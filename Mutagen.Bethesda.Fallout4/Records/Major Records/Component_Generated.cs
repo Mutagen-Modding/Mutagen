@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
@@ -1514,8 +1513,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.ModScrapScalar.SetTo(rhs.ModScrapScalar.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IComponent item,
+            IComponentGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IFallout4MajorRecordInternal item,
             IFallout4MajorRecordGetter rhs,
@@ -1705,30 +1716,13 @@ namespace Mutagen.Bethesda.Fallout4
             IComponentGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.CMPO)))
-            {
-                try
-                {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.CMPO,
+                writeEmbedded: Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -1899,7 +1893,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region CraftingSound
         private int? _CraftingSoundLocation;
-        public IFormLinkNullableGetter<ISoundDescriptorGetter> CraftingSound => _CraftingSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CraftingSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> CraftingSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundDescriptorGetter>(_package, _recordData, _CraftingSoundLocation);
         #endregion
         #region AutoCalcValue
         private int? _AutoCalcValueLocation;
@@ -1907,11 +1901,11 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region ScrapItem
         private int? _ScrapItemLocation;
-        public IFormLinkNullableGetter<IMiscItemGetter> ScrapItem => _ScrapItemLocation.HasValue ? new FormLinkNullable<IMiscItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScrapItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMiscItemGetter>.Null;
+        public IFormLinkNullableGetter<IMiscItemGetter> ScrapItem => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMiscItemGetter>(_package, _recordData, _ScrapItemLocation);
         #endregion
         #region ModScrapScalar
         private int? _ModScrapScalarLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> ModScrapScalar => _ModScrapScalarLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ModScrapScalarLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> ModScrapScalar => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _ModScrapScalarLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

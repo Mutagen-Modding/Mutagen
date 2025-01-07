@@ -895,8 +895,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Position = rhs.Position;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            INpcFaceDialPosition item,
+            INpcFaceDialPositionGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public NpcFaceDialPosition DeepCopy(

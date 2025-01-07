@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="StarfieldMod" objType="Mod" ctorPermission="protected" inferredAssets="true">
+  <Object name="StarfieldMod" objType="Mod" ctorPermission="protected" inferredAssets="true" generateDeepCopyNew="false">
     <Fields>
       <RefDirect name="ModHeader" refName="StarfieldModHeader" singleton="true" />
       <Group name="GameSettings" refName="GameSetting" />
@@ -51,6 +51,7 @@
       <Group name="Ingestibles" refName="Ingestible" />
       <Group name="IdleMarkers" refName="IdleMarker" />
       <Group name="BiomeMarkers" refName="BiomeMarker" />
+      <Group name="Notes" refName="Note" />
       <Group name="Projectiles" refName="Projectile" />
       <Group name="Hazards" refName="Hazard" />
       <Group name="BendableSplines" refName="BendableSpline" />
@@ -125,6 +126,7 @@
       <Group name="InstanceNamingRules" refName="InstanceNamingRules" />
       <Group name="SoundKeywordMappings" refName="SoundKeywordMapping" />
       <Group name="AttractionRules" refName="AttractionRule" />
+      <Group name="SceneCollections" refName="SceneCollection" />
       <Group name="AnimationSoundTagSets" refName="AnimationSoundTagSet" />
       <Group name="Resources" refName="Resource" />
       <Group name="Biomes" refName="Biome" />
@@ -174,10 +176,13 @@
       <Group name="ParticleSystemDefineCollisions" refName="ParticleSystemDefineCollision" />
       <Group name="SunPresets" refName="SunPreset" />
       <Group name="PhotoModeFeatures" refName="PhotoModeFeature" />
+      <Group name="GameplayOptions" refName="GameplayOptions" />
+      <Group name="GameplayOptionsGroups" refName="GameplayOptionsGroup" />
       <Group name="TimeOfDays" refName="TimeOfDayRecord" />
       <Group name="ActorValueModulations" refName="ActorValueModulation" />
       <Group name="Challenges" refName="Challenge" />
       <Group name="FacialExpressions" refName="FacialExpression" />
+      <Group name="PERS" refName="PERS" />
     </Fields>
     <GameReleaseOptions>Starfield</GameReleaseOptions>
   </Object>

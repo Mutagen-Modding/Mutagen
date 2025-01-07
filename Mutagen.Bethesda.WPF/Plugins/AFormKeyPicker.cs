@@ -535,22 +535,24 @@ public class AFormKeyPicker : NoggogControl
                         return new State(StatusIndicatorState.Passive, "No LinkCache is provided for lookup", FormKey.Null, string.Empty, null);
                     }
 
-                    if (FormID.TryFactory(x.Raw, out var formID, strictLength: true))
-                    {
-                        if (x.LinkCache.ListedOrder.Count >= formID.ModIndex.ID)
-                        {
-                            var targetMod = x.LinkCache.ListedOrder[formID.ModIndex.ID];
-                            formKey = new FormKey(targetMod.ModKey, formID.ID);
-                            if (x.LinkCache.TryResolveIdentifier(formKey, scopedTypes, out var edid, out var matchedType))
-                            {
-                                return new State(StatusIndicatorState.Success, "Located record", formKey, edid ?? string.Empty, matchedType);
-                            }
-                            else
-                            {
-                                return new State(StatusIndicatorState.Failure, "Could not resolve record", FormKey.Null, string.Empty, null);
-                            }
-                        }
-                    }
+                    // ToDo
+                    // Reimplement FormID lookup /w new separated systems
+                    // if (FormID.TryFactory(x.Raw, out var formID, strictLength: true))
+                    // {
+                    //     if (x.LinkCache.ListedOrder.Count >= formID.ModIndex.ID)
+                    //     {
+                    //         var targetMod = x.LinkCache.ListedOrder[formID.ModIndex.ID];
+                    //         formKey = new FormKey(targetMod.ModKey, formID.ID);
+                    //         if (x.LinkCache.TryResolveIdentifier(formKey, scopedTypes, out var edid, out var matchedType))
+                    //         {
+                    //             return new State(StatusIndicatorState.Success, "Located record", formKey, edid ?? string.Empty, matchedType);
+                    //         }
+                    //         else
+                    //         {
+                    //             return new State(StatusIndicatorState.Failure, "Could not resolve record", FormKey.Null, string.Empty, null);
+                    //         }
+                    //     }
+                    // }
 
                     return new State(StatusIndicatorState.Failure, "Could not resolve record", FormKey.Null, string.Empty, null);
                 }
@@ -635,7 +637,7 @@ public class AFormKeyPicker : NoggogControl
             .ObserveOn(RxApp.TaskpoolScheduler)
             .Select(x =>
             {
-                return Observable.Create<IMajorRecordIdentifier>(async (obs, cancel) =>
+                return Observable.Create<IMajorRecordIdentifierGetter>(async (obs, cancel) =>
                 {
                     try
                     {
@@ -657,7 +659,7 @@ public class AFormKeyPicker : NoggogControl
                     obs.OnCompleted();
                 });
             })
-            .FlowSwitch(this.WhenAnyValue(x => x.InSearchMode), Observable.Empty<IMajorRecordIdentifier>())
+            .FlowSwitch(this.WhenAnyValue(x => x.InSearchMode), Observable.Empty<IMajorRecordIdentifierGetter>())
             .ObserveOn(RxApp.TaskpoolScheduler)
             .Select(x => x.ToObservableChangeSet())
             .Switch()
@@ -672,23 +674,25 @@ public class AFormKeyPicker : NoggogControl
                     switch (x.SearchMode)
                     {
                         case FormKeyPickerSearchMode.None:
-                            return Observable.Return<Func<IMajorRecordIdentifier, bool>>(x => false);
+                            return Observable.Return<Func<IMajorRecordIdentifierGetter, bool>>(x => false);
                         case FormKeyPickerSearchMode.EditorID:
                             return this.WhenAnyValue(x => x.EditorID)
                                 .Throttle(TimeSpan.FromMilliseconds(300), RxApp.MainThreadScheduler)
                                 .ObserveOn(RxApp.TaskpoolScheduler)
-                                .Select<string, Func<IMajorRecordIdentifier, bool>>(term => (ident) =>
+                                .Select<string, Func<IMajorRecordIdentifierGetter, bool>>(term => (ident) =>
                                 {
                                     var edid = ident.EditorID;
                                     return term.IsNullOrWhitespace() ? true : edid != null && edid.ContainsInsensitive(term);
                                 });
                         case FormKeyPickerSearchMode.FormKey:
 
-                            var modKeyToId = x.Cache?.ListedOrder
-                                                 .Select((mod, index) => (mod, index))
-                                                 .Take(ModIndex.MaxIndex)
-                                                 .ToDictionary(keySelector: x => x.mod.ModKey, elementSelector: x => (byte)x.index)
-                                             ?? default;
+                            // ToDo
+                            // Reimplement FormID lookup /w new separated systems
+                            // var modKeyToId = x.Cache?.ListedOrder
+                            //                      .Select((mod, index) => (mod, index))
+                            //                      .Take(ModIndex.MaxIndex)
+                            //                      .ToDictionary(keySelector: x => x.mod.ModKey, elementSelector: x => (byte)x.index)
+                            //                  ?? default;
 
                             return this.WhenAnyValue(x => x.FormKeyStr)
                                 .Throttle(TimeSpan.FromMilliseconds(300), RxApp.MainThreadScheduler)
@@ -697,22 +701,24 @@ public class AFormKeyPicker : NoggogControl
                                 {
                                     return (RawStr: RawStr, FormKey: FormKey.TryFactory(RawStr), FormID: FormID.TryFactory(RawStr, strictLength: false));
                                 })
-                                .Select<(string RawStr, FormKey? FormKey, FormID? ID), Func<IMajorRecordIdentifier, bool>>(term => (ident) =>
+                                .Select<(string RawStr, FormKey? FormKey, FormID? ID), Func<IMajorRecordIdentifierGetter, bool>>(term => (ident) =>
                                 {
                                     var fk = ident.FormKey;
                                     if (fk == term.FormKey) return true;
-                                    if (term.ID != null)
-                                    {
-                                        if (term.RawStr.Length <= 6)
-                                        {
-                                            return fk.ID == term.ID.Value.Raw;
-                                        }
-                                        else if (modKeyToId != null && modKeyToId.TryGetValue(fk.ModKey, out var index))
-                                        {
-                                            var formID = new FormID(new ModIndex(index), fk.ID);
-                                            return formID.Raw == term.ID.Value.Raw;
-                                        }
-                                    }
+                                    // ToDo
+                                    // Reimplement FormID lookup /w new separated systems
+                                    // if (term.ID != null)
+                                    // {
+                                    //     if (term.RawStr.Length <= 6)
+                                    //     {
+                                    //         return fk.ID == term.ID.Value.Raw;
+                                    //     }
+                                    //     else if (modKeyToId != null && modKeyToId.TryGetValue(fk.ModKey, out var index))
+                                    //     {
+                                    //         var formID = new FormID(new ModIndex(index), fk.ID);
+                                    //         return formID.Raw == term.ID.Value.Raw;
+                                    //     }
+                                    // }
                                     return false;
                                 });
                         default:

@@ -916,8 +916,20 @@ namespace Mutagen.Bethesda.Starfield
                     item.EventData = default;
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IFindMatchingRefFromEvent item,
+            IFindMatchingRefFromEventGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public FindMatchingRefFromEvent DeepCopy(

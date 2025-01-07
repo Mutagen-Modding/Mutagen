@@ -951,8 +951,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.TriangleIndex = rhs.TriangleIndex;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IEdgeLink item,
+            IEdgeLinkGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public EdgeLink DeepCopy(
@@ -1155,7 +1167,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
-        public IFormLinkGetter<INavigationMeshGetter> Mesh => new FormLink<INavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<INavigationMeshGetter> Mesh => FormLinkBinaryTranslation.Instance.OverlayFactory<INavigationMeshGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         public Int16 TriangleIndex => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x8, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,

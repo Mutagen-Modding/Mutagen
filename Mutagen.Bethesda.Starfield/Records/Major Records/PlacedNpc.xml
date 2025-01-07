@@ -24,6 +24,7 @@
       <RefDirect name="Ownership" refName="Ownership"/>
       <FormLink name="EncounterLocation" refName="Location" recordType="XEZN" />
       <FormLink name="Layer" refName="Layer" recordType="XLYR" />
+      <FormLink name="Location" refName="Location" recordType="XLRL" />
       <Float name="HeadTrackingWeight" recordType="XHTW" />
       <List name="LocationRefTypes" recordType="XLRT">
         <FormLink refName="LocationReferenceType" />

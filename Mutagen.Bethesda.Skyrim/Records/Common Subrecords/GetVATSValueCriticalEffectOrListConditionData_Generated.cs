@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem RunOnType,
                 TItem Reference,
-                TItem Unknown3,
+                TItem RunOnTypeIndex,
                 TItem UseAliases,
                 TItem UsePackageData,
                 TItem FirstUnusedStringParameter,
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 RunOnType: RunOnType,
                 Reference: Reference,
-                Unknown3: Unknown3,
+                RunOnTypeIndex: RunOnTypeIndex,
                 UseAliases: UseAliases,
                 UsePackageData: UsePackageData,
                 FirstUnusedStringParameter: FirstUnusedStringParameter,
@@ -587,7 +587,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         RunOnType = 0,
         Reference = 1,
-        Unknown3 = 2,
+        RunOnTypeIndex = 2,
         UseAliases = 3,
         UsePackageData = 4,
         FirstUnusedStringParameter = 5,
@@ -820,7 +820,7 @@ namespace Mutagen.Bethesda.Skyrim
                     return (GetVATSValueCriticalEffectOrListConditionData_FieldIndex)((int)index);
                 case AGetVATSValueConditionData_FieldIndex.Reference:
                     return (GetVATSValueCriticalEffectOrListConditionData_FieldIndex)((int)index);
-                case AGetVATSValueConditionData_FieldIndex.Unknown3:
+                case AGetVATSValueConditionData_FieldIndex.RunOnTypeIndex:
                     return (GetVATSValueCriticalEffectOrListConditionData_FieldIndex)((int)index);
                 case AGetVATSValueConditionData_FieldIndex.UseAliases:
                     return (GetVATSValueCriticalEffectOrListConditionData_FieldIndex)((int)index);
@@ -843,7 +843,7 @@ namespace Mutagen.Bethesda.Skyrim
                     return (GetVATSValueCriticalEffectOrListConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.Reference:
                     return (GetVATSValueCriticalEffectOrListConditionData_FieldIndex)((int)index);
-                case ConditionData_FieldIndex.Unknown3:
+                case ConditionData_FieldIndex.RunOnTypeIndex:
                     return (GetVATSValueCriticalEffectOrListConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
                     return (GetVATSValueCriticalEffectOrListConditionData_FieldIndex)((int)index);
@@ -953,8 +953,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Value.SetTo(rhs.Value.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IGetVATSValueCriticalEffectOrListConditionData item,
+            IGetVATSValueCriticalEffectOrListConditionDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAGetVATSValueConditionData item,

@@ -970,8 +970,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Unused = rhs.Unused.ToArray();
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IRankPlacement item,
+            IRankPlacementGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public RankPlacement DeepCopy(
@@ -1182,7 +1194,7 @@ namespace Mutagen.Bethesda.Oblivion
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IFactionGetter> Faction => FormLinkBinaryTranslation.Instance.OverlayFactory<IFactionGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public SByte Rank => (sbyte)_structData.Slice(0x4, 0x1)[0];
         public ReadOnlyMemorySlice<Byte> Unused => _structData.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomFactoryEnd(

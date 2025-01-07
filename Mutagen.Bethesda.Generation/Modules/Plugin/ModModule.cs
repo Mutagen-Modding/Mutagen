@@ -65,10 +65,9 @@ public class ModModule : GenerationModule
         sb.AppendLine($"IGroupGetter? {nameof(IModGetter)}.{nameof(IModGetter.TryGetTopLevelGroup)}(Type type) => this.{nameof(IModGetter.TryGetTopLevelGroup)}(type);");
         sb.AppendLine($"IGroup<T>? {nameof(IMod)}.{nameof(IMod.TryGetTopLevelGroup)}<T>() => this.{nameof(IMod.TryGetTopLevelGroup)}<T>();");
         sb.AppendLine($"IGroup? {nameof(IMod)}.{nameof(IMod.TryGetTopLevelGroup)}(Type type) => this.{nameof(IMod.TryGetTopLevelGroup)}(type);");
-        sb.AppendLine($"void IModGetter.WriteToBinary({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);");
-        sb.AppendLine($"void IModGetter.WriteToBinaryParallel({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem, {nameof(ParallelWriteParameters)}? parallelWriteParams) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem, parallelParam: parallelWriteParams);");
+        sb.AppendLine($"void IModGetter.WriteToBinary({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinary(path, importMask: null, param: param);");
         sb.AppendLine($"void IModGetter.WriteToBinary({nameof(Stream)} stream, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinary(stream, importMask: null, param: param);");
-        sb.AppendLine($"void IModGetter.WriteToBinaryParallel({nameof(Stream)} stream, {nameof(BinaryWriteParameters)}? param, {nameof(ParallelWriteParameters)}? parallelWriteParams) => this.WriteToBinaryParallel(stream, param, parallelParam: parallelWriteParams);");
+        sb.AppendLine($"uint IModGetter.GetRecordCount() => this.GetRecordCount();");
         sb.AppendLine($"IMask<bool> {nameof(IEqualsMask)}.{nameof(IEqualsMask.GetEqualsMask)}(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => {obj.MixInClassName}.GetEqualsMask(this, ({obj.Interface(getter: true, internalInterface: true)})rhs, include);");
 
         // Localization enabled member
@@ -149,10 +148,6 @@ public class ModModule : GenerationModule
 
             using (var a = sb.Call("this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID"))
             {
-                if (objData.GameReleaseOptions != null)
-                {
-                    a.AddPassArg("release");
-                }
                 a.AddPassArg("forceUseLowerFormIDRanges");
             }
 
@@ -198,36 +193,8 @@ public class ModModule : GenerationModule
         }
         using (sb.CurlyBrace())
         {
-            sb.AppendLine("this.ModHeader.Stats.NumRecords = GetRecordCount();");
+            sb.AppendLine("this.ModHeader.Stats.NumRecords = this.GetRecordCount();");
         }
-        sb.AppendLine();
-
-        using (var args = sb.Function(
-                   "public uint GetRecordCount"))
-        {
-        }
-        using (sb.CurlyBrace())
-        {
-            sb.AppendLine("uint count = (uint)this.EnumerateMajorRecords().Count();");
-            foreach (var field in obj.IterateFields())
-            {
-                if (field is not LoquiType loqui) continue;
-                if (loqui.TargetObjectGeneration.GetObjectType() != ObjectType.Group) continue;
-                if (loqui.TargetObjectGeneration.Name.EndsWith("ListGroup"))
-                {
-                    sb.AppendLine($"count += {field.Name}.Records.Count > 0 ? 1 : default(uint);");
-                }
-                else
-                {
-                    sb.AppendLine($"count += {field.Name}.RecordCache.Count > 0 ? 1 : default(uint);");
-                }
-            }
-            sb.AppendLine("GetCustomRecordCount((customCount) => count += customCount);");
-            sb.AppendLine("return count;");
-        }
-        sb.AppendLine();
-
-        sb.AppendLine("partial void GetCustomRecordCount(Action<uint> setter);");
         sb.AppendLine();
 
         await base.GenerateInClass(obj, sb);
@@ -246,7 +213,7 @@ public class ModModule : GenerationModule
 
     public static string ModName(ObjectGeneration obj)
     {
-        return obj.Name.TrimEnd("Mod");
+        return obj.Name.TrimStringFromEnd("Mod");
     }
 
     public override async Task GenerateInVoid(ObjectGeneration obj, StructuredStringBuilder sb)
@@ -466,74 +433,18 @@ public class ModModule : GenerationModule
             }
         }
         sb.AppendLine();
-
+            
         using (var args = sb.Function(
-                   $"public static void WriteToBinaryParallel"))
+                   $"public static uint {nameof(IModGetter.GetRecordCount)}"))
         {
-            args.Add($"this {obj.Interface(getter: true, internalInterface: false)} item");
-            args.Add($"Stream stream");
-            args.Add($"{nameof(BinaryWriteParameters)}? param = null");
-            args.Add($"{nameof(ParallelWriteParameters)}? parallelParam = null");
+            args.Add($"this {obj.Interface(getter: true)} item");
         }
         using (sb.CurlyBrace())
         {
             using (var args = sb.Call(
-                       $"{obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.WriteParallel"))
+                       $"return {obj.CommonClassInstance("item", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetRecordCount"))
             {
                 args.AddPassArg("item");
-                args.AddPassArg("stream");
-                args.Add($"parallelParam: parallelParam ?? {nameof(ParallelWriteParameters)}.{nameof(ParallelWriteParameters.Default)}");
-                args.Add($"param: param ?? {nameof(BinaryWriteParameters)}.{nameof(BinaryWriteParameters.Default)}");
-                args.Add("modKey: item.ModKey");
-            }
-        }
-        sb.AppendLine();
-
-        using (var args = sb.Function(
-                   $"public static void WriteToBinaryParallel"))
-        {
-            args.Add($"this {obj.Interface(getter: true, internalInterface: false)} item");
-            args.Add($"string path");
-            args.Add($"{nameof(BinaryWriteParameters)}? param = null");
-            args.Add($"{nameof(ParallelWriteParameters)}? parallelParam = null");
-            args.Add($"{nameof(IFileSystem)}? fileSystem = null");
-        }
-        using (sb.CurlyBrace())
-        {
-            sb.AppendLine($"fileSystem = fileSystem.GetOrDefault();");
-            sb.AppendLine($"param ??= {nameof(BinaryWriteParameters)}.{nameof(BinaryWriteParameters.Default)};");
-            sb.AppendLine($"parallelParam ??= {nameof(ParallelWriteParameters)}.{nameof(ParallelWriteParameters.Default)};");
-            using (var args = sb.Call(
-                       $"var modKey = param.{nameof(BinaryWriteParameters.RunMasterMatch)}"))
-            {
-                args.Add("mod: item");
-                args.AddPassArg("path");
-            }
-            if (obj.GetObjectData().UsesStringFiles)
-            {
-                sb.AppendLine($"param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, item.GameRelease.ToCategory().GetLocalizedFlagIndex()!.Value) ? new StringsWriter({gameReleaseStr}, modKey, Path.Combine(Path.GetDirectoryName(path)!, \"Strings\"), {nameof(MutagenEncoding)}.{nameof(MutagenEncoding.Default)}, fileSystem: fileSystem) : null;");
-                sb.AppendLine("bool disposeStrings = param.StringsWriter != null;");
-            }
-            sb.AppendLine("using (var stream = fileSystem.FileStream.New(path, FileMode.Create, FileAccess.Write))");
-            using (sb.CurlyBrace())
-            {
-                using (var args = sb.Call(
-                           $"{obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.WriteParallel"))
-                {
-                    args.AddPassArg("item");
-                    args.AddPassArg("stream");
-                    args.AddPassArg("parallelParam");
-                    args.Add($"param: param");
-                    args.AddPassArg("modKey");
-                }
-            }
-            if (obj.GetObjectData().UsesStringFiles)
-            {
-                sb.AppendLine("if (disposeStrings)");
-                using (sb.CurlyBrace())
-                {
-                    sb.AppendLine("param.StringsWriter?.Dispose();");
-                }
             }
         }
         sb.AppendLine();
@@ -547,6 +458,7 @@ public class ModModule : GenerationModule
 
         GenerateGetGroup(obj, sb);
         GenerateWriteParallel(obj, sb);
+        GenerateGetRecordCount(obj, sb);
     }
 
     private void GenerateGetGroup(ObjectGeneration obj, StructuredStringBuilder sb)
@@ -612,32 +524,12 @@ public class ModModule : GenerationModule
                    "public static void WriteParallel"))
         {
             args.Add($"{obj.Interface(getter: true, internalInterface: false)} item");
-            args.Add($"Stream stream");
+            args.Add($"{nameof(MutagenWriter)} writer");
             args.Add($"{nameof(BinaryWriteParameters)} param");
-            args.Add($"{nameof(ParallelWriteParameters)} parallelParam");
             args.Add($"ModKey modKey");
         }
         using (sb.CurlyBrace())
         {
-            string gameConstantsStr;
-            if (objData.GameReleaseOptions == null)
-            {
-                gameConstantsStr = $"{nameof(GameConstants)}.{obj.GetObjectData().GameCategory}";
-            }
-            else
-            {
-                sb.AppendLine($"var gameConstants = {nameof(GameConstants)}.Get(item.{ReleaseEnumName(obj)}.ToGameRelease());");
-                gameConstantsStr = $"gameConstants";
-            }
-            sb.AppendLine($"var bundle = new {nameof(WritingBundle)}({gameConstantsStr})");
-            using (sb.CurlyBrace(appendSemiColon: true))
-            {
-                sb.AppendLine("StringsWriter = param.StringsWriter,");
-                sb.AppendLine("TargetLanguageOverride = param.TargetLanguageOverride,");
-                sb.AppendLine($"Encodings = param.Encodings ?? {gameConstantsStr}.Encodings,");
-            }
-
-            sb.AppendLine($"var writer = new MutagenWriter(stream, bundle);");
             using (var args = sb.Call(
                        $"{nameof(ModHeaderWriteLogic)}.{nameof(ModHeaderWriteLogic.WriteHeader)}"))
             {
@@ -675,20 +567,20 @@ public class ModModule : GenerationModule
                     && groupTarget.CustomBinaryEnd == CustomEnd.Off 
                     && groupTarget.Subgroups.Count == 0)
                 {
-                    sb.AppendLine($"toDo.Add(() => WriteGroupParallel(item.{field.Name}, {i}, outputStreams, bundle, parallelParam));");
+                    sb.AppendLine($"toDo.Add(() => WriteGroupParallel(item.{field.Name}, {i}, outputStreams, writer.MetaData, param.Parallel));");
                 }
                 else
                 {
-                    sb.AppendLine($"toDo.Add(() => Write{field.Name}Parallel(item.{field.Name}, {i}, outputStreams, bundle, parallelParam));");
+                    sb.AppendLine($"toDo.Add(() => Write{field.Name}Parallel(item.{field.Name}, {i}, outputStreams, writer.MetaData, param.Parallel));");
                 }
                 i++;
             }
-            sb.AppendLine("Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());");
+            sb.AppendLine("Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());");
             using (var args = sb.Call(
                        $"{nameof(PluginUtilityTranslation)}.{nameof(PluginUtilityTranslation.CompileStreamsInto)}"))
             {
                 args.Add("outputStreams.NotNull()");
-                args.Add("stream");
+                args.Add("writer.BaseStream");
             }
         }
         sb.AppendLine();
@@ -740,6 +632,39 @@ public class ModModule : GenerationModule
             }
             sb.AppendLine();
         }
+    }
+
+    private void GenerateGetRecordCount(ObjectGeneration obj, StructuredStringBuilder sb)
+    {
+        if (obj.GetObjectData().ObjectType != ObjectType.Mod) return;
+        using (var args = sb.Function(
+                   "public uint GetRecordCount"))
+        {
+            args.Add($"{obj.Interface(getter: true, internalInterface: false)} item");
+        }
+        using (sb.CurlyBrace())
+        {
+            sb.AppendLine("uint count = (uint)item.EnumerateMajorRecords().Count();");
+            foreach (var field in obj.IterateFields())
+            {
+                if (field is not LoquiType loqui) continue;
+                if (loqui.TargetObjectGeneration.GetObjectType() != ObjectType.Group) continue;
+                if (loqui.TargetObjectGeneration.Name.EndsWith("ListGroup"))
+                {
+                    sb.AppendLine($"count += item.{field.Name}.Records.Count > 0 ? 1 : default(uint);");
+                }
+                else
+                {
+                    sb.AppendLine($"count += item.{field.Name}.RecordCache.Count > 0 ? 1 : default(uint);");
+                }
+            }
+            sb.AppendLine("GetCustomRecordCount(item, (customCount) => count += customCount);");
+            sb.AppendLine("return count;");
+        }
+        sb.AppendLine();
+
+        sb.AppendLine($"partial void GetCustomRecordCount({obj.Interface(getter: true, internalInterface: false)} item, Action<uint> setter);");
+        sb.AppendLine();
     }
 
     public override async Task PreLoad(ObjectGeneration obj)

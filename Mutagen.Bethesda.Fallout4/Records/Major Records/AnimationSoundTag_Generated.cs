@@ -911,8 +911,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Action = rhs.Action;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IAnimationSoundTag item,
+            IAnimationSoundTagGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public AnimationSoundTag DeepCopy(
@@ -1125,7 +1137,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ISoundDescriptorGetter> Sound => new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<ISoundDescriptorGetter> Sound => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         #region Action
         public String Action { get; private set; } = string.Empty;
         protected int ActionEndingPos;

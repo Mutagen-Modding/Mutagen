@@ -1189,8 +1189,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.UnknownFloat7 = rhs.UnknownFloat7;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            INpcRaceOverrideUnknown7 item,
+            INpcRaceOverrideUnknown7Getter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public NpcRaceOverrideUnknown7 DeepCopy(

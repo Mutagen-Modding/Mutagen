@@ -1,4 +1,3 @@
-using System.IO.Abstractions;
 using Loqui;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Plugins;
@@ -17,6 +16,13 @@ internal class NoReleaseModInstantiatorTest : AModInstantiatorTest<OblivionMod, 
 }
 
 internal class ReleaseModInstantiatorTest : AModInstantiatorTest<SkyrimMod, ISkyrimMod, ISkyrimModGetter, SkyrimModBinaryOverlay>
+{
+    public override ModPath ModPath => TestDataPathing.SkyrimTestMod;
+    public override GameRelease Release => GameRelease.SkyrimSE;
+    public override ILoquiRegistration Registration => SkyrimMod_Registration.Instance;
+}
+
+internal class DisposableModInstantiatorTest : AModInstantiatorTest<SkyrimMod, ISkyrimMod, ISkyrimModDisposableGetter, SkyrimModBinaryOverlay>
 {
     public override ModPath ModPath => TestDataPathing.SkyrimTestMod;
     public override GameRelease Release => GameRelease.SkyrimSE;
@@ -61,8 +67,7 @@ public abstract class AModInstantiatorTest<TDirect, TSetter, TGetter, TOverlay>
     {
         var ret = ModInstantiatorReflection.GetImporter<TDirect>(Registration)(
             ModPath,
-            Release,
-            default(IFileSystem?));
+            Release);
         Assert.IsType<TDirect>(ret);
         Assert.Equal(ModPath.ModKey, ret.ModKey);
     }
@@ -72,8 +77,7 @@ public abstract class AModInstantiatorTest<TDirect, TSetter, TGetter, TOverlay>
     {
         var ret = ModInstantiatorReflection.GetImporter<TSetter>(Registration)(
             ModPath,
-            Release,
-            default(IFileSystem?));
+            Release);
         Assert.IsType<TDirect>(ret);
         Assert.Equal(ModPath.ModKey, ret.ModKey);
     }
@@ -83,8 +87,7 @@ public abstract class AModInstantiatorTest<TDirect, TSetter, TGetter, TOverlay>
     {
         var ret = ModInstantiatorReflection.GetImporter<TGetter>(Registration)(
             ModPath,
-            Release,
-            default(IFileSystem?));
+            Release);
         Assert.IsType<TOverlay>(ret);
         Assert.Equal(ModPath.ModKey, ret.ModKey);
     }

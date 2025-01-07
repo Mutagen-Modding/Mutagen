@@ -231,14 +231,14 @@ public sealed class ImmutableModLinkCache : ILinkCache
     }
 
     /// <inheritdoc />
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(Type type, CancellationToken? cancel = null)
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers(Type type, CancellationToken? cancel = null)
     {
         CheckDisposal();
         return _cache.AllIdentifiers(type, cancel);
     }
 
     /// <inheritdoc />
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers<TMajor>(CancellationToken? cancel = null) 
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers<TMajor>(CancellationToken? cancel = null) 
         where TMajor : class, IMajorRecordQueryableGetter
     {
         CheckDisposal();
@@ -246,14 +246,14 @@ public sealed class ImmutableModLinkCache : ILinkCache
     }
 
     /// <inheritdoc />
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(IEnumerable<Type> types, CancellationToken? cancel = null)
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers(IEnumerable<Type> types, CancellationToken? cancel = null)
     {
         CheckDisposal();
         return _cache.AllIdentifiers(types, cancel);
     }
 
     /// <inheritdoc />
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(params Type[] types)
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers(params Type[] types)
     {
         CheckDisposal();
         return _cache.AllIdentifiers(types);
@@ -1105,26 +1105,26 @@ public sealed class ImmutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, T
         throw new MissingRecordException(editorId, types.ToArray());
     }
 
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(Type type, CancellationToken? cancel = null)
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers(Type type, CancellationToken? cancel = null)
     {
         CheckDisposal();
         return _cache.AllIdentifiers(type, cancel);
     }
 
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers<TMajor>(CancellationToken? cancel = null) 
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers<TMajor>(CancellationToken? cancel = null) 
         where TMajor : class, IMajorRecordQueryableGetter
     {
         CheckDisposal();
         return _cache.AllIdentifiers<TMajor>(cancel);
     }
 
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(IEnumerable<Type> types, CancellationToken? cancel = null)
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers(IEnumerable<Type> types, CancellationToken? cancel = null)
     {
         CheckDisposal();
         return _cache.AllIdentifiers(types, cancel);
     }
 
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(params Type[] types)
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers(params Type[] types)
     {
         CheckDisposal();
         return _cache.AllIdentifiers(types);

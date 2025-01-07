@@ -2246,8 +2246,20 @@ namespace Mutagen.Bethesda.Starfield
                     item.CHGL = default;
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IStarfieldModHeader item,
+            IStarfieldModHeaderGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public StarfieldModHeader DeepCopy(
@@ -2823,14 +2835,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ONAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.OverriddenForms = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IStarfieldMajorRecordGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.OverriddenForms = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IStarfieldMajorRecordGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<IStarfieldMajorRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IStarfieldMajorRecordGetter>(p, s));
                     return (int)StarfieldModHeader_FieldIndex.OverriddenForms;
                 }
                 case RecordTypeInts.SCRN:

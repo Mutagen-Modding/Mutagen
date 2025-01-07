@@ -8,6 +8,7 @@
       <FormLink name="Magnitude" refName="Global" recordType="MNAM" />
       <FormLink name="Area" refName="Global" recordType="ANAM" />
       <FormLink name="Duration" refName="Global" recordType="ZNAM" />
+      <Int32 name="MAGF" recordType="MAGF" unknown="true" />
       <Int32 name="EFIF" recordType="EFIF" unknown="true" />
       <Int32 name="MUID" recordType="MUID" unknown="true" />
     </Fields>

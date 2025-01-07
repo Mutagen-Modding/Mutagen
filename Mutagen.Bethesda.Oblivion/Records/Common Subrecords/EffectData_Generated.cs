@@ -1113,8 +1113,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.ActorValue = rhs.ActorValue;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IEffectData item,
+            IEffectDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public EffectData DeepCopy(

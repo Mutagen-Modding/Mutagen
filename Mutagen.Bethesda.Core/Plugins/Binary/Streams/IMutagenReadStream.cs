@@ -10,7 +10,7 @@ public interface IMutagenReadStream : IBinaryReadStream
     /// <summary>
     /// All the extra meta bits for parsing
     /// </summary>
-    ParsingBundle MetaData { get; }
+    ParsingMeta MetaData { get; }
 
     /// <summary>
     /// Convenience offset tracker variable for helping print meaningful position information

@@ -1,5 +1,7 @@
 using Noggog;
 using System.Buffers.Binary;
+using Loqui.Internal;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
@@ -7,93 +9,216 @@ using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
-using System.Diagnostics;
 using Mutagen.Bethesda.Plugins.Utility;
 
 namespace Mutagen.Bethesda.Oblivion;
 
 public partial class OblivionMod : AMod
 {
-    private const uint DefaultInitialNextFormID = 0xD62;
-    private uint GetDefaultInitialNextFormID(
-        bool? forceUseLowerFormIDRanges) =>
-        GetDefaultInitialNextFormID(this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
-
-    public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
-        GetDefaultInitialNextFormID(
+    public override uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
+        GetDefaultInitialNextFormIDStatic(
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
+    
+    public override bool IsMaster
+    {
+        get => this.ModHeader.Flags.HasFlag(OblivionModHeader.HeaderFlag.Master);
+        set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(OblivionModHeader.HeaderFlag.Master, value);
+    }
+    
+    public override bool CanBeSmallMaster => false;
+    public override bool IsSmallMaster
+    {
+        get => false;
+        set => throw new ArgumentException("Tried to set light master flag on unsupported mod type");
+    }
+    public override bool CanBeMediumMaster => false;
+    public override bool IsMediumMaster
+    {
+        get => false;
+        set => throw new ArgumentException("Tried to set half master flag on unsupported mod type");
+    }
 
-    public static uint GetDefaultInitialNextFormID(float headerVersion,
+    public override bool ListsOverriddenForms => false;
+    
+    public override IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms => null;
+
+    internal static uint GetDefaultInitialNextFormIDStatic(float headerVersion,
         bool? forceUseLowerFormIDRanges)
     {
-        return HeaderVersionHelper.GetNextFormId(
+        return HeaderVersionHelper.GetInitialFormId(
             release: GameRelease.Oblivion,
             allowedReleases: null,
             headerVersion: headerVersion,
-            useLowerRangesVersion: null,
             forceUseLowerFormIDRanges: forceUseLowerFormIDRanges,
-            higherFormIdRange: DefaultInitialNextFormID);
+            constants: GameConstants.Get(GameRelease.Oblivion));
     }
 
-    partial void GetCustomRecordCount(Action<uint> setter)
+    internal class OblivionCreateBuilderInstantiator : IBinaryReadBuilderInstantiator<IOblivionMod, IOblivionModDisposableGetter, GroupMask>
     {
-        uint count = 0;
-        // Tally Cell Group counts
-        int cellSubGroupCount(Cell cell)
+        public static readonly OblivionCreateBuilderInstantiator Instance = new();
+        
+        public IOblivionMod Mutable(BinaryReadMutableBuilder<IOblivionMod, IOblivionModDisposableGetter, GroupMask> builder)
         {
-            int cellGroupCount = 0;
-            if ((cell.Temporary?.Count ?? 0) > 0
-                || cell.PathGrid != null
-                || cell.Landscape != null)
+            if (builder._param._path != null)
             {
-                cellGroupCount++;
+                return OblivionMod.CreateFromBinary(
+                    path: new ModPath(
+                        builder._param.ModKey,
+                        builder._param._path.Value),
+                    errorMask: builder._param.ErrorMaskBuilder,
+                    param: builder._param.Params,
+                    importMask: builder._param.GroupMask);
             }
-            if ((cell.Persistent?.Count ?? 0) > 0)
+            else if (builder._param._streamFactory != null)
             {
-                cellGroupCount++;
+                var stream = builder._param._streamFactory();
+                var recordCache =  new RecordTypeInfoCacheReader(() =>
+                {
+                    var stream1 = builder._param._streamFactory();
+                    if (stream1 == stream)
+                    {
+                        throw new ArgumentException("Stream factory provided returned the same stream twice");
+                    }
+                    var meta = ParsingMeta.Factory(builder._param.Params, builder._param.GameRelease, builder._param.ModKey, stream1);
+                    return new MutagenBinaryReadStream(stream, meta);
+                });
+
+                return OblivionMod.CreateFromBinary(
+                    stream: stream,
+                    modKey: builder._param.ModKey,
+                    infoCache: recordCache,
+                    param: builder._param.Params,
+                    importMask: builder._param.GroupMask);
             }
-            if ((cell.VisibleWhenDistant?.Count ?? 0) > 0)
+            else
             {
-                cellGroupCount++;
+                throw new ArgumentException("Path or stream factory needs to be specified");
             }
-            if (cellGroupCount > 0)
-            {
-                cellGroupCount++;
-            }
-            return cellGroupCount;
         }
-        count += (uint)this.Cells.Records.Count; // Block Count
-        count += (uint)this.Cells.Records.Sum(block => block.SubBlocks?.Count ?? 0); // Sub Block Count
-        count += (uint)this.Cells.Records
-            .SelectMany(block => block.SubBlocks)
-            .SelectMany(subBlock => subBlock.Cells)
-            .Select(cellSubGroupCount)
-            .Sum();
 
-        // Tally Worldspace Group Counts
-        count += (uint)this.Worldspaces.Sum(wrld => wrld.SubCells?.Count ?? 0); // Cell Blocks
-        count += (uint)this.Worldspaces
-            .SelectMany(wrld => wrld.SubCells)
-            .Sum(block => block.Items?.Count ?? 0); // Cell Sub Blocks
-        count += (uint)this.Worldspaces
-            .SelectMany(wrld => wrld.SubCells)
-            .SelectMany(block => block.Items)
-            .SelectMany(subBlock => subBlock.Items)
-            .Sum(cellSubGroupCount); // Cell sub groups
+        public IOblivionModDisposableGetter Readonly(BinaryReadBuilder<IOblivionMod, IOblivionModDisposableGetter, GroupMask> builder)
+        {
+            if (builder._param._path != null)
+            {
+                return OblivionMod.CreateFromBinaryOverlay(
+                    path: new ModPath(
+                        builder._param.ModKey,
+                        builder._param._path.Value),
+                    param: builder._param.Params);
+            }
+            else if (builder._param._streamFactory != null)
+            {
+                var stream = builder._param._streamFactory();
 
-        // Tally Dialog Group Counts
-        count += (uint)this.DialogTopics.RecordCache.Count;
-        setter(count);
+                return OblivionMod.CreateFromBinaryOverlay(
+                    stream: stream,
+                    modKey: builder._param.ModKey,
+                    param: builder._param.Params);
+            }
+            else
+            {
+                throw new ArgumentException("Path or stream factory needs to be specified");
+            }
+        }
+    }
+
+    public static BinaryReadBuilderSourceStreamFactoryChoice<IOblivionMod, IOblivionModDisposableGetter, GroupMask> 
+        Create => new(
+        GameRelease.Oblivion, 
+        OblivionCreateBuilderInstantiator.Instance,
+        needsRecordTypeInfoCacheReader: true);
+
+    internal class OblivionWriteBuilderInstantiator : IBinaryWriteBuilderWriter<IOblivionModGetter>
+    {
+        public static readonly OblivionWriteBuilderInstantiator Instance = new();
+
+        public async Task WriteAsync(IOblivionModGetter mod, BinaryWriteBuilderParams<IOblivionModGetter> param)
+        {
+            Write(mod, param);
+        }
+
+        public void Write(IOblivionModGetter mod, BinaryWriteBuilderParams<IOblivionModGetter> param)
+        {
+            if (param._path != null)
+            {
+                mod.WriteToBinary(param._path.Value, param._param);
+            }
+            else if (param._stream != null)
+            {
+                mod.WriteToBinary(param._stream, param._param);
+            }
+            else
+            {
+                throw new ArgumentException("Path or stream factory needs to be specified");
+            }
+        }
+    }
+
+    public BinaryModdedWriteBuilderTargetChoice<IOblivionModGetter> 
+        BeginWrite => new(
+        this, 
+        OblivionWriteBuilderInstantiator.Instance);
+
+    IBinaryModdedWriteBuilderTargetChoice IModGetter.BeginWrite => this.BeginWrite;
+
+    public static BinaryWriteBuilderTargetChoice<IOblivionModGetter> WriteBuilder() =>
+        new(GameRelease.Oblivion, OblivionWriteBuilderInstantiator.Instance);
+
+    IMod IModGetter.DeepCopy() => this.DeepCopy();
+}
+
+public partial interface IOblivionModGetter
+{
+    BinaryModdedWriteBuilderTargetChoice<IOblivionModGetter> BeginWrite { get; }
+}
+
+partial class OblivionModSetterTranslationCommon
+{
+    partial void DeepCopyInCustom(IOblivionMod item, IOblivionModGetter rhs, ErrorMaskBuilder? errorMask,
+        TranslationCrystal? copyMask, bool deepCopy)
+    {
+        if (!deepCopy) return;
+        if (item is not AMod mod)
+        {
+            throw new NotImplementedException();
+        }
+        mod.SetModKey(rhs.ModKey);
+    }
+
+    public partial OblivionMod DeepCopyGetNew(IOblivionModGetter item)
+    {
+        return new OblivionMod(item.ModKey);
     }
 }
 
 internal partial class OblivionModBinaryOverlay
 {
-    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
-        OblivionMod.GetDefaultInitialNextFormID(
+    public uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
+        OblivionMod.GetDefaultInitialNextFormIDStatic(
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
+    
+    public bool IsMaster => this.ModHeader.Flags.HasFlag(OblivionModHeader.HeaderFlag.Master);
+    public bool CanBeSmallMaster => false;
+    public bool IsSmallMaster => false;
+    public bool CanBeMediumMaster => false;
+    public bool IsMediumMaster => false;
+    public bool ListsOverriddenForms => false;
+    public MasterStyle MasterStyle => this.GetMasterStyle();
+    IMod IModGetter.DeepCopy() => this.DeepCopy();
+    
+    public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms => null;
+
+    IBinaryModdedWriteBuilderTargetChoice IModGetter.BeginWrite => 
+        new BinaryModdedWriteBuilderTargetChoice<IOblivionModGetter>(
+            this, 
+            OblivionMod.OblivionWriteBuilderInstantiator.Instance);
+
+    public BinaryModdedWriteBuilderTargetChoice<IOblivionModGetter> BeginWrite => 
+        new BinaryModdedWriteBuilderTargetChoice<IOblivionModGetter>(
+            this, 
+            OblivionMod.OblivionWriteBuilderInstantiator.Instance);
 }
 
 partial class OblivionModCommon
@@ -251,7 +376,7 @@ partial class OblivionModCommon
             worldGroupWriter.Write(Zeros.Slice(0, GameConstants.Oblivion.GroupConstants.LengthLength));
             FormKeyBinaryTranslation.Instance.Write(
                 worldGroupWriter,
-                worldspace.FormKey);
+                worldspace);
             worldGroupWriter.Write((int)GroupTypeEnum.WorldChildren);
             worldGroupWriter.Write(worldspace.SubCellsTimestamp);
             road?.WriteToBinary(worldGroupWriter);
@@ -352,5 +477,58 @@ partial class OblivionModCommon
         ParallelWriteParameters parallelWriteParameters)
     {
         WriteGroupParallel(group, targetIndex, streamDepositArray, bundle, parallelWriteParameters);
+    }
+
+    partial void GetCustomRecordCount(IOblivionModGetter item, Action<uint> setter)
+    {
+        uint count = 0;
+        // Tally Cell Group counts
+        int cellSubGroupCount(ICellGetter cell)
+        {
+            int cellGroupCount = 0;
+            if ((cell.Temporary?.Count ?? 0) > 0
+                || cell.PathGrid != null
+                || cell.Landscape != null)
+            {
+                cellGroupCount++;
+            }
+            if ((cell.Persistent?.Count ?? 0) > 0)
+            {
+                cellGroupCount++;
+            }
+            if ((cell.VisibleWhenDistant?.Count ?? 0) > 0)
+            {
+                cellGroupCount++;
+            }
+            if (cellGroupCount > 0)
+            {
+                cellGroupCount++;
+            }
+            return cellGroupCount;
+        }
+        count += (uint)item.Cells.Records.Count; // Block Count
+        count += (uint)item.Cells.Records.Sum(block => block.SubBlocks?.Count ?? 0); // Sub Block Count
+        count += (uint)item.Cells.Records
+            .SelectMany(block => block.SubBlocks)
+            .SelectMany(subBlock => subBlock.Cells)
+            .Select(cellSubGroupCount)
+            .Sum();
+
+        // Tally Worldspace Group Counts
+        count += (uint)item.Worldspaces.Sum(wrld => wrld.SubCells?.Count ?? 0); // Cell Blocks
+        count += (uint)item.Worldspaces
+            .SelectMany(wrld => wrld.SubCells)
+            .Sum(block => block.Items?.Count ?? 0); // Cell Sub Blocks
+        count += (uint)item.Worldspaces
+            .SelectMany(wrld => wrld.SubCells)
+            .SelectMany(block => block.Items)
+            .SelectMany(subBlock => subBlock.Items)
+            .Sum(cellSubGroupCount); // Cell sub groups
+
+        // Tally Dialog Group Counts
+        count += (uint)item.DialogTopics.RecordCache.Count;
+        
+        // Set count
+        setter(count);
     }
 }

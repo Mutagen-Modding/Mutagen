@@ -1,4 +1,5 @@
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
@@ -10,12 +11,9 @@ namespace Mutagen.Bethesda.Tests;
 
 public class SkyrimPassthroughTest : PassthroughTest
 {
-    public override GameRelease GameRelease { get; }
-
-    public SkyrimPassthroughTest(PassthroughTestParams param, GameRelease mode)
-        : base(param)
+    public SkyrimPassthroughTest(PassthroughTestParams param, GameRelease release)
+        : base(param, release)
     {
-        GameRelease = mode;
     }
 
     public override AlignmentRules GetAlignmentRules()
@@ -219,19 +217,25 @@ public class SkyrimPassthroughTest : PassthroughTest
 
     protected override async Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path, StringsReadParameters stringsParams)
     {
-        return SkyrimModBinaryOverlay.SkyrimModFactory(
-            new ModPath(ModKey, FilePath.Path),
-            GameRelease.ToSkyrimRelease(),
-            stringsParam: stringsParams);
+        return SkyrimMod.Create(GameRelease.ToSkyrimRelease())
+            .FromPath(
+                new ModPath(ModKey, path.Path))
+            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .WithStringsParameters(stringsParams)
+            .ThrowIfUnknownSubrecord()
+            .Construct();
     }
 
     protected override async Task<IMod> ImportBinary(FilePath path, StringsReadParameters stringsParams)
     {
-        return SkyrimMod.CreateFromBinary(
-            new ModPath(ModKey, path.Path),
-            GameRelease.ToSkyrimRelease(),
-            parallel: Settings.ParallelProcessingSteps,
-            stringsParam: stringsParams);
+        return SkyrimMod.Create(GameRelease.ToSkyrimRelease())
+            .FromPath(
+                new ModPath(ModKey, path.Path))
+            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .WithStringsParameters(stringsParams)
+            .ThrowIfUnknownSubrecord()
+            .Mutable()
+            .Construct();
     }
 
     protected override async Task<IMod> ImportCopyIn(FilePath file)
@@ -242,5 +246,5 @@ public class SkyrimPassthroughTest : PassthroughTest
         return ret;
     }
 
-    protected override Processor ProcessorFactory() => new SkyrimProcessor(GameRelease, Settings.ParallelProcessingSteps);
+    protected override Processor ProcessorFactory() => new SkyrimProcessor(Settings.ParallelProcessingSteps, GameRelease, MasterFlagsLookup);
 }

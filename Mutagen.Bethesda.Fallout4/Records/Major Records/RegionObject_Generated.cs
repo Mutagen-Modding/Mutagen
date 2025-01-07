@@ -1673,8 +1673,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Unknown2 = rhs.Unknown2.ToArray();
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IRegionObject item,
+            IRegionObjectGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public RegionObject DeepCopy(
@@ -1925,7 +1937,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IRegionTargetGetter> Object => new FormLink<IRegionTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IRegionTargetGetter> Object => FormLinkBinaryTranslation.Instance.OverlayFactory<IRegionTargetGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public UInt16 ParentIndex => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x4, 0x2));
         public UInt16 Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x6, 0x2));
         public Single Density => _structData.Slice(0x8, 0x4).Float();

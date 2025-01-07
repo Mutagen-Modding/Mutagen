@@ -27,21 +27,21 @@ public static class ModContextExt
         return false;
     }
 
-    public static IModContext<TMod, TModGetter, RMajorSetter, RMajorGetter> AsType<TMod, TModGetter, TMajor, TMajorGetter, RMajorSetter, RMajorGetter>(this IModContext<TMod, TModGetter, TMajor, TMajorGetter> context)
+    public static IModContext<TMod, TModGetter, TRhsMajorSetter, TRhsMajorGetter> AsType<TMod, TModGetter, TMajor, TMajorGetter, TRhsMajorSetter, TRhsMajorGetter>(this IModContext<TMod, TModGetter, TMajor, TMajorGetter> context)
         where TModGetter : IModGetter
         where TMod : TModGetter, IMod
         where TMajor : IMajorRecordQueryable, TMajorGetter
         where TMajorGetter : IMajorRecordQueryableGetter
-        where RMajorSetter : TMajor, RMajorGetter
-        where RMajorGetter : TMajorGetter
+        where TRhsMajorSetter : TMajor, TRhsMajorGetter
+        where TRhsMajorGetter : TMajorGetter
     {
-        return new ModContextCaster<TMod, TModGetter, TMajor, TMajorGetter, RMajorSetter, RMajorGetter>(context);
+        return new ModContextCaster<TMod, TModGetter, TMajor, TMajorGetter, TRhsMajorSetter, TRhsMajorGetter>(context);
     }
 
-    public static IModContext<RMajorGetter> AsType<TMajorGetter, RMajorGetter>(this IModContext<TMajorGetter> context)
+    public static IModContext<TRhsMajorGetter> AsType<TMajorGetter, TRhsMajorGetter>(this IModContext<TMajorGetter> context)
         where TMajorGetter : IMajorRecordQueryableGetter
-        where RMajorGetter : TMajorGetter
+        where TRhsMajorGetter : TMajorGetter
     {
-        return new SimpleModContextCaster<TMajorGetter, RMajorGetter>(context);
+        return new SimpleModContextCaster<TMajorGetter, TRhsMajorGetter>(context);
     }
 }

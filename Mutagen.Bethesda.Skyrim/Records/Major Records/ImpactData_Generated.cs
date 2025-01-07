@@ -920,8 +920,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Impact.SetTo(rhs.Impact.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IImpactData item,
+            IImpactDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ImpactData DeepCopy(
@@ -1130,8 +1142,8 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IMaterialTypeGetter> Material => new FormLink<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<IImpactGetter> Impact => new FormLink<IImpactGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IMaterialTypeGetter> Material => FormLinkBinaryTranslation.Instance.OverlayFactory<IMaterialTypeGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<IImpactGetter> Impact => FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

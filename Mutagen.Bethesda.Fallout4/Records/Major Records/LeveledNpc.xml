@@ -3,7 +3,7 @@
   <Object name="LeveledNpc" recordType="LVLN" baseClass="Fallout4MajorRecord" objType="Record">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <UInt8 name="ChanceNone" recordType="LVLD" nullable="False" />
+      <Percent name="ChanceNone" recordType="LVLD" nullable="False" integerType="ByteHundred" />
       <UInt8 name="MaxCount" recordType="LVLM" nullable="False" />
       <Enum name="Flags" recordType="LVLF" nullable="False" enumName="LeveledNpc.Flag" byteLength="1" />
       <FormLink name="Global" recordType="LVLG" refName="Global" />
@@ -30,7 +30,7 @@
         <Interface>INpcSpawn</Interface>
       </FormLink>
       <Int16 name="Count" />
-      <Percent name="ChanceNone" integerType="Byte" />
+      <Percent name="ChanceNone" integerType="ByteHundred" />
       <Int8 name="Unused2" />
     </Fields>
   </Object>

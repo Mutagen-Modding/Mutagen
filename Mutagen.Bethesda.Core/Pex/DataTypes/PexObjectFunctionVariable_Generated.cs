@@ -786,8 +786,20 @@ namespace Mutagen.Bethesda.Pex
             {
                 item.TypeName = rhs.TypeName;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPexObjectFunctionVariable item,
+            IPexObjectFunctionVariableGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public PexObjectFunctionVariable DeepCopy(

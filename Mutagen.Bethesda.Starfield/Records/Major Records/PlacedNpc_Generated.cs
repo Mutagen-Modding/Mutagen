@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -62,7 +61,7 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private VirtualMachineAdapter? _VirtualMachineAdapter;
         /// <summary>
-        /// Aspects: IScripted
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
         /// </summary>
         public VirtualMachineAdapter? VirtualMachineAdapter
         {
@@ -73,6 +72,7 @@ namespace Mutagen.Bethesda.Starfield
         IVirtualMachineAdapterGetter? IPlacedNpcGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #region Aspects
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
@@ -257,6 +257,16 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILayerGetter> IPlacedNpcGetter.Layer => this.Layer;
         #endregion
+        #region Location
+        private readonly IFormLinkNullable<ILocationGetter> _Location = new FormLinkNullable<ILocationGetter>();
+        public IFormLinkNullable<ILocationGetter> Location
+        {
+            get => _Location;
+            set => _Location.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILocationGetter> IPlacedNpcGetter.Location => this.Location;
+        #endregion
         #region HeadTrackingWeight
         public Single? HeadTrackingWeight { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -361,6 +371,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(initialValue, new Ownership.Mask<TItem>(initialValue));
                 this.EncounterLocation = initialValue;
                 this.Layer = initialValue;
+                this.Location = initialValue;
                 this.HeadTrackingWeight = initialValue;
                 this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.RagdollBipedRotation = initialValue;
@@ -401,6 +412,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Ownership,
                 TItem EncounterLocation,
                 TItem Layer,
+                TItem Location,
                 TItem HeadTrackingWeight,
                 TItem LocationRefTypes,
                 TItem RagdollBipedRotation,
@@ -440,6 +452,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Ownership = new MaskItem<TItem, Ownership.Mask<TItem>?>(Ownership, new Ownership.Mask<TItem>(Ownership));
                 this.EncounterLocation = EncounterLocation;
                 this.Layer = Layer;
+                this.Location = Location;
                 this.HeadTrackingWeight = HeadTrackingWeight;
                 this.LocationRefTypes = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LocationRefTypes, Enumerable.Empty<(int Index, TItem Value)>());
                 this.RagdollBipedRotation = RagdollBipedRotation;
@@ -481,6 +494,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, Ownership.Mask<TItem>?>? Ownership { get; set; }
             public TItem EncounterLocation;
             public TItem Layer;
+            public TItem Location;
             public TItem HeadTrackingWeight;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? LocationRefTypes;
             public TItem RagdollBipedRotation;
@@ -524,6 +538,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Ownership, rhs.Ownership)) return false;
                 if (!object.Equals(this.EncounterLocation, rhs.EncounterLocation)) return false;
                 if (!object.Equals(this.Layer, rhs.Layer)) return false;
+                if (!object.Equals(this.Location, rhs.Location)) return false;
                 if (!object.Equals(this.HeadTrackingWeight, rhs.HeadTrackingWeight)) return false;
                 if (!object.Equals(this.LocationRefTypes, rhs.LocationRefTypes)) return false;
                 if (!object.Equals(this.RagdollBipedRotation, rhs.RagdollBipedRotation)) return false;
@@ -559,6 +574,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Ownership);
                 hash.Add(this.EncounterLocation);
                 hash.Add(this.Layer);
+                hash.Add(this.Location);
                 hash.Add(this.HeadTrackingWeight);
                 hash.Add(this.LocationRefTypes);
                 hash.Add(this.RagdollBipedRotation);
@@ -655,6 +671,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (!eval(this.EncounterLocation)) return false;
                 if (!eval(this.Layer)) return false;
+                if (!eval(this.Location)) return false;
                 if (!eval(this.HeadTrackingWeight)) return false;
                 if (this.LocationRefTypes != null)
                 {
@@ -763,6 +780,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (eval(this.EncounterLocation)) return true;
                 if (eval(this.Layer)) return true;
+                if (eval(this.Location)) return true;
                 if (eval(this.HeadTrackingWeight)) return true;
                 if (this.LocationRefTypes != null)
                 {
@@ -878,6 +896,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Ownership = this.Ownership == null ? null : new MaskItem<R, Ownership.Mask<R>?>(eval(this.Ownership.Overall), this.Ownership.Specific?.Translate(eval));
                 obj.EncounterLocation = eval(this.EncounterLocation);
                 obj.Layer = eval(this.Layer);
+                obj.Location = eval(this.Location);
                 obj.HeadTrackingWeight = eval(this.HeadTrackingWeight);
                 if (LocationRefTypes != null)
                 {
@@ -1059,6 +1078,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Layer, "Layer");
                     }
+                    if (printMask?.Location ?? true)
+                    {
+                        sb.AppendItem(Location, "Location");
+                    }
                     if (printMask?.HeadTrackingWeight ?? true)
                     {
                         sb.AppendItem(HeadTrackingWeight, "HeadTrackingWeight");
@@ -1147,6 +1170,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, Ownership.ErrorMask?>? Ownership;
             public Exception? EncounterLocation;
             public Exception? Layer;
+            public Exception? Location;
             public Exception? HeadTrackingWeight;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? LocationRefTypes;
             public Exception? RagdollBipedRotation;
@@ -1205,6 +1229,8 @@ namespace Mutagen.Bethesda.Starfield
                         return EncounterLocation;
                     case PlacedNpc_FieldIndex.Layer:
                         return Layer;
+                    case PlacedNpc_FieldIndex.Location:
+                        return Location;
                     case PlacedNpc_FieldIndex.HeadTrackingWeight:
                         return HeadTrackingWeight;
                     case PlacedNpc_FieldIndex.LocationRefTypes:
@@ -1294,6 +1320,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case PlacedNpc_FieldIndex.Layer:
                         this.Layer = ex;
+                        break;
+                    case PlacedNpc_FieldIndex.Location:
+                        this.Location = ex;
                         break;
                     case PlacedNpc_FieldIndex.HeadTrackingWeight:
                         this.HeadTrackingWeight = ex;
@@ -1396,6 +1425,9 @@ namespace Mutagen.Bethesda.Starfield
                     case PlacedNpc_FieldIndex.Layer:
                         this.Layer = (Exception?)obj;
                         break;
+                    case PlacedNpc_FieldIndex.Location:
+                        this.Location = (Exception?)obj;
+                        break;
                     case PlacedNpc_FieldIndex.HeadTrackingWeight:
                         this.HeadTrackingWeight = (Exception?)obj;
                         break;
@@ -1455,6 +1487,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Ownership != null) return true;
                 if (EncounterLocation != null) return true;
                 if (Layer != null) return true;
+                if (Location != null) return true;
                 if (HeadTrackingWeight != null) return true;
                 if (LocationRefTypes != null) return true;
                 if (RagdollBipedRotation != null) return true;
@@ -1606,6 +1639,9 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Layer, "Layer");
                 }
                 {
+                    sb.AppendItem(Location, "Location");
+                }
+                {
                     sb.AppendItem(HeadTrackingWeight, "HeadTrackingWeight");
                 }
                 if (LocationRefTypes is {} LocationRefTypesItem)
@@ -1678,6 +1714,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Ownership = this.Ownership.Combine(rhs.Ownership, (l, r) => l.Combine(r));
                 ret.EncounterLocation = this.EncounterLocation.Combine(rhs.EncounterLocation);
                 ret.Layer = this.Layer.Combine(rhs.Layer);
+                ret.Location = this.Location.Combine(rhs.Location);
                 ret.HeadTrackingWeight = this.HeadTrackingWeight.Combine(rhs.HeadTrackingWeight);
                 ret.LocationRefTypes = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LocationRefTypes?.Overall, rhs.LocationRefTypes?.Overall), Noggog.ExceptionExt.Combine(this.LocationRefTypes?.Specific, rhs.LocationRefTypes?.Specific));
                 ret.RagdollBipedRotation = this.RagdollBipedRotation.Combine(rhs.RagdollBipedRotation);
@@ -1730,6 +1767,7 @@ namespace Mutagen.Bethesda.Starfield
             public Ownership.TranslationMask? Ownership;
             public bool EncounterLocation;
             public bool Layer;
+            public bool Location;
             public bool HeadTrackingWeight;
             public bool LocationRefTypes;
             public bool RagdollBipedRotation;
@@ -1761,6 +1799,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.IsLinkedRefTransient = defaultOn;
                 this.EncounterLocation = defaultOn;
                 this.Layer = defaultOn;
+                this.Location = defaultOn;
                 this.HeadTrackingWeight = defaultOn;
                 this.LocationRefTypes = defaultOn;
                 this.RagdollBipedRotation = defaultOn;
@@ -1797,6 +1836,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Ownership != null ? Ownership.OnOverall : DefaultOn, Ownership?.GetCrystal()));
                 ret.Add((EncounterLocation, null));
                 ret.Add((Layer, null));
+                ret.Add((Location, null));
                 ret.Add((HeadTrackingWeight, null));
                 ret.Add((LocationRefTypes, null));
                 ret.Add((RagdollBipedRotation, null));
@@ -1960,6 +2000,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IPlacedNpc :
         IAssetLinkContainer,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         IKeywordLinkedReference,
         ILinkedReference,
         ILoquiObjectSetter<IPlacedNpcInternal>,
@@ -1972,7 +2013,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordInternal
     {
         /// <summary>
-        /// Aspects: IScripted
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
         /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ExtendedList<AComponent> Components { get; }
@@ -1994,6 +2035,7 @@ namespace Mutagen.Bethesda.Starfield
         new Ownership? Ownership { get; set; }
         new IFormLinkNullable<ILocationGetter> EncounterLocation { get; set; }
         new IFormLinkNullable<ILayerGetter> Layer { get; set; }
+        new IFormLinkNullable<ILocationGetter> Location { get; set; }
         new Single? HeadTrackingWeight { get; set; }
         new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
         new P3Float? RagdollBipedRotation { get; set; }
@@ -2060,6 +2102,7 @@ namespace Mutagen.Bethesda.Starfield
         IOwnershipGetter? Ownership { get; }
         IFormLinkNullableGetter<ILocationGetter> EncounterLocation { get; }
         IFormLinkNullableGetter<ILayerGetter> Layer { get; }
+        IFormLinkNullableGetter<ILocationGetter> Location { get; }
         Single? HeadTrackingWeight { get; }
         IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; }
         P3Float? RagdollBipedRotation { get; }
@@ -2270,16 +2313,17 @@ namespace Mutagen.Bethesda.Starfield
         Ownership = 24,
         EncounterLocation = 25,
         Layer = 26,
-        HeadTrackingWeight = 27,
-        LocationRefTypes = 28,
-        RagdollBipedRotation = 29,
-        Health = 30,
-        EnableParent = 31,
-        IsActivationPoint = 32,
-        Scale = 33,
-        Position = 34,
-        Rotation = 35,
-        Comments = 36,
+        Location = 27,
+        HeadTrackingWeight = 28,
+        LocationRefTypes = 29,
+        RagdollBipedRotation = 30,
+        Health = 31,
+        EnableParent = 32,
+        IsActivationPoint = 33,
+        Scale = 34,
+        Position = 35,
+        Rotation = 36,
+        Comments = 37,
     }
     #endregion
 
@@ -2290,9 +2334,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 30;
+        public const ushort AdditionalFieldCount = 31;
 
-        public const ushort FieldCount = 37;
+        public const ushort FieldCount = 38;
 
         public static readonly Type MaskType = typeof(PlacedNpc.Mask<>);
 
@@ -2347,6 +2391,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XOWN,
                 RecordTypes.XEZN,
                 RecordTypes.XLYR,
+                RecordTypes.XLRL,
                 RecordTypes.XHTW,
                 RecordTypes.XLRT,
                 RecordTypes.XRGB,
@@ -2420,6 +2465,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Ownership = null;
             item.EncounterLocation.Clear();
             item.Layer.Clear();
+            item.Location.Clear();
             item.HeadTrackingWeight = default;
             item.LocationRefTypes = null;
             item.RagdollBipedRotation = default;
@@ -2459,6 +2505,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Ownership?.RemapLinks(mapping);
             obj.EncounterLocation.Relink(mapping);
             obj.Layer.Relink(mapping);
+            obj.Location.Relink(mapping);
             obj.LocationRefTypes?.RemapLinks(mapping);
             obj.EnableParent?.RemapLinks(mapping);
         }
@@ -2596,6 +2643,7 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.EncounterLocation = item.EncounterLocation.Equals(rhs.EncounterLocation);
             ret.Layer = item.Layer.Equals(rhs.Layer);
+            ret.Location = item.Location.Equals(rhs.Location);
             ret.HeadTrackingWeight = item.HeadTrackingWeight.EqualsWithin(rhs.HeadTrackingWeight);
             ret.LocationRefTypes = item.LocationRefTypes.CollectionEqualsHelper(
                 rhs.LocationRefTypes,
@@ -2789,6 +2837,10 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.Layer ?? true)
             {
                 sb.AppendItem(item.Layer.FormKeyNullable, "Layer");
+            }
+            if (printMask?.Location ?? true)
+            {
+                sb.AppendItem(item.Location.FormKeyNullable, "Location");
             }
             if ((printMask?.HeadTrackingWeight ?? true)
                 && item.HeadTrackingWeight is {} HeadTrackingWeightItem)
@@ -2989,6 +3041,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Layer.Equals(rhs.Layer)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Location) ?? true))
+            {
+                if (!lhs.Location.Equals(rhs.Location)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.HeadTrackingWeight) ?? true))
             {
                 if (!lhs.HeadTrackingWeight.EqualsWithin(rhs.HeadTrackingWeight)) return false;
@@ -3102,6 +3158,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             hash.Add(item.EncounterLocation);
             hash.Add(item.Layer);
+            hash.Add(item.Location);
             if (item.HeadTrackingWeight is {} HeadTrackingWeightitem)
             {
                 hash.Add(HeadTrackingWeightitem);
@@ -3211,6 +3268,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return LayerInfo;
             }
+            if (FormLinkInformation.TryFactory(obj.Location, out var LocationInfo))
+            {
+                yield return LocationInfo;
+            }
             if (obj.LocationRefTypes is {} LocationRefTypesItem)
             {
                 foreach (var item in LocationRefTypesItem)
@@ -3234,13 +3295,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
             {
-                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
-                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             yield break;
         }
@@ -3557,6 +3615,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Layer.SetTo(rhs.Layer.FormKeyNullable);
             }
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Location) ?? true))
+            {
+                item.Location.SetTo(rhs.Location.FormKeyNullable);
+            }
             if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.HeadTrackingWeight) ?? true))
             {
                 item.HeadTrackingWeight = rhs.HeadTrackingWeight;
@@ -3642,8 +3704,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Comments = rhs.Comments;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPlacedNpc item,
+            IPlacedNpcGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IStarfieldMajorRecordInternal item,
             IStarfieldMajorRecordGetter rhs,
@@ -3918,6 +3992,10 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.Layer,
                 header: translationParams.ConvertToCustom(RecordTypes.XLYR));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Location,
+                header: translationParams.ConvertToCustom(RecordTypes.XLRL));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.HeadTrackingWeight,
@@ -3977,30 +4055,13 @@ namespace Mutagen.Bethesda.Starfield
             IPlacedNpcGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.ACHR)))
-            {
-                try
-                {
-                    StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.ACHR,
+                writeEmbedded: StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -4190,6 +4251,12 @@ namespace Mutagen.Bethesda.Starfield
                     item.Layer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedNpc_FieldIndex.Layer;
                 }
+                case RecordTypeInts.XLRL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedNpc_FieldIndex.Location;
+                }
                 case RecordTypeInts.XHTW:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -4333,7 +4400,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Base
         private int? _BaseLocation;
-        public IFormLinkGetter<INpcGetter> Base => _BaseLocation.HasValue ? new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseLocation.Value, _package.MetaData.Constants)))) : FormLink<INpcGetter>.Null;
+        public IFormLinkGetter<INpcGetter> Base => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<INpcGetter>(_package, _recordData, _BaseLocation);
         #endregion
         #region LevelModifier
         private int? _LevelModifierLocation;
@@ -4341,7 +4408,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Emittance
         private int? _EmittanceLocation;
-        public IFormLinkNullableGetter<IEmittanceGetter> Emittance => _EmittanceLocation.HasValue ? new FormLinkNullable<IEmittanceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EmittanceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEmittanceGetter>.Null;
+        public IFormLinkNullableGetter<IEmittanceGetter> Emittance => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEmittanceGetter>(_package, _recordData, _EmittanceLocation);
         #endregion
         #region Radius
         private int? _RadiusLocation;
@@ -4350,15 +4417,15 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IRagdollDataGetter>? RagdollData { get; private set; }
         #region ReferenceGroup
         private int? _ReferenceGroupLocation;
-        public IFormLinkNullableGetter<IReferenceGroupGetter> ReferenceGroup => _ReferenceGroupLocation.HasValue ? new FormLinkNullable<IReferenceGroupGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ReferenceGroupLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IReferenceGroupGetter>.Null;
+        public IFormLinkNullableGetter<IReferenceGroupGetter> ReferenceGroup => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IReferenceGroupGetter>(_package, _recordData, _ReferenceGroupLocation);
         #endregion
         #region SourcePackIn
         private int? _SourcePackInLocation;
-        public IFormLinkNullableGetter<IPackInGetter> SourcePackIn => _SourcePackInLocation.HasValue ? new FormLinkNullable<IPackInGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SourcePackInLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPackInGetter>.Null;
+        public IFormLinkNullableGetter<IPackInGetter> SourcePackIn => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPackInGetter>(_package, _recordData, _SourcePackInLocation);
         #endregion
         #region PersistentLocation
         private int? _PersistentLocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> PersistentLocation => _PersistentLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PersistentLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        public IFormLinkNullableGetter<ILocationGetter> PersistentLocation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _PersistentLocationLocation);
         #endregion
         #region IsIgnoredBySandbox
         private int? _IsIgnoredBySandboxLocation;
@@ -4381,11 +4448,15 @@ namespace Mutagen.Bethesda.Starfield
         public IOwnershipGetter? Ownership { get; private set; }
         #region EncounterLocation
         private int? _EncounterLocationLocation;
-        public IFormLinkNullableGetter<ILocationGetter> EncounterLocation => _EncounterLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EncounterLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        public IFormLinkNullableGetter<ILocationGetter> EncounterLocation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _EncounterLocationLocation);
         #endregion
         #region Layer
         private int? _LayerLocation;
-        public IFormLinkNullableGetter<ILayerGetter> Layer => _LayerLocation.HasValue ? new FormLinkNullable<ILayerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LayerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILayerGetter>.Null;
+        public IFormLinkNullableGetter<ILayerGetter> Layer => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILayerGetter>(_package, _recordData, _LayerLocation);
+        #endregion
+        #region Location
+        private int? _LocationLocation;
+        public IFormLinkNullableGetter<ILocationGetter> Location => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _LocationLocation);
         #endregion
         #region HeadTrackingWeight
         private int? _HeadTrackingWeightLocation;
@@ -4542,14 +4613,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XRGD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.RagdollData = BinaryOverlayList.FactoryByStartIndex<IRagdollDataGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.RagdollData = BinaryOverlayList.FactoryByStartIndexWithTrigger<IRagdollDataGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 28,
                         getter: (s, p) => RagdollDataBinaryOverlay.RagdollDataFactory(s, p));
-                    stream.Position += subLen;
                     return (int)PlacedNpc_FieldIndex.RagdollData;
                 }
                 case RecordTypeInts.XRFG:
@@ -4635,6 +4704,11 @@ namespace Mutagen.Bethesda.Starfield
                     _LayerLocation = (stream.Position - offset);
                     return (int)PlacedNpc_FieldIndex.Layer;
                 }
+                case RecordTypeInts.XLRL:
+                {
+                    _LocationLocation = (stream.Position - offset);
+                    return (int)PlacedNpc_FieldIndex.Location;
+                }
                 case RecordTypeInts.XHTW:
                 {
                     _HeadTrackingWeightLocation = (stream.Position - offset);
@@ -4642,14 +4716,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XLRT:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.LocationRefTypes = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILocationReferenceTypeGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.LocationRefTypes = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ILocationReferenceTypeGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<ILocationReferenceTypeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ILocationReferenceTypeGetter>(p, s));
                     return (int)PlacedNpc_FieldIndex.LocationRefTypes;
                 }
                 case RecordTypeInts.XRGB:

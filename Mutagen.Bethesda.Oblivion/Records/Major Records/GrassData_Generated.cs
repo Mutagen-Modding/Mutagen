@@ -1404,8 +1404,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Flags = rhs.Flags;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IGrassData item,
+            IGrassDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public GrassData DeepCopy(

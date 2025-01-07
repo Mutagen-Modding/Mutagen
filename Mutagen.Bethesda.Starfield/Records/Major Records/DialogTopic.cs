@@ -199,7 +199,10 @@ partial class DialogTopicBinaryCreateTranslation
             {
                 obj.Timestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
                 obj.Unknown = frame.GetInt32(offset: 20);
-                if (FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)) != obj.FormKey)
+                if (FormKey.Factory(
+                        frame.MetaData.MasterReferences, 
+                        new FormID(BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)),
+                        reference: true) != obj.FormKey)
                 {
                     throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
                 }
@@ -246,7 +249,7 @@ partial class DialogTopicBinaryWriteTranslation
             {
                 FormKeyBinaryTranslation.Instance.Write(
                     writer,
-                    obj.FormKey);
+                    obj);
                 writer.Write((int)GroupTypeEnum.TopicChildren);
                 writer.Write(obj.Timestamp);
                 writer.Write(obj.Unknown);
@@ -295,7 +298,10 @@ partial class DialogTopicBinaryOverlay
             if (!stream.TryGetGroupHeader(out var groupMeta)) return;
             if (groupMeta.GroupType != (int)GroupTypeEnum.TopicChildren) return;
             this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));
-            var formKey = FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
+            var formKey = FormKey.Factory(
+                _package.MetaData.MasterReferences, 
+                new FormID(BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)),
+                reference: true);
             if (formKey != this.FormKey)
             {
                 throw new ArgumentException("Dialog children group did not match the FormID of the parent.");

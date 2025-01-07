@@ -883,8 +883,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Float2 = rhs.Float2;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IBlockHeightAdjustmentComponentItem item,
+            IBlockHeightAdjustmentComponentItemGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public BlockHeightAdjustmentComponentItem DeepCopy(

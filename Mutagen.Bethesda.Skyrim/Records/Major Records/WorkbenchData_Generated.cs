@@ -900,8 +900,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.UsesSkill = rhs.UsesSkill;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IWorkbenchData item,
+            IWorkbenchDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public WorkbenchData DeepCopy(

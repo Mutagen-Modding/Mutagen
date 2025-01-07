@@ -1106,8 +1106,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Unknown = rhs.Unknown.ToArray();
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPackageFlagsOverride item,
+            IPackageFlagsOverrideGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public PackageFlagsOverride DeepCopy(

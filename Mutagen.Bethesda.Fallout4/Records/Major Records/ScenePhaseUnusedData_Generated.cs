@@ -1142,8 +1142,20 @@ namespace Mutagen.Bethesda.Fallout4
                     item.SCRO = default;
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IScenePhaseUnusedData item,
+            IScenePhaseUnusedDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ScenePhaseUnusedData DeepCopy(

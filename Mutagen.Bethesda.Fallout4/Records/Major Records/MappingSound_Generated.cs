@@ -911,8 +911,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Descriptor.SetTo(rhs.Descriptor.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IMappingSound item,
+            IMappingSoundGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public MappingSound DeepCopy(
@@ -1125,7 +1137,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public ReverbClass ReverbClass => (ReverbClass)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
-        public IFormLinkGetter<ISoundDescriptorGetter> Descriptor => new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<ISoundDescriptorGetter> Descriptor => FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

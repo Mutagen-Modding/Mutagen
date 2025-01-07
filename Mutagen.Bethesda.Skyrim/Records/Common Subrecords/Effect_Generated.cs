@@ -1133,8 +1133,20 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IEffect item,
+            IEffectGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public Effect DeepCopy(
@@ -1389,7 +1401,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region BaseEffect
         private int? _BaseEffectLocation;
-        public IFormLinkNullableGetter<IMagicEffectGetter> BaseEffect => _BaseEffectLocation.HasValue ? new FormLinkNullable<IMagicEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseEffectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMagicEffectGetter>.Null;
+        public IFormLinkNullableGetter<IMagicEffectGetter> BaseEffect => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMagicEffectGetter>(_package, _recordData, _BaseEffectLocation);
         #endregion
         #region Data
         private RangeInt32? _DataLocation;

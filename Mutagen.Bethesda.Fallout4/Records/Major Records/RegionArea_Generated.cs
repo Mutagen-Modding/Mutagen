@@ -1067,8 +1067,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Unknown = rhs.Unknown;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IRegionArea item,
+            IRegionAreaGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public RegionArea DeepCopy(
@@ -1390,14 +1402,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.RPLD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.RegionPointListData = BinaryOverlayList.FactoryByStartIndex<P2Float>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.RegionPointListData = BinaryOverlayList.FactoryByStartIndexWithTrigger<P2Float>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
-                    stream.Position += subLen;
                     return (int)RegionArea_FieldIndex.RegionPointListData;
                 }
                 case RecordTypeInts.ANAM:

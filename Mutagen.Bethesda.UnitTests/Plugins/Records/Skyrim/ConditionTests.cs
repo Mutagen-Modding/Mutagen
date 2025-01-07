@@ -12,9 +12,9 @@ public class ConditionTests : ASpecificCaseTest<Condition, IConditionGetter>
     
     public override void TestItem(IConditionGetter item)
     {
-        var data = item.Data as IConditionStringParameterGetter;
+        var data = item.Data as IConditionParametersGetter;
         data.Should().NotBeNull();
-        data!.FirstStringParameter.Should().Be("Hello");
-        data.SecondStringParameter.Should().Be("World");
+        data!.StringParameter1.Should().Be("Hello");
+        data.StringParameter2.Should().Be("World");
     }
 }

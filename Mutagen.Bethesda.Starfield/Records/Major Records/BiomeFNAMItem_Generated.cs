@@ -1244,8 +1244,20 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IBiomeFNAMItem item,
+            IBiomeFNAMItemGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public BiomeFNAMItem DeepCopy(
@@ -1619,14 +1631,12 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DNAM:
                 {
                     if (lastParsed.ShortCircuit((int)BiomeFNAMItem_FieldIndex.DNAM, translationParams)) return ParseResult.Stop;
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.DNAM = BinaryOverlayList.FactoryByStartIndex<Single>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.DNAM = BinaryOverlayList.FactoryByStartIndexWithTrigger<Single>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => s.Float());
-                    stream.Position += subLen;
                     return (int)BiomeFNAMItem_FieldIndex.DNAM;
                 }
                 default:

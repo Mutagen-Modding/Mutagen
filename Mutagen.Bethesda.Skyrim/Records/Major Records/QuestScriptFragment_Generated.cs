@@ -1087,8 +1087,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.FragmentName = rhs.FragmentName;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IQuestScriptFragment item,
+            IQuestScriptFragmentGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public QuestScriptFragment DeepCopy(

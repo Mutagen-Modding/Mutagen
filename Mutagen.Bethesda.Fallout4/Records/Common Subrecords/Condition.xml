@@ -28,7 +28,7 @@
       <Int32 name="Unknown3" default="-1" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="FunctionConditionData" objType="Subrecord" baseClass="ConditionData">
+  <Object name="FunctionConditionData" objType="Subrecord" baseClass="ConditionData" generateConditionData="false">
     <Fields>
       <Enum name="Function" enumName="Condition.Function" byteLength="2" />
       <UInt16 name="Unknown2" />
@@ -41,7 +41,7 @@
       <String name="ParameterTwoString" binary="NoGeneration" nullable="True" />
     </Fields>
   </Object>
-  <Object name="GetEventData" objType="Subrecord" baseClass="ConditionData">
+  <Object name="GetEventData" objType="Subrecord" baseClass="ConditionData" generateConditionData="false">
     <Fields>
       <!-- ToDo change to enum -->
       <UInt16 name="EventFunction" />

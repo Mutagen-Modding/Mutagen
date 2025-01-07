@@ -883,8 +883,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Second = rhs.Second;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ISurfaceBlockIntItem item,
+            ISurfaceBlockIntItemGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public SurfaceBlockIntItem DeepCopy(

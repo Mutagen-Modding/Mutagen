@@ -1035,8 +1035,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.PcmTypeKeyword.SetTo(rhs.PcmTypeKeyword.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IQuestLocationAliasALPS item,
+            IQuestLocationAliasALPSGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public QuestLocationAliasALPS DeepCopy(
@@ -1278,7 +1290,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region PcmTypeKeyword
         private int? _PcmTypeKeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> PcmTypeKeyword => _PcmTypeKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PcmTypeKeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> PcmTypeKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _PcmTypeKeywordLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

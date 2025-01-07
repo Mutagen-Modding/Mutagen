@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -63,7 +62,7 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private VirtualMachineAdapter? _VirtualMachineAdapter;
         /// <summary>
-        /// Aspects: IScripted
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
         /// </summary>
         public VirtualMachineAdapter? VirtualMachineAdapter
         {
@@ -74,6 +73,7 @@ namespace Mutagen.Bethesda.Starfield
         IVirtualMachineAdapterGetter? IPackInGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #region Aspects
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
@@ -1676,6 +1676,7 @@ namespace Mutagen.Bethesda.Starfield
         IBaseObject,
         IConstructible,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         IKeyworded<IKeywordGetter>,
         ILeveledPackInTarget,
         ILoquiObjectSetter<IPackInInternal>,
@@ -1690,7 +1691,7 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedNamedRequired
     {
         /// <summary>
-        /// Aspects: IScripted
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
         /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         /// <summary>
@@ -2819,13 +2820,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
             {
-                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
-                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             yield break;
         }
@@ -3218,8 +3216,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Name = rhs.Name?.DeepCopy();
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPackIn item,
+            IPackInGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IStarfieldMajorRecordInternal item,
             IStarfieldMajorRecordGetter rhs,
@@ -3514,30 +3524,13 @@ namespace Mutagen.Bethesda.Starfield
             IPackInGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.PKIN)))
-            {
-                try
-                {
-                    StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.PKIN,
+                writeEmbedded: StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -3847,11 +3840,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SnapTemplate
         private int? _SnapTemplateLocation;
-        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate => _SnapTemplateLocation.HasValue ? new FormLinkNullable<ISnapTemplateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SnapTemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISnapTemplateGetter>.Null;
+        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISnapTemplateGetter>(_package, _recordData, _SnapTemplateLocation);
         #endregion
         #region SnapBehavior
         private int? _SnapBehaviorLocation;
-        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapBehavior => _SnapBehaviorLocation.HasValue ? new FormLinkNullable<ISnapTemplateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SnapBehaviorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISnapTemplateGetter>.Null;
+        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapBehavior => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISnapTemplateGetter>(_package, _recordData, _SnapBehaviorLocation);
         #endregion
         #region XALG
         private int? _XALGLocation;
@@ -3868,7 +3861,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Cell
         private int? _CellLocation;
-        public IFormLinkNullableGetter<ICellGetter> Cell => _CellLocation.HasValue ? new FormLinkNullable<ICellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CellLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICellGetter>.Null;
+        public IFormLinkNullableGetter<ICellGetter> Cell => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICellGetter>(_package, _recordData, _CellLocation);
         #endregion
         #region Version
         private int? _VersionLocation;
@@ -3884,7 +3877,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region NativeTerminal
         private int? _NativeTerminalLocation;
-        public IFormLinkNullableGetter<ITerminalMenuGetter> NativeTerminal => _NativeTerminalLocation.HasValue ? new FormLinkNullable<ITerminalMenuGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NativeTerminalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITerminalMenuGetter>.Null;
+        public IFormLinkNullableGetter<ITerminalMenuGetter> NativeTerminal => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITerminalMenuGetter>(_package, _recordData, _NativeTerminalLocation);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; private set; }
         public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
@@ -4081,7 +4074,7 @@ namespace Mutagen.Bethesda.Starfield
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
                         trigger: RecordTypes.KWDA,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)PackIn_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.NTRM:
@@ -4091,26 +4084,22 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.FTYP:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.ForcedLocations = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILocationReferenceTypeGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.ForcedLocations = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ILocationReferenceTypeGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<ILocationReferenceTypeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ILocationReferenceTypeGetter>(p, s));
                     return (int)PackIn_FieldIndex.ForcedLocations;
                 }
                 case RecordTypeInts.PRPS:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Properties = BinaryOverlayList.FactoryByStartIndex<IObjectPropertyGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Properties = BinaryOverlayList.FactoryByStartIndexWithTrigger<IObjectPropertyGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => ObjectPropertyBinaryOverlay.ObjectPropertyFactory(s, p));
-                    stream.Position += subLen;
                     return (int)PackIn_FieldIndex.Properties;
                 }
                 case RecordTypeInts.MOLM:
@@ -4122,7 +4111,7 @@ namespace Mutagen.Bethesda.Starfield
                         package: _package,
                         itemLength: 4,
                         count: count,
-                        getter: (s, p) => new FormLink<ILayeredMaterialSwapGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ILayeredMaterialSwapGetter>(p, s));
                     return (int)PackIn_FieldIndex.MaterialSwaps;
                 }
                 case RecordTypeInts.FULL:

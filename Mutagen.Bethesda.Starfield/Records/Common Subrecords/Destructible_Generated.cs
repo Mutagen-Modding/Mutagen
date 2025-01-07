@@ -951,8 +951,10 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.DSTF,
                 RecordTypes.DSTA,
                 RecordTypes.DMDL,
-                RecordTypes.MODT,
+                RecordTypes.DMDT,
                 RecordTypes.MOLM,
+                RecordTypes.DMDC,
+                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
@@ -1247,12 +1249,9 @@ namespace Mutagen.Bethesda.Starfield
         
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IDestructibleGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            foreach (var item in obj.Stages.SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
             {
-                foreach (var item in obj.Stages.SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             yield break;
         }
@@ -1365,8 +1364,20 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IDestructible item,
+            IDestructibleGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public Destructible DeepCopy(
@@ -1725,14 +1736,12 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DAMC:
                 {
                     if (lastParsed.ShortCircuit((int)Destructible_FieldIndex.Resistances, translationParams)) return ParseResult.Stop;
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Resistances = BinaryOverlayList.FactoryByStartIndex<IResistanceDestructibleGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Resistances = BinaryOverlayList.FactoryByStartIndexWithTrigger<IResistanceDestructibleGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => ResistanceDestructibleBinaryOverlay.ResistanceDestructibleFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Destructible_FieldIndex.Resistances;
                 }
                 case RecordTypeInts.DSDL:

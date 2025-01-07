@@ -31,7 +31,7 @@ public static class OverrideMixIns
         this ILoadOrderGetter<TMod> loadOrder,
         bool includeDeletedRecords = false)
         where TMod : class, IModGetter
-        where TMajor : class, IMajorRecordGetter
+        where TMajor : class, IMajorRecordQueryableGetter
     {
         return loadOrder.PriorityOrder.WinningOverrides<TMajor>(includeDeletedRecords: includeDeletedRecords);
     }
@@ -79,7 +79,7 @@ public static class OverrideMixIns
     public static IEnumerable<TMajor> WinningOverrides<TMajor>(
         this IEnumerable<IModListingGetter<IModGetter>> modListings,
         bool includeDeletedRecords = false)
-        where TMajor : class, IMajorRecordGetter
+        where TMajor : class, IMajorRecordQueryableGetter
     {
         return modListings
             .Select(l => l.Mod)
@@ -131,15 +131,16 @@ public static class OverrideMixIns
     public static IEnumerable<TMajor> WinningOverrides<TMajor>(
         this IEnumerable<IModGetter> mods,
         bool includeDeletedRecords = false)
-        where TMajor : class, IMajorRecordGetter
+        where TMajor : class, IMajorRecordQueryableGetter
     {
         var passedRecords = new HashSet<FormKey>();
         foreach (var mod in mods)
         {
             foreach (var record in mod.EnumerateMajorRecords<TMajor>())
             {
-                if (!passedRecords.Add(record.FormKey)) continue;
-                if (!includeDeletedRecords && record.IsDeleted) continue;
+                if (record is not IMajorRecordGetter maj) continue;
+                if (!passedRecords.Add(maj.FormKey)) continue;
+                if (!includeDeletedRecords && maj.IsDeleted) continue;
                 yield return record;
             }
         }
@@ -204,8 +205,8 @@ public static class OverrideMixIns
         bool includeDeletedRecords = false)
         where TMod : class, IMod, TModGetter
         where TModGetter : class, IModGetter, IMajorRecordContextEnumerable<TMod, TModGetter>
-        where TSetter : class, IMajorRecord, TGetter
-        where TGetter : class, IMajorRecordGetter
+        where TSetter : class, IMajorRecordQueryable, TGetter
+        where TGetter : class, IMajorRecordQueryableGetter
     {
         return loadOrder.PriorityOrder.WinningContextOverrides<TMod, TModGetter, TSetter, TGetter>(linkCache, includeDeletedRecords: includeDeletedRecords);
     }
@@ -269,8 +270,8 @@ public static class OverrideMixIns
         bool includeDeletedRecords = false)
         where TMod : class, IMod, TModGetter
         where TModGetter : class, IModGetter, IMajorRecordContextEnumerable<TMod, TModGetter>
-        where TSetter : class, IMajorRecord, TGetter
-        where TGetter : class, IMajorRecordGetter
+        where TSetter : class, IMajorRecordQueryable, TGetter
+        where TGetter : class, IMajorRecordQueryableGetter
     {
         return modListings
             .Select(l => l.Mod)
@@ -340,16 +341,17 @@ public static class OverrideMixIns
         bool includeDeletedRecords = false)
         where TMod : class, IMod, TModGetter
         where TModGetter : class, IModGetter, IMajorRecordContextEnumerable<TMod, TModGetter>
-        where TSetter : class, IMajorRecord, TGetter
-        where TGetter : class, IMajorRecordGetter
+        where TSetter : class, IMajorRecordQueryable, TGetter
+        where TGetter : class, IMajorRecordQueryableGetter
     {
         var passedRecords = new HashSet<FormKey>();
         foreach (var mod in mods)
         {
             foreach (var record in mod.EnumerateMajorRecordContexts<TSetter, TGetter>(linkCache))
             {
-                if (!passedRecords.Add(record.Record.FormKey)) continue;
-                if (!includeDeletedRecords && record.Record.IsDeleted) continue;
+                if (record.Record is not IMajorRecordGetter maj) continue;
+                if (!passedRecords.Add(maj.FormKey)) continue;
+                if (!includeDeletedRecords && maj.IsDeleted) continue;
                 yield return record;
             }
         }
@@ -387,7 +389,11 @@ public static class OverrideMixIns
         var passedRecords = new HashSet<FormKey>();
         foreach (var mod in mods)
         {
-            foreach (var record in mod.EnumerateMajorRecordContexts(linkCache, type))
+            foreach (var record in mod.EnumerateMajorRecordContexts(linkCache, type)
+                         .Catch((e) =>
+                         {
+                             throw RecordException.Enrich(e, mod.ModKey);
+                         }))
             {
                 if (!passedRecords.Add(record.Record.FormKey)) continue;
                 if (!includeDeletedRecords && record.Record.IsDeleted) continue;
@@ -424,8 +430,8 @@ public static class OverrideMixIns
         bool includeDeletedRecords = false)
         where TMod : class, IMod, TModGetter
         where TModGetter : class, IModGetter, IMajorRecordContextEnumerable<TMod, TModGetter>
-        where TSetter : class, IMajorRecord, TGetter
-        where TGetter : class, IMajorRecordGetter
+        where TSetter : class, IMajorRecordQueryable, TGetter
+        where TGetter : class, IMajorRecordQueryableGetter
     {
         return WinningContextOverrides<TMod, TModGetter, TSetter, TGetter>(loadOrder, linkCache, includeDeletedRecords);
     }
@@ -491,8 +497,8 @@ public static class OverrideMixIns
         bool includeDeletedRecords = false)
         where TMod : class, IMod, TModGetter
         where TModGetter : class, IModGetter, IMajorRecordContextEnumerable<TMod, TModGetter>
-        where TSetter : class, IMajorRecord, TGetter
-        where TGetter : class, IMajorRecordGetter
+        where TSetter : class, IMajorRecordQueryable, TGetter
+        where TGetter : class, IMajorRecordQueryableGetter
     {
         return WinningContextOverrides<TMod, TModGetter, TSetter, TGetter>(modListings, linkCache, includeDeletedRecords);
     }
@@ -558,8 +564,8 @@ public static class OverrideMixIns
         bool includeDeletedRecords = false)
         where TMod : class, IMod, TModGetter
         where TModGetter : class, IModGetter, IMajorRecordContextEnumerable<TMod, TModGetter>
-        where TSetter : class, IMajorRecord, TGetter
-        where TGetter : class, IMajorRecordGetter
+        where TSetter : class, IMajorRecordQueryable, TGetter
+        where TGetter : class, IMajorRecordQueryableGetter
     {
         return WinningContextOverrides<TMod, TModGetter, TSetter, TGetter>(mods, linkCache, includeDeletedRecords);
     }
@@ -605,8 +611,8 @@ public static class OverrideMixIns
     /// <param name="major">Major record to query and potentially copy</param>
     /// <returns>Existing override record, or a copy of the given record that has already been inserted into the group</returns>
     public static TMajor GetOrAddAsOverride<TMajor, TMajorGetter>(this IGroup<TMajor> group, TMajorGetter major)
-        where TMajor : class, IMajorRecordInternal, TMajorGetter
-        where TMajorGetter : class, IMajorRecordGetter
+        where TMajor : IMajorRecordInternal, TMajorGetter
+        where TMajorGetter : IMajorRecordGetter
     {
         try
         {
@@ -615,7 +621,12 @@ public static class OverrideMixIns
                 return existingMajor;
             }
             var mask = OverrideMaskRegistrations.Get<TMajor>();
-            existingMajor = (major.DeepCopy(mask as MajorRecord.TranslationMask) as TMajor)!;
+            var copy = major.DeepCopy(mask as MajorRecord.TranslationMask);
+            if (copy is not TMajor rhs)
+            {
+                throw new InvalidOperationException($"DeepCopy did not return a record of the expected type {typeof(TMajor).Name}");
+            }
+            existingMajor = rhs;
             group.RecordCache.Set(existingMajor);
             return existingMajor;
         }

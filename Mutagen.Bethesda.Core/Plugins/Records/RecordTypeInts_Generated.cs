@@ -89,6 +89,8 @@ public partial class RecordTypeInts
     public const int GDRY = 0x59524447;
     public const int GLOB = 0x424F4C47;
     public const int GMST = 0x54534D47;
+    public const int GPOF = 0x464F5047;
+    public const int GPOG = 0x474F5047;
     public const int GRAS = 0x53415247;
     public const int GRUP = 0x50555247;
     public const int HAIR = 0x52494148;
@@ -159,6 +161,7 @@ public partial class RecordTypeInts
     public const int PCON = 0x4E4F4350;
     public const int PDCL = 0x4C434450;
     public const int PERK = 0x4B524550;
+    public const int PERS = 0x53524550;
     public const int PFLA = 0x414C4650;
     public const int PGRD = 0x44524750;
     public const int PGRE = 0x45524750;

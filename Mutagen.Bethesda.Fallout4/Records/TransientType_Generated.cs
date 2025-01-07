@@ -1013,8 +1013,20 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ITransientType item,
+            ITransientTypeGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public TransientType DeepCopy(
@@ -1232,7 +1244,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public UInt32 FormType => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x0, 0x4));
         #region Links
-        public IReadOnlyList<IFormLinkGetter<IFallout4MajorRecordGetter>> Links => BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IFallout4MajorRecordGetter>>(_structData.Slice(0x4), _package, 4, (s, p) => new FormLink<IFallout4MajorRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLinkGetter<IFallout4MajorRecordGetter>> Links => BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IFallout4MajorRecordGetter>>(_structData.Slice(0x4), _package, 4, (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IFallout4MajorRecordGetter>(p, s));
         protected int LinksEndingPos;
         #endregion
         partial void CustomFactoryEnd(

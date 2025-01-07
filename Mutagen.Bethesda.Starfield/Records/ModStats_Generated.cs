@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Starfield
         public UInt32 NumRecords { get; set; } = default(UInt32);
         #endregion
         #region NextFormID
-        public static readonly UInt32 NextFormIDDefault = 0x1;
+        public static readonly UInt32 NextFormIDDefault = 0x0;
         public UInt32 NextFormID { get; set; } = NextFormIDDefault;
         #endregion
 
@@ -947,8 +947,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.NextFormID = rhs.NextFormID;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IModStats item,
+            IModStatsGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ModStats DeepCopy(

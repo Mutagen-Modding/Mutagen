@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
@@ -1964,8 +1963,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.ENITDataTypeState = rhs.ENITDataTypeState;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IObjectEffect item,
+            IObjectEffectGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IFallout4MajorRecordInternal item,
             IFallout4MajorRecordGetter rhs,
@@ -2192,30 +2203,13 @@ namespace Mutagen.Bethesda.Fallout4
             IObjectEffectGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.ENCH)))
-            {
-                try
-                {
-                    WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.ENCH,
+                writeEmbedded: Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -2458,12 +2452,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region BaseEnchantment
         private int _BaseEnchantmentLocation => _ENITLocation!.Value.Min + 0x1C;
         private bool _BaseEnchantment_IsSet => _ENITLocation.HasValue;
-        public IFormLinkGetter<IObjectEffectGetter> BaseEnchantment => _BaseEnchantment_IsSet ? new FormLink<IObjectEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_BaseEnchantmentLocation, 0x4)))) : FormLink<IObjectEffectGetter>.Null;
+        public IFormLinkGetter<IObjectEffectGetter> BaseEnchantment => _BaseEnchantment_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IObjectEffectGetter>(_package, _recordData.Span.Slice(_BaseEnchantmentLocation, 0x4), isSet: _BaseEnchantment_IsSet) : FormLink<IObjectEffectGetter>.Null;
         #endregion
         #region WornRestrictions
         private int _WornRestrictionsLocation => _ENITLocation!.Value.Min + 0x20;
         private bool _WornRestrictions_IsSet => _ENITLocation.HasValue && !ENITDataTypeState.HasFlag(ObjectEffect.ENITDataType.Break0);
-        public IFormLinkGetter<IFormListGetter> WornRestrictions => _WornRestrictions_IsSet ? new FormLink<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_WornRestrictionsLocation, 0x4)))) : FormLink<IFormListGetter>.Null;
+        public IFormLinkGetter<IFormListGetter> WornRestrictions => _WornRestrictions_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IFormListGetter>(_package, _recordData.Span.Slice(_WornRestrictionsLocation, 0x4), isSet: _WornRestrictions_IsSet) : FormLink<IFormListGetter>.Null;
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
         partial void CustomFactoryEnd(

@@ -894,8 +894,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Points = rhs.Points;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IFurnitureMarkerEntryPoints item,
+            IFurnitureMarkerEntryPointsGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public FurnitureMarkerEntryPoints DeepCopy(

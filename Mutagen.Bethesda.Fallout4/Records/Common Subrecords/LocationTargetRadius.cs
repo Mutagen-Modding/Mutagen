@@ -86,15 +86,15 @@ partial class LocationTargetRadiusBinaryWriteTranslation
         {
             case LocationTarget reference:
                 writer.Write((int)LocationTargetRadius.LocationType.NearReference);
-                FormKeyBinaryTranslation.Instance.Write(writer, reference.Link.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, reference.Link);
                 break;
             case LocationCell cell:
                 writer.Write((int)LocationTargetRadius.LocationType.InCell);
-                FormKeyBinaryTranslation.Instance.Write(writer, cell.Link.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, cell.Link);
                 break;
             case LocationObjectId id:
                 writer.Write((int)LocationTargetRadius.LocationType.ObjectID);
-                FormKeyBinaryTranslation.Instance.Write(writer, id.Link.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, id.Link);
                 break;
             case LocationObjectType type:
                 writer.Write((int)LocationTargetRadius.LocationType.ObjectType);
@@ -102,7 +102,7 @@ partial class LocationTargetRadiusBinaryWriteTranslation
                 break;
             case LocationKeyword keyw:
                 writer.Write((int)LocationTargetRadius.LocationType.LinkedReference);
-                FormKeyBinaryTranslation.Instance.Write(writer, keyw.Link.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, keyw.Link);
                 break;
             case LocationFallback fallback:
                 writer.Write((int)fallback.Type);

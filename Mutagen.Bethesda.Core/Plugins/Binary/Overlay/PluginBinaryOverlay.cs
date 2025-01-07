@@ -6,6 +6,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using Loqui;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Overlay;
 
@@ -117,6 +118,10 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         while (!stream.Complete && stream.Position < finalPos)
         {
             MajorRecordHeader majorMeta = stream.GetMajorRecordHeader();
+            if (majorMeta.RecordType == RecordTypes.GRUP)
+            {
+                throw new DataMisalignedException("Unexpected GRUP");
+            }
             try
             {
                 var minimumFinalPos = stream.Position + majorMeta.TotalLength;
@@ -154,7 +159,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, FormKey.Factory(stream.MetaData.MasterReferences, majorMeta.FormID.ID), ((ILoquiObject)this).Registration.ClassType, edid: null);
+                throw RecordException.Enrich(ex, FormKey.Factory(stream.MetaData.MasterReferences, majorMeta.FormID, reference: false), ((ILoquiObject)this).Registration.ClassType, edid: null);
             }
         }
     }
@@ -476,16 +481,23 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         RecordHeaderConstants constants,
         bool skipHeader,
         bool triggersAlwaysAreNewRecords = false,
-        TypedParseParams translationParams = default)
+        TypedParseParams translationParams = default,
+        RecordType? endMarker = null)
     {
         translationParams = translationParams.ShortCircuit();
         var ret = new List<int>();
         int? lastParsed = null;
+        bool lastWasEnder = false;
         var startingPos = stream.Position;
         while (!stream.Complete)
         {
             var varMeta = stream.GetVariableHeader(subRecords: constants.LengthLength == 2);
             var recType = translationParams.ConvertToStandard(varMeta.RecordType);
+            if (endMarker == recType)
+            {
+                stream.Position += checked((int)varMeta.TotalLength);
+                break;
+            }
             if (triggersAlwaysAreNewRecords)
             {
                 if (trigger.AllRecordTypes.Contains(recType))
@@ -529,6 +541,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
                 {
                     // If new record isn't before one we've already parsed, just continue
                     if (!triggersAlwaysAreNewRecords
+                        && !lastWasEnder
                         && lastParsed != null
                         && lastParsed.Value < index)
                     {
@@ -541,6 +554,7 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
                     if (trigger.AllAreTriggers
                         || trigger.TriggeringRecordTypes.Contains(recType))
                     {
+                        lastWasEnder = false;
                         if (skipHeader)
                         {
                             stream.Position += varMeta.HeaderLength;
@@ -553,13 +567,15 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
                             stream.Position += (int)varMeta.TotalLength;
                         }
                     }
-                    else if (trigger.EndRecordTypes.Contains(recType))
+                    else if (lastWasEnder)
                     {
-                        stream.Position += (int)varMeta.TotalLength;
+                        // Last was an ender record, and next record isn't a trigger.
+                        // Must be unrelated
                         break;
                     }
                     else
                     {
+                        lastWasEnder = trigger.EndRecordTypes.Contains(recType);
                         stream.Position += (int)varMeta.TotalLength;
                     }
 
@@ -653,9 +669,10 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         RecordHeaderConstants constants,
         bool skipHeader,
         bool triggersAlwaysAreNewRecords = false,
-        TypedParseParams translationParams = default)
+        TypedParseParams translationParams = default,
+        RecordType? endMarker = null)
     {
-        return ParseRecordLocationsInternal(stream, count, trigger, constants, skipHeader, triggersAlwaysAreNewRecords, translationParams);
+        return ParseRecordLocationsInternal(stream, count, trigger, constants, skipHeader, triggersAlwaysAreNewRecords, translationParams, endMarker);
     }
 
     /// <summary>
@@ -673,9 +690,10 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         RecordHeaderConstants constants,
         bool skipHeader,
         bool triggersAlwaysAreNewRecords = false,
-        TypedParseParams translationParams = default)
+        TypedParseParams translationParams = default,
+        RecordType? endMarker = null)
     {
-        return ParseRecordLocationsInternal(stream, count: null, trigger, constants, skipHeader, triggersAlwaysAreNewRecords, translationParams);
+        return ParseRecordLocationsInternal(stream, count: null, trigger, constants, skipHeader, triggersAlwaysAreNewRecords, translationParams, endMarker);
     }
 
     public static IReadOnlyList<int> ParseRecordLocations(

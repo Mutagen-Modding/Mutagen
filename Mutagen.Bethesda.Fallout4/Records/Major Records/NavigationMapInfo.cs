@@ -59,12 +59,12 @@ partial class NavigationMapInfoBinaryWriteTranslation
         switch (item.Parent)
         {
             case INavigationMapInfoWorldspaceParentGetter wrldSpace:
-                FormKeyBinaryTranslation.Instance.Write(writer, wrldSpace.Worldspace.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, wrldSpace.Worldspace);
                 P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(writer, wrldSpace.Coord);
                 break;
             case INavigationMapInfoCellParentGetter cellParent:
-                FormKeyBinaryTranslation.Instance.Write(writer, FormKey.Null);
-                FormKeyBinaryTranslation.Instance.Write(writer, cellParent.Cell.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, FormLinkInformation.Null);
+                FormKeyBinaryTranslation.Instance.Write(writer, cellParent.Cell);
                 break;
             default:
                 throw new NotImplementedException();
@@ -79,12 +79,18 @@ partial class NavigationMapInfoBinaryOverlay
 
     public partial IANavigationMapInfoParentGetter GetParentCustom(int location)
     {
-        var worldspace = FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(IslandEndingPos + 0x4, 0x4)));
+        var worldspace = FormKey.Factory(
+            _package.MetaData.MasterReferences, 
+            new FormID(BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(IslandEndingPos + 0x4, 0x4))),
+            reference: true);
         if (worldspace.IsNull)
         {
             return new NavigationMapInfoCellParent()
             {
-                Cell = FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(IslandEndingPos + 0x8, 0x4))).ToLink<ICellGetter>()
+                Cell = FormKey.Factory(
+                    _package.MetaData.MasterReferences, 
+                    new FormID(BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(IslandEndingPos + 0x8, 0x4))),
+                    reference: true).ToLink<ICellGetter>()
             };
         }
         else

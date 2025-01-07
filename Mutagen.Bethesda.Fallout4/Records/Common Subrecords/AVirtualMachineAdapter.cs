@@ -221,15 +221,25 @@ partial class AVirtualMachineAdapterBinaryWriteTranslation
         ushort objFormat,
         bool isStruct = false)
     {
+        var properties = entry.Properties;
         if (!isStruct)
         {
             var name = entry.Name;
             StringBinaryTranslation.Instance.Write(writer, name, StringBinaryType.PrependLengthUShort);
-            if (name.IsNullOrWhitespace()) return;
-            writer.Write((byte)entry.Flags);
+            if (!name.IsNullOrWhitespace())
+            {
+                writer.Write((byte)entry.Flags);
+            }
+            else
+            {
+                if (properties.Count > 0)
+                {
+                    throw new ArgumentException("Entry had no name, but had properties");
+                }
+                return;
+            }
         }
 
-        var properties = entry.Properties;
         if (isStruct)
             writer.Write(checked((uint)properties.Count));
         else
@@ -289,10 +299,10 @@ partial class AVirtualMachineAdapterBinaryWriteTranslation
             case 2:
                 writer.Write(obj.Unused);
                 writer.Write(obj.Alias);
-                writer.Write(writer.MetaData.MasterReferences!.GetFormID(obj.Object.FormKey).Raw);
+                FormKeyBinaryTranslation.Instance.Write(writer, obj.Object);
                 break;
             case 1:
-                writer.Write(writer.MetaData.MasterReferences!.GetFormID(obj.Object.FormKey).Raw);
+                FormKeyBinaryTranslation.Instance.Write(writer, obj.Object);
                 writer.Write(obj.Alias);
                 writer.Write(obj.Unused);
                 break;

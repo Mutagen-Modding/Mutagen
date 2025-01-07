@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="VehicleWeaponData" objType="Subrecord" recordType="VCTT" >
+    <Fields>
+      <P3Float name="Offset" />
+      <Float name="Pitch" />
+      <Float name="Yaw" />
+      <Float name="Roll" />
+      <Float name="Scale" />
+    </Fields>
+  </Object>
+</Loqui>

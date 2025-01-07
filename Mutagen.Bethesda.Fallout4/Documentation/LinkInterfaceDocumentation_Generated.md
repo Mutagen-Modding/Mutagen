@@ -81,7 +81,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - Key
 - LeveledItem
 - LeveledNpc
-- LeveledSpell
 - Light
 - MiscItem
 - MovableStatic
@@ -209,7 +208,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - Key
 - LeveledItem
 - LeveledNpc
-- LeveledSpell
 - Light
 - MiscItem
 - MovableStatic
@@ -267,7 +265,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - Key
 - LeveledItem
 - LeveledNpc
-- LeveledSpell
 - Light
 - MiscItem
 - MovableStatic
@@ -295,7 +292,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - SoundDescriptor
 - SoundMarker
 ### ISpellRecord
-- LeveledSpell
 - Spell
 ### IStaticObject
 - Static
@@ -515,11 +511,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - INpcSpawn
 - IPlaceableObject
 - IReferenceableObject
-### LeveledSpell
-- IExplodeSpawn
-- IPlaceableObject
-- IReferenceableObject
-- ISpellRecord
 ### Light
 - IConstructible
 - IConstructibleObjectTarget

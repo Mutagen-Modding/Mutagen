@@ -1618,8 +1618,20 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ICameraSceneShot item,
+            ICameraSceneShotGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public CameraSceneShot DeepCopy(
@@ -1971,7 +1983,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region CameraShot
         private int? _CameraShotLocation;
-        public IFormLinkNullableGetter<ICameraShotGetter> CameraShot => _CameraShotLocation.HasValue ? new FormLinkNullable<ICameraShotGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CameraShotLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICameraShotGetter>.Null;
+        public IFormLinkNullableGetter<ICameraShotGetter> CameraShot => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICameraShotGetter>(_package, _recordData, _CameraShotLocation);
         #endregion
         #region ALLA
         private int? _ALLALocation;
@@ -1979,7 +1991,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region REPL
         private int? _REPLLocation;
-        public IFormLinkGetter<IPlacedGetter> REPL => _REPLLocation.HasValue ? new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _REPLLocation.Value, _package.MetaData.Constants)))) : FormLink<IPlacedGetter>.Null;
+        public IFormLinkGetter<IPlacedGetter> REPL => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedGetter>(_package, _recordData, _REPLLocation);
         #endregion
         #region HNAM
         private int? _HNAMLocation;

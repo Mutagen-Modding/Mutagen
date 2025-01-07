@@ -986,8 +986,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Night = rhs.Night;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IWeatherColor item,
+            IWeatherColorGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public WeatherColor DeepCopy(

@@ -1065,8 +1065,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.PartID = rhs.PartID;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IBlueprintComponentItem item,
+            IBlueprintComponentItemGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public BlueprintComponentItem DeepCopy(
@@ -1278,8 +1290,8 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IGenericBaseFormGetter> BaseItem => new FormLink<IGenericBaseFormGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<IConstructibleObjectGetter> ConstructionObject => new FormLink<IConstructibleObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IGenericBaseFormGetter> BaseItem => FormLinkBinaryTranslation.Instance.OverlayFactory<IGenericBaseFormGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<IConstructibleObjectGetter> ConstructionObject => FormLinkBinaryTranslation.Instance.OverlayFactory<IConstructibleObjectGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         public P3Float Position => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x8, 0xC));
         public P3Float Rotation => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x14, 0xC));
         public UInt32 PartID => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x20, 0x4));

@@ -1456,8 +1456,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.LightningColor = rhs.LightningColor;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IWeatherData item,
+            IWeatherDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public WeatherData DeepCopy(

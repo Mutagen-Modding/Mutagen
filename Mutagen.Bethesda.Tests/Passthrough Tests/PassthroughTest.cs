@@ -9,10 +9,13 @@ using Mutagen.Bethesda.Strings;
 using Noggog;
 using Noggog.Streams.Binary;
 using System.Reactive.Subjects;
+using Mutagen.Bethesda.Environments;
 using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Processing.Alignment;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Masters;
+using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings.DI;
 using Noggog.IO;
@@ -43,7 +46,8 @@ public abstract class PassthroughTest
     public ModPath ProcessedPath(DirectoryPath path) => new(ModKey, Path.Combine(path, $"{Nickname}_Processed"));
     public ModKey ModKey => FilePath.ModKey;
     public DirectoryPath SourceDataFolder => FilePath.Path.Directory!.Value;
-    public abstract GameRelease GameRelease { get; }
+    public GameRelease GameRelease { get; }
+    public ILoadOrderGetter<IModMasterStyledGetter> MasterFlagsLookup { get; }
     public readonly GameConstants Meta;
 
     public StringsReadParameters StringsParams => new StringsReadParameters()
@@ -55,21 +59,24 @@ public abstract class PassthroughTest
     
     public static DirectoryPath GetTestFolderPath(string nickname) => Path.Combine(Path.GetTempPath(), $"Mutagen_Binary_Tests/{nickname}");
 
-    public PassthroughTest(PassthroughTestParams param)
+    public PassthroughTest(PassthroughTestParams param, GameRelease release)
     {
         var path = param.Target.Path;
         FilePath = path;
+        GameRelease = release;
         Nickname = $"{Path.GetFileName(param.Target.Path)}{param.NicknameSuffix}";
         Settings = param.PassthroughSettings;
         Target = param.Target;
         Meta = GameConstants.Get(GameRelease);
+        using var env = GameEnvironment.Typical.Construct(GameRelease);
+        MasterFlagsLookup = env.LoadOrder.ResolveExistingMods().Transform(KeyedMasterStyle.FromMod);
     }
 
     public abstract AlignmentRules GetAlignmentRules();
 
     public (TempFolder TempFolder, Test Test) SetupProcessedFiles()
     {
-        var tmp = TempFolder.FactoryByPath(GetTestFolderPath(Nickname), deleteAfter: Settings.DeleteCachesAfter);
+        var tmp = TempFolder.FactoryByPath(GetTestFolderPath(Nickname), deleteAfter: Settings.DeleteCachesAfter, deleteBefore: false);
 
         var test = new Test(
             $"Setup Processed Files",
@@ -118,10 +125,12 @@ public abstract class PassthroughTest
         if (!Settings.CacheReuse.ReuseAlignment
             || !File.Exists(alignedPath))
         {
+            var masters = SeparatedMasterPackage.Factory(GameRelease, prev, masterFlagLookup: MasterFlagsLookup, fileSystem: null);
+            var meta = new ParsingMeta(GameRelease, prev.ModKey, masters);
             ModRecordAligner.Align(
                 inputPath: prev,
                 outputPath: alignedPath.Path,
-                gameMode: GameRelease,
+                meta: meta,
                 alignmentRules: GetAlignmentRules(),
                 temp: temp);
         }
@@ -140,7 +149,7 @@ public abstract class PassthroughTest
             {
                 await using var outStream = new FileStream(decompressedPath, FileMode.Create, FileAccess.Write);
                 ModDecompressor.Decompress(
-                    streamCreator: () => new MutagenBinaryReadStream(prev, GameRelease),
+                    streamCreator: () => new MutagenBinaryReadStream(prev, GameRelease, MasterFlagsLookup),
                     outputStream: outStream);
             }
             catch (Exception)
@@ -168,7 +177,7 @@ public abstract class PassthroughTest
             {
                 await using var outStream = new FileStream(path, FileMode.Create, FileAccess.Write);
                 ModGroupMerger.MergeGroups(
-                    streamCreator: () => new MutagenBinaryReadStream(prev, GameRelease),
+                    streamCreator: () => new MutagenBinaryReadStream(prev, GameRelease, MasterFlagsLookup),
                     outputStream: outStream);
             }
             catch (Exception)
@@ -203,7 +212,10 @@ public abstract class PassthroughTest
                     using (var outStream = new FileStream(trimmedGroups, FileMode.Create, FileAccess.Write))
                     {
                         ModTrimmer.TrimGroups(
-                            streamCreator: () => new MutagenBinaryReadStream(FilePath, GameRelease),
+                            streamCreator: () =>
+                            {
+                                return new MutagenBinaryReadStream(FilePath, GameRelease, MasterFlagsLookup);
+                            },
                             outputStream: outStream,
                             interest: new RecordInterest(
                                 interestingTypes: Settings.Trimming.TypesToInclude.Select(x => new RecordType(x)),
@@ -215,7 +227,7 @@ public abstract class PassthroughTest
                         var modPath = new ModPath(ModKey, trimmedGroups);
                         TrimRecords(
                             modPath: modPath,
-                            streamCreator: () => new MutagenBinaryReadStream(modPath, GameRelease),
+                            streamCreator: () => new MutagenBinaryReadStream(modPath, GameRelease, MasterFlagsLookup),
                             outStream,
                             trimRecords);
                     }
@@ -290,8 +302,6 @@ public abstract class PassthroughTest
         var strsProcessedPath = Path.Combine(tmp.Dir.Path, "Strings/Processed");
         var trimmedPath = TrimmedFileName(tmp.Dir.Path);
 
-        var masterRefs = MasterReferenceCollection.FromPath(new ModPath(ModKey, FilePath.Path), GameRelease);
-
         // Do normal
         if (Settings.TestNormal)
         {
@@ -314,13 +324,20 @@ public abstract class PassthroughTest
                         record.IsCompressed = false;
                     }
 
-                    var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(GameRelease, mod.ModKey, strsWriteDir, MutagenEncoding.Default) : null);
                     var outputPath = Path.Combine(tmp.Dir.Path, $"{Nickname}_NormalImport_NormalExport");
-                    mod.WriteToBinary(outputPath, writeParam);
-                    GC.Collect();
+                    using (var stringsWriter = doStrings
+                               ? new StringsWriter(GameRelease, mod.ModKey, strsWriteDir, MutagenEncoding.Default)
+                               : null)
+                    {
+                        await BuildWriter(
+                                mod.BeginWrite
+                                    .ToPath(outputPath),
+                                stringsWriter)
+                            .WriteAsync();
+                        GC.Collect();
+                    }
 
-                    using var stream = new MutagenBinaryReadStream(processedPath, GameRelease);
-                    writeParam.StringsWriter?.Dispose();
+                    using var stream = new MutagenBinaryReadStream(processedPath, GameRelease, MasterFlagsLookup);
 
                     AssertFilesEqual(
                         stream,
@@ -347,13 +364,21 @@ public abstract class PassthroughTest
                             record.IsCompressed = false;
                         }
 
-                        var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(GameRelease, mod.ModKey, strsParallelWriteDir, MutagenEncoding.Default) : null);
                         var outputPath = Path.Combine(tmp.Dir.Path, $"{Nickname}_NormalImport_ParallelExport");
-                        mod.WriteToBinaryParallel(outputPath, writeParam, parallelWriteParameters: new ParallelWriteParameters() { MaxDegreeOfParallelism = 1 });
+                        using (var stringsWriter = doStrings
+                                   ? new StringsWriter(GameRelease, mod.ModKey, strsParallelWriteDir, MutagenEncoding.Default)
+                                   : null)
+                        {
+                            await BuildWriter(
+                                    mod.BeginWrite
+                                        .ToPath(outputPath),
+                                    stringsWriter)
+                                .WriteAsync();
+                        }
+
                         GC.Collect();
 
-                        using var stream = new MutagenBinaryReadStream(processedPath, GameRelease);
-                        writeParam.StringsWriter?.Dispose();
+                        using var stream = new MutagenBinaryReadStream(processedPath, GameRelease, MasterFlagsLookup);
 
                         AssertFilesEqual(
                             stream,
@@ -401,11 +426,24 @@ public abstract class PassthroughTest
                     {
                         try
                         {
+                            var dup = wrapper.DeepCopy();
+                            foreach (var record in dup.EnumerateMajorRecords())
+                            {
+                                record.IsCompressed = false;
+                            }
                             
                             doStrings = wrapper.UsingLocalization;
-                            var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(GameRelease, wrapper.ModKey, strsWriteDir, MutagenEncoding.Default) : null);
-                            wrapper.WriteToBinary(binaryOverlayPath, writeParam);
-                            writeParam.StringsWriter?.Dispose();
+                            using (var stringsWriter = doStrings
+                                       ? new StringsWriter(GameRelease, wrapper.ModKey, strsWriteDir,
+                                           MutagenEncoding.Default)
+                                       : null)
+                            {
+                                await BuildWriter(
+                                        dup.BeginWrite
+                                            .ToPath(binaryOverlayPath),
+                                        stringsWriter)
+                                    .WriteAsync();
+                            }
                         }
                         catch (Exception e)
                         {
@@ -414,7 +452,7 @@ public abstract class PassthroughTest
                         }
                     }
 
-                    using var stream = new MutagenBinaryReadStream(processedPath, GameRelease);
+                    using var stream = new MutagenBinaryReadStream(processedPath, GameRelease, MasterFlagsLookup);
 
                     AssertFilesEqual(
                         stream,
@@ -448,11 +486,19 @@ public abstract class PassthroughTest
                     o.OnNext(FilePath.ToString());
                     var copyIn = await ImportCopyIn(trimmedPath);
                     doStrings = copyIn.UsingLocalization;
-                    var writeParam = GetWriteParam(masterRefs, doStrings ? new StringsWriter(GameRelease, copyIn.ModKey, strsWriteDir, MutagenEncoding.Default) : null);
-                    copyIn.WriteToBinary(copyInPath, writeParam);
-                    writeParam.StringsWriter?.Dispose();
+                    using (var stringsWriter = doStrings
+                               ? new StringsWriter(GameRelease, copyIn.ModKey, strsWriteDir,
+                                   MutagenEncoding.Default)
+                               : null)
+                    {
+                        await BuildWriter(
+                                copyIn.BeginWrite
+                                    .ToPath(copyInPath),
+                                stringsWriter)
+                            .WriteAsync();
+                    }
 
-                    using var stream = new MutagenBinaryReadStream(processedPath, GameRelease);
+                    using var stream = new MutagenBinaryReadStream(processedPath, GameRelease, MasterFlagsLookup);
 
                     AssertFilesEqual(
                         stream,
@@ -544,19 +590,21 @@ public abstract class PassthroughTest
         });
     }
 
-    public BinaryWriteParameters GetWriteParam(IReadOnlyMasterReferenceCollection masterRefs, StringsWriter stringsWriter)
+    public IBinaryModdedWriteBuilder BuildWriter(
+        IBinaryModdedWriteBuilderLoadOrderChoice builder,
+        StringsWriter stringsWriter)
     {
-        return new BinaryWriteParameters()
-        {
-            ModKey = ModKeyOption.NoCheck,
-            MastersListContent = MastersListContentOption.NoCheck,
-            RecordCount = RecordCountOption.NoCheck,
-            NextFormID = NextFormIDOption.NoCheck,
-            FormIDUniqueness = FormIDUniquenessOption.NoCheck,
-            MasterFlag = MasterFlagOption.NoCheck,
-            MastersListOrdering = AMastersListOrderingOption.ByMasters(masterRefs),
-            StringsWriter = stringsWriter,
-        };
+        return builder
+            .WithLoadOrderFromHeaderMasters()
+            .WithDefaultDataFolder()
+            .WithStringsWriter(stringsWriter)
+            .NoModKeySync()
+            .WithMastersListContent(MastersListContentOption.NoCheck)
+            .WithRecordCount(RecordCountOption.NoCheck)
+            .NoNextFormIDProcessing()
+            .NoFormIDUniquenessCheck()
+            .NoFormIDCompactnessCheck()
+            .SingleThread();
     }
 
     public static PassthroughTest Factory(PassthroughTestParams passthroughSettings)

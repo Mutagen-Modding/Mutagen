@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="VehicleWWiseData" objType="Subrecord" recordType="VWWD" >
+    <Fields>
+      <RefDirect name="MotorSound" refName="SoundReference" />
+      <RefDirect name="TireSoundFrontLeft" refName="SoundReference" />
+      <RefDirect name="TireSoundFrontRight" refName="SoundReference" />
+      <RefDirect name="TireSoundRearLeft" refName="SoundReference" />
+      <RefDirect name="TireSoundRearRight" refName="SoundReference" />
+      <RefDirect name="HeadlightOn" refName="SoundReference" />
+      <RefDirect name="HeadlightOff" refName="SoundReference" />
+      <RefDirect name="LandingSoundGround" refName="SoundReference" />
+      <RefDirect name="LandingSoundWater" refName="SoundReference" />
+      <RefDirect name="HornSound" refName="SoundReference" />
+    </Fields>
+  </Object>
+</Loqui>

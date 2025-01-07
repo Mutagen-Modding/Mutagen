@@ -1281,8 +1281,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.FLMV = rhs.FLMV;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IMoveSceneAction item,
+            IMoveSceneActionGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IASceneAction item,
@@ -1596,7 +1608,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region REPL
         private int? _REPLLocation;
-        public IFormLinkGetter<IPlacedGetter> REPL => _REPLLocation.HasValue ? new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _REPLLocation.Value, _package.MetaData.Constants)))) : FormLink<IPlacedGetter>.Null;
+        public IFormLinkGetter<IPlacedGetter> REPL => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedGetter>(_package, _recordData, _REPLLocation);
         #endregion
         #region HNAM
         private int? _HNAMLocation;

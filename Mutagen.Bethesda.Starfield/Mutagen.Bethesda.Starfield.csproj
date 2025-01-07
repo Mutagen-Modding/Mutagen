@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
     <Description>A C# library for manipulating, creating, and analyzing Starfield mods</Description>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <IsPackable>true</IsPackable>
+      <DebugType>portable</DebugType>
+      <DebugSymbols>true</DebugSymbols>
+      <PublishRepositoryUrl>true</PublishRepositoryUrl>
+      <EmbedUntrackedSources>true</EmbedUntrackedSources>
+      <IncludeSymbols>true</IncludeSymbols>
+      <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>Mutagen.Bethesda.Starfield.xml</DocumentationFile>
-    <DebugType>embedded</DebugType>
-    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" />
@@ -124,6 +125,7 @@
     <Compile Include="Assets\StarfieldModelAssetType.cs" />
     <Compile Include="Assets\StarfieldRigAssetType.cs" />
     <Compile Include="Assets\StarfieldTextureAssetType.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Enums\ActorValue.cs" />
     <Compile Include="Enums\Axis.cs" />
     <Compile Include="Enums\BipedObject.cs" />
@@ -165,6 +167,7 @@
     </Compile>
     <Compile Include="Interfaces\Link\IStaticTarget_Generated.cs" />
     <Compile Include="InternalsPermissions.cs" />
+    <Compile Include="Plugins\Cache\Internal\StarfieldOverrideMaskRegistration.cs" />
     <Compile Include="Records\Common Subrecords\AComponent.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
@@ -1929,6 +1932,9 @@
     <Compile Include="Records\Common Subrecords\ConditionDatas\GetTargetHeightConditionData.cs">
       <DependentUpon>ConditionDatas.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\ConditionDatas\UnknownConditionData.cs">
+      <DependentUpon>ConditionDatas.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\ContainerEntry_Generated.cs">
       <DependentUpon>ContainerEntry.xml</DependentUpon>
     </Compile>
@@ -2064,6 +2070,9 @@
     </Compile>
     <Compile Include="Records\Major Records\AQuestAlias.cs">
       <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AreaLight.cs">
+      <DependentUpon>Light.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Armor.cs">
       <DependentUpon>Armor.xml</DependentUpon>
@@ -2215,6 +2224,12 @@
     <Compile Include="Records\Major Records\LeveledNpc.cs">
       <DependentUpon>LeveledNpc.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LeveledPackIn.cs">
+      <DependentUpon>LeveledPackIn.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LeveledSpaceCell.cs">
+      <DependentUpon>LeveledSpaceCell.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Light.cs">
       <DependentUpon>Light.xml</DependentUpon>
     </Compile>
@@ -2283,6 +2298,9 @@
     </Compile>
     <Compile Include="Records\Major Records\NavigationMesh.cs">
       <DependentUpon>NavigationMesh.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Note.cs">
+      <DependentUpon>Note.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Npc.cs">
       <DependentUpon>Npc.xml</DependentUpon>
@@ -2368,6 +2386,9 @@
     <Compile Include="Records\Major Records\PerkScriptFragments.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\PERS.cs">
+      <DependentUpon>PERS.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\PhotoModeFeature.cs">
       <DependentUpon>PhotoModeFeature.xml</DependentUpon>
     </Compile>
@@ -2406,6 +2427,9 @@
     </Compile>
     <Compile Include="Records\Major Records\PlacedTrap.cs">
       <DependentUpon>PlacedTrap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlanetContentManagerBranchNode.cs">
+      <DependentUpon>PlanetContentManagerBranchNode.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\PreferredPathing.cs">
       <DependentUpon>NavigationMeshInfoMap.xml</DependentUpon>
@@ -2493,6 +2517,12 @@
     </Compile>
     <Compile Include="Records\Major Records\Terminal.cs">
       <DependentUpon>Terminal.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TerminalMenu.cs">
+      <DependentUpon>TerminalMenu.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TerminalMenuItem.cs">
+      <DependentUpon>TerminalMenu.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\VoiceType.cs">
       <DependentUpon>VoiceType.xml</DependentUpon>
@@ -4362,7 +4392,7 @@
     <Compile Include="Records\Common Subrecords\ConditionGlobal.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\IConditionStringParameter.cs">
+    <Compile Include="Records\Common Subrecords\IConditionParameters.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\LocationTargetRadius.cs">
@@ -4434,12 +4464,6 @@
     <Compile Include="Interfaces\Link\ISpellRecord_Generated.cs" />
     <Compile Include="Records\Major Records\DebrisModel.cs">
       <DependentUpon>Debris.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\DebrisModel.cs">
-      <DependentUpon>Debris.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ActorValueModulation.cs">
-      <DependentUpon>ActorValueModulation.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IItem_Generated.cs" />
     <Compile Include="Records\StarfieldGroup_Generated.cs">
@@ -5901,9 +5925,6 @@
     <Compile Include="Records\Major Records\PlacedObjectVolumeData_Generated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PlacedObjectLightArea_Generated.cs">
-      <DependentUpon>PlacedObject.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\PlacedObjectShipArrival_Generated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
@@ -5925,9 +5946,6 @@
     <Compile Include="Records\Major Records\ExternalEmittance_Generated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PlacedObjectLightRoundedness_Generated.cs">
-      <DependentUpon>PlacedObject.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\PlacedObjectLightBarndoorData_Generated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
@@ -5941,9 +5959,6 @@
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\PlacedObjectProjectedDecal_Generated.cs">
-      <DependentUpon>PlacedObject.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\LightGobo_Generated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\PlacedObjectCollision_Generated.cs">
@@ -6526,9 +6541,6 @@
     <Compile Include="Records\Common Subrecords\SurfaceTreePatternSwapInfoComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\SurfaceTreePatternSwapInfoComponentItem_Generated.cs">
-      <DependentUpon>Component.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\SnapTemplateBehaviorItem_Generated.cs">
       <DependentUpon>SnapTemplateBehavior.xml</DependentUpon>
     </Compile>
@@ -6601,6 +6613,133 @@
     </Compile>
     <Compile Include="Records\Major Records\FacialExpressionItem_Generated.cs">
       <DependentUpon>FacialExpression.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\PTTA_Generated.cs">
+      <DependentUpon>PTTA.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\XTRV_Generated.cs">
+      <DependentUpon>XTRV.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\CityMapsUsageComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\GameplayOptions_Generated.cs">
+      <DependentUpon>GameplayOptions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\GPOD_Generated.cs">
+      <DependentUpon>GameplayOptions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\SliderEntry_Generated.cs">
+      <DependentUpon>GameplayOptions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameplayOptionsGroup_Generated.cs">
+      <DependentUpon>GameplayOptionsGroup.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Note_Generated.cs">
+      <DependentUpon>Note.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ANoteData_Generated.cs">
+      <DependentUpon>Note.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NoteVoice_Generated.cs">
+      <DependentUpon>Note.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NoteProgram_Generated.cs">
+      <DependentUpon>Note.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NoteTerminal_Generated.cs">
+      <DependentUpon>Note.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocationFaction_Generated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TerminalMenuItemDisplayText_Generated.cs">
+      <DependentUpon>TerminalMenu.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TerminalMenuItemSubmenu_Generated.cs">
+      <DependentUpon>TerminalMenu.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TerminalMenuItemDataslate_Generated.cs">
+      <DependentUpon>TerminalMenu.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TerminalMenuItemReturnToDesktop_Generated.cs">
+      <DependentUpon>TerminalMenu.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TerminalMenuItemReturnToPrevious_Generated.cs">
+      <DependentUpon>TerminalMenu.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TerminalMenuItemForceRedraw_Generated.cs">
+      <DependentUpon>TerminalMenu.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ATerminalMenuItemTarget_Generated.cs">
+      <DependentUpon>TerminalMenu.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PERS_Generated.cs">
+      <DependentUpon>PERS.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PERSItem_Generated.cs">
+      <DependentUpon>PERS.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PERSItems_Generated.cs">
+      <DependentUpon>PERS.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IPlanetParentNode_Generated.cs" />
+    <Compile Include="Records\Major Records\LightBarndoors_Generated.cs">
+      <DependentUpon>Light.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LightRoundness_Generated.cs">
+      <DependentUpon>Light.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LightGobo_Generated.cs">
+      <DependentUpon>Light.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AreaLight_Generated.cs">
+      <DependentUpon>Light.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\VehicleManagementComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\VehicleConfigComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\VehicleConfigData_Generated.cs">
+      <DependentUpon>VehicleConfigData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\VehicleMaterialTable_Generated.cs">
+      <DependentUpon>VehicleMaterialTable.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\VehicleAudioRule_Generated.cs">
+      <DependentUpon>VehicleMaterialTable.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\VehicleVfxRule_Generated.cs">
+      <DependentUpon>VehicleMaterialTable.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\VehicleFrictionRule_Generated.cs">
+      <DependentUpon>VehicleMaterialTable.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\VehicleWeaponData_Generated.cs">
+      <DependentUpon>VehicleWeaponData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\VehicleWWiseData_Generated.cs">
+      <DependentUpon>VehicleWWiseData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\OverlayDesignatedPlacementInfoComponent_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedObjectGoboAnimatedProperties_Generated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedObjectXCZRXCZA_Generated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedObjectCurrentZoneCell_Generated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SceneCollection_Generated.cs">
+      <DependentUpon>SceneCollection.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SceneCollectionItem_Generated.cs">
+      <DependentUpon>SceneCollection.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
     <WarningsAsErrors>nullable</WarningsAsErrors>
@@ -15,6 +15,7 @@
     <PackageReference Include="ReactiveUI" />
     <PackageReference Include="ReactiveUI.Fody" />
     <PackageReference Include="Simple.Wpf.Terminal" />
+      <PackageReference Include="ReactiveMarbles.ObservableEvents.SourceGenerator" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,12 +24,4 @@
     <ProjectReference Include="..\Mutagen.Bethesda.Tests\Mutagen.Bethesda.Tests.csproj" />
   </ItemGroup>
 
-  <Target Name="SetVersion" BeforeTargets="GetAssemblyVersion;GetPackageVersion" Condition="'$(ExcludeRestorePackageImports)' != 'true'">
-    <PropertyGroup>
-      <AssemblyVersion>0.0.1.0</AssemblyVersion>
-      <FileVersion>0.0.1.0</FileVersion>
-      <PackageVersion>0.0.1.0</PackageVersion>
-      <InformationalVersion>0.0.1.0</InformationalVersion>
-    </PropertyGroup>
-  </Target>
 </Project>

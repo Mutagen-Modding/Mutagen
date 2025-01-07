@@ -930,8 +930,20 @@ namespace Mutagen.Bethesda.Starfield
                     item.SPED = default;
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IMovementDataOverride item,
+            IMovementDataOverrideGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public MovementDataOverride DeepCopy(
@@ -1162,7 +1174,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region MovementType
         private int? _MovementTypeLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> MovementType => _MovementTypeLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MovementTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> MovementType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMovementTypeGetter>(_package, _recordData, _MovementTypeLocation);
         #endregion
         #region SPED
         private int? _SPEDLocation;

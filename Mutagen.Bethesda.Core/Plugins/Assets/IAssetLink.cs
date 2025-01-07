@@ -4,10 +4,12 @@ namespace Mutagen.Bethesda.Plugins.Assets;
 
 public interface IAssetLinkGetter
 {
+    IAssetType AssetTypeInstance { get; }
+
     /// <summary>
-    /// Raw path pointing to the asset
+    /// Original given path to the Asset Link
     /// </summary>
-    string RawPath { get; }
+    string GivenPath { get; }
 
     /// <summary>
     /// Raw path relative to the game's data directory, as it is commonly known in the Bethesda modding community.
@@ -21,7 +23,7 @@ public interface IAssetLinkGetter
     /// </code>
     /// </example>
     /// </summary>
-    string DataRelativePath { get; }
+    DataRelativePath DataRelativePath { get; }
 
     /// <summary>
     /// Extension of the asset
@@ -47,10 +49,12 @@ public interface IAssetLinkGetter<out TAssetType> : IAssetLinkGetter
 public interface IAssetLink<out TAssetType> : IAssetLink<IAssetLink<TAssetType>, TAssetType>
     where TAssetType : IAssetType
 {
+    new TAssetType AssetTypeInstance { get; }
+
     /// <summary>
     /// Raw path pointing to the asset
     /// </summary>
-    new string RawPath { get; set; }
+    new string GivenPath { get; set; }
 }
 
 public interface IAssetLink<out TLinkType, out TAssetType> : 
@@ -62,7 +66,7 @@ public interface IAssetLink<out TLinkType, out TAssetType> :
     /// <summary>
     /// Raw path pointing to the asset
     /// </summary>
-    new string RawPath { get; set; }
+    new string GivenPath { get; set; }
     
     void SetToNull();
 }
@@ -70,13 +74,21 @@ public interface IAssetLink<out TLinkType, out TAssetType> :
 public interface IAssetLink : IAssetLinkGetter
 {
     /// <summary>
-    /// Set the path to a path that is relative to the game's Data directory
-    /// i.e.: @"Skyrim Special Edition\Data\Meshes\Clutter\Spoon.nif" needs to be @"Meshes\Clutter\Spoon.nif"
+    /// Attempts to set the path of the AssetLink.  <br />
+    /// Will back out and return false if path does not align with expected folder structure.
     /// </summary>
+    /// <returns>True if path matched expected patterns.  False if it did not align with expected folder structure</returns>
+    bool TrySetPath(DataRelativePath? path);
+    
+    /// <summary>
+    /// Attempts to set the path of the AssetLink.  <br />
+    /// Will back out and return false if path does not align with expected folder structure.
+    /// </summary>
+    /// <returns>True if path matched expected patterns.  False if it did not align with expected folder structure</returns>
     bool TrySetPath(string? path);
 
     /// <summary>
     /// Raw path pointing to the asset
     /// </summary>
-    new string RawPath { get; set; }
+    new string GivenPath { get; set; }
 }

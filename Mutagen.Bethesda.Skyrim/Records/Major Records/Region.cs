@@ -175,8 +175,9 @@ partial class RegionBinaryOverlay
                 len += totalLen;
                 // Skip icon subrecord for now
                 contentMeta = stream.GetSubrecordHeader(offset: rdatFrame.TotalLength + totalLen);
+                stream.ReadSubrecord();
             }
-            if (RegionBinaryCreateTranslation.IsExpected(dataType, contentMeta.RecordType))
+            else if (RegionBinaryCreateTranslation.IsExpected(dataType, contentMeta.RecordType))
             {
                 len += contentMeta.TotalLength;
                 stream.Position += contentMeta.TotalLength;
@@ -202,6 +203,7 @@ partial class RegionBinaryOverlay
                         || nextRec.RecordType.Equals(RecordTypes.RDMO)))
                 {
                     len += nextRec.TotalLength;
+                    stream.Position += nextRec.TotalLength;
                 }
                 _soundsSpan = _recordData.Slice(loc, len);
                 break;

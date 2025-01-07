@@ -10,6 +10,7 @@ public static class MajorRecordPrinter<TMajor>
     
     static MajorRecordPrinter()
     {
+        Warmup.Init();
         var t = typeof(TMajor);
         if (LoquiRegistration.TryGetRegister(t, out var regis))
         {

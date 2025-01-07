@@ -1053,8 +1053,21 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom<T>(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom<T>(
+            IObjectTemplate<T> item,
+            IObjectTemplateGetter<T> rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+            where T : struct, Enum;
         #endregion
         
         public ObjectTemplate<T> DeepCopy<T>(

@@ -53,7 +53,8 @@ public sealed class ImmutableLoadOrderLinkCache : ILinkCache
             this,
             loadOrderArr,
             m => TryGet<FormKey>.Succeed(m.FormKey),
-            f => f.IsNull);
+            f => f.IsNull,
+            equalityComparer: null);
         _editorIdContexts = new ImmutableLoadOrderLinkCacheSimpleContextCategory<string>(
             gameCategory.Value,
             metaInterfaceMapGetter: prefs?.MetaInterfaceMapGetterOverride ?? MetaInterfaceMapping.Instance,
@@ -66,7 +67,8 @@ public sealed class ImmutableLoadOrderLinkCache : ILinkCache
                 var edid = m.EditorID;
                 return TryGet<string>.Create(successful: !string.IsNullOrWhiteSpace(edid), edid!);
             },
-            e => e.IsNullOrWhitespace());
+            e => e.IsNullOrWhitespace(),
+            equalityComparer: StringComparer.OrdinalIgnoreCase);
             
         var modsByKey = new Dictionary<ModKey, ILinkCache>();
         foreach (var modGetter in loadOrderArr) 
@@ -265,14 +267,14 @@ public sealed class ImmutableLoadOrderLinkCache : ILinkCache
     }
 
     /// <inheritdoc />
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(Type type, CancellationToken? cancel = null)
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers(Type type, CancellationToken? cancel = null)
     {
         CheckDisposal();
         return _cache.AllIdentifiers(type, cancel);
     }
 
     /// <inheritdoc />
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers<TMajor>(CancellationToken? cancel = null) 
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers<TMajor>(CancellationToken? cancel = null) 
         where TMajor : class, IMajorRecordQueryableGetter
     {
         CheckDisposal();
@@ -280,14 +282,14 @@ public sealed class ImmutableLoadOrderLinkCache : ILinkCache
     }
 
     /// <inheritdoc />
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(IEnumerable<Type> types, CancellationToken? cancel = null)
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers(IEnumerable<Type> types, CancellationToken? cancel = null)
     {
         CheckDisposal();
         return _cache.AllIdentifiers(types, cancel);
     }
 
     /// <inheritdoc />
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(params Type[] types)
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers(params Type[] types)
     {
         CheckDisposal();
         return _cache.AllIdentifiers(types);
@@ -845,7 +847,8 @@ public sealed class ImmutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<T
             linkCache: this,
             listedOrder: listedOrder,
             m => TryGet<FormKey>.Succeed(m.FormKey),
-            f => f.IsNull);
+            f => f.IsNull,
+            equalityComparer: null);
         _editorIdContextCache = new ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, string>(
             category: gameCategory,
             metaInterfaceMapGetter: prefs.MetaInterfaceMapGetterOverride ?? MetaInterfaceMapping.Instance,
@@ -858,7 +861,8 @@ public sealed class ImmutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<T
                 var edid = m.EditorID;
                 return TryGet<string>.Create(successful: !string.IsNullOrWhiteSpace(edid), edid!);
             },
-            e => e.IsNullOrWhitespace());
+            e => e.IsNullOrWhitespace(),
+            equalityComparer: StringComparer.OrdinalIgnoreCase);
             
         var modsByKey = new Dictionary<ModKey, ILinkCache<TMod, TModGetter>>();
         foreach (var modGetter in listedOrder) 
@@ -1054,14 +1058,14 @@ public sealed class ImmutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<T
     }
 
     /// <inheritdoc />
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(Type type, CancellationToken? cancel = null)
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers(Type type, CancellationToken? cancel = null)
     {
         CheckDisposal();
         return _cache.AllIdentifiers(type, cancel);
     }
 
     /// <inheritdoc />
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers<TMajor>(CancellationToken? cancel = null) 
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers<TMajor>(CancellationToken? cancel = null) 
         where TMajor : class, IMajorRecordQueryableGetter
     {
         CheckDisposal();
@@ -1069,14 +1073,14 @@ public sealed class ImmutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<T
     }
 
     /// <inheritdoc />
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(IEnumerable<Type> types, CancellationToken? cancel = null)
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers(IEnumerable<Type> types, CancellationToken? cancel = null)
     {
         CheckDisposal();
         return _cache.AllIdentifiers(types, cancel);
     }
 
     /// <inheritdoc />
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(params Type[] types)
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers(params Type[] types)
     {
         CheckDisposal();
         return _cache.AllIdentifiers(types);

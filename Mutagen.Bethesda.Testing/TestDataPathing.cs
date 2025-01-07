@@ -1,3 +1,4 @@
+using System.IO.Abstractions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -18,6 +19,8 @@ public class TestDataPathing
     public static ModPath RaceHeadPartDanglingMaster = ModPath.FromPath("Files/Skyrim/RaceHeadPartDanglingMarker.esp");
     public static ModPath SkyrimPerkFunctionParametersTypeNone = ModPath.FromPath("Files/Skyrim/SkyrimPerkFunctionParametersTypeNone.esp");
     public static string OblivionRegion = "Files/Oblivion/Region/OblivionRegion.esp";
+    public static string OblivionStringLists = "Files/Oblivion/stringlists.esp";
+    public static string OblivionMalformedStringLists = "Files/Oblivion/malformedstringlists.esp";
     public static string SkyrimBodtLength8With42 = "Files/Skyrim/BodyTemplate/BodtLength8With42.esp";
     public static string SkyrimBodtLength12With42 = "Files/Skyrim/BodyTemplate/BodtLength12With42.esp";
     public static string SkyrimBodtLength8With43 = "Files/Skyrim/BodyTemplate/BodtLength8With43.esp";
@@ -41,11 +44,17 @@ public class TestDataPathing
     public static string SkyrimPlacedObjectReflectedWaterMissingData = "Files/Skyrim/PlacedObjectReflectedWaterMissingData.esp";
     public static string SubgraphOutOfOrder = "Files/Fallout4/SubgraphOutOfOrder.esp";
     public static string SkyrimConditionWithTwoStrings = "Files/Skyrim/ConditionWithTwoStrings.esp";
+    public static string SkyrimDuplicateMasterListing = "Files/Skyrim/DuplicateMasterListing.esp";
+    public static string StarfieldDuplicateMasterListing = "Files/Starfield/DuplicateMasterListing.esp";
     public static string VoiceTypeTesting = "Files/Skyrim/VoiceTypeTestPlugin.esm";
     public static string CountDisagreesWithReality = "Files/Core/CountDisagreesWithReality.esp";
     public static string CountMissing = "Files/Core/CountMissing.esp";
     public static string HeaderOverflow = "Plugins/Binary/Headers/ModHeaderOverflow";
     public static string SmallOblivionMod = "Plugins/Binary/Headers/SmallOblivionMod.esp";
+    public static string StarfieldUnknownCondition = "Files/Starfield/UnknownCondition.esp";
+    public static string StarfieldTraversals = "Files/Starfield/Traversals.esp";
+    public static string Fallout4LeveledItems = "Files/Fallout4/LeveledItems.esp";
+    public static string Fallout4LeveledItemsOverflow = "Files/Fallout4/LeveledItemsOverflow.esp";
 
     public static byte[] GetBytes(FilePath path)
     {
@@ -54,21 +63,36 @@ public class TestDataPathing
 
     public static MutagenFrame GetReadFrame(ModPath path, GameRelease release, ModKey? modKey = null)
     {
+        var masters = SeparatedMasterPackage.NotSeparate(new MasterReferenceCollection(modKey ?? path.ModKey));
         return new MutagenFrame(
-            new MutagenBinaryReadStream(
-                File.OpenRead(path),
-                new ParsingBundle(
+            new MutagenMemoryReadStream(
+                File.ReadAllBytes(path),
+                new ParsingMeta(
                     release,
-                    new MasterReferenceCollection(modKey ?? path.ModKey))));
+                    path.ModKey,
+                    masters)));
     }
 
     internal static OverlayStream GetOverlayStream(ModPath path, GameRelease release, ModKey? modKey = null)
     {
+        var masters = SeparatedMasterPackage.NotSeparate(new MasterReferenceCollection(modKey ?? path.ModKey));
         return new OverlayStream(
             File.ReadAllBytes(path),
-            new ParsingBundle(
+            new ParsingMeta(
                 GameConstants.Get(release),
-                new MasterReferenceCollection(
-                    modKey ?? path.ModKey)));
+                path.ModKey,
+                masters));
+    }
+
+    public static MutagenWriter GetWriter(ModPath path, GameRelease release, IFileSystem fileSystem)
+    {
+        var masters = new MasterReferenceCollection(path.ModKey);
+        var separated = SeparatedMasterPackage.NotSeparate(masters);
+        var writingBundle = new WritingBundle(GameConstants.Get(release))
+        {
+            MasterReferences = masters,
+            SeparatedMasterPackage = separated
+        };
+        return new MutagenWriter(path, writingBundle, fileSystem: fileSystem);
     }
 }

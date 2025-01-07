@@ -18,6 +18,7 @@ public sealed class StringsLookupOverlay : IStringsLookup
         
     public StringsFileFormat Type { get; private set; }
     public int Count => _locations.Count;
+    public string? AssociatedPath { get; }
 
     /// <summary>
     /// Overlays onto a set of bytes assumed to be in Strings file format
@@ -49,6 +50,7 @@ public sealed class StringsLookupOverlay : IStringsLookup
     /// <param name="encoding">Encoding to read strings with</param>
     public StringsLookupOverlay(string path, StringsFileFormat type, IMutagenEncoding encoding)
     {
+        AssociatedPath = path;
         Init(File.ReadAllBytes(path), type, encoding);
     }
 
@@ -61,6 +63,7 @@ public sealed class StringsLookupOverlay : IStringsLookup
     /// <param name="fileSystem">Filesystem to use</param>
     public StringsLookupOverlay(string path, StringsSource source, IMutagenEncoding encoding, IFileSystem? fileSystem = null)
     {
+        AssociatedPath = path;
         fileSystem ??= fileSystem.GetOrDefault();
         Init(fileSystem.File.ReadAllBytes(path), StringsUtility.GetFormat(source), encoding);
     }

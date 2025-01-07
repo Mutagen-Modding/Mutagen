@@ -1208,8 +1208,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.VISI = rhs.VISI;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPlacedObjectMapMarker item,
+            IPlacedObjectMapMarkerGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public PlacedObjectMapMarker DeepCopy(

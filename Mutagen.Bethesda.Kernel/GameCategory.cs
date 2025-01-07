@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 
 namespace Mutagen.Bethesda;
 
@@ -49,19 +49,5 @@ public static class GameReleaseKernelExt
     public static int? GetLocalizedFlagIndex(this GameCategory release)
     {
         return 0x0000_0080;
-    }
-    
-    public static int? GetLightFlagIndex(this GameCategory release)
-    {
-        switch (release)
-        {
-            case GameCategory.Starfield:
-                return 0x0000_0100;
-            case GameCategory.Oblivion:
-            case GameCategory.Fallout3:
-                return null;
-            default:
-                return 0x0000_0200;
-        }
     }
 }

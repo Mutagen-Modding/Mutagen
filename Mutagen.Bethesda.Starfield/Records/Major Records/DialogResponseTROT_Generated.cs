@@ -911,8 +911,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.UnknownFloat = rhs.UnknownFloat;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IDialogResponseTROT item,
+            IDialogResponseTROTGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public DialogResponseTROT DeepCopy(
@@ -1121,7 +1133,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IVoiceTypeGetter> UnknownVoiceType => new FormLink<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IVoiceTypeGetter> UnknownVoiceType => FormLinkBinaryTranslation.Instance.OverlayFactory<IVoiceTypeGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public Single UnknownFloat => _structData.Slice(0x4, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,

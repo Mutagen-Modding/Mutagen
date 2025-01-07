@@ -22,7 +22,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Assets;
@@ -6849,8 +6848,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IEffectShader item,
+            IEffectShaderGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
@@ -7017,27 +7028,27 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.FillTexture?.RawPath,
+                item: item.FillTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.ICON),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.ParticleShaderTexture?.RawPath,
+                item: item.ParticleShaderTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.ICO2),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.HolesTexture?.RawPath,
+                item: item.HolesTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM7),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.MembranePaletteTexture?.RawPath,
+                item: item.MembranePaletteTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM8),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.ParticlePaletteTexture?.RawPath,
+                item: item.ParticlePaletteTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM9),
                 binaryType: StringBinaryType.NullTerminate);
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
@@ -7349,30 +7360,13 @@ namespace Mutagen.Bethesda.Skyrim
             IEffectShaderGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.EFSH)))
-            {
-                try
-                {
-                    WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.EFSH,
+                writeEmbedded: SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -8100,7 +8094,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region AddonModels
         private int _AddonModelsLocation => _DATALocation!.Value.Min + 0xF4;
         private bool _AddonModels_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IDebrisGetter> AddonModels => _AddonModels_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_AddonModelsLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
+        public IFormLinkGetter<IDebrisGetter> AddonModels => _AddonModels_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _recordData.Span.Slice(_AddonModelsLocation, 0x4), isSet: _AddonModels_IsSet) : FormLink<IDebrisGetter>.Null;
         #endregion
         #region HolesStartTime
         private int _HolesStartTimeLocation => _DATALocation!.Value.Min + 0xF8;
@@ -8180,7 +8174,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region AmbientSound
         private int _AmbientSoundLocation => _DATALocation!.Value.Min + 0x134;
         private bool _AmbientSound_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public IFormLinkGetter<ISoundGetter> AmbientSound => _AmbientSound_IsSet ? new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_AmbientSoundLocation, 0x4)))) : FormLink<ISoundGetter>.Null;
+        public IFormLinkGetter<ISoundGetter> AmbientSound => _AmbientSound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundGetter>(_package, _recordData.Span.Slice(_AmbientSoundLocation, 0x4), isSet: _AmbientSound_IsSet) : FormLink<ISoundGetter>.Null;
         #endregion
         #region FillColorKey2
         private int _FillColorKey2Location => _DATALocation!.Value.Min + 0x138;

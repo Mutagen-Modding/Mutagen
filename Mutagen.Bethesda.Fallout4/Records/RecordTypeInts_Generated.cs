@@ -359,7 +359,6 @@ public partial class RecordTypeInts
     public const int LVLN = 0x4E4C564C;
     public const int LVLO = 0x4F4C564C;
     public const int LVSG = 0x4753564C;
-    public const int LVSP = 0x5053564C;
     public const int MASE = 0x4553414D;
     public const int MAST = 0x5453414D;
     public const int MATO = 0x4F54414D;
@@ -373,6 +372,7 @@ public partial class RecordTypeInts
     public const int MIC2 = 0x3243494D;
     public const int MICO = 0x4F43494D;
     public const int MISC = 0x4353494D;
+    public const int MLSI = 0x49534C4D;
     public const int MNAM = 0x4D414E4D;
     public const int MO2C = 0x43324F4D;
     public const int MO2F = 0x46324F4D;

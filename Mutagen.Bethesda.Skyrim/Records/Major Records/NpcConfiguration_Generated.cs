@@ -1378,8 +1378,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.BleedoutOverride = rhs.BleedoutOverride;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            INpcConfiguration item,
+            INpcConfigurationGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public NpcConfiguration DeepCopy(

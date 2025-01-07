@@ -5,6 +5,7 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
+using Mutagen.Bethesda.Plugins.Internals;
 
 namespace Mutagen.Bethesda.Fallout4;
 
@@ -32,62 +33,14 @@ partial class RegionBinaryCreateTranslation
         return null;
     }
 
-    private static readonly RecordType[] ObjectTypes = 
+    public static RecordTriggerSpecs GetTypes(RegionData.RegionDataType type) => type switch
     {
-        RecordTypes.ICON,
-        RecordTypes.RDOT,
-        RecordTypes.RLDM,
-        RecordTypes.ANAM,
-    };
-
-    private static readonly RecordType[] WeatherTypes = 
-    {
-        RecordTypes.ICON,
-        RecordTypes.RDWT,
-        RecordTypes.RLDM,
-        RecordTypes.ANAM,
-    };
-
-    private static readonly RecordType[] MapTypes = 
-    {
-        RecordTypes.ICON,
-        RecordTypes.RDMP,
-        RecordTypes.RLDM,
-        RecordTypes.ANAM,
-    };
-
-    private static readonly RecordType[] GrassTypes =
-    {
-        RecordTypes.ICON,
-        RecordTypes.RDGS,
-        RecordTypes.RLDM,
-        RecordTypes.ANAM,
-    };
-
-    private static readonly RecordType[] SoundTypes = 
-    {
-        RecordTypes.ICON,
-        RecordTypes.RDSA,
-        RecordTypes.RDMO,
-        RecordTypes.RLDM,
-        RecordTypes.ANAM,
-    };
-
-    private static readonly RecordType[] LandTypes = 
-    {
-        RecordTypes.ICON,
-        RecordTypes.RLDM,
-        RecordTypes.ANAM,
-    };
-
-    public static RecordType[] GetTypes(RegionData.RegionDataType type) => type switch
-    {
-        RegionData.RegionDataType.Object => ObjectTypes,
-        RegionData.RegionDataType.Weather => WeatherTypes,
-        RegionData.RegionDataType.Map => MapTypes,
-        RegionData.RegionDataType.Grass => GrassTypes,
-        RegionData.RegionDataType.Sound => SoundTypes,
-        RegionData.RegionDataType.Land => LandTypes,
+        RegionData.RegionDataType.Object => RegionObjects_Registration.TriggerSpecs,
+        RegionData.RegionDataType.Weather => RegionWeather_Registration.TriggerSpecs,
+        RegionData.RegionDataType.Map => RegionMap_Registration.TriggerSpecs,
+        RegionData.RegionDataType.Grass => RegionGrasses_Registration.TriggerSpecs,
+        RegionData.RegionDataType.Sound => RegionSounds_Registration.TriggerSpecs,
+        RegionData.RegionDataType.Land => RegionLand_Registration.TriggerSpecs,
         _ => throw new ArgumentException($"Unexpected type {type}", nameof(type))
     };
 
@@ -201,6 +154,13 @@ partial class RegionBinaryOverlay
                 break;
             default:
                 throw new NotImplementedException();
+        }
+
+        var types = RegionBinaryCreateTranslation.GetTypes(dataType);
+        while (stream.TryGetSubrecord(types.AllRecordTypes, out var rec)
+               && rec.RecordType != RecordTypes.RDAT)
+        {
+            stream.Position += rec.TotalLength;
         }
     }
 }

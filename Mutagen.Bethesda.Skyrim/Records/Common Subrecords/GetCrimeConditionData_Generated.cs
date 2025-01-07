@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem RunOnType,
                 TItem Reference,
-                TItem Unknown3,
+                TItem RunOnTypeIndex,
                 TItem UseAliases,
                 TItem UsePackageData,
                 TItem Criminal,
@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 RunOnType: RunOnType,
                 Reference: Reference,
-                Unknown3: Unknown3,
+                RunOnTypeIndex: RunOnTypeIndex,
                 UseAliases: UseAliases,
                 UsePackageData: UsePackageData)
             {
@@ -466,6 +466,32 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GetCrimeConditionDataCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetCrimeConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
+        object? IConditionParameters.Parameter1
+        {
+            get => Criminal;
+            set => Criminal = (value is IFormLinkOrIndex<IPlacedNpcGetter> v ? v : throw new ArgumentException());
+        }
+        object? IConditionParametersGetter.Parameter1
+        {
+            get => Criminal;
+        }
+        Type? IConditionParametersGetter.Parameter1Type
+        {
+            get => typeof(IFormLinkOrIndexGetter<IPlacedNpcGetter>);
+        }
+        object? IConditionParameters.Parameter2
+        {
+            get => CrimeType;
+            set => CrimeType = (value is CrimeType v ? v : throw new ArgumentException());
+        }
+        object? IConditionParametersGetter.Parameter2
+        {
+            get => CrimeType;
+        }
+        Type? IConditionParametersGetter.Parameter2Type
+        {
+            get => typeof(CrimeType);
+        }
         #endregion
 
         #region Binary Translation
@@ -693,7 +719,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         RunOnType = 0,
         Reference = 1,
-        Unknown3 = 2,
+        RunOnTypeIndex = 2,
         UseAliases = 3,
         UsePackageData = 4,
         Criminal = 5,
@@ -931,7 +957,7 @@ namespace Mutagen.Bethesda.Skyrim
                     return (GetCrimeConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.Reference:
                     return (GetCrimeConditionData_FieldIndex)((int)index);
-                case ConditionData_FieldIndex.Unknown3:
+                case ConditionData_FieldIndex.RunOnTypeIndex:
                     return (GetCrimeConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
                     return (GetCrimeConditionData_FieldIndex)((int)index);
@@ -1061,8 +1087,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.SecondUnusedStringParameter = rhs.SecondUnusedStringParameter;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IGetCrimeConditionData item,
+            IGetCrimeConditionDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IConditionData item,

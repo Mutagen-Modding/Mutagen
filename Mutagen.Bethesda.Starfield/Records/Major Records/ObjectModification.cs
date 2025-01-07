@@ -79,7 +79,7 @@ partial class AObjectModification
         {
             throw RecordException.Enrich(
                 e,
-                FormKey.Factory(frame.MetaData.MasterReferences, majorMeta.FormID.ID),
+                FormKey.Factory(frame.MetaData.MasterReferences, majorMeta.FormID, reference: false),
                 typeof(AObjectModification));
         }
     }
@@ -270,10 +270,7 @@ partial class AObjectModificationBinaryOverlay
 
     public byte LevelTierScaledOffset => _dataBytes[0xF];
 
-    public IFormLinkGetter<IKeywordGetter> AttachPoint => new FormLink<IKeywordGetter>(
-        FormKey.Factory(
-            _package.MetaData.MasterReferences!, 
-            BinaryPrimitives.ReadUInt32LittleEndian(_dataBytes.Slice(StringEnd + 2, 0x4))));
+    public IFormLinkGetter<IKeywordGetter> AttachPoint => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(_package, _dataBytes.Slice(StringEnd + 2, 0x4));
 
     public IReadOnlyList<IFormLinkGetter<IKeywordGetter>> AttachParentSlots { get; private set; } = Array.Empty<IFormLinkGetter<IKeywordGetter>>();
     public uint Unknown3 => BinaryPrimitives.ReadUInt32LittleEndian(_dataBytes.Slice(AttachSlotsEnd));
@@ -295,7 +292,7 @@ partial class AObjectModificationBinaryOverlay
             _package,
             itemLength: 4,
             count: attachParentSlotsCount,
-            (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+            (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
         var includesStart = 4 + AttachSlotsEnd;
         Includes = BinaryOverlayList.FactoryByCount<IObjectModIncludeGetter>(
             _dataBytes.Slice(includesStart, checked((int)(7 * includeCount))), 

@@ -4,6 +4,7 @@
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <Float name="ODRT" recordType="ODRT" unknown="true" />
       <ByteArray name="XALG" recordType="XALG" unknown="true" />
       <String name="Description" recordType="NNAM" />
       <RefList name="Markers" refName="EchoMarker" itemMarkerType="ECHO" itemEndMarkerType="ECHE" />

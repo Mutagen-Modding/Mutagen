@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -3350,8 +3349,20 @@ namespace Mutagen.Bethesda.Oblivion
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ICreature item,
+            ICreatureGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
@@ -3544,6 +3555,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 items: item.Models,
                 recordType: translationParams.ConvertToCustom(RecordTypes.NIFZ),
+                writeNullSuffix: true,
                 transl: StringBinaryTranslation.Instance.Write);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
@@ -3596,6 +3608,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 items: item.Animations,
                 recordType: translationParams.ConvertToCustom(RecordTypes.KFFZ),
+                writeNullSuffix: true,
                 transl: StringBinaryTranslation.Instance.Write);
             if (item.Data is {} DataItem)
             {
@@ -3656,30 +3669,13 @@ namespace Mutagen.Bethesda.Oblivion
             ICreatureGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.CREA)))
-            {
-                try
-                {
-                    OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.CREA,
+                writeEmbedded: OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -3772,7 +3768,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Models = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.ParseTrimNullEnding(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: (MutagenFrame r, [MaybeNullWhen(false)] out String listSubItem) =>
                             {
@@ -3836,7 +3832,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Animations = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<String>.Instance.ParseTrimNullEnding(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: (MutagenFrame r, [MaybeNullWhen(false)] out String listSubItem) =>
                             {
@@ -4000,11 +3996,11 @@ namespace Mutagen.Bethesda.Oblivion
         public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = Array.Empty<IRankPlacementGetter>();
         #region DeathItem
         private int? _DeathItemLocation;
-        public IFormLinkNullableGetter<IItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<IItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DeathItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IItemGetter>.Null;
+        public IFormLinkNullableGetter<IItemGetter> DeathItem => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IItemGetter>(_package, _recordData, _DeathItemLocation);
         #endregion
         #region Script
         private int? _ScriptLocation;
-        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
+        public IFormLinkNullableGetter<IScriptGetter> Script => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IScriptGetter>(_package, _recordData, _ScriptLocation);
         #endregion
         #region AIData
         private RangeInt32? _AIDataLocation;
@@ -4022,7 +4018,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region CombatStyle
         private int? _CombatStyleLocation;
-        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CombatStyleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICombatStyleGetter>.Null;
+        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICombatStyleGetter>(_package, _recordData, _CombatStyleLocation);
         #endregion
         #region TurningSpeed
         private int? _TurningSpeedLocation;
@@ -4046,7 +4042,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region InheritsSoundFrom
         private int? _InheritsSoundFromLocation;
-        public IFormLinkNullableGetter<ICreatureGetter> InheritsSoundFrom => _InheritsSoundFromLocation.HasValue ? new FormLinkNullable<ICreatureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _InheritsSoundFromLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICreatureGetter>.Null;
+        public IFormLinkNullableGetter<ICreatureGetter> InheritsSoundFrom => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICreatureGetter>(_package, _recordData, _InheritsSoundFromLocation);
         #endregion
         public IReadOnlyList<ICreatureSoundGetter> Sounds { get; private set; } = Array.Empty<ICreatureSoundGetter>();
         partial void CustomFactoryEnd(
@@ -4151,7 +4147,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.Spells = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ISpellRecordGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<ISpellRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellRecordGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
@@ -4162,13 +4158,12 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.NIFZ:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Models = BinaryOverlayList.FactoryByLazyParse<String>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Models = BinaryOverlayList.FactoryByLazyParseWithTrigger<String>(
+                        stream: stream,
                         package: _package,
-                        getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s, encoding: p.MetaData.Encodings.NonTranslated));
-                    stream.Position += subLen;
+                        finalPos: finalPos,
+                        getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s, encoding: p.MetaData.Encodings.NonTranslated),
+                        trimNullSuffix: true);
                     return (int)Creature_FieldIndex.Models;
                 }
                 case RecordTypeInts.NIFT:
@@ -4216,7 +4211,7 @@ namespace Mutagen.Bethesda.Oblivion
                     this.AIPackages = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IAIPackageGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IAIPackageGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IAIPackageGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
@@ -4227,13 +4222,12 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.KFFZ:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Animations = BinaryOverlayList.FactoryByLazyParse<String>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Animations = BinaryOverlayList.FactoryByLazyParseWithTrigger<String>(
+                        stream: stream,
                         package: _package,
-                        getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s, encoding: p.MetaData.Encodings.NonTranslated));
-                    stream.Position += subLen;
+                        finalPos: finalPos,
+                        getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s, encoding: p.MetaData.Encodings.NonTranslated),
+                        trimNullSuffix: true);
                     return (int)Creature_FieldIndex.Animations;
                 }
                 case RecordTypeInts.DATA:

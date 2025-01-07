@@ -1010,8 +1010,20 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ISnapLink item,
+            ISnapLinkGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public SnapLink DeepCopy(
@@ -1224,7 +1236,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IPlacedObjectGetter> LinkedReference => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IPlacedObjectGetter> LinkedReference => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedObjectGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         #region Links
         public IReadOnlyList<ISnapLinkItemGetter> Links => BinaryOverlayList.FactoryByLazyParse<ISnapLinkItemGetter>(_structData.Slice(0x4), _package, (s, p) => SnapLinkItemBinaryOverlay.SnapLinkItemFactory(s, p));
         protected int LinksEndingPos;

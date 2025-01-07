@@ -1047,8 +1047,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Unknown5 = rhs.Unknown5;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IContactShadowComponentItem item,
+            IContactShadowComponentItemGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ContactShadowComponentItem DeepCopy(

@@ -1212,8 +1212,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.NextQuest.SetTo(rhs.NextQuest.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IQuestLogEntry item,
+            IQuestLogEntryGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public QuestLogEntry DeepCopy(
@@ -1512,7 +1524,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region NextQuest
         private int? _NextQuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> NextQuest => _NextQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NextQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullableGetter<IQuestGetter> NextQuest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _NextQuestLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

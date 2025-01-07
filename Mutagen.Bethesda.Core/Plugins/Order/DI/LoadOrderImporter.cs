@@ -1,6 +1,11 @@
 ﻿using System.IO.Abstractions;
 using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Masters;
+using Mutagen.Bethesda.Plugins.Masters.DI;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.DI;
 using Mutagen.Bethesda.Strings;
@@ -13,23 +18,24 @@ public interface ILoadOrderImporter
     /// <summary>
     /// Returns a load order filled with mods constructed
     /// </summary>
-    ILoadOrder<IModListing<IModGetter>> Import(StringsReadParameters? stringsParam = null);
+    ILoadOrder<IModListing<IModGetter>> Import(BinaryReadParameters? param = null);
 }
     
 public interface ILoadOrderImporter<TMod>
-    where TMod : class, IModGetter
+    where TMod : class, IModKeyed
 {
     /// <summary>
     /// Returns a load order filled with mods constructed
     /// </summary>
-    ILoadOrder<IModListing<TMod>> Import(StringsReadParameters? stringsParam = null);
+    ILoadOrder<IModListing<TMod>> Import(BinaryReadParameters? param = null);
 }
 
 public sealed class LoadOrderImporter<TMod> : ILoadOrderImporter<TMod>
-    where TMod : class, IModGetter
+    where TMod : class, IModKeyed
 {
     private readonly IFileSystem _fileSystem;
     private readonly IDataDirectoryProvider _dataDirectoryProvider;
+    private readonly IMasterFlagsLookupProvider _masterFlagsLookupProvider;
     public ILoadOrderListingsProvider LoadOrderListingsProvider { get; }
     public IModImporter<TMod> Importer { get; }
 
@@ -37,17 +43,25 @@ public sealed class LoadOrderImporter<TMod> : ILoadOrderImporter<TMod>
         IFileSystem fileSystem,
         IDataDirectoryProvider dataDirectoryProvider,
         ILoadOrderListingsProvider loadOrderListingsProvider,
-        IModImporter<TMod> importer)
+        IModImporter<TMod> importer,
+        IMasterFlagsLookupProvider masterFlagsLookupProvider)
     {
         _fileSystem = fileSystem;
         _dataDirectoryProvider = dataDirectoryProvider;
+        _masterFlagsLookupProvider = masterFlagsLookupProvider;
         LoadOrderListingsProvider = loadOrderListingsProvider;
         Importer = importer;
     }
         
-    public ILoadOrder<IModListing<TMod>> Import(StringsReadParameters? stringsParam = null)
+    public ILoadOrder<IModListing<TMod>> Import(BinaryReadParameters? param = null)
     {
         var loList = LoadOrderListingsProvider.Get().ToList();
+        param ??= BinaryReadParameters.Default;
+        param = param with
+        {
+            MasterFlagsLookup = _masterFlagsLookupProvider.Get(loList)
+        };
+        
         var results = new (ModKey ModKey, int ModIndex, TryGet<TMod> Mod, bool Enabled)[loList.Count];
         try
         {
@@ -61,7 +75,7 @@ public sealed class LoadOrderImporter<TMod> : ILoadOrderImporter<TMod>
                         results[modIndex] = (listing.ModKey, (int)modIndex, TryGet<TMod>.Failure, listing.Enabled);
                         return;
                     }
-                    var mod = Importer.Import(modPath, stringsParam: stringsParam);
+                    var mod = Importer.Import(modPath, param: param);
                     results[modIndex] = (listing.ModKey, (int)modIndex, TryGet<TMod>.Succeed(mod), listing.Enabled);
                 }
                 catch (Exception ex)
@@ -101,26 +115,48 @@ public sealed class LoadOrderImporter<TMod> : ILoadOrderImporter<TMod>
 public sealed class LoadOrderImporter : ILoadOrderImporter
 {
     private readonly IFileSystem _fileSystem;
+    private readonly IGameReleaseContext _gameRelease;
     private readonly IDataDirectoryProvider _dataDirectoryProvider;
+    private readonly IKeyedMasterStyleReader _keyedMasterStyleReader;
     public ILoadOrderListingsProvider LoadOrderListingsProvider { get; }
     public IModImporter Importer { get; }
 
     public LoadOrderImporter(
         IFileSystem fileSystem,
+        IGameReleaseContext gameRelease,
         IDataDirectoryProvider dataDirectoryProvider,
         ILoadOrderListingsProvider loadOrderListingsProvider,
+        IKeyedMasterStyleReader keyedMasterStyleReader,
         IModImporter importer)
     {
         _fileSystem = fileSystem;
+        _gameRelease = gameRelease;
         _dataDirectoryProvider = dataDirectoryProvider;
+        _keyedMasterStyleReader = keyedMasterStyleReader;
         LoadOrderListingsProvider = loadOrderListingsProvider;
         Importer = importer;
     }
         
-    public ILoadOrder<IModListing<IModGetter>> Import(StringsReadParameters? stringsParam = null)
+    public ILoadOrder<IModListing<IModGetter>> Import(BinaryReadParameters? param = null)
     {
         var loList = LoadOrderListingsProvider.Get().ToList();
         var results = new (ModKey ModKey, int ModIndex, TryGet<IModGetter> Mod, bool Enabled)[loList.Count];
+        param ??= BinaryReadParameters.Default;
+        if (param.MasterFlagsLookup == null)
+        {
+            param = param with
+            {
+                MasterFlagsLookup = new LoadOrder<IModMasterStyledGetter>(loList
+                    .Select(listing =>
+                    {
+                        var modPath = new ModPath(listing.ModKey,
+                            _dataDirectoryProvider.Path.GetFile(listing.ModKey.FileName).Path);
+                        if (!_fileSystem.File.Exists(modPath)) return null;
+                        return _keyedMasterStyleReader.ReadFrom(modPath);
+                    })
+                    .NotNull())
+            };
+        }
         try
         {
             Parallel.ForEach(loList, (listing, _, modIndex) =>
@@ -133,7 +169,7 @@ public sealed class LoadOrderImporter : ILoadOrderImporter
                         results[modIndex] = (listing.ModKey, (int)modIndex, TryGet<IModGetter>.Failure, listing.Enabled);
                         return;
                     }
-                    var mod = Importer.Import(modPath, stringsParam);
+                    var mod = Importer.Import(modPath, param);
                     results[modIndex] = (listing.ModKey, (int)modIndex, TryGet<IModGetter>.Succeed(mod), listing.Enabled);
                 }
                 catch (Exception ex)

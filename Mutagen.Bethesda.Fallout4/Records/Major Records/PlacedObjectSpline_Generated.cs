@@ -1115,8 +1115,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Unknown = rhs.Unknown.ToArray();
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPlacedObjectSpline item,
+            IPlacedObjectSplineGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public PlacedObjectSpline DeepCopy(
@@ -1348,7 +1360,7 @@ namespace Mutagen.Bethesda.Fallout4
         public P3Float HalfExtents => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x8, 0xC));
         public Boolean IsWindDetachedEnd => _structData.Length <= 0x14 ? default : _structData.Slice(0x14, 0x1)[0] >= 1;
         #region Unknown
-        public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Slice(0x15).ToArray();
+        public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Length <= 0x15 ? Array.Empty<byte>() : _structData.Span.Slice(0x15).ToArray();
         protected int UnknownEndingPos;
         #endregion
         partial void CustomFactoryEnd(

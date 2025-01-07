@@ -107,6 +107,11 @@ public class TestMajorRecord : ITestMajorRecord
         throw new NotImplementedException();
     }
 
+    public void Remove(IEnumerable<IFormLinkIdentifier> formLinks)
+    {
+        throw new NotImplementedException();
+    }
+
     public void Remove(FormKey formKey, Type type, bool throwIfUnknown = true)
     {
         throw new NotImplementedException();

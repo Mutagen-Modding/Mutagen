@@ -4,6 +4,7 @@
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <Float name="ODRT" recordType="ODRT" unknown="true" />
       <RefDirect name="ASLS" recordType="ASLS" unknown="true" refName="SoundReference" />
       <RefDirect name="WED0" recordType="WED0" unknown="true" refName="SoundReference" />
       <RefDirect name="WED1" recordType="WED1" unknown="true" refName="SoundReference" />

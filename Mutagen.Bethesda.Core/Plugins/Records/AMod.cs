@@ -1,9 +1,9 @@
 using Mutagen.Bethesda.Plugins.Allocators;
 using Noggog;
 using System.Diagnostics;
-using System.IO.Abstractions;
 using Loqui;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 
 namespace Mutagen.Bethesda.Plugins.Records;
@@ -14,20 +14,23 @@ namespace Mutagen.Bethesda.Plugins.Records;
 [DebuggerDisplay("{GameRelease} {ModKey.ToString()}")]
 public abstract class AMod : IMod
 {
-    /// <inheritdoc />
-    public ModKey ModKey { get; }
+    private ModKey _modKey;
+    
+    public ModKey ModKey => _modKey;
 
+    internal void SetModKey(ModKey modKey)
+    {
+        _modKey = modKey;
+    }
+    
     /// <inheritdoc />
     public abstract GameRelease GameRelease { get; }
 
     private IFormKeyAllocator _allocator;
 
-    /// <inheritdoc />
-    public abstract uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false);
-
     protected AMod()
     {
-        ModKey = ModKey.Null;
+        _modKey = ModKey.Null;
         _allocator = new SimpleFormKeyAllocator(this);
     }
 
@@ -37,7 +40,7 @@ public abstract class AMod : IMod
     /// <param name="modKey">Key to assign the mod</param> 
     public AMod(ModKey modKey)
     {
-        ModKey = modKey;
+        _modKey = modKey;
         _allocator = new SimpleFormKeyAllocator(this);
     }
 
@@ -45,21 +48,30 @@ public abstract class AMod : IMod
     IEnumerable<IFormLinkGetter> IFormLinkContainerGetter.EnumerateFormLinks() => throw new NotImplementedException();
     void IFormLinkContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
     IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => throw new NotImplementedException();
+    public abstract IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms { get; }
     IList<MasterReference> IMod.MasterReferences => throw new NotImplementedException();
     uint IMod.NextFormID { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     uint IModGetter.NextFormID { get => throw new NotImplementedException(); }
     public abstract bool CanUseLocalization { get; }
     public abstract bool UsingLocalization { get; set; }
-    bool IModGetter.UsingLocalization => throw new NotImplementedException();
+    bool IModFlagsGetter.UsingLocalization => throw new NotImplementedException();
+    public abstract bool IsMaster { get; set; }
+    bool IModFlagsGetter.IsMaster => throw new NotImplementedException();
+    public abstract bool CanBeSmallMaster { get; }
+    public abstract bool IsSmallMaster { get; set; }
+    bool IModFlagsGetter.IsSmallMaster => throw new NotImplementedException();
+    public abstract bool CanBeMediumMaster { get; }
+    public abstract bool IsMediumMaster { get; set; }
+    bool IModFlagsGetter.IsMediumMaster => throw new NotImplementedException();
+    public abstract bool ListsOverriddenForms { get; }
     IGroup<T>? IMod.TryGetTopLevelGroup<T>() => throw new NotImplementedException();
     IGroup? IMod.TryGetTopLevelGroup(Type t) => throw new NotImplementedException();
     public abstract void SyncRecordCount();
+    IBinaryModdedWriteBuilderTargetChoice IModGetter.BeginWrite => throw new NotImplementedException();
     IGroupGetter<T>? IModGetter.TryGetTopLevelGroup<T>() => throw new NotImplementedException();
     IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => throw new NotImplementedException();
-    void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => throw new NotImplementedException();
-    void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParameters) => throw new NotImplementedException();
+    void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param) => throw new NotImplementedException();
     void IModGetter.WriteToBinary(Stream stream, BinaryWriteParameters? param) => throw new NotImplementedException();
-    void IModGetter.WriteToBinaryParallel(Stream stream, BinaryWriteParameters? param, ParallelWriteParameters? parallelWriteParameters) => throw new NotImplementedException();
     IEnumerable<T> IMajorRecordEnumerable.EnumerateMajorRecords<T>(bool throwIfUnknown) => throw new NotImplementedException();
     IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => throw new NotImplementedException();
     IEnumerable<T> IMajorRecordGetterEnumerable.EnumerateMajorRecords<T>(bool throwIfUnknown) => throw new NotImplementedException();
@@ -68,6 +80,7 @@ public abstract class AMod : IMod
     IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords(Type? t, bool throwIfUnknown) => throw new NotImplementedException();
     void IMajorRecordEnumerable.Remove(FormKey formKey) => throw new NotImplementedException();
     void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => throw new NotImplementedException();
+    void IMajorRecordEnumerable.Remove(IEnumerable<IFormLinkIdentifier> formKeys) => throw new NotImplementedException();
     void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => throw new NotImplementedException();
     void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => throw new NotImplementedException();
     void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys, Type type, bool throwIfUnknown) => throw new NotImplementedException();
@@ -81,7 +94,11 @@ public abstract class AMod : IMod
     IEnumerable<IModContext<TMajor>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts<TMajor>(bool throwIfUnknown = true) => throw new NotImplementedException();
     IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts(Type t, bool throwIfUnknown = true) => throw new NotImplementedException();
     IEnumerable<IModContext<IMajorRecordGetter>> IMajorRecordSimpleContextEnumerable.EnumerateMajorRecordSimpleContexts() => throw new NotImplementedException();
+    uint IModGetter.GetRecordCount() => throw new NotImplementedException();
+    IMod IModGetter.DeepCopy() => throw new NotImplementedException();
     #endregion
+
+    public MasterStyle MasterStyle => this.GetMasterStyle();
 
     /// <inheritdoc />
     public FormKey GetNextFormKey()
@@ -103,4 +120,7 @@ public abstract class AMod : IMod
         _allocator = allocator;
         return allocator;
     }
+
+    /// <inheritdoc />
+    public abstract uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false);
 }

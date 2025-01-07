@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System.Diagnostics;
+using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Starfield;
 
@@ -16,6 +17,7 @@ public partial class StarfieldModHeader
         Localized = 0x0000_0080,
         Light = 0x0000_0100,
         Overlay = 0x0000_0200,
+        Medium = 0x0000_0400,
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -40,6 +42,19 @@ public partial class StarfieldModHeader
     }
 
     IExtendedList<MasterReference> IModHeaderCommon.MasterReferences => this.MasterReferences;
+
+    public void SetOverriddenForms(IEnumerable<FormKey>? formKeys)
+    {
+        if (formKeys == null)
+        {
+            this.OverriddenForms = null;
+        }
+        else
+        {
+            this.OverriddenForms ??= new();
+            this.OverriddenForms.SetTo(formKeys.Select(f => f.ToLink<IStarfieldMajorRecordGetter>()));
+        }
+    }
 }
 
 public partial interface IStarfieldModHeader : IModHeaderCommon
@@ -55,7 +70,6 @@ partial class StarfieldModHeaderBinaryCreateTranslation
                 reader: frame.SpawnAll(),
                 triggeringRecord: RecordTypes.MAST,
                 transl: MasterReference.TryCreateFromBinary));
-        frame.MetaData.MasterReferences.SetTo(item.MasterReferences);
     }
 }
 

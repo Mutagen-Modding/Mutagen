@@ -951,8 +951,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Unknown = rhs.Unknown;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IItemResource item,
+            IItemResourceGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ItemResource DeepCopy(
@@ -1154,7 +1166,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IResourceGetter> Resource => new FormLink<IResourceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IResourceGetter> Resource => FormLinkBinaryTranslation.Instance.OverlayFactory<IResourceGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public UInt32 Count => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
         public UInt32 Unknown => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(

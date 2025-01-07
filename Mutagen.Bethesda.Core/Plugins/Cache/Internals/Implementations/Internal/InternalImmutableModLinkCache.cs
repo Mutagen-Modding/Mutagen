@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -28,7 +28,8 @@ internal sealed class InternalImmutableModLinkCache
             this, 
             prefs?.MetaInterfaceMapGetterOverride ?? MetaInterfaceMapping.Instance,
             x => TryGet<FormKey>.Succeed(x.FormKey),
-            x => x.IsNull);
+            x => x.IsNull,
+            equalityComparer: null);
         _editorIdCache = new ImmutableModLinkCacheCategory<string>(
             this,
             prefs?.MetaInterfaceMapGetterOverride ?? MetaInterfaceMapping.Instance,
@@ -37,7 +38,8 @@ internal sealed class InternalImmutableModLinkCache
                 var edid = m.EditorID;
                 return TryGet<string>.Create(successful: !string.IsNullOrWhiteSpace(edid), edid!);
             },
-            e => e.IsNullOrWhitespace());
+            e => e.IsNullOrWhitespace(),
+            equalityComparer: StringComparer.OrdinalIgnoreCase);
         ListedOrder = new List<IModGetter>()
         {
             sourceMod
@@ -274,14 +276,16 @@ internal sealed class InternalImmutableModLinkCache
 
     public IMajorRecordGetter Resolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out Type matchedType, ResolveTarget target = ResolveTarget.Winner)
     {
-        if (TryResolve(formKey, types, out var commonRec, out matchedType, target)) return commonRec;
-        throw new MissingRecordException(formKey, types.ToArray());
+        var typesArr = types.ToArray();
+        if (TryResolve(formKey, typesArr, out var commonRec, out matchedType!, target)) return commonRec!;
+        throw new MissingRecordException(formKey, typesArr);
     }
 
     public IMajorRecordGetter Resolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out Type matchedType)
     {
-        if (TryResolve(editorId, types, out var commonRec, out matchedType)) return commonRec;
-        throw new MissingRecordException(editorId, types.ToArray());
+        var typesArr = types.ToArray();
+        if (TryResolve(editorId, typesArr, out var commonRec, out matchedType!)) return commonRec!;
+        throw new MissingRecordException(editorId, typesArr);
     }
 
     public bool TryResolveIdentifier(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, ResolveTarget target = ResolveTarget.Winner)
@@ -434,23 +438,23 @@ internal sealed class InternalImmutableModLinkCache
         return false;
     }
 
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(Type type, CancellationToken? cancel = null)
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers(Type type, CancellationToken? cancel = null)
     {
         return _formKeyCache.AllIdentifiers(type, cancel);
     }
 
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers<TMajor>(CancellationToken? cancel = null)
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers<TMajor>(CancellationToken? cancel = null)
         where TMajor : class, IMajorRecordQueryableGetter
     {
         return _formKeyCache.AllIdentifiers(typeof(TMajor), cancel);
     }
 
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(params Type[] types)
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers(params Type[] types)
     {
         return AllIdentifiers((IEnumerable<Type>)types, CancellationToken.None);
     }
 
-    public IEnumerable<IMajorRecordIdentifier> AllIdentifiers(IEnumerable<Type> types, CancellationToken? cancel = null)
+    public IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers(IEnumerable<Type> types, CancellationToken? cancel = null)
     {
         return types.SelectMany(type => AllIdentifiers(type, cancel))
             .Distinct(x => x.FormKey);

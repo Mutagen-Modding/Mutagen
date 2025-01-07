@@ -838,8 +838,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Index = rhs.Index;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IColorRemappingIndex item,
+            IColorRemappingIndexGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAColorRecordData item,

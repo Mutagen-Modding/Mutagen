@@ -900,8 +900,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Object.SetTo(rhs.Object.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IDefaultObject item,
+            IDefaultObjectGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public DefaultObject DeepCopy(
@@ -1104,7 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public RecordType Use => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4)));
-        public IFormLinkGetter<ISkyrimMajorRecordGetter> Object => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<ISkyrimMajorRecordGetter> Object => FormLinkBinaryTranslation.Instance.OverlayFactory<ISkyrimMajorRecordGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

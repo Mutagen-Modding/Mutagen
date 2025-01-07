@@ -22,7 +22,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -1594,8 +1593,20 @@ namespace Mutagen.Bethesda.Oblivion
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPathGrid item,
+            IPathGridGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
@@ -1797,30 +1808,13 @@ namespace Mutagen.Bethesda.Oblivion
             IPathGridGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.PGRD)))
-            {
-                try
-                {
-                    OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.PGRD,
+                writeEmbedded: OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -2058,14 +2052,12 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.PGRI:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.InterCellConnections = BinaryOverlayList.FactoryByStartIndex<IInterCellPointGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.InterCellConnections = BinaryOverlayList.FactoryByStartIndexWithTrigger<IInterCellPointGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 16,
                         getter: (s, p) => InterCellPointBinaryOverlay.InterCellPointFactory(s, p));
-                    stream.Position += subLen;
                     return (int)PathGrid_FieldIndex.InterCellConnections;
                 }
                 case RecordTypeInts.PGRL:

@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Assets;
@@ -2822,21 +2821,21 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
-                if (obj.Model is {} ModelItems)
-                {
-                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                if (obj.Destructible is {} DestructibleItems)
-                {
-                    foreach (var item in DestructibleItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
                 yield return obj.MuzzleFlashModel;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -3086,7 +3085,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.CollisionLayer.SetTo(rhs.CollisionLayer.FormKey);
             }
-            item.MuzzleFlashModel.RawPath = rhs.MuzzleFlashModel.RawPath;
+            item.MuzzleFlashModel.GivenPath = rhs.MuzzleFlashModel.GivenPath;
             if ((copyMask?.GetShouldTranslate((int)Projectile_FieldIndex.TextureFilesHashes) ?? true))
             {
                 if(rhs.TextureFilesHashes is {} TextureFilesHashesrhs)
@@ -3106,8 +3105,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IProjectile item,
+            IProjectileGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
@@ -3382,7 +3393,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.MuzzleFlashModel.RawPath,
+                item: item.MuzzleFlashModel.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM1),
                 binaryType: StringBinaryType.NullTerminate);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -3400,30 +3411,13 @@ namespace Mutagen.Bethesda.Skyrim
             IProjectileGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.PROJ)))
-            {
-                try
-                {
-                    WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.PROJ,
+                writeEmbedded: SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -3588,7 +3582,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MuzzleFlashModel.RawPath = StringBinaryTranslation.Instance.Parse(
+                    item.MuzzleFlashModel.GivenPath = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Projectile_FieldIndex.MuzzleFlashModel;
@@ -3714,12 +3708,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Light
         private int _LightLocation => _DATALocation!.Value.Min + 0x10;
         private bool _Light_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ILightGetter> Light => _Light_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_LightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
+        public IFormLinkGetter<ILightGetter> Light => _Light_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_LightLocation, 0x4), isSet: _Light_IsSet) : FormLink<ILightGetter>.Null;
         #endregion
         #region MuzzleFlash
         private int _MuzzleFlashLocation => _DATALocation!.Value.Min + 0x14;
         private bool _MuzzleFlash_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ILightGetter> MuzzleFlash => _MuzzleFlash_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_MuzzleFlashLocation, 0x4)))) : FormLink<ILightGetter>.Null;
+        public IFormLinkGetter<ILightGetter> MuzzleFlash => _MuzzleFlash_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_MuzzleFlashLocation, 0x4), isSet: _MuzzleFlash_IsSet) : FormLink<ILightGetter>.Null;
         #endregion
         #region TracerChance
         private int _TracerChanceLocation => _DATALocation!.Value.Min + 0x18;
@@ -3739,12 +3733,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region Explosion
         private int _ExplosionLocation => _DATALocation!.Value.Min + 0x24;
         private bool _Explosion_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_ExplosionLocation, 0x4), isSet: _Explosion_IsSet) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region Sound
         private int _SoundLocation => _DATALocation!.Value.Min + 0x28;
         private bool _Sound_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> Sound => _Sound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_SoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
+        public IFormLinkGetter<ISoundDescriptorGetter> Sound => _Sound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_SoundLocation, 0x4), isSet: _Sound_IsSet) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region MuzzleFlashDuration
         private int _MuzzleFlashDurationLocation => _DATALocation!.Value.Min + 0x2C;
@@ -3764,17 +3758,17 @@ namespace Mutagen.Bethesda.Skyrim
         #region CountdownSound
         private int _CountdownSoundLocation => _DATALocation!.Value.Min + 0x38;
         private bool _CountdownSound_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> CountdownSound => _CountdownSound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_CountdownSoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
+        public IFormLinkGetter<ISoundDescriptorGetter> CountdownSound => _CountdownSound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_CountdownSoundLocation, 0x4), isSet: _CountdownSound_IsSet) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region DisaleSound
         private int _DisaleSoundLocation => _DATALocation!.Value.Min + 0x3C;
         private bool _DisaleSound_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ISoundDescriptorGetter> DisaleSound => _DisaleSound_IsSet ? new FormLink<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_DisaleSoundLocation, 0x4)))) : FormLink<ISoundDescriptorGetter>.Null;
+        public IFormLinkGetter<ISoundDescriptorGetter> DisaleSound => _DisaleSound_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISoundDescriptorGetter>(_package, _recordData.Span.Slice(_DisaleSoundLocation, 0x4), isSet: _DisaleSound_IsSet) : FormLink<ISoundDescriptorGetter>.Null;
         #endregion
         #region DefaultWeaponSource
         private int _DefaultWeaponSourceLocation => _DATALocation!.Value.Min + 0x40;
         private bool _DefaultWeaponSource_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IWeaponGetter> DefaultWeaponSource => _DefaultWeaponSource_IsSet ? new FormLink<IWeaponGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_DefaultWeaponSourceLocation, 0x4)))) : FormLink<IWeaponGetter>.Null;
+        public IFormLinkGetter<IWeaponGetter> DefaultWeaponSource => _DefaultWeaponSource_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IWeaponGetter>(_package, _recordData.Span.Slice(_DefaultWeaponSourceLocation, 0x4), isSet: _DefaultWeaponSource_IsSet) : FormLink<IWeaponGetter>.Null;
         #endregion
         #region ConeSpread
         private int _ConeSpreadLocation => _DATALocation!.Value.Min + 0x44;
@@ -3799,12 +3793,12 @@ namespace Mutagen.Bethesda.Skyrim
         #region DecalData
         private int _DecalDataLocation => _DATALocation!.Value.Min + 0x54;
         private bool _DecalData_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Projectile.DATADataType.Break0);
-        public IFormLinkGetter<ITextureSetGetter> DecalData => _DecalData_IsSet ? new FormLink<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_DecalDataLocation, 0x4)))) : FormLink<ITextureSetGetter>.Null;
+        public IFormLinkGetter<ITextureSetGetter> DecalData => _DecalData_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ITextureSetGetter>(_package, _recordData.Span.Slice(_DecalDataLocation, 0x4), isSet: _DecalData_IsSet) : FormLink<ITextureSetGetter>.Null;
         #endregion
         #region CollisionLayer
         private int _CollisionLayerLocation => _DATALocation!.Value.Min + 0x58;
         private bool _CollisionLayer_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Projectile.DATADataType.Break1);
-        public IFormLinkGetter<ICollisionLayerGetter> CollisionLayer => _CollisionLayer_IsSet ? new FormLink<ICollisionLayerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_CollisionLayerLocation, 0x4)))) : FormLink<ICollisionLayerGetter>.Null;
+        public IFormLinkGetter<ICollisionLayerGetter> CollisionLayer => _CollisionLayer_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ICollisionLayerGetter>(_package, _recordData.Span.Slice(_CollisionLayerLocation, 0x4), isSet: _CollisionLayer_IsSet) : FormLink<ICollisionLayerGetter>.Null;
         #endregion
         #region MuzzleFlashModel
         private int? _MuzzleFlashModelLocation;

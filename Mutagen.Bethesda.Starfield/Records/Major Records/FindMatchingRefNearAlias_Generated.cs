@@ -975,8 +975,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.RefType.SetTo(rhs.RefType.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IFindMatchingRefNearAlias item,
+            IFindMatchingRefNearAliasGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public FindMatchingRefNearAlias DeepCopy(
@@ -1252,7 +1264,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region RefType
         private int? _RefTypeLocation;
-        public IFormLinkNullableGetter<ILocationReferenceTypeGetter> RefType => _RefTypeLocation.HasValue ? new FormLinkNullable<ILocationReferenceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RefTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationReferenceTypeGetter>.Null;
+        public IFormLinkNullableGetter<ILocationReferenceTypeGetter> RefType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationReferenceTypeGetter>(_package, _recordData, _RefTypeLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

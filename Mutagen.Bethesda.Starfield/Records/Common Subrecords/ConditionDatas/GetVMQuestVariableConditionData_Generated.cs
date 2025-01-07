@@ -466,6 +466,35 @@ namespace Mutagen.Bethesda.Starfield
         #region Mutagen
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GetVMQuestVariableConditionDataCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetVMQuestVariableConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
+        object? IConditionParameters.Parameter1
+        {
+            get => FirstParameter;
+            set => FirstParameter = (value is IFormLinkOrIndex<IQuestGetter> v ? v : throw new ArgumentException());
+        }
+        object? IConditionParametersGetter.Parameter1
+        {
+            get => FirstParameter;
+        }
+        Type? IConditionParametersGetter.Parameter1Type
+        {
+            get => typeof(IFormLinkOrIndexGetter<IQuestGetter>);
+        }
+        object? IConditionParameters.Parameter2
+        {
+            get => null;
+            set
+            {
+
+            }
+        }
+        object? IConditionParametersGetter.Parameter2
+        {
+            get => null;
+        }
+        Type? IConditionParametersGetter.Parameter2Type
+        {
+            get => null;
+        }
         #endregion
 
         #region Binary Translation
@@ -1061,8 +1090,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.SecondParameter = rhs.SecondParameter;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IGetVMQuestVariableConditionData item,
+            IGetVMQuestVariableConditionDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IConditionData item,

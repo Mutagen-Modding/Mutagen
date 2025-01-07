@@ -875,8 +875,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.SpawnOnDestroy.SetTo(rhs.SpawnOnDestroy.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ISpawnOnDestroyComponent item,
+            ISpawnOnDestroyComponentGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAComponent item,
@@ -1111,7 +1123,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region SpawnOnDestroy
         private int? _SpawnOnDestroyLocation;
-        public IFormLinkNullableGetter<IPlaceableObjectGetter> SpawnOnDestroy => _SpawnOnDestroyLocation.HasValue ? new FormLinkNullable<IPlaceableObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SpawnOnDestroyLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlaceableObjectGetter>.Null;
+        public IFormLinkNullableGetter<IPlaceableObjectGetter> SpawnOnDestroy => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlaceableObjectGetter>(_package, _recordData, _SpawnOnDestroyLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

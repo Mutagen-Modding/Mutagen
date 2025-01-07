@@ -1056,8 +1056,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.StalkTime = rhs.StalkTime;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ICombatStyleCloseRange item,
+            ICombatStyleCloseRangeGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public CombatStyleCloseRange DeepCopy(

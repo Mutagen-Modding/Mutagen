@@ -18,6 +18,7 @@ public class GetterTypeMapper : IGetterTypeMapper
     
     public GetterTypeMapper(IMetaInterfaceMapGetter meta)
     {
+        Warmup.Init();
         _meta = meta;
     }
 
@@ -100,6 +101,11 @@ public static class GetterTypeMapping
     {
         return new GetterTypeMapper(MetaInterfaceMapping.Instance);
     });
+
+    static GetterTypeMapping()
+    {
+        Mutagen.Bethesda.Plugins.Warmup.Init();
+    }
 
     public static IGetterTypeMapper Instance => _mapper.Value;
 

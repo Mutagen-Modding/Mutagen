@@ -948,8 +948,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Damage = rhs.Damage;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IWeaponBasicStats item,
+            IWeaponBasicStatsGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public WeaponBasicStats DeepCopy(

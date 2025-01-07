@@ -5,5 +5,5 @@ namespace Mutagen.Bethesda.Skyrim;
 public partial class MagicEffectSpawnHazardArchetype
 {
     public MagicEffectArchetype.TypeEnum Type => MagicEffectArchetype.TypeEnum.SpawnHazard;
-    public override FormKey AssociationKey => Association.FormKey;
+    public override IFormLinkIdentifier AssociationKey => Association;
 }

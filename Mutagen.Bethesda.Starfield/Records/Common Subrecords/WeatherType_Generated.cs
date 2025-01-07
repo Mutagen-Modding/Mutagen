@@ -960,8 +960,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Global.SetTo(rhs.Global.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IWeatherType item,
+            IWeatherTypeGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public WeatherType DeepCopy(
@@ -1165,9 +1177,9 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IWeatherGetter> Weather => new FormLink<IWeatherGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IWeatherGetter> Weather => FormLinkBinaryTranslation.Instance.OverlayFactory<IWeatherGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public Int32 Chance => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
-        public IFormLinkGetter<IGlobalGetter> Global => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
+        public IFormLinkGetter<IGlobalGetter> Global => FormLinkBinaryTranslation.Instance.OverlayFactory<IGlobalGetter>(_package, _structData.Span.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

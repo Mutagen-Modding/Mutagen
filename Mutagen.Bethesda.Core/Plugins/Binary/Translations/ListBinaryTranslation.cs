@@ -6,8 +6,9 @@ using static Mutagen.Bethesda.Plugins.Binary.Translations.PluginUtilityTranslati
 using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation; 
 using Mutagen.Bethesda.Translations.Binary; 
 using Mutagen.Bethesda.Plugins.Exceptions; 
-using Mutagen.Bethesda.Plugins.Internals; 
- 
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+
 namespace Mutagen.Bethesda.Plugins.Binary.Translations; 
  
 internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, MutagenFrame, T> 
@@ -345,12 +346,22 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
     public ExtendedList<T> Parse( 
         MutagenFrame reader, 
         BinaryMasterParseDelegate<T> transl, 
-        TypedParseParams translationParams = default) 
+        TypedParseParams translationParams = default,
+        RecordType? endMarker = null) 
     { 
         translationParams = translationParams.ShortCircuit(); 
         var ret = new ExtendedList<T>(); 
         while (!reader.Complete) 
-        { 
+        {
+            if (endMarker != null)
+            {
+                var rec = reader.GetSubrecord();
+                if (rec.RecordType == endMarker.Value)
+                {
+                    reader.Position += rec.TotalLength;
+                    break;
+                }
+            }
             if (transl(reader, out var subItem, translationParams)) 
             { 
                 ret.Add(subItem); 
@@ -726,7 +737,8 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         BinaryMasterParseDelegate<T> transl, 
         RecordTriggerSpecs triggeringRecord, 
         TypedParseParams translationParams = default, 
-        bool nullIfZero = true) 
+        bool nullIfZero = true,
+        RecordType? endMarker = null) 
     { 
         translationParams = translationParams.ShortCircuit(); 
         var subHeader = reader.GetSubrecord(); 
@@ -747,13 +759,20 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
                 transl, 
                 triggeringRecord, 
                 translationParams, 
-                nullIfZero: nullIfZero); 
+                nullIfZero: nullIfZero,
+                endMarker: endMarker); 
         } 
-        else 
+        else if (recType == endMarker)
+        {
+            reader.Position += subHeader.TotalLength;
+            return Array.Empty<T>();
+        }
+        else
         { 
             return Parse( 
                 reader, 
-                transl); 
+                transl,
+                endMarker: endMarker); 
         } 
     } 
  
@@ -763,7 +782,8 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         BinaryMasterParseDelegate<T> transl, 
         RecordTriggerSpecs? triggeringRecord = null, 
         TypedParseParams translationParams = default, 
-        bool nullIfZero = false) 
+        bool nullIfZero = false,
+        RecordType? endMarker = null) 
     { 
         if (amount == 0 && nullIfZero) return Enumerable.Empty<T>(); 
         translationParams = translationParams.ShortCircuit(); 
@@ -772,7 +792,12 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         for (int i = 0; i < amount; i++) 
         { 
             var nextRecord = HeaderTranslation.GetNextRecordType(reader.Reader); 
-            if (!triggeringRecord?.TriggeringRecordTypes.Contains(nextRecord) ?? false) break; 
+            if (endMarker == nextRecord)
+            {
+                reader.ReadSubrecord();
+                break;
+            }
+            if (!triggeringRecord?.TriggeringRecordTypes.Contains(nextRecord) ?? false) break;
             if (!IsLoqui) 
             { 
                 reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength; 
@@ -787,7 +812,12 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
                     new MalformedDataException($"Parsed item on the list consumed no data."), 
                     nextRecord); 
             } 
-        } 
+        }
+
+        if (endMarker.HasValue)
+        {
+            reader.TryReadSubrecord(endMarker.Value, out _);
+        }
         if (reader.Position == startingPos) 
         { 
             throw new MalformedDataException($"Parsed list of {amount} items consumed no data."); 
@@ -833,7 +863,8 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         MutagenWriter writer, 
         IReadOnlyList<T>? items, 
         RecordType recordType, 
-        BinarySubWriteDelegate<MutagenWriter, T> transl) 
+        BinarySubWriteDelegate<MutagenWriter, T> transl,
+        bool writeNullSuffix = false) 
     { 
         if (items == null) return; 
         try 
@@ -845,7 +876,12 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
                     foreach (var item in items) 
                     { 
                         transl(writer, item); 
-                    } 
+                    }
+
+                    if (writeNullSuffix)
+                    {
+                        writer.WriteZeros(1);
+                    }
                 } 
             } 
             catch (OverflowException overflow) 
@@ -1070,6 +1106,9 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
                     break; 
                 case 4: 
                     writer.Write(items.Count); 
+                    break; 
+                case 8: 
+                    writer.Write((long)items.Count); 
                     break; 
                 default: 
                     throw new NotImplementedException(); 
@@ -1386,24 +1425,42 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
             using (HeaderExport.Subrecord(writer, endMarker.Value)) { } 
         } 
     } 
- 
-    #region Cache Helpers 
-    public void Parse<K>( 
-        MutagenFrame reader, 
-        ICache<T, K> item, 
-        RecordType triggeringRecord, 
-        BinarySubParseDelegate<MutagenFrame, T> transl) 
-    { 
+}
+
+internal static class ListBinaryTranslationExt
+{
+    #region Cache Helpers
+
+    public static void Parse<T, K>(
+        this ListBinaryTranslation<T> translation,
+        MutagenFrame reader,
+        ICache<T, K> item,
+        RecordType triggeringRecord,
+        BinarySubParseDelegate<MutagenFrame, T> transl)
+        where T : IMajorRecordGetter
+    {
         // Should normally be SetTo, but since we want duplicate groups to merge, we're doing an Add. 
         // A clear is assumed to be run by the caller ahead of time before starting to fill. 
-        item.Set( 
-            Parse( 
-                reader, 
-                triggeringRecord, 
-                transl: transl)); 
+        foreach (var entry in translation.Parse(
+                     reader,
+                     triggeringRecord,
+                     transl: transl))
+        {
+            try
+            {
+                item.Add(entry);
+            }
+            catch (ArgumentException)
+            {
+                throw new RecordCollisionException(
+                    reader.MetaData.ModKey,
+                    entry.FormKey, 
+                    typeof(T));
+            }
+        }
     } 
     #endregion 
-} 
+}
  
 internal sealed class PluginListAsyncBinaryTranslation<T> 
 { 

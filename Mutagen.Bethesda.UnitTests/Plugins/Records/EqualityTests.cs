@@ -1,7 +1,11 @@
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
+using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Testing;
+using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
 using Xunit;
 
@@ -9,6 +13,28 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records;
 
 public class EqualityTests
 {
+    [Fact]
+    public void FreshEquals()
+    {
+        var npc1 = new Npc(TestConstants.Form1, SkyrimRelease.SkyrimSE);
+        var npc2 = new Npc(TestConstants.Form1, SkyrimRelease.SkyrimSE);
+        Assert.Equal(npc1, npc2);
+    }
+
+    [Fact]
+    public void SimpleEquals()
+    {
+        var npc1 = new Npc(TestConstants.Form1, SkyrimRelease.SkyrimSE)
+        {
+            Name = "TEST"
+        };
+        var npc2 = new Npc(TestConstants.Form1, SkyrimRelease.SkyrimSE)
+        {
+            Name = "TEST"
+        };
+        Assert.Equal(npc1, npc2);
+    }
+    
     private Weapon GetSomeWeapon()
     {
         return new Weapon(FormKey.Null, SkyrimRelease.SkyrimSE)
@@ -112,5 +138,37 @@ public class EqualityTests
                 Properties = false,
             }
         }).Should().BeTrue();
+    }
+
+    [Theory, MutagenModAutoData]
+    public void AssetLinkListEquality(
+        SkyrimMod mod,
+        Weather weather1,
+        Weather weather2,
+        Weather weather3,
+        AssetLink<SkyrimTextureAssetType> assetLink1,
+        AssetLink<SkyrimTextureAssetType> assetLink2,
+        AssetLink<SkyrimTextureAssetType> assetLink3)
+    {
+        var mask = new Weather.TranslationMask(false, false)
+        {
+            CloudTextures = true
+        };
+
+        weather1.CloudTextures[0] = assetLink1;
+        weather1.CloudTextures[1] = assetLink2;
+        
+        weather2.CloudTextures[0] = assetLink2;
+        weather2.CloudTextures[1] = assetLink3;
+        
+        weather3.CloudTextures[0] = assetLink1;
+        weather3.CloudTextures[1] = assetLink2;
+
+        weather1.Equals(weather1, mask)
+            .Should().BeTrue();
+        weather1.Equals(weather3, mask)
+            .Should().BeTrue();
+        weather1.Equals(weather2, mask)
+            .Should().BeFalse();
     }
 }

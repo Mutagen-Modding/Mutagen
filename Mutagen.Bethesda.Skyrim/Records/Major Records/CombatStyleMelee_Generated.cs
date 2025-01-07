@@ -1260,8 +1260,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.SpecialAttackMult = rhs.SpecialAttackMult;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ICombatStyleMelee item,
+            ICombatStyleMeleeGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public CombatStyleMelee DeepCopy(

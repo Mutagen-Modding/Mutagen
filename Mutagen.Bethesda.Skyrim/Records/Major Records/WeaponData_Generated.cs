@@ -2142,8 +2142,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Stagger = rhs.Stagger;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IWeaponData item,
+            IWeaponDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public WeaponData DeepCopy(

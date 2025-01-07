@@ -454,6 +454,35 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
 
+        #region Mutagen
+        object? IConditionParameters.Parameter1
+        {
+            get => FirstParameter;
+            set => FirstParameter = (value is ActorValue v ? v : throw new ArgumentException());
+        }
+        object? IConditionParametersGetter.Parameter1
+        {
+            get => FirstParameter;
+        }
+        Type? IConditionParametersGetter.Parameter1Type
+        {
+            get => typeof(ActorValue);
+        }
+        object? IConditionParameters.Parameter2
+        {
+            get => SecondParameter;
+            set => SecondParameter = (value is Int32 v ? v : throw new ArgumentException());
+        }
+        object? IConditionParametersGetter.Parameter2
+        {
+            get => SecondParameter;
+        }
+        Type? IConditionParametersGetter.Parameter2Type
+        {
+            get => typeof(Int32);
+        }
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => GetWorkshopResourceDamageConditionDataBinaryWriteTranslation.Instance;
@@ -1040,8 +1069,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.SecondUnusedStringParameter = rhs.SecondUnusedStringParameter;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IGetWorkshopResourceDamageConditionData item,
+            IGetWorkshopResourceDamageConditionDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IConditionData item,

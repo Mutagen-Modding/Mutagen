@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Mutagen.Bethesda.Plugins.Masters;
+using Mutagen.Bethesda.Plugins.Masters.DI;
 using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Plugins;
@@ -53,7 +54,7 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
     /// <summary>
     /// True if FormKey is considered Null
     /// </summary>
-    public bool IsNull => ID == 0 || ModKey.IsNull;
+    public bool IsNull => ModKey.IsNull;
 
     /// <summary>
     /// Constructor taking a ModKey and ID as separate parameters
@@ -68,48 +69,32 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
     }
 
     /// <summary>
-    /// Constructs a FormKey from a list of masters and the raw uint
+    /// Constructs a FormKey from a list of masters and the FormID
     /// </summary>
     /// <param name="masterReferences">Master reference list to refer to</param>
-    /// <param name="idWithModID">Mod index and Record ID to use</param>
-    /// <returns>Converted FormID</returns>
-    public static FormKey Factory(IReadOnlyMasterReferenceCollection masterReferences, uint idWithModID)
+    /// <param name="formId">FormID to convert</param>
+    /// <param name="reference">Whether the FormID is a reference.  If false, it is part of a records header</param>
+    /// <returns>Converted FormKey</returns>
+    internal static FormKey Factory(IReadOnlySeparatedMasterPackage masterReferences, FormID formId, bool reference)
     {
-        var modID = ModIndex.GetModIndexByteFromUInt(idWithModID);
-
-        if (modID >= masterReferences.Masters.Count)
-        {
-            return new FormKey(
-                masterReferences.CurrentMod,
-                idWithModID);
-        }
-
-        var justId = idWithModID & 0xFFFFFF;
-        if (modID == 0 && justId == 0)
-        {
-            return Null;
-        }
-
-        var master = masterReferences.Masters[modID];
-        return new FormKey(
-            master.Master,
-            idWithModID);
+        return FormIDTranslator.GetFormKey(masterReferences, formId, reference: reference);
     }
 
     /// <summary>
-    /// Constructs a FormKey from a list of masters and the raw uint
+    /// Constructs a FormKey from a list of masters and the FormID
     /// </summary>
     /// <param name="masterReferences">Master reference list to refer to</param>
-    /// <param name="idWithModID">Mod index and Record ID to use</param>
+    /// <param name="formId">FormID to convert</param>
+    /// <param name="reference">Whether the FormID is a reference.  If false, it is part of a records header</param>
     /// <param name="maxIsNull">Whether a maximum value should be considered null</param>
-    /// <returns>Converted FormID</returns>
-    public static FormKey Factory(IReadOnlyMasterReferenceCollection masterReferences, uint idWithModID, bool maxIsNull)
+    /// <returns>Converted FormKey</returns>
+    internal static FormKey Factory(IReadOnlySeparatedMasterPackage masterReferences, FormID formId, bool reference, bool maxIsNull)
     {
-        if (maxIsNull && idWithModID == uint.MaxValue)
+        if (maxIsNull && formId.Raw == uint.MaxValue)
         {
             return FormKey.None;
         }
-        return Factory(masterReferences, idWithModID);
+        return FormIDTranslator.GetFormKey(masterReferences, formId, reference: true);
     }
 
     private static bool IsDelim(char c) => c is ':' or '_';
@@ -148,30 +133,20 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
             return false;
         }
 
-        uint id;
-        int delim;
-        if (IsDelim(str[4]) && str.Slice(0, 4).Equals(NullStr, StringComparison.OrdinalIgnoreCase))
+        // If delimeter not in place, invalid
+        if (!IsDelim(str[6]))
         {
-            delim = 4;
-            id = 0;
+            formKey = default!;
+            return false;
         }
-        else
+
+        int delim = 6;
+
+        // Convert ID section
+        if (!uint.TryParse(str.Slice(0, delim), NumberStyles.HexNumber, null, out var id))
         {
-            // If delimeter not in place, invalid
-            if (!IsDelim(str[6]))
-            {
-                formKey = default!;
-                return false;
-            }
-
-            delim = 6;
-
-            // Convert ID section
-            if (!uint.TryParse(str.Slice(0, delim), NumberStyles.HexNumber, null, out id))
-            {
-                formKey = default!;
-                return false;
-            }
+            formKey = default!;
+            return false;
         }
 
         // Slice past delimiter
@@ -260,11 +235,11 @@ public readonly struct FormKey : IEquatable<FormKey>, IFormKeyGetter
     /// <returns>a string that is safe for use in file paths</returns>
     public string ToFilesafeString()
     {
-        if (ID == 0 && ModKey.IsNull)
+        if (ModKey.IsNull)
         {
             return "Null";
         }
-        return $"{(ID == 0 ? "Null" : IDString())}_{ModKey}";
+        return $"{IDString()}_{ModKey}";
     }
 
     /// <summary>

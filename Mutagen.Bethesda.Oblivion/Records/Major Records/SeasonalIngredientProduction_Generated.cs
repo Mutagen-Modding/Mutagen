@@ -996,8 +996,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Winter = rhs.Winter;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ISeasonalIngredientProduction item,
+            ISeasonalIngredientProductionGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public SeasonalIngredientProduction DeepCopy(

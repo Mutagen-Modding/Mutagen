@@ -695,8 +695,21 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.FunctionType = rhs.FunctionType;
             }
+            DeepCopyInCustom<T>(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom<T>(
+            IObjectModFormLinkIntProperty<T> item,
+            IObjectModFormLinkIntPropertyGetter<T> rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+            where T : struct, Enum;
         
         public override void DeepCopyIn<T>(
             IAObjectModProperty<T> item,
@@ -917,7 +930,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IFallout4MajorRecordGetter> Record => new FormLink<IFallout4MajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x5, 0x4))));
+        public IFormLinkGetter<IFallout4MajorRecordGetter> Record => FormLinkBinaryTranslation.Instance.OverlayFactory<IFallout4MajorRecordGetter>(_package, _structData.Span.Slice(0x5, 0x4));
         public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x9, 0x4));
         public ObjectModProperty.FormLinkFunctionType FunctionType => (ObjectModProperty.FormLinkFunctionType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0xD, 0x4));
         partial void CustomFactoryEnd(

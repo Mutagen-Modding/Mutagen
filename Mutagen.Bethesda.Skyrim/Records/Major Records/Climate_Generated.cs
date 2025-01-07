@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Assets;
@@ -1720,12 +1719,12 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     yield return obj.SunGlareTexture;
                 }
-                if (obj.Model is {} ModelItems)
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
-                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
+                    yield return item;
                 }
             }
             yield break;
@@ -1890,8 +1889,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.PhaseLength = rhs.PhaseLength;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IClimate item,
+            IClimateGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
@@ -2061,12 +2072,12 @@ namespace Mutagen.Bethesda.Skyrim
                 });
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.SunTexture?.RawPath,
+                item: item.SunTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.SunGlareTexture?.RawPath,
+                item: item.SunGlareTexture?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.GNAM),
                 binaryType: StringBinaryType.NullTerminate);
             if (item.Model is {} ModelItem)
@@ -2167,30 +2178,13 @@ namespace Mutagen.Bethesda.Skyrim
             IClimateGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.CLMT)))
-            {
-                try
-                {
-                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.CLMT,
+                writeEmbedded: SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -2494,14 +2488,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.WLST:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.WeatherTypes = BinaryOverlayList.FactoryByStartIndex<IWeatherTypeGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.WeatherTypes = BinaryOverlayList.FactoryByStartIndexWithTrigger<IWeatherTypeGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => WeatherTypeBinaryOverlay.WeatherTypeFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Climate_FieldIndex.WeatherTypes;
                 }
                 case RecordTypeInts.FNAM:

@@ -8,6 +8,7 @@
       <String name="Name" recordType="TNAM" nullable="False" />
       <RefList name="Entries" refName="ActorValueModulationEntry" counterRecType="ITMC" />
       <Enum name="TextureType" enumName="ActorValueModulation.TextureTypeEnum" recordType="MODT" byteLength="4" />
+      <FormLink name="Parent" refName="ActorValueModulation" recordType="AVMP" />
     </Fields>
   </Object>
   <Object name="ActorValueModulationEntry" objType="Subrecord">

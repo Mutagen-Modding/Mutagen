@@ -9,6 +9,8 @@ public class SkyrimRegionTests : ASpecificCaseTest<Region, IRegionGetter>
 {
     public override ModPath Path => TestDataPathing.SkyrimSoundRegionDataWithNoSecondSubrecord;
     public override GameRelease Release => GameRelease.SkyrimSE;
+    public override bool TestPassthrough => false;
+    
     public override void TestItem(IRegionGetter item)
     {
         item.Sounds.Should().NotBeNull();

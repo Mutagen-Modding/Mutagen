@@ -1,43 +1,47 @@
-using System.Diagnostics;
+using Mutagen.Bethesda.Plugins.Analysis.DI;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Masters;
-using Mutagen.Bethesda.Plugins.Utility;
-using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Plugins.Meta;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
-public sealed class ModHeaderWriteLogic
+internal sealed class ModHeaderWriteLogic
 {
     private readonly List<Action<IMajorRecordGetter>> _recordIterationActions = new();
+    private readonly List<Action<IModContext<IMajorRecordGetter>>> _recordContextIterationActions = new();
     private readonly List<Action<FormKey, IFormLinkGetter>> _formLinkIterationActions = new();
     private readonly BinaryWriteParameters _params;
+    private static readonly RecordCompactionCompatibilityDetector _recordCompactionDetector = new();
 
     private readonly ModKey _modKey;
     private readonly Dictionary<ModKey, FormKey?> _modKeys = new();
     private uint _numRecords;
     private uint? _nextFormID;
-    private uint _uniqueRecordsFromMod;
     private readonly HashSet<FormKey> _formKeyUniqueness = new();
-    private readonly GameRelease _release;
     private readonly GameCategory _category;
-    private FormKey? _disallowedFormKey;
+    private FormKey? _disallowedLowerFormKey;
     private uint _higherFormIDRange;
+    private GameConstants _constants;
+    private readonly IModGetter _mod;
+    private readonly HashSet<FormKey> _overriddenForms = new();
+    private RangeUInt32? _recordRange;
 
     private ModHeaderWriteLogic(
-        BinaryWriteParameters? param,
-        IModGetter mod,
-        IModHeaderCommon modHeader)
+        BinaryWriteParameters param,
+        IModGetter mod)
     {
-        _params = param ?? BinaryWriteParameters.Default;
+        _mod = mod;
+        _params = param;
         _modKey = mod.ModKey;
-        _release = mod.GameRelease;
         _category = mod.GameRelease.ToCategory();
-        _higherFormIDRange = HeaderVersionHelper.GetDefaultHigherFormID(this._release);
+        _constants = GameConstants.Get(mod.GameRelease);
+        _higherFormIDRange = _constants.DefaultHighRangeFormID;
     }
 
     public static void WriteHeader(
@@ -47,13 +51,16 @@ public sealed class ModHeaderWriteLogic
         IModHeaderCommon modHeader,
         ModKey modKey)
     {
+        param ??= BinaryWriteParameters.Default;
         var modHeaderWriter = new ModHeaderWriteLogic(
             param: param,
-            mod: mod,
-            modHeader: modHeader);
+            mod: mod);
         modHeaderWriter.AddProcessors(mod, modHeader);
         modHeaderWriter.RunProcessors(mod);
-        modHeaderWriter.PostProcessAdjustments(writer, mod, modHeader);
+        modHeaderWriter.PostProcessAdjustments(writer, mod, modHeader, 
+            modHeaderWriter._constants.SeparateMasterLoadOrders
+                ? param.MasterFlagsLookup 
+                : null);
         modHeader.WriteToBinary(writer);
     }
 
@@ -61,40 +68,65 @@ public sealed class ModHeaderWriteLogic
         IModGetter mod, 
         IModHeaderCommon modHeader)
     {
-        ModifyMasterFlags(modHeader);
         AddMasterCollectionActions(mod);
         AddRecordCount();
         AddNextFormIDActions();
         AddFormIDUniqueness();
-        AddLightFormLimit(modHeader);
-        AddCompressionCheck();
+        AddFormIDCompactionLogic();
+        AddCompactionTracking(modHeader);
         AddDisallowedLowerFormIDs();
+        RegisterOverriddenFormsFishing();
     }
 
     private void RunProcessors(IModGetter mod)
     {
         // Do any major record iteration work
         if (_recordIterationActions.Count > 0
-            || _formLinkIterationActions.Count > 0)
+            || _formLinkIterationActions.Count > 0
+            || _recordContextIterationActions.Count > 0)
         {
-            foreach (var maj in mod.EnumerateMajorRecords())
+            if (_recordContextIterationActions.Count > 0)
             {
-                foreach (var majAction in _recordIterationActions)
+                foreach (var context in mod.EnumerateMajorRecordSimpleContexts())
                 {
-                    majAction(maj);
-                }
-
-                if (_formLinkIterationActions.Count > 0)
-                {
-                    foreach (var linkInfo in maj.EnumerateFormLinks())
-                    {
-                        foreach (var formLinkAction in _formLinkIterationActions)
-                        {
-                            formLinkAction(maj.FormKey, linkInfo);
-                        }
-                    }
+                    RunProcessorsOnModContexts(context);
                 }
             }
+            else
+            {
+                foreach (var maj in mod.EnumerateMajorRecords())
+                {
+                    RunProcessorsOnMajorRecord(maj);
+                }
+            }
+        }
+    }
+
+    private void RunProcessorsOnMajorRecord(IMajorRecordGetter maj)
+    {
+        foreach (var majAction in _recordIterationActions)
+        {
+            majAction(maj);
+        }
+
+        if (_formLinkIterationActions.Count > 0)
+        {
+            foreach (var linkInfo in maj.EnumerateFormLinks())
+            {
+                foreach (var formLinkAction in _formLinkIterationActions)
+                {
+                    formLinkAction(maj.FormKey, linkInfo);
+                }
+            }
+        }
+    }
+
+    private void RunProcessorsOnModContexts(IModContext<IMajorRecordGetter> context)
+    {
+        RunProcessorsOnMajorRecord(context.Record);
+        foreach (var majAction in _recordContextIterationActions)
+        {
+            majAction(context);
         }
     }
 
@@ -105,6 +137,11 @@ public sealed class ModHeaderWriteLogic
         _modKeys.Remove(ModKey.Null);
         var modKeysList = _modKeys.Keys.ToList();
         SortMasters(modKeysList);
+        if (_params.MastersContentCustomOverride != null)
+        {
+            modKeysList = _params.MastersContentCustomOverride(modKeysList).ToList();
+            SortMasters(modKeysList);
+        }
         ret.SetTo(modKeysList.Select(m => new MasterReference()
         {
             Master = m,
@@ -116,15 +153,32 @@ public sealed class ModHeaderWriteLogic
     private void PostProcessAdjustments(
         MutagenWriter writer,
         IModGetter mod,
-        IModHeaderCommon modHeader)
+        IModHeaderCommon modHeader,
+        IReadOnlyCache<IModMasterStyledGetter, ModKey>? masterFlagLookup)
     {
-        HandleDisallowedLowerFormIDs();
+        HandleDisallowedLowerFormIDs(); 
+        SetOutgoingMasters(writer, mod, modHeader, masterFlagLookup);
+        SetNumRecords(mod, modHeader);
+        SetNextFormID(mod, modHeader);
+        SetOverriddenForms(modHeader);
+    }
+    
+    private void SetOutgoingMasters(MutagenWriter writer, IModGetter mod, IModHeaderCommon modHeader,
+        IReadOnlyCache<IModMasterStyledGetter, ModKey>? masterFlagLookup)
+    {
         writer.MetaData.MasterReferences = ConstructWriteMasters(mod);
+        writer.MetaData.SeparatedMasterPackage = SeparatedMasterPackage.Factory(
+            mod.GameRelease,
+            mod.ModKey,
+            mod.GetMasterStyle(),
+            writer.MetaData.MasterReferences,
+            masterFlagLookup);
+        
         modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));
-        if (_params.RecordCount != RecordCountOption.NoCheck)
-        {
-            modHeader.NumRecords = _numRecords;
-        }
+    }
+
+    private void SetNextFormID(IModGetter mod, IModHeaderCommon modHeader)
+    {
         if (_params.NextFormID != NextFormIDOption.NoCheck)
         {
             bool? forceLowerBound = null;
@@ -132,15 +186,16 @@ public sealed class ModHeaderWriteLogic
             {
                 forceLowerBound = force.ForceLowerRangeSetting;
             }
-            modHeader.NextFormID = _nextFormID.HasValue ? _nextFormID.Value + 1 : mod.MinimumCustomFormID(forceLowerBound);
+            modHeader.NextFormID = _nextFormID.HasValue ? _nextFormID.Value + 1 : mod.GetDefaultInitialNextFormID(forceLowerBound);
         }
+    }
 
-        var lightIndex = _category.GetLightFlagIndex();
-        if (lightIndex.HasValue 
-            && Enums.HasFlag(modHeader.RawFlags, lightIndex.Value)
-            && _uniqueRecordsFromMod > Constants.LightMasterLimit)
+    private void SetNumRecords(IModGetter mod, IModHeaderCommon modHeader)
+    {
+        if (_params.RecordCount != RecordCountOption.NoCheck)
         {
-            throw new ArgumentException($"Light Master Mod contained more originating records than allowed. {_uniqueRecordsFromMod} > {Constants.LightMasterLimit}");
+            // Can't use raw count, as more gets considered in this tally
+            modHeader.NumRecords = mod.GetRecordCount();
         }
     }
 
@@ -212,6 +267,31 @@ public sealed class ModHeaderWriteLogic
     }
     #endregion
 
+    #region FormID Compaction Logic
+    private void AddFormIDCompactionLogic()
+    {
+        switch (_params.FormIDCompaction)
+        {
+            case FormIDCompactionOption.NoCheck:
+                break;
+            case FormIDCompactionOption.Iterate:
+            {
+                var formIdRange = _recordCompactionDetector.GetAllowedRange(_mod, potential: true);
+                if (formIdRange != null)
+                {
+                    _recordIterationActions.Add(maj =>
+                    {
+                        _recordCompactionDetector.ThrowIfIncompatible(_mod, formIdRange.Value, maj);
+                    });
+                }
+                break;
+            }
+            default:
+                throw new NotImplementedException();
+        }
+    }
+    #endregion
+
     #region Next Form ID
     private void AddNextFormIDActions()
     {
@@ -272,68 +352,28 @@ public sealed class ModHeaderWriteLogic
     }
     #endregion
 
-    #region Master Flags
-    public void ModifyMasterFlags(IModHeaderCommon header)
+    #region Compaction
+    private void AddCompactionTracking(IModHeaderCommon header)
     {
-        switch (_params.MasterFlag)
-        {
-            case MasterFlagOption.NoCheck:
-                break;
-            case MasterFlagOption.ChangeToMatchModKey:
-                header.RawFlags = Enums.SetFlag(header.RawFlags, _category.GetMasterFlagIndex(), _modKey.Type == ModType.Master);
-                if (_modKey.Type != ModType.Plugin)
-                {
-                    header.RawFlags = Enums.SetFlag(header.RawFlags, _category.GetMasterFlagIndex(), true);
-                }
-                break;
-            case MasterFlagOption.ExceptionOnMismatch:
-                if ((_modKey.Type == ModType.Master) != Enums.HasFlag(header.RawFlags, _category.GetMasterFlagIndex()))
-                {
-                    throw new ArgumentException($"Master flag did not match ModKey type. ({_modKey})");
-                }
-
-                var lightIndex = _category.GetLightFlagIndex();
-                if (lightIndex.HasValue && (_modKey.Type == ModType.Light) != Enums.HasFlag(header.RawFlags, lightIndex.Value))
-                {
-                    throw new ArgumentException($"Light flag did not match ModKey type. ({_modKey})");
-                }
-                
-                break;
-            default:
-                break;
-        }
-    }
-    #endregion
-
-    #region Light Master Form Limit
-    private void AddLightFormLimit(IModHeaderCommon header)
-    {
-        var lightIndex = _category.GetLightFlagIndex();
-        if (!lightIndex.HasValue || !Enums.HasFlag(header.RawFlags, lightIndex.Value)) return;
         _recordIterationActions.Add(maj =>
         {
             if (maj.FormKey.ModKey == _modKey)
             {
-                _uniqueRecordsFromMod++;
+                if (_recordRange == null)
+                {
+                    _recordRange = new RangeUInt32(maj.FormKey.ID);
+                }
+                else if (maj.FormKey.ID > _recordRange.Value.Max)
+                {
+                    _recordRange = new RangeUInt32(_recordRange.Value.Min, maj.FormKey.ID);
+                }
+                else if (maj.FormKey.ID < _recordRange.Value.Min)
+                {
+                    _recordRange = new RangeUInt32(maj.FormKey.ID, _recordRange.Value.Max);
+                }
             }
         });
     }
-    #endregion
-
-    #region Compression Check
-
-    private void AddCompressionCheck()
-    {
-        _recordIterationActions.Add(maj =>
-        {
-            if (maj.IsCompressed)
-            {
-                throw new NotImplementedException(
-                    "Writing with compression enabled is not currently supported.  https://github.com/Mutagen-Modding/Mutagen/issues/235");
-            }
-        });
-    }
-
     #endregion
 
     #region DisallowedLowerFormIDs
@@ -350,7 +390,7 @@ public sealed class ModHeaderWriteLogic
                     if (maj.FormKey.ModKey != _modKey) return;
                     if (_higherFormIDRange > maj.FormKey.ID)
                     {
-                        _disallowedFormKey = maj.FormKey;
+                        _disallowedLowerFormKey = maj.FormKey;
                     }
                 });
                 break;
@@ -360,20 +400,67 @@ public sealed class ModHeaderWriteLogic
     private void HandleDisallowedLowerFormIDs()
     {
         if (_numRecords == 0) return;
-        if (_disallowedFormKey == null) return;
+        if (_disallowedLowerFormKey == null) return;
 
         switch (_params.LowerRangeDisallowedHandler)
         {
             case NoCheckIfLowerRangeDisallowed:
                 return;
             case ThrowIfLowerRangeDisallowed:
-                throw new LowerFormKeyRangeDisallowedException(_disallowedFormKey.Value);
+                throw new LowerFormKeyRangeDisallowedException(_disallowedLowerFormKey.Value);
             case AddPlaceholderMasterIfLowerRangeDisallowed placeholder:
                 if (placeholder.ModKey == null)
                 {
-                    throw new LowerFormKeyRangeDisallowedException(_disallowedFormKey.Value);
+                    throw new LowerFormKeyRangeDisallowedException(_disallowedLowerFormKey.Value);
                 }
                 _modKeys[placeholder.ModKey.Value] = null;
+                break;
+        }
+    }
+
+    #endregion
+
+    #region OverriddenForms
+
+    private void RegisterOverriddenFormsFishing()
+    {
+        if (!_mod.ListsOverriddenForms) return;
+        switch (_params.OverriddenFormsOption)
+        {
+            case OverriddenFormsOption.NoCheck:
+                break;
+            case OverriddenFormsOption.Iterate:
+                _recordContextIterationActions.Add(context =>
+                {
+                    if (context.Record.FormKey.ModKey == _modKey) return;
+                    if (Enums.HasFlag(context.Record.MajorRecordFlagsRaw, Constants.Persistent)) return;
+                    if (context.Parent?.Record is not IMajorRecordGetter parentMaj) return;
+                    if (parentMaj.Registration.Name == "Worldspace") return;
+                    _overriddenForms.Add(context.Record.FormKey);
+                });
+                break;
+        }
+    }
+
+    private void SetOverriddenForms(
+        IModHeaderCommon modHeader)
+    {
+        if (!_mod.ListsOverriddenForms) return;
+        switch (_params.OverriddenFormsOption)
+        {
+            case OverriddenFormsOption.NoCheck:
+                break;
+            case OverriddenFormsOption.Iterate:
+                if (_overriddenForms.Count == 0)
+                {
+                    modHeader.SetOverriddenForms(null);
+                }
+                else
+                {
+                    modHeader.SetOverriddenForms(
+                        _overriddenForms.OrderBy(x => x.ModKey.FileName.String)
+                            .ThenBy(x => x.ID));
+                }
                 break;
         }
     }

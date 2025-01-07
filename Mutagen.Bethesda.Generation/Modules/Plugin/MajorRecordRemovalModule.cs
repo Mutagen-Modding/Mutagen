@@ -34,6 +34,8 @@ public class MajorRecordRemovalModule : GenerationModule
             sb.AppendLine("[DebuggerStepThrough]");
             sb.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove(IEnumerable<{nameof(FormKey)}> formKeys) => this.Remove(formKeys);");
             sb.AppendLine("[DebuggerStepThrough]");
+            sb.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove(IEnumerable<{nameof(IFormLinkIdentifier)}> formLinks) => this.Remove(formLinks);");
+            sb.AppendLine("[DebuggerStepThrough]");
             sb.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove({nameof(FormKey)} formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);");
             sb.AppendLine("[DebuggerStepThrough]");
             sb.AppendLine($"void {nameof(IMajorRecordEnumerable)}.Remove(HashSet<{nameof(FormKey)}> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);");
@@ -92,6 +94,29 @@ public class MajorRecordRemovalModule : GenerationModule
             {
                 args.AddPassArg("obj");
                 args.Add("keys: keys.ToHashSet()");
+            }
+        }
+        sb.AppendLine();
+        
+        sb.AppendLine("[DebuggerStepThrough]");
+        using (var args = sb.Function(
+                   $"public static void Remove{obj.GetGenericTypes(MaskType.Normal)}"))
+        {
+            args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.ISetter, obj.Generics));
+            args.Add($"this {obj.Interface(getter: false, internalInterface: true)} obj");
+            args.Add($"IEnumerable<{nameof(IFormLinkIdentifier)}> keys");
+        }
+        using (sb.CurlyBrace())
+        {
+            sb.AppendLine("foreach (var g in keys.GroupBy(x => x.Type))");
+            using (sb.CurlyBrace())
+            {
+                using (var c = sb.Call("Remove"))
+                {
+                    c.AddPassArg("obj");
+                    c.Add("keys: g.Select(x => x.FormKey)");
+                    c.Add("type: g.Key");
+                }
             }
         }
         sb.AppendLine();

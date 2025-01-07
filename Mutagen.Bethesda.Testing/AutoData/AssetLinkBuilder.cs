@@ -39,12 +39,12 @@ public class AssetLinkBuilder : ISpecimenBuilder
         var fileName =
             $"{name}{Path.GetFileNameWithoutExtension(Path.GetRandomFileName())}{link.Type.FileExtensions.First()}";
         
-        link.RawPath = Path.Combine($"{PathingUtil.DrivePrefix}Data", link.Type.BaseFolder, fileName);
+        link.GivenPath = Path.Combine($"{PathingUtil.DrivePrefix}Data", link.Type.BaseFolder, fileName);
         if (existing)
         {
             var fs = context.Create<IFileSystem>();
-            fs.Directory.CreateDirectory(Path.GetDirectoryName(link.RawPath));
-            fs.File.WriteAllText(link.RawPath, string.Empty);
+            fs.Directory.CreateDirectory(Path.GetDirectoryName(link.GivenPath));
+            fs.File.WriteAllText(link.GivenPath, string.Empty);
         }
         return link;
     }

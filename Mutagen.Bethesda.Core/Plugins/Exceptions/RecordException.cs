@@ -1,4 +1,5 @@
 using Loqui;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Plugins.Exceptions;
@@ -12,6 +13,11 @@ public class RecordException : Exception
     public FormKey? FormKey { get; private set; }
     public Type? RecordType { get; private set; }
     public string? EditorID { get; private set; }
+
+    static RecordException()
+    {
+        Warmup.Init();
+    }
 
     public RecordException(FormKey? formKey, Type? recordType, ModKey? modKey, string? edid)
     {
@@ -52,6 +58,8 @@ public class RecordException : Exception
     /// <summary>
     /// Wraps an exception to associate it with a specific major record
     /// </summary>
+    /// <param name="ex">Exception to enrich</param>
+    /// <param name="majorRec">Major Record to pull information from</param>
     public static RecordException Enrich(Exception ex, IMajorRecordGetter? majorRec)
     {
         return Enrich(ex, majorRec?.FormKey, majorRec?.Registration.ClassType, majorRec?.EditorID);
@@ -60,6 +68,9 @@ public class RecordException : Exception
     /// <summary>
     /// Wraps an exception to associate it with a specific major record
     /// </summary>
+    /// <param name="ex">Exception to enrich</param>
+    /// <param name="modKey">ModKey to mark as containing the record</param>
+    /// <param name="majorRec">Major Record to pull information from</param>
     public static RecordException Enrich(Exception ex, ModKey? modKey, IMajorRecordGetter? majorRec)
     {
         return Enrich(ex, majorRec?.FormKey, majorRec?.Registration.ClassType, majorRec?.EditorID, modKey);
@@ -68,6 +79,11 @@ public class RecordException : Exception
     /// <summary>
     /// Wraps an exception to associate it with a specific major record
     /// </summary>
+    /// <param name="ex">Exception to enrich</param>
+    /// <param name="formKey">FormKey to mark the exception to be associated with</param>
+    /// <param name="recordType">C# Type that the record is</param>
+    /// <param name="edid">EditorID to mark the exception to be associated with</param>
+    /// <param name="modKey">ModKey to mark as containing the record</param>
     public static RecordException Enrich(Exception ex, FormKey? formKey, Type? recordType, string? edid = null, ModKey? modKey = null)
     {
         if (ex is RecordException rec)
@@ -76,12 +92,10 @@ public class RecordException : Exception
             {
                 rec.ModKey = modKey;
             }
-            if (rec.EditorID == null && edid != null)
+
+            if (rec.EditorID == null && rec.FormKey == null)
             {
                 rec.EditorID = edid;
-            }
-            if (rec.FormKey == null && formKey != null)
-            {
                 rec.FormKey = formKey;
             }
             if (rec.RecordType == null && recordType != null)
@@ -111,6 +125,10 @@ public class RecordException : Exception
     /// <summary>
     /// Wraps an exception to associate it with a specific major record
     /// </summary>
+    /// <param name="ex">Exception to enrich</param>
+    /// <param name="formKey">FormKey to mark the exception to be associated with</param>
+    /// <param name="edid">EditorID to mark the exception to be associated with</param>
+    /// <param name="modKey">ModKey to mark as containing the record</param>
     public static RecordException Enrich<TMajor>(Exception ex, FormKey? formKey, string? edid, ModKey? modKey = null)
         where TMajor : IMajorRecordGetter
     {
@@ -125,6 +143,8 @@ public class RecordException : Exception
     /// <summary>
     /// Wraps an exception to associate it with a specific major record
     /// </summary>
+    /// <param name="ex">Exception to enrich</param>
+    /// <param name="modKey">ModKey to mark as containing the record</param>
     public static RecordException Enrich(Exception ex, ModKey modKey)
     {
         if (ex is RecordException rec)
@@ -141,6 +161,17 @@ public class RecordException : Exception
             edid: null,
             recordType: null,
             innerException: ex);
+    }
+
+    /// <summary>
+    /// Wraps an exception to associate it with a specific major record
+    /// </summary>
+    /// <param name="ex">Exception to enrich</param>
+    /// <param name="majorRecordContext">ModContext to pull information from</param>
+    public static RecordException Enrich<TMajor>(Exception ex, IModContext<TMajor> majorRecordContext)
+        where TMajor : IMajorRecordGetter
+    {
+        return Enrich(ex, modKey: majorRecordContext.ModKey, majorRec: majorRecordContext.Record);
     }
 
     #endregion

@@ -867,8 +867,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Reference.SetTo(rhs.Reference.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IScriptObjectReference item,
+            IScriptObjectReferenceGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAScriptReference item,
@@ -1092,7 +1104,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Reference
         private int? _ReferenceLocation;
-        public IFormLinkGetter<IOblivionMajorRecordGetter> Reference => _ReferenceLocation.HasValue ? new FormLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ReferenceLocation.Value, _package.MetaData.Constants)))) : FormLink<IOblivionMajorRecordGetter>.Null;
+        public IFormLinkGetter<IOblivionMajorRecordGetter> Reference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IOblivionMajorRecordGetter>(_package, _recordData, _ReferenceLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem RunOnType,
                 TItem Reference,
-                TItem Unknown3,
+                TItem RunOnTypeIndex,
                 TItem UseAliases,
                 TItem UsePackageData,
                 TItem EncounterZone,
@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 RunOnType: RunOnType,
                 Reference: Reference,
-                Unknown3: Unknown3,
+                RunOnTypeIndex: RunOnTypeIndex,
                 UseAliases: UseAliases,
                 UsePackageData: UsePackageData)
             {
@@ -466,6 +466,35 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GetInZoneConditionDataCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetInZoneConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
+        object? IConditionParameters.Parameter1
+        {
+            get => EncounterZone;
+            set => EncounterZone = (value is IFormLinkOrIndex<IEncounterZoneGetter> v ? v : throw new ArgumentException());
+        }
+        object? IConditionParametersGetter.Parameter1
+        {
+            get => EncounterZone;
+        }
+        Type? IConditionParametersGetter.Parameter1Type
+        {
+            get => typeof(IFormLinkOrIndexGetter<IEncounterZoneGetter>);
+        }
+        object? IConditionParameters.Parameter2
+        {
+            get => null;
+            set
+            {
+
+            }
+        }
+        object? IConditionParametersGetter.Parameter2
+        {
+            get => null;
+        }
+        Type? IConditionParametersGetter.Parameter2Type
+        {
+            get => null;
+        }
         #endregion
 
         #region Binary Translation
@@ -693,7 +722,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         RunOnType = 0,
         Reference = 1,
-        Unknown3 = 2,
+        RunOnTypeIndex = 2,
         UseAliases = 3,
         UsePackageData = 4,
         EncounterZone = 5,
@@ -931,7 +960,7 @@ namespace Mutagen.Bethesda.Skyrim
                     return (GetInZoneConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.Reference:
                     return (GetInZoneConditionData_FieldIndex)((int)index);
-                case ConditionData_FieldIndex.Unknown3:
+                case ConditionData_FieldIndex.RunOnTypeIndex:
                     return (GetInZoneConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
                     return (GetInZoneConditionData_FieldIndex)((int)index);
@@ -1061,8 +1090,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.SecondUnusedStringParameter = rhs.SecondUnusedStringParameter;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IGetInZoneConditionData item,
+            IGetInZoneConditionDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IConditionData item,

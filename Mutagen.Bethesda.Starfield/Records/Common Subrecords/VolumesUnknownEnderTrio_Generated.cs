@@ -947,8 +947,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Unknown3 = rhs.Unknown3;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IVolumesUnknownEnderTrio item,
+            IVolumesUnknownEnderTrioGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAVolumesUnknownEnder item,

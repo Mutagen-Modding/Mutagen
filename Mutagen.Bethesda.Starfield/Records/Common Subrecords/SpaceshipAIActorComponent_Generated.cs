@@ -875,8 +875,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.SpaceshipAIActor.SetTo(rhs.SpaceshipAIActor.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ISpaceshipAIActorComponent item,
+            ISpaceshipAIActorComponentGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAComponent item,
@@ -1111,7 +1123,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region SpaceshipAIActor
         private int? _SpaceshipAIActorLocation;
-        public IFormLinkNullableGetter<INpcGetter> SpaceshipAIActor => _SpaceshipAIActorLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SpaceshipAIActorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
+        public IFormLinkNullableGetter<INpcGetter> SpaceshipAIActor => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<INpcGetter>(_package, _recordData, _SpaceshipAIActorLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

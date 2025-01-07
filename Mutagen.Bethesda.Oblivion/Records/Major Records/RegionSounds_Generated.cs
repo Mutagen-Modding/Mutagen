@@ -1065,8 +1065,20 @@ namespace Mutagen.Bethesda.Oblivion
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IRegionSounds item,
+            IRegionSoundsGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IRegionData item,
@@ -1401,14 +1413,12 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 case RecordTypeInts.RDSD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Sounds = BinaryOverlayList.FactoryByStartIndex<IRegionSoundGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Sounds = BinaryOverlayList.FactoryByStartIndexWithTrigger<IRegionSoundGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => RegionSoundBinaryOverlay.RegionSoundFactory(s, p));
-                    stream.Position += subLen;
                     return (int)RegionSounds_FieldIndex.Sounds;
                 }
                 default:

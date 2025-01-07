@@ -1108,8 +1108,20 @@ namespace Mutagen.Bethesda.Fallout4
                     item.BMMP = default;
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IBone item,
+            IBoneGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public Bone DeepCopy(
@@ -1441,14 +1453,12 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.BSMS:
                 {
                     if (lastParsed.ShortCircuit((int)Bone_FieldIndex.Values, translationParams)) return ParseResult.Stop;
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Values = BinaryOverlayList.FactoryByStartIndex<Single>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Values = BinaryOverlayList.FactoryByStartIndexWithTrigger<Single>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => s.Float());
-                    stream.Position += subLen;
                     return (int)Bone_FieldIndex.Values;
                 }
                 case RecordTypeInts.BMMP:

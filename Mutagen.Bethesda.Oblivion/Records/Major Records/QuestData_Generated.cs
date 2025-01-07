@@ -894,8 +894,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Priority = rhs.Priority;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IQuestData item,
+            IQuestDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public QuestData DeepCopy(

@@ -1149,8 +1149,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.MaximumTrainingLevel = rhs.MaximumTrainingLevel;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ICreatureAIData item,
+            ICreatureAIDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public CreatureAIData DeepCopy(

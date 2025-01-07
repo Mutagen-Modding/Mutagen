@@ -860,8 +860,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.ActorValue.SetTo(rhs.ActorValue.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IBookActorValue item,
+            IBookActorValueGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IBookTeachTarget item,
@@ -1063,7 +1075,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IActorValueInformationGetter> ActorValue => new FormLink<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IActorValueInformationGetter> ActorValue => FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

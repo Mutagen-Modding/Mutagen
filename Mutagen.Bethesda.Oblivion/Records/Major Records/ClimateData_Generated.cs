@@ -1150,8 +1150,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.PhaseLength = rhs.PhaseLength;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IClimateData item,
+            IClimateDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ClimateData DeepCopy(

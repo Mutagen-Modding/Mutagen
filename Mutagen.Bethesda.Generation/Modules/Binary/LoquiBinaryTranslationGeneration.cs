@@ -182,7 +182,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
         if (data.MarkerType.HasValue
             && !data.RecordType.HasValue)
         {
-            sb.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength; // Skip marker");
+            sb.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength; // Skip marker");
         }
         if (loqui.TargetObjectGeneration != null)
         {
@@ -200,7 +200,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
             {
                 if (NeedsHeaderProcessing(loqui))
                 {
-                    sb.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)}; // Skip header");
+                    sb.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)}; // Skip header");
                 }
                 using (var args = sb.Call(
                            $"{itemAccessor} = {loqui.TargetObjectGeneration.Namespace}.{loqui.TypeNameInternal(getter: false, internalInterface: true)}.{this.Module.CreateFromPrefix}{this.Module.ModuleNickname}"))
@@ -608,7 +608,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
         }
         if (data.MarkerType.HasValue)
         {
-            sb.AppendLine($"stream.Position += {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.HeaderLength; // Skip marker");
+            sb.AppendLine($"stream.Position += {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)}.SubConstants.HeaderLength; // Skip marker");
         }
 
         if (loqui.TargetObjectGeneration.IsTopLevelGroup())
@@ -634,7 +634,7 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
         {
             if (NeedsHeaderProcessing(loqui))
             {
-                sb.AppendLine($"stream.Position += _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.HeaderLength;");
+                sb.AppendLine($"stream.Position += _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingMeta.Constants)}.SubConstants.HeaderLength;");
             }
             using (var args = sb.Call(
                        $"this.{accessor} = {this.Module.BinaryOverlayClassName(loqui)}.{loqui.TargetObjectGeneration.Name}Factory"))

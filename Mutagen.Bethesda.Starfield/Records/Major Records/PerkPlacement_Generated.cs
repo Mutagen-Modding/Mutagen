@@ -911,8 +911,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Rank = rhs.Rank;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPerkPlacement item,
+            IPerkPlacementGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public PerkPlacement DeepCopy(
@@ -1119,7 +1131,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IPerkGetter> Perk => new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IPerkGetter> Perk => FormLinkBinaryTranslation.Instance.OverlayFactory<IPerkGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public Byte Rank => _structData.Span[0x4];
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
@@ -61,7 +60,7 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private VirtualMachineAdapter? _VirtualMachineAdapter;
         /// <summary>
-        /// Aspects: IScripted
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
         /// </summary>
         public VirtualMachineAdapter? VirtualMachineAdapter
         {
@@ -72,6 +71,7 @@ namespace Mutagen.Bethesda.Fallout4
         IVirtualMachineAdapterGetter? IMagicEffectGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #region Aspects
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
@@ -2441,6 +2441,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial interface IMagicEffect :
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IMagicEffectInternal>,
         IMagicEffectGetter,
@@ -2451,7 +2452,7 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedNamedRequired
     {
         /// <summary>
-        /// Aspects: IScripted
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
         /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         /// <summary>
@@ -4186,8 +4187,20 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IMagicEffect item,
+            IMagicEffectGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IFallout4MajorRecordInternal item,
             IFallout4MajorRecordGetter rhs,
@@ -4562,30 +4575,13 @@ namespace Mutagen.Bethesda.Fallout4
             IMagicEffectGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.MGEF)))
-            {
-                try
-                {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.MGEF,
+                writeEmbedded: Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -4901,7 +4897,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region MenuDisplayObject
         private int? _MenuDisplayObjectLocation;
-        public IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject => _MenuDisplayObjectLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MenuDisplayObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
+        public IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStaticGetter>(_package, _recordData, _MenuDisplayObjectLocation);
         #endregion
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
@@ -4928,12 +4924,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region MagicSkill
         private int _MagicSkillLocation => _DATALocation!.Value.Min + 0xC;
         private bool _MagicSkill_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IActorValueInformationGetter> MagicSkill => _MagicSkill_IsSet ? new FormLink<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_MagicSkillLocation, 0x4)))) : FormLink<IActorValueInformationGetter>.Null;
+        public IFormLinkGetter<IActorValueInformationGetter> MagicSkill => _MagicSkill_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_MagicSkillLocation, 0x4), isSet: _MagicSkill_IsSet) : FormLink<IActorValueInformationGetter>.Null;
         #endregion
         #region ResistValue
         private int _ResistValueLocation => _DATALocation!.Value.Min + 0x10;
         private bool _ResistValue_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IActorValueInformationGetter> ResistValue => _ResistValue_IsSet ? new FormLink<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ResistValueLocation, 0x4)))) : FormLink<IActorValueInformationGetter>.Null;
+        public IFormLinkGetter<IActorValueInformationGetter> ResistValue => _ResistValue_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_ResistValueLocation, 0x4), isSet: _ResistValue_IsSet) : FormLink<IActorValueInformationGetter>.Null;
         #endregion
         #region CounterEffectCount
         private int _CounterEffectCountLocation => _DATALocation!.Value.Min + 0x14;
@@ -4948,7 +4944,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region CastingLight
         private int _CastingLightLocation => _DATALocation!.Value.Min + 0x18;
         private bool _CastingLight_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ILightGetter> CastingLight => _CastingLight_IsSet ? new FormLink<ILightGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_CastingLightLocation, 0x4)))) : FormLink<ILightGetter>.Null;
+        public IFormLinkGetter<ILightGetter> CastingLight => _CastingLight_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_CastingLightLocation, 0x4), isSet: _CastingLight_IsSet) : FormLink<ILightGetter>.Null;
         #endregion
         #region TaperWeight
         private int _TaperWeightLocation => _DATALocation!.Value.Min + 0x1C;
@@ -4958,12 +4954,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region HitShader
         private int _HitShaderLocation => _DATALocation!.Value.Min + 0x20;
         private bool _HitShader_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IEffectShaderGetter> HitShader => _HitShader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_HitShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
+        public IFormLinkGetter<IEffectShaderGetter> HitShader => _HitShader_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IEffectShaderGetter>(_package, _recordData.Span.Slice(_HitShaderLocation, 0x4), isSet: _HitShader_IsSet) : FormLink<IEffectShaderGetter>.Null;
         #endregion
         #region EnchantShader
         private int _EnchantShaderLocation => _DATALocation!.Value.Min + 0x24;
         private bool _EnchantShader_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IEffectShaderGetter> EnchantShader => _EnchantShader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_EnchantShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
+        public IFormLinkGetter<IEffectShaderGetter> EnchantShader => _EnchantShader_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IEffectShaderGetter>(_package, _recordData.Span.Slice(_EnchantShaderLocation, 0x4), isSet: _EnchantShader_IsSet) : FormLink<IEffectShaderGetter>.Null;
         #endregion
         #region MinimumSkillLevel
         private int _MinimumSkillLevelLocation => _DATALocation!.Value.Min + 0x28;
@@ -5003,12 +4999,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Projectile
         private int _ProjectileLocation => _DATALocation!.Value.Min + 0x48;
         private bool _Projectile_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IProjectileGetter> Projectile => _Projectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
+        public IFormLinkGetter<IProjectileGetter> Projectile => _Projectile_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IProjectileGetter>(_package, _recordData.Span.Slice(_ProjectileLocation, 0x4), isSet: _Projectile_IsSet) : FormLink<IProjectileGetter>.Null;
         #endregion
         #region Explosion
         private int _ExplosionLocation => _DATALocation!.Value.Min + 0x4C;
         private bool _Explosion_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_ExplosionLocation, 0x4), isSet: _Explosion_IsSet) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region CastType
         private int _CastTypeLocation => _DATALocation!.Value.Min + 0x50;
@@ -5023,22 +5019,22 @@ namespace Mutagen.Bethesda.Fallout4
         #region SecondActorValue
         private int _SecondActorValueLocation => _DATALocation!.Value.Min + 0x58;
         private bool _SecondActorValue_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IActorValueInformationGetter> SecondActorValue => _SecondActorValue_IsSet ? new FormLink<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_SecondActorValueLocation, 0x4)))) : FormLink<IActorValueInformationGetter>.Null;
+        public IFormLinkGetter<IActorValueInformationGetter> SecondActorValue => _SecondActorValue_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_SecondActorValueLocation, 0x4), isSet: _SecondActorValue_IsSet) : FormLink<IActorValueInformationGetter>.Null;
         #endregion
         #region CastingArt
         private int _CastingArtLocation => _DATALocation!.Value.Min + 0x5C;
         private bool _CastingArt_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IArtObjectGetter> CastingArt => _CastingArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_CastingArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        public IFormLinkGetter<IArtObjectGetter> CastingArt => _CastingArt_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_CastingArtLocation, 0x4), isSet: _CastingArt_IsSet) : FormLink<IArtObjectGetter>.Null;
         #endregion
         #region HitEffectArt
         private int _HitEffectArtLocation => _DATALocation!.Value.Min + 0x60;
         private bool _HitEffectArt_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IArtObjectGetter> HitEffectArt => _HitEffectArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_HitEffectArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        public IFormLinkGetter<IArtObjectGetter> HitEffectArt => _HitEffectArt_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_HitEffectArtLocation, 0x4), isSet: _HitEffectArt_IsSet) : FormLink<IArtObjectGetter>.Null;
         #endregion
         #region ImpactData
         private int _ImpactDataLocation => _DATALocation!.Value.Min + 0x64;
         private bool _ImpactData_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> ImpactData => _ImpactData_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImpactDataLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public IFormLinkGetter<IImpactDataSetGetter> ImpactData => _ImpactData_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_ImpactDataLocation, 0x4), isSet: _ImpactData_IsSet) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region SkillUsageMultiplier
         private int _SkillUsageMultiplierLocation => _DATALocation!.Value.Min + 0x68;
@@ -5048,7 +5044,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region DualCastArt
         private int _DualCastArtLocation => _DATALocation!.Value.Min + 0x6C;
         private bool _DualCastArt_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IDualCastDataGetter> DualCastArt => _DualCastArt_IsSet ? new FormLink<IDualCastDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_DualCastArtLocation, 0x4)))) : FormLink<IDualCastDataGetter>.Null;
+        public IFormLinkGetter<IDualCastDataGetter> DualCastArt => _DualCastArt_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IDualCastDataGetter>(_package, _recordData.Span.Slice(_DualCastArtLocation, 0x4), isSet: _DualCastArt_IsSet) : FormLink<IDualCastDataGetter>.Null;
         #endregion
         #region DualCastScale
         private int _DualCastScaleLocation => _DATALocation!.Value.Min + 0x70;
@@ -5058,32 +5054,32 @@ namespace Mutagen.Bethesda.Fallout4
         #region EnchantArt
         private int _EnchantArtLocation => _DATALocation!.Value.Min + 0x74;
         private bool _EnchantArt_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IArtObjectGetter> EnchantArt => _EnchantArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_EnchantArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        public IFormLinkGetter<IArtObjectGetter> EnchantArt => _EnchantArt_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_EnchantArtLocation, 0x4), isSet: _EnchantArt_IsSet) : FormLink<IArtObjectGetter>.Null;
         #endregion
         #region HitVisuals
         private int _HitVisualsLocation => _DATALocation!.Value.Min + 0x78;
         private bool _HitVisuals_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IVisualEffectGetter> HitVisuals => _HitVisuals_IsSet ? new FormLink<IVisualEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_HitVisualsLocation, 0x4)))) : FormLink<IVisualEffectGetter>.Null;
+        public IFormLinkGetter<IVisualEffectGetter> HitVisuals => _HitVisuals_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IVisualEffectGetter>(_package, _recordData.Span.Slice(_HitVisualsLocation, 0x4), isSet: _HitVisuals_IsSet) : FormLink<IVisualEffectGetter>.Null;
         #endregion
         #region EnchantVisuals
         private int _EnchantVisualsLocation => _DATALocation!.Value.Min + 0x7C;
         private bool _EnchantVisuals_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IVisualEffectGetter> EnchantVisuals => _EnchantVisuals_IsSet ? new FormLink<IVisualEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_EnchantVisualsLocation, 0x4)))) : FormLink<IVisualEffectGetter>.Null;
+        public IFormLinkGetter<IVisualEffectGetter> EnchantVisuals => _EnchantVisuals_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IVisualEffectGetter>(_package, _recordData.Span.Slice(_EnchantVisualsLocation, 0x4), isSet: _EnchantVisuals_IsSet) : FormLink<IVisualEffectGetter>.Null;
         #endregion
         #region EquipAbility
         private int _EquipAbilityLocation => _DATALocation!.Value.Min + 0x80;
         private bool _EquipAbility_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<ISpellGetter> EquipAbility => _EquipAbility_IsSet ? new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_EquipAbilityLocation, 0x4)))) : FormLink<ISpellGetter>.Null;
+        public IFormLinkGetter<ISpellGetter> EquipAbility => _EquipAbility_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellGetter>(_package, _recordData.Span.Slice(_EquipAbilityLocation, 0x4), isSet: _EquipAbility_IsSet) : FormLink<ISpellGetter>.Null;
         #endregion
         #region ImageSpaceModifier
         private int _ImageSpaceModifierLocation => _DATALocation!.Value.Min + 0x84;
         private bool _ImageSpaceModifier_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifier_IsSet ? new FormLink<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImageSpaceModifierLocation, 0x4)))) : FormLink<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifier_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImageSpaceAdapterGetter>(_package, _recordData.Span.Slice(_ImageSpaceModifierLocation, 0x4), isSet: _ImageSpaceModifier_IsSet) : FormLink<IImageSpaceAdapterGetter>.Null;
         #endregion
         #region PerkToApply
         private int _PerkToApplyLocation => _DATALocation!.Value.Min + 0x88;
         private bool _PerkToApply_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IPerkGetter> PerkToApply => _PerkToApply_IsSet ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_PerkToApplyLocation, 0x4)))) : FormLink<IPerkGetter>.Null;
+        public IFormLinkGetter<IPerkGetter> PerkToApply => _PerkToApply_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IPerkGetter>(_package, _recordData.Span.Slice(_PerkToApplyLocation, 0x4), isSet: _PerkToApply_IsSet) : FormLink<IPerkGetter>.Null;
         #endregion
         #region CastingSoundLevel
         private int _CastingSoundLevelLocation => _DATALocation!.Value.Min + 0x8C;
@@ -5213,7 +5209,7 @@ namespace Mutagen.Bethesda.Fallout4
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
                         trigger: RecordTypes.KWDA,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)MagicEffect_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:
@@ -5226,7 +5222,7 @@ namespace Mutagen.Bethesda.Fallout4
                     this.CounterEffects = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IMagicEffectGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IMagicEffectGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IMagicEffectGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
@@ -5237,14 +5233,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.SNDD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Sounds = BinaryOverlayList.FactoryByStartIndex<IMagicEffectSoundGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Sounds = BinaryOverlayList.FactoryByStartIndexWithTrigger<IMagicEffectSoundGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => MagicEffectSoundBinaryOverlay.MagicEffectSoundFactory(s, p));
-                    stream.Position += subLen;
                     return (int)MagicEffect_FieldIndex.Sounds;
                 }
                 case RecordTypeInts.DNAM:

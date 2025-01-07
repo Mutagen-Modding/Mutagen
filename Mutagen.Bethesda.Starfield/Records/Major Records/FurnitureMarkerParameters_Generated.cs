@@ -1061,8 +1061,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Unknown = rhs.Unknown.ToArray();
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IFurnitureMarkerParameters item,
+            IFurnitureMarkerParametersGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public FurnitureMarkerParameters DeepCopy(
@@ -1286,7 +1298,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public P3Float Offset => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x0, 0xC));
         public Single RotationZ => _structData.Slice(0xC, 0x4).Float() * 57.2958f;
-        public IFormLinkGetter<IKeywordGetter> Keyword => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x10, 0x4))));
+        public IFormLinkGetter<IKeywordGetter> Keyword => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(_package, _structData.Span.Slice(0x10, 0x4));
         public Furniture.EntryParameterType EntryTypes => (Furniture.EntryParameterType)_structData.Span.Slice(0x14, 0x1)[0];
         public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Slice(0x15, 0x7).ToArray();
         partial void CustomFactoryEnd(

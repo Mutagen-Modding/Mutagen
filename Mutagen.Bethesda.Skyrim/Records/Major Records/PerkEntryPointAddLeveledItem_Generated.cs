@@ -947,8 +947,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Item.SetTo(rhs.Item.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPerkEntryPointAddLeveledItem item,
+            IPerkEntryPointAddLeveledItemGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAPerkEntryPointEffect item,
@@ -1188,7 +1200,7 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ILeveledItemGetter> Item => new FormLink<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x2, 0x4))));
+        public IFormLinkGetter<ILeveledItemGetter> Item => FormLinkBinaryTranslation.Instance.OverlayFactory<ILeveledItemGetter>(_package, _structData.Span.Slice(0x2, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

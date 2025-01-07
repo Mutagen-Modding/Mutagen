@@ -88,6 +88,7 @@ public class FloatBinaryTranslationGeneration : PrimitiveBinaryTranslationGenera
                 FloatIntegerType.UInt => 4,
                 FloatIntegerType.UShort => 2,
                 FloatIntegerType.Byte => 1,
+                FloatIntegerType.ByteHundred => 1,
                 _ => throw new NotImplementedException(),
             };
         }

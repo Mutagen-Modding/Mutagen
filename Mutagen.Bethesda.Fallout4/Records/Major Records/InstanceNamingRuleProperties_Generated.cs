@@ -945,8 +945,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Operation = rhs.Operation;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IInstanceNamingRuleProperties item,
+            IInstanceNamingRulePropertiesGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public InstanceNamingRuleProperties DeepCopy(

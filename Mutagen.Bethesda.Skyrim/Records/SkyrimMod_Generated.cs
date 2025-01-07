@@ -5284,10 +5284,9 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
         IGroup<T>? IMod.TryGetTopLevelGroup<T>() => this.TryGetTopLevelGroup<T>();
         IGroup? IMod.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
-        void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
-        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem, parallelParam: parallelWriteParams);
+        void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinary(Stream stream, BinaryWriteParameters? param) => this.WriteToBinary(stream, importMask: null, param: param);
-        void IModGetter.WriteToBinaryParallel(Stream stream, BinaryWriteParameters? param, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(stream, param, parallelParam: parallelWriteParams);
+        uint IModGetter.GetRecordCount() => this.GetRecordCount();
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => SkyrimModMixIn.GetEqualsMask(this, (ISkyrimModGetter)rhs, include);
         public override bool CanUseLocalization => true;
         public override bool UsingLocalization
@@ -5323,9 +5322,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ModHeader.Stats.Version = headerVersion.Value;
             }
             this.SkyrimRelease = release;
-            this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID(
-                release: release,
-                forceUseLowerFormIDRanges: forceUseLowerFormIDRanges);
+            this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID(forceUseLowerFormIDRanges: forceUseLowerFormIDRanges);
             _GameSettings_Object = new SkyrimGroup<GameSetting>(this);
             _Keywords_Object = new SkyrimGroup<Keyword>(this);
             _LocationReferenceTypes_Object = new SkyrimGroup<LocationReferenceType>(this);
@@ -5908,131 +5905,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         public override void SyncRecordCount()
         {
-            this.ModHeader.Stats.NumRecords = GetRecordCount();
+            this.ModHeader.Stats.NumRecords = this.GetRecordCount();
         }
-
-        public uint GetRecordCount()
-        {
-            uint count = (uint)this.EnumerateMajorRecords().Count();
-            count += GameSettings.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Keywords.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LocationReferenceTypes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Actions.RecordCache.Count > 0 ? 1 : default(uint);
-            count += TextureSets.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Globals.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Classes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Factions.RecordCache.Count > 0 ? 1 : default(uint);
-            count += HeadParts.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Hairs.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Eyes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Races.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SoundMarkers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AcousticSpaces.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MagicEffects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LandscapeTextures.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ObjectEffects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Spells.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Scrolls.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Activators.RecordCache.Count > 0 ? 1 : default(uint);
-            count += TalkingActivators.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Armors.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Books.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Containers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Doors.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Ingredients.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Lights.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MiscItems.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AlchemicalApparatuses.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Statics.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MoveableStatics.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Grasses.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Trees.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Florae.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Furniture.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Weapons.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Ammunitions.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Npcs.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LeveledNpcs.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Keys.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Ingestibles.RecordCache.Count > 0 ? 1 : default(uint);
-            count += IdleMarkers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ConstructibleObjects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Projectiles.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Hazards.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SoulGems.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LeveledItems.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Weathers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Climates.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ShaderParticleGeometries.RecordCache.Count > 0 ? 1 : default(uint);
-            count += VisualEffects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Regions.RecordCache.Count > 0 ? 1 : default(uint);
-            count += NavigationMeshInfoMaps.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Cells.Records.Count > 0 ? 1 : default(uint);
-            count += Worldspaces.RecordCache.Count > 0 ? 1 : default(uint);
-            count += DialogTopics.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Quests.RecordCache.Count > 0 ? 1 : default(uint);
-            count += IdleAnimations.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Packages.RecordCache.Count > 0 ? 1 : default(uint);
-            count += CombatStyles.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LoadScreens.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LeveledSpells.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AnimatedObjects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Waters.RecordCache.Count > 0 ? 1 : default(uint);
-            count += EffectShaders.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Explosions.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Debris.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ImageSpaces.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ImageSpaceAdapters.RecordCache.Count > 0 ? 1 : default(uint);
-            count += FormLists.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Perks.RecordCache.Count > 0 ? 1 : default(uint);
-            count += BodyParts.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AddonNodes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ActorValueInformation.RecordCache.Count > 0 ? 1 : default(uint);
-            count += CameraShots.RecordCache.Count > 0 ? 1 : default(uint);
-            count += CameraPaths.RecordCache.Count > 0 ? 1 : default(uint);
-            count += VoiceTypes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MaterialTypes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Impacts.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ImpactDataSets.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ArmorAddons.RecordCache.Count > 0 ? 1 : default(uint);
-            count += EncounterZones.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Locations.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Messages.RecordCache.Count > 0 ? 1 : default(uint);
-            count += DefaultObjectManagers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LightingTemplates.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MusicTypes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Footsteps.RecordCache.Count > 0 ? 1 : default(uint);
-            count += FootstepSets.RecordCache.Count > 0 ? 1 : default(uint);
-            count += StoryManagerBranchNodes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += StoryManagerQuestNodes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += StoryManagerEventNodes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += DialogBranches.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MusicTracks.RecordCache.Count > 0 ? 1 : default(uint);
-            count += DialogViews.RecordCache.Count > 0 ? 1 : default(uint);
-            count += WordsOfPower.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Shouts.RecordCache.Count > 0 ? 1 : default(uint);
-            count += EquipTypes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Relationships.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Scenes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += AssociationTypes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Outfits.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ArtObjects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MaterialObjects.RecordCache.Count > 0 ? 1 : default(uint);
-            count += MovementTypes.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SoundDescriptors.RecordCache.Count > 0 ? 1 : default(uint);
-            count += DualCastData.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SoundCategories.RecordCache.Count > 0 ? 1 : default(uint);
-            count += SoundOutputModels.RecordCache.Count > 0 ? 1 : default(uint);
-            count += CollisionLayers.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Colors.RecordCache.Count > 0 ? 1 : default(uint);
-            count += ReverbParameters.RecordCache.Count > 0 ? 1 : default(uint);
-            count += VolumetricLightings.RecordCache.Count > 0 ? 1 : default(uint);
-            count += LensFlares.RecordCache.Count > 0 ? 1 : default(uint);
-            GetCustomRecordCount((customCount) => count += customCount);
-            return count;
-        }
-
-        partial void GetCustomRecordCount(Action<uint> setter);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SkyrimModCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModSetterCommon.Instance.RemapLinks(this, mapping);
@@ -6054,6 +5928,8 @@ namespace Mutagen.Bethesda.Skyrim
         void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<IFormLinkIdentifier> formLinks) => this.Remove(formLinks);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);
         [DebuggerStepThrough]
@@ -6091,21 +5967,19 @@ namespace Mutagen.Bethesda.Skyrim
         public static SkyrimMod CreateFromBinary(
             ModPath path,
             SkyrimRelease release,
-            GroupMask? importMask = null,
-            StringsReadParameters? stringsParam = null,
-            bool parallel = true,
-            IFileSystem? fileSystem = null)
+            BinaryReadParameters? param = null,
+            GroupMask? importMask = null)
         {
             try
             {
                 var gameRelease = release.ToGameRelease();
-                using (var reader = new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem))
+                param ??= BinaryReadParameters.Default;
+                var fileSystem = param.FileSystem.GetOrDefault();
+                var meta = ParsingMeta.Factory(param, gameRelease, path);
+                using (var reader = new MutagenBinaryReadStream(path, meta))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem));
-                    frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ModKey = path.ModKey;
-                    frame.MetaData.Absorb(stringsParam);
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -6113,7 +5987,7 @@ namespace Mutagen.Bethesda.Skyrim
                     var flags = reader.GetInt32(offset: 8);
                     if (Enums.HasFlag(flags, (int)SkyrimModHeader.HeaderFlag.Localized))
                     {
-                        frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(gameRelease, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
+                        frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(gameRelease, path.ModKey, Path.GetDirectoryName(path.Path)!, param.StringsParam);
                     }
                     return CreateFromBinary(
                         release: release,
@@ -6131,21 +6005,19 @@ namespace Mutagen.Bethesda.Skyrim
             ModPath path,
             SkyrimRelease release,
             ErrorMaskBuilder? errorMask,
-            GroupMask? importMask = null,
-            StringsReadParameters? stringsParam = null,
-            bool parallel = true,
-            IFileSystem? fileSystem = null)
+            BinaryReadParameters? param = null,
+            GroupMask? importMask = null)
         {
             try
             {
                 var gameRelease = release.ToGameRelease();
-                using (var reader = new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem))
+                param ??= BinaryReadParameters.Default;
+                var fileSystem = param.FileSystem.GetOrDefault();
+                var meta = ParsingMeta.Factory(param, gameRelease, path);
+                using (var reader = new MutagenBinaryReadStream(path, meta))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem));
-                    frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ModKey = path.ModKey;
-                    frame.MetaData.Absorb(stringsParam);
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -6153,7 +6025,7 @@ namespace Mutagen.Bethesda.Skyrim
                     var flags = reader.GetInt32(offset: 8);
                     if (Enums.HasFlag(flags, (int)SkyrimModHeader.HeaderFlag.Localized))
                     {
-                        frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(gameRelease, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
+                        frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(gameRelease, path.ModKey, Path.GetDirectoryName(path.Path)!, param.StringsParam);
                     }
                     return CreateFromBinary(
                         release: release,
@@ -6172,17 +6044,17 @@ namespace Mutagen.Bethesda.Skyrim
             ModKey modKey,
             SkyrimRelease release,
             RecordTypeInfoCacheReader infoCache,
-            GroupMask? importMask = null,
-            bool parallel = true)
+            BinaryReadParameters? param = null,
+            GroupMask? importMask = null)
         {
             try
             {
-                using (var reader = new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()))
+                param ??= BinaryReadParameters.Default;
+                var meta = ParsingMeta.Factory(param, GameRelease.Oblivion, modKey, stream);
+                using (var reader = new MutagenBinaryReadStream(stream, meta))
                 {
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
-                    frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ModKey = modKey;
                     return CreateFromBinary(
                         release: release,
                         importMask: importMask,
@@ -6201,17 +6073,17 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease release,
             RecordTypeInfoCacheReader infoCache,
             ErrorMaskBuilder? errorMask,
-            GroupMask? importMask = null,
-            bool parallel = true)
+            BinaryReadParameters? param = null,
+            GroupMask? importMask = null)
         {
             try
             {
-                using (var reader = new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()))
+                param ??= BinaryReadParameters.Default;
+                var meta = ParsingMeta.Factory(param, GameRelease.Oblivion, modKey, stream);
+                using (var reader = new MutagenBinaryReadStream(stream, meta))
                 {
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
-                    frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ModKey = modKey;
                     return CreateFromBinary(
                         release: release,
                         importMask: importMask,
@@ -6229,23 +6101,24 @@ namespace Mutagen.Bethesda.Skyrim
         public static ISkyrimModDisposableGetter CreateFromBinaryOverlay(
             ModPath path,
             SkyrimRelease release,
-            StringsReadParameters? stringsParam = null,
-            IFileSystem? fileSystem = null)
+            BinaryReadParameters? param = null)
         {
             return SkyrimModBinaryOverlay.SkyrimModFactory(
                 path: path,
-                stringsParam: stringsParam,
                 release: release,
-                fileSystem: fileSystem);
+                param: param);
         }
 
         public static ISkyrimModDisposableGetter CreateFromBinaryOverlay(
             Stream stream,
             SkyrimRelease release,
-            ModKey modKey)
+            ModKey modKey,
+            BinaryReadParameters? param = null)
         {
+            param ??= BinaryReadParameters.Default;
+            var meta = ParsingMeta.Factory(param, release.ToGameRelease(), modKey, stream);
             return SkyrimModBinaryOverlay.SkyrimModFactory(
-                stream: new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()),
+                stream: new MutagenBinaryReadStream(stream, meta),
                 modKey: modKey,
                 release: release,
                 shouldDispose: false);
@@ -6734,48 +6607,9 @@ namespace Mutagen.Bethesda.Skyrim
                 type: type);
         }
 
-        public static void WriteToBinaryParallel(
-            this ISkyrimModGetter item,
-            Stream stream,
-            BinaryWriteParameters? param = null,
-            ParallelWriteParameters? parallelParam = null)
+        public static uint GetRecordCount(this ISkyrimModGetter item)
         {
-            SkyrimModCommon.WriteParallel(
-                item: item,
-                stream: stream,
-                parallelParam: parallelParam ?? ParallelWriteParameters.Default,
-                param: param ?? BinaryWriteParameters.Default,
-                modKey: item.ModKey);
-        }
-
-        public static void WriteToBinaryParallel(
-            this ISkyrimModGetter item,
-            string path,
-            BinaryWriteParameters? param = null,
-            ParallelWriteParameters? parallelParam = null,
-            IFileSystem? fileSystem = null)
-        {
-            fileSystem = fileSystem.GetOrDefault();
-            param ??= BinaryWriteParameters.Default;
-            parallelParam ??= ParallelWriteParameters.Default;
-            var modKey = param.RunMasterMatch(
-                mod: item,
-                path: path);
-            param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, item.GameRelease.ToCategory().GetLocalizedFlagIndex()!.Value) ? new StringsWriter(item.GameRelease, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncoding.Default, fileSystem: fileSystem) : null;
-            bool disposeStrings = param.StringsWriter != null;
-            using (var stream = fileSystem.FileStream.New(path, FileMode.Create, FileAccess.Write))
-            {
-                SkyrimModCommon.WriteParallel(
-                    item: item,
-                    stream: stream,
-                    parallelParam: parallelParam,
-                    param: param,
-                    modKey: modKey);
-            }
-            if (disposeStrings)
-            {
-                param.StringsWriter?.Dispose();
-            }
+            return ((SkyrimModCommon)((ISkyrimModGetter)item).CommonInstance()!).GetRecordCount(item: item);
         }
 
         [DebuggerStepThrough]
@@ -6864,6 +6698,20 @@ namespace Mutagen.Bethesda.Skyrim
             ((SkyrimModSetterCommon)((ISkyrimModGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
                 keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ISkyrimMod obj,
+            IEnumerable<IFormLinkIdentifier> keys)
+        {
+            foreach (var g in keys.GroupBy(x => x.Type))
+            {
+                Remove(
+                    obj: obj,
+                    keys: g.Select(x => x.FormKey),
+                    type: g.Key);
+            }
         }
 
         [DebuggerStepThrough]
@@ -7016,7 +6864,8 @@ namespace Mutagen.Bethesda.Skyrim
         {
             return ((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).EnumerateMajorRecordContexts(
                 obj: obj,
-                linkCache: null!);
+                linkCache: null!)
+                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -7030,7 +6879,8 @@ namespace Mutagen.Bethesda.Skyrim
                 obj: obj,
                 linkCache: linkCache,
                 type: type,
-                throwIfUnknown: throwIfUnknown);
+                throwIfUnknown: throwIfUnknown)
+                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         #endregion
@@ -7053,21 +6903,19 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimMod item,
             ModPath path,
             SkyrimRelease release,
-            GroupMask? importMask = null,
-            StringsReadParameters? stringsParam = null,
-            bool parallel = true,
-            IFileSystem? fileSystem = null)
+            BinaryReadParameters? param = null,
+            GroupMask? importMask = null)
         {
             try
             {
                 var gameRelease = release.ToGameRelease();
-                using (var reader = new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem))
+                param ??= BinaryReadParameters.Default;
+                var fileSystem = param.FileSystem.GetOrDefault();
+                var meta = ParsingMeta.Factory(param, gameRelease, path);
+                using (var reader = new MutagenBinaryReadStream(path, meta))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem));
-                    frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ModKey = path.ModKey;
-                    frame.MetaData.Absorb(stringsParam);
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
                     if (reader.Remaining < 12)
                     {
                         throw new ArgumentException("File stream was too short to parse flags");
@@ -7075,7 +6923,7 @@ namespace Mutagen.Bethesda.Skyrim
                     var flags = reader.GetInt32(offset: 8);
                     if (Enums.HasFlag(flags, (int)SkyrimModHeader.HeaderFlag.Localized))
                     {
-                        frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(gameRelease, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
+                        frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(gameRelease, path.ModKey, Path.GetDirectoryName(path.Path)!, param.StringsParam);
                     }
                     CopyInFromBinary(
                         item: item,
@@ -7096,17 +6944,17 @@ namespace Mutagen.Bethesda.Skyrim
             ModKey modKey,
             SkyrimRelease release,
             RecordTypeInfoCacheReader infoCache,
-            GroupMask? importMask = null,
-            bool parallel = true)
+            BinaryReadParameters? param = null,
+            GroupMask? importMask = null)
         {
             try
             {
-                using (var reader = new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()))
+                param ??= BinaryReadParameters.Default;
+                var meta = ParsingMeta.Factory(param, GameRelease.Oblivion, modKey, stream);
+                using (var reader = new MutagenBinaryReadStream(stream, meta))
                 {
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
-                    frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ModKey = modKey;
                     CopyInFromBinary(
                         item: item,
                         release: release,
@@ -11862,19 +11710,10 @@ namespace Mutagen.Bethesda.Skyrim
         
         public static void WriteParallel(
             ISkyrimModGetter item,
-            Stream stream,
+            MutagenWriter writer,
             BinaryWriteParameters param,
-            ParallelWriteParameters parallelParam,
             ModKey modKey)
         {
-            var gameConstants = GameConstants.Get(item.SkyrimRelease.ToGameRelease());
-            var bundle = new WritingBundle(gameConstants)
-            {
-                StringsWriter = param.StringsWriter,
-                TargetLanguageOverride = param.TargetLanguageOverride,
-                Encodings = param.Encodings ?? gameConstants.Encodings,
-            };
-            var writer = new MutagenWriter(stream, bundle);
             ModHeaderWriteLogic.WriteHeader(
                 param: param,
                 writer: writer,
@@ -11883,124 +11722,124 @@ namespace Mutagen.Bethesda.Skyrim
                 modKey: modKey);
             Stream[] outputStreams = new Stream[114];
             List<Action> toDo = new List<Action>();
-            toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LocationReferenceTypes, 2, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Actions, 3, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TextureSets, 4, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Globals, 5, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Classes, 6, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Factions, 7, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.HeadParts, 8, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Hairs, 9, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Eyes, 10, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Races, 11, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SoundMarkers, 12, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AcousticSpaces, 13, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.MagicEffects, 14, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LandscapeTextures, 15, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ObjectEffects, 16, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Spells, 17, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Scrolls, 18, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Activators, 19, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.TalkingActivators, 20, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Armors, 21, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Books, 22, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Containers, 23, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Doors, 24, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Ingredients, 25, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Lights, 26, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.MiscItems, 27, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AlchemicalApparatuses, 28, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Statics, 29, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.MoveableStatics, 30, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Grasses, 31, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Trees, 32, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Florae, 33, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Furniture, 34, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Weapons, 35, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Ammunitions, 36, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Npcs, 37, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LeveledNpcs, 38, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Keys, 39, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Ingestibles, 40, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.IdleMarkers, 41, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 42, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Projectiles, 43, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Hazards, 44, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SoulGems, 45, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LeveledItems, 46, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Weathers, 47, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Climates, 48, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ShaderParticleGeometries, 49, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.VisualEffects, 50, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Regions, 51, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.NavigationMeshInfoMaps, 52, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteCellsParallel(item.Cells, 53, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, 54, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteDialogTopicsParallel(item.DialogTopics, 55, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Quests, 56, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.IdleAnimations, 57, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Packages, 58, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.CombatStyles, 59, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LoadScreens, 60, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LeveledSpells, 61, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 62, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Waters, 63, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.EffectShaders, 64, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Explosions, 65, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Debris, 66, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ImageSpaces, 67, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ImageSpaceAdapters, 68, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.FormLists, 69, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Perks, 70, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.BodyParts, 71, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AddonNodes, 72, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueInformation, 73, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.CameraShots, 74, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.CameraPaths, 75, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.VoiceTypes, 76, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.MaterialTypes, 77, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Impacts, 78, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ImpactDataSets, 79, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, 80, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.EncounterZones, 81, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Locations, 82, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Messages, 83, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.DefaultObjectManagers, 84, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LightingTemplates, 85, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.MusicTypes, 86, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Footsteps, 87, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.FootstepSets, 88, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.StoryManagerBranchNodes, 89, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.StoryManagerQuestNodes, 90, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.StoryManagerEventNodes, 91, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.DialogBranches, 92, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.MusicTracks, 93, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.DialogViews, 94, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.WordsOfPower, 95, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Shouts, 96, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.EquipTypes, 97, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Relationships, 98, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Scenes, 99, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.AssociationTypes, 100, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Outfits, 101, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ArtObjects, 102, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.MaterialObjects, 103, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.MovementTypes, 104, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SoundDescriptors, 105, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.DualCastData, 106, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SoundCategories, 107, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.SoundOutputModels, 108, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.CollisionLayers, 109, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Colors, 110, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.ReverbParameters, 111, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.VolumetricLightings, 112, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.LensFlares, 113, outputStreams, bundle, parallelParam));
-            Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
+            toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LocationReferenceTypes, 2, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Actions, 3, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.TextureSets, 4, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Globals, 5, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Classes, 6, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Factions, 7, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.HeadParts, 8, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Hairs, 9, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Eyes, 10, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Races, 11, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SoundMarkers, 12, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.AcousticSpaces, 13, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.MagicEffects, 14, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LandscapeTextures, 15, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ObjectEffects, 16, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Spells, 17, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Scrolls, 18, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Activators, 19, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.TalkingActivators, 20, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Armors, 21, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Books, 22, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Containers, 23, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Doors, 24, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Ingredients, 25, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Lights, 26, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.MiscItems, 27, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.AlchemicalApparatuses, 28, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Statics, 29, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.MoveableStatics, 30, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Grasses, 31, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Trees, 32, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Florae, 33, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Furniture, 34, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Weapons, 35, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Ammunitions, 36, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Npcs, 37, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LeveledNpcs, 38, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Keys, 39, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Ingestibles, 40, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.IdleMarkers, 41, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, 42, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Projectiles, 43, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Hazards, 44, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SoulGems, 45, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LeveledItems, 46, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Weathers, 47, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Climates, 48, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ShaderParticleGeometries, 49, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.VisualEffects, 50, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Regions, 51, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.NavigationMeshInfoMaps, 52, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteCellsParallel(item.Cells, 53, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, 54, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteDialogTopicsParallel(item.DialogTopics, 55, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Quests, 56, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.IdleAnimations, 57, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Packages, 58, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.CombatStyles, 59, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LoadScreens, 60, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LeveledSpells, 61, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, 62, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Waters, 63, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.EffectShaders, 64, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Explosions, 65, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Debris, 66, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ImageSpaces, 67, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ImageSpaceAdapters, 68, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.FormLists, 69, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Perks, 70, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.BodyParts, 71, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.AddonNodes, 72, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueInformation, 73, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.CameraShots, 74, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.CameraPaths, 75, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.VoiceTypes, 76, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.MaterialTypes, 77, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Impacts, 78, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ImpactDataSets, 79, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, 80, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.EncounterZones, 81, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Locations, 82, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Messages, 83, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjectManagers, 84, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LightingTemplates, 85, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.MusicTypes, 86, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Footsteps, 87, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.FootstepSets, 88, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.StoryManagerBranchNodes, 89, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.StoryManagerQuestNodes, 90, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.StoryManagerEventNodes, 91, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.DialogBranches, 92, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.MusicTracks, 93, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.DialogViews, 94, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.WordsOfPower, 95, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Shouts, 96, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.EquipTypes, 97, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Relationships, 98, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Scenes, 99, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.AssociationTypes, 100, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Outfits, 101, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ArtObjects, 102, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.MaterialObjects, 103, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.MovementTypes, 104, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SoundDescriptors, 105, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.DualCastData, 106, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SoundCategories, 107, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.SoundOutputModels, 108, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.CollisionLayers, 109, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Colors, 110, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.ReverbParameters, 111, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.VolumetricLightings, 112, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.LensFlares, 113, outputStreams, writer.MetaData, param.Parallel));
+            Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
-                stream);
+                writer.BaseStream);
         }
         
         public static void WriteGroupParallel<T>(
@@ -12038,6 +11877,129 @@ namespace Mutagen.Bethesda.Skyrim
             PluginUtilityTranslation.CompileSetGroupLength(subStreams, groupBytes);
             streamDepositArray[targetIndex] = new CompositeReadStream(subStreams, resetPositions: true);
         }
+        
+        public uint GetRecordCount(ISkyrimModGetter item)
+        {
+            uint count = (uint)item.EnumerateMajorRecords().Count();
+            count += item.GameSettings.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Keywords.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LocationReferenceTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Actions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.TextureSets.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Globals.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Classes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Factions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.HeadParts.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Hairs.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Eyes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Races.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SoundMarkers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AcousticSpaces.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MagicEffects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LandscapeTextures.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ObjectEffects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Spells.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Scrolls.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Activators.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.TalkingActivators.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Armors.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Books.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Containers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Doors.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Ingredients.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Lights.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MiscItems.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AlchemicalApparatuses.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Statics.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MoveableStatics.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Grasses.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Trees.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Florae.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Furniture.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Weapons.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Ammunitions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Npcs.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LeveledNpcs.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Keys.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Ingestibles.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.IdleMarkers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ConstructibleObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Projectiles.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Hazards.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SoulGems.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LeveledItems.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Weathers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Climates.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ShaderParticleGeometries.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.VisualEffects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Regions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.NavigationMeshInfoMaps.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Cells.Records.Count > 0 ? 1 : default(uint);
+            count += item.Worldspaces.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.DialogTopics.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Quests.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.IdleAnimations.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Packages.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.CombatStyles.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LoadScreens.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LeveledSpells.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AnimatedObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Waters.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.EffectShaders.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Explosions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Debris.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ImageSpaces.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ImageSpaceAdapters.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.FormLists.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Perks.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.BodyParts.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AddonNodes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ActorValueInformation.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.CameraShots.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.CameraPaths.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.VoiceTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MaterialTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Impacts.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ImpactDataSets.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ArmorAddons.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.EncounterZones.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Locations.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Messages.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.DefaultObjectManagers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LightingTemplates.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MusicTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Footsteps.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.FootstepSets.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.StoryManagerBranchNodes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.StoryManagerQuestNodes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.StoryManagerEventNodes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.DialogBranches.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MusicTracks.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.DialogViews.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.WordsOfPower.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Shouts.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.EquipTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Relationships.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Scenes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.AssociationTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Outfits.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ArtObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MaterialObjects.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MovementTypes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SoundDescriptors.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.DualCastData.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SoundCategories.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.SoundOutputModels.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.CollisionLayers.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Colors.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.ReverbParameters.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.VolumetricLightings.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.LensFlares.RecordCache.Count > 0 ? 1 : default(uint);
+            GetCustomRecordCount(item, (customCount) => count += customCount);
+            return count;
+        }
+        
+        partial void GetCustomRecordCount(ISkyrimModGetter item, Action<uint> setter);
         
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISkyrimModGetter obj)
         {
@@ -16924,251 +16886,248 @@ namespace Mutagen.Bethesda.Skyrim
                     yield return additional;
                 }
             }
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            foreach (var item in obj.TextureSets.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
             {
-                foreach (var item in obj.TextureSets.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                yield return item;
+            }
+            foreach (var item in obj.HeadParts.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Eyes.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Races.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MagicEffects.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Scrolls.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Activators.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.TalkingActivators.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Armors.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Books.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Containers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Doors.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Ingredients.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Lights.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MiscItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AlchemicalApparatuses.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Statics.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MoveableStatics.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Grasses.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Trees.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Florae.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Furniture.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Weapons.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Ammunitions.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Npcs.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LeveledNpcs.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Keys.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Ingestibles.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.IdleMarkers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Projectiles.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Hazards.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SoulGems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Weathers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Climates.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ShaderParticleGeometries.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Regions.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            if (obj.Cells is IAssetLinkContainerGetter CellslinkCont)
+            {
+                foreach (var item in CellslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
-                foreach (var item in obj.HeadParts.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Eyes.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Races.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.MagicEffects.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Scrolls.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Activators.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.TalkingActivators.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Armors.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Books.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Containers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Doors.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Ingredients.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Lights.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.MiscItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.AlchemicalApparatuses.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Statics.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.MoveableStatics.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Grasses.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Trees.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Florae.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Furniture.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Weapons.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Ammunitions.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Npcs.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.LeveledNpcs.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Keys.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Ingestibles.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.IdleMarkers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Projectiles.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Hazards.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.SoulGems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Weathers.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Climates.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.ShaderParticleGeometries.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Regions.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                if (obj.Cells is IAssetLinkContainerGetter CellslinkCont)
-                {
-                    foreach (var item in CellslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
-                }
-                foreach (var item in obj.Worldspaces.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.DialogTopics.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Quests.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.IdleAnimations.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Packages.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.LoadScreens.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.AnimatedObjects.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Waters.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.EffectShaders.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Explosions.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Debris.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Perks.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.BodyParts.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.AddonNodes.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.CameraShots.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Impacts.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.ArmorAddons.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.MusicTracks.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.Scenes.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.ArtObjects.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.MaterialObjects.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.SoundDescriptors.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-                foreach (var item in obj.LensFlares.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
+            }
+            foreach (var item in obj.Worldspaces.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.DialogTopics.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Quests.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.IdleAnimations.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Packages.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LoadScreens.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AnimatedObjects.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Waters.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.EffectShaders.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Explosions.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Debris.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Perks.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.BodyParts.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.AddonNodes.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.CameraShots.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Impacts.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ArmorAddons.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MusicTracks.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Scenes.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ArtObjects.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MaterialObjects.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.SoundDescriptors.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LensFlares.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
             }
             yield break;
         }
@@ -19488,15 +19447,28 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ISkyrimMod item,
+            ISkyrimModGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
+        public partial SkyrimMod DeepCopyGetNew(ISkyrimModGetter item);
         public SkyrimMod DeepCopy(
             ISkyrimModGetter item,
             SkyrimMod.TranslationMask? copyMask = null)
         {
-            SkyrimMod ret = (SkyrimMod)((SkyrimModCommon)((ISkyrimModGetter)item).CommonInstance()!).GetNew();
+            var ret = DeepCopyGetNew(item);
             ((SkyrimModSetterTranslationCommon)((ISkyrimModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
@@ -19512,7 +19484,7 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMod.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            SkyrimMod ret = (SkyrimMod)((SkyrimModCommon)((ISkyrimModGetter)item).CommonInstance()!).GetNew();
+            var ret = DeepCopyGetNew(item);
             ((SkyrimModSetterTranslationCommon)((ISkyrimModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
@@ -19528,7 +19500,7 @@ namespace Mutagen.Bethesda.Skyrim
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            SkyrimMod ret = (SkyrimMod)((SkyrimModCommon)((ISkyrimModGetter)item).CommonInstance()!).GetNew();
+            var ret = DeepCopyGetNew(item);
             ((SkyrimModSetterTranslationCommon)((ISkyrimModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
@@ -21148,6 +21120,16 @@ namespace Mutagen.Bethesda.Skyrim
             GroupMask? importMask = null,
             BinaryWriteParameters? param = null)
         {
+            param ??= BinaryWriteParameters.Default;
+            if (param.Parallel.MaxDegreeOfParallelism != 1)
+            {
+                SkyrimModCommon.WriteParallel(
+                    item: item,
+                    writer: writer,
+                    param: param,
+                    modKey: modKey);
+                return;
+            }
             ModHeaderWriteLogic.WriteHeader(
                 param: param,
                 writer: writer,
@@ -22828,20 +22810,19 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimModGetter item,
             FilePath path,
             BinaryWriteParameters? param = null,
-            GroupMask? importMask = null,
-            IFileSystem? fileSystem = null)
+            GroupMask? importMask = null)
         {
             param ??= BinaryWriteParameters.Default;
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, (int)SkyrimModHeader.HeaderFlag.Localized) ? new StringsWriter(item.SkyrimRelease.ToGameRelease(), modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncoding.Default, fileSystem: fileSystem.GetOrDefault()) : null;
-            bool disposeStrings = param.StringsWriter != null;
+            param = PluginUtilityTranslation.SetStringsWriter(item, param, path, modKey);
             var bundle = new WritingBundle(item.SkyrimRelease.ToGameRelease())
             {
                 StringsWriter = param.StringsWriter,
                 CleanNulls = param.CleanNulls,
-                TargetLanguageOverride = param.TargetLanguageOverride
+                TargetLanguageOverride = param.TargetLanguageOverride,
+                Header = item
             };
             if (param.Encodings != null)
             {
@@ -22860,15 +22841,12 @@ namespace Mutagen.Bethesda.Skyrim
                     param: param,
                     modKey: modKey);
             }
-            using (var fs = fileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))
+            using (var fs = param.FileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))
             {
                 memStream.Position = 0;
                 memStream.CopyTo(fs);
             }
-            if (disposeStrings)
-            {
-                param.StringsWriter?.Dispose();
-            }
+            param.StringsWriter?.Dispose();
         }
 
         public static void WriteToBinary(
@@ -22925,10 +22903,9 @@ namespace Mutagen.Bethesda.Skyrim
         public GameRelease GameRelease => SkyrimRelease.ToGameRelease();
         IGroupGetter<T>? IModGetter.TryGetTopLevelGroup<T>() => this.TryGetTopLevelGroup<T>();
         IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
-        void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
-        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem, parallelParam: parallelWriteParams);
+        void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinary(Stream stream, BinaryWriteParameters? param) => this.WriteToBinary(stream, importMask: null, param: param);
-        void IModGetter.WriteToBinaryParallel(Stream stream, BinaryWriteParameters? param, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(stream, param, parallelParam: parallelWriteParams);
+        uint IModGetter.GetRecordCount() => this.GetRecordCount();
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         public bool CanUseLocalization => true;
         public bool UsingLocalization => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Localized);
@@ -23552,20 +23529,16 @@ namespace Mutagen.Bethesda.Skyrim
         public static SkyrimModBinaryOverlay SkyrimModFactory(
             ModPath path,
             SkyrimRelease release,
-            StringsReadParameters? stringsParam = null,
-            IFileSystem? fileSystem = null)
+            BinaryReadParameters? param)
         {
-            var meta = new ParsingBundle(release.ToGameRelease(), new MasterReferenceCollection(path.ModKey))
-            {
-                RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, release.ToGameRelease(), fileSystem: fileSystem))
-            };
+            param ??= BinaryReadParameters.Default;
+            var meta = ParsingMeta.Factory(param, release.ToGameRelease(), path);
+            meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
             var stream = new MutagenBinaryReadStream(
                 path: path.Path,
-                metaData: meta,
-                fileSystem: fileSystem);
+                metaData: meta);
             try
             {
-                meta.Absorb(stringsParam);
                 if (stream.Remaining < 12)
                 {
                     throw new ArgumentException("File stream was too short to parse flags");
@@ -23573,7 +23546,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var flags = stream.GetInt32(offset: 8);
                 if (Enums.HasFlag(flags, (int)SkyrimModHeader.HeaderFlag.Localized))
                 {
-                    meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(release.ToGameRelease(), path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam, fileSystem: fileSystem);
+                    meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(release.ToGameRelease(), path.ModKey, Path.GetDirectoryName(path.Path)!, param.StringsParam, fileSystem: param.FileSystem);
                 }
                 return SkyrimModFactory(
                     stream: stream,
@@ -23621,13 +23594,6 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.TES4:
                 {
                     _ModHeaderLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
-                    _package.MetaData.MasterReferences!.SetTo(
-                        this.ModHeader.MasterReferences.Select(
-                            master => new MasterReference()
-                            {
-                                Master = master.Master,
-                                FileSize = master.FileSize,
-                            }));
                     return (int)SkyrimMod_FieldIndex.ModHeader;
                 }
                 case RecordTypeInts.GMST:

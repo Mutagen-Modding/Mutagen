@@ -1150,8 +1150,20 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IStoredTraversalsComponent item,
+            IStoredTraversalsComponentGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAComponent item,
@@ -1354,12 +1366,12 @@ namespace Mutagen.Bethesda.Starfield
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Traversals.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TraversalReference>.Instance.Parse(
-                            amount: frame.ReadInt32(),
+                            amount: checked((int)frame.ReadUInt32()),
                             reader: frame,
                             transl: TraversalReference.TryCreateFromBinary));
                     item.ActivatorTraversals.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<StoredTraversalsComponentItem>.Instance.Parse(
-                            amount: frame.ReadInt32(),
+                            amount: checked((int)frame.ReadUInt32()),
                             reader: frame,
                             transl: StoredTraversalsComponentItem.TryCreateFromBinary));
                     return (int)StoredTraversalsComponent_FieldIndex.ActivatorTraversals;

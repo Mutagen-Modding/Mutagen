@@ -1260,8 +1260,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.ParameterTwoString = rhs.ParameterTwoString;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IFunctionConditionData item,
+            IFunctionConditionDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IConditionData item,

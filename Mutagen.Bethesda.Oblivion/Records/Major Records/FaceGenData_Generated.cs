@@ -1000,8 +1000,20 @@ namespace Mutagen.Bethesda.Oblivion
                     item.SymmetricTexture = default;
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IFaceGenData item,
+            IFaceGenDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public FaceGenData DeepCopy(

@@ -912,8 +912,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Flags = rhs.Flags;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IWorldspaceParent item,
+            IWorldspaceParentGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public WorldspaceParent DeepCopy(
@@ -1146,7 +1158,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Worldspace
         private int? _WorldspaceLocation;
-        public IFormLinkGetter<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WorldspaceLocation.Value, _package.MetaData.Constants)))) : FormLink<IWorldspaceGetter>.Null;
+        public IFormLinkGetter<IWorldspaceGetter> Worldspace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWorldspaceGetter>(_package, _recordData, _WorldspaceLocation);
         #endregion
         #region Flags
         private int? _FlagsLocation;

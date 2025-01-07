@@ -897,8 +897,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Rotation = rhs.Rotation;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPlacement item,
+            IPlacementGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public Placement DeepCopy(

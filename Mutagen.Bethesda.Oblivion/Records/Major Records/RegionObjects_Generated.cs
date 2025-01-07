@@ -1007,8 +1007,20 @@ namespace Mutagen.Bethesda.Oblivion
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IRegionObjects item,
+            IRegionObjectsGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IRegionData item,
@@ -1321,14 +1333,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RecordTypeInts.RDOT:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Objects = BinaryOverlayList.FactoryByStartIndex<IRegionObjectGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Objects = BinaryOverlayList.FactoryByStartIndexWithTrigger<IRegionObjectGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 52,
                         getter: (s, p) => RegionObjectBinaryOverlay.RegionObjectFactory(s, p));
-                    stream.Position += subLen;
                     return (int)RegionObjects_FieldIndex.Objects;
                 }
                 default:

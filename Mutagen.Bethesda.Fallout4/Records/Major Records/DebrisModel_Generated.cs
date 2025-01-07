@@ -1086,8 +1086,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IDebrisModel item,
+            IDebrisModelGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public DebrisModel DeepCopy(

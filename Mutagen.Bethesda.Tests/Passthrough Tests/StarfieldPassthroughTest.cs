@@ -10,29 +10,34 @@ namespace Mutagen.Bethesda.Tests;
 
 public class StarfieldPassthroughTest : PassthroughTest
 {
-    public override GameRelease GameRelease { get; }
-
     public StarfieldPassthroughTest(PassthroughTestParams param)
-        : base(param)
+        : base(param, GameRelease.Starfield)
     {
-        GameRelease = GameRelease.Starfield;
     }
 
     protected override async Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path, StringsReadParameters stringsParams)
     {
-        return StarfieldModBinaryOverlay.StarfieldModFactory(
-            new ModPath(ModKey, path),
-            StarfieldRelease.Starfield,
-            stringsParams);
+        return StarfieldMod.Create(GameRelease.ToStarfieldRelease())
+            .FromPath(
+                new ModPath(ModKey, path.Path))
+            .WithKnownMasters(MasterFlagsLookup.ListedOrder.ToArray())
+            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .WithStringsParameters(stringsParams)
+            .ThrowIfUnknownSubrecord()
+            .Construct();
     }
 
     protected override async Task<IMod> ImportBinary(FilePath path, StringsReadParameters stringsParams)
     {
-        return StarfieldMod.CreateFromBinary(
-            new ModPath(ModKey, path.Path),
-            StarfieldRelease.Starfield,
-            parallel: Settings.ParallelProcessingSteps,
-            stringsParam: stringsParams);
+        return StarfieldMod.Create(GameRelease.ToStarfieldRelease())
+            .FromPath(
+                new ModPath(ModKey, path.Path))
+            .WithDefaultLoadOrder()
+            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .WithStringsParameters(stringsParams)
+            .ThrowIfUnknownSubrecord()
+            .Mutable()
+            .Construct();
     }
 
     protected override async Task<IMod> ImportCopyIn(FilePath file)
@@ -45,7 +50,7 @@ public class StarfieldPassthroughTest : PassthroughTest
         return ret;
     }
 
-    protected override Processor ProcessorFactory() => new StarfieldProcessor(Settings.ParallelProcessingSteps);
+    protected override Processor ProcessorFactory() => new StarfieldProcessor(Settings.ParallelProcessingSteps, MasterFlagsLookup);
     
     public override AlignmentRules GetAlignmentRules()
     {
@@ -56,6 +61,9 @@ public class StarfieldPassthroughTest : PassthroughTest
             RecordTypes.DLBR,
             RecordTypes.DIAL,
             RecordTypes.SCEN);
+        ret.SetGroupAlignment(
+            (int)GroupTypeEnum.CellTemporaryChildren,
+            RecordTypes.NAVM);
         
         ret.StartMarkers.Add(RecordTypes.REFR, new[]
         {
@@ -65,22 +73,25 @@ public class StarfieldPassthroughTest : PassthroughTest
         ret.AddAlignments(
             RecordTypes.REFR,
             RecordTypes.NAME,
+            RecordTypes.XMSP,
+            RecordTypes.XPWR,
+            RecordTypes.XLTW,
+            RecordTypes.XTRV,
             RecordTypes.XVL2,
             RecordTypes.XSAD,
             RecordTypes.XLCM,
             RecordTypes.XACT,
             RecordTypes.XPRM,
+            AlignmentRepeatedRule.Basic(RecordTypes.XCZR, RecordTypes.XCZA),
             RecordTypes.XVOI,
             RecordTypes.XDTS,
             RecordTypes.XDTF,
             RecordTypes.XEMI,
             RecordTypes.XRDS,
-            RecordTypes.XRDS,
             RecordTypes.XLIG,
             RecordTypes.XLBD,
             RecordTypes.XALD,
-            RecordTypes.XCZC,
-            RecordTypes.XCZA,
+            AlignmentRepeatedRule.Basic(RecordTypes.XCZR, RecordTypes.XCZA),
             RecordTypes.XPRD,
             RecordTypes.XPPA,
             RecordTypes.INAM,
@@ -90,8 +101,8 @@ public class StarfieldPassthroughTest : PassthroughTest
             RecordTypes.XTEL,
             RecordTypes.XTNM,
             RecordTypes.XRFG,
-            RecordTypes.XLRT,
-            RecordTypes.XLMS,
+            AlignmentRepeatedRule.Basic(RecordTypes.XLRT),
+            AlignmentRepeatedRule.Basic(RecordTypes.XLMS),
             RecordTypes.XPCK,
             RecordTypes.XPCS,
             RecordTypes.XLCN,
@@ -119,7 +130,6 @@ public class StarfieldPassthroughTest : PassthroughTest
             RecordTypes.XLVD,
             RecordTypes.XOWN,
             AlignmentRepeatedRule.Basic(RecordTypes.XLCD),
-            
             new SandwichedMarkersRule(
                 RecordTypes.XWPK,
                 RecordTypes.GNAM, 
@@ -128,12 +138,17 @@ public class StarfieldPassthroughTest : PassthroughTest
                 RecordTypes.JNAM, 
                 RecordTypes.LNAM, 
                 RecordTypes.XGOM),
-            
             RecordTypes.XBPO,
             RecordTypes.XLYR,
+            RecordTypes.BOLV,
+            RecordTypes.XWCN,
+            RecordTypes.XWCU,
+            RecordTypes.XLRL,
+            RecordTypes.XTRI,
             RecordTypes.XLRD,
             AlignmentRepeatedRule.Basic(RecordTypes.XLKR),
             RecordTypes.XLKT,
+            RecordTypes.XLIB,
             RecordTypes.XSL1,
             RecordTypes.XEZN,
             RecordTypes.XGDS,
@@ -141,7 +156,6 @@ public class StarfieldPassthroughTest : PassthroughTest
             RecordTypes.XPPS,
             RecordTypes.XEED,
             RecordTypes.XHTW,
-            RecordTypes.BOLV,
             RecordTypes.XBSD,
             RecordTypes.XNSE,
             RecordTypes.XATR,

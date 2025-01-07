@@ -71,5 +71,6 @@ public partial class MapMarker
         TelMithryn = 56,
         ToSkyrim = 57,
         ToSolstheim = 58,
+        CastleKarstaag = 59
     }
 }

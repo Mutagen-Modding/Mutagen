@@ -1276,8 +1276,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.NextPartID = rhs.NextPartID;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IBlueprintComponent item,
+            IBlueprintComponentGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAComponent item,
@@ -1642,14 +1654,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.BUO4:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Items = BinaryOverlayList.FactoryByStartIndex<IBlueprintComponentItemGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Items = BinaryOverlayList.FactoryByStartIndexWithTrigger<IBlueprintComponentItemGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 36,
                         getter: (s, p) => BlueprintComponentItemBinaryOverlay.BlueprintComponentItemFactory(s, p));
-                    stream.Position += subLen;
                     return (int)BlueprintComponent_FieldIndex.Items;
                 }
                 case RecordTypeInts.BODM:

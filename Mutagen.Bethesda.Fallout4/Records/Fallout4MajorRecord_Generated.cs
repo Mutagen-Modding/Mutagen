@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -43,7 +42,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [AcousticSpace, ActionRecord, Activator, ActorValueInformation, AddonNode, AimModel, Ammunition, AnimatedObject, AnimationSoundTagSet, Armor, ArmorAddon, ArtObject, AssociationType, AttractionRule, AudioCategorySnapshot, AudioEffectChain, BendableSpline, BodyPartData, Book, CameraPath, CameraShot, Cell, Class, Climate, CollisionLayer, ColorRecord, CombatStyle, Component, ConstructibleObject, Container, ADamageType, Debris, DefaultObject, DefaultObjectManager, DialogBranch, DialogResponses, DialogTopic, DialogView, Door, DualCastData, EffectShader, EncounterZone, EquipType, Explosion, Faction, Flora, Footstep, FootstepSet, FormList, Furniture, GameSetting, Global, GodRays, Grass, Hazard, HeadPart, Holotape, IdleAnimation, IdleMarker, ImageSpace, ImageSpaceAdapter, Impact, ImpactDataSet, Ingestible, Ingredient, InstanceNamingRules, Key, Keyword, Landscape, LandscapeTexture, Layer, LensFlare, LeveledItem, LeveledNpc, LeveledSpell, Light, LightingTemplate, LoadScreen, Location, LocationReferenceType, MagicEffect, MaterialObject, MaterialSwap, MaterialType, Message, MiscItem, MovableStatic, MovementType, MusicTrack, MusicType, NavigationMesh, NavigationMeshInfoMap, NavigationMeshObstacleManager, Npc, ObjectEffect, AObjectModification, ObjectVisibilityManager, Outfit, Package, PackIn, Perk, PlacedNpc, PlacedObject, APlacedTrap, Projectile, Quest, Race, ReferenceGroup, Region, Relationship, ReverbParameters, Scene, SceneCollection, ShaderParticleGeometry, SoundCategory, SoundDescriptor, SoundKeywordMapping, SoundMarker, SoundOutputModel, Spell, Static, StaticCollection, AStoryManagerNode, TalkingActivator, Terminal, TextureSet, Transform, Tree, VisualEffect, VoiceType, Water, Weapon, Weather, Worldspace, Zoom]
+    /// Implemented by: [AcousticSpace, ActionRecord, Activator, ActorValueInformation, AddonNode, AimModel, Ammunition, AnimatedObject, AnimationSoundTagSet, Armor, ArmorAddon, ArtObject, AssociationType, AttractionRule, AudioCategorySnapshot, AudioEffectChain, BendableSpline, BodyPartData, Book, CameraPath, CameraShot, Cell, Class, Climate, CollisionLayer, ColorRecord, CombatStyle, Component, ConstructibleObject, Container, ADamageType, Debris, DefaultObject, DefaultObjectManager, DialogBranch, DialogResponses, DialogTopic, DialogView, Door, DualCastData, EffectShader, EncounterZone, EquipType, Explosion, Faction, Flora, Footstep, FootstepSet, FormList, Furniture, GameSetting, Global, GodRays, Grass, Hazard, HeadPart, Holotape, IdleAnimation, IdleMarker, ImageSpace, ImageSpaceAdapter, Impact, ImpactDataSet, Ingestible, Ingredient, InstanceNamingRules, Key, Keyword, Landscape, LandscapeTexture, Layer, LensFlare, LeveledItem, LeveledNpc, Light, LightingTemplate, LoadScreen, Location, LocationReferenceType, MagicEffect, MaterialObject, MaterialSwap, MaterialType, Message, MiscItem, MovableStatic, MovementType, MusicTrack, MusicType, NavigationMesh, NavigationMeshInfoMap, NavigationMeshObstacleManager, Npc, ObjectEffect, AObjectModification, ObjectVisibilityManager, Outfit, Package, PackIn, Perk, PlacedNpc, PlacedObject, APlacedTrap, Projectile, Quest, Race, ReferenceGroup, Region, Relationship, ReverbParameters, Scene, SceneCollection, ShaderParticleGeometry, SoundCategory, SoundDescriptor, SoundKeywordMapping, SoundMarker, SoundOutputModel, Spell, Static, StaticCollection, AStoryManagerNode, TalkingActivator, Terminal, TextureSet, Transform, Tree, VisualEffect, VoiceType, Water, Weapon, Weather, Worldspace, Zoom]
     /// </summary>
     public abstract partial class Fallout4MajorRecord :
         MajorRecord,
@@ -472,6 +471,8 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
         [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<IFormLinkIdentifier> formLinks) => this.Remove(formLinks);
+        [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
@@ -544,7 +545,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [AcousticSpace, ActionRecord, Activator, ActorValueInformation, AddonNode, AimModel, Ammunition, AnimatedObject, AnimationSoundTagSet, Armor, ArmorAddon, ArtObject, AssociationType, AttractionRule, AudioCategorySnapshot, AudioEffectChain, BendableSpline, BodyPartData, Book, CameraPath, CameraShot, Cell, Class, Climate, CollisionLayer, ColorRecord, CombatStyle, Component, ConstructibleObject, Container, ADamageType, Debris, DefaultObject, DefaultObjectManager, DialogBranch, DialogResponses, DialogTopic, DialogView, Door, DualCastData, EffectShader, EncounterZone, EquipType, Explosion, Faction, Flora, Footstep, FootstepSet, FormList, Furniture, GameSetting, Global, GodRays, Grass, Hazard, HeadPart, Holotape, IdleAnimation, IdleMarker, ImageSpace, ImageSpaceAdapter, Impact, ImpactDataSet, Ingestible, Ingredient, InstanceNamingRules, Key, Keyword, Landscape, LandscapeTexture, Layer, LensFlare, LeveledItem, LeveledNpc, LeveledSpell, Light, LightingTemplate, LoadScreen, Location, LocationReferenceType, MagicEffect, MaterialObject, MaterialSwap, MaterialType, Message, MiscItem, MovableStatic, MovementType, MusicTrack, MusicType, NavigationMesh, NavigationMeshInfoMap, NavigationMeshObstacleManager, Npc, ObjectEffect, AObjectModification, ObjectVisibilityManager, Outfit, Package, PackIn, Perk, PlacedNpc, PlacedObject, APlacedTrap, Projectile, Quest, Race, ReferenceGroup, Region, Relationship, ReverbParameters, Scene, SceneCollection, ShaderParticleGeometry, SoundCategory, SoundDescriptor, SoundKeywordMapping, SoundMarker, SoundOutputModel, Spell, Static, StaticCollection, AStoryManagerNode, TalkingActivator, Terminal, TextureSet, Transform, Tree, VisualEffect, VoiceType, Water, Weapon, Weather, Worldspace, Zoom]
+    /// Implemented by: [AcousticSpace, ActionRecord, Activator, ActorValueInformation, AddonNode, AimModel, Ammunition, AnimatedObject, AnimationSoundTagSet, Armor, ArmorAddon, ArtObject, AssociationType, AttractionRule, AudioCategorySnapshot, AudioEffectChain, BendableSpline, BodyPartData, Book, CameraPath, CameraShot, Cell, Class, Climate, CollisionLayer, ColorRecord, CombatStyle, Component, ConstructibleObject, Container, ADamageType, Debris, DefaultObject, DefaultObjectManager, DialogBranch, DialogResponses, DialogTopic, DialogView, Door, DualCastData, EffectShader, EncounterZone, EquipType, Explosion, Faction, Flora, Footstep, FootstepSet, FormList, Furniture, GameSetting, Global, GodRays, Grass, Hazard, HeadPart, Holotape, IdleAnimation, IdleMarker, ImageSpace, ImageSpaceAdapter, Impact, ImpactDataSet, Ingestible, Ingredient, InstanceNamingRules, Key, Keyword, Landscape, LandscapeTexture, Layer, LensFlare, LeveledItem, LeveledNpc, Light, LightingTemplate, LoadScreen, Location, LocationReferenceType, MagicEffect, MaterialObject, MaterialSwap, MaterialType, Message, MiscItem, MovableStatic, MovementType, MusicTrack, MusicType, NavigationMesh, NavigationMeshInfoMap, NavigationMeshObstacleManager, Npc, ObjectEffect, AObjectModification, ObjectVisibilityManager, Outfit, Package, PackIn, Perk, PlacedNpc, PlacedObject, APlacedTrap, Projectile, Quest, Race, ReferenceGroup, Region, Relationship, ReverbParameters, Scene, SceneCollection, ShaderParticleGeometry, SoundCategory, SoundDescriptor, SoundKeywordMapping, SoundMarker, SoundOutputModel, Spell, Static, StaticCollection, AStoryManagerNode, TalkingActivator, Terminal, TextureSet, Transform, Tree, VisualEffect, VoiceType, Water, Weapon, Weather, Worldspace, Zoom]
     /// </summary>
     public partial interface IFallout4MajorRecord :
         IAssetLinkContainer,
@@ -567,7 +568,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [AcousticSpace, ActionRecord, Activator, ActorValueInformation, AddonNode, AimModel, Ammunition, AnimatedObject, AnimationSoundTagSet, Armor, ArmorAddon, ArtObject, AssociationType, AttractionRule, AudioCategorySnapshot, AudioEffectChain, BendableSpline, BodyPartData, Book, CameraPath, CameraShot, Cell, Class, Climate, CollisionLayer, ColorRecord, CombatStyle, Component, ConstructibleObject, Container, ADamageType, Debris, DefaultObject, DefaultObjectManager, DialogBranch, DialogResponses, DialogTopic, DialogView, Door, DualCastData, EffectShader, EncounterZone, EquipType, Explosion, Faction, Flora, Footstep, FootstepSet, FormList, Furniture, GameSetting, Global, GodRays, Grass, Hazard, HeadPart, Holotape, IdleAnimation, IdleMarker, ImageSpace, ImageSpaceAdapter, Impact, ImpactDataSet, Ingestible, Ingredient, InstanceNamingRules, Key, Keyword, Landscape, LandscapeTexture, Layer, LensFlare, LeveledItem, LeveledNpc, LeveledSpell, Light, LightingTemplate, LoadScreen, Location, LocationReferenceType, MagicEffect, MaterialObject, MaterialSwap, MaterialType, Message, MiscItem, MovableStatic, MovementType, MusicTrack, MusicType, NavigationMesh, NavigationMeshInfoMap, NavigationMeshObstacleManager, Npc, ObjectEffect, AObjectModification, ObjectVisibilityManager, Outfit, Package, PackIn, Perk, PlacedNpc, PlacedObject, APlacedTrap, Projectile, Quest, Race, ReferenceGroup, Region, Relationship, ReverbParameters, Scene, SceneCollection, ShaderParticleGeometry, SoundCategory, SoundDescriptor, SoundKeywordMapping, SoundMarker, SoundOutputModel, Spell, Static, StaticCollection, AStoryManagerNode, TalkingActivator, Terminal, TextureSet, Transform, Tree, VisualEffect, VoiceType, Water, Weapon, Weather, Worldspace, Zoom]
+    /// Implemented by: [AcousticSpace, ActionRecord, Activator, ActorValueInformation, AddonNode, AimModel, Ammunition, AnimatedObject, AnimationSoundTagSet, Armor, ArmorAddon, ArtObject, AssociationType, AttractionRule, AudioCategorySnapshot, AudioEffectChain, BendableSpline, BodyPartData, Book, CameraPath, CameraShot, Cell, Class, Climate, CollisionLayer, ColorRecord, CombatStyle, Component, ConstructibleObject, Container, ADamageType, Debris, DefaultObject, DefaultObjectManager, DialogBranch, DialogResponses, DialogTopic, DialogView, Door, DualCastData, EffectShader, EncounterZone, EquipType, Explosion, Faction, Flora, Footstep, FootstepSet, FormList, Furniture, GameSetting, Global, GodRays, Grass, Hazard, HeadPart, Holotape, IdleAnimation, IdleMarker, ImageSpace, ImageSpaceAdapter, Impact, ImpactDataSet, Ingestible, Ingredient, InstanceNamingRules, Key, Keyword, Landscape, LandscapeTexture, Layer, LensFlare, LeveledItem, LeveledNpc, Light, LightingTemplate, LoadScreen, Location, LocationReferenceType, MagicEffect, MaterialObject, MaterialSwap, MaterialType, Message, MiscItem, MovableStatic, MovementType, MusicTrack, MusicType, NavigationMesh, NavigationMeshInfoMap, NavigationMeshObstacleManager, Npc, ObjectEffect, AObjectModification, ObjectVisibilityManager, Outfit, Package, PackIn, Perk, PlacedNpc, PlacedObject, APlacedTrap, Projectile, Quest, Race, ReferenceGroup, Region, Relationship, ReverbParameters, Scene, SceneCollection, ShaderParticleGeometry, SoundCategory, SoundDescriptor, SoundKeywordMapping, SoundMarker, SoundOutputModel, Spell, Static, StaticCollection, AStoryManagerNode, TalkingActivator, Terminal, TextureSet, Transform, Tree, VisualEffect, VoiceType, Water, Weapon, Weather, Worldspace, Zoom]
     /// </summary>
     public partial interface IFallout4MajorRecordGetter :
         IMajorRecordGetter,
@@ -784,6 +785,20 @@ namespace Mutagen.Bethesda.Fallout4
             ((Fallout4MajorRecordSetterCommon)((IFallout4MajorRecordGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
                 keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IFallout4MajorRecordInternal obj,
+            IEnumerable<IFormLinkIdentifier> keys)
+        {
+            foreach (var g in keys.GroupBy(x => x.Type))
+            {
+                Remove(
+                    obj: obj,
+                    keys: g.Select(x => x.FormKey),
+                    type: g.Key);
+            }
         }
 
         [DebuggerStepThrough]
@@ -1486,8 +1501,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Fallout4MajorRecordFlags = rhs.Fallout4MajorRecordFlags;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IFallout4MajorRecord item,
+            IFallout4MajorRecordGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
@@ -1620,23 +1647,7 @@ namespace Mutagen.Bethesda.Fallout4
             IFallout4MajorRecordGetter item,
             TypedWriteParams translationParams)
         {
-            try
-            {
-                WriteEmbedded(
-                    item: item,
-                    writer: writer);
-                if (!item.IsDeleted)
-                {
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw RecordException.Enrich(ex, item);
-            }
+            throw new NotImplementedException();
         }
 
         public override void Write(

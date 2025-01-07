@@ -33,8 +33,14 @@ internal sealed class ImmutableLoadOrderLinkCacheSimpleContextCategory<TKey> : I
     private readonly IReadOnlyList<IModGetter> _listedOrder;
     private readonly Func<IMajorRecordGetter, TryGet<TKey>> _keyGetter;
     private readonly Func<TKey, bool> _shortCircuit;
+    private readonly IEqualityComparer<TKey>? _equalityComparer;
     private readonly Dictionary<Type, DepthCache<TKey, IModContext<IMajorRecordGetter>>> _winningContexts = new();
     private readonly Dictionary<Type, DepthCache<TKey, ImmutableList<IModContext<IMajorRecordGetter>>>> _allContexts = new();
+
+    static ImmutableLoadOrderLinkCacheSimpleContextCategory()
+    {
+        Plugins.Warmup.Init();
+    }
 
     public ImmutableLoadOrderLinkCacheSimpleContextCategory(
         GameCategory category,
@@ -44,7 +50,8 @@ internal sealed class ImmutableLoadOrderLinkCacheSimpleContextCategory<TKey> : I
         ILinkCache linkCache,
         IReadOnlyList<IModGetter> listedOrder,
         Func<IMajorRecordGetter, TryGet<TKey>> keyGetter,
-        Func<TKey, bool> shortCircuit)
+        Func<TKey, bool> shortCircuit,
+        IEqualityComparer<TKey>? equalityComparer)
     {
         _category = category;
         _metaInterfaceMapGetter = metaInterfaceMapGetter;
@@ -54,6 +61,7 @@ internal sealed class ImmutableLoadOrderLinkCacheSimpleContextCategory<TKey> : I
         _listedOrder = listedOrder;
         _keyGetter = keyGetter;
         _shortCircuit = shortCircuit;
+        _equalityComparer = equalityComparer;
     }
 
     public bool TryResolveSimpleContext(TKey key, ModKey? modKey, Type type, [MaybeNullWhen(false)] out IModContext<IMajorRecordGetter> majorRec)
@@ -75,7 +83,7 @@ internal sealed class ImmutableLoadOrderLinkCacheSimpleContextCategory<TKey> : I
             // Get cache object by type
             if (!_winningContexts.TryGetValue(type, out cache))
             {
-                cache = new DepthCache<TKey, IModContext<IMajorRecordGetter>>();
+                cache = new DepthCache<TKey, IModContext<IMajorRecordGetter>>(_equalityComparer);
                 if (type == typeof(IMajorRecord)
                     || type == typeof(IMajorRecordGetter))
                 {
@@ -180,7 +188,7 @@ internal sealed class ImmutableLoadOrderLinkCacheSimpleContextCategory<TKey> : I
         DepthCache<TKey, ImmutableList<IModContext<IMajorRecordGetter>>> cache;
         lock (_allContexts)
         {
-            cache = _allContexts.GetOrAdd(type);
+            cache = _allContexts.GetOrAdd(type, () => new DepthCache<TKey, ImmutableList<IModContext<IMajorRecordGetter>>>(_equalityComparer));
         }
 
         // Grab the formkey's list

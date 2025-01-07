@@ -21,7 +21,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -2093,8 +2092,20 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IResearchProject item,
+            IResearchProjectGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IStarfieldMajorRecordInternal item,
             IStarfieldMajorRecordGetter rhs,
@@ -2327,30 +2338,13 @@ namespace Mutagen.Bethesda.Starfield
             IResearchProjectGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.RSPJ)))
-            {
-                try
-                {
-                    StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.RSPJ,
+                writeEmbedded: StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -2565,13 +2559,13 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region WorkbenchKeyword
         private int? _WorkbenchKeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> WorkbenchKeyword => _WorkbenchKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _WorkbenchKeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> WorkbenchKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _WorkbenchKeywordLocation);
         #endregion
         public IReadOnlyList<IResearchProjectResourceGetter>? Resources { get; private set; }
         public IReadOnlyList<IResearchProjectRequiredPerkGetter>? RequiredPerks { get; private set; }
         #region IconSource
         private int? _IconSourceLocation;
-        public IFormLinkNullableGetter<IStarfieldMajorRecordGetter> IconSource => _IconSourceLocation.HasValue ? new FormLinkNullable<IStarfieldMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _IconSourceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStarfieldMajorRecordGetter>.Null;
+        public IFormLinkNullableGetter<IStarfieldMajorRecordGetter> IconSource => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStarfieldMajorRecordGetter>(_package, _recordData, _IconSourceLocation);
         #endregion
         #region NNAM
         private int? _NNAMLocation;
@@ -2587,7 +2581,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region CategoryKeyword
         private int? _CategoryKeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> CategoryKeyword => _CategoryKeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CategoryKeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> CategoryKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _CategoryKeywordLocation);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IResearchProjectGetter>> RequiredProjects { get; private set; } = Array.Empty<IFormLinkGetter<IResearchProjectGetter>>();
         partial void CustomFactoryEnd(
@@ -2676,26 +2670,22 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.FVPA:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Resources = BinaryOverlayList.FactoryByStartIndex<IResearchProjectResourceGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Resources = BinaryOverlayList.FactoryByStartIndexWithTrigger<IResearchProjectResourceGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => ResearchProjectResourceBinaryOverlay.ResearchProjectResourceFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ResearchProject_FieldIndex.Resources;
                 }
                 case RecordTypeInts.RQPK:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.RequiredPerks = BinaryOverlayList.FactoryByStartIndex<IResearchProjectRequiredPerkGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.RequiredPerks = BinaryOverlayList.FactoryByStartIndexWithTrigger<IResearchProjectRequiredPerkGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => ResearchProjectRequiredPerkBinaryOverlay.ResearchProjectRequiredPerkFactory(s, p));
-                    stream.Position += subLen;
                     return (int)ResearchProject_FieldIndex.RequiredPerks;
                 }
                 case RecordTypeInts.CNAM:
@@ -2728,7 +2718,7 @@ namespace Mutagen.Bethesda.Starfield
                     this.RequiredProjects = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IResearchProjectGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IResearchProjectGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IResearchProjectGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

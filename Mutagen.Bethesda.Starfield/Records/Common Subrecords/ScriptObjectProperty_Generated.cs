@@ -983,8 +983,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Unused = rhs.Unused;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IScriptObjectProperty item,
+            IScriptObjectPropertyGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IScriptProperty item,
@@ -1196,7 +1208,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IStarfieldMajorRecordGetter> Object => new FormLink<IStarfieldMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IStarfieldMajorRecordGetter> Object => FormLinkBinaryTranslation.Instance.OverlayFactory<IStarfieldMajorRecordGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public Int16 Alias => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x4, 0x2));
         public UInt16 Unused => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x6, 0x2));
         partial void CustomFactoryEnd(

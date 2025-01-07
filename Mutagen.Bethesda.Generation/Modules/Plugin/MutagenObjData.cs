@@ -13,7 +13,6 @@ public class MutagenObjData
     public ObjectGeneration ObjGen { get; }
     public RecordType? RecordType { get; set; }
     public RecordType? OverflowRecordType;
-    public bool FailOnUnknown;
     public ObjectType? ObjectType;
     public RecordType? MarkerType;
     public RecordCollection TriggeringRecordTypes = new();
@@ -21,6 +20,7 @@ public class MutagenObjData
     public RecordCollection AdditionalContainedRecordTypes = new();
     public string TriggeringSource;
     public bool CustomBinary;
+    public bool GenerateConditionData;
     public BinaryGenerationType BinaryOverlay = BinaryGenerationType.Normal;
     public bool BinaryOverlayGenerateCtor;
     public CustomEnd CustomBinaryEnd;

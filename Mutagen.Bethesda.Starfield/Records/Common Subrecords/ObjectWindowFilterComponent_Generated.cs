@@ -939,8 +939,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.FLTR = rhs.FLTR;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IObjectWindowFilterComponent item,
+            IObjectWindowFilterComponentGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAComponent item,

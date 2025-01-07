@@ -1269,8 +1269,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.EXBS = rhs.EXBS;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IExternalDataSourceComponent item,
+            IExternalDataSourceComponentGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAComponent item,
@@ -1563,7 +1575,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region ExternalBaseTemplate
         private int? _ExternalBaseTemplateLocation;
-        public IFormLinkNullableGetter<IExternalBaseTemplateGetter> ExternalBaseTemplate => _ExternalBaseTemplateLocation.HasValue ? new FormLinkNullable<IExternalBaseTemplateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ExternalBaseTemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IExternalBaseTemplateGetter>.Null;
+        public IFormLinkNullableGetter<IExternalBaseTemplateGetter> ExternalBaseTemplate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IExternalBaseTemplateGetter>(_package, _recordData, _ExternalBaseTemplateLocation);
         #endregion
         public IReadOnlyList<IExternalDataSourceGetter> Sources { get; private set; } = Array.Empty<IExternalDataSourceGetter>();
         public IReadOnlyList<String>? EXASs { get; private set; }

@@ -1046,8 +1046,20 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IWWiseKeywordMappingSoundItem item,
+            IWWiseKeywordMappingSoundItemGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public WWiseKeywordMappingSoundItem DeepCopy(
@@ -1201,7 +1213,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Sound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
             item.GuidPairs.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<WWiseKeywordMappingSoundItemGuidPair>.Instance.Parse(
-                    amount: frame.ReadInt32(),
+                    amount: checked((int)frame.ReadUInt32()),
                     reader: frame,
                     transl: WWiseKeywordMappingSoundItemGuidPair.TryCreateFromBinary));
         }

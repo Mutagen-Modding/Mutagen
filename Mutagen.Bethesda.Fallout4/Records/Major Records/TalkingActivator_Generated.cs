@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
@@ -61,7 +60,7 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private VirtualMachineAdapter? _VirtualMachineAdapter;
         /// <summary>
-        /// Aspects: IScripted
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
         /// </summary>
         public VirtualMachineAdapter? VirtualMachineAdapter
         {
@@ -72,6 +71,7 @@ namespace Mutagen.Bethesda.Fallout4
         IVirtualMachineAdapterGetter? ITalkingActivatorGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #region Aspects
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
@@ -993,6 +993,7 @@ namespace Mutagen.Bethesda.Fallout4
         IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<ITalkingActivatorInternal>,
         IModeled,
@@ -1007,7 +1008,7 @@ namespace Mutagen.Bethesda.Fallout4
         ITranslatedNamedRequired
     {
         /// <summary>
-        /// Aspects: IScripted
+        /// Aspects: IHaveVirtualMachineAdapter, IScripted
         /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         /// <summary>
@@ -1349,7 +1350,7 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.KWDA,
                 RecordTypes.KSIZ,
                 RecordTypes.PNAM,
-                RecordTypes.SNDR,
+                RecordTypes.SNAM,
                 RecordTypes.FNAM,
                 RecordTypes.VNAM);
             return new RecordTriggerSpecs(
@@ -2075,8 +2076,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.VoiceType.SetTo(rhs.VoiceType.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ITalkingActivator item,
+            ITalkingActivatorGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IFallout4MajorRecordInternal item,
             IFallout4MajorRecordGetter rhs,
@@ -2283,7 +2296,7 @@ namespace Mutagen.Bethesda.Fallout4
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.LoopingSound,
-                header: translationParams.ConvertToCustom(RecordTypes.SNDR));
+                header: translationParams.ConvertToCustom(RecordTypes.SNAM));
             Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.FNAM,
@@ -2299,30 +2312,13 @@ namespace Mutagen.Bethesda.Fallout4
             ITalkingActivatorGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.TACT)))
-            {
-                try
-                {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.TACT,
+                writeEmbedded: Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -2436,7 +2432,7 @@ namespace Mutagen.Bethesda.Fallout4
                     item.PNAM = frame.ReadInt32();
                     return (int)TalkingActivator_FieldIndex.PNAM;
                 }
-                case RecordTypeInts.SNDR:
+                case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LoopingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
@@ -2554,7 +2550,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region LoopingSound
         private int? _LoopingSoundLocation;
-        public IFormLinkNullableGetter<ISoundMarkerGetter> LoopingSound => _LoopingSoundLocation.HasValue ? new FormLinkNullable<ISoundMarkerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LoopingSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundMarkerGetter>.Null;
+        public IFormLinkNullableGetter<ISoundMarkerGetter> LoopingSound => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISoundMarkerGetter>(_package, _recordData, _LoopingSoundLocation);
         #endregion
         #region FNAM
         private int? _FNAMLocation;
@@ -2562,7 +2558,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region VoiceType
         private int? _VoiceTypeLocation;
-        public IFormLinkNullableGetter<IVoiceTypeGetter> VoiceType => _VoiceTypeLocation.HasValue ? new FormLinkNullable<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _VoiceTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IVoiceTypeGetter>.Null;
+        public IFormLinkNullableGetter<IVoiceTypeGetter> VoiceType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IVoiceTypeGetter>(_package, _recordData, _VoiceTypeLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2684,7 +2680,7 @@ namespace Mutagen.Bethesda.Fallout4
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
                         trigger: RecordTypes.KWDA,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)TalkingActivator_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.PNAM:
@@ -2692,7 +2688,7 @@ namespace Mutagen.Bethesda.Fallout4
                     _PNAMLocation = (stream.Position - offset);
                     return (int)TalkingActivator_FieldIndex.PNAM;
                 }
-                case RecordTypeInts.SNDR:
+                case RecordTypeInts.SNAM:
                 {
                     _LoopingSoundLocation = (stream.Position - offset);
                     return (int)TalkingActivator_FieldIndex.LoopingSound;

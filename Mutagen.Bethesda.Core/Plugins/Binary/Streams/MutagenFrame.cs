@@ -64,7 +64,7 @@ public readonly struct MutagenFrame : IMutagenReadStream
     public ReadOnlyMemorySlice<byte> RemainingMemory => Reader.RemainingMemory;
 
     /// <inheritdoc/>
-    public ParsingBundle MetaData => Reader.MetaData;
+    public ParsingMeta MetaData => Reader.MetaData;
 
     public bool IsLittleEndian => Reader.IsLittleEndian;
 

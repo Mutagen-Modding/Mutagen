@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem RunOnType,
                 TItem Reference,
-                TItem Unknown3,
+                TItem RunOnTypeIndex,
                 TItem UseAliases,
                 TItem UsePackageData,
                 TItem LocationAliasIndex,
@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 RunOnType: RunOnType,
                 Reference: Reference,
-                Unknown3: Unknown3,
+                RunOnTypeIndex: RunOnTypeIndex,
                 UseAliases: UseAliases,
                 UsePackageData: UsePackageData)
             {
@@ -466,6 +466,32 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GetLocAliasRefTypeAliveCountConditionDataCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetLocAliasRefTypeAliveCountConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
+        object? IConditionParameters.Parameter1
+        {
+            get => LocationAliasIndex;
+            set => LocationAliasIndex = (value is Int32 v ? v : throw new ArgumentException());
+        }
+        object? IConditionParametersGetter.Parameter1
+        {
+            get => LocationAliasIndex;
+        }
+        Type? IConditionParametersGetter.Parameter1Type
+        {
+            get => typeof(Int32);
+        }
+        object? IConditionParameters.Parameter2
+        {
+            get => LocationReferenceType;
+            set => LocationReferenceType = (value is IFormLinkOrIndex<ILocationReferenceTypeGetter> v ? v : throw new ArgumentException());
+        }
+        object? IConditionParametersGetter.Parameter2
+        {
+            get => LocationReferenceType;
+        }
+        Type? IConditionParametersGetter.Parameter2Type
+        {
+            get => typeof(IFormLinkOrIndexGetter<ILocationReferenceTypeGetter>);
+        }
         #endregion
 
         #region Binary Translation
@@ -693,7 +719,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         RunOnType = 0,
         Reference = 1,
-        Unknown3 = 2,
+        RunOnTypeIndex = 2,
         UseAliases = 3,
         UsePackageData = 4,
         LocationAliasIndex = 5,
@@ -931,7 +957,7 @@ namespace Mutagen.Bethesda.Skyrim
                     return (GetLocAliasRefTypeAliveCountConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.Reference:
                     return (GetLocAliasRefTypeAliveCountConditionData_FieldIndex)((int)index);
-                case ConditionData_FieldIndex.Unknown3:
+                case ConditionData_FieldIndex.RunOnTypeIndex:
                     return (GetLocAliasRefTypeAliveCountConditionData_FieldIndex)((int)index);
                 case ConditionData_FieldIndex.UseAliases:
                     return (GetLocAliasRefTypeAliveCountConditionData_FieldIndex)((int)index);
@@ -1061,8 +1087,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.SecondUnusedStringParameter = rhs.SecondUnusedStringParameter;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IGetLocAliasRefTypeAliveCountConditionData item,
+            IGetLocAliasRefTypeAliveCountConditionDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IConditionData item,

@@ -1009,8 +1009,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.StartTime = rhs.StartTime;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ISoundDataExtended item,
+            ISoundDataExtendedGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             ISoundDataInternal item,
             ISoundDataInternalGetter rhs,

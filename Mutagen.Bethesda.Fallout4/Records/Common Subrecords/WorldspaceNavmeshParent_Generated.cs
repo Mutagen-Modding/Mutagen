@@ -918,8 +918,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Coordinates = rhs.Coordinates;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IWorldspaceNavmeshParent item,
+            IWorldspaceNavmeshParentGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IANavmeshParent item,
@@ -1125,7 +1137,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IWorldspaceGetter> Parent => new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IWorldspaceGetter> Parent => FormLinkBinaryTranslation.Instance.OverlayFactory<IWorldspaceGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public P2Int16 Coordinates => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

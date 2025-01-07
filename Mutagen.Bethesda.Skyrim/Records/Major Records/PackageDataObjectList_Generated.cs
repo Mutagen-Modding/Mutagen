@@ -880,8 +880,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Data = rhs.Data;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPackageDataObjectList item,
+            IPackageDataObjectListGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAPackageData item,

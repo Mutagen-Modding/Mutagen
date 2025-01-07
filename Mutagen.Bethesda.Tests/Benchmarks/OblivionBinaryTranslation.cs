@@ -20,6 +20,14 @@ public class OblivionBinaryTranslation
     public static BinaryWriteParameters WriteParametersNoCheck = new()
     {
         MastersListContent = MastersListContentOption.NoCheck,
+        Parallel = new ParallelWriteParameters()
+        {
+            MaxDegreeOfParallelism = 1
+        },
+    };
+    public static BinaryWriteParameters WriteParametersNoCheckParallel = new()
+    {
+        MastersListContent = MastersListContentOption.NoCheck,
     };
 
     [GlobalSetup]
@@ -36,7 +44,7 @@ public class OblivionBinaryTranslation
         DataPath = new ModPath(
             new ModKey("Oblivion", ModType.Master),
             Path.Combine(Settings.DataFolderLocations.Oblivion, "Oblivion.esm"));
-        TempFolder = TempFolder.Factory(deleteAfter: true);
+        TempFolder = TempFolder.Factory();
         BinaryPath = Path.Combine(TempFolder.Dir.Path, "Oblivion.esm");
 
         // Setup
@@ -60,14 +68,14 @@ public class OblivionBinaryTranslation
     [Benchmark]
     public void CreateAndWriteBinaryOverlayToDisk()
     {
-        var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath);
+        var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath, null);
         mod.WriteToBinary(BinaryPath, WriteParametersNoCheck);
     }
 
     [Benchmark]
     public void CreateAndWriteBinaryOverlayToMemory()
     {
-        var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath);
+        var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath, null);
         DataOutput.Position = 0;
         mod.WriteToBinary(DataOutput, WriteParametersNoCheck);
     }
@@ -75,16 +83,16 @@ public class OblivionBinaryTranslation
     [Benchmark]
     public void CreateAndWriteBinaryOverlayParallelToDisk()
     {
-        var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath);
-        mod.WriteToBinaryParallel(BinaryPath, WriteParametersNoCheck);
+        var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath, null);
+        mod.WriteToBinary(BinaryPath, WriteParametersNoCheckParallel);
     }
 
     [Benchmark]
     public void CreateAndWriteBinaryOverlayParallelToMemory()
     {
-        var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath);
+        var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath, null);
         DataOutput.Position = 0;
-        mod.WriteToBinaryParallel(DataOutput, WriteParametersNoCheck);
+        mod.WriteToBinary(DataOutput, WriteParametersNoCheckParallel);
     }
 
     [Benchmark]
@@ -103,13 +111,13 @@ public class OblivionBinaryTranslation
     [Benchmark]
     public void WriteBinaryParallelToDisk()
     {
-        Mod.WriteToBinaryParallel(BinaryPath, WriteParametersNoCheck);
+        Mod.WriteToBinary(BinaryPath, WriteParametersNoCheckParallel);
     }
 
     [Benchmark]
     public void WriteBinaryParallelToMemory()
     {
         DataOutput.Position = 0;
-        Mod.WriteToBinaryParallel(DataOutput, WriteParametersNoCheck);
+        Mod.WriteToBinary(DataOutput, WriteParametersNoCheckParallel);
     }
 }

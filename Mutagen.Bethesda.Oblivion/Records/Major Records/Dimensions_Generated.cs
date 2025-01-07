@@ -894,8 +894,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Height = rhs.Height;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IDimensions item,
+            IDimensionsGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public Dimensions DeepCopy(

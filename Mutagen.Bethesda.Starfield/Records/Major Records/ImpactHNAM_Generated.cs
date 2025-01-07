@@ -1040,8 +1040,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Link4.SetTo(rhs.Link4.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IImpactHNAM item,
+            IImpactHNAMGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ImpactHNAM DeepCopy(
@@ -1258,10 +1270,10 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IProjectedDecalGetter> Link1 => new FormLink<IProjectedDecalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<IProjectedDecalGetter> Link2 => new FormLink<IProjectedDecalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
-        public IFormLinkGetter<IProjectedDecalGetter> Link3 => new FormLink<IProjectedDecalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x8, 0x4))));
-        public IFormLinkGetter<IProjectedDecalGetter> Link4 => new FormLink<IProjectedDecalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0xC, 0x4))));
+        public IFormLinkGetter<IProjectedDecalGetter> Link1 => FormLinkBinaryTranslation.Instance.OverlayFactory<IProjectedDecalGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<IProjectedDecalGetter> Link2 => FormLinkBinaryTranslation.Instance.OverlayFactory<IProjectedDecalGetter>(_package, _structData.Span.Slice(0x4, 0x4));
+        public IFormLinkGetter<IProjectedDecalGetter> Link3 => FormLinkBinaryTranslation.Instance.OverlayFactory<IProjectedDecalGetter>(_package, _structData.Span.Slice(0x8, 0x4));
+        public IFormLinkGetter<IProjectedDecalGetter> Link4 => FormLinkBinaryTranslation.Instance.OverlayFactory<IProjectedDecalGetter>(_package, _structData.Span.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

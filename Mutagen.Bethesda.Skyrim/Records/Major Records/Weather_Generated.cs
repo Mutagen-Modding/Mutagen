@@ -22,7 +22,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Assets;
@@ -69,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<IAssetLinkGetter<SkyrimTextureAssetType>?> IWeatherGetter.CloudTextures => _CloudTextures;
+        IReadOnlyList<IAssetLinkGetter<SkyrimTextureAssetType>?> IWeatherGetter.CloudTextures => _CloudTextures;
         #endregion
 
         #endregion
@@ -169,7 +168,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<ICloudLayerGetter> IWeatherGetter.Clouds => _Clouds;
+        IReadOnlyList<ICloudLayerGetter> IWeatherGetter.Clouds => _Clouds;
         #endregion
 
         #endregion
@@ -3121,7 +3120,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IWeatherGetter>
     {
         static new ILoquiRegistration StaticRegistration => Weather_Registration.Instance;
-        ReadOnlyMemorySlice<IAssetLinkGetter<SkyrimTextureAssetType>?> CloudTextures { get; }
+        IReadOnlyList<IAssetLinkGetter<SkyrimTextureAssetType>?> CloudTextures { get; }
         ReadOnlyMemorySlice<Byte>? DNAM { get; }
         ReadOnlyMemorySlice<Byte>? CNAM { get; }
         ReadOnlyMemorySlice<Byte>? ANAM { get; }
@@ -3130,7 +3129,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IShaderParticleGeometryGetter> Precipitation { get; }
         IFormLinkGetter<IVisualEffectGetter> VisualEffect { get; }
         ReadOnlyMemorySlice<Byte>? ONAM { get; }
-        ReadOnlyMemorySlice<ICloudLayerGetter> Clouds { get; }
+        IReadOnlyList<ICloudLayerGetter> Clouds { get; }
         IWeatherColorGetter SkyUpperColor { get; }
         IWeatherColorGetter FogNearColor { get; }
         IWeatherColorGetter UnknownColor { get; }
@@ -3717,8 +3716,7 @@ namespace Mutagen.Bethesda.Skyrim
             Weather.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.CloudTextures = EqualsMaskHelper.SpanEqualsHelper<IAssetLinkGetter<SkyrimTextureAssetType>?>(
-                item.CloudTextures,
+            ret.CloudTextures = item.CloudTextures.CollectionEqualsHelper(
                 rhs.CloudTextures,
                 (l, r) => object.Equals(l, r),
                 include);
@@ -3730,8 +3728,7 @@ namespace Mutagen.Bethesda.Skyrim
             ret.Precipitation = item.Precipitation.Equals(rhs.Precipitation);
             ret.VisualEffect = item.VisualEffect.Equals(rhs.VisualEffect);
             ret.ONAM = MemorySliceExt.SequenceEqual(item.ONAM, rhs.ONAM);
-            ret.Clouds = EqualsMaskHelper.SpanEqualsHelper<ICloudLayerGetter, CloudLayer.Mask<bool>>(
-                item.Clouds,
+            ret.Clouds = item.Clouds.CollectionEqualsHelper(
                 rhs.Clouds,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
@@ -4205,7 +4202,7 @@ namespace Mutagen.Bethesda.Skyrim
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.CloudTextures) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual<IAssetLinkGetter<SkyrimTextureAssetType>>(lhs.CloudTextures.Span!, rhs.CloudTextures.Span!)) return false;
+                if (!lhs.CloudTextures.SequenceEqualNullable(rhs.CloudTextures)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.DNAM) ?? true))
             {
@@ -4241,7 +4238,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.Clouds) ?? true))
             {
-                if (!lhs.Clouds.SequenceEqualNullable(rhs.Clouds)) return false;
+                if (!lhs.Clouds.SequenceEqual(rhs.Clouds, (l, r) => ((CloudLayerCommon)((ICloudLayerGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Weather_FieldIndex.Clouds)))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Weather_FieldIndex.SkyUpperColor) ?? true))
             {
@@ -4738,12 +4735,12 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     yield return item;
                 }
-                if (obj.Aurora is {} AuroraItems)
+            }
+            if (obj.Aurora is {} AuroraItems)
+            {
+                foreach (var item in AuroraItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
-                    foreach (var item in AuroraItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
+                    yield return item;
                 }
             }
             yield break;
@@ -5556,8 +5553,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.NAM0DataTypeState = rhs.NAM0DataTypeState;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IWeather item,
+            IWeatherGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
@@ -6124,30 +6133,13 @@ namespace Mutagen.Bethesda.Skyrim
             IWeatherGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.WTHR)))
-            {
-                try
-                {
-                    WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.WTHR,
+                writeEmbedded: SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -6629,11 +6621,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Precipitation
         private int? _PrecipitationLocation;
-        public IFormLinkNullableGetter<IShaderParticleGeometryGetter> Precipitation => _PrecipitationLocation.HasValue ? new FormLinkNullable<IShaderParticleGeometryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PrecipitationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IShaderParticleGeometryGetter>.Null;
+        public IFormLinkNullableGetter<IShaderParticleGeometryGetter> Precipitation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IShaderParticleGeometryGetter>(_package, _recordData, _PrecipitationLocation);
         #endregion
         #region VisualEffect
         private int? _VisualEffectLocation;
-        public IFormLinkGetter<IVisualEffectGetter> VisualEffect => _VisualEffectLocation.HasValue ? new FormLink<IVisualEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _VisualEffectLocation.Value, _package.MetaData.Constants)))) : FormLink<IVisualEffectGetter>.Null;
+        public IFormLinkGetter<IVisualEffectGetter> VisualEffect => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IVisualEffectGetter>(_package, _recordData, _VisualEffectLocation);
         #endregion
         #region ONAM
         private int? _ONAMLocation;
@@ -6926,7 +6918,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IModelGetter? Aurora { get; private set; }
         #region SunGlareLensFlare
         private int? _SunGlareLensFlareLocation;
-        public IFormLinkNullableGetter<ILensFlareGetter> SunGlareLensFlare => _SunGlareLensFlareLocation.HasValue ? new FormLinkNullable<ILensFlareGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SunGlareLensFlareLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILensFlareGetter>.Null;
+        public IFormLinkNullableGetter<ILensFlareGetter> SunGlareLensFlare => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILensFlareGetter>(_package, _recordData, _SunGlareLensFlareLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -7119,7 +7111,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.SkyStatics = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IStaticGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IStaticGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IStaticGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

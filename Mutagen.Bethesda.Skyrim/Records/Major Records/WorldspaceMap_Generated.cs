@@ -1158,8 +1158,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.CameraInitialPitch = rhs.CameraInitialPitch;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IWorldspaceMap item,
+            IWorldspaceMapGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public WorldspaceMap DeepCopy(

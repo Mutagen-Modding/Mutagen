@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -77,7 +76,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region ChanceNone
-        public Byte ChanceNone { get; set; } = default(Byte);
+        public Percent ChanceNone { get; set; } = default(Percent);
         #endregion
         #region MaxCount
         public Byte MaxCount { get; set; } = default(Byte);
@@ -922,7 +921,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: IObjectBounded
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
-        new Byte ChanceNone { get; set; }
+        new Percent ChanceNone { get; set; }
         new Byte MaxCount { get; set; }
         new LeveledNpc.Flag Flags { get; set; }
         new IFormLinkNullable<IGlobalGetter> Global { get; set; }
@@ -962,7 +961,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
-        Byte ChanceNone { get; }
+        Percent ChanceNone { get; }
         Byte MaxCount { get; }
         LeveledNpc.Flag Flags { get; }
         IFormLinkNullableGetter<IGlobalGetter> Global { get; }
@@ -1261,7 +1260,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             ClearPartial();
             item.ObjectBounds.Clear();
-            item.ChanceNone = default(Byte);
+            item.ChanceNone = default(Percent);
             item.MaxCount = default(Byte);
             item.Flags = default(LeveledNpc.Flag);
             item.Global.Clear();
@@ -1357,7 +1356,7 @@ namespace Mutagen.Bethesda.Fallout4
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
-            ret.ChanceNone = item.ChanceNone == rhs.ChanceNone;
+            ret.ChanceNone = item.ChanceNone.Equals(rhs.ChanceNone);
             ret.MaxCount = item.MaxCount == rhs.MaxCount;
             ret.Flags = item.Flags == rhs.Flags;
             ret.Global = item.Global.Equals(rhs.Global);
@@ -1538,7 +1537,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if ((equalsMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.ChanceNone) ?? true))
             {
-                if (lhs.ChanceNone != rhs.ChanceNone) return false;
+                if (!lhs.ChanceNone.Equals(rhs.ChanceNone)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.MaxCount) ?? true))
             {
@@ -1864,8 +1863,20 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ILeveledNpc item,
+            ILeveledNpcGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IFallout4MajorRecordInternal item,
             IFallout4MajorRecordGetter rhs,
@@ -2026,9 +2037,10 @@ namespace Mutagen.Bethesda.Fallout4
                 item: ObjectBoundsItem,
                 writer: writer,
                 translationParams: translationParams);
-            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            PercentBinaryTranslation.Write(
                 writer: writer,
                 item: item.ChanceNone,
+                integerType: FloatIntegerType.ByteHundred,
                 header: translationParams.ConvertToCustom(RecordTypes.LVLD));
             ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
@@ -2082,30 +2094,13 @@ namespace Mutagen.Bethesda.Fallout4
             ILeveledNpcGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.LVLN)))
-            {
-                try
-                {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.LVLN,
+                writeEmbedded: Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -2168,7 +2163,9 @@ namespace Mutagen.Bethesda.Fallout4
                 case RecordTypeInts.LVLD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ChanceNone = frame.ReadUInt8();
+                    item.ChanceNone = PercentBinaryTranslation.Parse(
+                        reader: frame,
+                        integerType: FloatIntegerType.ByteHundred);
                     return (int)LeveledNpc_FieldIndex.ChanceNone;
                 }
                 case RecordTypeInts.LVLM:
@@ -2292,7 +2289,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region ChanceNone
         private int? _ChanceNoneLocation;
-        public Byte ChanceNone => _ChanceNoneLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChanceNoneLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
+        public Percent ChanceNone => _ChanceNoneLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChanceNoneLocation.Value, _package.MetaData.Constants), FloatIntegerType.ByteHundred) : default(Percent);
         #endregion
         #region MaxCount
         private int? _MaxCountLocation;
@@ -2304,7 +2301,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Global
         private int? _GlobalLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> Global => _GlobalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GlobalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> Global => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _GlobalLocation);
         #endregion
         public IReadOnlyList<ILeveledNpcEntryGetter>? Entries { get; private set; }
         public IReadOnlyList<IFilterKeywordChanceGetter>? FilterKeywordChances { get; private set; }
@@ -2420,14 +2417,12 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.LLKC:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.FilterKeywordChances = BinaryOverlayList.FactoryByStartIndex<IFilterKeywordChanceGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.FilterKeywordChances = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFilterKeywordChanceGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => FilterKeywordChanceBinaryOverlay.FilterKeywordChanceFactory(s, p));
-                    stream.Position += subLen;
                     return (int)LeveledNpc_FieldIndex.FilterKeywordChances;
                 }
                 case RecordTypeInts.MODL:

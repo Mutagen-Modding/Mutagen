@@ -8,6 +8,7 @@
         <FormLink refName="StarfieldMajorRecord" recordType="LNAM" />
       </List>
       <RefList name="ConditionalEntries" refName="FormListConditionalEntry" />
+      <FormLink name="ANAM" recordType="ANAM" refName="FormList" />
     </Fields>
     <LinkInterface>IVoiceTypeOrList</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>

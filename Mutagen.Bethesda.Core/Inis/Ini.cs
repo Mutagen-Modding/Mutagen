@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Inis;
 internal class Ini
 {
     private static readonly IniPathLookup Lookup = new(
-        GameLocator.Instance);
+        GameLocatorLookupCache.Instance);
     
     public static FilePath GetTypicalPath(GameRelease release)
     {

@@ -900,8 +900,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.UnarmedWeapon.SetTo(rhs.UnarmedWeapon.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            INpcRaceOverrideUnarmedWeapon item,
+            INpcRaceOverrideUnarmedWeaponGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public NpcRaceOverrideUnarmedWeapon DeepCopy(
@@ -1104,7 +1116,7 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public Single Unknown => _structData.Slice(0x0, 0x4).Float();
-        public IFormLinkGetter<IWeaponGetter> UnarmedWeapon => new FormLink<IWeaponGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IWeaponGetter> UnarmedWeapon => FormLinkBinaryTranslation.Instance.OverlayFactory<IWeaponGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

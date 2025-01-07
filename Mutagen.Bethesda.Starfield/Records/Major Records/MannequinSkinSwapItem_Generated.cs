@@ -930,8 +930,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.MaterialSwap.SetTo(rhs.MaterialSwap.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IMannequinSkinSwapItem item,
+            IMannequinSkinSwapItemGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public MannequinSkinSwapItem DeepCopy(
@@ -1166,7 +1178,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region MaterialSwap
         private int? _MaterialSwapLocation;
-        public IFormLinkNullableGetter<ILayeredMaterialSwapGetter> MaterialSwap => _MaterialSwapLocation.HasValue ? new FormLinkNullable<ILayeredMaterialSwapGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaterialSwapLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILayeredMaterialSwapGetter>.Null;
+        public IFormLinkNullableGetter<ILayeredMaterialSwapGetter> MaterialSwap => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILayeredMaterialSwapGetter>(_package, _recordData, _MaterialSwapLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

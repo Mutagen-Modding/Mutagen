@@ -487,6 +487,35 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
 
+        #region Mutagen
+        object? IConditionParameters.Parameter1
+        {
+            get => Function;
+            set => Function = (value is Condition.Function v ? v : throw new ArgumentException());
+        }
+        object? IConditionParametersGetter.Parameter1
+        {
+            get => Function;
+        }
+        Type? IConditionParametersGetter.Parameter1Type
+        {
+            get => typeof(Condition.Function);
+        }
+        object? IConditionParameters.Parameter2
+        {
+            get => ParameterOne;
+            set => ParameterOne = (value is Int32 v ? v : throw new ArgumentException());
+        }
+        object? IConditionParametersGetter.Parameter2
+        {
+            get => ParameterOne;
+        }
+        Type? IConditionParametersGetter.Parameter2Type
+        {
+            get => typeof(Int32);
+        }
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => UnknownConditionDataBinaryWriteTranslation.Instance;
@@ -1091,8 +1120,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.SecondUnusedStringParameter = rhs.SecondUnusedStringParameter;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IUnknownConditionData item,
+            IUnknownConditionDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IConditionData item,
@@ -1202,10 +1243,6 @@ namespace Mutagen.Bethesda.Starfield
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            EnumBinaryTranslation<Condition.Function, MutagenFrame, MutagenWriter>.Instance.Write(
-                writer,
-                item.Function,
-                length: 2);
             writer.Write(item.ParameterOne);
             writer.Write(item.ParameterTwo);
         }
@@ -1255,9 +1292,6 @@ namespace Mutagen.Bethesda.Starfield
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.Function = EnumBinaryTranslation<Condition.Function, MutagenFrame, MutagenWriter>.Instance.Parse(
-                reader: frame,
-                length: 2);
             item.ParameterOne = frame.ReadInt32();
             item.ParameterTwo = frame.ReadInt32();
         }

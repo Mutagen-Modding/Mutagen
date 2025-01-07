@@ -844,8 +844,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.RawContent = rhs.RawContent;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IBookTeachesNothing item,
+            IBookTeachesNothingGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IBookTeachTarget item,

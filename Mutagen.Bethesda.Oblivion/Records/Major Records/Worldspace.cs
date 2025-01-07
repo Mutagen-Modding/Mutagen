@@ -1,4 +1,5 @@
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -38,7 +39,7 @@ partial class WorldspaceBinaryWriteTranslation
             {
                 FormKeyBinaryTranslation.Instance.Write(
                     writer,
-                    obj.FormKey);
+                    obj);
                 writer.Write((int)GroupTypeEnum.WorldChildren);
                 writer.Write(obj.SubCellsTimestamp);
 
@@ -70,10 +71,10 @@ partial class WorldspaceBinaryCreateTranslation
             if (groupHeader.GroupType == (int)GroupTypeEnum.WorldChildren)
             {
                 obj.SubCellsTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupHeader.LastModifiedData);
-                var formKey = FormKeyBinaryTranslation.Instance.Parse(groupHeader.ContainedRecordTypeData, frame.MetaData.MasterReferences!);
+                var formKey = FormKeyBinaryTranslation.Instance.Parse(groupHeader.ContainedRecordTypeData, frame.MetaData.MasterReferences);
                 if (formKey != obj.FormKey)
                 {
-                    throw new ArgumentException("Cell children group did not match the FormID of the parent worldspace.");
+                    throw new ArgumentException("Worldspace children group did not match the FormID of the parent worldspace.");
                 }
             }
             else
@@ -135,9 +136,12 @@ partial class WorldspaceBinaryOverlay
             var groupMeta = stream.GetGroupHeader();
             if (!groupMeta.IsGroup || groupMeta.GroupType != (int)GroupTypeEnum.WorldChildren) return;
 
-            if (this.FormKey != Mutagen.Bethesda.Plugins.FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)))
+            if (this.FormKey != Mutagen.Bethesda.Plugins.FormKey.Factory(
+                    _package.MetaData.MasterReferences, 
+                    new FormID(BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)),
+                    reference: true))
             {
-                throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
+                throw new ArgumentException("Worldspace children group did not match the FormID of the parent cell.");
             }
 
             this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));

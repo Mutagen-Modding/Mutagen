@@ -16,18 +16,20 @@ public sealed class StringsFolderLookupOverlay : IStringsFolderLookup
     public DirectoryPath DataPath { get; }
     public ModKey ModKey { get; }
 
+    internal record LookupItem(IStringsLookup StringsLookup, string SourcePath);
+    
     class DictionaryBundle
     {
-        private readonly Dictionary<Language, Lazy<IStringsLookup>> _strings = new();
-        private readonly Dictionary<Language, Lazy<IStringsLookup>> _dlStrings = new();
-        private readonly Dictionary<Language, Lazy<IStringsLookup>> _ilStrings = new();
+        private readonly Dictionary<Language, Lazy<LookupItem>> _strings = new();
+        private readonly Dictionary<Language, Lazy<LookupItem>> _dlStrings = new();
+        private readonly Dictionary<Language, Lazy<LookupItem>> _ilStrings = new();
 
         public bool Empty =>
             _strings.Count == 0
             && _dlStrings.Count == 0
             && _ilStrings.Count == 0;
 
-        public Dictionary<Language, Lazy<IStringsLookup>> Get(StringsSource source)
+        public Dictionary<Language, Lazy<LookupItem>> Get(StringsSource source)
         {
             return source switch
             {
@@ -48,6 +50,7 @@ public sealed class StringsFolderLookupOverlay : IStringsFolderLookup
         ModKey = modKey;
     }
 
+    // todo integrate IAssetProvider
     public static StringsFolderLookupOverlay TypicalFactory(
         GameRelease release, 
         ModKey modKey, 
@@ -89,12 +92,17 @@ public sealed class StringsFolderLookupOverlay : IStringsFolderLookup
                                 continue;
                             }
                             var dict = bundle.Get(type);
-                            dict[lang] = new Lazy<IStringsLookup>(() => new StringsLookupOverlay(file.Path, type, encodings.GetEncoding(release, lang), fileSystem: fileSystem), LazyThreadSafetyMode.ExecutionAndPublication);
+                            dict[lang] = new Lazy<LookupItem>(() =>
+                                {
+                                    return new LookupItem(
+                                        new StringsLookupOverlay(file.Path, type, encodings.GetEncoding(release, lang), fileSystem: fileSystem),
+                                        file.Path);
+                                },
+                                LazyThreadSafetyMode.ExecutionAndPublication);
                         }
                     }
                     foreach (var bsaFile in Archive.GetApplicableArchivePaths(
-                        release, dataPath, modKey, instructions?.BsaOrdering, fileSystem: fileSystem,
-                        returnEmptyIfMissing: true))
+                        release, dataPath, modKey, instructions?.BsaOrdering, fileSystem: fileSystem))
                     {
                         try
                         {
@@ -116,11 +124,13 @@ public sealed class StringsFolderLookupOverlay : IStringsFolderLookup
                                     if (!MemoryExtensions.Equals(modKey.Name, modName, StringComparison.OrdinalIgnoreCase)) continue;
                                     var dict = bundle.Get(type);
                                     if (dict.ContainsKey(lang)) continue;
-                                    dict[lang] = new Lazy<IStringsLookup>(() =>
+                                    dict[lang] = new Lazy<LookupItem>(() =>
                                     {
                                         try
                                         {
-                                            return new StringsLookupOverlay(item.GetMemorySlice(), type, encodings.GetEncoding(release, lang));
+                                            return new LookupItem(
+                                                new StringsLookupOverlay(item.GetMemorySlice(), type, encodings.GetEncoding(release, lang)),
+                                                Path.Combine(bsaFile, item.Path));
                                         }
                                         catch (Exception ex)
                                         {
@@ -155,10 +165,34 @@ public sealed class StringsFolderLookupOverlay : IStringsFolderLookup
             str = default;
             return false;
         }
-        return lookup.Value.TryLookup(key, out str);
+        return lookup.Value.StringsLookup.TryLookup(key, out str);
     }
 
-    public Dictionary<Language, Lazy<IStringsLookup>> Get(StringsSource source) => _dictionaries.Value.Get(source);
+    public bool TryLookup(
+        StringsSource source,
+        Language language,
+        uint key,
+        [MaybeNullWhen(false)] out string str,
+        [MaybeNullWhen(false)] out string sourcePath)
+    {
+        var dict = Get(source);
+        if (!dict.TryGetValue(language, out var lookup))
+        {
+            str = default;
+            sourcePath = default;
+            return false;
+        }
+        if (!lookup.Value.StringsLookup.TryLookup(key, out str))
+        {
+            sourcePath = default;
+            return false;
+        }
+
+        sourcePath = lookup.Value.SourcePath;
+        return true;
+    }
+
+    internal Dictionary<Language, Lazy<LookupItem>> Get(StringsSource source) => _dictionaries.Value.Get(source);
 
     public TranslatedString CreateString(StringsSource source, uint key, Language defaultLanguage)
     {

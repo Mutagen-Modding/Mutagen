@@ -20,7 +20,7 @@ public class FormLinkOrIndexBinaryTranslation
         {
             FormKeyBinaryTranslation.Instance.Write(
                 writer,
-                item.Link.FormKey);
+                item.Link);
         }
     }
 

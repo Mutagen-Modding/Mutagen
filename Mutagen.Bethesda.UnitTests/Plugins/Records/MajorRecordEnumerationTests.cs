@@ -190,15 +190,15 @@ public abstract class AMajorRecordEnumerationTests
     public void EnumerateAspectInterface(SkyrimMod mod, Light light)
     {
         light.Icons = new Icons();
-        light.Icons.LargeIconFilename.RawPath = "Hello";
+        light.Icons.LargeIconFilename.GivenPath = "Hello";
         light.Icons.SmallIconFilename = new AssetLink<SkyrimTextureAssetType>("World");
         var conv = ConvertMod(mod);
         Assert.Equal(Getter ? 0 : 1, RunTest<IHasIcons, IHasIcons>(conv).Count());
         Assert.Single(RunTest<IHasIcons, IHasIconsGetter>(conv));
         var item = RunTest<IHasIcons, IHasIconsGetter>(conv).First();
         item.Icons.Should().NotBeNull();
-        item.Icons!.LargeIconFilename.RawPath.Should().Be("Hello");
-        item.Icons!.SmallIconFilename!.RawPath.Should().Be("World");
+        item.Icons!.LargeIconFilename.GivenPath.Should().Be("Hello");
+        item.Icons!.SmallIconFilename!.GivenPath.Should().Be("World");
     }
 
     [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]

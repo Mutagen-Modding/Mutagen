@@ -226,7 +226,6 @@ internal class ProtocolDefinition_Fallout4 : IProtocolRegistration
             LeveledNpc_Registration.Instance,
             LeveledNpcEntry_Registration.Instance,
             LeveledNpcEntryData_Registration.Instance,
-            LeveledSpell_Registration.Instance,
             Light_Registration.Instance,
             LightingTemplate_Registration.Instance,
             LinkedAlias_Registration.Instance,

@@ -8,10 +8,14 @@ using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using System.Buffers.Binary;
 using System.Diagnostics.CodeAnalysis;
+using System.IO.Abstractions;
 using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Translations;
 
@@ -116,6 +120,7 @@ internal static class PluginUtilityTranslation
                         translationParams: translationParams);
                 }
                 catch (Exception ex)
+                    when (ex is not SubrecordException)
                 {
                     throw new SubrecordException(
                         subMeta.RecordType,
@@ -253,7 +258,7 @@ internal static class PluginUtilityTranslation
             frame: frame);
         var lastParsed = new PreviousParse();
         Dictionary<RecordType, int>? recordParseCount = null;
-        
+
         // Keep going past the frame, as subrecord frames might not contain followup subrecords
         // when bundled.  Rely on Stop commands to break accordingly
         while (!frame.Reader.Complete)
@@ -313,7 +318,7 @@ internal static class PluginUtilityTranslation
 
         frame.Position += groupMeta.TypeAndLengthLength;
         frame = frame.ReadAndReframe(checked((int)(groupMeta.TotalLength - groupMeta.TypeAndLengthLength)));
-            
+
         fillStructs?.Invoke(
             record: record,
             frame: frame);
@@ -393,7 +398,6 @@ internal static class PluginUtilityTranslation
             nextRecordType: modHeader.RecordType,
             contentLength: checked((int)modHeader.ContentLength),
             translationParams: null);
-        frame.Reader.MetaData.MasterReferences.SetTo(record.MasterReferences);
         while (!frame.Complete)
         {
             var groupHeader = frame.GetGroupHeader();
@@ -546,10 +550,67 @@ internal static class PluginUtilityTranslation
         if (rhs == null) return null;
         if (lhs == null)
         {
-            return new AssetLink<TAssetType>(rhs.RawPath);
+            return new AssetLink<TAssetType>(rhs.GivenPath);
         }
 
-        lhs.RawPath = rhs.RawPath;
+        lhs.GivenPath = rhs.GivenPath;
         return lhs;
+    }
+
+    internal static BinaryWriteParameters SetStringsWriter(
+        IModGetter mod,
+        BinaryWriteParameters writeParameters,
+        string path,
+        ModKey modKey)
+    {
+        if (writeParameters.StringsWriter != null) return writeParameters;
+        if (!mod.UsingLocalization) return writeParameters;
+
+        return writeParameters with
+        {
+            StringsWriter = new StringsWriter(
+                release: mod.GameRelease,
+                modKey: modKey,
+                writeDirectory: Path.Combine(Path.GetDirectoryName(path)!, "Strings"),
+                encodingProvider: MutagenEncoding.Default,
+                fileSystem: writeParameters.FileSystem.GetOrDefault())
+        };
+    }
+
+    internal static void WriteMajorRecord<TMajor>(
+        MutagenWriter writer,
+        TypedWriteParams translationParams,
+        RecordType type,
+        TMajor item,
+        Action<TMajor, MutagenWriter> writeEmbedded,
+        Action<TMajor, MutagenWriter, TypedWriteParams> writeRecordTypes,
+        RecordType? endMarker = null)
+        where TMajor : IMajorRecordGetter
+    {
+        try
+        {
+            using (HeaderExport.Record(
+                       writer: writer,
+                       record: translationParams.ConvertToCustom(type)))
+            {
+                writeEmbedded(item, writer);
+                if (item.IsDeleted) return;
+
+                writer.MetaData.FormVersion = item.FormVersion;
+                using (CompressionExport.Compression(item.IsCompressed, writer, out var writerToUse))
+                {
+                    writeRecordTypes(item, writerToUse, translationParams);
+                    if (endMarker != null)
+                    {
+                        using (HeaderExport.Subrecord(writer, endMarker.Value)) {}
+                    }
+                }
+                writer.MetaData.FormVersion = null;
+            }
+        }
+        catch (Exception ex)
+        {
+            throw RecordException.Enrich(ex, item);
+        }
     }
 }

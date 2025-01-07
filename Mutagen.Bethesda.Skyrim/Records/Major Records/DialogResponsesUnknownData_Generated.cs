@@ -982,8 +982,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.NEXT = rhs.NEXT;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IDialogResponsesUnknownData item,
+            IDialogResponsesUnknownDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public DialogResponsesUnknownData DeepCopy(
@@ -1228,7 +1240,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region QNAM
         private int? _QNAMLocation;
-        public IFormLinkNullableGetter<ISkyrimMajorRecordGetter> QNAM => _QNAMLocation.HasValue ? new FormLinkNullable<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _QNAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
+        public IFormLinkNullableGetter<ISkyrimMajorRecordGetter> QNAM => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISkyrimMajorRecordGetter>(_package, _recordData, _QNAMLocation);
         #endregion
         #region NEXT
         private int? _NEXTLocation;

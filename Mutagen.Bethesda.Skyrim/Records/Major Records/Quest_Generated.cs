@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
@@ -62,6 +61,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region VirtualMachineAdapter
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private QuestAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter
+        /// </summary>
         public QuestAdapter? VirtualMachineAdapter
         {
             get => _VirtualMachineAdapter;
@@ -69,7 +71,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IQuestAdapterGetter? IQuestGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
         IAVirtualMachineAdapterGetter? IHaveVirtualMachineAdapterGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        IAVirtualMachineAdapter? IHaveVirtualMachineAdapter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         #endregion
         #region Name
         /// <summary>
@@ -203,6 +208,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #endregion
+        #region NextAliasID
+        public UInt32? NextAliasID { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt32? IQuestGetter.NextAliasID => this.NextAliasID;
+        #endregion
         #region Aliases
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<QuestAlias> _Aliases = new ExtendedList<QuestAlias>();
@@ -261,6 +271,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.EventConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>());
                 this.Objectives = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>());
+                this.NextAliasID = initialValue;
                 this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestAlias.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, QuestAlias.Mask<TItem>?>>());
                 this.Description = initialValue;
             }
@@ -287,6 +298,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EventConditions,
                 TItem Stages,
                 TItem Objectives,
+                TItem NextAliasID,
                 TItem Aliases,
                 TItem Description)
             : base(
@@ -312,6 +324,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.EventConditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(EventConditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.Stages = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>(Stages, Enumerable.Empty<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>());
                 this.Objectives = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>(Objectives, Enumerable.Empty<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>());
+                this.NextAliasID = NextAliasID;
                 this.Aliases = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestAlias.Mask<TItem>?>>?>(Aliases, Enumerable.Empty<MaskItemIndexed<TItem, QuestAlias.Mask<TItem>?>>());
                 this.Description = Description;
             }
@@ -339,6 +352,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? EventConditions;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestStage.Mask<TItem>?>>?>? Stages;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestObjective.Mask<TItem>?>>?>? Objectives;
+            public TItem NextAliasID;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, QuestAlias.Mask<TItem>?>>?>? Aliases;
             public TItem Description;
             #endregion
@@ -368,6 +382,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.EventConditions, rhs.EventConditions)) return false;
                 if (!object.Equals(this.Stages, rhs.Stages)) return false;
                 if (!object.Equals(this.Objectives, rhs.Objectives)) return false;
+                if (!object.Equals(this.NextAliasID, rhs.NextAliasID)) return false;
                 if (!object.Equals(this.Aliases, rhs.Aliases)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 return true;
@@ -389,6 +404,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.EventConditions);
                 hash.Add(this.Stages);
                 hash.Add(this.Objectives);
+                hash.Add(this.NextAliasID);
                 hash.Add(this.Aliases);
                 hash.Add(this.Description);
                 hash.Add(base.GetHashCode());
@@ -473,6 +489,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
+                if (!eval(this.NextAliasID)) return false;
                 if (this.Aliases != null)
                 {
                     if (!eval(this.Aliases.Overall)) return false;
@@ -566,6 +583,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
+                if (eval(this.NextAliasID)) return true;
                 if (this.Aliases != null)
                 {
                     if (eval(this.Aliases.Overall)) return true;
@@ -677,6 +695,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
+                obj.NextAliasID = eval(this.NextAliasID);
                 if (Aliases != null)
                 {
                     obj.Aliases = new MaskItem<R, IEnumerable<MaskItemIndexed<R, QuestAlias.Mask<R>?>>?>(eval(this.Aliases.Overall), Enumerable.Empty<MaskItemIndexed<R, QuestAlias.Mask<R>?>>());
@@ -844,6 +863,10 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
+                    if (printMask?.NextAliasID ?? true)
+                    {
+                        sb.AppendItem(NextAliasID, "NextAliasID");
+                    }
                     if ((printMask?.Aliases?.Overall ?? true)
                         && Aliases is {} AliasesItem)
                     {
@@ -892,6 +915,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? EventConditions;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestStage.ErrorMask?>>?>? Stages;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjective.ErrorMask?>>?>? Objectives;
+            public Exception? NextAliasID;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestAlias.ErrorMask?>>?>? Aliases;
             public Exception? Description;
             #endregion
@@ -930,6 +954,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Stages;
                     case Quest_FieldIndex.Objectives:
                         return Objectives;
+                    case Quest_FieldIndex.NextAliasID:
+                        return NextAliasID;
                     case Quest_FieldIndex.Aliases:
                         return Aliases;
                     case Quest_FieldIndex.Description:
@@ -985,6 +1011,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Quest_FieldIndex.Objectives:
                         this.Objectives = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjective.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Quest_FieldIndex.NextAliasID:
+                        this.NextAliasID = ex;
                         break;
                     case Quest_FieldIndex.Aliases:
                         this.Aliases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestAlias.ErrorMask?>>?>(ex, null);
@@ -1045,6 +1074,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case Quest_FieldIndex.Objectives:
                         this.Objectives = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjective.ErrorMask?>>?>)obj;
                         break;
+                    case Quest_FieldIndex.NextAliasID:
+                        this.NextAliasID = (Exception?)obj;
+                        break;
                     case Quest_FieldIndex.Aliases:
                         this.Aliases = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestAlias.ErrorMask?>>?>)obj;
                         break;
@@ -1074,6 +1106,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (EventConditions != null) return true;
                 if (Stages != null) return true;
                 if (Objectives != null) return true;
+                if (NextAliasID != null) return true;
                 if (Aliases != null) return true;
                 if (Description != null) return true;
                 return false;
@@ -1219,6 +1252,9 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
+                {
+                    sb.AppendItem(NextAliasID, "NextAliasID");
+                }
                 if (Aliases is {} AliasesItem)
                 {
                     sb.AppendLine("Aliases =>");
@@ -1262,6 +1298,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.EventConditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.EventConditions?.Overall, rhs.EventConditions?.Overall), Noggog.ExceptionExt.Combine(this.EventConditions?.Specific, rhs.EventConditions?.Specific));
                 ret.Stages = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestStage.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Stages?.Overall, rhs.Stages?.Overall), Noggog.ExceptionExt.Combine(this.Stages?.Specific, rhs.Stages?.Specific));
                 ret.Objectives = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestObjective.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Objectives?.Overall, rhs.Objectives?.Overall), Noggog.ExceptionExt.Combine(this.Objectives?.Specific, rhs.Objectives?.Specific));
+                ret.NextAliasID = this.NextAliasID.Combine(rhs.NextAliasID);
                 ret.Aliases = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, QuestAlias.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Aliases?.Overall, rhs.Aliases?.Overall), Noggog.ExceptionExt.Combine(this.Aliases?.Specific, rhs.Aliases?.Specific));
                 ret.Description = this.Description.Combine(rhs.Description);
                 return ret;
@@ -1300,6 +1337,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Condition.TranslationMask? EventConditions;
             public QuestStage.TranslationMask? Stages;
             public QuestObjective.TranslationMask? Objectives;
+            public bool NextAliasID;
             public QuestAlias.TranslationMask? Aliases;
             public bool Description;
             #endregion
@@ -1319,6 +1357,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Event = defaultOn;
                 this.TextDisplayGlobals = defaultOn;
                 this.Filter = defaultOn;
+                this.NextAliasID = defaultOn;
                 this.Description = defaultOn;
             }
 
@@ -1341,6 +1380,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((EventConditions == null ? DefaultOn : !EventConditions.GetCrystal().CopyNothing, EventConditions?.GetCrystal()));
                 ret.Add((Stages == null ? DefaultOn : !Stages.GetCrystal().CopyNothing, Stages?.GetCrystal()));
                 ret.Add((Objectives == null ? DefaultOn : !Objectives.GetCrystal().CopyNothing, Objectives?.GetCrystal()));
+                ret.Add((NextAliasID, null));
                 ret.Add((Aliases == null ? DefaultOn : !Aliases.GetCrystal().CopyNothing, Aliases?.GetCrystal()));
                 ret.Add((Description, null));
             }
@@ -1491,6 +1531,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IQuest :
         IAssetLinkContainer,
         IFormLinkContainer,
+        IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IQuestInternal>,
         INamed,
         INamedRequired,
@@ -1499,6 +1540,9 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: IHaveVirtualMachineAdapter
+        /// </summary>
         new QuestAdapter? VirtualMachineAdapter { get; set; }
         /// <summary>
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
@@ -1516,6 +1560,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<Condition> EventConditions { get; }
         new ExtendedList<QuestStage> Stages { get; }
         new ExtendedList<QuestObjective> Objectives { get; }
+        new UInt32? NextAliasID { get; set; }
         new ExtendedList<QuestAlias> Aliases { get; }
         new TranslatedString? Description { get; set; }
     }
@@ -1566,6 +1611,7 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IConditionGetter> EventConditions { get; }
         IReadOnlyList<IQuestStageGetter> Stages { get; }
         IReadOnlyList<IQuestObjectiveGetter> Objectives { get; }
+        UInt32? NextAliasID { get; }
         IReadOnlyList<IQuestAliasGetter> Aliases { get; }
         ITranslatedStringGetter? Description { get; }
 
@@ -1758,8 +1804,9 @@ namespace Mutagen.Bethesda.Skyrim
         EventConditions = 18,
         Stages = 19,
         Objectives = 20,
-        Aliases = 21,
-        Description = 22,
+        NextAliasID = 21,
+        Aliases = 22,
+        Description = 23,
     }
     #endregion
 
@@ -1770,9 +1817,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 16;
+        public const ushort AdditionalFieldCount = 17;
 
-        public const ushort FieldCount = 23;
+        public const ushort FieldCount = 24;
 
         public static readonly Type MaskType = typeof(Quest.Mask<>);
 
@@ -1918,6 +1965,7 @@ namespace Mutagen.Bethesda.Skyrim
             item.EventConditions.Clear();
             item.Stages.Clear();
             item.Objectives.Clear();
+            item.NextAliasID = default;
             item.Aliases.Clear();
             item.Description = default;
             base.Clear(item);
@@ -2076,6 +2124,7 @@ namespace Mutagen.Bethesda.Skyrim
                 rhs.Objectives,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.NextAliasID = item.NextAliasID == rhs.NextAliasID;
             ret.Aliases = item.Aliases.CollectionEqualsHelper(
                 rhs.Aliases,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -2240,6 +2289,11 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
+            if ((printMask?.NextAliasID ?? true)
+                && item.NextAliasID is {} NextAliasIDItem)
+            {
+                sb.AppendItem(NextAliasIDItem, "NextAliasID");
+            }
             if (printMask?.Aliases?.Overall ?? true)
             {
                 sb.AppendLine("Aliases =>");
@@ -2369,6 +2423,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!lhs.Objectives.SequenceEqual(rhs.Objectives, (l, r) => ((QuestObjectiveCommon)((IQuestObjectiveGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.Objectives)))) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.NextAliasID) ?? true))
+            {
+                if (lhs.NextAliasID != rhs.NextAliasID) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Quest_FieldIndex.Aliases) ?? true))
             {
                 if (!lhs.Aliases.SequenceEqual(rhs.Aliases, (l, r) => ((QuestAliasCommon)((IQuestAliasGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Quest_FieldIndex.Aliases)))) return false;
@@ -2431,6 +2489,10 @@ namespace Mutagen.Bethesda.Skyrim
             hash.Add(item.EventConditions);
             hash.Add(item.Stages);
             hash.Add(item.Objectives);
+            if (item.NextAliasID is {} NextAliasIDitem)
+            {
+                hash.Add(NextAliasIDitem);
+            }
             hash.Add(item.Aliases);
             if (item.Description is {} Descriptionitem)
             {
@@ -2513,14 +2575,11 @@ namespace Mutagen.Bethesda.Skyrim
                     yield return additional;
                 }
             }
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            if (obj.VirtualMachineAdapter is {} VirtualMachineAdapterItems)
             {
-                if (obj.VirtualMachineAdapter is {} VirtualMachineAdapterItems)
+                foreach (var item in VirtualMachineAdapterItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
-                    foreach (var item in VirtualMachineAdapterItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
+                    yield return item;
                 }
             }
             yield break;
@@ -2770,6 +2829,10 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.NextAliasID) ?? true))
+            {
+                item.NextAliasID = rhs.NextAliasID;
+            }
             if ((copyMask?.GetShouldTranslate((int)Quest_FieldIndex.Aliases) ?? true))
             {
                 errorMask?.PushIndex((int)Quest_FieldIndex.Aliases);
@@ -2798,8 +2861,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Description = rhs.Description?.DeepCopy();
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IQuest item,
+            IQuestGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             ISkyrimMajorRecordInternal item,
             ISkyrimMajorRecordGetter rhs,
@@ -3029,9 +3104,10 @@ namespace Mutagen.Bethesda.Skyrim
                         writer: subWriter,
                         translationParams: conv);
                 });
-            QuestBinaryWriteTranslation.WriteBinaryNextAliasID(
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item);
+                item: item.NextAliasID,
+                header: translationParams.ConvertToCustom(RecordTypes.ANAM));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IQuestAliasGetter>.Instance.Write(
                 writer: writer,
                 items: item.Aliases,
@@ -3077,48 +3153,18 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item);
         }
 
-        public static partial void WriteBinaryNextAliasIDCustom(
-            MutagenWriter writer,
-            IQuestGetter item);
-
-        public static void WriteBinaryNextAliasID(
-            MutagenWriter writer,
-            IQuestGetter item)
-        {
-            WriteBinaryNextAliasIDCustom(
-                writer: writer,
-                item: item);
-        }
-
         public void Write(
             MutagenWriter writer,
             IQuestGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.QUST)))
-            {
-                try
-                {
-                    SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.QUST,
+                writeEmbedded: SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -3269,10 +3315,9 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    return QuestBinaryCreateTranslation.FillBinaryNextAliasIDCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item,
-                        lastParsed: lastParsed);
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NextAliasID = frame.ReadUInt32();
+                    return (int)Quest_FieldIndex.NextAliasID;
                 }
                 case RecordTypeInts.ALST:
                 case RecordTypeInts.ALLS:
@@ -3317,11 +3362,6 @@ namespace Mutagen.Bethesda.Skyrim
             PreviousParse lastParsed);
 
         public static partial ParseResult FillBinaryUnusedConditionsLogicCustom(
-            MutagenFrame frame,
-            IQuestInternal item,
-            PreviousParse lastParsed);
-
-        public static partial ParseResult FillBinaryNextAliasIDCustom(
             MutagenFrame frame,
             IQuestInternal item,
             PreviousParse lastParsed);
@@ -3444,10 +3484,8 @@ namespace Mutagen.Bethesda.Skyrim
         public IReadOnlyList<IQuestStageGetter> Stages { get; private set; } = Array.Empty<IQuestStageGetter>();
         public IReadOnlyList<IQuestObjectiveGetter> Objectives { get; private set; } = Array.Empty<IQuestObjectiveGetter>();
         #region NextAliasID
-        public partial ParseResult NextAliasIDCustomParse(
-            OverlayStream stream,
-            int offset,
-            PreviousParse lastParsed);
+        private int? _NextAliasIDLocation;
+        public UInt32? NextAliasID => _NextAliasIDLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NextAliasIDLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
         public IReadOnlyList<IQuestAliasGetter> Aliases { get; private set; } = Array.Empty<IQuestAliasGetter>();
         #region Description
@@ -3553,7 +3591,7 @@ namespace Mutagen.Bethesda.Skyrim
                     this.TextDisplayGlobals = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IGlobalGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IGlobalGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IGlobalGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
@@ -3604,10 +3642,8 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    return NextAliasIDCustomParse(
-                        stream,
-                        offset,
-                        lastParsed: lastParsed);
+                    _NextAliasIDLocation = (stream.Position - offset);
+                    return (int)Quest_FieldIndex.NextAliasID;
                 }
                 case RecordTypeInts.ALST:
                 case RecordTypeInts.ALLS:

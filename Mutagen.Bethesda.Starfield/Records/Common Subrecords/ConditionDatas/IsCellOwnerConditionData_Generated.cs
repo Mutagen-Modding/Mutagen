@@ -474,6 +474,32 @@ namespace Mutagen.Bethesda.Starfield
         #region Mutagen
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => IsCellOwnerConditionDataCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IsCellOwnerConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
+        object? IConditionParameters.Parameter1
+        {
+            get => FirstParameter;
+            set => FirstParameter = (value is IFormLinkOrIndex<ICellGetter> v ? v : throw new ArgumentException());
+        }
+        object? IConditionParametersGetter.Parameter1
+        {
+            get => FirstParameter;
+        }
+        Type? IConditionParametersGetter.Parameter1Type
+        {
+            get => typeof(IFormLinkOrIndexGetter<ICellGetter>);
+        }
+        object? IConditionParameters.Parameter2
+        {
+            get => SecondParameter;
+            set => SecondParameter = (value is IFormLinkOrIndex<IOwnerGetter> v ? v : throw new ArgumentException());
+        }
+        object? IConditionParametersGetter.Parameter2
+        {
+            get => SecondParameter;
+        }
+        Type? IConditionParametersGetter.Parameter2Type
+        {
+            get => typeof(IFormLinkOrIndexGetter<IOwnerGetter>);
+        }
         #endregion
 
         #region Binary Translation
@@ -1074,8 +1100,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.SecondUnusedStringParameter = rhs.SecondUnusedStringParameter;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IIsCellOwnerConditionData item,
+            IIsCellOwnerConditionDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IConditionData item,

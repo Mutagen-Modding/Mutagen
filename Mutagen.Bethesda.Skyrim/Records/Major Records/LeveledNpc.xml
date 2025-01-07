@@ -3,7 +3,7 @@
   <Object name="LeveledNpc" recordType="LVLN" baseClass="SkyrimMajorRecord" objType="Record">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <UInt8 name="ChanceNone" recordType="LVLD" nullable="False" />
+      <Percent name="ChanceNone" recordType="LVLD" nullable="False" integerType="ByteHundred" />
       <Enum name="Flags" recordType="LVLF" nullable="False" enumName="LeveledNpc.Flag" byteLength="1" />
       <FormLink name="Global" recordType="LVLG" refName="Global" />
       <RefList name="Entries" counterRecType="LLCT" refName="LeveledNpcEntry" counterLength="1" />

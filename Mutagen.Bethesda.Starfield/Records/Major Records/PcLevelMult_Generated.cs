@@ -838,8 +838,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.LevelMult = rhs.LevelMult;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPcLevelMult item,
+            IPcLevelMultGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IANpcLevel item,

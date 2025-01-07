@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="PERS" recordType="PERS" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <UInt32 name="DATA" recordType="DATA" unknown="true" />
+      <CustomLogic name="ItemsParse">
+        <RecordType>XXXX</RecordType>
+        <RecordType>DAT2</RecordType>
+      </CustomLogic>
+      <RefList name="Items" refName="PERSItems" unknown="true" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="PERSItems" objType="Subrecord">
+    <Fields>
+      <RefList name="Items" refName="PERSItem" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="PERSItem" objType="Subrecord">
+    <Fields>
+      <FormLink name="Record" refName="StarfieldMajorRecord" />
+      <UInt32 name="Unknown1" unknown="true" />
+      <UInt32 name="Unknown2" unknown="true" />
+    </Fields>
+  </Object>
+</Loqui>

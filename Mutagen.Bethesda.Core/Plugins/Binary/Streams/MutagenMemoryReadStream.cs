@@ -12,7 +12,7 @@ public sealed class MutagenMemoryReadStream : LittleEndianBinaryMemoryReadStream
     public long OffsetReference { get; }
 
     /// <inheritdoc/>
-    public ParsingBundle MetaData { get; }
+    public ParsingMeta MetaData { get; }
 
     /// <summary>
     /// Constructor that wraps a memory slice
@@ -22,7 +22,7 @@ public sealed class MutagenMemoryReadStream : LittleEndianBinaryMemoryReadStream
     /// <param name="offsetReference">Optional offset reference position to use</param>
     public MutagenMemoryReadStream(
         ReadOnlyMemorySlice<byte> data,
-        ParsingBundle metaData,
+        ParsingMeta metaData,
         long offsetReference = 0)
         : base(data)
     {

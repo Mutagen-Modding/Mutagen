@@ -132,6 +132,8 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
         [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<IFormLinkIdentifier> formLinks) => this.Remove(formLinks);
+        [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
@@ -516,6 +518,21 @@ namespace Mutagen.Bethesda.Oblivion
             ((OblivionGroupSetterCommon<T>)((IOblivionGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<T>(
+            this IOblivionGroup<T> obj,
+            IEnumerable<IFormLinkIdentifier> keys)
+            where T : class, IOblivionMajorRecordInternal, IBinaryItem
+        {
+            foreach (var g in keys.GroupBy(x => x.Type))
+            {
+                Remove(
+                    obj: obj,
+                    keys: g.Select(x => x.FormKey),
+                    type: g.Key);
+            }
         }
 
         [DebuggerStepThrough]
@@ -1111,13 +1128,10 @@ namespace Mutagen.Bethesda.Oblivion
         
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IOblivionGroupGetter<T> obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            foreach (var item in obj.RecordCache.Items.WhereCastable<T, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
             {
-                foreach (var item in obj.RecordCache.Items.WhereCastable<T, IAssetLinkContainerGetter>()
-                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             yield break;
         }
@@ -1169,8 +1183,22 @@ namespace Mutagen.Bethesda.Oblivion
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom<T, TGetter>(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom<T, TGetter>(
+            IOblivionGroup<T> item,
+            IOblivionGroupGetter<TGetter> rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+            where T : class, IOblivionMajorRecordInternal, IBinaryItem
+            where TGetter : class, IOblivionMajorRecordGetter, IBinaryItem;
         #endregion
         
         public OblivionGroup<T> DeepCopy<T, TGetter, T_TranslMask>(

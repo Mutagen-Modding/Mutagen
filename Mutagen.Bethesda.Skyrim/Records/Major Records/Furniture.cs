@@ -182,7 +182,7 @@ partial class FurnitureBinaryCreateTranslation
                         };
                         break;
                     case RecordTypeInts.FNMK:
-                        marker.MarkerKeyword.FormKey = FormKeyBinaryTranslation.Instance.Parse(subMeta.Value.Content, stream.MetaData.MasterReferences!);
+                        marker.MarkerKeyword.FormKey = FormKeyBinaryTranslation.Instance.Parse(subMeta.Value.Content, stream.MetaData.MasterReferences);
                         break;
                     default:
                         throw new ArgumentException($"Unexpected record type: {subMeta.Value.RecordType}");
@@ -285,10 +285,7 @@ partial class FurnitureBinaryWriteTranslation
                 }
             }
 
-            if (markerKeyword.FormKeyNullable != null)
-            {
-                FormKeyBinaryTranslation.Instance.Write(writer, markerKeyword.FormKeyNullable.Value, FurnitureBinaryCreateTranslation.FNMK);
-            }
+            FormKeyBinaryTranslation.Instance.Write(writer, markerKeyword, FurnitureBinaryCreateTranslation.FNMK);
         }
     }
 

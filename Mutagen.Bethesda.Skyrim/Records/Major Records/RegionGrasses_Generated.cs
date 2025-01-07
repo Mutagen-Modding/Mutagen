@@ -1015,8 +1015,20 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IRegionGrasses item,
+            IRegionGrassesGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IRegionData item,
@@ -1329,14 +1341,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.RDGS:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Grasses = BinaryOverlayList.FactoryByStartIndex<IRegionGrassGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Grasses = BinaryOverlayList.FactoryByStartIndexWithTrigger<IRegionGrassGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 8,
                         getter: (s, p) => RegionGrassBinaryOverlay.RegionGrassFactory(s, p));
-                    stream.Position += subLen;
                     return (int)RegionGrasses_FieldIndex.Grasses;
                 }
                 default:

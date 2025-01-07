@@ -135,6 +135,8 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
         [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<IFormLinkIdentifier> formLinks) => this.Remove(formLinks);
+        [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
@@ -521,6 +523,21 @@ namespace Mutagen.Bethesda.Starfield
             ((StarfieldGroupSetterCommon<T>)((IStarfieldGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<T>(
+            this IStarfieldGroup<T> obj,
+            IEnumerable<IFormLinkIdentifier> keys)
+            where T : class, IStarfieldMajorRecordInternal, IBinaryItem
+        {
+            foreach (var g in keys.GroupBy(x => x.Type))
+            {
+                Remove(
+                    obj: obj,
+                    keys: g.Select(x => x.FormKey),
+                    type: g.Key);
+            }
         }
 
         [DebuggerStepThrough]
@@ -1128,13 +1145,10 @@ namespace Mutagen.Bethesda.Starfield
         
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IStarfieldGroupGetter<T> obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            foreach (var item in obj.RecordCache.Items.WhereCastable<T, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
             {
-                foreach (var item in obj.RecordCache.Items.WhereCastable<T, IAssetLinkContainerGetter>()
-                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             yield break;
         }
@@ -1190,8 +1204,22 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom<T, TGetter>(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom<T, TGetter>(
+            IStarfieldGroup<T> item,
+            IStarfieldGroupGetter<TGetter> rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+            where T : class, IStarfieldMajorRecordInternal, IBinaryItem
+            where TGetter : class, IStarfieldMajorRecordGetter, IBinaryItem;
         #endregion
         
         public StarfieldGroup<T> DeepCopy<T, TGetter, T_TranslMask>(

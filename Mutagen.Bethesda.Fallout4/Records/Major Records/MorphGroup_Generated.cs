@@ -1205,8 +1205,20 @@ namespace Mutagen.Bethesda.Fallout4
                     item.UnknownMPGS = default;
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IMorphGroup item,
+            IMorphGroupGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public MorphGroup DeepCopy(

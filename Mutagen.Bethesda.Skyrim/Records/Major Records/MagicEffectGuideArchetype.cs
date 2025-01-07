@@ -5,5 +5,5 @@ namespace Mutagen.Bethesda.Skyrim;
 public partial class MagicEffectGuideArchetype
 {
     public MagicEffectArchetype.TypeEnum Type => MagicEffectArchetype.TypeEnum.Guide;
-    public override FormKey AssociationKey => Association.FormKey;
+    public override IFormLinkIdentifier AssociationKey => Association;
 }

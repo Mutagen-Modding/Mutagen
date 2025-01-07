@@ -978,8 +978,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Insignia = rhs.Insignia;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IRank item,
+            IRankGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public Rank DeepCopy(

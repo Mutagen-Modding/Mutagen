@@ -142,6 +142,8 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                 }
             }
 
+            await YieldReturnNestedAssets(obj, fg);
+
             fg.AppendLine("yield break;");
         }
 
@@ -488,29 +490,13 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
 
         fg.AppendLine();
     }
-
-
-    private async Task YieldReturnListedAssets(ObjectGeneration obj, StructuredStringBuilder fg)
+    
+    private async Task YieldReturnNestedAssets(ObjectGeneration obj, StructuredStringBuilder fg)
     {
         var startCount = fg.Count;
         foreach (var field in obj.IterateFields(nonIntegrated: true))
         {
-            if (field is AssetLinkType link)
-            {
-                if (field.Nullable)
-                {
-                    fg.AppendLine($"if (obj.{field.Name} != null)");
-                    using (fg.CurlyBrace())
-                    {
-                        fg.AppendLine($"yield return obj.{field.Name};");
-                    }
-                }
-                else
-                {
-                    fg.AppendLine($"yield return obj.{field.Name};");
-                }
-            }
-            else if (field is LoquiType loqui)
+            if (field is LoquiType loqui)
             {
                 Case subLinkCase;
                 if (loqui.TargetObjectGeneration != null)
@@ -587,14 +573,6 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                         }
                     }
                 }
-                else if (cont.SubTypeGeneration is AssetLinkType assetLinkType)
-                {
-                    string filterNulls =
-                        assetLinkType.IsNullable || (cont is GenderedType && ((GenderedType)cont).ItemNullable)
-                            ? ".NotNull()"
-                            : null;
-                    subFg.AppendLine($"foreach (var item in {access}{filterNulls})");
-                }
                 else
                 {
                     continue;
@@ -641,7 +619,78 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                             break;
                     }
                 }
-                else if (dict.ValueTypeGen is AssetLinkType)
+                else
+                {
+                    continue;
+                }
+
+                using (fg.CurlyBrace())
+                {
+                    fg.AppendLine($"yield return item;");
+                }
+            }
+        }
+    }
+    
+    private async Task YieldReturnListedAssets(ObjectGeneration obj, StructuredStringBuilder fg)
+    {
+        var startCount = fg.Count;
+        foreach (var field in obj.IterateFields(nonIntegrated: true))
+        {
+            if (field is AssetLinkType link)
+            {
+                if (field.Nullable)
+                {
+                    fg.AppendLine($"if (obj.{field.Name} != null)");
+                    using (fg.CurlyBrace())
+                    {
+                        fg.AppendLine($"yield return obj.{field.Name};");
+                    }
+                }
+                else
+                {
+                    fg.AppendLine($"yield return obj.{field.Name};");
+                }
+            }
+            else if (field is WrapperType cont)
+            {
+                var access = $"obj.{field.Name}";
+                if (field.Nullable)
+                {
+                    access = $"{field.Name}Item";
+                }
+
+                var subFg = new StructuredStringBuilder();
+                if (cont.SubTypeGeneration is AssetLinkType assetLinkType)
+                {
+                    string filterNulls =
+                        assetLinkType.IsNullable || (cont is GenderedType && ((GenderedType)cont).ItemNullable)
+                            ? ".NotNull()"
+                            : null;
+                    subFg.AppendLine($"foreach (var item in {access}{filterNulls})");
+                }
+                else
+                {
+                    continue;
+                }
+
+                if (field.Nullable)
+                {
+                    fg.AppendLine($"if (obj.{field.Name} is {{}} {field.Name}Item)");
+                }
+
+                using (fg.CurlyBrace(doIt: field.Nullable))
+                {
+                    fg.AppendLines(subFg);
+                    using (fg.CurlyBrace())
+                    {
+                        fg.AppendLine($"yield return item;");
+                    }
+                }
+            }
+            else if (field is DictType dict)
+            {
+                if (dict.ValueTypeGen is AssetLinkType)
                 {
                     fg.AppendLine($"foreach (var item in obj.{field.Name}.Values)");
                 }
@@ -654,27 +703,6 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                 {
                     fg.AppendLine($"yield return item;");
                 }
-            }
-            else if (field is BreakType breakType)
-            {
-                if (fg.Count > startCount)
-                {
-                    fg.AppendLine(
-                        $"if (obj.{VersioningModule.VersioningFieldName}.HasFlag({obj.Name}.{VersioningModule.VersioningEnumName}.Break{breakType.Index})) yield break;");
-                }
-            }
-        }
-
-        // Remove trailing breaks
-        while (fg.Count > startCount)
-        {
-            if (fg[fg.Count - 1].AsSpan().TrimStart().StartsWith($"if (obj.{VersioningModule.VersioningFieldName}"))
-            {
-                fg.RemoveAt(fg.Count - 1);
-            }
-            else
-            {
-                break;
             }
         }
     }

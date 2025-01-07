@@ -55,6 +55,16 @@ public sealed class RecordLocatorResults
         return true;
     }
 
+    public RecordLocationMarker GetRecord(FormKey formKey)
+    {
+        if (TryGetRecord(formKey, out var item))
+        {
+            return item;
+        }
+
+        throw new KeyNotFoundException($"Could not locate FormKey {formKey}");
+    }
+
     public bool TryGetRecord(long loc, [MaybeNullWhen(false)] out RecordLocationMarker record)
     {
         if (!_fromStart.TryGetInDirection(

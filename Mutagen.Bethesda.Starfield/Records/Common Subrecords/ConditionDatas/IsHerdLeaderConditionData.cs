@@ -1,18 +1,18 @@
 namespace Mutagen.Bethesda.Starfield;
 
-public partial class IsHerdLeaderConditionData : IConditionStringParameter
+public partial class IsHerdLeaderConditionData : IConditionParameters
 {
-    string? IConditionStringParameterGetter.FirstStringParameter => FirstUnusedStringParameter;
+    string? IConditionParametersGetter.StringParameter1 => FirstUnusedStringParameter;
 
-    string? IConditionStringParameterGetter.SecondStringParameter => SecondUnusedStringParameter;
+    string? IConditionParametersGetter.StringParameter2 => SecondUnusedStringParameter;
 
-    string? IConditionStringParameter.FirstStringParameter
+    string? IConditionParameters.StringParameter1
     {
         get => FirstUnusedStringParameter;
         set => FirstUnusedStringParameter = value;
     }
 
-    string? IConditionStringParameter.SecondStringParameter
+    string? IConditionParameters.StringParameter2
     {
         get => SecondUnusedStringParameter;
         set => SecondUnusedStringParameter = value;

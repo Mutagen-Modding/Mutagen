@@ -961,8 +961,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.MaxName = rhs.MaxName;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IMorphValue item,
+            IMorphValueGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public MorphValue DeepCopy(

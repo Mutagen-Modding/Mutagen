@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="VehicleMaterialTable" objType="Subrecord" recordType="VMRT" >
+    <Fields>
+      <Guid name="MaterialID" />
+      <RefList name="AudioRules" counterLength="8" refName="VehicleAudioRule" />
+      <RefList name="VfxRules" counterLength="8" refName="VehicleVfxRule" />
+      <RefList name="FrictionRules" counterLength="8" refName="VehicleFrictionRule" />
+    </Fields>
+  </Object>
+  <Object name="VehicleAudioRule" objType="Subrecord" >
+    <Fields>
+      <String name="Rule" binaryType="PrependLengthUInt8" />
+      <Guid name="Sound" />
+    </Fields>
+  </Object>
+  <Object name="VehicleVfxRule" objType="Subrecord" >
+    <Fields>
+      <String name="Rule" binaryType="PrependLengthUInt8" />
+      <FormLink name="BoundObject" refName="StarfieldMajorRecord" />
+    </Fields>
+  </Object>
+  <Object name="VehicleFrictionRule" objType="Subrecord" >
+    <Fields>
+      <String name="Rule" binaryType="PrependLengthUInt8" />
+      <Float name="Friction" />
+    </Fields>
+  </Object>
+</Loqui>

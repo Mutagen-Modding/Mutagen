@@ -30,6 +30,11 @@ internal sealed class ImmutableModLinkCacheSimpleContextCategory<TKey> : IImmuta
     private readonly Lazy<IReadOnlyCache<IModContext<IMajorRecordGetter>, TKey>> _untypedContexts;
     private readonly Dictionary<Type, IReadOnlyCache<IModContext<IMajorRecordGetter>, TKey>> _contexts = new();
 
+    static ImmutableModLinkCacheSimpleContextCategory()
+    {
+        Plugins.Warmup.Init();
+    }
+
     public ImmutableModLinkCacheSimpleContextCategory(
         bool simple,
         ILinkCache linkCache,

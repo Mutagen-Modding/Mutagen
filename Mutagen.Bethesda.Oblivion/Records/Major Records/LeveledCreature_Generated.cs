@@ -22,7 +22,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -56,9 +55,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region ChanceNone
-        public Byte? ChanceNone { get; set; }
+        public Percent? ChanceNone { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte? ILeveledCreatureGetter.ChanceNone => this.ChanceNone;
+        Percent? ILeveledCreatureGetter.ChanceNone => this.ChanceNone;
         #endregion
         #region Flags
         public LeveledFlag? Flags { get; set; }
@@ -685,7 +684,7 @@ namespace Mutagen.Bethesda.Oblivion
         INpcSpawn,
         IOblivionMajorRecordInternal
     {
-        new Byte? ChanceNone { get; set; }
+        new Percent? ChanceNone { get; set; }
         new LeveledFlag? Flags { get; set; }
         new ExtendedList<LeveledCreatureEntry> Entries { get; }
         new IFormLinkNullable<IScriptGetter> Script { get; set; }
@@ -709,7 +708,7 @@ namespace Mutagen.Bethesda.Oblivion
         INpcSpawnGetter
     {
         static new ILoquiRegistration StaticRegistration => LeveledCreature_Registration.Instance;
-        Byte? ChanceNone { get; }
+        Percent? ChanceNone { get; }
         LeveledFlag? Flags { get; }
         IReadOnlyList<ILeveledCreatureEntryGetter> Entries { get; }
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
@@ -1079,7 +1078,7 @@ namespace Mutagen.Bethesda.Oblivion
             LeveledCreature.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.ChanceNone = item.ChanceNone == rhs.ChanceNone;
+            ret.ChanceNone = item.ChanceNone.Equals(rhs.ChanceNone);
             ret.Flags = item.Flags == rhs.Flags;
             ret.Entries = item.Entries.CollectionEqualsHelper(
                 rhs.Entries,
@@ -1216,7 +1215,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.ChanceNone) ?? true))
             {
-                if (lhs.ChanceNone != rhs.ChanceNone) return false;
+                if (!lhs.ChanceNone.Equals(rhs.ChanceNone)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)LeveledCreature_FieldIndex.Flags) ?? true))
             {
@@ -1428,8 +1427,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Template.SetTo(rhs.Template.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ILeveledCreature item,
+            ILeveledCreatureGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IOblivionMajorRecordInternal item,
             IOblivionMajorRecordGetter rhs,
@@ -1585,9 +1596,10 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            PercentBinaryTranslation.Write(
                 writer: writer,
                 item: item.ChanceNone,
+                integerType: FloatIntegerType.ByteHundred,
                 header: translationParams.ConvertToCustom(RecordTypes.LVLD));
             EnumBinaryTranslation<LeveledFlag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
@@ -1620,30 +1632,13 @@ namespace Mutagen.Bethesda.Oblivion
             ILeveledCreatureGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.LVLC)))
-            {
-                try
-                {
-                    OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.LVLC,
+                writeEmbedded: OblivionMajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -1701,7 +1696,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case RecordTypeInts.LVLD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ChanceNone = frame.ReadUInt8();
+                    item.ChanceNone = PercentBinaryTranslation.Parse(
+                        reader: frame,
+                        integerType: FloatIntegerType.ByteHundred);
                     return (int)LeveledCreature_FieldIndex.ChanceNone;
                 }
                 case RecordTypeInts.LVLF:
@@ -1795,7 +1792,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region ChanceNone
         private int? _ChanceNoneLocation;
-        public Byte? ChanceNone => _ChanceNoneLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChanceNoneLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
+        public Percent? ChanceNone => _ChanceNoneLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChanceNoneLocation.Value, _package.MetaData.Constants), FloatIntegerType.ByteHundred) : default(Percent?);
         #endregion
         #region Flags
         private int? _FlagsLocation;
@@ -1804,11 +1801,11 @@ namespace Mutagen.Bethesda.Oblivion
         public IReadOnlyList<ILeveledCreatureEntryGetter> Entries { get; private set; } = Array.Empty<ILeveledCreatureEntryGetter>();
         #region Script
         private int? _ScriptLocation;
-        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
+        public IFormLinkNullableGetter<IScriptGetter> Script => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IScriptGetter>(_package, _recordData, _ScriptLocation);
         #endregion
         #region Template
         private int? _TemplateLocation;
-        public IFormLinkNullableGetter<INpcRecordGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<INpcRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcRecordGetter>.Null;
+        public IFormLinkNullableGetter<INpcRecordGetter> Template => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<INpcRecordGetter>(_package, _recordData, _TemplateLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

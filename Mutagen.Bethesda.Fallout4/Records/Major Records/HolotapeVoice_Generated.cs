@@ -863,8 +863,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Scene.SetTo(rhs.Scene.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IHolotapeVoice item,
+            IHolotapeVoiceGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAHolotapeData item,
@@ -1067,7 +1079,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkNullableGetter<ISceneGetter> Scene => new FormLinkNullable<ISceneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkNullableGetter<ISceneGetter> Scene => FormLinkBinaryTranslation.Instance.NullableOverlayFactory<ISceneGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

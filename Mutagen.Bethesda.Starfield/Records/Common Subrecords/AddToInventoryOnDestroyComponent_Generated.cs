@@ -875,8 +875,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Item.SetTo(rhs.Item.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IAddToInventoryOnDestroyComponent item,
+            IAddToInventoryOnDestroyComponentGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAComponent item,
@@ -1111,7 +1123,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Item
         private int? _ItemLocation;
-        public IFormLinkNullableGetter<ILeveledItemGetter> Item => _ItemLocation.HasValue ? new FormLinkNullable<ILeveledItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILeveledItemGetter>.Null;
+        public IFormLinkNullableGetter<ILeveledItemGetter> Item => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILeveledItemGetter>(_package, _recordData, _ItemLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

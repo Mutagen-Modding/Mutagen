@@ -20,7 +20,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -1448,8 +1447,20 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ILeveledSpaceCell item,
+            ILeveledSpaceCellGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IStarfieldMajorRecordInternal item,
             IStarfieldMajorRecordGetter rhs,
@@ -1605,10 +1616,9 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            LeveledSpaceCellBinaryWriteTranslation.WriteBinaryChanceNone(
                 writer: writer,
-                item: item.ChanceNone,
-                header: translationParams.ConvertToCustom(RecordTypes.LVLD));
+                item: item);
             ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.MaxCount,
@@ -1637,35 +1647,31 @@ namespace Mutagen.Bethesda.Starfield
                 });
         }
 
+        public static partial void WriteBinaryChanceNoneCustom(
+            MutagenWriter writer,
+            ILeveledSpaceCellGetter item);
+
+        public static void WriteBinaryChanceNone(
+            MutagenWriter writer,
+            ILeveledSpaceCellGetter item)
+        {
+            WriteBinaryChanceNoneCustom(
+                writer: writer,
+                item: item);
+        }
+
         public void Write(
             MutagenWriter writer,
             ILeveledSpaceCellGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.LVSC)))
-            {
-                try
-                {
-                    StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.LVSC,
+                writeEmbedded: StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -1722,8 +1728,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.LVLD:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ChanceNone = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    LeveledSpaceCellBinaryCreateTranslation.FillBinaryChanceNoneCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item,
+                        lastParsed: lastParsed);
                     return (int)LeveledSpaceCell_FieldIndex.ChanceNone;
                 }
                 case RecordTypeInts.LVLM:
@@ -1771,6 +1779,11 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams.WithNoConverter());
             }
         }
+
+        public static partial void FillBinaryChanceNoneCustom(
+            MutagenFrame frame,
+            ILeveledSpaceCellInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -1820,8 +1833,12 @@ namespace Mutagen.Bethesda.Starfield
 
 
         #region ChanceNone
-        private int? _ChanceNoneLocation;
-        public Single ChanceNone => _ChanceNoneLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChanceNoneLocation.Value, _package.MetaData.Constants).Float() : default(Single);
+        partial void ChanceNoneCustomParse(
+            OverlayStream stream,
+            int finalPos,
+            int offset);
+        public partial Single GetChanceNoneCustom();
+        public Single ChanceNone => GetChanceNoneCustom();
         #endregion
         #region MaxCount
         private int? _MaxCountLocation;
@@ -1833,7 +1850,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region UseGlobal
         private int? _UseGlobalLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> UseGlobal => _UseGlobalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _UseGlobalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> UseGlobal => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _UseGlobalLocation);
         #endregion
         public IReadOnlyList<ILeveledNpcEntryGetter>? Entries { get; private set; }
         partial void CustomFactoryEnd(
@@ -1907,7 +1924,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.LVLD:
                 {
-                    _ChanceNoneLocation = (stream.Position - offset);
+                    ChanceNoneCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset);
                     return (int)LeveledSpaceCell_FieldIndex.ChanceNone;
                 }
                 case RecordTypeInts.LVLM:

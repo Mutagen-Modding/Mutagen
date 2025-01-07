@@ -361,7 +361,6 @@ public partial class RecordTypes
     public static readonly RecordType LVLN = new(0x4E4C564C);
     public static readonly RecordType LVLO = new(0x4F4C564C);
     public static readonly RecordType LVSG = new(0x4753564C);
-    public static readonly RecordType LVSP = new(0x5053564C);
     public static readonly RecordType MASE = new(0x4553414D);
     public static readonly RecordType MAST = new(0x5453414D);
     public static readonly RecordType MATO = new(0x4F54414D);
@@ -375,6 +374,7 @@ public partial class RecordTypes
     public static readonly RecordType MIC2 = new(0x3243494D);
     public static readonly RecordType MICO = new(0x4F43494D);
     public static readonly RecordType MISC = new(0x4353494D);
+    public static readonly RecordType MLSI = new(0x49534C4D);
     public static readonly RecordType MNAM = new(0x4D414E4D);
     public static readonly RecordType MO2C = new(0x43324F4D);
     public static readonly RecordType MO2F = new(0x46324F4D);

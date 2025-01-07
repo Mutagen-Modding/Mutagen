@@ -1110,8 +1110,10 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.DSTF,
                 RecordTypes.DSTA,
                 RecordTypes.DMDL,
-                RecordTypes.MODT,
+                RecordTypes.DMDT,
                 RecordTypes.MOLM,
+                RecordTypes.DMDC,
+                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
@@ -1125,7 +1127,10 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTypeConverter ModelConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
                 RecordTypes.MODL,
-                RecordTypes.DMDL));
+                RecordTypes.DMDL),
+            new KeyValuePair<RecordType, RecordType>(
+                RecordTypes.MODT,
+                RecordTypes.DMDT));
         public static readonly Type BinaryWriteTranslation = typeof(DestructionStageBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1478,14 +1483,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IDestructionStageGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            if (obj.Model is {} ModelItems)
             {
-                if (obj.Model is {} ModelItems)
+                foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
-                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
+                    yield return item;
                 }
             }
             yield break;
@@ -1576,8 +1578,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.UnusedMaterialSwap = rhs.UnusedMaterialSwap;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IDestructionStage item,
+            IDestructionStageGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public DestructionStage DeepCopy(
@@ -1789,8 +1803,10 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)DestructionStage_FieldIndex.SequenceName;
                 }
                 case RecordTypeInts.DMDL:
-                case RecordTypeInts.MODT:
+                case RecordTypeInts.DMDT:
                 case RecordTypeInts.MOLM:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -1911,12 +1927,12 @@ namespace Mutagen.Bethesda.Starfield
         #region Explosion
         private int _ExplosionLocation => _DSTDLocation!.Value.Min + 0x8;
         private bool _Explosion_IsSet => _DSTDLocation.HasValue;
-        public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_ExplosionLocation, 0x4), isSet: _Explosion_IsSet) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region Debris
         private int _DebrisLocation => _DSTDLocation!.Value.Min + 0xC;
         private bool _Debris_IsSet => _DSTDLocation.HasValue;
-        public IFormLinkGetter<IDebrisGetter> Debris => _Debris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_DebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
+        public IFormLinkGetter<IDebrisGetter> Debris => _Debris_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _recordData.Span.Slice(_DebrisLocation, 0x4), isSet: _Debris_IsSet) : FormLink<IDebrisGetter>.Null;
         #endregion
         #region DebrisCount
         private int _DebrisCountLocation => _DSTDLocation!.Value.Min + 0x10;
@@ -2012,8 +2028,10 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)DestructionStage_FieldIndex.SequenceName;
                 }
                 case RecordTypeInts.DMDL:
-                case RecordTypeInts.MODT:
+                case RecordTypeInts.DMDT:
                 case RecordTypeInts.MOLM:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:

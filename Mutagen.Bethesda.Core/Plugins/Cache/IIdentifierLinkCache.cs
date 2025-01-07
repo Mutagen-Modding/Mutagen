@@ -435,7 +435,7 @@ public interface IIdentifierLinkCache : IDisposable
     /// <param name="type">Type to retrieve identifiers for</param>
     /// <param name="cancel">Optional cancel token</param>
     /// <returns>Winning identifiers for a given type</returns>
-    IEnumerable<IMajorRecordIdentifier> AllIdentifiers(Type type, CancellationToken? cancel = null);
+    IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers(Type type, CancellationToken? cancel = null);
 
     /// <summary>
     /// Returns all winning identifiers for a given type.
@@ -443,7 +443,7 @@ public interface IIdentifierLinkCache : IDisposable
     /// <typeparam name="TMajor">Type to retrieve identifiers for</typeparam>
     /// <param name="cancel">Optional cancel token</param>
     /// <returns>Winning identifiers for a given type</returns>
-    IEnumerable<IMajorRecordIdentifier> AllIdentifiers<TMajor>(CancellationToken? cancel = null)
+    IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers<TMajor>(CancellationToken? cancel = null)
         where TMajor : class, IMajorRecordQueryableGetter;
 
     /// <summary>
@@ -452,12 +452,12 @@ public interface IIdentifierLinkCache : IDisposable
     /// <param name="types">Types to retrieve identifiers for</param>
     /// <param name="cancel">Optional cancel token</param>
     /// <returns>Winning identifiers for a given type</returns>
-    IEnumerable<IMajorRecordIdentifier> AllIdentifiers(IEnumerable<Type> types, CancellationToken? cancel = null);
+    IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers(IEnumerable<Type> types, CancellationToken? cancel = null);
 
     /// <summary>
     /// Returns all winning identifiers for the given types.
     /// </summary>
     /// <param name="types">Types to retrieve identifiers for</param>
     /// <returns>Winning identifiers for a given type</returns>
-    IEnumerable<IMajorRecordIdentifier> AllIdentifiers(params Type[] types);
+    IEnumerable<IMajorRecordIdentifierGetter> AllIdentifiers(params Type[] types);
 }

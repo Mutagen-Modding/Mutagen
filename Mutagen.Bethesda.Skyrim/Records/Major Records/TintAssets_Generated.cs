@@ -1241,8 +1241,20 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ITintAssets item,
+            ITintAssetsGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public TintAssets DeepCopy(
@@ -1344,7 +1356,7 @@ namespace Mutagen.Bethesda.Skyrim
                 header: translationParams.ConvertToCustom(RecordTypes.TINI));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.FileName?.RawPath,
+                item: item.FileName?.GivenPath,
                 header: translationParams.ConvertToCustom(RecordTypes.TINT),
                 binaryType: StringBinaryType.NullTerminate);
             EnumBinaryTranslation<TintAssets.TintMaskType, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
@@ -1536,7 +1548,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region PresetDefault
         private int? _PresetDefaultLocation;
-        public IFormLinkNullableGetter<IColorRecordGetter> PresetDefault => _PresetDefaultLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PresetDefaultLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
+        public IFormLinkNullableGetter<IColorRecordGetter> PresetDefault => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IColorRecordGetter>(_package, _recordData, _PresetDefaultLocation);
         #endregion
         public IReadOnlyList<ITintPresetGetter> Presets { get; private set; } = Array.Empty<ITintPresetGetter>();
         partial void CustomFactoryEnd(

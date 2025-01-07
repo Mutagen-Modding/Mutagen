@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -59,6 +58,20 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> IRaceGetter.Components => _Components;
+        #endregion
+
+        #endregion
         #region Name
         /// <summary>
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
@@ -550,6 +563,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Name = initialValue;
                 this.Description = initialValue;
                 this.ActorEffect = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
@@ -614,6 +628,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
+                TItem Components,
                 TItem Name,
                 TItem Description,
                 TItem ActorEffect,
@@ -677,6 +692,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Name = Name;
                 this.Description = Description;
                 this.ActorEffect = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ActorEffect, Enumerable.Empty<(int Index, TItem Value)>());
@@ -742,6 +758,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public TItem Name;
             public TItem Description;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ActorEffect;
@@ -809,6 +826,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.ActorEffect, rhs.ActorEffect)) return false;
@@ -868,6 +886,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Components);
                 hash.Add(this.Name);
                 hash.Add(this.Description);
                 hash.Add(this.ActorEffect);
@@ -932,6 +951,18 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (!eval(this.Name)) return false;
                 if (!eval(this.Description)) return false;
                 if (this.ActorEffect != null)
@@ -1122,6 +1153,18 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (eval(this.Name)) return true;
                 if (eval(this.Description)) return true;
                 if (this.ActorEffect != null)
@@ -1319,6 +1362,21 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
                 obj.Name = eval(this.Name);
                 obj.Description = eval(this.Description);
                 if (ActorEffect != null)
@@ -1545,6 +1603,25 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(Race.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                     if (printMask?.Name ?? true)
                     {
                         sb.AppendItem(Name, "Name");
@@ -1949,6 +2026,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public Exception? Name;
             public Exception? Description;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ActorEffect;
@@ -2011,6 +2089,8 @@ namespace Mutagen.Bethesda.Starfield
                 Race_FieldIndex enu = (Race_FieldIndex)index;
                 switch (enu)
                 {
+                    case Race_FieldIndex.Components:
+                        return Components;
                     case Race_FieldIndex.Name:
                         return Name;
                     case Race_FieldIndex.Description:
@@ -2129,6 +2209,9 @@ namespace Mutagen.Bethesda.Starfield
                 Race_FieldIndex enu = (Race_FieldIndex)index;
                 switch (enu)
                 {
+                    case Race_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
                     case Race_FieldIndex.Name:
                         this.Name = ex;
                         break;
@@ -2302,6 +2385,9 @@ namespace Mutagen.Bethesda.Starfield
                 Race_FieldIndex enu = (Race_FieldIndex)index;
                 switch (enu)
                 {
+                    case Race_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
                     case Race_FieldIndex.Name:
                         this.Name = (Exception?)obj;
                         break;
@@ -2473,6 +2559,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Components != null) return true;
                 if (Name != null) return true;
                 if (Description != null) return true;
                 if (ActorEffect != null) return true;
@@ -2553,6 +2640,24 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
                 {
                     sb.AppendItem(Name, "Name");
                 }
@@ -2896,6 +3001,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.ActorEffect = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ActorEffect?.Overall, rhs.ActorEffect?.Overall), Noggog.ExceptionExt.Combine(this.ActorEffect?.Specific, rhs.ActorEffect?.Specific));
@@ -2972,6 +3078,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
+            public AComponent.TranslationMask? Components;
             public bool Name;
             public bool Description;
             public bool ActorEffect;
@@ -3079,6 +3186,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((Name, null));
                 ret.Add((Description, null));
                 ret.Add((ActorEffect, null));
@@ -3291,6 +3399,7 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
+        new ExtendedList<AComponent> Components { get; }
         /// <summary>
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
@@ -3384,6 +3493,7 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Race_Registration.Instance;
+        IReadOnlyList<IAComponentGetter> Components { get; }
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
@@ -3624,60 +3734,61 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        Name = 7,
-        Description = 8,
-        ActorEffect = 9,
-        Skin = 10,
-        FirstPersonFlags = 11,
-        Keywords = 12,
-        Properties = 13,
-        BodyPartData = 14,
-        Height = 15,
-        DefaultWeight = 16,
-        Flags = 17,
-        AccelerationRate = 18,
-        DecelerationRate = 19,
-        Size = 20,
-        DAT2Unknown1 = 21,
-        ShieldBipedObject = 22,
-        BeardBipedObject = 23,
-        BodyBipedObject = 24,
-        DAT2Unknown2 = 25,
-        Explosion = 26,
-        Debris = 27,
-        ImpactDataSet = 28,
-        OrientationLimitsPitch = 29,
-        OrientationLimitsRoll = 30,
-        DAT2Unknown3 = 31,
-        SkeletalModel = 32,
-        MovementTypeNames = 33,
-        Voices = 34,
-        FacegenMainClamp = 35,
-        FacegenFaceClamp = 36,
-        Attacks = 37,
-        BodyData = 38,
-        AimAssistPose = 39,
-        ImpactMaterialType = 40,
-        WED0 = 41,
-        WED1 = 42,
-        BipedObjects = 43,
-        MovementDataOverrides = 44,
-        EquipmentFlags = 45,
-        EquipmentSlots = 46,
-        UnarmedWeapon = 47,
-        BaseMovementDefault = 48,
-        BaseMovementSwimDefault = 49,
-        BaseMovementFlyDefault = 50,
-        ChargenAndSkintones = 51,
-        ArmorRace = 52,
-        SubgraphTemplateRace = 53,
-        Subgraphs = 54,
-        IdleChatterTimeMin = 55,
-        IdleChatterTimeMax = 56,
-        DialogueQuest = 57,
-        HeadPartsAndBoneModifiers = 58,
-        MannequinSkinSwaps = 59,
-        PluralName = 60,
+        Components = 7,
+        Name = 8,
+        Description = 9,
+        ActorEffect = 10,
+        Skin = 11,
+        FirstPersonFlags = 12,
+        Keywords = 13,
+        Properties = 14,
+        BodyPartData = 15,
+        Height = 16,
+        DefaultWeight = 17,
+        Flags = 18,
+        AccelerationRate = 19,
+        DecelerationRate = 20,
+        Size = 21,
+        DAT2Unknown1 = 22,
+        ShieldBipedObject = 23,
+        BeardBipedObject = 24,
+        BodyBipedObject = 25,
+        DAT2Unknown2 = 26,
+        Explosion = 27,
+        Debris = 28,
+        ImpactDataSet = 29,
+        OrientationLimitsPitch = 30,
+        OrientationLimitsRoll = 31,
+        DAT2Unknown3 = 32,
+        SkeletalModel = 33,
+        MovementTypeNames = 34,
+        Voices = 35,
+        FacegenMainClamp = 36,
+        FacegenFaceClamp = 37,
+        Attacks = 38,
+        BodyData = 39,
+        AimAssistPose = 40,
+        ImpactMaterialType = 41,
+        WED0 = 42,
+        WED1 = 43,
+        BipedObjects = 44,
+        MovementDataOverrides = 45,
+        EquipmentFlags = 46,
+        EquipmentSlots = 47,
+        UnarmedWeapon = 48,
+        BaseMovementDefault = 49,
+        BaseMovementSwimDefault = 50,
+        BaseMovementFlyDefault = 51,
+        ChargenAndSkintones = 52,
+        ArmorRace = 53,
+        SubgraphTemplateRace = 54,
+        Subgraphs = 55,
+        IdleChatterTimeMin = 56,
+        IdleChatterTimeMax = 57,
+        DialogueQuest = 58,
+        HeadPartsAndBoneModifiers = 59,
+        MannequinSkinSwaps = 60,
+        PluralName = 61,
     }
     #endregion
 
@@ -3688,9 +3799,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 54;
+        public const ushort AdditionalFieldCount = 55;
 
-        public const ushort FieldCount = 61;
+        public const ushort FieldCount = 62;
 
         public static readonly Type MaskType = typeof(Race.Mask<>);
 
@@ -3727,6 +3838,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.FTSM,
                 RecordTypes.AHCM,
                 RecordTypes.DFTM,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
                 RecordTypes.FULL,
                 RecordTypes.DESC,
                 RecordTypes.SPLO,
@@ -3742,6 +3855,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.ANAM,
                 RecordTypes.MODT,
                 RecordTypes.MOLM,
+                RecordTypes.DMDC,
+                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
@@ -3777,6 +3892,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.RPRF,
                 RecordTypes.RNAM,
                 RecordTypes.SRAC,
+                RecordTypes.SADD,
                 RecordTypes.SAKD,
                 RecordTypes.SGNM,
                 RecordTypes.SAPT,
@@ -3837,6 +3953,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IRaceInternal item)
         {
             ClearPartial();
+            item.Components.Clear();
             item.Name = default;
             item.Description.Clear();
             item.ActorEffect.Clear();
@@ -3912,6 +4029,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IRace obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Components.RemapLinks(mapping);
             obj.ActorEffect.RemapLinks(mapping);
             obj.Skin.Relink(mapping);
             obj.Keywords?.RemapLinks(mapping);
@@ -3950,6 +4068,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
             if (obj.SkeletalModel is {} SkeletalModelItem)
             {
                 foreach (var item in SkeletalModelItem.NotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
@@ -3971,6 +4094,7 @@ namespace Mutagen.Bethesda.Starfield
             AssetLinkQuery queryCategories)
         {
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
             obj.SkeletalModel?.ForEach(x => x?.RemapAssetLinks(mapping, queryCategories, linkCache));
             obj.BodyData.ForEach(x => x?.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
@@ -4040,6 +4164,10 @@ namespace Mutagen.Bethesda.Starfield
             Race.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Description = object.Equals(item.Description, rhs.Description);
             ret.ActorEffect = item.ActorEffect.CollectionEqualsHelper(
@@ -4206,6 +4334,20 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
@@ -4587,6 +4729,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Race_FieldIndex.Components)))) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Race_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
@@ -4839,6 +4985,7 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IRaceGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Components);
             if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
@@ -4954,6 +5101,11 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             foreach (var item in obj.ActorEffect)
             {
@@ -5096,19 +5248,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
             {
-                if (obj.SkeletalModel is {} SkeletalModelItem)
-                {
-                    foreach (var item in SkeletalModelItem.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
-                    {
-                        yield return item;
-                    }
-                }
-                foreach (var item in obj.BodyData.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                yield return item;
+            }
+            if (obj.SkeletalModel is {} SkeletalModelItem)
+            {
+                foreach (var item in SkeletalModelItem.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
                 {
                     yield return item;
                 }
+            }
+            foreach (var item in obj.BodyData.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+            {
+                yield return item;
             }
             yield break;
         }
@@ -5184,6 +5338,30 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)Race_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Name) ?? true))
             {
                 item.Name = rhs.Name?.DeepCopy();
@@ -5665,8 +5843,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.PluralName = rhs.PluralName?.DeepCopy();
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IRace item,
+            IRaceGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IStarfieldMajorRecordInternal item,
             IStarfieldMajorRecordGetter rhs,
@@ -5822,6 +6012,17 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
@@ -6244,30 +6445,13 @@ namespace Mutagen.Bethesda.Starfield
             IRaceGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.RACE)))
-            {
-                try
-                {
-                    StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.RACE,
+                writeEmbedded: StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -6322,6 +6506,16 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)Race_FieldIndex.Components;
+                }
                 case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -6397,11 +6591,11 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 8) return null;
-                    item.Height = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Single>(
+                    item.Height = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<Single>(
                         frame: frame,
                         transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
                     if (dataFrame.Remaining < 24) return null;
-                    item.DefaultWeight = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Weight>(
+                    item.DefaultWeight = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<Weight>(
                         frame: frame,
                         transl: Weight.TryCreateFromBinary);
                     if (dataFrame.Remaining < 8) return null;
@@ -6578,7 +6772,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.VTCK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Voices = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<IFormLinkGetter<IVoiceTypeGetter>>(
+                    item.Voices = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.ParseRequired<IFormLinkGetter<IVoiceTypeGetter>>(
                         frame: frame,
                         transl: FormLinkBinaryTranslation.Instance.Parse);
                     return (int)Race_FieldIndex.Voices;
@@ -6724,6 +6918,7 @@ namespace Mutagen.Bethesda.Starfield
                     item.SubgraphTemplateRace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Race_FieldIndex.SubgraphTemplateRace;
                 }
+                case RecordTypeInts.SADD:
                 case RecordTypeInts.SAKD:
                 case RecordTypeInts.SGNM:
                 case RecordTypeInts.SAPT:
@@ -6857,6 +7052,7 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IRace);
 
 
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         #region Name
         private int? _NameLocation;
         public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
@@ -6876,7 +7072,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>> ActorEffect { get; private set; } = Array.Empty<IFormLinkGetter<ISpellRecordGetter>>();
         #region Skin
         private int? _SkinLocation;
-        public IFormLinkNullableGetter<IArmorGetter> Skin => _SkinLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SkinLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
+        public IFormLinkNullableGetter<IArmorGetter> Skin => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArmorGetter>(_package, _recordData, _SkinLocation);
         #endregion
         #region FirstPersonFlags
         private int? _FirstPersonFlagsLocation;
@@ -6889,7 +7085,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
         #region BodyPartData
         private int? _BodyPartDataLocation;
-        public IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData => _BodyPartDataLocation.HasValue ? new FormLinkNullable<IBodyPartDataGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BodyPartDataLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IBodyPartDataGetter>.Null;
+        public IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IBodyPartDataGetter>(_package, _recordData, _BodyPartDataLocation);
         #endregion
         private RangeInt32? _DAT2Location;
         #region Height
@@ -6970,17 +7166,17 @@ namespace Mutagen.Bethesda.Starfield
         #region Explosion
         private int _ExplosionLocation => _DAT2Location!.Value.Min + 0x8C;
         private bool _Explosion_IsSet => _DAT2Location.HasValue;
-        public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_ExplosionLocation, 0x4), isSet: _Explosion_IsSet) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region Debris
         private int _DebrisLocation => _DAT2Location!.Value.Min + 0x90;
         private bool _Debris_IsSet => _DAT2Location.HasValue;
-        public IFormLinkGetter<IDebrisGetter> Debris => _Debris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_DebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
+        public IFormLinkGetter<IDebrisGetter> Debris => _Debris_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _recordData.Span.Slice(_DebrisLocation, 0x4), isSet: _Debris_IsSet) : FormLink<IDebrisGetter>.Null;
         #endregion
         #region ImpactDataSet
         private int _ImpactDataSetLocation => _DAT2Location!.Value.Min + 0x94;
         private bool _ImpactDataSet_IsSet => _DAT2Location.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_ImpactDataSetLocation, 0x4), isSet: _ImpactDataSet_IsSet) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region OrientationLimitsPitch
         private int _OrientationLimitsPitchLocation => _DAT2Location!.Value.Min + 0x98;
@@ -7019,8 +7215,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (!_VoicesLocation.HasValue) return new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(FormLink<IVoiceTypeGetter>.Null, FormLink<IVoiceTypeGetter>.Null);
                 var data = HeaderTranslation.ExtractSubrecordMemory(_recordData, _VoicesLocation.Value, _package.MetaData.Constants);
                 return new GenderedItem<IFormLinkGetter<IVoiceTypeGetter>>(
-                    new FormLink<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data))),
-                    new FormLink<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(data.Slice(4)))));
+                    FormLinkBinaryTranslation.Instance.OverlayFactory<IVoiceTypeGetter>(_package, data),
+                    FormLinkBinaryTranslation.Instance.OverlayFactory<IVoiceTypeGetter>(_package, data.Slice(4)));
             }
         }
         #endregion
@@ -7039,7 +7235,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region AimAssistPose
         private int? _AimAssistPoseLocation;
-        public IFormLinkNullableGetter<IAimAssistPoseGetter> AimAssistPose => _AimAssistPoseLocation.HasValue ? new FormLinkNullable<IAimAssistPoseGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AimAssistPoseLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAimAssistPoseGetter>.Null;
+        public IFormLinkNullableGetter<IAimAssistPoseGetter> AimAssistPose => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAimAssistPoseGetter>(_package, _recordData, _AimAssistPoseLocation);
         #endregion
         #region NAM3
         public partial ParseResult NAM3CustomParse(
@@ -7049,7 +7245,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ImpactMaterialType
         private int? _ImpactMaterialTypeLocation;
-        public IFormLinkNullableGetter<IMaterialTypeGetter> ImpactMaterialType => _ImpactMaterialTypeLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImpactMaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMaterialTypeGetter> ImpactMaterialType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMaterialTypeGetter>(_package, _recordData, _ImpactMaterialTypeLocation);
         #endregion
         public ISoundReferenceGetter? WED0 { get; private set; }
         public ISoundReferenceGetter? WED1 { get; private set; }
@@ -7061,19 +7257,19 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IEquipmentSlotGetter> EquipmentSlots { get; private set; } = Array.Empty<IEquipmentSlotGetter>();
         #region UnarmedWeapon
         private int? _UnarmedWeaponLocation;
-        public IFormLinkNullableGetter<IWeaponGetter> UnarmedWeapon => _UnarmedWeaponLocation.HasValue ? new FormLinkNullable<IWeaponGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _UnarmedWeaponLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWeaponGetter>.Null;
+        public IFormLinkNullableGetter<IWeaponGetter> UnarmedWeapon => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWeaponGetter>(_package, _recordData, _UnarmedWeaponLocation);
         #endregion
         #region BaseMovementDefault
         private int? _BaseMovementDefaultLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefault => _BaseMovementDefaultLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementDefaultLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementDefault => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMovementTypeGetter>(_package, _recordData, _BaseMovementDefaultLocation);
         #endregion
         #region BaseMovementSwimDefault
         private int? _BaseMovementSwimDefaultLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementSwimDefault => _BaseMovementSwimDefaultLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementSwimDefaultLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementSwimDefault => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMovementTypeGetter>(_package, _recordData, _BaseMovementSwimDefaultLocation);
         #endregion
         #region BaseMovementFlyDefault
         private int? _BaseMovementFlyDefaultLocation;
-        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementFlyDefault => _BaseMovementFlyDefaultLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BaseMovementFlyDefaultLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> BaseMovementFlyDefault => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMovementTypeGetter>(_package, _recordData, _BaseMovementFlyDefaultLocation);
         #endregion
         #region ChargenAndSkintones
         private IGenderedItemGetter<IChargenAndSkintonesGetter?>? _ChargenAndSkintonesOverlay;
@@ -7081,11 +7277,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ArmorRace
         private int? _ArmorRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> ArmorRace => _ArmorRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ArmorRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> ArmorRace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _ArmorRaceLocation);
         #endregion
         #region SubgraphTemplateRace
         private int? _SubgraphTemplateRaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> SubgraphTemplateRace => _SubgraphTemplateRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SubgraphTemplateRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        public IFormLinkNullableGetter<IRaceGetter> SubgraphTemplateRace => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _SubgraphTemplateRaceLocation);
         #endregion
         public IReadOnlyList<ISubgraphGetter> Subgraphs { get; private set; } = Array.Empty<ISubgraphGetter>();
         #region IdleChatterTimeMin
@@ -7098,7 +7294,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region DialogueQuest
         private int? _DialogueQuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> DialogueQuest => _DialogueQuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DialogueQuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullableGetter<IQuestGetter> DialogueQuest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _DialogueQuestLocation);
         #endregion
         #region HeadPartsAndBoneModifiers
         private IGenderedItemGetter<IHeadPartsAndBoneModifiersGetter?>? _HeadPartsAndBoneModifiersOverlay;
@@ -7178,6 +7374,15 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)Race_FieldIndex.Components;
+                }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
@@ -7193,7 +7398,7 @@ namespace Mutagen.Bethesda.Starfield
                     this.ActorEffect = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ISpellRecordGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<ISpellRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellRecordGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
@@ -7222,19 +7427,17 @@ namespace Mutagen.Bethesda.Starfield
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
                         trigger: RecordTypes.KWDA,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)Race_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.PRPS:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Properties = BinaryOverlayList.FactoryByStartIndex<IObjectPropertyGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Properties = BinaryOverlayList.FactoryByStartIndexWithTrigger<IObjectPropertyGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => ObjectPropertyBinaryOverlay.ObjectPropertyFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Race_FieldIndex.Properties;
                 }
                 case RecordTypeInts.GNAM:
@@ -7539,6 +7742,7 @@ namespace Mutagen.Bethesda.Starfield
                     _SubgraphTemplateRaceLocation = (stream.Position - offset);
                     return (int)Race_FieldIndex.SubgraphTemplateRace;
                 }
+                case RecordTypeInts.SADD:
                 case RecordTypeInts.SAKD:
                 case RecordTypeInts.SGNM:
                 case RecordTypeInts.SAPT:

@@ -22,7 +22,11 @@ public interface IStringsFolderLookup
     /// <param name="key">Index key to look up</param>
     /// <param name="str">String if retrieved</param>
     /// <returns>True if string was located</returns>
-    bool TryLookup(StringsSource source, Language language, uint key, [MaybeNullWhen(false)] out string str);
+    bool TryLookup(
+        StringsSource source,
+        Language language,
+        uint key, 
+        [MaybeNullWhen(false)] out string str);
 
     /// <summary>
     /// Attempts to retrieve a string given its index key

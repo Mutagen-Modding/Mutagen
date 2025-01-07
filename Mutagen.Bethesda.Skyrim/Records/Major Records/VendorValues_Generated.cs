@@ -1149,8 +1149,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Unknown2 = rhs.Unknown2;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IVendorValues item,
+            IVendorValuesGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public VendorValues DeepCopy(

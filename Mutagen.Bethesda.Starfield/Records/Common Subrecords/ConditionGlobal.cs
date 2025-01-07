@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Starfield;
 
 internal partial class ConditionGlobalBinaryOverlay
 {
-    public IFormLinkGetter<IGlobalGetter> ComparisonValue => new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(4))));
+    public IFormLinkGetter<IGlobalGetter> ComparisonValue => FormLinkBinaryTranslation.Instance.OverlayFactory<IGlobalGetter>(_package, _structData.Slice(4));
 }
 
 partial class ConditionGlobalBinaryCreateTranslation

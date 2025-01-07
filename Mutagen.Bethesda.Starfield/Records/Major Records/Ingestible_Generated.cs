@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -2165,6 +2164,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MODL,
                 RecordTypes.MODT,
                 RecordTypes.MOLM,
+                RecordTypes.DMDC,
+                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
@@ -2184,6 +2185,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MNAM,
                 RecordTypes.ANAM,
                 RecordTypes.ZNAM,
+                RecordTypes.MAGF,
                 RecordTypes.EFIF,
                 RecordTypes.MUID,
                 RecordTypes.CITC,
@@ -3005,19 +3007,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
             {
-                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
-                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                yield return item;
+            }
+            if (obj.Model is {} ModelItems)
+            {
+                foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
-                }
-                if (obj.Model is {} ModelItems)
-                {
-                    foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                    {
-                        yield return item;
-                    }
                 }
             }
             yield break;
@@ -3474,8 +3473,20 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IIngestible item,
+            IIngestibleGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IStarfieldMajorRecordInternal item,
             IStarfieldMajorRecordGetter rhs,
@@ -3794,30 +3805,13 @@ namespace Mutagen.Bethesda.Starfield
             IIngestibleGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.ALCH)))
-            {
-                try
-                {
-                    StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.ALCH,
+                writeEmbedded: StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -3934,6 +3928,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -4030,6 +4026,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MNAM:
                 case RecordTypeInts.ANAM:
                 case RecordTypeInts.ZNAM:
+                case RecordTypeInts.MAGF:
                 case RecordTypeInts.EFIF:
                 case RecordTypeInts.MUID:
                 {
@@ -4168,7 +4165,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Addiction
         private int _AddictionLocation => _ENITLocation!.Value.Min + 0x8;
         private bool _Addiction_IsSet => _ENITLocation.HasValue;
-        public IFormLinkGetter<ISpellGetter> Addiction => _Addiction_IsSet ? new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_AddictionLocation, 0x4)))) : FormLink<ISpellGetter>.Null;
+        public IFormLinkGetter<ISpellGetter> Addiction => _Addiction_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellGetter>(_package, _recordData.Span.Slice(_AddictionLocation, 0x4), isSet: _Addiction_IsSet) : FormLink<ISpellGetter>.Null;
         #endregion
         #region AddictionChance
         private int _AddictionChanceLocation => _ENITLocation!.Value.Min + 0xC;
@@ -4304,12 +4301,14 @@ namespace Mutagen.Bethesda.Starfield
                         countLength: 4,
                         countType: RecordTypes.KSIZ,
                         trigger: RecordTypes.KWDA,
-                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)Ingestible_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
+                case RecordTypeInts.DMDC:
+                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -4355,26 +4354,22 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.CVPA:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Resources = BinaryOverlayList.FactoryByStartIndex<IItemResourceGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Resources = BinaryOverlayList.FactoryByStartIndexWithTrigger<IItemResourceGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 12,
                         getter: (s, p) => ItemResourceBinaryOverlay.ItemResourceFactory(s, p));
-                    stream.Position += subLen;
                     return (int)Ingestible_FieldIndex.Resources;
                 }
                 case RecordTypeInts.CDIX:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.ComponentDisplayIndices = BinaryOverlayList.FactoryByStartIndex<Byte>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.ComponentDisplayIndices = BinaryOverlayList.FactoryByStartIndexWithTrigger<Byte>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 1,
                         getter: (s, p) => s[0]);
-                    stream.Position += subLen;
                     return (int)Ingestible_FieldIndex.ComponentDisplayIndices;
                 }
                 case RecordTypeInts.DATA:
@@ -4398,6 +4393,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MNAM:
                 case RecordTypeInts.ANAM:
                 case RecordTypeInts.ZNAM:
+                case RecordTypeInts.MAGF:
                 case RecordTypeInts.EFIF:
                 case RecordTypeInts.MUID:
                 {

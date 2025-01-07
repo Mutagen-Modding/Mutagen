@@ -2074,8 +2074,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.TwistVariablePrefix = rhs.TwistVariablePrefix;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IBodyPart item,
+            IBodyPartGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public BodyPart DeepCopy(
@@ -2523,7 +2535,7 @@ namespace Mutagen.Bethesda.Starfield
         #region ActorValue
         private int _ActorValueLocation => _BPD2Location!.Value.Min + 0x7;
         private bool _ActorValue_IsSet => _BPD2Location.HasValue;
-        public IFormLinkGetter<IActorValueInformationGetter> ActorValue => _ActorValue_IsSet ? new FormLink<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ActorValueLocation, 0x4)))) : FormLink<IActorValueInformationGetter>.Null;
+        public IFormLinkGetter<IActorValueInformationGetter> ActorValue => _ActorValue_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _recordData.Span.Slice(_ActorValueLocation, 0x4), isSet: _ActorValue_IsSet) : FormLink<IActorValueInformationGetter>.Null;
         #endregion
         #region ToHitChance
         private int _ToHitChanceLocation => _BPD2Location!.Value.Min + 0xB;
@@ -2533,22 +2545,22 @@ namespace Mutagen.Bethesda.Starfield
         #region OnCrippleArtObject
         private int _OnCrippleArtObjectLocation => _BPD2Location!.Value.Min + 0xC;
         private bool _OnCrippleArtObject_IsSet => _BPD2Location.HasValue;
-        public IFormLinkGetter<IArtObjectGetter> OnCrippleArtObject => _OnCrippleArtObject_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_OnCrippleArtObjectLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        public IFormLinkGetter<IArtObjectGetter> OnCrippleArtObject => _OnCrippleArtObject_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_OnCrippleArtObjectLocation, 0x4), isSet: _OnCrippleArtObject_IsSet) : FormLink<IArtObjectGetter>.Null;
         #endregion
         #region OnCrippleDebris
         private int _OnCrippleDebrisLocation => _BPD2Location!.Value.Min + 0x10;
         private bool _OnCrippleDebris_IsSet => _BPD2Location.HasValue;
-        public IFormLinkGetter<IDebrisGetter> OnCrippleDebris => _OnCrippleDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_OnCrippleDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
+        public IFormLinkGetter<IDebrisGetter> OnCrippleDebris => _OnCrippleDebris_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IDebrisGetter>(_package, _recordData.Span.Slice(_OnCrippleDebrisLocation, 0x4), isSet: _OnCrippleDebris_IsSet) : FormLink<IDebrisGetter>.Null;
         #endregion
         #region OnCrippleExplosion
         private int _OnCrippleExplosionLocation => _BPD2Location!.Value.Min + 0x14;
         private bool _OnCrippleExplosion_IsSet => _BPD2Location.HasValue;
-        public IFormLinkGetter<IExplosionGetter> OnCrippleExplosion => _OnCrippleExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_OnCrippleExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> OnCrippleExplosion => _OnCrippleExplosion_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IExplosionGetter>(_package, _recordData.Span.Slice(_OnCrippleExplosionLocation, 0x4), isSet: _OnCrippleExplosion_IsSet) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region OnCrippleImpactData
         private int _OnCrippleImpactDataLocation => _BPD2Location!.Value.Min + 0x18;
         private bool _OnCrippleImpactData_IsSet => _BPD2Location.HasValue;
-        public IFormLinkGetter<IImpactDataSetGetter> OnCrippleImpactData => _OnCrippleImpactData_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_OnCrippleImpactDataLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public IFormLinkGetter<IImpactDataSetGetter> OnCrippleImpactData => _OnCrippleImpactData_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IImpactDataSetGetter>(_package, _recordData.Span.Slice(_OnCrippleImpactDataLocation, 0x4), isSet: _OnCrippleImpactData_IsSet) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region OnCrippleDebrisScale
         private int _OnCrippleDebrisScaleLocation => _BPD2Location!.Value.Min + 0x1C;
@@ -2579,11 +2591,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region GoreEffectsBloodImpactMaterialType
         private int? _GoreEffectsBloodImpactMaterialTypeLocation;
-        public IFormLinkNullableGetter<IMaterialTypeGetter> GoreEffectsBloodImpactMaterialType => _GoreEffectsBloodImpactMaterialTypeLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GoreEffectsBloodImpactMaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMaterialTypeGetter> GoreEffectsBloodImpactMaterialType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMaterialTypeGetter>(_package, _recordData, _GoreEffectsBloodImpactMaterialTypeLocation);
         #endregion
         #region OnCrippleBloodImpactMaterialType
         private int? _OnCrippleBloodImpactMaterialTypeLocation;
-        public IFormLinkNullableGetter<IMaterialTypeGetter> OnCrippleBloodImpactMaterialType => _OnCrippleBloodImpactMaterialTypeLocation.HasValue ? new FormLinkNullable<IMaterialTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OnCrippleBloodImpactMaterialTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMaterialTypeGetter> OnCrippleBloodImpactMaterialType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMaterialTypeGetter>(_package, _recordData, _OnCrippleBloodImpactMaterialTypeLocation);
         #endregion
         #region TwistVariablePrefix
         private int? _TwistVariablePrefixLocation;

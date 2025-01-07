@@ -61,5 +61,5 @@ public partial class MagicEffectArchetype
         this.Type = type;
     }
     
-    public override FormKey AssociationKey => Association.FormKey;
+    public override IFormLinkIdentifier AssociationKey => Association;
 }

@@ -119,7 +119,7 @@ public class FormKeyMultiPicker : AFormKeyPicker
             if (FormKeys == null) return;
             switch (o)
             {
-                case IMajorRecordIdentifier identifier:
+                case IMajorRecordIdentifierGetter identifier:
                     FormKeys.Add(identifier.FormKey);
                     break;
                 default:

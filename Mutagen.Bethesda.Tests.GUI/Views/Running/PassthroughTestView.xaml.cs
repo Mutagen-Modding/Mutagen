@@ -4,6 +4,7 @@ using ReactiveUI;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows;
+using ReactiveMarbles.ObservableEvents;
 
 namespace Mutagen.Bethesda.Tests.GUI.Views;
 

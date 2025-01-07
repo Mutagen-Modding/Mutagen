@@ -900,8 +900,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Object.SetTo(rhs.Object.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IDefaultObjectUse item,
+            IDefaultObjectUseGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public DefaultObjectUse DeepCopy(
@@ -1104,7 +1116,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public RecordType Use => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4)));
-        public IFormLinkGetter<IFallout4MajorRecordGetter> Object => new FormLink<IFallout4MajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IFallout4MajorRecordGetter> Object => FormLinkBinaryTranslation.Instance.OverlayFactory<IFallout4MajorRecordGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

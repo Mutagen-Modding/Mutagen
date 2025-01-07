@@ -33,7 +33,7 @@ public class FormKeyPicker : AFormKeyPicker
         {
             switch (o)
             {
-                case IMajorRecordIdentifier identifier:
+                case IMajorRecordIdentifierGetter identifier:
                     FormKey = identifier.FormKey;
                     InSearchMode = false;
                     break;

@@ -491,6 +491,17 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(IPlanetNode),
                 Getter: typeof(IPlanetNodeGetter)));
         dict[typeof(IPlanetNodeGetter)] = dict[typeof(IPlanetNode)] with { Setter = false };
+        dict[typeof(IPlanetParentNode)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                PlanetContentManagerBranchNode_Registration.Instance,
+                PlanetContentManagerTree_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IPlanetParentNode),
+                Getter: typeof(IPlanetParentNodeGetter)));
+        dict[typeof(IPlanetParentNodeGetter)] = dict[typeof(IPlanetParentNode)] with { Setter = false };
         dict[typeof(ISpellRecord)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]

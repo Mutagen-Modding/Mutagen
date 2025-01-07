@@ -120,6 +120,11 @@ public static class BinaryStringUtility
     {
         switch (lengthLength)
         {
+            case 1:
+            {
+                var length = span[0];
+                return span.Slice(1, length);
+            }
             case 2:
             {
                 var length = BinaryPrimitives.ReadUInt16LittleEndian(span);
@@ -129,6 +134,11 @@ public static class BinaryStringUtility
             {
                 var length = BinaryPrimitives.ReadUInt32LittleEndian(span);
                 return span.Slice(4, checked((int)length));
+            }
+            case 8:
+            {
+                var length = BinaryPrimitives.ReadUInt64LittleEndian(span);
+                return span.Slice(8, checked((int)length));
             }
             default:
                 throw new NotImplementedException();
@@ -204,6 +214,13 @@ public static class BinaryStringUtility
             {
                 var len = encoding.GetByteCount(str);
                 stream.Write(checked((ushort)len));
+                Write(stream, str, encoding, len);
+                break;
+            }
+            case StringBinaryType.PrependLengthUInt8:
+            {
+                var len = encoding.GetByteCount(str);
+                stream.Write(checked((byte)len));
                 Write(stream, str, encoding, len);
                 break;
             }

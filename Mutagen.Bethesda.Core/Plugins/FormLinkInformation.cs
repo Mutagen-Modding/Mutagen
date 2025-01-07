@@ -44,7 +44,7 @@ public sealed record FormLinkInformation(FormKey FormKey, Type Type) : IFormLink
         return new FormLinkInformation(majorRec.FormKey, majorRec.Registration.GetterType);
     }
 
-    public static IFormLinkGetter Factory(IFormLinkGetter rhs) => rhs;
+    public static FormLinkInformation Factory(IFormLinkIdentifier rhs) => new(rhs.FormKey, rhs.Type);
 
     public bool TryGetModKey([MaybeNullWhen(false)] out ModKey modKey)
     {

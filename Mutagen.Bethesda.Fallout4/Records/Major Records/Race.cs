@@ -120,7 +120,7 @@ partial class RaceBinaryCreateTranslation
             var subFrame = frame.ReadSubrecord();
             if (subFrame.RecordType != RecordTypes.NAME)
             {
-                throw new ArgumentException($"Unexpected record type: {subFrame.RecordType} != {RecordTypes.NAME}");
+                throw new ArgumentException($"Unexpected record type: {subFrame.RecordType} != {RecordTypes.NAME}.  Race.NAME is expected to come in a set of {NumBipedObjectNames}, exactly.");
             }
 
             data.Name = subFrame.AsString(frame.MetaData.Encodings.NonTranslated);
@@ -155,9 +155,6 @@ partial class RaceBinaryCreateTranslation
                 reader: frame.SpawnAll(),
                 triggeringRecord: MorphValue_Registration.TriggerSpecs,
                 transl: MorphValue.TryCreateFromBinary));
-
-        // Read off last index subrecord
-        frame.ReadSubrecord(RecordTypes.MLSI);
     }
 
     public static partial ParseResult FillBinaryBoneDataParseCustom(MutagenFrame frame, IRaceInternal item, PreviousParse lastParsed)
@@ -292,9 +289,6 @@ partial class RaceBinaryOverlay
             translationParams: null,
             trigger: MorphValue_Registration.TriggerSpecs,
             factory: MorphValueBinaryOverlay.MorphValueFactory);
-
-        // Read off last index subrecord
-        stream.ReadSubrecord(RecordTypes.MLSI);
     }
 }
 
@@ -404,16 +398,5 @@ partial class RaceBinaryWriteTranslation
                     writer: subWriter,
                     translationParams: conv);
             });
-        using (HeaderExport.Subrecord(writer, RecordTypes.MLSI))
-        {
-            if (morphs.Count == 0)
-            {
-                writer.Write(0);
-            }
-            else
-            {
-                writer.Write(morphs.Max(x => x.Index));
-            }
-        }
     }
 }

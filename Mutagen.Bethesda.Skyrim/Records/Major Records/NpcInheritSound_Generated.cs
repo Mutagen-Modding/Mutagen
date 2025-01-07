@@ -870,8 +870,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.InheritsSoundsFrom.SetTo(rhs.InheritsSoundsFrom.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            INpcInheritSound item,
+            INpcInheritSoundGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IANpcSoundDefinition item,
@@ -1095,7 +1107,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region InheritsSoundsFrom
         private int? _InheritsSoundsFromLocation;
-        public IFormLinkNullableGetter<INpcGetter> InheritsSoundsFrom => _InheritsSoundsFromLocation.HasValue ? new FormLinkNullable<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _InheritsSoundsFromLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<INpcGetter>.Null;
+        public IFormLinkNullableGetter<INpcGetter> InheritsSoundsFrom => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<INpcGetter>(_package, _recordData, _InheritsSoundsFromLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

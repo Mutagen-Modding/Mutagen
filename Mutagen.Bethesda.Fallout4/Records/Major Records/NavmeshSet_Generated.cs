@@ -945,8 +945,20 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            INavmeshSet item,
+            INavmeshSetGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public NavmeshSet DeepCopy(
@@ -1086,7 +1098,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             item.Navmeshes.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INavigationMeshGetter>>.Instance.Parse(
-                    amount: frame.ReadInt32(),
+                    amount: checked((int)frame.ReadUInt32()),
                     reader: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));
         }
@@ -1156,7 +1168,7 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         #region Navmeshes
-        public IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> Navmeshes => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<INavigationMeshGetter>>(_structData, _package, 4, countLength: 4, (s, p) => new FormLink<INavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLinkGetter<INavigationMeshGetter>> Navmeshes => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<INavigationMeshGetter>>(_structData, _package, 4, countLength: 4, (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<INavigationMeshGetter>(p, s));
         protected int NavmeshesEndingPos;
         #endregion
         partial void CustomFactoryEnd(

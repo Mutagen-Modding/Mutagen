@@ -25,6 +25,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MiscItem
 - MoveableStatic
 - NavigationMesh
+- Note
 - Npc
 - Package
 - PackIn
@@ -73,6 +74,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Npc
 - ObjectTemplate
 - PackIn
+- PlanetBiome
 - PlanetContentManagerBranchNode
 - PlanetContentManagerContentNode
 - Quest
@@ -124,9 +126,12 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - LeveledNpc
 - LeveledPackIn
 - Light
+- MaterialType
 - MiscItem
 - ModelComponent
+- MorphableObject
 - MoveableStatic
+- Note
 - NpcModification
 - ObjectModification
 - PlanetModelComponent
@@ -180,6 +185,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Furniture
 - FurnitureMarkerFile
 - FxSceneAction
+- GenericBaseForm
 - Hazard
 - HeadPart
 - IdleAnimation
@@ -187,6 +193,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - InstanceNamingRule
 - Key
 - Keyword
+- Light
 - Location
 - MagicEffect
 - MaterialType
@@ -196,6 +203,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MoveableStatic
 - MovementType
 - MoveSceneAction
+- Note
 - Npc
 - NpcModification
 - ObjectEffect
@@ -243,6 +251,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ScriptStructProperty
 - ScriptVariableListProperty
 - ScriptVariableProperty
+- SliderEntry
 - Spell
 - Star
 - StartSceneAction
@@ -287,6 +296,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Light
 - MiscItem
 - MoveableStatic
+- Note
 - Npc
 - ObjectEffect
 - PackIn
@@ -339,6 +349,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MiscItem
 - MoveableStatic
 - NavigationMesh
+- Note
 - Npc
 - PackIn
 - PlacedArrow
@@ -357,6 +368,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Book
 - Ingestible
 - Key
+- Note
 ## Concrete Classes to Interfaces
 ### AcousticSpace
 - IObjectBounded
@@ -528,6 +540,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### GenericBaseForm
 - IHaveVirtualMachineAdapter
+- INamed
 - IObjectBounded
 - IScripted
 ### Grass
@@ -597,6 +610,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - IModeled
+- INamed
 - IObjectBounded
 - IScripted
 ### Location
@@ -608,6 +622,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 - IScripted
 ### MaterialType
+- IModeled
 - INamed
 ### Message
 - INamed
@@ -619,6 +634,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 - IScripted
 ### ModelComponent
+- IModeled
+### MorphableObject
 - IModeled
 ### MorphGroup
 - INamed
@@ -636,6 +653,13 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### NavigationMesh
 - IHaveVirtualMachineAdapter
 - IScripted
+### Note
+- IHaveVirtualMachineAdapter
+- IModeled
+- INamed
+- IObjectBounded
+- IScripted
+- IWeightValue
 ### Npc
 - IHaveVirtualMachineAdapter
 - IKeyworded
@@ -729,6 +753,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IScripted
 ### Planet
 - INamed
+### PlanetBiome
+- IKeyworded
 ### PlanetContentManagerBranchNode
 - IKeyworded
 ### PlanetContentManagerContentNode
@@ -806,6 +832,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### SkeletalModel
 - IModeled
+### SliderEntry
+- INamed
 ### SnapTemplateNode
 - IKeyworded
 - IModeled

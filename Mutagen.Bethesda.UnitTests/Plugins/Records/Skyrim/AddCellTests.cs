@@ -65,7 +65,7 @@ public class AddCellTests
 	}
 
 	[Theory]
-	[MutagenAutoData(ConfigureMembers: true)]
+	[MutagenModAutoData()]
 	public void TestAddingMultipleExteriorCells(SkyrimMod mod, Worldspace worldspace)
 	{
 		worldspace.SubCells.Clear();

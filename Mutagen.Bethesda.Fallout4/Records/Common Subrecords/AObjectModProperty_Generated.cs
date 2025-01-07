@@ -615,8 +615,21 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Step = rhs.Step;
             }
+            DeepCopyInCustom<T>(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom<T>(
+            IAObjectModProperty<T> item,
+            IAObjectModPropertyGetter<T> rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+            where T : struct, Enum;
         #endregion
         
         public AObjectModProperty<T> DeepCopy<T>(

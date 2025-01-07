@@ -6,16 +6,16 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay;
 
 internal struct BinaryOverlayFactoryPackage
 {
-    public ParsingBundle MetaData;
+    public ParsingMeta MetaData;
     public IFormVersionGetter? FormVersion;
 
-    public BinaryOverlayFactoryPackage(ParsingBundle metaData)
+    public BinaryOverlayFactoryPackage(ParsingMeta metaData)
     {
         MetaData = metaData;
         FormVersion = null;
     }
 
-    public static implicit operator ParsingBundle(BinaryOverlayFactoryPackage package)
+    public static implicit operator ParsingMeta(BinaryOverlayFactoryPackage package)
     {
         return package.MetaData;
     }

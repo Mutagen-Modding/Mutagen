@@ -5,6 +5,7 @@
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <Float name="ODRT" recordType="ODRT" unknown="true" />
       <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
       <ByteArray name="XALG" recordType="XALG" unknown="true" />
       <RefDirect name="Transforms" refName="Transforms" />
@@ -95,6 +96,8 @@
           <UInt8 name="Unused" />
         </Fields>
       </Data>
+      <Int32 name="HCLR" recordType="HCLR" unknown="true" />
+      <Int32 name="BCLR" recordType="BCLR" unknown="true" />
       <List name="HeadParts">
         <FormLink refName="HeadPart" recordType="PNAM" />
       </List>
@@ -119,6 +122,7 @@
       <RefList name="MorphBlends" refName="NpcMorphBlend" />
       <String name="ActivateTextOverride" recordType="ATTX" translated="Normal" />
       <UInt8 name="SkinToneIndex" recordType="STON" />
+      <UInt32 name="EYEC" recordType="EYEC" unknown="true" />
       <String name="HairColor" recordType="HCOL" />
       <String name="FacialHairColor" recordType="FHCL" />
       <String name="EyebrowColor" recordType="BCOL" />

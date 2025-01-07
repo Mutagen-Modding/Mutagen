@@ -22,7 +22,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -2762,8 +2761,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.DATADataTypeState = rhs.DATADataTypeState;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ILightingTemplate item,
+            ILightingTemplateGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IFallout4MajorRecordInternal item,
             IFallout4MajorRecordGetter rhs,
@@ -3033,30 +3044,13 @@ namespace Mutagen.Bethesda.Fallout4
             ILightingTemplateGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.LGTM)))
-            {
-                try
-                {
-                    WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.LGTM,
+                writeEmbedded: Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -3400,7 +3394,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IAmbientColorsGetter? DirectionalAmbientColors { get; private set; }
         #region GodRays
         private int? _GodRaysLocation;
-        public IFormLinkNullableGetter<IGodRaysGetter> GodRays => _GodRaysLocation.HasValue ? new FormLinkNullable<IGodRaysGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GodRaysLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGodRaysGetter>.Null;
+        public IFormLinkNullableGetter<IGodRaysGetter> GodRays => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGodRaysGetter>(_package, _recordData, _GodRaysLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

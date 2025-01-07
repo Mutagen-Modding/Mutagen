@@ -14,7 +14,7 @@ public abstract class EnumerableSettingsVM : SettingsNodeVM
 {
     protected Func<JsonElement, TryGet<IBasicSettingsNodeVM>> _import;
     protected Action<ObservableCollection<IBasicSettingsNodeVM>> _add;
-    public ObservableCollection<IBasicSettingsNodeVM> Values { get; } = new ObservableCollection<IBasicSettingsNodeVM>();
+    public ObservableCollection<IBasicSettingsNodeVM> Values { get; } = new();
     public ReactiveCommand<Unit, Unit> AddCommand { get; private set; } = null!;
     public ReactiveCommand<Unit, Unit> DeleteCommand { get; private set; }
 

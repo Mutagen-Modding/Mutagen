@@ -4,9 +4,10 @@
     <Fields>
       <RefList name="Components" refName="AComponent" />
       <FormLink name="SurfacePatternStyle" refName="SurfacePatternStyle" recordType="CNAM" nullable="false" />
-      <Array2D name="SurfaceBlocks" fixedWidth="16" fixedHeight="16" recordType="BNAM" nullable="False">
+      <Array2D name="SurfaceBlocks" fixedWidth="16" fixedHeight="16" recordType="FNAM" nullable="False">
         <FormLink refName="SurfaceBlock" />
       </Array2D>
+      <ByteArray name="GNAM" recordType="GNAM" unknown="true" />
       <List name="Worldspaces" recordType="DNAM" >
         <FormLink refName="Worldspace" />
       </List>

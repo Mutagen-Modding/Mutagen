@@ -12,7 +12,7 @@ public static class AssetLinkRemappingMixIn
     {
         if (mapping.TryGetValue(link, out var replacement))
         {
-            link.RawPath = replacement;
+            link.GivenPath = replacement;
         }
     }
 
@@ -23,7 +23,7 @@ public static class AssetLinkRemappingMixIn
         if (mapping.TryGetValue(link, out var replacement))
         {
             var clone = new TLinkType();
-            clone.RawPath = replacement;
+            clone.GivenPath = replacement;
             return clone;
         }
         return link;

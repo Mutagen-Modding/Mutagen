@@ -2,5 +2,5 @@
 
 public class SteamGameSource : IGameSource
 {
-    public int Id { get; init; } 
+    public uint Id { get; init; } 
 }

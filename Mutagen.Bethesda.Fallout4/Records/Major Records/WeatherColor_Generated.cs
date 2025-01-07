@@ -1250,8 +1250,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.LateSunset = rhs.LateSunset;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IWeatherColor item,
+            IWeatherColorGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public WeatherColor DeepCopy(

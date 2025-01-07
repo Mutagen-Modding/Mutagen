@@ -920,8 +920,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Floats = rhs.Floats.ToArray();
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IResourceGenerationDataItem item,
+            IResourceGenerationDataItemGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ResourceGenerationDataItem DeepCopy(
@@ -1151,7 +1163,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Resource
         private int? _ResourceLocation;
-        public IFormLinkGetter<IResourceGetter> Resource => _ResourceLocation.HasValue ? new FormLink<IResourceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ResourceLocation.Value, _package.MetaData.Constants)))) : FormLink<IResourceGetter>.Null;
+        public IFormLinkGetter<IResourceGetter> Resource => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IResourceGetter>(_package, _recordData, _ResourceLocation);
         #endregion
         #region Floats
         private int? _FloatsLocation;

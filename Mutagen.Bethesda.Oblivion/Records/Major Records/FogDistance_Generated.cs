@@ -996,8 +996,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.NightFar = rhs.NightFar;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IFogDistance item,
+            IFogDistanceGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public FogDistance DeepCopy(

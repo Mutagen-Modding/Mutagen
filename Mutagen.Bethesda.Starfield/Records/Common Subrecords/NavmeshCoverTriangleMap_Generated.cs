@@ -883,8 +883,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Triangle = rhs.Triangle;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            INavmeshCoverTriangleMap item,
+            INavmeshCoverTriangleMapGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public NavmeshCoverTriangleMap DeepCopy(

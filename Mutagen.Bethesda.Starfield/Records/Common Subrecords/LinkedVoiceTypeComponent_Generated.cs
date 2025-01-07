@@ -875,8 +875,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.VoiceType.SetTo(rhs.VoiceType.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ILinkedVoiceTypeComponent item,
+            ILinkedVoiceTypeComponentGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAComponent item,
@@ -1111,7 +1123,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region VoiceType
         private int? _VoiceTypeLocation;
-        public IFormLinkNullableGetter<IVoiceTypeGetter> VoiceType => _VoiceTypeLocation.HasValue ? new FormLinkNullable<IVoiceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _VoiceTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IVoiceTypeGetter>.Null;
+        public IFormLinkNullableGetter<IVoiceTypeGetter> VoiceType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IVoiceTypeGetter>(_package, _recordData, _VoiceTypeLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

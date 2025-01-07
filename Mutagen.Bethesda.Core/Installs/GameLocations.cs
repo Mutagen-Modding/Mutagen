@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Installs;
 /// </summary>
 public static class GameLocations
 {
-    private static readonly GameLocator Locator = new();
+    private static readonly GameLocatorLookupCache Locator = new();
     private static IGameDirectoryLookup GameDirLookup => Locator;
     private static IDataDirectoryLookup DataDirLookup => Locator;
         
@@ -21,14 +21,6 @@ public static class GameLocations
         {
             yield return dir;
         }
-    }
-
-    /// <inheritdoc cref="GameLocator" />
-    [Obsolete("Will be removed soon")]
-    public static bool TryGetGameFolderFromRegistry(GameRelease release,
-        [MaybeNullWhen(false)] out DirectoryPath path)
-    {
-        return Locator.TryGetGameDirectoryFromRegistry(release, out path);
     }
     
     /// <inheritdoc cref="GameLocator" />

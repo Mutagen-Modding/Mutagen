@@ -926,8 +926,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Source.SetTo(rhs.Source.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IExternalDataSource item,
+            IExternalDataSourceGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ExternalDataSource DeepCopy(
@@ -1164,7 +1176,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Source
         private int? _SourceLocation;
-        public IFormLinkGetter<IExternalBaseTemplateGetter> Source => _SourceLocation.HasValue ? new FormLink<IExternalBaseTemplateGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SourceLocation.Value, _package.MetaData.Constants)))) : FormLink<IExternalBaseTemplateGetter>.Null;
+        public IFormLinkGetter<IExternalBaseTemplateGetter> Source => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IExternalBaseTemplateGetter>(_package, _recordData, _SourceLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -7,6 +7,7 @@ using ReactiveUI;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Input;
+using ReactiveMarbles.ObservableEvents;
 
 namespace Mutagen.Bethesda.WPF.Plugins;
 

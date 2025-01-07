@@ -59,9 +59,9 @@ The quick any easy way to override a record is to utilize a Group.GetOrAddAsOver
 ```csharp
 INpcGetter sourceNpc = ...;
 // Retrieve or copy-and-add the record to our mod
-var override = myMod.Npcs.GetOrAddAsOverride(sourceNpc);
+var overrideRecord = myMod.Npcs.GetOrAddAsOverride(sourceNpc);
 // Modify the name to be different inside myMod
-override.Name = "My New Name";
+overrideRecord.Name = "My New Name";
 ```
 
 !!! tip "Call After Filters to Avoid ITPOs"

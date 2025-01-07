@@ -99,10 +99,18 @@ public class MajorRecordContextEnumerationModule : GenerationModule
         using (sb.CurlyBrace())
         {
             using (var args = sb.Call(
-                       $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.EnumerateMajorRecordContexts"))
+                       $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.EnumerateMajorRecordContexts",
+                       semiColon: !needsCatch))
             {
                 args.AddPassArg("obj");
                 args.Add("linkCache: null!");
+            }
+            using (sb.IncreaseDepth())
+            {
+                if (needsCatch)
+                {
+                    sb.AppendLine($"{catchLine};");
+                }
             }
         }
         sb.AppendLine();
@@ -120,12 +128,20 @@ public class MajorRecordContextEnumerationModule : GenerationModule
         using (sb.CurlyBrace())
         {
             using (var args = sb.Call(
-                       $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.EnumerateMajorRecordContexts"))
+                       $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.EnumerateMajorRecordContexts",
+                       semiColon: !needsCatch))
             {
                 args.AddPassArg("obj");
                 args.AddPassArg("linkCache");
                 args.AddPassArg("type");
                 args.AddPassArg("throwIfUnknown");
+            }
+            using (sb.IncreaseDepth())
+            {
+                if (needsCatch)
+                {
+                    sb.AppendLine($"{catchLine};");
+                }
             }
         }
         sb.AppendLine();

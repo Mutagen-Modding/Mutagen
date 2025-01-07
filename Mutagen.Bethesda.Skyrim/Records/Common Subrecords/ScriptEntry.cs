@@ -36,7 +36,7 @@ partial class ScriptEntrySetterCommon
             var directoryParts = newCompiledAsset.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
             if (directoryParts.Length > 1)
             {
-                var newName = directoryParts[^1].TrimEnd(SkyrimScriptCompiledAssetType.PexExtension);
+                var newName = directoryParts[^1].TrimStringFromEnd(SkyrimScriptCompiledAssetType.PexExtension);
                 obj.Name = newName;
             }
         }
@@ -45,7 +45,7 @@ partial class ScriptEntrySetterCommon
             var directoryParts = newSourceAsset.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
             if (directoryParts.Length > 1)
             {
-                var newName = directoryParts[^1].TrimEnd(SkyrimScriptSourceAssetType.PscExtension);
+                var newName = directoryParts[^1].TrimStringFromEnd(SkyrimScriptSourceAssetType.PscExtension);
                 obj.Name = newName;
             }
         }

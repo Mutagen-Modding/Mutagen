@@ -5,6 +5,8 @@
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Float name="ODTY" recordType="ODTY" unknown="true" />
       <String name="Name" recordType="FULL" translated="Normal" />
+      <Int32 name="MAGF" recordType="MAGF" unknown="true" />
+      <Int32 name="MUID" recordType="MUID" unknown="true" />
       <Data recordType="ENIT">
         <Fields>
           <ByteArray name="UnknownENIT" byteLength="27" nullable="false" />

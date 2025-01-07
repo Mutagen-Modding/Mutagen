@@ -10,13 +10,13 @@ public sealed class MutagenInterfaceReadStream : IMutagenReadStream
     public long OffsetReference { get; }
 
     /// <inheritdoc />
-    public ParsingBundle MetaData { get; }
+    public ParsingMeta MetaData { get; }
 
     public bool IsLittleEndian => _readStream.IsLittleEndian;
 
     public MutagenInterfaceReadStream(
         IBinaryReadStream stream,
-        ParsingBundle metaData,
+        ParsingMeta metaData,
         long offsetReference = 0)
     {
         _readStream = stream;

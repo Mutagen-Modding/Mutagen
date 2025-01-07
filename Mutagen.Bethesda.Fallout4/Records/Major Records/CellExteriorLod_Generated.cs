@@ -911,8 +911,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Offset = rhs.Offset;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ICellExteriorLod item,
+            ICellExteriorLodGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public CellExteriorLod DeepCopy(
@@ -1121,7 +1133,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IWorldspaceGetter> Worldspace => new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IWorldspaceGetter> Worldspace => FormLinkBinaryTranslation.Instance.OverlayFactory<IWorldspaceGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public P3Float Offset => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x4, 0xC));
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -37,11 +37,16 @@ public partial class RecordTypeInts
     public const int ACBS = 0x53424341;
     public const int ACEP = 0x50454341;
     public const int ACHR = 0x52484341;
+    public const int ACID = 0x44494341;
     public const int ACOL = 0x4C4F4341;
+    public const int ACPR = 0x52504341;
     public const int ACPT = 0x54504341;
     public const int ACSH = 0x48534341;
+    public const int ACSR = 0x52534341;
     public const int ACTI = 0x49544341;
     public const int ACTV = 0x56544341;
+    public const int ACUN = 0x4E554341;
+    public const int ACUR = 0x52554341;
     public const int ADBO = 0x4F424441;
     public const int ADCR = 0x52434441;
     public const int ADDN = 0x4E444441;
@@ -148,9 +153,11 @@ public partial class RecordTypeInts
     public const int AVFL = 0x4C465641;
     public const int AVIF = 0x46495641;
     public const int AVMD = 0x444D5641;
+    public const int AVMP = 0x504D5641;
     public const int AVSG = 0x47535641;
     public const int AWGT = 0x54475741;
     public const int BAMT = 0x544D4142;
+    public const int BCLR = 0x524C4342;
     public const int BCOL = 0x4C4F4342;
     public const int BDED = 0x44454442;
     public const int BDFS = 0x53464442;
@@ -162,6 +169,7 @@ public partial class RecordTypeInts
     public const int BIMT = 0x544D4942;
     public const int BIOM = 0x4D4F4942;
     public const int BIPL = 0x4C504942;
+    public const int BLMS = 0x534D4C42;
     public const int BLUF = 0x46554C42;
     public const int BMC1 = 0x31434D42;
     public const int BMC2 = 0x32434D42;
@@ -275,8 +283,10 @@ public partial class RecordTypeInts
     public const int DLBR = 0x52424C44;
     public const int DLSH = 0x48534C44;
     public const int DMAX = 0x58414D44;
+    public const int DMDC = 0x43444D44;
     public const int DMDL = 0x4C444D44;
     public const int DMDS = 0x53444D44;
+    public const int DMDT = 0x54444D44;
     public const int DMGT = 0x54474D44;
     public const int DMIN = 0x4E494D44;
     public const int DNAM = 0x4D414E44;
@@ -314,6 +324,7 @@ public partial class RecordTypeInts
     public const int ENAM = 0x4D414E45;
     public const int ENCH = 0x48434E45;
     public const int ENIT = 0x54494E45;
+    public const int EOVR = 0x52564F45;
     public const int EPF2 = 0x32465045;
     public const int EPF3 = 0x33465045;
     public const int EPFB = 0x42465045;
@@ -334,6 +345,7 @@ public partial class RecordTypeInts
     public const int EXDC = 0x43445845;
     public const int EXDZ = 0x5A445845;
     public const int EXPL = 0x4C505845;
+    public const int EYEC = 0x43455945;
     public const int FACT = 0x54434146;
     public const int FBDS = 0x53444246;
     public const int FBOL = 0x4C4F4246;
@@ -402,6 +414,10 @@ public partial class RecordTypeInts
     public const int GLOB = 0x424F4C47;
     public const int GMST = 0x54534D47;
     public const int GNAM = 0x4D414E47;
+    public const int GOGL = 0x4C474F47;
+    public const int GPOD = 0x444F5047;
+    public const int GPOF = 0x464F5047;
+    public const int GPOG = 0x474F5047;
     public const int GRAS = 0x53415247;
     public const int GRPH = 0x48505247;
     public const int GRUP = 0x50555247;
@@ -411,6 +427,7 @@ public partial class RecordTypeInts
     public const int GWOR = 0x524F5747;
     public const int HACK = 0x4B434148;
     public const int HAZD = 0x445A4148;
+    public const int HCLR = 0x524C4348;
     public const int HCOL = 0x4C4F4348;
     public const int HDPT = 0x54504448;
     public const int HEAD = 0x44414548;
@@ -490,6 +507,7 @@ public partial class RecordTypeInts
     public const int LLCT = 0x54434C4C;
     public const int LLKC = 0x434B4C4C;
     public const int LLLD = 0x444C4C4C;
+    public const int LLSH = 0x48534C4C;
     public const int LMSW = 0x57534D4C;
     public const int LNA2 = 0x32414E4C;
     public const int LNAM = 0x4D414E4C;
@@ -514,6 +532,7 @@ public partial class RecordTypeInts
     public const int LVLP = 0x504C564C;
     public const int LVSC = 0x4353564C;
     public const int MAAM = 0x4D41414D;
+    public const int MAGF = 0x4647414D;
     public const int MAST = 0x5453414D;
     public const int MATT = 0x5454414D;
     public const int MCQP = 0x5051434D;
@@ -612,6 +631,7 @@ public partial class RecordTypeInts
     public const int NNAM = 0x4D414E4E;
     public const int NOCM = 0x4D434F4E;
     public const int NONE = 0x454E4F4E;
+    public const int NOTE = 0x45544F4E;
     public const int NPAC = 0x4341504E;
     public const int NPC_ = 0x5F43504E;
     public const int NPRK = 0x4B52504E;
@@ -638,6 +658,7 @@ public partial class RecordTypeInts
     public const int OBTS = 0x5354424F;
     public const int OCCV = 0x5643434F;
     public const int OCOR = 0x524F434F;
+    public const int ODRT = 0x5452444F;
     public const int ODTY = 0x5954444F;
     public const int OFST = 0x5453464F;
     public const int OMOD = 0x444F4D4F;
@@ -666,6 +687,7 @@ public partial class RecordTypeInts
     public const int PDSH = 0x48534450;
     public const int PDTO = 0x4F544450;
     public const int PERK = 0x4B524550;
+    public const int PERS = 0x53524550;
     public const int PFCT = 0x54434650;
     public const int PFHS = 0x53484650;
     public const int PFIG = 0x47494650;
@@ -712,6 +734,8 @@ public partial class RecordTypeInts
     public const int PRPS = 0x53505250;
     public const int PRRF = 0x46525250;
     public const int PRRK = 0x4B525250;
+    public const int PRTN = 0x4E545250;
+    public const int PRVN = 0x4E565250;
     public const int PSDC = 0x43445350;
     public const int PSDF = 0x46445350;
     public const int PSDT = 0x54445350;
@@ -720,8 +744,10 @@ public partial class RecordTypeInts
     public const int PTOP = 0x504F5450;
     public const int PTST = 0x54535450;
     public const int PTT2 = 0x32545450;
+    public const int PTTA = 0x41545450;
     public const int PUSE = 0x45535550;
     public const int PUSH = 0x48535550;
+    public const int QDUP = 0x50554451;
     public const int QMDP = 0x50444D51;
     public const int QMDS = 0x53444D51;
     public const int QMDT = 0x54444D51;
@@ -749,6 +775,9 @@ public partial class RecordTypeInts
     public const int RADR = 0x52444152;
     public const int RBPC = 0x43504252;
     public const int RCLR = 0x524C4352;
+    public const int RCPR = 0x52504352;
+    public const int RCSR = 0x52534352;
+    public const int RCUR = 0x52554352;
     public const int RDAT = 0x54414452;
     public const int RDIF = 0x46494452;
     public const int RDSA = 0x41534452;
@@ -759,6 +788,7 @@ public partial class RecordTypeInts
     public const int REGN = 0x4E474552;
     public const int REMP = 0x504D4552;
     public const int REPL = 0x4C504552;
+    public const int RESN = 0x4E534552;
     public const int REVB = 0x42564552;
     public const int RFDP = 0x50444652;
     public const int RFGP = 0x50474652;
@@ -774,10 +804,12 @@ public partial class RecordTypeInts
     public const int RSMH = 0x484D5352;
     public const int RSPJ = 0x4A505352;
     public const int RVSH = 0x48535652;
+    public const int SADD = 0x44444153;
     public const int SAIA = 0x41494153;
     public const int SAKD = 0x444B4153;
     public const int SAPT = 0x54504153;
     public const int SCCM = 0x4D434353;
+    public const int SCCO = 0x4F434353;
     public const int SCEN = 0x4E454353;
     public const int SCFC = 0x43464353;
     public const int SCOL = 0x4C4F4353;
@@ -890,6 +922,7 @@ public partial class RecordTypeInts
     public const int TX01 = 0x31305854;
     public const int TX08 = 0x38305854;
     public const int TX09 = 0x39305854;
+    public const int TX15 = 0x35315854;
     public const int TX16 = 0x36315854;
     public const int TX17 = 0x37315854;
     public const int TX19 = 0x39315854;
@@ -903,7 +936,11 @@ public partial class RecordTypeInts
     public const int VAIX = 0x58494156;
     public const int VAVN = 0x4E564156;
     public const int VAVX = 0x58564156;
+    public const int VCCD = 0x44434356;
     public const int VCLR = 0x524C4356;
+    public const int VCMT = 0x544D4356;
+    public const int VCSB = 0x42534356;
+    public const int VCTT = 0x54544356;
     public const int VDAC = 0x43414456;
     public const int VDDC = 0x43444456;
     public const int VDIN = 0x4E494456;
@@ -916,13 +953,18 @@ public partial class RecordTypeInts
     public const int VISI = 0x49534956;
     public const int VLMS = 0x534D4C56;
     public const int VMAD = 0x44414D56;
+    public const int VMRT = 0x54524D56;
     public const int VNAM = 0x4D414E56;
     public const int VNML = 0x4C4D4E56;
     public const int VOLI = 0x494C4F56;
+    public const int VORN = 0x4E524F56;
+    public const int VORV = 0x56524F56;
+    public const int VOVS = 0x53564F56;
     public const int VTCK = 0x4B435456;
     public const int VTXT = 0x54585456;
     public const int VTYP = 0x50595456;
     public const int VUSE = 0x45535556;
+    public const int VWWD = 0x44575756;
     public const int VX00 = 0x30305856;
     public const int WABB = 0x42424157;
     public const int WABS = 0x53424157;
@@ -932,6 +974,7 @@ public partial class RecordTypeInts
     public const int WAIM = 0x4D494157;
     public const int WAM2 = 0x324D4157;
     public const int WAMB = 0x424D4157;
+    public const int WAMM = 0x4D4D4157;
     public const int WAOC = 0x434F4157;
     public const int WAOS = 0x534F4157;
     public const int WASH = 0x48534157;
@@ -1014,6 +1057,7 @@ public partial class RecordTypeInts
     public const int WRNK = 0x4B4E5257;
     public const int WRSG = 0x47535257;
     public const int WRSP = 0x50535257;
+    public const int WRUM = 0x4D555257;
     public const int WSCP = 0x50435357;
     public const int WSDM = 0x4D445357;
     public const int WSED = 0x44455357;
@@ -1056,6 +1100,7 @@ public partial class RecordTypeInts
     public const int XCLD = 0x444C4358;
     public const int XCLL = 0x4C4C4358;
     public const int XCLP = 0x504C4358;
+    public const int XCLR = 0x524C4358;
     public const int XCLW = 0x574C4358;
     public const int XCMO = 0x4F4D4358;
     public const int XCNT = 0x544E4358;
@@ -1064,6 +1109,7 @@ public partial class RecordTypeInts
     public const int XCWT = 0x54574358;
     public const int XCZA = 0x415A4358;
     public const int XCZC = 0x435A4358;
+    public const int XCZR = 0x525A4358;
     public const int XDTF = 0x46544458;
     public const int XDTS = 0x53544458;
     public const int XEED = 0x44454558;
@@ -1084,6 +1130,7 @@ public partial class RecordTypeInts
     public const int XLCN = 0x4E434C58;
     public const int XLFD = 0x44464C58;
     public const int XLGD = 0x44474C58;
+    public const int XLIB = 0x42494C58;
     public const int XLIG = 0x47494C58;
     public const int XLKR = 0x524B4C58;
     public const int XLKT = 0x544B4C58;
@@ -1091,8 +1138,10 @@ public partial class RecordTypeInts
     public const int XLMS = 0x534D4C58;
     public const int XLOC = 0x434F4C58;
     public const int XLRD = 0x44524C58;
+    public const int XLRL = 0x4C524C58;
     public const int XLRT = 0x54524C58;
     public const int XLSM = 0x4D534C58;
+    public const int XLTW = 0x57544C58;
     public const int XLVD = 0x44564C58;
     public const int XLYR = 0x52594C58;
     public const int XMPM = 0x4D504D58;
@@ -1112,6 +1161,7 @@ public partial class RecordTypeInts
     public const int XPPS = 0x53505058;
     public const int XPRD = 0x44525058;
     public const int XPRM = 0x4D525058;
+    public const int XPWR = 0x52575058;
     public const int XRDS = 0x53445258;
     public const int XRFG = 0x47465258;
     public const int XRGB = 0x42475258;
@@ -1123,6 +1173,7 @@ public partial class RecordTypeInts
     public const int XTEL = 0x4C455458;
     public const int XTNM = 0x4D4E5458;
     public const int XTRI = 0x49525458;
+    public const int XTRV = 0x56525458;
     public const int XTV2 = 0x32565458;
     public const int XVL2 = 0x324C5658;
     public const int XVOI = 0x494F5658;

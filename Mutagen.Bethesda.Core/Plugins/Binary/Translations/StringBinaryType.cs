@@ -29,4 +29,8 @@ public enum StringBinaryType
     /// Length prepended as a ushort
     /// </summary>
     PrependLengthUShort,
+    /// <summary>
+    /// Length prepended as a byte
+    /// </summary>
+    PrependLengthUInt8,
 }

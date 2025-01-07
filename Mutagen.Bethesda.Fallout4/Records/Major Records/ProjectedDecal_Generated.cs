@@ -894,8 +894,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.HeightScale = rhs.HeightScale;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IProjectedDecal item,
+            IProjectedDecalGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ProjectedDecal DeepCopy(

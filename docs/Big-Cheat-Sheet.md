@@ -25,16 +25,16 @@ If you're just copy pasting code, often it will not compile because some require
 [:octicons-arrow-right-24: Environments](environment/index.md)
 
 ## Retrieve a Mod From a Load Order
+=== "Resolve"
+    ``` cs
+    var mod = myLoadOrder.ResolveMod("MyMod.esp");
+    ```
 === "TryGet"
     ``` cs
     if (myLoadOrder.TryGetValue("MyMod.esp", out var mod))
     {
         // ..
     }
-    ```
-=== "Direct Index"
-    ``` cs
-    var mod = myLoadOrder["MyMod.esp"];
     ```
 
 [:octicons-arrow-right-24: Mod Retrieval](loadorder/index.md#accessing-specific-listings)
@@ -120,6 +120,17 @@ var npcLink = formKey.ToLink<INpcGetter>();
 ```
 
 [:octicons-arrow-right-24: FormLinks](plugins/ModKey, FormKey, FormLink.md#formlink)
+
+## Check if FormLink is Pointing to a Null record
+``` { .cs hl_lines="2" }
+Npc npc = ...;
+if (!npc.Race.IsNull)
+{
+   // ...
+}
+```
+
+[:octicons-arrow-right-24: FormLink Nullability](best-practices/FormLink-Nullability.md/#checking-if-formlink-is-null)
 
 ## Convert FormLink to NullableFormLink
 === SetTo
@@ -292,3 +303,79 @@ if (formLinkOfRecordOfInterest.TryResolveSimpleContext(someLinkCache, out var co
     }
 }
 ```
+
+## Find all Major Record Types
+``` cs
+foreach (var recTypes in MajorRecordTypeEnumerator.GetMajorRecordTypesFor(GameCategory.Skyrim))
+{
+    Console.WriteLine($"Getter: {recTypes.GetterType}");
+    Console.WriteLine($"Setter: {recTypes.SetterType}");
+    Console.WriteLine($"Class: {recTypes.ClassType}");
+}
+```
+
+## Find all Major Record Types for Top Level Groups
+```cs
+foreach (var recTypes in MajorRecordTypeEnumerator.GetTopLevelMajorRecordTypesFor(GameCategory.Skyrim))
+{
+    Console.WriteLine($"Getter: {recTypes.GetterType}");
+    Console.WriteLine($"Setter: {recTypes.SetterType}");
+    Console.WriteLine($"Class: {recTypes.ClassType}");
+}
+```
+
+## Enrich Exceptions
+```cs
+var majorRecordContext = ...;
+try
+{
+    // Access majorRecordContext and potentially throw
+}
+catch (Exception e)
+{
+    throw RecordException.Enrich(e, majorRecordContext);
+}
+```
+
+[:octicons-arrow-right-24: Exception Enrichment](best-practices/Enrich-Exceptions.md)
+
+## Detect if PlacedObject is inside Worldspace
+```cs
+var loadOrder = ...;
+var linkCache = ...;
+
+foreach (var placedObjectContext in loadOrder.PriorityOrder.PlacedObject().WinningContextOverrides(linkCache))
+{
+    Console.WriteLine($"Checking placed object: {placedObjectContext.Record}");
+    if (placedObjectContext.TryGetParent<IWorldspaceGetter>(out var worldspace))
+    {
+        Console.WriteLine($"Was in worldspace: {worldspace}");
+    }
+}
+```
+
+[:octicons-arrow-right-24: Mod Context Parents](linkcache/ModContexts.md/#parent-concepts)
+
+## Call Generic Function by Mod Type
+```cs
+public class MyClass
+{
+    public void DoSomeThings(IMod mod)
+    {
+        ModToGenericCallHelper.InvokeFromCategory(
+            this,
+            mod.GameRelease.ToCategory(),
+            typeof(MyClass).GetMethod(nameof(DoSomeThingsGeneric), BindingFlags.NonPublic | BindingFlags.Instance)!,
+            new object[] { mod });
+    }
+
+    private void DoSomeThingsGeneric<TMod, TModGetter>(TMod mod)
+        where TModGetter : IModGetter
+        where TMod : IMod, TModGetter, IMajorRecordContextEnumerable<TMod, TModGetter>
+    {
+        // Actual logic
+    }
+}
+```
+
+[:octicons-arrow-right-24: Common to Generic Crossover](plugins/other-utility.md#common-to-generic-crossover)

@@ -22,7 +22,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -1477,8 +1476,20 @@ namespace Mutagen.Bethesda.Fallout4
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            INavigationMesh item,
+            INavigationMeshGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IFallout4MajorRecordInternal item,
             IFallout4MajorRecordGetter rhs,
@@ -1668,30 +1679,13 @@ namespace Mutagen.Bethesda.Fallout4
             INavigationMeshGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.NAVM)))
-            {
-                try
-                {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.NAVM,
+                writeEmbedded: Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -1847,7 +1841,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region ONAM
         private int? _ONAMLocation;
-        public IFormLinkNullableGetter<IStaticTargetGetter> ONAM => _ONAMLocation.HasValue ? new FormLinkNullable<IStaticTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ONAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticTargetGetter>.Null;
+        public IFormLinkNullableGetter<IStaticTargetGetter> ONAM => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStaticTargetGetter>(_package, _recordData, _ONAMLocation);
         #endregion
         #region NNAM
         private int? _NNAMLocation;
@@ -1945,13 +1939,11 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.MNAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.PreCutMapEntries = BinaryOverlayList.FactoryByLazyParse<IPreCutMapEntryGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.PreCutMapEntries = BinaryOverlayList.FactoryByLazyParseWithTrigger<IPreCutMapEntryGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         getter: (s, p) => PreCutMapEntryBinaryOverlay.PreCutMapEntryFactory(s, p));
-                    stream.Position += subLen;
                     return (int)NavigationMesh_FieldIndex.PreCutMapEntries;
                 }
                 case RecordTypeInts.XXXX:

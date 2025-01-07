@@ -1055,8 +1055,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.Unknown2 = rhs.Unknown2.ToArray();
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IDialogResponseData item,
+            IDialogResponseDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public DialogResponseData DeepCopy(

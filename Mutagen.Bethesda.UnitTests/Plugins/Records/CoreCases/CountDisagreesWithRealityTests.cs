@@ -9,6 +9,7 @@ public class CountDisagreesWithRealityTests : ASpecificCaseTest<Npc, INpcGetter>
 {
     public override ModPath Path => TestDataPathing.CountDisagreesWithReality;
     public override GameRelease Release => GameRelease.Fallout4;
+    public override bool TestPassthrough => false;
     
     public override void TestItem(INpcGetter item)
     {

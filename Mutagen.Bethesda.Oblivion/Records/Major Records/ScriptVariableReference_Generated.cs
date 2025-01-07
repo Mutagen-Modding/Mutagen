@@ -850,8 +850,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.VariableIndex = rhs.VariableIndex;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IScriptVariableReference item,
+            IScriptVariableReferenceGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAScriptReference item,

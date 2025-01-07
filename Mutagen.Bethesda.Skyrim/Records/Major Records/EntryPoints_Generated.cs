@@ -883,8 +883,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Points = rhs.Points;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IEntryPoints item,
+            IEntryPointsGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public EntryPoints DeepCopy(

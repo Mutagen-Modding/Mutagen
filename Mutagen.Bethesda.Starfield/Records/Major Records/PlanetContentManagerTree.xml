@@ -10,5 +10,6 @@
       </List>
       <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
     </Fields>
+    <LinkInterface>IPlanetParentNode</LinkInterface>
   </Object>
 </Loqui>

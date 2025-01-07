@@ -26,11 +26,24 @@ public class TestSettings
 
     public SubClass SubObject = new();
 
-    public List<int> PrimitiveList = new();
+    public List<int> PrimitiveList = new()
+    {
+        1, 2, 3
+    };
 
-    public List<SubClass> ObjectList = new();
+    public List<SubClass> ObjectList = new()
+    {
+        new SubClass()
+        {
+            MyInt = 23,
+        }
+    };
 
-    public List<IFormLinkGetter<IItemGetter>> MyItems = new();
+    public List<IFormLinkGetter<IItemGetter>> MyItems = new()
+    {
+        new FormLink<IItemGetter>(FormKey.Factory("123456:Skyrim.esm")),
+        new FormLink<IItemGetter>(FormKey.Factory("123457:Skyrim.esm")),
+    };
 
     public Dictionary<int, SubClass> Dictionary = new();
 

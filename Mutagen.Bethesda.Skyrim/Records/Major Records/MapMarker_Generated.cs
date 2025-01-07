@@ -1002,8 +1002,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Type = rhs.Type;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IMapMarker item,
+            IMapMarkerGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public MapMarker DeepCopy(

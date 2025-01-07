@@ -82,11 +82,11 @@ partial class APackageTargetBinaryWriteTranslation
         {
             case PackageTargetSpecificReference r:
                 writer.Write((int)APackageTarget.Type.SpecificReference);
-                FormKeyBinaryTranslation.Instance.Write(writer, r.Reference.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, r.Reference);
                 break;
             case PackageTargetObjectID r:
                 writer.Write((int)APackageTarget.Type.ObjectID);
-                FormKeyBinaryTranslation.Instance.Write(writer, r.Reference.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, r.Reference);
                 break;
             case PackageTargetObjectType r:
                 writer.Write((int)APackageTarget.Type.ObjectType);
@@ -94,7 +94,7 @@ partial class APackageTargetBinaryWriteTranslation
                 break;
             case PackageTargetReference r:
                 writer.Write((int)APackageTarget.Type.LinkedReference);
-                FormKeyBinaryTranslation.Instance.Write(writer, r.Reference.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, r.Reference);
                 break;
             case PackageTargetAlias r:
                 writer.Write((int)APackageTarget.Type.RefAlias);
@@ -110,7 +110,7 @@ partial class APackageTargetBinaryWriteTranslation
                 break;
             case PackageTargetKeyword r:
                 writer.Write((int)APackageTarget.Type.Keyword);
-                FormKeyBinaryTranslation.Instance.Write(writer, r.Keyword.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, r.Keyword);
                 break;
             case PackageTargetUnknown r:
                 writer.Write((int)APackageTarget.Type.Unknown);

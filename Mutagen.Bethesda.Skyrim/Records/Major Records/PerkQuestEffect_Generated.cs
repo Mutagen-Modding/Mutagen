@@ -1000,8 +1000,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Unknown = rhs.Unknown.ToArray();
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPerkQuestEffect item,
+            IPerkQuestEffectGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAPerkEffect item,
@@ -1214,7 +1226,7 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IQuestGetter> Quest => new FormLink<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IQuestGetter> Quest => FormLinkBinaryTranslation.Instance.OverlayFactory<IQuestGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public Byte Stage => _structData.Span[0x4];
         public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomFactoryEnd(

@@ -17,10 +17,10 @@ public partial class ExtraData
 
 partial class ExtraDataBinaryCreateTranslation
 {
-    public static OwnerTarget GetBinaryOwner(ReadOnlySpan<byte> span, RecordTypeInfoCacheReader cache, IReadOnlyMasterReferenceCollection masters)
+    public static OwnerTarget GetBinaryOwner(ReadOnlySpan<byte> span, RecordTypeInfoCacheReader cache, IReadOnlySeparatedMasterPackage masters)
     {
         FormID form = new FormID(BinaryPrimitives.ReadUInt32LittleEndian(span));
-        FormKey formKey = FormKey.Factory(masters, form.Raw);
+        FormKey formKey = FormKey.Factory(masters, form, reference: true);
         if (cache.IsOfRecordType<Npc>(formKey))
         {
             return new NpcOwner()
@@ -49,7 +49,7 @@ partial class ExtraDataBinaryCreateTranslation
 
     public static partial void FillBinaryOwnerCustom(MutagenFrame frame, IExtraData item)
     {
-        item.Owner = GetBinaryOwner(frame.ReadSpan(8), frame.MetaData.RecordInfoCache!, frame.MetaData.MasterReferences!);
+        item.Owner = GetBinaryOwner(frame.ReadSpan(8), frame.MetaData.RecordInfoCache!, frame.MetaData.MasterReferences);
     }
 }
 
@@ -64,11 +64,11 @@ partial class ExtraDataBinaryWriteTranslation
                 writer.Write(noOwner.RawVariableData);
                 break;
             case NpcOwner npcOwner:
-                FormKeyBinaryTranslation.Instance.Write(writer, npcOwner.Npc.FormKey);
-                FormKeyBinaryTranslation.Instance.Write(writer, npcOwner.Global.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, npcOwner.Npc);
+                FormKeyBinaryTranslation.Instance.Write(writer, npcOwner.Global);
                 break;
             case FactionOwner factionOwner:
-                FormKeyBinaryTranslation.Instance.Write(writer, factionOwner.Faction.FormKey);
+                FormKeyBinaryTranslation.Instance.Write(writer, factionOwner.Faction);
                 writer.Write(factionOwner.RequiredRank);
                 break;
             default:
@@ -84,5 +84,5 @@ partial class ExtraDataBinaryOverlay
     public IOwnerTargetGetter Owner => GetOwnerCustom(location: 0x0);
     #endregion
     
-    public partial IOwnerTargetGetter GetOwnerCustom(int location) => ExtraDataBinaryCreateTranslation.GetBinaryOwner(_structData.Slice(location), _package.MetaData.RecordInfoCache!, _package.MetaData.MasterReferences!);
+    public partial IOwnerTargetGetter GetOwnerCustom(int location) => ExtraDataBinaryCreateTranslation.GetBinaryOwner(_structData.Slice(location), _package.MetaData.RecordInfoCache!, _package.MetaData.MasterReferences);
 }

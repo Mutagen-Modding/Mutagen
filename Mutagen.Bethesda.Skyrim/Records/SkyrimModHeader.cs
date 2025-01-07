@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System.Diagnostics;
+using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Skyrim;
 
@@ -14,7 +15,7 @@ public partial class SkyrimModHeader
     {
         Master = 0x0000_0001,
         Localized = 0x0000_0080,
-        Light = 0x0000_0200,
+        Small = 0x0000_0200,
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -39,6 +40,19 @@ public partial class SkyrimModHeader
     }
 
     IExtendedList<MasterReference> IModHeaderCommon.MasterReferences => this.MasterReferences;
+
+    public void SetOverriddenForms(IEnumerable<FormKey>? formKeys)
+    {
+        if (formKeys == null)
+        {
+            this.OverriddenForms = null;
+        }
+        else
+        {
+            this.OverriddenForms ??= new();
+            this.OverriddenForms.SetTo(formKeys.Select(f => f.ToLink<ISkyrimMajorRecordGetter>()));
+        }
+    }
 }
 
 public partial interface ISkyrimModHeader : IModHeaderCommon
@@ -54,7 +68,6 @@ partial class SkyrimModHeaderBinaryCreateTranslation
                 reader: frame.SpawnAll(),
                 triggeringRecord: RecordTypes.MAST,
                 transl: MasterReference.TryCreateFromBinary));
-        frame.MetaData.MasterReferences.SetTo(item.MasterReferences);
     }
 }
 

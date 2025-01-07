@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Note" recordType="NOTE" objType="Record" baseClass="StarfieldMajorRecord">
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
+      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <Float name="ODRT" recordType="ODRT" unknown="true" />
+      <RefList name="Components" refName="AComponent" />
+      <RefDirect name="Transforms" refName="Transforms" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="PickupSound" recordType="PUSH" refName="SoundReference" />
+      <RefDirect name="DropdownSound" recordType="PDSH" refName="SoundReference" />
+      <CustomLogic name="TypeParse" recordType="DNAM" />
+      <Data>
+        <Fields>
+          <UInt32 name="Value" />
+          <Float name="Weight" />
+        </Fields>
+      </Data>
+      <CustomLogic name="DataParse">
+        <RecordType>SNAM</RecordType>
+        <RecordType>PNAM</RecordType>
+      </CustomLogic>
+      <RefDirect name="Data" refName="ANoteData" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="ANoteData" objType="Subrecord" abstract="true" />
+  <Object name="NoteVoice" objType="Subrecord" baseClass="ANoteData">
+    <Fields>
+      <FormLink name="Scene" refName="Scene" nullable="True" />
+    </Fields>
+  </Object>
+  <Object name="NoteProgram" objType="Subrecord" baseClass="ANoteData">
+    <Fields>
+      <String name="File" nullable="True" />
+    </Fields>
+  </Object>
+  <Object name="NoteTerminal" objType="Subrecord" baseClass="ANoteData">
+    <Fields>
+      <FormLink name="Terminal" refName="Terminal" nullable="True" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -17,6 +17,7 @@ public class ListTests
 {
     [Theory, MutagenModAutoData]
     public void LListCounter(
+        SkyrimMod mod,
         LeveledItem leveledItem,
         MasterReferenceCollection masters,
         ModPath path,
@@ -30,11 +31,12 @@ public class ListTests
 
         using (var writer = new MutagenWriter(fileSystem.File.OpenWrite(path), GameConstants.SkyrimSE, dispose: true))
         {
-            writer.MetaData.MasterReferences = masters;
+            writer.MetaData.MasterReferences = new MasterReferenceCollection(mod.ModKey);
+            writer.MetaData.SeparatedMasterPackage = SeparatedMasterPackage.NotSeparate(writer.MetaData.MasterReferences);
             leveledItem.WriteToBinary(writer);
         }
 
-        using (var stream = new MutagenBinaryReadStream(path, GameRelease.SkyrimSE, fileSystem: fileSystem))
+        using (var stream = new MutagenBinaryReadStream(path, GameRelease.SkyrimSE, masterFlagLookup: null, fileSystem: fileSystem))
         {
             var rec = stream.ReadMajorRecord();
             var llct = rec.FindSubrecord(RecordTypes.LLCT);
@@ -44,8 +46,8 @@ public class ListTests
     
     [Theory, MutagenModAutoData]
     public void LListOverflowPrintsZeroCounter(
+        SkyrimMod mod,
         LeveledItem leveledItem,
-        MasterReferenceCollection masters,
         ModPath path,
         IFileSystem fileSystem)
     {
@@ -57,11 +59,12 @@ public class ListTests
 
         using (var writer = new MutagenWriter(fileSystem.File.OpenWrite(path), GameConstants.SkyrimSE, dispose: true))
         {
-            writer.MetaData.MasterReferences = masters;
+            writer.MetaData.MasterReferences = new MasterReferenceCollection(mod.ModKey);
+            writer.MetaData.SeparatedMasterPackage = SeparatedMasterPackage.NotSeparate(writer.MetaData.MasterReferences);
             leveledItem.WriteToBinary(writer);
         }
 
-        using (var stream = new MutagenBinaryReadStream(path, GameRelease.SkyrimSE, fileSystem: fileSystem))
+        using (var stream = new MutagenBinaryReadStream(path, GameRelease.SkyrimSE, masterFlagLookup: null, fileSystem: fileSystem))
         {
             var rec = stream.ReadMajorRecord();
             var llct = rec.FindSubrecord(RecordTypes.LLCT);

@@ -12,7 +12,7 @@ public class HeaderVersionHelperTests
         GameRelease release,
         float headerVersion)
     {
-        HeaderVersionHelper.GetNextFormId(
+        HeaderVersionHelper.GetInitialFormId(
             release,
             allowedReleases: null,
             headerVersion: headerVersion,
@@ -20,14 +20,14 @@ public class HeaderVersionHelperTests
             forceUseLowerFormIDRanges: null,
             higherFormIdRange: 0x800)
             .Should().Be(0x800);
-        HeaderVersionHelper.GetNextFormId(
+        HeaderVersionHelper.GetInitialFormId(
             release,
             allowedReleases: null,
             headerVersion: headerVersion,
             useLowerRangesVersion: headerVersion + 1,
             forceUseLowerFormIDRanges: true,
             higherFormIdRange: 0x800)
-            .Should().Be(1);
+            .Should().Be(0);
     }
 
     [Theory, DefaultAutoData]
@@ -35,15 +35,15 @@ public class HeaderVersionHelperTests
         GameRelease release,
         float headerVersion)
     {
-        HeaderVersionHelper.GetNextFormId(
+        HeaderVersionHelper.GetInitialFormId(
             release,
             allowedReleases: null,
             headerVersion: headerVersion,
             useLowerRangesVersion: headerVersion - 1,
             forceUseLowerFormIDRanges: null,
             higherFormIdRange: 0x800)
-            .Should().Be(1);
-        HeaderVersionHelper.GetNextFormId(
+            .Should().Be(0);
+        HeaderVersionHelper.GetInitialFormId(
             release,
             allowedReleases: null,
             headerVersion: headerVersion,
@@ -58,14 +58,14 @@ public class HeaderVersionHelperTests
         GameRelease release,
         float headerVersion)
     {
-        HeaderVersionHelper.GetNextFormId(
+        HeaderVersionHelper.GetInitialFormId(
             release,
             allowedReleases: null,
             headerVersion: headerVersion,
             useLowerRangesVersion: headerVersion - 1,
             forceUseLowerFormIDRanges: null,
             higherFormIdRange: 0x800)
-            .Should().Be(1);
+            .Should().Be(0);
     }
 
     [Theory, DefaultAutoData]
@@ -73,7 +73,7 @@ public class HeaderVersionHelperTests
         GameRelease release,
         float headerVersion)
     {
-        HeaderVersionHelper.GetNextFormId(
+        HeaderVersionHelper.GetInitialFormId(
             release,
             allowedReleases: null,
             headerVersion: headerVersion,
@@ -88,7 +88,7 @@ public class HeaderVersionHelperTests
         GameRelease release,
         float headerVersion)
     {
-        HeaderVersionHelper.GetNextFormId(
+        HeaderVersionHelper.GetInitialFormId(
             release,
             allowedReleases: new HashSet<GameRelease>()
             {
@@ -98,7 +98,7 @@ public class HeaderVersionHelperTests
             useLowerRangesVersion: headerVersion - 1,
             forceUseLowerFormIDRanges: null,
             higherFormIdRange: 0x800)
-            .Should().Be(1);
+            .Should().Be(0);
     }
 
     [Theory, DefaultAutoData]
@@ -106,7 +106,7 @@ public class HeaderVersionHelperTests
         GameRelease release,
         float headerVersion)
     {
-        HeaderVersionHelper.GetNextFormId(
+        HeaderVersionHelper.GetInitialFormId(
             release,
             allowedReleases: new HashSet<GameRelease>()
             {
@@ -123,7 +123,7 @@ public class HeaderVersionHelperTests
         GameRelease release,
         float headerVersion)
     {
-        HeaderVersionHelper.GetNextFormId(
+        HeaderVersionHelper.GetInitialFormId(
             release,
             allowedReleases: new HashSet<GameRelease>()
             {
@@ -132,6 +132,6 @@ public class HeaderVersionHelperTests
             useLowerRangesVersion: null,
             forceUseLowerFormIDRanges: true,
             higherFormIdRange: 0x800)
-            .Should().Be(1);
+            .Should().Be(0);
     }
 }

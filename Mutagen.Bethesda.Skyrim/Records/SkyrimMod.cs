@@ -1,5 +1,7 @@
 using Noggog;
 using System.Buffers.Binary;
+using Loqui.Internal;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -15,15 +17,32 @@ namespace Mutagen.Bethesda.Skyrim;
 
 public partial class SkyrimMod : AMod
 {
-    private uint GetDefaultInitialNextFormID(
-        SkyrimRelease release,
-        bool? forceUseLowerFormIDRanges) =>
-        GetDefaultInitialNextFormID(release, this.ModHeader.Stats.Version, forceUseLowerFormIDRanges);
-
-    public override uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) => 
-        GetDefaultInitialNextFormID(this.SkyrimRelease, 
+    public override uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) => 
+        GetDefaultInitialNextFormIDStatic(this.SkyrimRelease, 
             this.ModHeader.Stats.Version, 
             forceUseLowerFormIDRanges);
+
+    public override bool CanBeSmallMaster => true;
+
+    public override bool ListsOverriddenForms => true;
+    
+    public override bool IsMaster
+    {
+        get => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Master);
+        set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(SkyrimModHeader.HeaderFlag.Master, value);
+    }
+
+    public override bool IsSmallMaster
+    {
+        get => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Small);
+        set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(SkyrimModHeader.HeaderFlag.Small, value);
+    }
+    public override bool CanBeMediumMaster => false;
+    public override bool IsMediumMaster
+    {
+        get => false;
+        set => throw new ArgumentException("Tried to set half master flag on unsupported mod type");
+    }
 
     partial void CustomCtor()
     {
@@ -37,28 +56,192 @@ public partial class SkyrimMod : AMod
         GameRelease.EnderalSE,
     };
 
-    public static uint GetDefaultInitialNextFormID(
+    internal static uint GetDefaultInitialNextFormIDStatic(
         SkyrimRelease release,
         float headerVersion,
         bool? forceUseLowerFormIDRanges)
     {
-        return HeaderVersionHelper.GetNextFormId(
+        return HeaderVersionHelper.GetInitialFormId(
             release: release.ToGameRelease(),
             allowedReleases: _allowedLowerRangeReleases,
             headerVersion: headerVersion,
-            useLowerRangesVersion: 1.71f,
             forceUseLowerFormIDRanges: forceUseLowerFormIDRanges,
-            higherFormIdRange: 0x800);
+            constants: GameConstants.Get(release.ToGameRelease()));
+    }
+
+    public override IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
+        this.ModHeader.OverriddenForms;
+
+    internal class SkyrimCreateBuilderInstantiator : IBinaryReadBuilderInstantiator<ISkyrimMod, ISkyrimModDisposableGetter, GroupMask>
+    {
+        public static readonly SkyrimCreateBuilderInstantiator Instance = new();
+        
+        public ISkyrimMod Mutable(BinaryReadMutableBuilder<ISkyrimMod, ISkyrimModDisposableGetter, GroupMask> builder)
+        {
+            if (builder._param._path != null)
+            {
+                return SkyrimMod.CreateFromBinary(
+                    path: new ModPath(
+                        builder._param.ModKey,
+                        builder._param._path.Value),
+                    release: builder._param.GameRelease.ToSkyrimRelease(),
+                    errorMask: builder._param.ErrorMaskBuilder,
+                    param: builder._param.Params,
+                    importMask: builder._param.GroupMask);
+            }
+            else if (builder._param._streamFactory != null)
+            {
+                var stream = builder._param._streamFactory();
+                var recordCache =  new RecordTypeInfoCacheReader(() =>
+                {
+                    var stream1 = builder._param._streamFactory();
+                    if (stream1 == stream)
+                    {
+                        throw new ArgumentException("Stream factory provided returned the same stream twice");
+                    }
+                    var meta = ParsingMeta.Factory(builder._param.Params, builder._param.GameRelease, builder._param.ModKey, stream1);
+                    return new MutagenBinaryReadStream(stream, meta);
+                });
+
+                return SkyrimMod.CreateFromBinary(
+                    stream: stream,
+                    release: builder._param.GameRelease.ToSkyrimRelease(),
+                    modKey: builder._param.ModKey,
+                    infoCache: recordCache,
+                    param: builder._param.Params,
+                    importMask: builder._param.GroupMask);
+            }
+            else
+            {
+                throw new ArgumentException("Path or stream factory needs to be specified");
+            }
+        }
+
+        public ISkyrimModDisposableGetter Readonly(BinaryReadBuilder<ISkyrimMod, ISkyrimModDisposableGetter, GroupMask> builder)
+        {
+            if (builder._param._path != null)
+            {
+                return SkyrimMod.CreateFromBinaryOverlay(
+                    path: new ModPath(
+                        builder._param.ModKey,
+                        builder._param._path.Value),
+                    release: builder._param.GameRelease.ToSkyrimRelease(),
+                    param: builder._param.Params);
+            }
+            else if (builder._param._streamFactory != null)
+            {
+                var stream = builder._param._streamFactory();
+
+                return SkyrimMod.CreateFromBinaryOverlay(
+                    stream: stream,
+                    release: builder._param.GameRelease.ToSkyrimRelease(),
+                    modKey: builder._param.ModKey,
+                    param: builder._param.Params);
+            }
+            else
+            {
+                throw new ArgumentException("Path or stream factory needs to be specified");
+            }
+        }
+    }
+    
+    public static BinaryReadBuilderSourceStreamFactoryChoice<ISkyrimMod, ISkyrimModDisposableGetter, GroupMask> 
+        Create(SkyrimRelease release) => new( 
+        release.ToGameRelease(), 
+        SkyrimCreateBuilderInstantiator.Instance,
+        needsRecordTypeInfoCacheReader: false);
+    
+    internal class SkyrimWriteBuilderInstantiator : IBinaryWriteBuilderWriter<ISkyrimModGetter>
+    {
+        public static readonly SkyrimWriteBuilderInstantiator Instance = new();
+
+        public async Task WriteAsync(ISkyrimModGetter mod, BinaryWriteBuilderParams<ISkyrimModGetter> param)
+        {
+            Write(mod, param);
+        }
+
+        public void Write(ISkyrimModGetter mod, BinaryWriteBuilderParams<ISkyrimModGetter> param)
+        {
+            if (param._path != null)
+            {
+                mod.WriteToBinary(param._path.Value, param._param);
+            }
+            else if (param._stream != null)
+            {
+                mod.WriteToBinary(param._stream, param._param);
+            }
+            else
+            {
+                throw new ArgumentException("Path or stream factory needs to be specified");
+            }
+        }
+    }
+
+    public BinaryModdedWriteBuilderTargetChoice<ISkyrimModGetter> 
+        BeginWrite => new(
+        this, 
+        SkyrimWriteBuilderInstantiator.Instance);
+
+    IBinaryModdedWriteBuilderTargetChoice IModGetter.BeginWrite => this.BeginWrite;
+
+    public static BinaryWriteBuilderTargetChoice<ISkyrimModGetter> WriteBuilder(SkyrimRelease release) => new(release.ToGameRelease(), SkyrimWriteBuilderInstantiator.Instance);
+}
+
+public partial interface ISkyrimModGetter
+{
+    BinaryModdedWriteBuilderTargetChoice<ISkyrimModGetter> BeginWrite { get; }
+}
+
+partial class SkyrimModSetterTranslationCommon
+{
+    partial void DeepCopyInCustom(ISkyrimMod item, ISkyrimModGetter rhs, ErrorMaskBuilder? errorMask,
+        TranslationCrystal? copyMask, bool deepCopy)
+    {
+        if (!deepCopy) return;
+        if (item is not AMod mod)
+        {
+            throw new NotImplementedException();
+        }
+        mod.SetModKey(rhs.ModKey);
+    }
+
+    public partial SkyrimMod DeepCopyGetNew(ISkyrimModGetter item)
+    {
+        return new SkyrimMod(item.ModKey, item.SkyrimRelease);
     }
 }
 
 internal partial class SkyrimModBinaryOverlay
 {
-    public uint MinimumCustomFormID(bool? forceUseLowerFormIDRanges = false) =>
-        SkyrimMod.GetDefaultInitialNextFormID(
+    public uint GetDefaultInitialNextFormID(bool? forceUseLowerFormIDRanges = false) =>
+        SkyrimMod.GetDefaultInitialNextFormIDStatic(
             this.SkyrimRelease,
             this.ModHeader.Stats.Version,
             forceUseLowerFormIDRanges);
+    
+    public bool IsMaster => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Master);
+    public bool CanBeSmallMaster => true;
+    public bool IsSmallMaster => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Small);
+    
+    public bool CanBeMediumMaster => false;
+    public bool IsMediumMaster => false;
+    public bool ListsOverriddenForms => true;
+    public MasterStyle MasterStyle => this.GetMasterStyle();
+    
+    public IReadOnlyList<IFormLinkGetter<IMajorRecordGetter>>? OverriddenForms =>
+        this.ModHeader.OverriddenForms;
+
+    IBinaryModdedWriteBuilderTargetChoice IModGetter.BeginWrite => 
+        new BinaryModdedWriteBuilderTargetChoice<ISkyrimModGetter>(
+            this, 
+            SkyrimMod.SkyrimWriteBuilderInstantiator.Instance);
+
+    public BinaryModdedWriteBuilderTargetChoice<ISkyrimModGetter> BeginWrite => 
+        new BinaryModdedWriteBuilderTargetChoice<ISkyrimModGetter>(
+            this, 
+            SkyrimMod.SkyrimWriteBuilderInstantiator.Instance);
+    
+    IMod IModGetter.DeepCopy() => this.DeepCopy();
 }
 
 partial class SkyrimModSetterCommon
@@ -246,7 +429,7 @@ partial class SkyrimModCommon
             worldGroupWriter.Write(Zeros.Slice(0, bundle.Constants.GroupConstants.LengthLength));
             FormKeyBinaryTranslation.Instance.Write(
                 worldGroupWriter,
-                worldspace.FormKey);
+                worldspace);
             worldGroupWriter.Write((int)GroupTypeEnum.WorldChildren);
             worldGroupWriter.Write(worldspace.SubCellsTimestamp);
             worldGroupWriter.Write(worldspace.SubCellsUnknown);
@@ -353,5 +536,54 @@ partial class SkyrimModCommon
         ParallelWriteParameters parallelWriteParameters)
     {
         WriteGroupParallel(group, targetIndex, streamDepositArray, bundle, parallelWriteParameters);
+    }
+
+    partial void GetCustomRecordCount(ISkyrimModGetter item, Action<uint> setter)
+    {
+        uint count = 0;
+        // Tally Cell Group counts
+        int cellSubGroupCount(ICellGetter cell)
+        {
+            int cellGroupCount = 0;
+            if ((cell.Temporary?.Count ?? 0) > 0
+                || cell.NavigationMeshes.Count > 0
+                || cell.Landscape != null)
+            {
+                cellGroupCount++;
+            }
+            if ((cell.Persistent?.Count ?? 0) > 0)
+            {
+                cellGroupCount++;
+            }
+            if (cellGroupCount > 0)
+            {
+                cellGroupCount++;
+            }
+            return cellGroupCount;
+        }
+        count += (uint)item.Cells.Records.Count; // Block Count
+        count += (uint)item.Cells.Records.Sum(block => block.SubBlocks?.Count ?? 0); // Sub Block Count
+        count += (uint)item.Cells.Records
+            .SelectMany(block => block.SubBlocks)
+            .SelectMany(subBlock => subBlock.Cells)
+            .Select(cellSubGroupCount)
+            .Sum();
+
+        // Tally Worldspace Group Counts
+        count += (uint)item.Worldspaces.Sum(wrld => wrld.SubCells?.Count ?? 0); // Cell Blocks
+        count += (uint)item.Worldspaces
+            .SelectMany(wrld => wrld.SubCells)
+            .Sum(block => block.Items?.Count ?? 0); // Cell Sub Blocks
+        count += (uint)item.Worldspaces
+            .SelectMany(wrld => wrld.SubCells)
+            .SelectMany(block => block.Items)
+            .SelectMany(subBlock => subBlock.Items)
+            .Sum(cellSubGroupCount); // Cell sub groups
+
+        // Tally Dialog Group Counts
+        count += (uint)item.DialogTopics.RecordCache.Count;
+        
+        // Set count
+        setter(count);
     }
 }

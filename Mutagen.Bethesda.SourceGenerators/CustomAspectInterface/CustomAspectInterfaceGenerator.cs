@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Noggog;
@@ -35,188 +36,194 @@ public record MethodUsageInformation(
     List<InterfaceParameter> InterfaceUsages);
 
 [Generator]
-public class CustomAspectInterfaceGenerator : ISourceGenerator
+public class CustomAspectInterfaceGenerator : IIncrementalGenerator
 {
-    public void Initialize(GeneratorInitializationContext context)
+    public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        context.RegisterForSyntaxNotifications(() => new CustomAspectInterfaceReceiver());
+        var customAspectInterfaceDefs = context.SyntaxProvider
+            .CreateSyntaxProvider(
+                predicate: static (node, _) => node is InterfaceDeclarationSyntax,
+                transform: static (node, _) => (InterfaceDeclarationSyntax)node.Node)
+            .Select(static (interf, cancel) =>
+            {
+                cancel.ThrowIfCancellationRequested();
+                var customAspectAttr = interf.AttributeLists.SelectMany(x => x.Attributes)
+                    .FirstOrDefault(x => x.Name.ToString() == "CustomAspectInterface");
+                if (customAspectAttr == null) return null;
+                return new InterfaceDeclaration(interf, customAspectAttr.ArgumentList?.Arguments.Select(x => x.Expression)
+                    .WhereCastable<ExpressionSyntax, TypeOfExpressionSyntax>().ToArray() ?? Enumerable.Empty<TypeOfExpressionSyntax>().ToArray());
+            })
+            .Where(x => x != null)
+            .Select((x, _) => x!);
+
+        var aspectInterfaceMethodDecls = context.SyntaxProvider
+            .CreateSyntaxProvider(
+                predicate: static (node, _) => node is MethodDeclarationSyntax,
+                transform: static (node, _) => (MethodDeclarationSyntax)node.Node)
+            .Where(IsInPartialClass);
+        
+        var combination = context.CompilationProvider
+            .Combine(aspectInterfaceMethodDecls.Collect())
+            .Combine(customAspectInterfaceDefs.Collect());
+
+        context.RegisterSourceOutput(combination, (sourceContext, data) =>
+        {
+            Execute(sourceContext, data.Left.Left, data.Left.Right, data.Right);
+        });
     }
 
-    public void Execute(GeneratorExecutionContext context)
+    private static bool IsInPartialClass(SyntaxNode node)
+    {
+        if (node is ClassDeclarationSyntax cl)
+        {
+            return cl.Modifiers.Any(m => m.Text == "partial");
+        }
+
+        if (node.Parent == null) return false;
+        return IsInPartialClass(node.Parent);
+    }
+
+    public void Execute(
+        SourceProductionContext context, 
+        Compilation compilation, 
+        ImmutableArray<MethodDeclarationSyntax> methods,
+        ImmutableArray<InterfaceDeclaration> interfaces)
     {
         if (context.CancellationToken.IsCancellationRequested) return;
-        if (context.SyntaxReceiver is not CustomAspectInterfaceReceiver customAspectReceiver) return;
 
-        try
+        if (context.CancellationToken.IsCancellationRequested) return;
+        var interfaceSymbols = GetInterfaceTypeDictionary(compilation, interfaces);
+
+        // Group things by namespace
+        if (context.CancellationToken.IsCancellationRequested) return;
+        var targets = new Dictionary<string, GenerationTarget>();
+
+        foreach (var namespaceGroup in interfaceSymbols.Values
+                     .GroupBy(x => x.Symbol.ContainingNamespace, SymbolEqualityComparer.Default))
+        {
+            if (namespaceGroup.Key == null) continue;
+            targets[namespaceGroup.Key.Name] = new GenerationTarget(
+                namespaceGroup.Key.Name,
+                namespaceGroup,
+                new());
+        }
+
+        HashSet<string> requiredUsings = new(targets.SelectMany(x => x.Value.UsedInterfaces)
+            .SelectMany(x => x.Types)
+            .Select(i => i.Symbol)
+            .NotNull()
+            .Select(x => x.ContainingNamespace.ToString()));
+
+        // Generate
+        foreach (var namespaceGroup in targets)
         {
             if (context.CancellationToken.IsCancellationRequested) return;
-            var interfaceSymbols = GetInterfaceTypeDictionary(context, customAspectReceiver);
+            var sb = new StructuredStringBuilder();
 
-            // Group things by namespace
-            if (context.CancellationToken.IsCancellationRequested) return;
-            var targets = new Dictionary<string, GenerationTarget>();
-
-            foreach (var namespaceGroup in interfaceSymbols.Values
-                         .GroupBy(x => x.Symbol.ContainingNamespace, SymbolEqualityComparer.Default))
+            foreach (var use in requiredUsings)
             {
-                if (namespaceGroup.Key == null) continue;
-                targets[namespaceGroup.Key.Name] = new GenerationTarget(
-                    namespaceGroup.Key.Name,
-                    namespaceGroup,
-                    new());
+                sb.AppendLine($"using {use};");
             }
+            sb.AppendLine();
 
-            HashSet<string> requiredUsings = new(targets.SelectMany(x => x.Value.UsedInterfaces)
-                .SelectMany(x => x.Types)
-                .Select(i => i.Symbol)
-                .NotNull()
-                .Select(x => x.ContainingNamespace.ToString()));
-
-            // Generate
-            foreach (var namespaceGroup in targets)
+            using (sb.Namespace(namespaceGroup.Key, fileScoped: false))
             {
-                if (context.CancellationToken.IsCancellationRequested) return;
-                var sb = new StructuredStringBuilder();
-
-                foreach (var use in requiredUsings)
+                using (sb.Region("Wrappers"))
                 {
-                    sb.AppendLine($"using {use};");
+                    foreach (var decl in namespaceGroup.Value.UsedInterfaces)
+                    {
+                        if (context.CancellationToken.IsCancellationRequested) return;
+                        foreach (var t in decl.Types)
+                        {
+                            var className = $"{t.Syntax.Type}Wrapper";
+                            using (var c = sb.Class(className))
+                            {
+                                c.Interfaces.Add(decl.Symbol.Name);
+                            }
+                            using (sb.CurlyBrace())
+                            {
+                                sb.AppendLine($"private readonly {t.Syntax.Type} _wrapped;");
+                                foreach (var member in decl.Symbol.GetMembers())
+                                {
+                                    switch (member)
+                                    {
+                                        case IPropertySymbol prop:
+                                            sb.AppendLine($"public {prop.Type} {prop.Name}");
+                                            using (sb.CurlyBrace())
+                                            {
+                                                if (!prop.IsWriteOnly)
+                                                {
+                                                    sb.AppendLine($"get => _wrapped.{member.Name};");
+                                                }
+                                                if (!prop.IsReadOnly)
+                                                {
+                                                    sb.AppendLine($"set => _wrapped.{member.Name} = value;");
+                                                }
+                                            }
+                                            break;
+                                        default:
+                                            continue;
+                                    }
+                                    sb.AppendLine();
+                                }
+
+                                using (var args = sb.Function($"public {className}"))
+                                {
+                                    args.Add($"{t.Syntax.Type} rhs");
+                                }
+                                using (sb.CurlyBrace())
+                                {
+                                    sb.AppendLine("_wrapped = rhs;");
+                                }
+                            }
+                            sb.AppendLine();
+                        }
+                    }
+                    sb.AppendLine();
                 }
-                sb.AppendLine();
 
-                using (sb.Namespace(namespaceGroup.Key, fileScoped: false))
+                if (context.CancellationToken.IsCancellationRequested) return;
+                using (sb.Region("Mix Ins"))
                 {
-                    using (sb.Region("Wrappers"))
+                    using (var c = sb.Class("WrapperMixIns"))
+                    {
+                        c.Static = true;
+                    }
+                    using (sb.CurlyBrace())
                     {
                         foreach (var decl in namespaceGroup.Value.UsedInterfaces)
                         {
                             if (context.CancellationToken.IsCancellationRequested) return;
                             foreach (var t in decl.Types)
                             {
-                                var className = $"{t.Syntax.Type}Wrapper";
-                                using (var c = sb.Class(className))
+                                using (var args = sb.Function(
+                                           $"public static {t.Syntax.Type}Wrapper As{decl.Symbol.Name}"))
                                 {
-                                    c.Interfaces.Add(decl.Symbol.Name);
+                                    args.Add($"this {t.Syntax.Type} rhs");
                                 }
                                 using (sb.CurlyBrace())
                                 {
-                                    sb.AppendLine($"private readonly {t.Syntax.Type} _wrapped;");
-                                    foreach (var member in decl.Symbol.GetMembers())
-                                    {
-                                        switch (member)
-                                        {
-                                            case IPropertySymbol prop:
-                                                sb.AppendLine($"public {prop.Type} {prop.Name}");
-                                                using (sb.CurlyBrace())
-                                                {
-                                                    if (!prop.IsWriteOnly)
-                                                    {
-                                                        sb.AppendLine($"get => _wrapped.{member.Name};");
-                                                    }
-                                                    if (!prop.IsReadOnly)
-                                                    {
-                                                        sb.AppendLine($"set => _wrapped.{member.Name} = value;");
-                                                    }
-                                                }
-                                                break;
-                                            default:
-                                                continue;
-                                        }
-                                        sb.AppendLine();
-                                    }
-
-                                    using (var args = sb.Function($"public {className}"))
-                                    {
-                                        args.Add($"{t.Syntax.Type} rhs");
-                                    }
-                                    using (sb.CurlyBrace())
-                                    {
-                                        sb.AppendLine("_wrapped = rhs;");
-                                    }
+                                    sb.AppendLine($"return new {t.Syntax.Type}Wrapper(rhs);");
                                 }
                                 sb.AppendLine();
                             }
                         }
-                        sb.AppendLine();
-                    }
-
-                    if (context.CancellationToken.IsCancellationRequested) return;
-                    using (sb.Region("Mix Ins"))
-                    {
-                        using (var c = sb.Class("WrapperMixIns"))
-                        {
-                            c.Static = true;
-                        }
-                        using (sb.CurlyBrace())
-                        {
-                            foreach (var decl in namespaceGroup.Value.UsedInterfaces)
-                            {
-                                if (context.CancellationToken.IsCancellationRequested) return;
-                                foreach (var t in decl.Types)
-                                {
-                                    using (var args = sb.Function(
-                                               $"public static {t.Syntax.Type}Wrapper As{decl.Symbol.Name}"))
-                                    {
-                                        args.Add($"this {t.Syntax.Type} rhs");
-                                    }
-                                    using (sb.CurlyBrace())
-                                    {
-                                        sb.AppendLine($"return new {t.Syntax.Type}Wrapper(rhs);");
-                                    }
-                                    sb.AppendLine();
-                                }
-                            }
-                        }
                     }
                 }
-                context.AddSource($"CustomAspectInterfaces.g.cs", sb.ToString());
             }
-        }
-        catch (Exception ex)
-        {
-            customAspectReceiver.Exceptions.Add(ex);
-        }
-
-        if (customAspectReceiver.Exceptions.Count > 0)
-        {
-            context.AddSource($"Errors.g.cs", $"Number of exceptions: {customAspectReceiver.Exceptions.Count}\n" +
-                                              $"{customAspectReceiver.Exceptions.FirstOrDefault()}");
+            context.AddSource($"CustomAspectInterfaces.g.cs", sb.ToString());
         }
     }
 
-    private static Dictionary<string, MethodUsageInformation> GetInterfaceUsageDeclarations(GeneratorExecutionContext context,
-        CustomAspectInterfaceReceiver customAspectReceiver, Dictionary<string, InterfaceSymbolDeclaration> interfaceSymbols)
-    {
-        var interfaceUsageDeclarations = new Dictionary<string, MethodUsageInformation>();
-        foreach (var methodDeclaration in customAspectReceiver.MethodDeclarations)
-        {
-            var model = context.Compilation.GetSemanticModel(methodDeclaration.SyntaxTree.GetRoot().SyntaxTree);
-            var modelSymbol = new Lazy<ISymbol?>(() => model.GetDeclaredSymbol(methodDeclaration));
-            foreach (var parameter in methodDeclaration.ParameterList.Parameters)
-            {
-                var pSymbol = model.GetDeclaredSymbol(parameter) as IParameterSymbol;
-                if (pSymbol == null) continue;
-                var str = $"{pSymbol.Type.ContainingNamespace}.{pSymbol.Type.Name}";
-                if (!interfaceSymbols.TryGetValue(str, out var interf)) continue;
-                var modelSymb = modelSymbol.Value;
-                if (modelSymb == null) continue;
-                interfaceUsageDeclarations
-                    .GetOrAdd(methodDeclaration.Identifier.Text, () => new MethodUsageInformation(methodDeclaration, modelSymb, new()))
-                    .InterfaceUsages.Add(new(interf, pSymbol.Type, parameter.Identifier.Text));
-            }
-        }
-
-        return interfaceUsageDeclarations;
-    }
-
-    private static Dictionary<string, InterfaceSymbolDeclaration> GetInterfaceTypeDictionary(GeneratorExecutionContext context,
-        CustomAspectInterfaceReceiver customAspectReceiver)
+    private static Dictionary<string, InterfaceSymbolDeclaration> GetInterfaceTypeDictionary(
+        Compilation compilation,
+        ImmutableArray<InterfaceDeclaration> interfaces)
     {
         Dictionary<string, InterfaceSymbolDeclaration> interfaceSymbols = new();
-        foreach (var interf in customAspectReceiver.CustomAspectInterfaces)
+        foreach (var interf in interfaces)
         {
             var root = interf.Interface.SyntaxTree.GetRoot().SyntaxTree;
-            var model = context.Compilation.GetSemanticModel(root);
+            var model = compilation.GetSemanticModel(root);
             var symb = model.GetDeclaredSymbol(interf.Interface) as ITypeSymbol;
             if (symb == null) continue;
             interfaceSymbols[$"{symb.ContainingNamespace}.{symb.Name}"] = new(

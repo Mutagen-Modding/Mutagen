@@ -934,8 +934,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.MountCameraOffset = rhs.MountCameraOffset;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IMountData item,
+            IMountDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public MountData DeepCopy(

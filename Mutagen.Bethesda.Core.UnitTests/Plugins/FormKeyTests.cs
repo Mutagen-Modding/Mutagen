@@ -83,29 +83,15 @@ public class FormKeyTests
     [Fact]
     public void Import_Null_ID()
     {
-        Assert.True(
+        Assert.False(
             FormKey.TryFactory($"{FormKey.NullStr}:{TestConstants.Skyrim}", out FormKey id));
-        Assert.Equal(
-            TestConstants.Skyrim.MakeFormKey(0),
-            id);
-        Assert.Equal(
-            TestConstants.Skyrim,
-            id.ModKey);
-        Assert.True(id.IsNull);
     }
 
     [Fact]
     public void Import_Null_Strs()
     {
-        Assert.True(
+        Assert.False(
             FormKey.TryFactory($"{FormKey.NullStr}:{FormKey.NullStr}", out FormKey id));
-        Assert.Equal(
-            FormKey.Null,
-            id);
-        Assert.Equal(
-            ModKey.Null,
-            id.ModKey);
-        Assert.True(id.IsNull);
     }
 
     [Fact]
@@ -125,24 +111,25 @@ public class FormKeyTests
     #region BinaryTranslation
     public ModKey TargetModKey() => new ModKey("Master2", ModType.Master);
 
-    public IReadOnlyMasterReferenceCollection TypicalMasters() =>
-        new MasterReferenceCollection(
-            TestConstants.PluginModKey,
-            new List<IMasterReferenceGetter>()
-            {
-                new MasterReference()
+    public IReadOnlySeparatedMasterPackage TypicalMasters() =>
+        SeparatedMasterPackage.NotSeparate(
+            new MasterReferenceCollection(
+                TestConstants.PluginModKey,
+                new List<IMasterReferenceGetter>()
                 {
-                    Master = new ModKey("Master1", ModType.Master)
-                },
-                new MasterReference()
-                {
-                    Master = TargetModKey()
-                },
-                new MasterReference()
-                {
-                    Master = new ModKey("Master3", type: ModType.Master)
-                },
-            });
+                    new MasterReference()
+                    {
+                        Master = new ModKey("Master1", ModType.Master)
+                    },
+                    new MasterReference()
+                    {
+                        Master = TargetModKey()
+                    },
+                    new MasterReference()
+                    {
+                        Master = new ModKey("Master3", type: ModType.Master)
+                    },
+                }));
 
     [Fact]
     public void BinaryTranslation_Typical()
@@ -223,9 +210,9 @@ public class FormKeyTests
     }
 
     [Fact]
-    public void Null_ExistingModKeyIsNull()
+    public void Null_ExistingModKeyIsNotNull()
     {
-        new FormKey(TestConstants.Skyrim, 0).IsNull.Should().BeTrue();
+        new FormKey(TestConstants.Skyrim, 0).IsNull.Should().BeFalse();
     }
 
     [Fact]
@@ -509,9 +496,6 @@ public class FormKeyTests
         FormKey.Null
             .ToString()
             .Should().Be(FormKey.NullStr);
-        FormKey.Factory("Null:Null")
-            .ToString()
-            .Should().Be("Null");
         FormKey.Factory("000000:Null")
             .ToString()
             .Should().Be("Null");

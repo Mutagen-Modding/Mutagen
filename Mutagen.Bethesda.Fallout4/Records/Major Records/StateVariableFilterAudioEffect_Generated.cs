@@ -951,8 +951,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Mode = rhs.Mode;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IStateVariableFilterAudioEffect item,
+            IStateVariableFilterAudioEffectGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAAudioEffect item,

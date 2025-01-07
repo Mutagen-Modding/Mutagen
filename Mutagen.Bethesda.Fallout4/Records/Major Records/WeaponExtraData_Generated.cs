@@ -1370,8 +1370,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.RumblePeriodMs = rhs.RumblePeriodMs;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IWeaponExtraData item,
+            IWeaponExtraDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public WeaponExtraData DeepCopy(
@@ -1623,7 +1635,7 @@ namespace Mutagen.Bethesda.Fallout4
         public Single BoltAnimSeconds => _structData.Slice(0x14, 0x4).Float();
         public Single SightedTransitionSeconds => _structData.Slice(0x18, 0x4).Float();
         public Byte NumProjectiles => _structData.Span[0x1C];
-        public IFormLinkGetter<IProjectileGetter> ProjectileOverride => new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x1D, 0x4))));
+        public IFormLinkGetter<IProjectileGetter> ProjectileOverride => FormLinkBinaryTranslation.Instance.OverlayFactory<IProjectileGetter>(_package, _structData.Span.Slice(0x1D, 0x4));
         public Weapon.PatternType Pattern => (Weapon.PatternType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x21, 0x4));
         public UInt32 RumblePeriodMs => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x25, 0x4));
         partial void CustomFactoryEnd(

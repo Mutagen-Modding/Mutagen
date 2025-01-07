@@ -1004,8 +1004,20 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ILocationCoordinate item,
+            ILocationCoordinateGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public LocationCoordinate DeepCopy(
@@ -1223,7 +1235,7 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IComplexLocationGetter> Location => new FormLink<IComplexLocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IComplexLocationGetter> Location => FormLinkBinaryTranslation.Instance.OverlayFactory<IComplexLocationGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         #region Coordinates
         public IReadOnlyList<P2Int16> Coordinates => BinaryOverlayList.FactoryByStartIndex<P2Int16>(_structData.Slice(0x4), _package, 4, (s, p) => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s, swapCoords: true));
         protected int CoordinatesEndingPos;

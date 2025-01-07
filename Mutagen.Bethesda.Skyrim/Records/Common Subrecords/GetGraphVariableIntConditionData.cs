@@ -1,18 +1,18 @@
 namespace Mutagen.Bethesda.Skyrim;
 
-public partial class GetGraphVariableIntConditionData : IConditionStringParameter
+public partial class GetGraphVariableIntConditionData : IConditionParameters
 {
-    string? IConditionStringParameterGetter.FirstStringParameter => GraphVariable;
+    string? IConditionParametersGetter.StringParameter1 => GraphVariable;
 
-    string? IConditionStringParameterGetter.SecondStringParameter => SecondUnusedStringParameter;
+    string? IConditionParametersGetter.StringParameter2 => SecondUnusedStringParameter;
 
-    string? IConditionStringParameter.FirstStringParameter
+    string? IConditionParameters.StringParameter1
     {
         get => GraphVariable;
         set => GraphVariable = value;
     }
 
-    string? IConditionStringParameter.SecondStringParameter
+    string? IConditionParameters.StringParameter2
     {
         get => SecondUnusedStringParameter;
         set => SecondUnusedStringParameter = value;

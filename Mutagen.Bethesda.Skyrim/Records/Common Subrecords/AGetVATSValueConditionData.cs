@@ -2,19 +2,27 @@
 
 namespace Mutagen.Bethesda.Skyrim;
 
-partial class AGetVATSValueConditionData : IConditionStringParameter
+partial interface IAGetVATSValueConditionData : IConditionParameters
 {
-    string? IConditionStringParameterGetter.FirstStringParameter => FirstUnusedStringParameter;
+}
 
-    string? IConditionStringParameterGetter.SecondStringParameter => SecondUnusedStringParameter;
+partial interface IAGetVATSValueConditionDataGetter : IConditionParametersGetter
+{
+}
 
-    string? IConditionStringParameter.FirstStringParameter
+partial class AGetVATSValueConditionData
+{
+    string? IConditionParametersGetter.StringParameter1 => FirstUnusedStringParameter;
+
+    string? IConditionParametersGetter.StringParameter2 => SecondUnusedStringParameter;
+
+    string? IConditionParameters.StringParameter1
     {
         get => FirstUnusedStringParameter;
         set => FirstUnusedStringParameter = value;
     }
 
-    string? IConditionStringParameter.SecondStringParameter
+    string? IConditionParameters.StringParameter2
     {
         get => SecondUnusedStringParameter;
         set => SecondUnusedStringParameter = value;

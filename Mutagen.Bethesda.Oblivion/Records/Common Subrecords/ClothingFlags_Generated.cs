@@ -894,8 +894,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.GeneralFlags = rhs.GeneralFlags;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IClothingFlags item,
+            IClothingFlagsGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ClothingFlags DeepCopy(

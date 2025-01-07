@@ -1,19 +1,19 @@
 namespace Mutagen.Bethesda.Skyrim;
 
 [Obsolete("This function always returns -1")]
-public partial class GetHitLocationConditionData : IConditionStringParameter
+public partial class GetHitLocationConditionData : IConditionParameters
 {
-    string? IConditionStringParameterGetter.FirstStringParameter => FirstUnusedStringParameter;
+    string? IConditionParametersGetter.StringParameter1 => FirstUnusedStringParameter;
 
-    string? IConditionStringParameterGetter.SecondStringParameter => SecondUnusedStringParameter;
+    string? IConditionParametersGetter.StringParameter2 => SecondUnusedStringParameter;
 
-    string? IConditionStringParameter.FirstStringParameter
+    string? IConditionParameters.StringParameter1
     {
         get => FirstUnusedStringParameter;
         set => FirstUnusedStringParameter = value;
     }
 
-    string? IConditionStringParameter.SecondStringParameter
+    string? IConditionParameters.StringParameter2
     {
         get => SecondUnusedStringParameter;
         set => SecondUnusedStringParameter = value;

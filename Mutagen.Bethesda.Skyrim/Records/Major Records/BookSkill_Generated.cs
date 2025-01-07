@@ -849,8 +849,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Skill = rhs.Skill;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IBookSkill item,
+            IBookSkillGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IBookTeachTarget item,

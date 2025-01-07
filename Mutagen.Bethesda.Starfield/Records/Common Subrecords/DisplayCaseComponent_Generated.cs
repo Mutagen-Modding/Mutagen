@@ -1162,8 +1162,20 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IDisplayCaseComponent item,
+            IDisplayCaseComponentGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAComponent item,
@@ -1490,26 +1502,22 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.DCSD:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.Items = BinaryOverlayList.FactoryByStartIndex<IDisplayCaseComponentItemGetter>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.Items = BinaryOverlayList.FactoryByStartIndexWithTrigger<IDisplayCaseComponentItemGetter>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 16,
                         getter: (s, p) => DisplayCaseComponentItemBinaryOverlay.DisplayCaseComponentItemFactory(s, p));
-                    stream.Position += subLen;
                     return (int)DisplayCaseComponent_FieldIndex.Items;
                 }
                 case RecordTypeInts.DCED:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.DCED = BinaryOverlayList.FactoryByStartIndex<UInt32>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.DCED = BinaryOverlayList.FactoryByStartIndexWithTrigger<UInt32>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => BinaryPrimitives.ReadUInt32LittleEndian(s));
-                    stream.Position += subLen;
                     return (int)DisplayCaseComponent_FieldIndex.DCED;
                 }
                 default:

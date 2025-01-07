@@ -2,6 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Race" recordType="RACE" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
+      <RefList name="Components" refName="AComponent" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <String name="Description" recordType="DESC" nullable="False" translated="DL" />
       <List name="ActorEffect">
@@ -150,8 +151,8 @@
         </RecordTypeOverrides>
       </RefDirect>
       <AssetLink name="Rig" recordType="NAM5" assetType="StarfieldRig" />
-      <AssetLink name="AnimationText" recordType="NAM6" assetType="StarfieldAnimationText" />
-      <String name="DNAM" recordType="DNAM" unknown="true" />
+      <AssetLink name="AnimationRoot" recordType="NAM6" assetType="StarfieldAnimationText" />
+      <String name="Animations" recordType="DNAM" />
     </Fields>
   </Object>
   <Object name="BipedObjectData" objType="Subrecord">
@@ -162,6 +163,7 @@
   </Object>
   <Object name="Subgraph" objType="Subrecord" shortCircuitToLastRequired="true">
     <Fields>
+      <FormLink name="Race" refName="Race" recordType="SADD" />
       <List name="ActorKeywords">
         <FormLink recordType="SAKD" refName="Keyword" />
       </List>

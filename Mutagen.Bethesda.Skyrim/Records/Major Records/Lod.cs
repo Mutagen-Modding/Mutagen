@@ -13,10 +13,10 @@ partial class LodBinaryCreateTranslation
 
     public static partial void FillBinaryLevel0Custom(MutagenFrame frame, ILod item)
     {
-        item.Level0.RawPath = ReadString(frame, out var bytes);
-        item.Level1.RawPath = ReadString(frame, out bytes);
-        item.Level2.RawPath = ReadString(frame, out bytes);
-        item.Level3.RawPath = ReadString(frame, out bytes);
+        item.Level0.GivenPath = ReadString(frame, out var bytes);
+        item.Level1.GivenPath = ReadString(frame, out bytes);
+        item.Level2.GivenPath = ReadString(frame, out bytes);
+        item.Level3.GivenPath = ReadString(frame, out bytes);
     }
 
     public static string ReadString(MutagenFrame frame, out MemorySlice<byte> extraBytes)
@@ -31,10 +31,10 @@ partial class LodBinaryWriteTranslation
 {
     public static partial void WriteBinaryLevel0Custom(MutagenWriter writer, ILodGetter item)
     {
-        WriteString(writer, item.Level0.RawPath);
-        WriteString(writer, item.Level1.RawPath);
-        WriteString(writer, item.Level2.RawPath);
-        WriteString(writer, item.Level3.RawPath);
+        WriteString(writer, item.Level0.GivenPath);
+        WriteString(writer, item.Level1.GivenPath);
+        WriteString(writer, item.Level2.GivenPath);
+        WriteString(writer, item.Level3.GivenPath);
     }
 
     public static void WriteString(MutagenWriter writer, string str)

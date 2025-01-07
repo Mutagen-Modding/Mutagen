@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Strings.DI;
 using Noggog;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -17,18 +18,16 @@ public class Fallout4Processor : Processor
 {
     public override bool StrictStrings => true;
     
-    public Fallout4Processor(bool multithread) : base(multithread)
+    public Fallout4Processor(bool multithread, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup) 
+        : base(multithread, GameRelease.Fallout4, masterFlagLookup)
     {
     }
-
-    public override GameRelease GameRelease => GameRelease.Fallout4;
 
     protected override void AddDynamicProcessorInstructions()
     {
         base.AddDynamicProcessorInstructions();
         AddDynamicProcessing(RecordTypes.GMST, ProcessGameSettings);
         AddDynamicProcessing(RecordTypes.TRNS, ProcessTransforms);
-        AddDynamicProcessing(RecordTypes.RACE, ProcessRaces);
         AddDynamicProcessing(RecordTypes.SCOL, ProcessStaticCollections);
         AddDynamicProcessing(RecordTypes.STAT, ProcessStatics);
         AddDynamicProcessing(RecordTypes.FURN, ProcessFurniture);
@@ -68,6 +67,7 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.GDRY, ProcessGodRays);
         AddDynamicProcessing(RecordTypes.LCTN, ProcessLocations);
         AddDynamicProcessing(RecordTypes.ARMA, ProcessArmorAddons);
+        AddDynamicProcessing(RecordTypes.LVLI, ProcessLeveledItems);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -141,37 +141,6 @@ public class Fallout4Processor : Processor
         if (!majorFrame.TryFindSubrecord(RecordTypes.DATA, out var dataRec)) return;
         int offset = 0;
         ProcessZeroFloats(dataRec, fileOffset, ref offset, 9);
-    }
-
-    private void ProcessRaces(
-        MajorRecordFrame majorFrame,
-        long fileOffset)
-    {
-        if (!majorFrame.TryFindSubrecord(RecordTypes.MLSI, out var mlsi)) return;
-
-        if (majorFrame.TryFindSubrecordHeader(RecordTypes.MSID, out _))
-        {
-            var max = majorFrame.FindEnumerateSubrecords(RecordTypes.MSID)
-                .Select(x => x.AsInt32())
-                .Max(0);
-
-            var existing = mlsi.AsInt32();
-            if (existing == max) return;
-
-            byte[] sub = new byte[4];
-            BinaryPrimitives.WriteInt32LittleEndian(sub, max);
-            Instructions.SetSubstitution(
-                fileOffset + mlsi.Location + mlsi.HeaderLength,
-                sub);
-        }
-        else
-        {
-            Instructions.SetRemove(RangeInt64.FromLength(fileOffset + mlsi.Location, mlsi.TotalLength));
-            ProcessLengths(
-                majorFrame,
-                -mlsi.TotalLength,
-                fileOffset);
-        }
     }
 
     private void ProcessStaticCollections(
@@ -260,11 +229,15 @@ public class Fallout4Processor : Processor
         {
             ProcessFormIDOverflows(frame, fileOffset);
         }
-        if (majorFrame.FormID.ID == 0x3D62A
-            && majorFrame.TryFindSubrecord(RecordTypes.COCT, out frame))
+        foreach (var fmrs in majorFrame.FindEnumerateSubrecords(RecordTypes.FMRS))
         {
+            ProcessZeroFloats(fmrs, fileOffset);
+        }
+        if (majorFrame.TryFindSubrecord(RecordTypes.COCT, out frame))
+        {
+            var numEntries = majorFrame.FindEnumerateSubrecordsAfter(RecordTypes.CNTO, frame).Count();
             var bytes = new byte[4];
-            BinaryPrimitives.WriteInt32LittleEndian(bytes, 1);
+            BinaryPrimitives.WriteInt32LittleEndian(bytes, (byte)numEntries);
             Instructions.SetSubstitution(
                 fileOffset + frame.Location + frame.HeaderLength,
                 bytes);
@@ -475,7 +448,7 @@ public class Fallout4Processor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        var formKey = FormKey.Factory(stream.MetaData.MasterReferences!, majorFrame.FormID.Raw);
+        var formKey = FormKey.Factory(stream.MetaData.MasterReferences, majorFrame.FormID, reference: false);
         CleanEmptyCellGroups(
             stream,
             formKey,
@@ -506,7 +479,7 @@ public class Fallout4Processor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        var formKey = FormKey.Factory(stream.MetaData.MasterReferences!, majorFrame.FormID.Raw);
+        var formKey = FormKey.Factory(stream.MetaData.MasterReferences, majorFrame.FormID, reference: false);
         CleanEmptyDialogGroups(
             stream,
             formKey,
@@ -767,6 +740,19 @@ public class Fallout4Processor : Processor
         }
     }
 
+    private void ProcessLeveledItems(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.LVLO))
+        {
+            if (subRec.Content[10] > 100)
+            {
+                Instructions.SetSubstitution(fileOffset + subRec.Location + subRec.HeaderLength + 10, 0);
+            }
+        }
+    }
+
     private void ProcessPackages(
         MajorRecordFrame majorFrame,
         long fileOffset)
@@ -971,7 +957,7 @@ public class Fallout4Processor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        var formKey = FormKey.Factory(stream.MetaData.MasterReferences!, majorFrame.FormID.Raw);
+        var formKey = FormKey.Factory(stream.MetaData.MasterReferences, majorFrame.FormID, reference: false);
 
         if (majorFrame.TryFindSubrecord(RecordTypes.ANAM, out var anamRec))
         {

@@ -975,8 +975,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Index = rhs.Index;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ITintPreset item,
+            ITintPresetGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public TintPreset DeepCopy(
@@ -1218,7 +1230,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Color
         private int? _ColorLocation;
-        public IFormLinkNullableGetter<IColorRecordGetter> Color => _ColorLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
+        public IFormLinkNullableGetter<IColorRecordGetter> Color => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IColorRecordGetter>(_package, _recordData, _ColorLocation);
         #endregion
         #region DefaultValue
         private int? _DefaultValueLocation;

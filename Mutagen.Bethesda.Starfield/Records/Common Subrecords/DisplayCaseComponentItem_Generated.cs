@@ -1002,8 +1002,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Unknown2 = rhs.Unknown2;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IDisplayCaseComponentItem item,
+            IDisplayCaseComponentItemGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public DisplayCaseComponentItem DeepCopy(
@@ -1207,7 +1219,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IFormListGetter> DisplayFilter => new FormLink<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IFormListGetter> DisplayFilter => FormLinkBinaryTranslation.Instance.OverlayFactory<IFormListGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public UInt32 Unknown1 => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
         public UInt32 Index => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x8, 0x4));
         public UInt32 Unknown2 => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0xC, 0x4));

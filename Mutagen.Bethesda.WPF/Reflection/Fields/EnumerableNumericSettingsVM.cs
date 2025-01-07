@@ -19,6 +19,7 @@ public class EnumerableNumericSettingsVM : EnumerableSettingsVM
     {
         _setToDefault = setToDefault;
         _defaultVal = defaultVal;
+        _setToDefault(Values, defaultVal);
     }
 
     public static EnumerableNumericSettingsVM Factory<TItem, TWrapper>(FieldMeta fieldMeta, object? defaultVal, TWrapper prototype)

@@ -917,8 +917,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.DNAM = rhs.DNAM;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IGroundCoverGrass item,
+            IGroundCoverGrassGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public GroundCoverGrass DeepCopy(
@@ -1149,7 +1161,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Grass
         private int? _GrassLocation;
-        public IFormLinkNullableGetter<IGrassGetter> Grass => _GrassLocation.HasValue ? new FormLinkNullable<IGrassGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GrassLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGrassGetter>.Null;
+        public IFormLinkNullableGetter<IGrassGetter> Grass => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGrassGetter>(_package, _recordData, _GrassLocation);
         #endregion
         #region DNAM
         private int? _DNAMLocation;

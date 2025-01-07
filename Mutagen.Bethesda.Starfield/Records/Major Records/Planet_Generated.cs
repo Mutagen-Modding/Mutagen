@@ -23,7 +23,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
@@ -72,17 +71,28 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
+        #region EOVR
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _EOVR;
+        public MemorySlice<Byte>? EOVR
+        {
+            get => this._EOVR;
+            set => this._EOVR = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPlanetGetter.EOVR => this.EOVR;
+        #endregion
         #region Worldspaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<PlanetWorldspace> _Worldspaces = new ExtendedList<PlanetWorldspace>();
-        public ExtendedList<PlanetWorldspace> Worldspaces
+        private ExtendedList<PlanetWorldspace>? _Worldspaces;
+        public ExtendedList<PlanetWorldspace>? Worldspaces
         {
             get => this._Worldspaces;
-            init => this._Worldspaces = value;
+            set => this._Worldspaces = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IPlanetWorldspaceGetter> IPlanetGetter.Worldspaces => _Worldspaces;
+        IReadOnlyList<IPlanetWorldspaceGetter>? IPlanetGetter.Worldspaces => _Worldspaces;
         #endregion
 
         #endregion
@@ -284,6 +294,7 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.EOVR = initialValue;
                 this.Worldspaces = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetWorldspace.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PlanetWorldspace.Mask<TItem>?>>());
                 this.Biomes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetBiome.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PlanetBiome.Mask<TItem>?>>());
                 this.SurfaceTree = initialValue;
@@ -313,6 +324,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
                 TItem Components,
+                TItem EOVR,
                 TItem Worldspaces,
                 TItem Biomes,
                 TItem SurfaceTree,
@@ -341,6 +353,7 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.EOVR = EOVR;
                 this.Worldspaces = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetWorldspace.Mask<TItem>?>>?>(Worldspaces, Enumerable.Empty<MaskItemIndexed<TItem, PlanetWorldspace.Mask<TItem>?>>());
                 this.Biomes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetBiome.Mask<TItem>?>>?>(Biomes, Enumerable.Empty<MaskItemIndexed<TItem, PlanetBiome.Mask<TItem>?>>());
                 this.SurfaceTree = SurfaceTree;
@@ -371,6 +384,7 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public TItem EOVR;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetWorldspace.Mask<TItem>?>>?>? Worldspaces;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetBiome.Mask<TItem>?>>?>? Biomes;
             public TItem SurfaceTree;
@@ -403,6 +417,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.EOVR, rhs.EOVR)) return false;
                 if (!object.Equals(this.Worldspaces, rhs.Worldspaces)) return false;
                 if (!object.Equals(this.Biomes, rhs.Biomes)) return false;
                 if (!object.Equals(this.SurfaceTree, rhs.SurfaceTree)) return false;
@@ -427,6 +442,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 var hash = new HashCode();
                 hash.Add(this.Components);
+                hash.Add(this.EOVR);
                 hash.Add(this.Worldspaces);
                 hash.Add(this.Biomes);
                 hash.Add(this.SurfaceTree);
@@ -467,6 +483,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (!eval(this.EOVR)) return false;
                 if (this.Worldspaces != null)
                 {
                     if (!eval(this.Worldspaces.Overall)) return false;
@@ -543,6 +560,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (eval(this.EOVR)) return true;
                 if (this.Worldspaces != null)
                 {
                     if (eval(this.Worldspaces.Overall)) return true;
@@ -629,6 +647,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                obj.EOVR = eval(this.EOVR);
                 if (Worldspaces != null)
                 {
                     obj.Worldspaces = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PlanetWorldspace.Mask<R>?>>?>(eval(this.Worldspaces.Overall), Enumerable.Empty<MaskItemIndexed<R, PlanetWorldspace.Mask<R>?>>());
@@ -711,6 +730,10 @@ namespace Mutagen.Bethesda.Starfield
                                 }
                             }
                         }
+                    }
+                    if (printMask?.EOVR ?? true)
+                    {
+                        sb.AppendItem(EOVR, "EOVR");
                     }
                     if ((printMask?.Worldspaces?.Overall ?? true)
                         && Worldspaces is {} WorldspacesItem)
@@ -826,6 +849,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public Exception? EOVR;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetWorldspace.ErrorMask?>>?>? Worldspaces;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetBiome.ErrorMask?>>?>? Biomes;
             public Exception? SurfaceTree;
@@ -854,6 +878,8 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case Planet_FieldIndex.Components:
                         return Components;
+                    case Planet_FieldIndex.EOVR:
+                        return EOVR;
                     case Planet_FieldIndex.Worldspaces:
                         return Worldspaces;
                     case Planet_FieldIndex.Biomes:
@@ -902,6 +928,9 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case Planet_FieldIndex.Components:
                         this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Planet_FieldIndex.EOVR:
+                        this.EOVR = ex;
                         break;
                     case Planet_FieldIndex.Worldspaces:
                         this.Worldspaces = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetWorldspace.ErrorMask?>>?>(ex, null);
@@ -971,6 +1000,9 @@ namespace Mutagen.Bethesda.Starfield
                     case Planet_FieldIndex.Components:
                         this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
                         break;
+                    case Planet_FieldIndex.EOVR:
+                        this.EOVR = (Exception?)obj;
+                        break;
                     case Planet_FieldIndex.Worldspaces:
                         this.Worldspaces = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetWorldspace.ErrorMask?>>?>)obj;
                         break;
@@ -1035,6 +1067,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (Components != null) return true;
+                if (EOVR != null) return true;
                 if (Worldspaces != null) return true;
                 if (Biomes != null) return true;
                 if (SurfaceTree != null) return true;
@@ -1096,6 +1129,9 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
+                }
+                {
+                    sb.AppendItem(EOVR, "EOVR");
                 }
                 if (Worldspaces is {} WorldspacesItem)
                 {
@@ -1182,6 +1218,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.EOVR = this.EOVR.Combine(rhs.EOVR);
                 ret.Worldspaces = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetWorldspace.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Worldspaces?.Overall, rhs.Worldspaces?.Overall), Noggog.ExceptionExt.Combine(this.Worldspaces?.Specific, rhs.Worldspaces?.Specific));
                 ret.Biomes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetBiome.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Biomes?.Overall, rhs.Biomes?.Overall), Noggog.ExceptionExt.Combine(this.Biomes?.Specific, rhs.Biomes?.Specific));
                 ret.SurfaceTree = this.SurfaceTree.Combine(rhs.SurfaceTree);
@@ -1223,6 +1260,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public AComponent.TranslationMask? Components;
+            public bool EOVR;
             public PlanetWorldspace.TranslationMask? Worldspaces;
             public PlanetBiome.TranslationMask? Biomes;
             public bool SurfaceTree;
@@ -1249,6 +1287,7 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.EOVR = defaultOn;
                 this.SurfaceTree = defaultOn;
                 this.GNAM = defaultOn;
                 this.Name = defaultOn;
@@ -1269,6 +1308,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.GetCrystal(ret);
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((EOVR, null));
                 ret.Add((Worldspaces == null ? DefaultOn : !Worldspaces.GetCrystal().CopyNothing, Worldspaces?.GetCrystal()));
                 ret.Add((Biomes == null ? DefaultOn : !Biomes.GetCrystal().CopyNothing, Biomes?.GetCrystal()));
                 ret.Add((SurfaceTree, null));
@@ -1442,7 +1482,8 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordInternal
     {
         new ExtendedList<AComponent> Components { get; }
-        new ExtendedList<PlanetWorldspace> Worldspaces { get; }
+        new MemorySlice<Byte>? EOVR { get; set; }
+        new ExtendedList<PlanetWorldspace>? Worldspaces { get; set; }
         new ExtendedList<PlanetBiome> Biomes { get; }
         new IFormLinkNullable<ISurfaceTreeGetter> SurfaceTree { get; set; }
         new MemorySlice<Byte>? GNAM { get; set; }
@@ -1485,7 +1526,8 @@ namespace Mutagen.Bethesda.Starfield
     {
         static new ILoquiRegistration StaticRegistration => Planet_Registration.Instance;
         IReadOnlyList<IAComponentGetter> Components { get; }
-        IReadOnlyList<IPlanetWorldspaceGetter> Worldspaces { get; }
+        ReadOnlyMemorySlice<Byte>? EOVR { get; }
+        IReadOnlyList<IPlanetWorldspaceGetter>? Worldspaces { get; }
         IReadOnlyList<IPlanetBiomeGetter> Biomes { get; }
         IFormLinkNullableGetter<ISurfaceTreeGetter> SurfaceTree { get; }
         ReadOnlyMemorySlice<Byte>? GNAM { get; }
@@ -1685,24 +1727,25 @@ namespace Mutagen.Bethesda.Starfield
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
         Components = 7,
-        Worldspaces = 8,
-        Biomes = 9,
-        SurfaceTree = 10,
-        GNAM = 11,
-        Name = 12,
-        BodyType = 13,
-        DNAM = 14,
-        ENAM = 15,
-        FNAM = 16,
-        IDs = 17,
-        Details = 18,
-        INAM = 19,
-        KNAM = 20,
-        NNAM = 21,
-        Temperature = 22,
-        Density = 23,
-        PerihelionAngleDegrees = 24,
-        RSCS = 25,
+        EOVR = 8,
+        Worldspaces = 9,
+        Biomes = 10,
+        SurfaceTree = 11,
+        GNAM = 12,
+        Name = 13,
+        BodyType = 14,
+        DNAM = 15,
+        ENAM = 16,
+        FNAM = 17,
+        IDs = 18,
+        Details = 19,
+        INAM = 20,
+        KNAM = 21,
+        NNAM = 22,
+        Temperature = 23,
+        Density = 24,
+        PerihelionAngleDegrees = 25,
+        RSCS = 26,
     }
     #endregion
 
@@ -1713,9 +1756,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 19;
+        public const ushort AdditionalFieldCount = 20;
 
-        public const ushort FieldCount = 26;
+        public const ushort FieldCount = 27;
 
         public static readonly Type MaskType = typeof(Planet.Mask<>);
 
@@ -1750,6 +1793,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.PNDT,
                 RecordTypes.BFCB,
                 RecordTypes.BFCE,
+                RecordTypes.EOVR,
                 RecordTypes.CNAM,
                 RecordTypes.PPBD,
                 RecordTypes.FNAM,
@@ -1812,7 +1856,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Components.Clear();
-            item.Worldspaces.Clear();
+            item.EOVR = default;
+            item.Worldspaces = null;
             item.Biomes.Clear();
             item.SurfaceTree.Clear();
             item.GNAM = default;
@@ -1848,7 +1893,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             base.RemapLinks(obj, mapping);
             obj.Components.RemapLinks(mapping);
-            obj.Worldspaces.RemapLinks(mapping);
+            obj.Worldspaces?.RemapLinks(mapping);
             obj.Biomes.RemapLinks(mapping);
             obj.SurfaceTree.Relink(mapping);
         }
@@ -1946,6 +1991,7 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Components,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.EOVR = MemorySliceExt.SequenceEqual(item.EOVR, rhs.EOVR);
             ret.Worldspaces = item.Worldspaces.CollectionEqualsHelper(
                 rhs.Worldspaces,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -2049,12 +2095,18 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if (printMask?.Worldspaces?.Overall ?? true)
+            if ((printMask?.EOVR ?? true)
+                && item.EOVR is {} EOVRItem)
+            {
+                sb.AppendLine($"EOVR => {SpanExt.ToHexString(EOVRItem)}");
+            }
+            if ((printMask?.Worldspaces?.Overall ?? true)
+                && item.Worldspaces is {} WorldspacesItem)
             {
                 sb.AppendLine("Worldspaces =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.Worldspaces)
+                    foreach (var subItem in WorldspacesItem)
                     {
                         using (sb.Brace())
                         {
@@ -2210,9 +2262,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Planet_FieldIndex.Components)))) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.EOVR) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.EOVR, rhs.EOVR)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.Worldspaces) ?? true))
             {
-                if (!lhs.Worldspaces.SequenceEqual(rhs.Worldspaces, (l, r) => ((PlanetWorldspaceCommon)((IPlanetWorldspaceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Planet_FieldIndex.Worldspaces)))) return false;
+                if (!lhs.Worldspaces.SequenceEqualNullable(rhs.Worldspaces, (l, r) => ((PlanetWorldspaceCommon)((IPlanetWorldspaceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Planet_FieldIndex.Worldspaces)))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.Biomes) ?? true))
             {
@@ -2327,6 +2383,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             var hash = new HashCode();
             hash.Add(item.Components);
+            if (item.EOVR is {} EOVRItem)
+            {
+                hash.Add(EOVRItem);
+            }
             hash.Add(item.Worldspaces);
             hash.Add(item.Biomes);
             hash.Add(item.SurfaceTree);
@@ -2424,9 +2484,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.Worldspaces.SelectMany(f => f.EnumerateFormLinks()))
+            if (obj.Worldspaces is {} WorldspacesItem)
             {
-                yield return FormLinkInformation.Factory(item);
+                foreach (var item in WorldspacesItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
             }
             foreach (var item in obj.Biomes.SelectMany(f => f.EnumerateFormLinks()))
             {
@@ -2445,13 +2508,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            if (queryCategories.HasFlag(AssetLinkQuery.Listed))
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
             {
-                foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
-                    .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             yield break;
         }
@@ -2551,19 +2611,38 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.EOVR) ?? true))
+            {
+                if(rhs.EOVR is {} EOVRrhs)
+                {
+                    item.EOVR = EOVRrhs.ToArray();
+                }
+                else
+                {
+                    item.EOVR = default;
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.Worldspaces) ?? true))
             {
                 errorMask?.PushIndex((int)Planet_FieldIndex.Worldspaces);
                 try
                 {
-                    item.Worldspaces.SetTo(
-                        rhs.Worldspaces
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
+                    if ((rhs.Worldspaces != null))
+                    {
+                        item.Worldspaces = 
+                            rhs.Worldspaces
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<PlanetWorldspace>();
+                    }
+                    else
+                    {
+                        item.Worldspaces = null;
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2793,8 +2872,20 @@ namespace Mutagen.Bethesda.Starfield
                     item.RSCS = default;
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPlanet item,
+            IPlanetGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IStarfieldMajorRecordInternal item,
             IStarfieldMajorRecordGetter rhs,
@@ -2961,6 +3052,10 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.EOVR,
+                header: translationParams.ConvertToCustom(RecordTypes.EOVR));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IPlanetWorldspaceGetter>.Instance.Write(
                 writer: writer,
                 items: item.Worldspaces,
@@ -3071,30 +3166,13 @@ namespace Mutagen.Bethesda.Starfield
             IPlanetGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.PNDT)))
-            {
-                try
-                {
-                    StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.PNDT,
+                writeEmbedded: StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -3159,16 +3237,23 @@ namespace Mutagen.Bethesda.Starfield
                             transl: AComponent.TryCreateFromBinary));
                     return (int)Planet_FieldIndex.Components;
                 }
+                case RecordTypeInts.EOVR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.EOVR = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Planet_FieldIndex.EOVR;
+                }
                 case RecordTypeInts.CNAM:
                 {
                     if (!lastParsed.ParsedIndex.HasValue
-                        || lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.Components)
+                        || lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.EOVR)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.Worldspaces.SetTo(
+                        item.Worldspaces = 
                             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<PlanetWorldspace>.Instance.Parse(
                                 reader: frame.SpawnWithLength(contentLength),
-                                transl: PlanetWorldspace.TryCreateFromBinary));
+                                transl: PlanetWorldspace.TryCreateFromBinary)
+                            .CastExtendedList<PlanetWorldspace>();
                         return new ParseResult((int)Planet_FieldIndex.Worldspaces, nextRecordType);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.Name)
@@ -3185,10 +3270,11 @@ namespace Mutagen.Bethesda.Starfield
                         {
                             case 0:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                                item.Worldspaces.SetTo(
+                                item.Worldspaces = 
                                     Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<PlanetWorldspace>.Instance.Parse(
                                         reader: frame.SpawnWithLength(contentLength),
-                                        transl: PlanetWorldspace.TryCreateFromBinary));
+                                        transl: PlanetWorldspace.TryCreateFromBinary)
+                                    .CastExtendedList<PlanetWorldspace>();
                                 return new ParseResult((int)Planet_FieldIndex.Worldspaces, nextRecordType);
                             case 1:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -3408,11 +3494,15 @@ namespace Mutagen.Bethesda.Starfield
 
 
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
-        public IReadOnlyList<IPlanetWorldspaceGetter> Worldspaces { get; private set; } = Array.Empty<IPlanetWorldspaceGetter>();
+        #region EOVR
+        private int? _EOVRLocation;
+        public ReadOnlyMemorySlice<Byte>? EOVR => _EOVRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _EOVRLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        public IReadOnlyList<IPlanetWorldspaceGetter>? Worldspaces { get; private set; }
         public IReadOnlyList<IPlanetBiomeGetter> Biomes { get; private set; } = Array.Empty<IPlanetBiomeGetter>();
         #region SurfaceTree
         private int? _SurfaceTreeLocation;
-        public IFormLinkNullableGetter<ISurfaceTreeGetter> SurfaceTree => _SurfaceTreeLocation.HasValue ? new FormLinkNullable<ISurfaceTreeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SurfaceTreeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISurfaceTreeGetter>.Null;
+        public IFormLinkNullableGetter<ISurfaceTreeGetter> SurfaceTree => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISurfaceTreeGetter>(_package, _recordData, _SurfaceTreeLocation);
         #endregion
         #region GNAM
         private int? _GNAMLocation;
@@ -3556,19 +3646,22 @@ namespace Mutagen.Bethesda.Starfield
                         factory: AComponentBinaryOverlay.AComponentFactory);
                     return (int)Planet_FieldIndex.Components;
                 }
+                case RecordTypeInts.EOVR:
+                {
+                    _EOVRLocation = (stream.Position - offset);
+                    return (int)Planet_FieldIndex.EOVR;
+                }
                 case RecordTypeInts.CNAM:
                 {
                     if (!lastParsed.ParsedIndex.HasValue
-                        || lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.Components)
+                        || lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.EOVR)
                     {
-                        var subMeta = stream.ReadSubrecordHeader();
-                        var subLen = finalPos - stream.Position;
-                        this.Worldspaces = BinaryOverlayList.FactoryByStartIndex<IPlanetWorldspaceGetter>(
-                            mem: stream.RemainingMemory.Slice(0, subLen),
+                        this.Worldspaces = BinaryOverlayList.FactoryByStartIndexWithTrigger<IPlanetWorldspaceGetter>(
+                            stream: stream,
                             package: _package,
+                            finalPos: finalPos,
                             itemLength: 20,
                             getter: (s, p) => PlanetWorldspaceBinaryOverlay.PlanetWorldspaceFactory(s, p));
-                        stream.Position += subLen;
                         return new ParseResult((int)Planet_FieldIndex.Worldspaces, type);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.Name)
@@ -3582,14 +3675,12 @@ namespace Mutagen.Bethesda.Starfield
                         {
                             case 0:
                             {
-                                var subMeta = stream.ReadSubrecordHeader();
-                                var subLen = finalPos - stream.Position;
-                                this.Worldspaces = BinaryOverlayList.FactoryByStartIndex<IPlanetWorldspaceGetter>(
-                                    mem: stream.RemainingMemory.Slice(0, subLen),
+                                this.Worldspaces = BinaryOverlayList.FactoryByStartIndexWithTrigger<IPlanetWorldspaceGetter>(
+                                    stream: stream,
                                     package: _package,
+                                    finalPos: finalPos,
                                     itemLength: 20,
                                     getter: (s, p) => PlanetWorldspaceBinaryOverlay.PlanetWorldspaceFactory(s, p));
-                                stream.Position += subLen;
                                 return new ParseResult((int)Planet_FieldIndex.Worldspaces, type);
                             }
                             case 1:

@@ -1854,8 +1854,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.INCC = rhs.INCC;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ISkyrimModHeader item,
+            ISkyrimModHeaderGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public SkyrimModHeader DeepCopy(
@@ -2367,14 +2379,12 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.ONAM:
                 {
-                    var subMeta = stream.ReadSubrecordHeader();
-                    var subLen = finalPos - stream.Position;
-                    this.OverriddenForms = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ISkyrimMajorRecordGetter>>(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
+                    this.OverriddenForms = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ISkyrimMajorRecordGetter>>(
+                        stream: stream,
                         package: _package,
+                        finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ISkyrimMajorRecordGetter>(p, s));
                     return (int)SkyrimModHeader_FieldIndex.OverriddenForms;
                 }
                 case RecordTypeInts.INTV:

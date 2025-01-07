@@ -9,6 +9,7 @@
       <FormLink name="Inventory" refName="Transform" />
       <FormLink name="Workbench" refName="Transform" />
       <FormLink name="MainGameUI" refName="Transform" />
+      <Break />
       <FormLink name="Unknown" refName="Transform" />
     </Fields>
   </Object>

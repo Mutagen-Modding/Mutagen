@@ -1130,8 +1130,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Model = rhs.Model;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            INavigationMeshObstacleManagerSubObject item,
+            INavigationMeshObstacleManagerSubObjectGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public NavigationMeshObstacleManagerSubObject DeepCopy(

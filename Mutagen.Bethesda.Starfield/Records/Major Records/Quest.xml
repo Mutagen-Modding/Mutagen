@@ -12,6 +12,9 @@
       <FormLink name="Location" recordType="LNAM" refName="Location" />
       <FormLink name="QuestTimeLimit" recordType="QTLM" refName="Global" />
       <FormLink name="SourceQuest" recordType="QSRC" refName="Quest" />
+      <List name="QDUPs" recordType="QDUP" unknown="true" >
+        <FormLink refName="DialogResponses" />
+      </List>
       <List name="TextDisplayGlobals">
         <FormLink recordType="QTGL" refName="Global" />
       </List>
@@ -31,6 +34,7 @@
       </CustomLogic>
       <RefList name="Aliases" refName="AQuestAlias" binary="NoGeneration" nullable="True" />
       <FormLink name="QuestGroup" recordType="GNAM" refName="Keyword" />
+      <String name="SwfFile" recordType="SNAM" />
       <FormLink name="MissionTypeKeyword" refName="Keyword" recordType="QMTY" />
       <String name="MissionBoardDescription" translated="Normal" recordType="QMSU" />
       <RefList name="MissionBoardInfoPanels" refName="QuestMissionBoardPanel" />
@@ -197,7 +201,9 @@
       <FormLink name="VoiceTypes" recordType="VTCK">
         <Interface>IAliasVoiceType</Interface>
       </FormLink>
-      <FormLink name="TerminalMenu" recordType="ALTM" refName="Terminal" />
+      <List name="TerminalMenus">
+        <FormLink recordType="ALTM" refName="Terminal" />
+      </List>
     </Fields>
   </Object>
   <Object name="QuestLocationAlias" objType="Subrecord" baseClass="AQuestAlias" >

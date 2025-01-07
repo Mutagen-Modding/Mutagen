@@ -17,8 +17,14 @@ internal sealed class ImmutableLoadOrderLinkCacheCategory<TKey>
     private readonly IMetaInterfaceMapGetter _metaInterfaceMapGetter;
     private readonly Func<IMajorRecordGetter, TryGet<TKey>> _keyGetter;
     private readonly Func<TKey, bool> _shortCircuit;
+    private readonly IEqualityComparer<TKey>? _equalityComparer;
     private readonly Dictionary<Type, DepthCache<TKey, LinkCacheItem>> _winningRecords = new();
     private readonly Dictionary<Type, DepthCache<TKey, ImmutableList<LinkCacheItem>>> _allRecords = new();
+
+    static ImmutableLoadOrderLinkCacheCategory()
+    {
+        Plugins.Warmup.Init();
+    }
 
     public ImmutableLoadOrderLinkCacheCategory(
         GameCategory gameCategory,
@@ -27,7 +33,8 @@ internal sealed class ImmutableLoadOrderLinkCacheCategory<TKey>
         IReadOnlyList<IModGetter> listedOrder,
         IMetaInterfaceMapGetter metaInterfaceMapGetter,
         Func<IMajorRecordGetter, TryGet<TKey>> keyGetter,
-        Func<TKey, bool> shortCircuit)
+        Func<TKey, bool> shortCircuit,
+        IEqualityComparer<TKey>? equalityComparer)
     {
         _gameCategory = gameCategory;
         _hasAny = hasAny;
@@ -36,6 +43,7 @@ internal sealed class ImmutableLoadOrderLinkCacheCategory<TKey>
         _metaInterfaceMapGetter = metaInterfaceMapGetter;
         _keyGetter = keyGetter;
         _shortCircuit = shortCircuit;
+        _equalityComparer = equalityComparer;
     }
 
     private DepthCache<TKey, LinkCacheItem> GetTypeCache(Type type)
@@ -45,7 +53,7 @@ internal sealed class ImmutableLoadOrderLinkCacheCategory<TKey>
             // Get cache object by type
             if (!_winningRecords.TryGetValue(type, out var cache))
             {
-                cache = new DepthCache<TKey, LinkCacheItem>();
+                cache = new DepthCache<TKey, LinkCacheItem>(_equalityComparer);
                 if (type == typeof(IMajorRecord)
                     || type == typeof(IMajorRecordGetter))
                 {
@@ -178,7 +186,7 @@ internal sealed class ImmutableLoadOrderLinkCacheCategory<TKey>
         DepthCache<TKey, ImmutableList<LinkCacheItem>> cache;
         lock (_allRecords)
         {
-            cache = _allRecords.GetOrAdd(type);
+            cache = _allRecords.GetOrAdd(type, () => new DepthCache<TKey, ImmutableList<LinkCacheItem>>(_equalityComparer));
         }
 
         // If we're done, we can just query without locking

@@ -5,12 +5,17 @@ namespace Mutagen.Bethesda.Plugins.Cache.Internals.Implementations.Internal;
 internal sealed class DepthCache<K, T>
     where K : notnull
 {
-    private readonly Dictionary<K, T> _dictionary = new Dictionary<K, T>();
-    public HashSet<ModKey> PassedMods = new HashSet<ModKey>();
+    private readonly Dictionary<K, T> _dictionary;
+    public HashSet<ModKey> PassedMods = new();
     public int Depth;
     public bool Done;
 
     public IReadOnlyCollection<T> Values => _dictionary.Values;
+
+    public DepthCache(IEqualityComparer<K>? equalityComparer)
+    {
+        _dictionary = new Dictionary<K, T>(equalityComparer);
+    }
 
     public bool TryGetValue(K key, [MaybeNullWhen(false)] out T value)
     {

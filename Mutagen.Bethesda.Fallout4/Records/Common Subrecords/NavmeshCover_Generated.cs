@@ -934,8 +934,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Data = rhs.Data;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            INavmeshCover item,
+            INavmeshCoverGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public NavmeshCover DeepCopy(

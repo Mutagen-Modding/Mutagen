@@ -22,7 +22,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -1377,8 +1376,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.AssociationType.SetTo(rhs.AssociationType.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IRelationship item,
+            IRelationshipGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IFallout4MajorRecordInternal item,
             IFallout4MajorRecordGetter rhs,
@@ -1562,30 +1573,13 @@ namespace Mutagen.Bethesda.Fallout4
             IRelationshipGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.RELA)))
-            {
-                try
-                {
-                    Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.RELA,
+                writeEmbedded: Fallout4MajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -1725,12 +1719,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Parent
         private int _ParentLocation => _DATALocation!.Value.Min;
         private bool _Parent_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<INpcGetter> Parent => _Parent_IsSet ? new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ParentLocation, 0x4)))) : FormLink<INpcGetter>.Null;
+        public IFormLinkGetter<INpcGetter> Parent => _Parent_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<INpcGetter>(_package, _recordData.Span.Slice(_ParentLocation, 0x4), isSet: _Parent_IsSet) : FormLink<INpcGetter>.Null;
         #endregion
         #region Child
         private int _ChildLocation => _DATALocation!.Value.Min + 0x4;
         private bool _Child_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<INpcGetter> Child => _Child_IsSet ? new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_ChildLocation, 0x4)))) : FormLink<INpcGetter>.Null;
+        public IFormLinkGetter<INpcGetter> Child => _Child_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<INpcGetter>(_package, _recordData.Span.Slice(_ChildLocation, 0x4), isSet: _Child_IsSet) : FormLink<INpcGetter>.Null;
         #endregion
         #region Rank
         private int _RankLocation => _DATALocation!.Value.Min + 0x8;
@@ -1750,7 +1744,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region AssociationType
         private int _AssociationTypeLocation => _DATALocation!.Value.Min + 0xC;
         private bool _AssociationType_IsSet => _DATALocation.HasValue;
-        public IFormLinkGetter<IAssociationTypeGetter> AssociationType => _AssociationType_IsSet ? new FormLink<IAssociationTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_AssociationTypeLocation, 0x4)))) : FormLink<IAssociationTypeGetter>.Null;
+        public IFormLinkGetter<IAssociationTypeGetter> AssociationType => _AssociationType_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IAssociationTypeGetter>(_package, _recordData.Span.Slice(_AssociationTypeLocation, 0x4), isSet: _AssociationType_IsSet) : FormLink<IAssociationTypeGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

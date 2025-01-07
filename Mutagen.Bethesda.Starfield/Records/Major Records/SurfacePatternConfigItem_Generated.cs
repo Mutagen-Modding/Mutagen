@@ -903,8 +903,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.CNAM = rhs.CNAM;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ISurfacePatternConfigItem item,
+            ISurfacePatternConfigItemGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public SurfacePatternConfigItem DeepCopy(

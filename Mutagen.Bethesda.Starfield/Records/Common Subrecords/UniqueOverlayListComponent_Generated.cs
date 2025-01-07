@@ -989,8 +989,20 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IUniqueOverlayListComponent item,
+            IUniqueOverlayListComponentGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAComponent item,
@@ -1174,7 +1186,7 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Worldspaces = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<UniqueOverlayListComponentItem>.Instance.Parse(
-                            amount: frame.ReadInt32(),
+                            amount: checked((int)frame.ReadUInt32()),
                             reader: frame,
                             transl: UniqueOverlayListComponentItem.TryCreateFromBinary)
                         .CastExtendedList<UniqueOverlayListComponentItem>();

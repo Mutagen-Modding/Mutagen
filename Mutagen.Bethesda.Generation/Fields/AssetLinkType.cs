@@ -94,7 +94,7 @@ public class AssetLinkType : StringType
         }
         else
         {
-            sb.AppendLine($"{accessor}.{nameof(IAssetLink.RawPath)} = {rhs}{this.NullChar}.{nameof(IAssetLink.RawPath)};");
+            sb.AppendLine($"{accessor}.{nameof(IAssetLink.GivenPath)} = {rhs}{this.NullChar}.{nameof(IAssetLink.GivenPath)};");
         }
     }
 

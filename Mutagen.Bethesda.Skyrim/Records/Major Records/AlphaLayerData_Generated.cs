@@ -934,8 +934,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Opacity = rhs.Opacity;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IAlphaLayerData item,
+            IAlphaLayerDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public AlphaLayerData DeepCopy(

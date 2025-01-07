@@ -837,8 +837,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.FirstPersonFlags = rhs.FirstPersonFlags;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IBipedBodyTemplate item,
+            IBipedBodyTemplateGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public BipedBodyTemplate DeepCopy(

@@ -1441,8 +1441,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.Index = rhs.Index;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IActorValuePerkNode item,
+            IActorValuePerkNodeGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ActorValuePerkNode DeepCopy(
@@ -1746,7 +1758,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Perk
         private int? _PerkLocation;
-        public IFormLinkGetter<IPerkGetter> Perk => _PerkLocation.HasValue ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PerkLocation.Value, _package.MetaData.Constants)))) : FormLink<IPerkGetter>.Null;
+        public IFormLinkGetter<IPerkGetter> Perk => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPerkGetter>(_package, _recordData, _PerkLocation);
         #endregion
         #region FNAM
         private int? _FNAMLocation;
@@ -1770,7 +1782,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region AssociatedSkill
         private int? _AssociatedSkillLocation;
-        public IFormLinkNullableGetter<IActorValueInformationGetter> AssociatedSkill => _AssociatedSkillLocation.HasValue ? new FormLinkNullable<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AssociatedSkillLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IActorValueInformationGetter>.Null;
+        public IFormLinkNullableGetter<IActorValueInformationGetter> AssociatedSkill => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IActorValueInformationGetter>(_package, _recordData, _AssociatedSkillLocation);
         #endregion
         public IReadOnlyList<UInt32> ConnectionLineToIndices { get; private set; } = Array.Empty<UInt32>();
         #region Index

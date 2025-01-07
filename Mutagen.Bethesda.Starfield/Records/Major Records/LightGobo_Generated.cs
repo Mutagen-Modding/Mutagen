@@ -50,16 +50,71 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region Data
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Data = new byte[88];
-        public MemorySlice<Byte> Data
-        {
-            get => _Data;
-            set => this._Data = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ILightGoboGetter.Data => this.Data;
+        #region StaticOffsetU
+        public Single StaticOffsetU { get; set; } = default(Single);
+        #endregion
+        #region StaticOffsetV
+        public Single StaticOffsetV { get; set; } = default(Single);
+        #endregion
+        #region RotationPivotU
+        public Single RotationPivotU { get; set; } = default(Single);
+        #endregion
+        #region RotationPivotV
+        public Single RotationPivotV { get; set; } = default(Single);
+        #endregion
+        #region StaticRotation
+        public Single StaticRotation { get; set; } = default(Single);
+        #endregion
+        #region AnimatedRotationSpeed
+        public Single AnimatedRotationSpeed { get; set; } = default(Single);
+        #endregion
+        #region AnimatedWaveRotationSpeed
+        public Single AnimatedWaveRotationSpeed { get; set; } = default(Single);
+        #endregion
+        #region AnimatedWaveRotation
+        public Single AnimatedWaveRotation { get; set; } = default(Single);
+        #endregion
+        #region StaticScaleU
+        public Single StaticScaleU { get; set; } = default(Single);
+        #endregion
+        #region StaticScaleV
+        public Single StaticScaleV { get; set; } = default(Single);
+        #endregion
+        #region WaveScalingSpeedU
+        public Single WaveScalingSpeedU { get; set; } = default(Single);
+        #endregion
+        #region WaveScalingSpeedV
+        public Single WaveScalingSpeedV { get; set; } = default(Single);
+        #endregion
+        #region WaveScalingAmountU
+        public Single WaveScalingAmountU { get; set; } = default(Single);
+        #endregion
+        #region WaveScalingAmountV
+        public Single WaveScalingAmountV { get; set; } = default(Single);
+        #endregion
+        #region ScrollSpeedU
+        public Single ScrollSpeedU { get; set; } = default(Single);
+        #endregion
+        #region ScrollSpeedV
+        public Single ScrollSpeedV { get; set; } = default(Single);
+        #endregion
+        #region WaveScrollSpeedU
+        public Single WaveScrollSpeedU { get; set; } = default(Single);
+        #endregion
+        #region WaveScrollSpeedV
+        public Single WaveScrollSpeedV { get; set; } = default(Single);
+        #endregion
+        #region WaveScrollAmountU
+        public Single WaveScrollAmountU { get; set; } = default(Single);
+        #endregion
+        #region WaveScrollAmountV
+        public Single WaveScrollAmountV { get; set; } = default(Single);
+        #endregion
+        #region RandomTimeOffsetRange
+        public Single RandomTimeOffsetRange { get; set; } = default(Single);
+        #endregion
+        #region IsAnimated
+        public Boolean IsAnimated { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -98,9 +153,78 @@ namespace Mutagen.Bethesda.Starfield
             IMask<TItem>
         {
             #region Ctors
-            public Mask(TItem Data)
+            public Mask(TItem initialValue)
             {
-                this.Data = Data;
+                this.StaticOffsetU = initialValue;
+                this.StaticOffsetV = initialValue;
+                this.RotationPivotU = initialValue;
+                this.RotationPivotV = initialValue;
+                this.StaticRotation = initialValue;
+                this.AnimatedRotationSpeed = initialValue;
+                this.AnimatedWaveRotationSpeed = initialValue;
+                this.AnimatedWaveRotation = initialValue;
+                this.StaticScaleU = initialValue;
+                this.StaticScaleV = initialValue;
+                this.WaveScalingSpeedU = initialValue;
+                this.WaveScalingSpeedV = initialValue;
+                this.WaveScalingAmountU = initialValue;
+                this.WaveScalingAmountV = initialValue;
+                this.ScrollSpeedU = initialValue;
+                this.ScrollSpeedV = initialValue;
+                this.WaveScrollSpeedU = initialValue;
+                this.WaveScrollSpeedV = initialValue;
+                this.WaveScrollAmountU = initialValue;
+                this.WaveScrollAmountV = initialValue;
+                this.RandomTimeOffsetRange = initialValue;
+                this.IsAnimated = initialValue;
+            }
+
+            public Mask(
+                TItem StaticOffsetU,
+                TItem StaticOffsetV,
+                TItem RotationPivotU,
+                TItem RotationPivotV,
+                TItem StaticRotation,
+                TItem AnimatedRotationSpeed,
+                TItem AnimatedWaveRotationSpeed,
+                TItem AnimatedWaveRotation,
+                TItem StaticScaleU,
+                TItem StaticScaleV,
+                TItem WaveScalingSpeedU,
+                TItem WaveScalingSpeedV,
+                TItem WaveScalingAmountU,
+                TItem WaveScalingAmountV,
+                TItem ScrollSpeedU,
+                TItem ScrollSpeedV,
+                TItem WaveScrollSpeedU,
+                TItem WaveScrollSpeedV,
+                TItem WaveScrollAmountU,
+                TItem WaveScrollAmountV,
+                TItem RandomTimeOffsetRange,
+                TItem IsAnimated)
+            {
+                this.StaticOffsetU = StaticOffsetU;
+                this.StaticOffsetV = StaticOffsetV;
+                this.RotationPivotU = RotationPivotU;
+                this.RotationPivotV = RotationPivotV;
+                this.StaticRotation = StaticRotation;
+                this.AnimatedRotationSpeed = AnimatedRotationSpeed;
+                this.AnimatedWaveRotationSpeed = AnimatedWaveRotationSpeed;
+                this.AnimatedWaveRotation = AnimatedWaveRotation;
+                this.StaticScaleU = StaticScaleU;
+                this.StaticScaleV = StaticScaleV;
+                this.WaveScalingSpeedU = WaveScalingSpeedU;
+                this.WaveScalingSpeedV = WaveScalingSpeedV;
+                this.WaveScalingAmountU = WaveScalingAmountU;
+                this.WaveScalingAmountV = WaveScalingAmountV;
+                this.ScrollSpeedU = ScrollSpeedU;
+                this.ScrollSpeedV = ScrollSpeedV;
+                this.WaveScrollSpeedU = WaveScrollSpeedU;
+                this.WaveScrollSpeedV = WaveScrollSpeedV;
+                this.WaveScrollAmountU = WaveScrollAmountU;
+                this.WaveScrollAmountV = WaveScrollAmountV;
+                this.RandomTimeOffsetRange = RandomTimeOffsetRange;
+                this.IsAnimated = IsAnimated;
             }
 
             #pragma warning disable CS8618
@@ -112,7 +236,28 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Data;
+            public TItem StaticOffsetU;
+            public TItem StaticOffsetV;
+            public TItem RotationPivotU;
+            public TItem RotationPivotV;
+            public TItem StaticRotation;
+            public TItem AnimatedRotationSpeed;
+            public TItem AnimatedWaveRotationSpeed;
+            public TItem AnimatedWaveRotation;
+            public TItem StaticScaleU;
+            public TItem StaticScaleV;
+            public TItem WaveScalingSpeedU;
+            public TItem WaveScalingSpeedV;
+            public TItem WaveScalingAmountU;
+            public TItem WaveScalingAmountV;
+            public TItem ScrollSpeedU;
+            public TItem ScrollSpeedV;
+            public TItem WaveScrollSpeedU;
+            public TItem WaveScrollSpeedV;
+            public TItem WaveScrollAmountU;
+            public TItem WaveScrollAmountV;
+            public TItem RandomTimeOffsetRange;
+            public TItem IsAnimated;
             #endregion
 
             #region Equals
@@ -125,13 +270,55 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Data, rhs.Data)) return false;
+                if (!object.Equals(this.StaticOffsetU, rhs.StaticOffsetU)) return false;
+                if (!object.Equals(this.StaticOffsetV, rhs.StaticOffsetV)) return false;
+                if (!object.Equals(this.RotationPivotU, rhs.RotationPivotU)) return false;
+                if (!object.Equals(this.RotationPivotV, rhs.RotationPivotV)) return false;
+                if (!object.Equals(this.StaticRotation, rhs.StaticRotation)) return false;
+                if (!object.Equals(this.AnimatedRotationSpeed, rhs.AnimatedRotationSpeed)) return false;
+                if (!object.Equals(this.AnimatedWaveRotationSpeed, rhs.AnimatedWaveRotationSpeed)) return false;
+                if (!object.Equals(this.AnimatedWaveRotation, rhs.AnimatedWaveRotation)) return false;
+                if (!object.Equals(this.StaticScaleU, rhs.StaticScaleU)) return false;
+                if (!object.Equals(this.StaticScaleV, rhs.StaticScaleV)) return false;
+                if (!object.Equals(this.WaveScalingSpeedU, rhs.WaveScalingSpeedU)) return false;
+                if (!object.Equals(this.WaveScalingSpeedV, rhs.WaveScalingSpeedV)) return false;
+                if (!object.Equals(this.WaveScalingAmountU, rhs.WaveScalingAmountU)) return false;
+                if (!object.Equals(this.WaveScalingAmountV, rhs.WaveScalingAmountV)) return false;
+                if (!object.Equals(this.ScrollSpeedU, rhs.ScrollSpeedU)) return false;
+                if (!object.Equals(this.ScrollSpeedV, rhs.ScrollSpeedV)) return false;
+                if (!object.Equals(this.WaveScrollSpeedU, rhs.WaveScrollSpeedU)) return false;
+                if (!object.Equals(this.WaveScrollSpeedV, rhs.WaveScrollSpeedV)) return false;
+                if (!object.Equals(this.WaveScrollAmountU, rhs.WaveScrollAmountU)) return false;
+                if (!object.Equals(this.WaveScrollAmountV, rhs.WaveScrollAmountV)) return false;
+                if (!object.Equals(this.RandomTimeOffsetRange, rhs.RandomTimeOffsetRange)) return false;
+                if (!object.Equals(this.IsAnimated, rhs.IsAnimated)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Data);
+                hash.Add(this.StaticOffsetU);
+                hash.Add(this.StaticOffsetV);
+                hash.Add(this.RotationPivotU);
+                hash.Add(this.RotationPivotV);
+                hash.Add(this.StaticRotation);
+                hash.Add(this.AnimatedRotationSpeed);
+                hash.Add(this.AnimatedWaveRotationSpeed);
+                hash.Add(this.AnimatedWaveRotation);
+                hash.Add(this.StaticScaleU);
+                hash.Add(this.StaticScaleV);
+                hash.Add(this.WaveScalingSpeedU);
+                hash.Add(this.WaveScalingSpeedV);
+                hash.Add(this.WaveScalingAmountU);
+                hash.Add(this.WaveScalingAmountV);
+                hash.Add(this.ScrollSpeedU);
+                hash.Add(this.ScrollSpeedV);
+                hash.Add(this.WaveScrollSpeedU);
+                hash.Add(this.WaveScrollSpeedV);
+                hash.Add(this.WaveScrollAmountU);
+                hash.Add(this.WaveScrollAmountV);
+                hash.Add(this.RandomTimeOffsetRange);
+                hash.Add(this.IsAnimated);
                 return hash.ToHashCode();
             }
 
@@ -140,7 +327,28 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Data)) return false;
+                if (!eval(this.StaticOffsetU)) return false;
+                if (!eval(this.StaticOffsetV)) return false;
+                if (!eval(this.RotationPivotU)) return false;
+                if (!eval(this.RotationPivotV)) return false;
+                if (!eval(this.StaticRotation)) return false;
+                if (!eval(this.AnimatedRotationSpeed)) return false;
+                if (!eval(this.AnimatedWaveRotationSpeed)) return false;
+                if (!eval(this.AnimatedWaveRotation)) return false;
+                if (!eval(this.StaticScaleU)) return false;
+                if (!eval(this.StaticScaleV)) return false;
+                if (!eval(this.WaveScalingSpeedU)) return false;
+                if (!eval(this.WaveScalingSpeedV)) return false;
+                if (!eval(this.WaveScalingAmountU)) return false;
+                if (!eval(this.WaveScalingAmountV)) return false;
+                if (!eval(this.ScrollSpeedU)) return false;
+                if (!eval(this.ScrollSpeedV)) return false;
+                if (!eval(this.WaveScrollSpeedU)) return false;
+                if (!eval(this.WaveScrollSpeedV)) return false;
+                if (!eval(this.WaveScrollAmountU)) return false;
+                if (!eval(this.WaveScrollAmountV)) return false;
+                if (!eval(this.RandomTimeOffsetRange)) return false;
+                if (!eval(this.IsAnimated)) return false;
                 return true;
             }
             #endregion
@@ -148,7 +356,28 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Data)) return true;
+                if (eval(this.StaticOffsetU)) return true;
+                if (eval(this.StaticOffsetV)) return true;
+                if (eval(this.RotationPivotU)) return true;
+                if (eval(this.RotationPivotV)) return true;
+                if (eval(this.StaticRotation)) return true;
+                if (eval(this.AnimatedRotationSpeed)) return true;
+                if (eval(this.AnimatedWaveRotationSpeed)) return true;
+                if (eval(this.AnimatedWaveRotation)) return true;
+                if (eval(this.StaticScaleU)) return true;
+                if (eval(this.StaticScaleV)) return true;
+                if (eval(this.WaveScalingSpeedU)) return true;
+                if (eval(this.WaveScalingSpeedV)) return true;
+                if (eval(this.WaveScalingAmountU)) return true;
+                if (eval(this.WaveScalingAmountV)) return true;
+                if (eval(this.ScrollSpeedU)) return true;
+                if (eval(this.ScrollSpeedV)) return true;
+                if (eval(this.WaveScrollSpeedU)) return true;
+                if (eval(this.WaveScrollSpeedV)) return true;
+                if (eval(this.WaveScrollAmountU)) return true;
+                if (eval(this.WaveScrollAmountV)) return true;
+                if (eval(this.RandomTimeOffsetRange)) return true;
+                if (eval(this.IsAnimated)) return true;
                 return false;
             }
             #endregion
@@ -163,7 +392,28 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Data = eval(this.Data);
+                obj.StaticOffsetU = eval(this.StaticOffsetU);
+                obj.StaticOffsetV = eval(this.StaticOffsetV);
+                obj.RotationPivotU = eval(this.RotationPivotU);
+                obj.RotationPivotV = eval(this.RotationPivotV);
+                obj.StaticRotation = eval(this.StaticRotation);
+                obj.AnimatedRotationSpeed = eval(this.AnimatedRotationSpeed);
+                obj.AnimatedWaveRotationSpeed = eval(this.AnimatedWaveRotationSpeed);
+                obj.AnimatedWaveRotation = eval(this.AnimatedWaveRotation);
+                obj.StaticScaleU = eval(this.StaticScaleU);
+                obj.StaticScaleV = eval(this.StaticScaleV);
+                obj.WaveScalingSpeedU = eval(this.WaveScalingSpeedU);
+                obj.WaveScalingSpeedV = eval(this.WaveScalingSpeedV);
+                obj.WaveScalingAmountU = eval(this.WaveScalingAmountU);
+                obj.WaveScalingAmountV = eval(this.WaveScalingAmountV);
+                obj.ScrollSpeedU = eval(this.ScrollSpeedU);
+                obj.ScrollSpeedV = eval(this.ScrollSpeedV);
+                obj.WaveScrollSpeedU = eval(this.WaveScrollSpeedU);
+                obj.WaveScrollSpeedV = eval(this.WaveScrollSpeedV);
+                obj.WaveScrollAmountU = eval(this.WaveScrollAmountU);
+                obj.WaveScrollAmountV = eval(this.WaveScrollAmountV);
+                obj.RandomTimeOffsetRange = eval(this.RandomTimeOffsetRange);
+                obj.IsAnimated = eval(this.IsAnimated);
             }
             #endregion
 
@@ -182,9 +432,93 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(LightGobo.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Data ?? true)
+                    if (printMask?.StaticOffsetU ?? true)
                     {
-                        sb.AppendItem(Data, "Data");
+                        sb.AppendItem(StaticOffsetU, "StaticOffsetU");
+                    }
+                    if (printMask?.StaticOffsetV ?? true)
+                    {
+                        sb.AppendItem(StaticOffsetV, "StaticOffsetV");
+                    }
+                    if (printMask?.RotationPivotU ?? true)
+                    {
+                        sb.AppendItem(RotationPivotU, "RotationPivotU");
+                    }
+                    if (printMask?.RotationPivotV ?? true)
+                    {
+                        sb.AppendItem(RotationPivotV, "RotationPivotV");
+                    }
+                    if (printMask?.StaticRotation ?? true)
+                    {
+                        sb.AppendItem(StaticRotation, "StaticRotation");
+                    }
+                    if (printMask?.AnimatedRotationSpeed ?? true)
+                    {
+                        sb.AppendItem(AnimatedRotationSpeed, "AnimatedRotationSpeed");
+                    }
+                    if (printMask?.AnimatedWaveRotationSpeed ?? true)
+                    {
+                        sb.AppendItem(AnimatedWaveRotationSpeed, "AnimatedWaveRotationSpeed");
+                    }
+                    if (printMask?.AnimatedWaveRotation ?? true)
+                    {
+                        sb.AppendItem(AnimatedWaveRotation, "AnimatedWaveRotation");
+                    }
+                    if (printMask?.StaticScaleU ?? true)
+                    {
+                        sb.AppendItem(StaticScaleU, "StaticScaleU");
+                    }
+                    if (printMask?.StaticScaleV ?? true)
+                    {
+                        sb.AppendItem(StaticScaleV, "StaticScaleV");
+                    }
+                    if (printMask?.WaveScalingSpeedU ?? true)
+                    {
+                        sb.AppendItem(WaveScalingSpeedU, "WaveScalingSpeedU");
+                    }
+                    if (printMask?.WaveScalingSpeedV ?? true)
+                    {
+                        sb.AppendItem(WaveScalingSpeedV, "WaveScalingSpeedV");
+                    }
+                    if (printMask?.WaveScalingAmountU ?? true)
+                    {
+                        sb.AppendItem(WaveScalingAmountU, "WaveScalingAmountU");
+                    }
+                    if (printMask?.WaveScalingAmountV ?? true)
+                    {
+                        sb.AppendItem(WaveScalingAmountV, "WaveScalingAmountV");
+                    }
+                    if (printMask?.ScrollSpeedU ?? true)
+                    {
+                        sb.AppendItem(ScrollSpeedU, "ScrollSpeedU");
+                    }
+                    if (printMask?.ScrollSpeedV ?? true)
+                    {
+                        sb.AppendItem(ScrollSpeedV, "ScrollSpeedV");
+                    }
+                    if (printMask?.WaveScrollSpeedU ?? true)
+                    {
+                        sb.AppendItem(WaveScrollSpeedU, "WaveScrollSpeedU");
+                    }
+                    if (printMask?.WaveScrollSpeedV ?? true)
+                    {
+                        sb.AppendItem(WaveScrollSpeedV, "WaveScrollSpeedV");
+                    }
+                    if (printMask?.WaveScrollAmountU ?? true)
+                    {
+                        sb.AppendItem(WaveScrollAmountU, "WaveScrollAmountU");
+                    }
+                    if (printMask?.WaveScrollAmountV ?? true)
+                    {
+                        sb.AppendItem(WaveScrollAmountV, "WaveScrollAmountV");
+                    }
+                    if (printMask?.RandomTimeOffsetRange ?? true)
+                    {
+                        sb.AppendItem(RandomTimeOffsetRange, "RandomTimeOffsetRange");
+                    }
+                    if (printMask?.IsAnimated ?? true)
+                    {
+                        sb.AppendItem(IsAnimated, "IsAnimated");
                     }
                 }
             }
@@ -210,7 +544,28 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? Data;
+            public Exception? StaticOffsetU;
+            public Exception? StaticOffsetV;
+            public Exception? RotationPivotU;
+            public Exception? RotationPivotV;
+            public Exception? StaticRotation;
+            public Exception? AnimatedRotationSpeed;
+            public Exception? AnimatedWaveRotationSpeed;
+            public Exception? AnimatedWaveRotation;
+            public Exception? StaticScaleU;
+            public Exception? StaticScaleV;
+            public Exception? WaveScalingSpeedU;
+            public Exception? WaveScalingSpeedV;
+            public Exception? WaveScalingAmountU;
+            public Exception? WaveScalingAmountV;
+            public Exception? ScrollSpeedU;
+            public Exception? ScrollSpeedV;
+            public Exception? WaveScrollSpeedU;
+            public Exception? WaveScrollSpeedV;
+            public Exception? WaveScrollAmountU;
+            public Exception? WaveScrollAmountV;
+            public Exception? RandomTimeOffsetRange;
+            public Exception? IsAnimated;
             #endregion
 
             #region IErrorMask
@@ -219,8 +574,50 @@ namespace Mutagen.Bethesda.Starfield
                 LightGobo_FieldIndex enu = (LightGobo_FieldIndex)index;
                 switch (enu)
                 {
-                    case LightGobo_FieldIndex.Data:
-                        return Data;
+                    case LightGobo_FieldIndex.StaticOffsetU:
+                        return StaticOffsetU;
+                    case LightGobo_FieldIndex.StaticOffsetV:
+                        return StaticOffsetV;
+                    case LightGobo_FieldIndex.RotationPivotU:
+                        return RotationPivotU;
+                    case LightGobo_FieldIndex.RotationPivotV:
+                        return RotationPivotV;
+                    case LightGobo_FieldIndex.StaticRotation:
+                        return StaticRotation;
+                    case LightGobo_FieldIndex.AnimatedRotationSpeed:
+                        return AnimatedRotationSpeed;
+                    case LightGobo_FieldIndex.AnimatedWaveRotationSpeed:
+                        return AnimatedWaveRotationSpeed;
+                    case LightGobo_FieldIndex.AnimatedWaveRotation:
+                        return AnimatedWaveRotation;
+                    case LightGobo_FieldIndex.StaticScaleU:
+                        return StaticScaleU;
+                    case LightGobo_FieldIndex.StaticScaleV:
+                        return StaticScaleV;
+                    case LightGobo_FieldIndex.WaveScalingSpeedU:
+                        return WaveScalingSpeedU;
+                    case LightGobo_FieldIndex.WaveScalingSpeedV:
+                        return WaveScalingSpeedV;
+                    case LightGobo_FieldIndex.WaveScalingAmountU:
+                        return WaveScalingAmountU;
+                    case LightGobo_FieldIndex.WaveScalingAmountV:
+                        return WaveScalingAmountV;
+                    case LightGobo_FieldIndex.ScrollSpeedU:
+                        return ScrollSpeedU;
+                    case LightGobo_FieldIndex.ScrollSpeedV:
+                        return ScrollSpeedV;
+                    case LightGobo_FieldIndex.WaveScrollSpeedU:
+                        return WaveScrollSpeedU;
+                    case LightGobo_FieldIndex.WaveScrollSpeedV:
+                        return WaveScrollSpeedV;
+                    case LightGobo_FieldIndex.WaveScrollAmountU:
+                        return WaveScrollAmountU;
+                    case LightGobo_FieldIndex.WaveScrollAmountV:
+                        return WaveScrollAmountV;
+                    case LightGobo_FieldIndex.RandomTimeOffsetRange:
+                        return RandomTimeOffsetRange;
+                    case LightGobo_FieldIndex.IsAnimated:
+                        return IsAnimated;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -231,8 +628,71 @@ namespace Mutagen.Bethesda.Starfield
                 LightGobo_FieldIndex enu = (LightGobo_FieldIndex)index;
                 switch (enu)
                 {
-                    case LightGobo_FieldIndex.Data:
-                        this.Data = ex;
+                    case LightGobo_FieldIndex.StaticOffsetU:
+                        this.StaticOffsetU = ex;
+                        break;
+                    case LightGobo_FieldIndex.StaticOffsetV:
+                        this.StaticOffsetV = ex;
+                        break;
+                    case LightGobo_FieldIndex.RotationPivotU:
+                        this.RotationPivotU = ex;
+                        break;
+                    case LightGobo_FieldIndex.RotationPivotV:
+                        this.RotationPivotV = ex;
+                        break;
+                    case LightGobo_FieldIndex.StaticRotation:
+                        this.StaticRotation = ex;
+                        break;
+                    case LightGobo_FieldIndex.AnimatedRotationSpeed:
+                        this.AnimatedRotationSpeed = ex;
+                        break;
+                    case LightGobo_FieldIndex.AnimatedWaveRotationSpeed:
+                        this.AnimatedWaveRotationSpeed = ex;
+                        break;
+                    case LightGobo_FieldIndex.AnimatedWaveRotation:
+                        this.AnimatedWaveRotation = ex;
+                        break;
+                    case LightGobo_FieldIndex.StaticScaleU:
+                        this.StaticScaleU = ex;
+                        break;
+                    case LightGobo_FieldIndex.StaticScaleV:
+                        this.StaticScaleV = ex;
+                        break;
+                    case LightGobo_FieldIndex.WaveScalingSpeedU:
+                        this.WaveScalingSpeedU = ex;
+                        break;
+                    case LightGobo_FieldIndex.WaveScalingSpeedV:
+                        this.WaveScalingSpeedV = ex;
+                        break;
+                    case LightGobo_FieldIndex.WaveScalingAmountU:
+                        this.WaveScalingAmountU = ex;
+                        break;
+                    case LightGobo_FieldIndex.WaveScalingAmountV:
+                        this.WaveScalingAmountV = ex;
+                        break;
+                    case LightGobo_FieldIndex.ScrollSpeedU:
+                        this.ScrollSpeedU = ex;
+                        break;
+                    case LightGobo_FieldIndex.ScrollSpeedV:
+                        this.ScrollSpeedV = ex;
+                        break;
+                    case LightGobo_FieldIndex.WaveScrollSpeedU:
+                        this.WaveScrollSpeedU = ex;
+                        break;
+                    case LightGobo_FieldIndex.WaveScrollSpeedV:
+                        this.WaveScrollSpeedV = ex;
+                        break;
+                    case LightGobo_FieldIndex.WaveScrollAmountU:
+                        this.WaveScrollAmountU = ex;
+                        break;
+                    case LightGobo_FieldIndex.WaveScrollAmountV:
+                        this.WaveScrollAmountV = ex;
+                        break;
+                    case LightGobo_FieldIndex.RandomTimeOffsetRange:
+                        this.RandomTimeOffsetRange = ex;
+                        break;
+                    case LightGobo_FieldIndex.IsAnimated:
+                        this.IsAnimated = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -244,8 +704,71 @@ namespace Mutagen.Bethesda.Starfield
                 LightGobo_FieldIndex enu = (LightGobo_FieldIndex)index;
                 switch (enu)
                 {
-                    case LightGobo_FieldIndex.Data:
-                        this.Data = (Exception?)obj;
+                    case LightGobo_FieldIndex.StaticOffsetU:
+                        this.StaticOffsetU = (Exception?)obj;
+                        break;
+                    case LightGobo_FieldIndex.StaticOffsetV:
+                        this.StaticOffsetV = (Exception?)obj;
+                        break;
+                    case LightGobo_FieldIndex.RotationPivotU:
+                        this.RotationPivotU = (Exception?)obj;
+                        break;
+                    case LightGobo_FieldIndex.RotationPivotV:
+                        this.RotationPivotV = (Exception?)obj;
+                        break;
+                    case LightGobo_FieldIndex.StaticRotation:
+                        this.StaticRotation = (Exception?)obj;
+                        break;
+                    case LightGobo_FieldIndex.AnimatedRotationSpeed:
+                        this.AnimatedRotationSpeed = (Exception?)obj;
+                        break;
+                    case LightGobo_FieldIndex.AnimatedWaveRotationSpeed:
+                        this.AnimatedWaveRotationSpeed = (Exception?)obj;
+                        break;
+                    case LightGobo_FieldIndex.AnimatedWaveRotation:
+                        this.AnimatedWaveRotation = (Exception?)obj;
+                        break;
+                    case LightGobo_FieldIndex.StaticScaleU:
+                        this.StaticScaleU = (Exception?)obj;
+                        break;
+                    case LightGobo_FieldIndex.StaticScaleV:
+                        this.StaticScaleV = (Exception?)obj;
+                        break;
+                    case LightGobo_FieldIndex.WaveScalingSpeedU:
+                        this.WaveScalingSpeedU = (Exception?)obj;
+                        break;
+                    case LightGobo_FieldIndex.WaveScalingSpeedV:
+                        this.WaveScalingSpeedV = (Exception?)obj;
+                        break;
+                    case LightGobo_FieldIndex.WaveScalingAmountU:
+                        this.WaveScalingAmountU = (Exception?)obj;
+                        break;
+                    case LightGobo_FieldIndex.WaveScalingAmountV:
+                        this.WaveScalingAmountV = (Exception?)obj;
+                        break;
+                    case LightGobo_FieldIndex.ScrollSpeedU:
+                        this.ScrollSpeedU = (Exception?)obj;
+                        break;
+                    case LightGobo_FieldIndex.ScrollSpeedV:
+                        this.ScrollSpeedV = (Exception?)obj;
+                        break;
+                    case LightGobo_FieldIndex.WaveScrollSpeedU:
+                        this.WaveScrollSpeedU = (Exception?)obj;
+                        break;
+                    case LightGobo_FieldIndex.WaveScrollSpeedV:
+                        this.WaveScrollSpeedV = (Exception?)obj;
+                        break;
+                    case LightGobo_FieldIndex.WaveScrollAmountU:
+                        this.WaveScrollAmountU = (Exception?)obj;
+                        break;
+                    case LightGobo_FieldIndex.WaveScrollAmountV:
+                        this.WaveScrollAmountV = (Exception?)obj;
+                        break;
+                    case LightGobo_FieldIndex.RandomTimeOffsetRange:
+                        this.RandomTimeOffsetRange = (Exception?)obj;
+                        break;
+                    case LightGobo_FieldIndex.IsAnimated:
+                        this.IsAnimated = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -255,7 +778,28 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Data != null) return true;
+                if (StaticOffsetU != null) return true;
+                if (StaticOffsetV != null) return true;
+                if (RotationPivotU != null) return true;
+                if (RotationPivotV != null) return true;
+                if (StaticRotation != null) return true;
+                if (AnimatedRotationSpeed != null) return true;
+                if (AnimatedWaveRotationSpeed != null) return true;
+                if (AnimatedWaveRotation != null) return true;
+                if (StaticScaleU != null) return true;
+                if (StaticScaleV != null) return true;
+                if (WaveScalingSpeedU != null) return true;
+                if (WaveScalingSpeedV != null) return true;
+                if (WaveScalingAmountU != null) return true;
+                if (WaveScalingAmountV != null) return true;
+                if (ScrollSpeedU != null) return true;
+                if (ScrollSpeedV != null) return true;
+                if (WaveScrollSpeedU != null) return true;
+                if (WaveScrollSpeedV != null) return true;
+                if (WaveScrollAmountU != null) return true;
+                if (WaveScrollAmountV != null) return true;
+                if (RandomTimeOffsetRange != null) return true;
+                if (IsAnimated != null) return true;
                 return false;
             }
             #endregion
@@ -282,7 +826,70 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Data, "Data");
+                    sb.AppendItem(StaticOffsetU, "StaticOffsetU");
+                }
+                {
+                    sb.AppendItem(StaticOffsetV, "StaticOffsetV");
+                }
+                {
+                    sb.AppendItem(RotationPivotU, "RotationPivotU");
+                }
+                {
+                    sb.AppendItem(RotationPivotV, "RotationPivotV");
+                }
+                {
+                    sb.AppendItem(StaticRotation, "StaticRotation");
+                }
+                {
+                    sb.AppendItem(AnimatedRotationSpeed, "AnimatedRotationSpeed");
+                }
+                {
+                    sb.AppendItem(AnimatedWaveRotationSpeed, "AnimatedWaveRotationSpeed");
+                }
+                {
+                    sb.AppendItem(AnimatedWaveRotation, "AnimatedWaveRotation");
+                }
+                {
+                    sb.AppendItem(StaticScaleU, "StaticScaleU");
+                }
+                {
+                    sb.AppendItem(StaticScaleV, "StaticScaleV");
+                }
+                {
+                    sb.AppendItem(WaveScalingSpeedU, "WaveScalingSpeedU");
+                }
+                {
+                    sb.AppendItem(WaveScalingSpeedV, "WaveScalingSpeedV");
+                }
+                {
+                    sb.AppendItem(WaveScalingAmountU, "WaveScalingAmountU");
+                }
+                {
+                    sb.AppendItem(WaveScalingAmountV, "WaveScalingAmountV");
+                }
+                {
+                    sb.AppendItem(ScrollSpeedU, "ScrollSpeedU");
+                }
+                {
+                    sb.AppendItem(ScrollSpeedV, "ScrollSpeedV");
+                }
+                {
+                    sb.AppendItem(WaveScrollSpeedU, "WaveScrollSpeedU");
+                }
+                {
+                    sb.AppendItem(WaveScrollSpeedV, "WaveScrollSpeedV");
+                }
+                {
+                    sb.AppendItem(WaveScrollAmountU, "WaveScrollAmountU");
+                }
+                {
+                    sb.AppendItem(WaveScrollAmountV, "WaveScrollAmountV");
+                }
+                {
+                    sb.AppendItem(RandomTimeOffsetRange, "RandomTimeOffsetRange");
+                }
+                {
+                    sb.AppendItem(IsAnimated, "IsAnimated");
                 }
             }
             #endregion
@@ -292,7 +899,28 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Data = this.Data.Combine(rhs.Data);
+                ret.StaticOffsetU = this.StaticOffsetU.Combine(rhs.StaticOffsetU);
+                ret.StaticOffsetV = this.StaticOffsetV.Combine(rhs.StaticOffsetV);
+                ret.RotationPivotU = this.RotationPivotU.Combine(rhs.RotationPivotU);
+                ret.RotationPivotV = this.RotationPivotV.Combine(rhs.RotationPivotV);
+                ret.StaticRotation = this.StaticRotation.Combine(rhs.StaticRotation);
+                ret.AnimatedRotationSpeed = this.AnimatedRotationSpeed.Combine(rhs.AnimatedRotationSpeed);
+                ret.AnimatedWaveRotationSpeed = this.AnimatedWaveRotationSpeed.Combine(rhs.AnimatedWaveRotationSpeed);
+                ret.AnimatedWaveRotation = this.AnimatedWaveRotation.Combine(rhs.AnimatedWaveRotation);
+                ret.StaticScaleU = this.StaticScaleU.Combine(rhs.StaticScaleU);
+                ret.StaticScaleV = this.StaticScaleV.Combine(rhs.StaticScaleV);
+                ret.WaveScalingSpeedU = this.WaveScalingSpeedU.Combine(rhs.WaveScalingSpeedU);
+                ret.WaveScalingSpeedV = this.WaveScalingSpeedV.Combine(rhs.WaveScalingSpeedV);
+                ret.WaveScalingAmountU = this.WaveScalingAmountU.Combine(rhs.WaveScalingAmountU);
+                ret.WaveScalingAmountV = this.WaveScalingAmountV.Combine(rhs.WaveScalingAmountV);
+                ret.ScrollSpeedU = this.ScrollSpeedU.Combine(rhs.ScrollSpeedU);
+                ret.ScrollSpeedV = this.ScrollSpeedV.Combine(rhs.ScrollSpeedV);
+                ret.WaveScrollSpeedU = this.WaveScrollSpeedU.Combine(rhs.WaveScrollSpeedU);
+                ret.WaveScrollSpeedV = this.WaveScrollSpeedV.Combine(rhs.WaveScrollSpeedV);
+                ret.WaveScrollAmountU = this.WaveScrollAmountU.Combine(rhs.WaveScrollAmountU);
+                ret.WaveScrollAmountV = this.WaveScrollAmountV.Combine(rhs.WaveScrollAmountV);
+                ret.RandomTimeOffsetRange = this.RandomTimeOffsetRange.Combine(rhs.RandomTimeOffsetRange);
+                ret.IsAnimated = this.IsAnimated.Combine(rhs.IsAnimated);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -316,7 +944,28 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Data;
+            public bool StaticOffsetU;
+            public bool StaticOffsetV;
+            public bool RotationPivotU;
+            public bool RotationPivotV;
+            public bool StaticRotation;
+            public bool AnimatedRotationSpeed;
+            public bool AnimatedWaveRotationSpeed;
+            public bool AnimatedWaveRotation;
+            public bool StaticScaleU;
+            public bool StaticScaleV;
+            public bool WaveScalingSpeedU;
+            public bool WaveScalingSpeedV;
+            public bool WaveScalingAmountU;
+            public bool WaveScalingAmountV;
+            public bool ScrollSpeedU;
+            public bool ScrollSpeedV;
+            public bool WaveScrollSpeedU;
+            public bool WaveScrollSpeedV;
+            public bool WaveScrollAmountU;
+            public bool WaveScrollAmountV;
+            public bool RandomTimeOffsetRange;
+            public bool IsAnimated;
             #endregion
 
             #region Ctors
@@ -326,7 +975,28 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Data = defaultOn;
+                this.StaticOffsetU = defaultOn;
+                this.StaticOffsetV = defaultOn;
+                this.RotationPivotU = defaultOn;
+                this.RotationPivotV = defaultOn;
+                this.StaticRotation = defaultOn;
+                this.AnimatedRotationSpeed = defaultOn;
+                this.AnimatedWaveRotationSpeed = defaultOn;
+                this.AnimatedWaveRotation = defaultOn;
+                this.StaticScaleU = defaultOn;
+                this.StaticScaleV = defaultOn;
+                this.WaveScalingSpeedU = defaultOn;
+                this.WaveScalingSpeedV = defaultOn;
+                this.WaveScalingAmountU = defaultOn;
+                this.WaveScalingAmountV = defaultOn;
+                this.ScrollSpeedU = defaultOn;
+                this.ScrollSpeedV = defaultOn;
+                this.WaveScrollSpeedU = defaultOn;
+                this.WaveScrollSpeedV = defaultOn;
+                this.WaveScrollAmountU = defaultOn;
+                this.WaveScrollAmountV = defaultOn;
+                this.RandomTimeOffsetRange = defaultOn;
+                this.IsAnimated = defaultOn;
             }
 
             #endregion
@@ -342,7 +1012,28 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Data, null));
+                ret.Add((StaticOffsetU, null));
+                ret.Add((StaticOffsetV, null));
+                ret.Add((RotationPivotU, null));
+                ret.Add((RotationPivotV, null));
+                ret.Add((StaticRotation, null));
+                ret.Add((AnimatedRotationSpeed, null));
+                ret.Add((AnimatedWaveRotationSpeed, null));
+                ret.Add((AnimatedWaveRotation, null));
+                ret.Add((StaticScaleU, null));
+                ret.Add((StaticScaleV, null));
+                ret.Add((WaveScalingSpeedU, null));
+                ret.Add((WaveScalingSpeedV, null));
+                ret.Add((WaveScalingAmountU, null));
+                ret.Add((WaveScalingAmountV, null));
+                ret.Add((ScrollSpeedU, null));
+                ret.Add((ScrollSpeedV, null));
+                ret.Add((WaveScrollSpeedU, null));
+                ret.Add((WaveScrollSpeedV, null));
+                ret.Add((WaveScrollAmountU, null));
+                ret.Add((WaveScrollAmountV, null));
+                ret.Add((RandomTimeOffsetRange, null));
+                ret.Add((IsAnimated, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -415,7 +1106,28 @@ namespace Mutagen.Bethesda.Starfield
         ILightGoboGetter,
         ILoquiObjectSetter<ILightGobo>
     {
-        new MemorySlice<Byte> Data { get; set; }
+        new Single StaticOffsetU { get; set; }
+        new Single StaticOffsetV { get; set; }
+        new Single RotationPivotU { get; set; }
+        new Single RotationPivotV { get; set; }
+        new Single StaticRotation { get; set; }
+        new Single AnimatedRotationSpeed { get; set; }
+        new Single AnimatedWaveRotationSpeed { get; set; }
+        new Single AnimatedWaveRotation { get; set; }
+        new Single StaticScaleU { get; set; }
+        new Single StaticScaleV { get; set; }
+        new Single WaveScalingSpeedU { get; set; }
+        new Single WaveScalingSpeedV { get; set; }
+        new Single WaveScalingAmountU { get; set; }
+        new Single WaveScalingAmountV { get; set; }
+        new Single ScrollSpeedU { get; set; }
+        new Single ScrollSpeedV { get; set; }
+        new Single WaveScrollSpeedU { get; set; }
+        new Single WaveScrollSpeedV { get; set; }
+        new Single WaveScrollAmountU { get; set; }
+        new Single WaveScrollAmountV { get; set; }
+        new Single RandomTimeOffsetRange { get; set; }
+        new Boolean IsAnimated { get; set; }
     }
 
     public partial interface ILightGoboGetter :
@@ -430,7 +1142,28 @@ namespace Mutagen.Bethesda.Starfield
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => LightGobo_Registration.Instance;
-        ReadOnlyMemorySlice<Byte> Data { get; }
+        Single StaticOffsetU { get; }
+        Single StaticOffsetV { get; }
+        Single RotationPivotU { get; }
+        Single RotationPivotV { get; }
+        Single StaticRotation { get; }
+        Single AnimatedRotationSpeed { get; }
+        Single AnimatedWaveRotationSpeed { get; }
+        Single AnimatedWaveRotation { get; }
+        Single StaticScaleU { get; }
+        Single StaticScaleV { get; }
+        Single WaveScalingSpeedU { get; }
+        Single WaveScalingSpeedV { get; }
+        Single WaveScalingAmountU { get; }
+        Single WaveScalingAmountV { get; }
+        Single ScrollSpeedU { get; }
+        Single ScrollSpeedV { get; }
+        Single WaveScrollSpeedU { get; }
+        Single WaveScrollSpeedV { get; }
+        Single WaveScrollAmountU { get; }
+        Single WaveScrollAmountV { get; }
+        Single RandomTimeOffsetRange { get; }
+        Boolean IsAnimated { get; }
 
     }
 
@@ -600,7 +1333,28 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum LightGobo_FieldIndex
     {
-        Data = 0,
+        StaticOffsetU = 0,
+        StaticOffsetV = 1,
+        RotationPivotU = 2,
+        RotationPivotV = 3,
+        StaticRotation = 4,
+        AnimatedRotationSpeed = 5,
+        AnimatedWaveRotationSpeed = 6,
+        AnimatedWaveRotation = 7,
+        StaticScaleU = 8,
+        StaticScaleV = 9,
+        WaveScalingSpeedU = 10,
+        WaveScalingSpeedV = 11,
+        WaveScalingAmountU = 12,
+        WaveScalingAmountV = 13,
+        ScrollSpeedU = 14,
+        ScrollSpeedV = 15,
+        WaveScrollSpeedU = 16,
+        WaveScrollSpeedV = 17,
+        WaveScrollAmountU = 18,
+        WaveScrollAmountV = 19,
+        RandomTimeOffsetRange = 20,
+        IsAnimated = 21,
     }
     #endregion
 
@@ -611,9 +1365,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 1;
+        public const ushort AdditionalFieldCount = 22;
 
-        public const ushort FieldCount = 1;
+        public const ushort FieldCount = 22;
 
         public static readonly Type MaskType = typeof(LightGobo.Mask<>);
 
@@ -639,13 +1393,6 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.XLGD;
-        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
-        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
-        {
-            var all = RecordCollection.Factory(RecordTypes.XLGD);
-            return new RecordTriggerSpecs(allRecordTypes: all);
-        });
         public static readonly Type BinaryWriteTranslation = typeof(LightGoboBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -686,7 +1433,28 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ILightGobo item)
         {
             ClearPartial();
-            item.Data = new byte[88];
+            item.StaticOffsetU = default(Single);
+            item.StaticOffsetV = default(Single);
+            item.RotationPivotU = default(Single);
+            item.RotationPivotV = default(Single);
+            item.StaticRotation = default(Single);
+            item.AnimatedRotationSpeed = default(Single);
+            item.AnimatedWaveRotationSpeed = default(Single);
+            item.AnimatedWaveRotation = default(Single);
+            item.StaticScaleU = default(Single);
+            item.StaticScaleV = default(Single);
+            item.WaveScalingSpeedU = default(Single);
+            item.WaveScalingSpeedV = default(Single);
+            item.WaveScalingAmountU = default(Single);
+            item.WaveScalingAmountV = default(Single);
+            item.ScrollSpeedU = default(Single);
+            item.ScrollSpeedV = default(Single);
+            item.WaveScrollSpeedU = default(Single);
+            item.WaveScrollSpeedV = default(Single);
+            item.WaveScrollAmountU = default(Single);
+            item.WaveScrollAmountV = default(Single);
+            item.RandomTimeOffsetRange = default(Single);
+            item.IsAnimated = default(Boolean);
         }
         
         #region Mutagen
@@ -702,10 +1470,6 @@ namespace Mutagen.Bethesda.Starfield
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                translationParams.ConvertToCustom(RecordTypes.XLGD),
-                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -740,7 +1504,28 @@ namespace Mutagen.Bethesda.Starfield
             LightGobo.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Data = MemoryExtensions.SequenceEqual(item.Data.Span, rhs.Data.Span);
+            ret.StaticOffsetU = item.StaticOffsetU.EqualsWithin(rhs.StaticOffsetU);
+            ret.StaticOffsetV = item.StaticOffsetV.EqualsWithin(rhs.StaticOffsetV);
+            ret.RotationPivotU = item.RotationPivotU.EqualsWithin(rhs.RotationPivotU);
+            ret.RotationPivotV = item.RotationPivotV.EqualsWithin(rhs.RotationPivotV);
+            ret.StaticRotation = item.StaticRotation.EqualsWithin(rhs.StaticRotation);
+            ret.AnimatedRotationSpeed = item.AnimatedRotationSpeed.EqualsWithin(rhs.AnimatedRotationSpeed);
+            ret.AnimatedWaveRotationSpeed = item.AnimatedWaveRotationSpeed.EqualsWithin(rhs.AnimatedWaveRotationSpeed);
+            ret.AnimatedWaveRotation = item.AnimatedWaveRotation.EqualsWithin(rhs.AnimatedWaveRotation);
+            ret.StaticScaleU = item.StaticScaleU.EqualsWithin(rhs.StaticScaleU);
+            ret.StaticScaleV = item.StaticScaleV.EqualsWithin(rhs.StaticScaleV);
+            ret.WaveScalingSpeedU = item.WaveScalingSpeedU.EqualsWithin(rhs.WaveScalingSpeedU);
+            ret.WaveScalingSpeedV = item.WaveScalingSpeedV.EqualsWithin(rhs.WaveScalingSpeedV);
+            ret.WaveScalingAmountU = item.WaveScalingAmountU.EqualsWithin(rhs.WaveScalingAmountU);
+            ret.WaveScalingAmountV = item.WaveScalingAmountV.EqualsWithin(rhs.WaveScalingAmountV);
+            ret.ScrollSpeedU = item.ScrollSpeedU.EqualsWithin(rhs.ScrollSpeedU);
+            ret.ScrollSpeedV = item.ScrollSpeedV.EqualsWithin(rhs.ScrollSpeedV);
+            ret.WaveScrollSpeedU = item.WaveScrollSpeedU.EqualsWithin(rhs.WaveScrollSpeedU);
+            ret.WaveScrollSpeedV = item.WaveScrollSpeedV.EqualsWithin(rhs.WaveScrollSpeedV);
+            ret.WaveScrollAmountU = item.WaveScrollAmountU.EqualsWithin(rhs.WaveScrollAmountU);
+            ret.WaveScrollAmountV = item.WaveScrollAmountV.EqualsWithin(rhs.WaveScrollAmountV);
+            ret.RandomTimeOffsetRange = item.RandomTimeOffsetRange.EqualsWithin(rhs.RandomTimeOffsetRange);
+            ret.IsAnimated = item.IsAnimated == rhs.IsAnimated;
         }
         
         public string Print(
@@ -785,9 +1570,93 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             LightGobo.Mask<bool>? printMask = null)
         {
-            if (printMask?.Data ?? true)
+            if (printMask?.StaticOffsetU ?? true)
             {
-                sb.AppendLine($"Data => {SpanExt.ToHexString(item.Data)}");
+                sb.AppendItem(item.StaticOffsetU, "StaticOffsetU");
+            }
+            if (printMask?.StaticOffsetV ?? true)
+            {
+                sb.AppendItem(item.StaticOffsetV, "StaticOffsetV");
+            }
+            if (printMask?.RotationPivotU ?? true)
+            {
+                sb.AppendItem(item.RotationPivotU, "RotationPivotU");
+            }
+            if (printMask?.RotationPivotV ?? true)
+            {
+                sb.AppendItem(item.RotationPivotV, "RotationPivotV");
+            }
+            if (printMask?.StaticRotation ?? true)
+            {
+                sb.AppendItem(item.StaticRotation, "StaticRotation");
+            }
+            if (printMask?.AnimatedRotationSpeed ?? true)
+            {
+                sb.AppendItem(item.AnimatedRotationSpeed, "AnimatedRotationSpeed");
+            }
+            if (printMask?.AnimatedWaveRotationSpeed ?? true)
+            {
+                sb.AppendItem(item.AnimatedWaveRotationSpeed, "AnimatedWaveRotationSpeed");
+            }
+            if (printMask?.AnimatedWaveRotation ?? true)
+            {
+                sb.AppendItem(item.AnimatedWaveRotation, "AnimatedWaveRotation");
+            }
+            if (printMask?.StaticScaleU ?? true)
+            {
+                sb.AppendItem(item.StaticScaleU, "StaticScaleU");
+            }
+            if (printMask?.StaticScaleV ?? true)
+            {
+                sb.AppendItem(item.StaticScaleV, "StaticScaleV");
+            }
+            if (printMask?.WaveScalingSpeedU ?? true)
+            {
+                sb.AppendItem(item.WaveScalingSpeedU, "WaveScalingSpeedU");
+            }
+            if (printMask?.WaveScalingSpeedV ?? true)
+            {
+                sb.AppendItem(item.WaveScalingSpeedV, "WaveScalingSpeedV");
+            }
+            if (printMask?.WaveScalingAmountU ?? true)
+            {
+                sb.AppendItem(item.WaveScalingAmountU, "WaveScalingAmountU");
+            }
+            if (printMask?.WaveScalingAmountV ?? true)
+            {
+                sb.AppendItem(item.WaveScalingAmountV, "WaveScalingAmountV");
+            }
+            if (printMask?.ScrollSpeedU ?? true)
+            {
+                sb.AppendItem(item.ScrollSpeedU, "ScrollSpeedU");
+            }
+            if (printMask?.ScrollSpeedV ?? true)
+            {
+                sb.AppendItem(item.ScrollSpeedV, "ScrollSpeedV");
+            }
+            if (printMask?.WaveScrollSpeedU ?? true)
+            {
+                sb.AppendItem(item.WaveScrollSpeedU, "WaveScrollSpeedU");
+            }
+            if (printMask?.WaveScrollSpeedV ?? true)
+            {
+                sb.AppendItem(item.WaveScrollSpeedV, "WaveScrollSpeedV");
+            }
+            if (printMask?.WaveScrollAmountU ?? true)
+            {
+                sb.AppendItem(item.WaveScrollAmountU, "WaveScrollAmountU");
+            }
+            if (printMask?.WaveScrollAmountV ?? true)
+            {
+                sb.AppendItem(item.WaveScrollAmountV, "WaveScrollAmountV");
+            }
+            if (printMask?.RandomTimeOffsetRange ?? true)
+            {
+                sb.AppendItem(item.RandomTimeOffsetRange, "RandomTimeOffsetRange");
+            }
+            if (printMask?.IsAnimated ?? true)
+            {
+                sb.AppendItem(item.IsAnimated, "IsAnimated");
             }
         }
         
@@ -798,9 +1667,93 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)LightGobo_FieldIndex.Data) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LightGobo_FieldIndex.StaticOffsetU) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Data.Span, rhs.Data.Span)) return false;
+                if (!lhs.StaticOffsetU.EqualsWithin(rhs.StaticOffsetU)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LightGobo_FieldIndex.StaticOffsetV) ?? true))
+            {
+                if (!lhs.StaticOffsetV.EqualsWithin(rhs.StaticOffsetV)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LightGobo_FieldIndex.RotationPivotU) ?? true))
+            {
+                if (!lhs.RotationPivotU.EqualsWithin(rhs.RotationPivotU)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LightGobo_FieldIndex.RotationPivotV) ?? true))
+            {
+                if (!lhs.RotationPivotV.EqualsWithin(rhs.RotationPivotV)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LightGobo_FieldIndex.StaticRotation) ?? true))
+            {
+                if (!lhs.StaticRotation.EqualsWithin(rhs.StaticRotation)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LightGobo_FieldIndex.AnimatedRotationSpeed) ?? true))
+            {
+                if (!lhs.AnimatedRotationSpeed.EqualsWithin(rhs.AnimatedRotationSpeed)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LightGobo_FieldIndex.AnimatedWaveRotationSpeed) ?? true))
+            {
+                if (!lhs.AnimatedWaveRotationSpeed.EqualsWithin(rhs.AnimatedWaveRotationSpeed)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LightGobo_FieldIndex.AnimatedWaveRotation) ?? true))
+            {
+                if (!lhs.AnimatedWaveRotation.EqualsWithin(rhs.AnimatedWaveRotation)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LightGobo_FieldIndex.StaticScaleU) ?? true))
+            {
+                if (!lhs.StaticScaleU.EqualsWithin(rhs.StaticScaleU)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LightGobo_FieldIndex.StaticScaleV) ?? true))
+            {
+                if (!lhs.StaticScaleV.EqualsWithin(rhs.StaticScaleV)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LightGobo_FieldIndex.WaveScalingSpeedU) ?? true))
+            {
+                if (!lhs.WaveScalingSpeedU.EqualsWithin(rhs.WaveScalingSpeedU)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LightGobo_FieldIndex.WaveScalingSpeedV) ?? true))
+            {
+                if (!lhs.WaveScalingSpeedV.EqualsWithin(rhs.WaveScalingSpeedV)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LightGobo_FieldIndex.WaveScalingAmountU) ?? true))
+            {
+                if (!lhs.WaveScalingAmountU.EqualsWithin(rhs.WaveScalingAmountU)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LightGobo_FieldIndex.WaveScalingAmountV) ?? true))
+            {
+                if (!lhs.WaveScalingAmountV.EqualsWithin(rhs.WaveScalingAmountV)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LightGobo_FieldIndex.ScrollSpeedU) ?? true))
+            {
+                if (!lhs.ScrollSpeedU.EqualsWithin(rhs.ScrollSpeedU)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LightGobo_FieldIndex.ScrollSpeedV) ?? true))
+            {
+                if (!lhs.ScrollSpeedV.EqualsWithin(rhs.ScrollSpeedV)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LightGobo_FieldIndex.WaveScrollSpeedU) ?? true))
+            {
+                if (!lhs.WaveScrollSpeedU.EqualsWithin(rhs.WaveScrollSpeedU)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LightGobo_FieldIndex.WaveScrollSpeedV) ?? true))
+            {
+                if (!lhs.WaveScrollSpeedV.EqualsWithin(rhs.WaveScrollSpeedV)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LightGobo_FieldIndex.WaveScrollAmountU) ?? true))
+            {
+                if (!lhs.WaveScrollAmountU.EqualsWithin(rhs.WaveScrollAmountU)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LightGobo_FieldIndex.WaveScrollAmountV) ?? true))
+            {
+                if (!lhs.WaveScrollAmountV.EqualsWithin(rhs.WaveScrollAmountV)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LightGobo_FieldIndex.RandomTimeOffsetRange) ?? true))
+            {
+                if (!lhs.RandomTimeOffsetRange.EqualsWithin(rhs.RandomTimeOffsetRange)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LightGobo_FieldIndex.IsAnimated) ?? true))
+            {
+                if (lhs.IsAnimated != rhs.IsAnimated) return false;
             }
             return true;
         }
@@ -808,7 +1761,28 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ILightGoboGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Data);
+            hash.Add(item.StaticOffsetU);
+            hash.Add(item.StaticOffsetV);
+            hash.Add(item.RotationPivotU);
+            hash.Add(item.RotationPivotV);
+            hash.Add(item.StaticRotation);
+            hash.Add(item.AnimatedRotationSpeed);
+            hash.Add(item.AnimatedWaveRotationSpeed);
+            hash.Add(item.AnimatedWaveRotation);
+            hash.Add(item.StaticScaleU);
+            hash.Add(item.StaticScaleV);
+            hash.Add(item.WaveScalingSpeedU);
+            hash.Add(item.WaveScalingSpeedV);
+            hash.Add(item.WaveScalingAmountU);
+            hash.Add(item.WaveScalingAmountV);
+            hash.Add(item.ScrollSpeedU);
+            hash.Add(item.ScrollSpeedV);
+            hash.Add(item.WaveScrollSpeedU);
+            hash.Add(item.WaveScrollSpeedV);
+            hash.Add(item.WaveScrollAmountU);
+            hash.Add(item.WaveScrollAmountV);
+            hash.Add(item.RandomTimeOffsetRange);
+            hash.Add(item.IsAnimated);
             return hash.ToHashCode();
         }
         
@@ -841,12 +1815,108 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)LightGobo_FieldIndex.Data) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LightGobo_FieldIndex.StaticOffsetU) ?? true))
             {
-                item.Data = rhs.Data.ToArray();
+                item.StaticOffsetU = rhs.StaticOffsetU;
             }
+            if ((copyMask?.GetShouldTranslate((int)LightGobo_FieldIndex.StaticOffsetV) ?? true))
+            {
+                item.StaticOffsetV = rhs.StaticOffsetV;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightGobo_FieldIndex.RotationPivotU) ?? true))
+            {
+                item.RotationPivotU = rhs.RotationPivotU;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightGobo_FieldIndex.RotationPivotV) ?? true))
+            {
+                item.RotationPivotV = rhs.RotationPivotV;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightGobo_FieldIndex.StaticRotation) ?? true))
+            {
+                item.StaticRotation = rhs.StaticRotation;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightGobo_FieldIndex.AnimatedRotationSpeed) ?? true))
+            {
+                item.AnimatedRotationSpeed = rhs.AnimatedRotationSpeed;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightGobo_FieldIndex.AnimatedWaveRotationSpeed) ?? true))
+            {
+                item.AnimatedWaveRotationSpeed = rhs.AnimatedWaveRotationSpeed;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightGobo_FieldIndex.AnimatedWaveRotation) ?? true))
+            {
+                item.AnimatedWaveRotation = rhs.AnimatedWaveRotation;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightGobo_FieldIndex.StaticScaleU) ?? true))
+            {
+                item.StaticScaleU = rhs.StaticScaleU;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightGobo_FieldIndex.StaticScaleV) ?? true))
+            {
+                item.StaticScaleV = rhs.StaticScaleV;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightGobo_FieldIndex.WaveScalingSpeedU) ?? true))
+            {
+                item.WaveScalingSpeedU = rhs.WaveScalingSpeedU;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightGobo_FieldIndex.WaveScalingSpeedV) ?? true))
+            {
+                item.WaveScalingSpeedV = rhs.WaveScalingSpeedV;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightGobo_FieldIndex.WaveScalingAmountU) ?? true))
+            {
+                item.WaveScalingAmountU = rhs.WaveScalingAmountU;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightGobo_FieldIndex.WaveScalingAmountV) ?? true))
+            {
+                item.WaveScalingAmountV = rhs.WaveScalingAmountV;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightGobo_FieldIndex.ScrollSpeedU) ?? true))
+            {
+                item.ScrollSpeedU = rhs.ScrollSpeedU;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightGobo_FieldIndex.ScrollSpeedV) ?? true))
+            {
+                item.ScrollSpeedV = rhs.ScrollSpeedV;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightGobo_FieldIndex.WaveScrollSpeedU) ?? true))
+            {
+                item.WaveScrollSpeedU = rhs.WaveScrollSpeedU;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightGobo_FieldIndex.WaveScrollSpeedV) ?? true))
+            {
+                item.WaveScrollSpeedV = rhs.WaveScrollSpeedV;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightGobo_FieldIndex.WaveScrollAmountU) ?? true))
+            {
+                item.WaveScrollAmountU = rhs.WaveScrollAmountU;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightGobo_FieldIndex.WaveScrollAmountV) ?? true))
+            {
+                item.WaveScrollAmountV = rhs.WaveScrollAmountV;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightGobo_FieldIndex.RandomTimeOffsetRange) ?? true))
+            {
+                item.RandomTimeOffsetRange = rhs.RandomTimeOffsetRange;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightGobo_FieldIndex.IsAnimated) ?? true))
+            {
+                item.IsAnimated = rhs.IsAnimated;
+            }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ILightGobo item,
+            ILightGoboGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public LightGobo DeepCopy(
@@ -941,9 +2011,74 @@ namespace Mutagen.Bethesda.Starfield
             ILightGoboGetter item,
             MutagenWriter writer)
         {
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.Data);
+                item: item.StaticOffsetU);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.StaticOffsetV);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.RotationPivotU);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.RotationPivotV);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.StaticRotation,
+                divisor: 57.295799255371094f,
+                multiplier: null);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.AnimatedRotationSpeed);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.AnimatedWaveRotationSpeed);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.AnimatedWaveRotation,
+                divisor: 57.295799255371094f,
+                multiplier: null);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.StaticScaleU);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.StaticScaleV);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.WaveScalingSpeedU);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.WaveScalingSpeedV);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.WaveScalingAmountU);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.WaveScalingAmountV);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.ScrollSpeedU);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.ScrollSpeedV);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.WaveScrollSpeedU);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.WaveScrollSpeedV);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.WaveScrollAmountU);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.WaveScrollAmountV);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.RandomTimeOffsetRange);
+            writer.Write(item.IsAnimated, length: 4);
         }
 
         public void Write(
@@ -951,16 +2086,9 @@ namespace Mutagen.Bethesda.Starfield
             ILightGoboGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Subrecord(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.XLGD),
-                overflowRecord: translationParams.OverflowRecordType,
-                out var writerToUse))
-            {
-                WriteEmbedded(
-                    item: item,
-                    writer: writerToUse);
-            }
+            WriteEmbedded(
+                item: item,
+                writer: writer);
         }
 
         public void Write(
@@ -984,7 +2112,37 @@ namespace Mutagen.Bethesda.Starfield
             ILightGobo item,
             MutagenFrame frame)
         {
-            item.Data = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(88));
+            item.StaticOffsetU = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.StaticOffsetV = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.RotationPivotU = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.RotationPivotV = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.StaticRotation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                multiplier: 57.295799255371094f,
+                divisor: null);
+            item.AnimatedRotationSpeed = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.AnimatedWaveRotationSpeed = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.AnimatedWaveRotation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                multiplier: 57.295799255371094f,
+                divisor: null);
+            item.StaticScaleU = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.StaticScaleV = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.WaveScalingSpeedU = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.WaveScalingSpeedV = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.WaveScalingAmountU = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.WaveScalingAmountV = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.ScrollSpeedU = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.ScrollSpeedV = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.WaveScrollSpeedU = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.WaveScrollSpeedV = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.WaveScrollAmountU = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.WaveScrollAmountV = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.RandomTimeOffsetRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.IsAnimated = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
+                reader: frame,
+                byteLength: 4,
+                importantByteLength: 1);
         }
 
     }
@@ -1050,7 +2208,28 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public ReadOnlyMemorySlice<Byte> Data => _structData.Span.Slice(0x0, 0x58).ToArray();
+        public Single StaticOffsetU => _structData.Slice(0x0, 0x4).Float();
+        public Single StaticOffsetV => _structData.Slice(0x4, 0x4).Float();
+        public Single RotationPivotU => _structData.Slice(0x8, 0x4).Float();
+        public Single RotationPivotV => _structData.Slice(0xC, 0x4).Float();
+        public Single StaticRotation => _structData.Slice(0x10, 0x4).Float() * 57.2958f;
+        public Single AnimatedRotationSpeed => _structData.Slice(0x14, 0x4).Float();
+        public Single AnimatedWaveRotationSpeed => _structData.Slice(0x18, 0x4).Float();
+        public Single AnimatedWaveRotation => _structData.Slice(0x1C, 0x4).Float() * 57.2958f;
+        public Single StaticScaleU => _structData.Slice(0x20, 0x4).Float();
+        public Single StaticScaleV => _structData.Slice(0x24, 0x4).Float();
+        public Single WaveScalingSpeedU => _structData.Slice(0x28, 0x4).Float();
+        public Single WaveScalingSpeedV => _structData.Slice(0x2C, 0x4).Float();
+        public Single WaveScalingAmountU => _structData.Slice(0x30, 0x4).Float();
+        public Single WaveScalingAmountV => _structData.Slice(0x34, 0x4).Float();
+        public Single ScrollSpeedU => _structData.Slice(0x38, 0x4).Float();
+        public Single ScrollSpeedV => _structData.Slice(0x3C, 0x4).Float();
+        public Single WaveScrollSpeedU => _structData.Slice(0x40, 0x4).Float();
+        public Single WaveScrollSpeedV => _structData.Slice(0x44, 0x4).Float();
+        public Single WaveScrollAmountU => _structData.Slice(0x48, 0x4).Float();
+        public Single WaveScrollAmountV => _structData.Slice(0x4C, 0x4).Float();
+        public Single RandomTimeOffsetRange => _structData.Slice(0x50, 0x4).Float();
+        public Boolean IsAnimated => _structData.Slice(0x54, 0x4)[0] >= 1;
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1072,7 +2251,7 @@ namespace Mutagen.Bethesda.Starfield
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            stream = ExtractSubrecordStructMemory(
+            stream = ExtractTypelessSubrecordStructMemory(
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
@@ -1082,7 +2261,7 @@ namespace Mutagen.Bethesda.Starfield
             var ret = new LightGoboBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            stream.Position += 0x58 + package.MetaData.Constants.SubConstants.HeaderLength;
+            stream.Position += 0x58;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

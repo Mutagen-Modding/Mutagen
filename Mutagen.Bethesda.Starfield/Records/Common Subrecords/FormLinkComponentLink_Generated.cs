@@ -923,8 +923,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.LinkedForm.SetTo(rhs.LinkedForm.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IFormLinkComponentLink item,
+            IFormLinkComponentLinkGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public FormLinkComponentLink DeepCopy(
@@ -1155,11 +1167,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Keyword
         private int? _KeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> Keyword => _KeywordLocation.HasValue ? new FormLinkNullable<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _KeywordLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IKeywordGetter>.Null;
+        public IFormLinkNullableGetter<IKeywordGetter> Keyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _KeywordLocation);
         #endregion
         #region LinkedForm
         private int? _LinkedFormLocation;
-        public IFormLinkNullableGetter<IStarfieldMajorRecordGetter> LinkedForm => _LinkedFormLocation.HasValue ? new FormLinkNullable<IStarfieldMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LinkedFormLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStarfieldMajorRecordGetter>.Null;
+        public IFormLinkNullableGetter<IStarfieldMajorRecordGetter> LinkedForm => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStarfieldMajorRecordGetter>(_package, _recordData, _LinkedFormLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

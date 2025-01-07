@@ -958,8 +958,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.NoCrime = rhs.NoCrime;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IOwnership item,
+            IOwnershipGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public Ownership DeepCopy(
@@ -1194,7 +1206,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Owner
         private int _OwnerLocation => _XOWNLocation!.Value.Min;
         private bool _Owner_IsSet => _XOWNLocation.HasValue;
-        public IFormLinkGetter<IOwnerGetter> Owner => _Owner_IsSet ? new FormLink<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_OwnerLocation, 0x4)))) : FormLink<IOwnerGetter>.Null;
+        public IFormLinkGetter<IOwnerGetter> Owner => _Owner_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IOwnerGetter>(_package, _recordData.Span.Slice(_OwnerLocation, 0x4), isSet: _Owner_IsSet) : FormLink<IOwnerGetter>.Null;
         #endregion
         #region Unknown
         private int _UnknownLocation => _XOWNLocation!.Value.Min + 0x4;

@@ -978,8 +978,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.PerkEntryID = rhs.PerkEntryID;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IAPerkEntryPointEffect item,
+            IAPerkEntryPointEffectGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAPerkEffect item,

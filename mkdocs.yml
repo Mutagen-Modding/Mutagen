@@ -1,13 +1,15 @@
 site_name: Mutagen Documentation
 site_url: https://mutagen-modding.github.io/Mutagen/
 
-repo_name: Mutagen-Modding/Mutagen
+repo_name: Mutagen
 repo_url: https://github.com/Mutagen-Modding/Mutagen
 
 extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/Mutagen-Modding
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/GdKZ3SH
 
 markdown_extensions:
   - admonition
@@ -32,6 +34,9 @@ extra_css:
 
 plugins:
   - search
+  - glightbox:
+      zoomable: true
+      draggable: true
 
 theme:
   name: material
@@ -57,27 +62,28 @@ nav:
   - Plugin Record Suite:
     - plugins/index.md
     - ModKey, FormKey, FormLink: plugins/ModKey, FormKey, FormLink.md
-    - Importing: plugins/Binary-Importing.md
-    - Exporting: plugins/Binary-Exporting.md
+    - Importing and Construction: plugins/Importing-and-Construction.md
+    - Exporting: plugins/Exporting.md
     - Interfaces (Aspect/Link/Getters): plugins/Interfaces.md
     - Copy Functionality: plugins/Copy-Functionality.md
     - Equality Checks: plugins/Equality-Checks.md
     - Translation Masks: plugins/Translation-Masks.md
     - Flags and Enums: plugins/Flags-and-Enums.md
     - Asset Links: plugins/AssetLink.md
+    - Compaction: plugins/Compaction.md
     - Create, Duplicate, and Override: plugins/Create,-Duplicate,-and-Override.md
     - Printing: plugins/Printing.md
-    - Mod Construction and Importing: plugins/Mod-Construction-and-Importing.md
     - Abstract Subclassing: plugins/Abstract-Subclassing.md
-    - Bethesda Format Abstraction: plugins/Bethesda-Format-Abstraction.md
-    - FormKey Allocation and Persistence: plugins/FormKey-Allocation-and-Persistence.md
-  - Specific Records:
-    - plugins/specific/index.md
-    - Globals and GameSettings: plugins/specific/Globals-And-GameSettings.md
+    - Specific Records:
+      - plugins/specific/index.md
+      - Globals and GameSettings: plugins/specific/Globals-And-GameSettings.md
     # - Perks:
     # - Magic Effects:
     # - Conditions:
     # - Npcs:
+    - Bethesda Format Abstraction: plugins/Bethesda-Format-Abstraction.md
+    - FormKey Allocation and Persistence: plugins/FormKey-Allocation-and-Persistence.md
+    - Other Utility: plugins/other-utility.md
   - Environment:
     - environment/index.md
     - Environment Construction: environment/Environment-Construction.md
@@ -106,7 +112,7 @@ nav:
     - Accessing Known Records: best-practices/Accessing-Known-Records.md
     - FormLinks Target Getter Interfaces: best-practices/FormLinks-Target-Getter-Interfaces.md
     - FormLinks vs EditorID as Identifiers: best-practices/FormLinks-vs-EditorID-as-Identifiers.md
-    - FormLink vs FormLinkNullable: best-practices/FormLink-vs-FormLinkNullable.md
+    - FormLink Nullability: best-practices/FormLink-Nullability.md
     # - FormLinks vs FormID/FormKey as Identifiers:
     # - Reference FormLinks By EditorID:
     # - LinkCache Resolution Type Choice:
@@ -117,6 +123,7 @@ nav:
     - ITPO Avoidance: best-practices/ITPO-Avoidance.md
     - Reuse Translation Masks: best-practices/Reuse-Translation-Masks.md
     - Modifying Groups Being Iterated: best-practices/Modifying-Groups-Being-Iterated.md
+    - Enriching Exceptions: best-practices/Enrich-Exceptions.md
     # - Testing:
     # - Auto Fixture:
     # - Major Record Test Building:
@@ -145,3 +152,4 @@ nav:
       - Skyrim Aspect Interfaces: game-specific/skyrim/Skyrim-Aspect-Interfaces.md
       - Skyrim Link Interfaces: game-specific/skyrim/Skyrim-Link-Interfaces.md
   - Correctness: Correctness.md
+  - Contributing: Contributing.md

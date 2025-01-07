@@ -883,8 +883,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Value = rhs.Value;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IArmorCategoryValue item,
+            IArmorCategoryValueGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ArmorCategoryValue DeepCopy(

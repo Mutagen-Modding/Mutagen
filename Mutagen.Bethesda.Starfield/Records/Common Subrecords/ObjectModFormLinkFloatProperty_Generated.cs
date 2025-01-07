@@ -695,8 +695,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.FunctionType = rhs.FunctionType;
             }
+            DeepCopyInCustom<T>(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom<T>(
+            IObjectModFormLinkFloatProperty<T> item,
+            IObjectModFormLinkFloatPropertyGetter<T> rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+            where T : struct, Enum;
         
         public override void DeepCopyIn<T>(
             IAObjectModProperty<T> item,
@@ -919,7 +932,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IStarfieldMajorRecordGetter> Record => new FormLink<IStarfieldMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x5, 0x4))));
+        public IFormLinkGetter<IStarfieldMajorRecordGetter> Record => FormLinkBinaryTranslation.Instance.OverlayFactory<IStarfieldMajorRecordGetter>(_package, _structData.Span.Slice(0x5, 0x4));
         public Single Value => _structData.Slice(0x9, 0x4).Float();
         public ObjectModProperty.FloatFunctionType FunctionType => (ObjectModProperty.FloatFunctionType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0xD, 0x4));
         partial void CustomFactoryEnd(

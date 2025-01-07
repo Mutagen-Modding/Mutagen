@@ -952,8 +952,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Spell.SetTo(rhs.Spell.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IPerkEntryPointSelectSpell item,
+            IPerkEntryPointSelectSpellGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAPerkEntryPointEffect item,
@@ -1193,7 +1205,7 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ISpellGetter> Spell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x2, 0x4))));
+        public IFormLinkGetter<ISpellGetter> Spell => FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellGetter>(_package, _structData.Span.Slice(0x2, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -7,6 +7,8 @@ public sealed class ImmutableManyListWrapper<TValue> : IReadOnlyList<TValue>
     private int _count;
     private readonly List<IReadOnlyList<TValue>> _listOfLists = new();
 
+    public static readonly ImmutableManyListWrapper<TValue> Empty = new(); 
+
     public void AddList(IReadOnlyList<TValue> val)
     {
         _count += val.Count;

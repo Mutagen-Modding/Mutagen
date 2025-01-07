@@ -875,8 +875,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ImageSpaceAdapter.SetTo(rhs.ImageSpaceAdapter.FormKeyNullable);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IImageSpaceModifiableFormComponent item,
+            IImageSpaceModifiableFormComponentGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IAComponent item,
@@ -1111,7 +1123,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region ImageSpaceAdapter
         private int? _ImageSpaceAdapterLocation;
-        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceAdapter => _ImageSpaceAdapterLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ImageSpaceAdapterLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceAdapter => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IImageSpaceAdapterGetter>(_package, _recordData, _ImageSpaceAdapterLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

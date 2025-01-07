@@ -1013,8 +1013,20 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ITransientType item,
+            ITransientTypeGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public TransientType DeepCopy(
@@ -1232,7 +1244,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public UInt32 FormType => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x0, 0x4));
         #region Links
-        public IReadOnlyList<IFormLinkGetter<IStarfieldMajorRecordGetter>> Links => BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IStarfieldMajorRecordGetter>>(_structData.Slice(0x4), _package, 4, (s, p) => new FormLink<IStarfieldMajorRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLinkGetter<IStarfieldMajorRecordGetter>> Links => BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IStarfieldMajorRecordGetter>>(_structData.Slice(0x4), _package, 4, (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IStarfieldMajorRecordGetter>(p, s));
         protected int LinksEndingPos;
         #endregion
         partial void CustomFactoryEnd(

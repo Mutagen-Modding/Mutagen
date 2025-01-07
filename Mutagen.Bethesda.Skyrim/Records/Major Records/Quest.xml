@@ -23,7 +23,7 @@
       <RefList name="EventConditions" refName="Condition" binary="NoGeneration" />
       <RefList name="Stages" refName="QuestStage" />
       <RefList name="Objectives" refName="QuestObjective" />
-      <CustomLogic name="NextAliasID" recordType="ANAM" />
+      <UInt32 name="NextAliasID" recordType="ANAM" />
       <RefList name="Aliases" refName="QuestAlias" />
       <String name="Description" recordType="NNAM" translated="DL" />
     </Fields>

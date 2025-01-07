@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Starfield
         public NavmeshGeometry.VersioningBreaks Versioning { get; set; } = default(NavmeshGeometry.VersioningBreaks);
         #endregion
         #region NavmeshVersion
-        public static readonly UInt32 NavmeshVersionDefault = 15;
+        public static readonly UInt32 NavmeshVersionDefault = 17;
         public UInt32 NavmeshVersion { get; set; } = NavmeshVersionDefault;
         #endregion
         #region CrcHash
@@ -2596,8 +2596,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Unknown3 = rhs.Unknown3;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            INavmeshGeometry item,
+            INavmeshGeometryGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public NavmeshGeometry DeepCopy(
@@ -2866,37 +2878,37 @@ namespace Mutagen.Bethesda.Starfield
                 item: item);
             item.Vertices.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavmeshVertex>.Instance.Parse(
-                    amount: frame.ReadInt32(),
+                    amount: checked((int)frame.ReadUInt32()),
                     reader: frame,
                     transl: NavmeshVertex.TryCreateFromBinary));
             item.Triangles.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavmeshTriangle>.Instance.Parse(
-                    amount: frame.ReadInt32(),
+                    amount: checked((int)frame.ReadUInt32()),
                     reader: frame,
                     transl: NavmeshTriangle.TryCreateFromBinary));
             item.EdgeLinks.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<EdgeLink>.Instance.Parse(
-                    amount: frame.ReadInt32(),
+                    amount: checked((int)frame.ReadUInt32()),
                     reader: frame,
                     transl: EdgeLink.TryCreateFromBinary));
             item.DoorTriangles.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<DoorTriangle>.Instance.Parse(
-                    amount: frame.ReadInt32(),
+                    amount: checked((int)frame.ReadUInt32()),
                     reader: frame,
                     transl: DoorTriangle.TryCreateFromBinary));
             item.Cover.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavmeshCover>.Instance.Parse(
-                    amount: frame.ReadInt32(),
+                    amount: checked((int)frame.ReadUInt32()),
                     reader: frame,
                     transl: NavmeshCover.TryCreateFromBinary));
             item.CoverTriangleMappings.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavmeshCoverTriangleMap>.Instance.Parse(
-                    amount: frame.ReadInt32(),
+                    amount: checked((int)frame.ReadUInt32()),
                     reader: frame,
                     transl: NavmeshCoverTriangleMap.TryCreateFromBinary));
             item.Waypoints.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavmeshWaypoint>.Instance.Parse(
-                    amount: frame.ReadInt32(),
+                    amount: checked((int)frame.ReadUInt32()),
                     reader: frame,
                     transl: NavmeshWaypoint.TryCreateFromBinary));
             item.GridSize = frame.ReadUInt32();

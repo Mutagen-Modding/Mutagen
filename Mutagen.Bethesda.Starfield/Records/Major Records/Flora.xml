@@ -26,13 +26,14 @@
       <List name="AttachParentSlots" recordType="APPR">
         <FormLink refName="Keyword" />
       </List>
-      <List name="ObjectTemplates" counterRecType="OBTE" allowNoCounter="false" endMarker="STOP" alwaysWriteEndMarker="true" >
+      <List name="ObjectTemplates" counterRecType="OBTE" allowNoCounter="false" >
         <Ref>
           <Direct refName="ObjectTemplate">
             <GenericSpecification Definition="AObjectModification.NoneProperty" TypeToSpecify="T" />
           </Direct>
         </Ref>
       </List>
+      <Marker name="STOP" recordType="STOP" />
       <FormLink name="ActionKeyword" refName="Keyword" recordType="ANAM" />
       <Float name="BNAM" recordType="BNAM" unknown="true" />
       <Float name="FMAH" recordType="FMAH" unknown="true" />

@@ -945,8 +945,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.SoutheastCellCoords = rhs.SoutheastCellCoords;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IWorldspaceMap item,
+            IWorldspaceMapGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public WorldspaceMap DeepCopy(

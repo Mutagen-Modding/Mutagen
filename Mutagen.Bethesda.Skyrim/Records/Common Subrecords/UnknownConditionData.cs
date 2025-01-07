@@ -1,20 +1,40 @@
 ﻿namespace Mutagen.Bethesda.Skyrim;
 
-partial class UnknownConditionData : IConditionStringParameter
+partial class UnknownConditionData : IConditionParameters
 {
-    string? IConditionStringParameterGetter.FirstStringParameter => FirstUnusedStringParameter;
+    string? IConditionParametersGetter.StringParameter1 => FirstUnusedStringParameter;
 
-    string? IConditionStringParameterGetter.SecondStringParameter => SecondUnusedStringParameter;
+    string? IConditionParametersGetter.StringParameter2 => SecondUnusedStringParameter;
 
-    string? IConditionStringParameter.FirstStringParameter
+    string? IConditionParameters.StringParameter1
     {
         get => FirstUnusedStringParameter;
         set => FirstUnusedStringParameter = value;
     }
 
-    string? IConditionStringParameter.SecondStringParameter
+    string? IConditionParameters.StringParameter2
     {
         get => SecondUnusedStringParameter;
         set => SecondUnusedStringParameter = value;
     }
+
+    object? IConditionParameters.Parameter1
+    {
+        get => null;
+        set
+        {
+
+        }
+    }
+    Type? IConditionParametersGetter.Parameter1Type => null;
+
+    object? IConditionParameters.Parameter2
+    {
+        get => null;
+        set
+        {
+
+        }
+    }
+    Type? IConditionParametersGetter.Parameter2Type => null;
 }

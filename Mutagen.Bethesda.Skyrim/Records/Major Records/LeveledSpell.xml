@@ -3,7 +3,7 @@
   <Object name="LeveledSpell" objType="Record" baseClass="SkyrimMajorRecord" recordType="LVSP">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <UInt8 name="ChanceNone" recordType="LVLD" />
+      <Percent name="ChanceNone" recordType="LVLD" nullable="False" integerType="ByteHundred" />
       <Enum name="Flags" enumName="LeveledSpell.Flag" byteLength="1" recordType="LVLF" nullable="False" />
       <RefList name="Entries" counterRecType="LLCT" refName="LeveledSpellEntry" counterLength="1" />
     </Fields>

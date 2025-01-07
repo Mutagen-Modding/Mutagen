@@ -1189,8 +1189,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.QSTADataTypeState = rhs.QSTADataTypeState;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IQuestObjectiveTarget item,
+            IQuestObjectiveTargetGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public QuestObjectiveTarget DeepCopy(
@@ -1482,7 +1494,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region Keyword
         private int _KeywordLocation => _QSTALocation!.Value.Min + 0x8;
         private bool _Keyword_IsSet => _QSTALocation.HasValue && !QSTADataTypeState.HasFlag(QuestObjectiveTarget.QSTADataType.Break0);
-        public IFormLinkGetter<IKeywordGetter> Keyword => _Keyword_IsSet ? new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Span.Slice(_KeywordLocation, 0x4)))) : FormLink<IKeywordGetter>.Null;
+        public IFormLinkGetter<IKeywordGetter> Keyword => _Keyword_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(_package, _recordData.Span.Slice(_KeywordLocation, 0x4), isSet: _Keyword_IsSet) : FormLink<IKeywordGetter>.Null;
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(

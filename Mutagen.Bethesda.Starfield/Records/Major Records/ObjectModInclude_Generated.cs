@@ -1002,8 +1002,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.DoNotUseAll = rhs.DoNotUseAll;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IObjectModInclude item,
+            IObjectModIncludeGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public ObjectModInclude DeepCopy(
@@ -1207,7 +1219,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IAObjectModificationGetter> Mod => new FormLink<IAObjectModificationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IAObjectModificationGetter> Mod => FormLinkBinaryTranslation.Instance.OverlayFactory<IAObjectModificationGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public Byte MinimumLevel => _structData.Span[0x4];
         public Boolean Optional => _structData.Slice(0x5, 0x1)[0] >= 1;
         public Boolean DoNotUseAll => _structData.Slice(0x6, 0x1)[0] >= 1;

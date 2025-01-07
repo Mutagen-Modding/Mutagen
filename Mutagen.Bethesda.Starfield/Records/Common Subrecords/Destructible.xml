@@ -42,6 +42,7 @@
       <RefDirect name="Model" refName="Model">
         <RecordTypeOverrides>
           <Mapping From="MODL" To="DMDL" />
+          <Mapping From="MODT" To="DMDT" />
         </RecordTypeOverrides>
       </RefDirect>
       <Int32 name="UnusedMaterialSwap" recordType="DMDS" />

@@ -211,6 +211,16 @@ public interface IGroup<TMajor> : IGroupGetter<TMajor>, IGroup, IGroupCommon<TMa
     /// A record with the same FormKey already exists in the group
     /// </exception>
     void Add(TMajor record);
+        
+    /// <summary>
+    /// Adds a major record to the group and then returns it
+    /// </summary>
+    /// <param name="record">The record</param>
+    /// <exception cref="ArgumentException">
+    /// A record with the same FormKey already exists in the group
+    /// </exception>
+    /// <returns>The record</returns>
+    TMajor AddReturn(TMajor record);
 
     /// <summary>
     /// Adds or replaces the major record

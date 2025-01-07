@@ -927,8 +927,20 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 item.Parent.SetTo(rhs.Parent.FormKey);
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ICellNavmeshParent item,
+            ICellNavmeshParentGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         
         public override void DeepCopyIn(
             IANavmeshParent item,
@@ -1134,8 +1146,8 @@ namespace Mutagen.Bethesda.Fallout4
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IWorldspaceGetter> UnusedWorldspaceParent => new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x0, 0x4))));
-        public IFormLinkGetter<ICellGetter> Parent => new FormLink<ICellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_structData.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IWorldspaceGetter> UnusedWorldspaceParent => FormLinkBinaryTranslation.Instance.OverlayFactory<IWorldspaceGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<ICellGetter> Parent => FormLinkBinaryTranslation.Instance.OverlayFactory<ICellGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

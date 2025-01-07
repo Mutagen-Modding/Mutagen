@@ -1,6 +1,8 @@
 ﻿using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Masters;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.Testing.AutoData;
 using Xunit;
@@ -16,8 +18,10 @@ public class MutagenBinaryReadStreamTests
         var stream = new DisposeTesterWrapStream(File.OpenRead(TestDataPathing.SkyrimOverrideMod));
         var mutaStream = new MutagenBinaryReadStream(
             stream,
-            ModKey.FromNameAndExtension("Skyrim.esm"),
-            GameRelease.SkyrimSE);
+            new ParsingMeta(
+                GameConstants.Get(GameRelease.SkyrimSE),
+                ModKey.FromNameAndExtension("Skyrim.esm"),
+                SeparatedMasterPackage.EmptyNull));
         stream.Disposed.Should().BeFalse();
     }
 }

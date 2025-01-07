@@ -945,8 +945,20 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.CellCoordinatesSECell = rhs.CellCoordinatesSECell;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IMapData item,
+            IMapDataGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public MapData DeepCopy(

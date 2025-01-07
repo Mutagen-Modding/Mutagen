@@ -154,6 +154,7 @@
           <xs:sequence>
             <xs:element name="CustomVersion" type="xs:int" minOccurs="0" maxOccurs="1" />
             <xs:element name="Versioning" type="VersioningType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="RecordTypeVersioning" type="RecordTypeVersioningType" minOccurs="0" maxOccurs="unbounded" />
           </xs:sequence>
           <xs:attribute name="recordType" type="xs:string" >
             <xs:annotation>
@@ -651,6 +652,7 @@
       <xs:enumeration value="NullTerminate" />
       <xs:enumeration value="PrependLength" />
       <xs:enumeration value="PrependLengthUShort" />
+      <xs:enumeration value="PrependLengthUInt8" />
       <xs:enumeration value="NullTerminateIfNotEmpty" />
       <xs:enumeration value="PrependLengthWithNullIfContent" />
     </xs:restriction>
@@ -659,6 +661,7 @@
   <xs:simpleType name="FloatIntegerType" final="restriction" >
     <xs:restriction base="xs:string">
       <xs:enumeration value="Byte" />
+      <xs:enumeration value="ByteHundred" />
       <xs:enumeration value="UInt" />
       <xs:enumeration value="UShort" />
     </xs:restriction>
@@ -676,6 +679,11 @@
   <xs:complexType name="VersioningType" >
     <xs:attribute name="formVersion" type="xs:unsignedShort" use="required" />
     <xs:attribute name="action" type="MutagenVersionAction" />
+  </xs:complexType>
+
+  <xs:complexType name="RecordTypeVersioningType" >
+    <xs:attribute name="formVersion" type="xs:unsignedShort" use="required" />
+    <xs:attribute name="recordType" type="xs:string" />
   </xs:complexType>
 
   <xs:complexType name="NBuffer" >
@@ -900,6 +908,7 @@
       <xs:element name="Fields" type="DataTypeFields" minOccurs="0" maxOccurs="1" />
       <xs:element name="CustomVersion" type="xs:int" minOccurs="0" maxOccurs="1" />
       <xs:element name="Versioning" type="VersioningType" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="RecordTypeVersioning" type="RecordTypeVersioningType" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
     <xs:attribute name="recordType" />
     <xs:attribute name="binaryOverlay" type="MutagenBinaryType" >
