@@ -209,6 +209,7 @@ public class MainVM : ViewModel
                         }
                     }
 
+                    Directory.CreateDirectory(Path.GetDirectoryName(p.Path)!);
                     File.WriteAllText(p.Path, JsonConvert.SerializeObject(p.Settings, Formatting.Indented));
                 }
                 ReadInSettings(p.Settings ?? new TestingSettings());
