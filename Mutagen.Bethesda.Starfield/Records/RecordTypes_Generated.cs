@@ -211,6 +211,7 @@ public partial class RecordTypes
     public static readonly RecordType CHAL = new(0x4C414843);
     public static readonly RecordType CHGL = new(0x4C474843);
     public static readonly RecordType CHRR = new(0x52524843);
+    public static readonly RecordType CIFK = new(0x4B464943);
     public static readonly RecordType CIS1 = new(0x31534943);
     public static readonly RecordType CIS2 = new(0x32534943);
     public static readonly RecordType CITC = new(0x43544943);

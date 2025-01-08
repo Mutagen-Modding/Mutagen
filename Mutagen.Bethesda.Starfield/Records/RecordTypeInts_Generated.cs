@@ -209,6 +209,7 @@ public partial class RecordTypeInts
     public const int CHAL = 0x4C414843;
     public const int CHGL = 0x4C474843;
     public const int CHRR = 0x52524843;
+    public const int CIFK = 0x4B464943;
     public const int CIS1 = 0x31534943;
     public const int CIS2 = 0x32534943;
     public const int CITC = 0x43544943;
