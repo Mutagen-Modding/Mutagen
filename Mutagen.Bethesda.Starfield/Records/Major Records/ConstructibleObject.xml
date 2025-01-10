@@ -26,8 +26,8 @@
           <FormLink refName="Keyword" />
         </Fields>
       </List>
-      <UInt64 name="RECF" recordType="RECF" unknown="true" />
       <FormLink name="InstantiationFilterKeyword" refName="Keyword" recordType="CIFK" />
+      <UInt64 name="RECF" recordType="RECF" unknown="true" />
     </Fields>
     <LinkInterface>IResourceTarget</LinkInterface>
     <LinkInterface>IBaseObject</LinkInterface>
