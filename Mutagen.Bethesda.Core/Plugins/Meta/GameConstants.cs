@@ -449,7 +449,7 @@ public sealed record GameConstants
         },
         languageFormat: Strings.StringsLanguageFormat.Iso,
         hasEnabledMarkers: true,
-        defaultFormVersion: 555,
+        defaultFormVersion: 576,
         defaultModHeaderVersion: 0.96f,
         defaultHighRangeFormId: 0x800,
         useLowerRangeFormIdVersion: 0f,
