@@ -102,7 +102,7 @@ public sealed class StringsFolderLookupOverlay : IStringsFolderLookup
                         }
                     }
                     foreach (var bsaFile in Archive.GetApplicableArchivePaths(
-                        release, dataPath, modKey, instructions?.BsaOrdering, fileSystem: fileSystem))
+                        release, dataPath, modKey, fileSystem: fileSystem))
                     {
                         try
                         {

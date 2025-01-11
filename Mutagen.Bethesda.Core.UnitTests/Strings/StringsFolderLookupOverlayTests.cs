@@ -29,7 +29,6 @@ public class StringsFolderLookupOverlayTests
         }
         var overlay = StringsFolderLookupOverlay.TypicalFactory(GameRelease.SkyrimSE, modKey, existingPath, new StringsReadParameters()
         {
-            BsaOrdering = Enumerable.Empty<FileName>(),
             StringsFolderOverride = existingPath
         }, fileSystem: fileSystem);
         
@@ -67,7 +66,6 @@ public class StringsFolderLookupOverlayTests
         
         var overlay = StringsFolderLookupOverlay.TypicalFactory(GameRelease.SkyrimSE, modKey1, existingPath, new StringsReadParameters()
         {
-            BsaOrdering = Enumerable.Empty<FileName>(),
             StringsFolderOverride = existingPath
         }, fileSystem: fileSystem);
         

@@ -19,13 +19,6 @@ public sealed record StringsReadParameters
     public DirectoryPath? BsaFolderOverride { get; init; }
 
     /// <summary>
-    /// How to order BSAs when searching for strings.<br/>
-    /// Null is the default, which will fall back on typical ini files for the bsa ordering.<br/>
-    /// Otherwise, given order will be treated like other load order concepts.  Later entries override earlier entries.
-    /// </summary>
-    public IEnumerable<FileName>? BsaOrdering { get; init; }
-
-    /// <summary>
     /// The object to retrieve the encodings to be used
     /// </summary>
     public IMutagenEncodingProvider? EncodingProvider { get; init; }

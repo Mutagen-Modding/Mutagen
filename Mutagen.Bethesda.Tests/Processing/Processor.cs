@@ -1013,12 +1013,7 @@ public abstract class Processor
             })
             .ToArray();
 
-        var bsaOrder = Archive.GetIniListings(GameRelease).ToList();
-        var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(GameRelease, ModKey, DataFolder,
-            new StringsReadParameters()
-            {
-                BsaOrdering = bsaOrder
-            });
+        var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(GameRelease, ModKey, DataFolder, null);
 
         var overlays = Enums<StringsSource>.Values
             .Select(x => (x, stringsOverlay.Get(x)))
