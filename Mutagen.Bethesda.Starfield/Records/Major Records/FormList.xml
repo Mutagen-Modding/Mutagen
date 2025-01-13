@@ -11,7 +11,7 @@
       <FormLink name="ANAM" recordType="ANAM" refName="FormList" />
     </Fields>
     <LinkInterface>IVoiceTypeOrList</LinkInterface>
-    <LinkInterface>IConstructible</LinkInterface>
+    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
     <LinkInterface>IBaseObject</LinkInterface>
   </Object>
   <Object name="FormListConditionalEntry" objType="Subrecord" >

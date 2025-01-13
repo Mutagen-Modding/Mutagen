@@ -1192,7 +1192,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IGenericBaseForm :
         IAssetLinkContainer,
         IBaseObject,
-        IConstructible,
+        IConstructibleObjectTarget,
         IExternalBaseTemplate,
         IFormLinkContainer,
         IGenericBaseFormGetter,
@@ -1243,7 +1243,7 @@ namespace Mutagen.Bethesda.Starfield
         IAssetLinkContainerGetter,
         IBaseObjectGetter,
         IBinaryItem,
-        IConstructibleGetter,
+        IConstructibleObjectTargetGetter,
         IExternalBaseTemplateGetter,
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,

@@ -25,7 +25,7 @@
       <Marker name="STOP2" recordType="STOP" />
       <RefDirect name="NavmeshGeometry" refName="NavmeshGeometry" overflowRecordType="XXXX" />
     </Fields>
-    <LinkInterface>IConstructible</LinkInterface>
+    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
     <LinkInterface>IExternalBaseTemplate</LinkInterface>
     <LinkInterface>ILeveledBaseFormTarget</LinkInterface>
     <LinkInterface>IBaseObject</LinkInterface>

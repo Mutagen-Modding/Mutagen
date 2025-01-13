@@ -1772,7 +1772,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IIngestible :
         IAssetLinkContainer,
         IBaseObject,
-        IConstructible,
+        IConstructibleObjectTarget,
         IFormLinkContainer,
         IIngestibleGetter,
         IItem,
@@ -1843,7 +1843,7 @@ namespace Mutagen.Bethesda.Starfield
         IAssetLinkContainerGetter,
         IBaseObjectGetter,
         IBinaryItem,
-        IConstructibleGetter,
+        IConstructibleObjectTargetGetter,
         IFormLinkContainerGetter,
         IItemGetter,
         IKeywordedGetter<IKeywordGetter>,

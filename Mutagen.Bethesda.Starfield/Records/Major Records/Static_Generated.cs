@@ -1605,7 +1605,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IStatic :
         IAssetLinkContainer,
         IBaseObject,
-        IConstructible,
+        IConstructibleObjectTarget,
         IFormLinkContainer,
         IItem,
         ILoquiObjectSetter<IStaticInternal>,
@@ -1665,7 +1665,7 @@ namespace Mutagen.Bethesda.Starfield
         IAssetLinkContainerGetter,
         IBaseObjectGetter,
         IBinaryItem,
-        IConstructibleGetter,
+        IConstructibleObjectTargetGetter,
         IFormLinkContainerGetter,
         IItemGetter,
         ILoquiObject<IStaticGetter>,

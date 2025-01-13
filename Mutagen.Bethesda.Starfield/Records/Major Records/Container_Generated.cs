@@ -1850,7 +1850,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IContainer :
         IAssetLinkContainer,
         IBaseObject,
-        IConstructible,
+        IConstructibleObjectTarget,
         IContainerGetter,
         IFormLinkContainer,
         IHaveVirtualMachineAdapter,
@@ -1923,7 +1923,7 @@ namespace Mutagen.Bethesda.Starfield
         IAssetLinkContainerGetter,
         IBaseObjectGetter,
         IBinaryItem,
-        IConstructibleGetter,
+        IConstructibleObjectTargetGetter,
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,
         IItemGetter,
