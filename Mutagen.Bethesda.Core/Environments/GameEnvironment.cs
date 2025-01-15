@@ -112,6 +112,7 @@ public interface IGameEnvironment<TModSetter, TModGetter> : IGameEnvironment<TMo
     new ILinkCache<TModSetter, TModGetter> LinkCache { get; }
 }
 
+[Register(typeof(ArchiveNameFromModKeyProvider), typeof(IArchiveNameFromModKeyProvider))]
 [Register(typeof(ModImporter<>), typeof(IModImporter<>))]
 [Register(typeof(HasEnabledMarkersProvider), typeof(IHasEnabledMarkersProvider))]
 [Register(typeof(LoadOrderListingParser), typeof(ILoadOrderListingParser))]
@@ -311,6 +312,7 @@ public sealed class GameEnvironmentState<TMod> :
 }
 
 
+[Register(typeof(ArchiveNameFromModKeyProvider), typeof(IArchiveNameFromModKeyProvider))]
 [Register(typeof(ModImporter<>), typeof(IModImporter<>))]
 [Register(typeof(HasEnabledMarkersProvider), typeof(IHasEnabledMarkersProvider))]
 [Register(typeof(LoadOrderListingParser), typeof(ILoadOrderListingParser))]

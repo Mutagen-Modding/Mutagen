@@ -68,6 +68,7 @@
             <BuildAction>Compile</BuildAction>
         </Compile>
         <Compile Include="Archives\DI\IArchiveListingDetailsProvider.cs" />
+        <Compile Include="Archives\DI\IArchiveNameFromModKeyProvider.cs" />
         <Compile Include="Archives\Exceptions\ArchiveException.cs" />
         <Compile Include="Archives\IArchiveFile.cs" />
         <Compile Include="Archives\IArchiveFolder.cs" />

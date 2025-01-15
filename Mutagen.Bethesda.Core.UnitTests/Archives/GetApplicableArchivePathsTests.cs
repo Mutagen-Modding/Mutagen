@@ -55,7 +55,9 @@ sResourceArchiveList={SomeExplicitListingBsa}, {UnusedExplicitListingBsa}") }
                     fs,
                     new IniPathProvider(
                         gameReleaseInjection,
-                        new IniPathLookupInjection(MyDocumentsPath)))));
+                        new IniPathLookupInjection(MyDocumentsPath))),
+                new ArchiveNameFromModKeyProvider(
+                    gameReleaseInjection)));
     }
 
     #region No ModKey

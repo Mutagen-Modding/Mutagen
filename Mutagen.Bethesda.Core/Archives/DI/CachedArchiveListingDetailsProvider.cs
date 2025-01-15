@@ -18,7 +18,8 @@ public class CachedArchiveListingDetailsProvider : IArchiveListingDetailsProvide
     
     public CachedArchiveListingDetailsProvider(
         ILoadOrderListingsProvider listingsProvider,
-        IGetArchiveIniListings getArchiveIniListings)
+        IGetArchiveIniListings getArchiveIniListings,
+        IArchiveNameFromModKeyProvider archiveNameFromModKeyProvider)
     {
         _listingsProvider = listingsProvider;
         _getArchiveIniListings = getArchiveIniListings;
@@ -29,7 +30,7 @@ public class CachedArchiveListingDetailsProvider : IArchiveListingDetailsProvide
             listed.AddRange(_listingsProvider.Get()
                 .Where(x => x.Enabled)
                 .Select(x => x.ModKey)
-                .Select(x => x.FileName));
+                .Select(archiveNameFromModKeyProvider.Get));
             return new Payload()
             {
                 Listed = listed,
