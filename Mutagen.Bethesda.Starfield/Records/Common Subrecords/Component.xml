@@ -202,6 +202,10 @@
       <Float name="Unknown3" />
     </Fields>
   </Object>
+  <Object name="VolumesUnknownEnderEmpty" objType="Subrecord" baseClass="AVolumesUnknownEnder" >
+    <Fields>
+    </Fields>
+  </Object>
   <Object name="PlanetContentManagerContentPropertiesComponent" objType="Subrecord" baseClass="AComponent">
     <Fields>
       <UInt32 name="ZNAM" recordType="ZNAM" unknown="true" />

@@ -1314,6 +1314,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             VolumesComponentItem_Registration.Instance,
             VolumesMatrix_Registration.Instance,
             VolumesUnknownEnderDouble_Registration.Instance,
+            VolumesUnknownEnderEmpty_Registration.Instance,
             VolumesUnknownEnderSingle_Registration.Instance,
             VolumesUnknownEnderTrio_Registration.Instance,
             VolumetricLighting_Registration.Instance,

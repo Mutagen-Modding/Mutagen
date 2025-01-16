@@ -5,12 +5,12 @@
     <Description>A C# library for manipulating, creating, and analyzing Starfield mods</Description>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <IsPackable>true</IsPackable>
-      <DebugType>portable</DebugType>
-      <DebugSymbols>true</DebugSymbols>
-      <PublishRepositoryUrl>true</PublishRepositoryUrl>
-      <EmbedUntrackedSources>true</EmbedUntrackedSources>
-      <IncludeSymbols>true</IncludeSymbols>
-      <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
@@ -6740,6 +6740,9 @@
     </Compile>
     <Compile Include="Records\Major Records\SceneCollectionItem_Generated.cs">
       <DependentUpon>SceneCollection.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\VolumesUnknownEnderEmpty_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>
