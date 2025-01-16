@@ -8,10 +8,10 @@
             <Interface>IOwner</Interface>
           </FormLink>
           <FormLink name="Location" refName="Location" />
-          <Int8 name="Rank" />
-          <Int8 name="MinLevel" />
+          <UInt8 name="Rank" />
+          <UInt8 name="MinLevel" />
           <Enum name="Flags" enumName="EncounterZone.Flag" byteLength="1" />
-          <Int8 name="MaxLevel" />
+          <UInt8 name="MaxLevel" />
         </Fields>
       </Data>
     </Fields>
