@@ -9,11 +9,6 @@ public class ManualLoadOrderProvider : ILoadOrderListingsProvider
 {
     private readonly List<ILoadOrderListingGetter> _listings = new();
 
-    public ManualLoadOrderProvider(IImplicitListingsProvider implicitListings)
-    {
-        _listings.AddRange(implicitListings.Get());
-    }
-    
     public void SetTo(IEnumerable<ILoadOrderListingGetter> listings)
     {
         _listings.SetTo(listings);
