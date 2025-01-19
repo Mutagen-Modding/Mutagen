@@ -5,44 +5,14 @@ using Mutagen.Bethesda.Archives.DI;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Inis.DI;
 using Mutagen.Bethesda.Installs.DI;
-using Mutagen.Bethesda.Plugins.Implicit.DI;
-using Mutagen.Bethesda.Plugins.Order.DI;
+using Mutagen.Bethesda.Plugins.Utility;
 using StrongInject;
 using Stream = System.IO.Stream;
 
 namespace Mutagen.Bethesda.Archives;
 
-[Register(typeof(ArchiveNameFromModKeyProvider), typeof(IArchiveNameFromModKeyProvider))]
-[Register(typeof(IniPathLookup), typeof(IIniPathLookup))]
-[Register(typeof(IniPathProvider), typeof(IIniPathProvider))]
-[Register(typeof(GetArchiveIniListings), typeof(IGetArchiveIniListings))]
-[Register(typeof(CachedArchiveListingDetailsProvider), typeof(IArchiveListingDetailsProvider))]
-[Register(typeof(ArchiveExtensionProvider), typeof(IArchiveExtensionProvider))]
-[Register(typeof(CheckArchiveApplicability), typeof(ICheckArchiveApplicability))]
-[Register(typeof(LoadOrderListingsProvider), typeof(ILoadOrderListingsProvider))]
-[Register(typeof(OrderListings), typeof(IOrderListings))]
-[Register(typeof(ImplicitListingsProvider), typeof(IImplicitListingsProvider))]
-[Register(typeof(ImplicitListingModKeyProvider), typeof(IImplicitListingModKeyProvider))]
-[Register(typeof(EnabledPluginListingsProvider), typeof(IEnabledPluginListingsProvider))]
-[Register(typeof(TimestampedPluginListingsProvider), typeof(ITimestampedPluginListingsProvider))]
-[Register(typeof(PluginListingsProvider), typeof(IPluginListingsProvider))]
-[Register(typeof(PluginRawListingsReader), typeof(IPluginRawListingsReader))]
-[Register(typeof(PluginListingsPathContext), typeof(IPluginListingsPathContext))]
-[Register(typeof(TimestampAligner), typeof(ITimestampAligner))]
-[Register(typeof(PluginListingsParser), typeof(IPluginListingsParser))]
-[Register(typeof(PluginListingsPathProvider), typeof(IPluginListingsPathProvider))]
-[Register(typeof(CreationClubListingsProvider), typeof(ICreationClubListingsProvider))]
-[Register(typeof(LoadOrderListingParser), typeof(ILoadOrderListingParser))]
-[Register(typeof(CreationClubListingsPathProvider), typeof(ICreationClubListingsPathProvider))]
-[Register(typeof(CreationClubRawListingsReader), typeof(ICreationClubRawListingsReader))]
-[Register(typeof(TimestampedPluginListingsPreferences), typeof(ITimestampedPluginListingsPreferences))]
-[Register(typeof(HasEnabledMarkersProvider), typeof(IHasEnabledMarkersProvider))]
-[Register(typeof(GameDirectoryProvider), typeof(IGameDirectoryProvider))]
-[Register(typeof(CreationClubEnabledProvider), typeof(ICreationClubEnabledProvider))]
-[Register(typeof(GameCategoryContext), typeof(IGameCategoryContext))]
-[Register(typeof(PluginListingCommentTrimmer), typeof(IPluginListingCommentTrimmer))]
-[Register(typeof(GetApplicableArchivePaths))]
-partial class ArchiveContainer : IContainer<GetApplicableArchivePaths>
+[RegisterModule(typeof(MutagenStrongInjectModule))]
+partial class ArchiveContainer : IContainer<IGetApplicableArchivePaths>
 {
     [Instance] private readonly IFileSystem _fileSystem;
     [Instance] private readonly IGameReleaseContext _gameReleaseContext;
@@ -80,7 +50,7 @@ partial class GetArchiveIniListingsContainer : IContainer<GetArchiveIniListings>
 
 public static class Archive
 {
-    private static GetApplicableArchivePaths GetApplicableArchivePathsDi(
+    private static IGetApplicableArchivePaths GetApplicableArchivePathsDi(
         GameRelease release, 
         DirectoryPath dataFolderPath,
         IFileSystem? fileSystem)

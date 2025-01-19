@@ -46,6 +46,7 @@
         <Compile Include="Archives\Bsa\BsaVersionType.cs" />
         <Compile Include="Archives\Bsa\BsaFileNameBlock.cs" />
         <Compile Include="Archives\DI\ArchiveExtensionProvider.cs" />
+        <Compile Include="Archives\DI\ArchiveModule.cs" />
         <Compile Include="Archives\DI\CachedArchiveListingDetailsProvider.cs" />
         <Compile Include="Archives\DI\ArchiveReaderProvider.cs">
             <CodeLanguage>cs</CodeLanguage>
@@ -81,6 +82,7 @@
         <Compile Include="Assets\DI\GameAssetProvider.cs" />
         <Compile Include="Assets\DI\IAssetProvider.cs" />
         <Compile Include="Assets\IAssetType.cs" />
+        <Compile Include="Environments\DI\EnvironmentsModule.cs" />
         <Compile Include="Environments\DI\GameEnvironmentProvider.cs" />
         <Compile Include="Environments\DI\IDataDirectoryProvider.cs">
             <CodeLanguage>cs</CodeLanguage>
@@ -139,6 +141,7 @@
         <Compile Include="Fonts\FontMapping.cs" />
         <Compile Include="Inis\DI\IIniPathLookup.cs" />
         <Compile Include="Inis\DI\IIniPathProvider.cs" />
+        <Compile Include="Inis\DI\IniModule.cs" />
         <Compile Include="Installs\DI\GameLocatorLookupCache.cs" />
         <Compile Include="Installs\GameLocator.cs" />
         <Compile Include="Installs\GameSource.cs" />
@@ -311,6 +314,7 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Plugins\Implicit\DI\ImplicitModule.cs" />
         <Compile Include="Plugins\Implicit\DI\ImplicitRecordFormKeyProvider.cs">
             <CodeLanguage>cs</CodeLanguage>
             <DefaultPackFolder>content</DefaultPackFolder>
@@ -444,6 +448,7 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Plugins\Order\DI\OrderModule.cs" />
         <Compile Include="Plugins\Order\DI\PluginListingCommentTrimmer.cs" />
         <Compile Include="Plugins\Order\DI\PluginListingsParser.cs">
             <CodeLanguage>cs</CodeLanguage>
@@ -557,6 +562,7 @@
         <Compile Include="Plugins\Utility\DI\ModCompactor.cs" />
         <Compile Include="Plugins\Utility\HeaderVersionHelper.cs" />
         <Compile Include="Plugins\Utility\ModCompaction.cs" />
+        <Compile Include="Plugins\Utility\MutagenStrongInjectModule.cs" />
         <Compile Include="Plugins\Warmup.cs">
             <CodeLanguage>cs</CodeLanguage>
             <DefaultPackFolder>content</DefaultPackFolder>
