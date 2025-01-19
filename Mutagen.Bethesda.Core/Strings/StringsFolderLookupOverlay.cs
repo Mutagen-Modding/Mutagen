@@ -1,10 +1,8 @@
-using Mutagen.Bethesda.Archives;
-using Mutagen.Bethesda.Archives.Exceptions;
 using Mutagen.Bethesda.Plugins;
 using Noggog;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
-using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Strings.DI;
 
 namespace Mutagen.Bethesda.Strings;
@@ -18,7 +16,7 @@ public sealed class StringsFolderLookupOverlay : IStringsFolderLookup
 
     internal record LookupItem(IStringsLookup StringsLookup, string SourcePath);
     
-    class DictionaryBundle
+    internal class DictionaryBundle
     {
         private readonly Dictionary<Language, Lazy<LookupItem>> _strings = new();
         private readonly Dictionary<Language, Lazy<LookupItem>> _dlStrings = new();
@@ -43,7 +41,7 @@ public sealed class StringsFolderLookupOverlay : IStringsFolderLookup
 
     public bool Empty => _dictionaries.Value.Empty;
 
-    private StringsFolderLookupOverlay(Lazy<DictionaryBundle> instantiator, DirectoryPath dataPath, ModKey modKey)
+    internal StringsFolderLookupOverlay(Lazy<DictionaryBundle> instantiator, DirectoryPath dataPath, ModKey modKey)
     {
         _dictionaries = instantiator;
         DataPath = dataPath;
@@ -58,102 +56,10 @@ public sealed class StringsFolderLookupOverlay : IStringsFolderLookup
         StringsReadParameters? instructions,
         IFileSystem? fileSystem = null)
     {
-        fileSystem = fileSystem.GetOrDefault();
-        var languageFormat = GameConstants.Get(release).StringsLanguageFormat ?? throw new ArgumentException($"Tried to get language format for an unsupported game: {release}", nameof(release));
-        var encodings = instructions?.EncodingProvider ?? new MutagenEncodingProvider();
-        var stringsFolderPath = instructions?.StringsFolderOverride;
-        if (stringsFolderPath == null)
-        {
-            stringsFolderPath = Path.Combine(dataPath.Path, "Strings");
-        }
-
-        if (instructions?.BsaFolderOverride != null)
-        {
-            dataPath = instructions.BsaFolderOverride.Value;
-        }
-        return new StringsFolderLookupOverlay(new Lazy<DictionaryBundle>(
-                isThreadSafe: true,
-                valueFactory: () =>
-                {
-                    var bundle = new DictionaryBundle();
-                    if (fileSystem.Directory.Exists(stringsFolderPath.Value))
-                    {
-                        var bsaEnumer = stringsFolderPath.Value.EnumerateFiles(searchPattern: $"{modKey.Name}*{StringsUtility.StringsFileExtension}", fileSystem: fileSystem);
-                        foreach (var file in bsaEnumer)
-                        {
-                            if (!StringsUtility.TryRetrieveInfoFromString(
-                                    languageFormat,
-                                    file.Name.String, 
-                                    out var type,
-                                    out var lang, 
-                                    out var modName)
-                                || !modKey.Name.AsSpan().Equals(modName, StringComparison.InvariantCulture))
-                            {
-                                continue;
-                            }
-                            var dict = bundle.Get(type);
-                            dict[lang] = new Lazy<LookupItem>(() =>
-                                {
-                                    return new LookupItem(
-                                        new StringsLookupOverlay(file.Path, type, encodings.GetEncoding(release, lang), fileSystem: fileSystem),
-                                        file.Path);
-                                },
-                                LazyThreadSafetyMode.ExecutionAndPublication);
-                        }
-                    }
-                    foreach (var bsaFile in Archive.GetApplicableArchivePaths(
-                        release, dataPath, modKey, fileSystem: fileSystem))
-                    {
-                        try
-                        {
-                            var bsaReader = Archive.CreateReader(release, bsaFile, fileSystem);
-                            if (!bsaReader.TryGetFolder("strings", out var stringsFolder)) continue;
-                            try
-                            {
-                                foreach (var item in stringsFolder.Files)
-                                {
-                                    if (!StringsUtility.TryRetrieveInfoFromString(
-                                            languageFormat, 
-                                            Path.GetFileName(item.Path), 
-                                            out var type, 
-                                            out var lang,
-                                            out var modName))
-                                    {
-                                        continue;
-                                    }
-                                    if (!MemoryExtensions.Equals(modKey.Name, modName, StringComparison.OrdinalIgnoreCase)) continue;
-                                    var dict = bundle.Get(type);
-                                    if (dict.ContainsKey(lang)) continue;
-                                    dict[lang] = new Lazy<LookupItem>(() =>
-                                    {
-                                        try
-                                        {
-                                            return new LookupItem(
-                                                new StringsLookupOverlay(item.GetMemorySlice(), type, encodings.GetEncoding(release, lang)),
-                                                Path.Combine(bsaFile, item.Path));
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            throw ArchiveException.EnrichWithFileAccessed("String file from BSA failed to parse", ex, item.Path);
-                                        }
-                                    }, LazyThreadSafetyMode.ExecutionAndPublication);
-                                }
-                            }
-                            catch (Exception ex)
-                                when (stringsFolder.Path != null)
-                            {
-                                throw ArchiveException.EnrichWithFolderAccessed("BSA folder failed to parse for string file", ex, stringsFolder.Path);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            throw ArchiveException.EnrichWithArchivePath("BSA failed to parse for string file", ex, bsaFile);
-                        }
-                    }
-                    return bundle;
-                }),
-            dataPath: dataPath,
-            modKey: modKey);
+        var factory = new StringsFolderLookupFactory(
+            new DataDirectoryInjection(dataPath),
+            fileSystem.GetOrDefault());
+        return factory.InternalFactory(release, modKey, instructions);
     }
 
     /// <inheritdoc />

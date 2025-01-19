@@ -11,14 +11,15 @@ namespace Mutagen.Bethesda.UnitTests.Strings;
 
 public class StringsFolderLookupOverlayTests
 {
-    [Theory, MutagenAutoData]
+    [Theory, MutagenContainerAutoData]
     internal void Typical(IFileSystem fileSystem,
         ModKey modKey,
         DirectoryPath existingPath,
         MutagenEncodingProvider encodingProvider,
         string normalStr,
         string ilStr,
-        string dlStr)
+        string dlStr,
+        StringsFolderLookupFactory factory)
     {
         uint normalId, ilId, dlId;
         using (var writer = new StringsWriter(GameRelease.SkyrimSE, modKey, existingPath, encodingProvider, fileSystem))
@@ -27,10 +28,10 @@ public class StringsFolderLookupOverlayTests
             ilId = writer.Register(ilStr, Language.English, StringsSource.IL);
             dlId = writer.Register(dlStr, Language.English, StringsSource.DL);
         }
-        var overlay = StringsFolderLookupOverlay.TypicalFactory(GameRelease.SkyrimSE, modKey, existingPath, new StringsReadParameters()
+        var overlay = factory.Factory(GameRelease.SkyrimSE, modKey, new StringsReadParameters()
         {
             StringsFolderOverride = existingPath
-        }, fileSystem: fileSystem);
+        });
         
         overlay.TryLookup(StringsSource.Normal, Language.English, normalId, out var normalStrOut)
             .Should().BeTrue();
@@ -43,12 +44,13 @@ public class StringsFolderLookupOverlayTests
         dlStrOut.Should().Be(dlStr);
     }
     
-    [Theory, MutagenAutoData]
+    [Theory, MutagenContainerAutoData]
     internal void SuffixCollision(IFileSystem fileSystem,
         DirectoryPath existingPath,
         MutagenEncodingProvider encodingProvider,
         string str1,
-        string str2)
+        string str2,
+        StringsFolderLookupFactory factory)
     {
         var modKey1 = ModKey.FromFileName("FileName.esm");
         uint id1;
@@ -64,10 +66,10 @@ public class StringsFolderLookupOverlayTests
             id2 = writer.Register(str2, Language.English, StringsSource.Normal);
         }
         
-        var overlay = StringsFolderLookupOverlay.TypicalFactory(GameRelease.SkyrimSE, modKey1, existingPath, new StringsReadParameters()
+        var overlay = factory.Factory(GameRelease.SkyrimSE, modKey1, new StringsReadParameters()
         {
             StringsFolderOverride = existingPath
-        }, fileSystem: fileSystem);
+        });
         
         overlay.TryLookup(StringsSource.Normal, Language.English, id1, out var strOut)
             .Should().BeTrue();
