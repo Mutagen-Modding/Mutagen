@@ -12,16 +12,54 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Implicit.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Plugins.Records.DI;
+using StrongInject;
 
 namespace Mutagen.Bethesda.Plugins.Order;
 
 /// <summary>
 /// A static class with LoadOrder related utility functions
 /// </summary>
-public static class LoadOrder
+public static partial class LoadOrder
 {
     private static TimestampAligner Aligner = new(IFileSystemExt.DefaultFilesystem);
     private static OrderListings Orderer = new();
+    
+    [Register(typeof(DataDirectoryProvider), typeof(IDataDirectoryProvider))]
+    [Register(typeof(ModImporter<>), typeof(IModImporter<>))]
+    [Register(typeof(LoadOrderImporter<>), typeof(LoadOrderImporter<>), typeof(ILoadOrderImporter<>))]
+    [Register(typeof(LiveLoadOrderTimings), typeof(ILiveLoadOrderTimings))]
+    [Register(typeof(MasterFlagsLookupProvider), typeof(IMasterFlagsLookupProvider))]
+    [Register(typeof(PluginLiveLoadOrderProvider), typeof(IPluginLiveLoadOrderProvider))]
+    [Register(typeof(CreationClubLiveLoadOrderFolderWatcher), typeof(ICreationClubLiveLoadOrderFolderWatcher))]
+    [Register(typeof(CreationClubLiveListingsFileReader), typeof(ICreationClubLiveListingsFileReader))]
+    [Register(typeof(CreationClubLiveLoadOrderProvider), typeof(ICreationClubLiveLoadOrderProvider))]
+    [Register(typeof(LiveLoadOrderProvider), typeof(LiveLoadOrderProvider), typeof(ILiveLoadOrderProvider))]
+    [Register(typeof(CreationClubRawListingsReader), typeof(ICreationClubRawListingsReader))]
+    [Register(typeof(GameDirectoryProvider), typeof(IGameDirectoryProvider))]
+    [Register(typeof(GameCategoryContext), typeof(IGameCategoryContext))]
+    [Register(typeof(CreationClubEnabledProvider), typeof(ICreationClubEnabledProvider))]
+    [Register(typeof(CreationClubListingsPathProvider), typeof(ICreationClubListingsPathProvider))]
+    [Register(typeof(PluginListingCommentTrimmer), typeof(IPluginListingCommentTrimmer))]
+    [Register(typeof(EnabledPluginListingsProvider), typeof(IEnabledPluginListingsProvider))]
+    [Register(typeof(CreationClubListingsProvider), typeof(ICreationClubListingsProvider))]
+    [Register(typeof(HasEnabledMarkersProvider), typeof(IHasEnabledMarkersProvider))]
+    [Register(typeof(LoadOrderListingParser), typeof(ILoadOrderListingParser))]
+    [Register(typeof(PluginListingsParser), typeof(IPluginListingsParser))]
+    [Register(typeof(PluginListingsPathProvider), typeof(IPluginListingsPathProvider))]
+    [Register(typeof(PluginRawListingsReader), typeof(IPluginRawListingsReader))]
+    [Register(typeof(PluginListingsPathContext), typeof(IPluginListingsPathContext))]
+    [Register(typeof(TimestampAligner), typeof(ITimestampAligner))]
+    [Register(typeof(TimestampedPluginListingsProvider), typeof(ITimestampedPluginListingsProvider))]
+    [Register(typeof(ImplicitListingModKeyProvider), typeof(IImplicitListingModKeyProvider))]
+    [Register(typeof(PluginListingsProvider), typeof(IPluginListingsProvider))]
+    [Register(typeof(ImplicitListingsProvider), typeof(IImplicitListingsProvider))]
+    [Register(typeof(OrderListings), typeof(IOrderListings))]
+    [Register(typeof(TimestampedPluginListingsPreferences), typeof(ITimestampedPluginListingsPreferences))]
+    [Register(typeof(LoadOrderListingsProvider), typeof(LoadOrderListingsProvider), typeof(ILoadOrderListingsProvider))]
+    internal partial class CommonModule
+    {
+        [Instance(Options.AsImplementedInterfaces)] public static GameLocatorLookupCache LookupCache = GameLocatorLookupCache.Instance;
+    }
 
     #region Timestamps
 
@@ -86,6 +124,30 @@ public static class LoadOrder
 
     #endregion
 
+    [RegisterModule(typeof(CommonModule))]
+    internal partial class GetLoadOrderListingsModule : IContainer<LoadOrderListingsProvider>
+    {
+        [Instance] private readonly IGameReleaseContext _release;
+        [Instance] private readonly IFileSystem _fileSystem;
+        [Instance] private readonly IDataDirectoryProvider _dataDirectory;
+        [Instance] private readonly ITimestampedPluginListingsPreferences _timestampedPrefs;
+        
+        public GetLoadOrderListingsModule(
+            GameRelease release,
+            DirectoryPath dataPath,
+            bool throwOnMissingMods,
+            IFileSystem? fileSystem)
+        {
+            _release = new GameReleaseInjection(release);
+            _fileSystem = fileSystem.GetOrDefault();
+            _dataDirectory = new DataDirectoryInjection(dataPath);
+            _timestampedPrefs = new TimestampedPluginListingsPreferences()
+            {
+                ThrowOnMissingMods = throwOnMissingMods
+            };
+        }
+    }
+
     /// <summary>
     /// Returns a load order listing from the usual sources
     /// </summary>
@@ -103,39 +165,41 @@ public static class LoadOrder
         bool throwOnMissingMods = true,
         IFileSystem? fileSystem = null)
     {
-        fileSystem ??= IFileSystemExt.DefaultFilesystem;
-        var gameContext = new GameReleaseInjection(game);
-        var categoryContext = new GameCategoryInjection(game.ToCategory());
-        var pluginPath = new PluginListingsPathContext(
-            new PluginListingsPathProvider(),
-            gameContext);
-        var dataDir = new DataDirectoryInjection(dataPath);
-        var pluginProvider = PluginListingsProvider(
-            dataDir,
-            gameContext,
-            pluginPath,
-            throwOnMissingMods,
-            fileSystem);
-
-        return new LoadOrderListingsProvider(
-                Orderer,
-                new ImplicitListingsProvider(
-                    fileSystem,
-                    new DataDirectoryInjection(dataPath),
-                    new ImplicitListingModKeyProvider(gameContext)),
-                pluginProvider,
-                new CreationClubListingsProvider(
-                    fileSystem,
-                    dataDir,
-                    new CreationClubListingsPathProvider(
-                        categoryContext,
-                        new CreationClubEnabledProvider(
-                            categoryContext),
-                        new GameDirectoryInjection(dataPath.Directory!.Value)),
-                    new CreationClubRawListingsReader()))
-            .Get();
+        var prov = new GetLoadOrderListingsModule(game, dataPath, throwOnMissingMods, fileSystem)
+            .Resolve().Value;
+        return prov.Get();
     }
 
+    [RegisterModule(typeof(CommonModule))]
+    internal partial class GetLoadOrderListingsPluginsOverrideModule : IContainer<LoadOrderListingsProvider>
+    {
+        [Instance] private readonly IGameReleaseContext _release;
+        [Instance] private readonly IFileSystem _fileSystem;
+        [Instance] private readonly IDataDirectoryProvider _dataDirectory;
+        [Instance] private readonly ITimestampedPluginListingsPreferences _timestampedPrefs;
+        [Instance] private readonly ICreationClubListingsPathProvider _creationClubListingsPathProvider;
+        [Instance] private readonly IPluginListingsPathContext _pluginListingsPathContext;
+        
+        public GetLoadOrderListingsPluginsOverrideModule(
+            GameRelease release,
+            FilePath pluginsFilePath,
+            FilePath? creationClubFilePath,
+            DirectoryPath dataPath,
+            bool throwOnMissingMods,
+            IFileSystem? fileSystem)
+        {
+            _release = new GameReleaseInjection(release);
+            _fileSystem = fileSystem.GetOrDefault();
+            _pluginListingsPathContext = new PluginListingsPathInjection(pluginsFilePath);
+            _dataDirectory = new DataDirectoryInjection(dataPath);
+            _creationClubListingsPathProvider = new CreationClubListingsPathInjection(creationClubFilePath);
+            _timestampedPrefs = new TimestampedPluginListingsPreferences()
+            {
+                ThrowOnMissingMods = throwOnMissingMods
+            };
+        }
+    }
+    
     public static IEnumerable<ILoadOrderListingGetter> GetLoadOrderListings(
         GameRelease game,
         FilePath pluginsFilePath,
@@ -144,30 +208,11 @@ public static class LoadOrder
         bool throwOnMissingMods = true,
         IFileSystem? fileSystem = null)
     {
-        fileSystem ??= IFileSystemExt.DefaultFilesystem;
-        var gameContext = new GameReleaseInjection(game);
-        var pluginPath = new PluginListingsPathInjection(pluginsFilePath);
-        var dataDir = new DataDirectoryInjection(dataPath);
-        var pluginProvider = PluginListingsProvider(
-            dataDir,
-            gameContext,
-            pluginPath,
-            throwOnMissingMods,
-            fileSystem);
-
-        return new LoadOrderListingsProvider(
-                Orderer,
-                new ImplicitListingsProvider(
-                    fileSystem,
-                    new DataDirectoryInjection(dataPath),
-                    new ImplicitListingModKeyProvider(gameContext)),
-                pluginProvider,
-                new CreationClubListingsProvider(
-                    fileSystem,
-                    dataDir,
-                    new CreationClubListingsPathInjection(creationClubFilePath),
-                    new CreationClubRawListingsReader()))
-            .Get();
+        var prov = new GetLoadOrderListingsPluginsOverrideModule(
+                game, pluginsFilePath, creationClubFilePath, 
+                dataPath, throwOnMissingMods, fileSystem)
+            .Resolve().Value;
+        return prov.Get();
     }
 
     public static IEnumerable<T> OrderListings<T>(IEnumerable<T> e, Func<T, ModKey> selector)
@@ -184,31 +229,40 @@ public static class LoadOrder
         return Orderer.Order(implicitListings, pluginsListings, creationClubListings, selector);
     }
 
+    [RegisterModule(typeof(CommonModule))]
+    internal partial class LiveLoadOrderProviderModule : IContainer<LiveLoadOrderProvider>
+    {
+        [Instance] private readonly IGameReleaseContext _release;
+        [Instance] private readonly IFileSystem _fileSystem;
+        [Instance] private readonly IDataDirectoryProvider _dataDirectory;
+        [Instance] private readonly ITimestampedPluginListingsPreferences _timestampedPrefs;
+
+        public LiveLoadOrderProviderModule(
+            GameRelease release,
+            DirectoryPath dataFolderPath,
+            bool throwOnMissingMods,
+            IFileSystem? fileSystem)
+        {
+            _release = new GameReleaseInjection(release);
+            _dataDirectory = new DataDirectoryInjection(dataFolderPath);
+            _fileSystem = fileSystem.GetOrDefault();
+            _timestampedPrefs = new TimestampedPluginListingsPreferences()
+            {
+                ThrowOnMissingMods = throwOnMissingMods
+            };
+        }
+    }
+
     public static IObservable<IChangeSet<ILoadOrderListingGetter>> GetLiveLoadOrderListings(
         GameRelease game,
         DirectoryPath dataFolderPath,
         out IObservable<ErrorResponse> state,
         bool throwOnMissingMods = true,
-        IScheduler? scheduler = null)
+        IScheduler? scheduler = null,
+        IFileSystem? fileSystem = null)
     {
-        var gameRelease = new GameReleaseInjection(game);
-        var pluginPath = new PluginListingsPathContext(
-            new PluginListingsPathProvider(),
-            gameRelease);
-        var gameCategoryInjection = new GameCategoryInjection(game.ToCategory());
-        var cccPath = new CreationClubListingsPathProvider(
-            gameCategoryInjection,
-            new CreationClubEnabledProvider(
-                gameCategoryInjection),
-            new GameDirectoryInjection(dataFolderPath.Directory!.Value));
-        return GetLiveLoadOrderListings(
-            game,
-            pluginPath.Path,
-            dataFolderPath,
-            out state,
-            cccPath.Path,
-            throwOnMissingMods,
-            scheduler: scheduler);
+        var prov = new LiveLoadOrderProviderModule(game, dataFolderPath, throwOnMissingMods, fileSystem);
+        return prov.Resolve().Value.Get(out state, scheduler);
     }
 
     public static IObservable<IChangeSet<ILoadOrderListingGetter>> GetLiveLoadOrderListings(
@@ -241,6 +295,45 @@ public static class LoadOrder
             .Switch();
     }
 
+    [RegisterModule(typeof(CommonModule))]
+    internal partial class GetLiveLoadOrderListingsPluginsListingsOverrideModule : IContainer<LiveLoadOrderProvider>
+    {
+        [Instance] private readonly IGameReleaseContext _release;
+        [Instance] private readonly IFileSystem _fileSystem;
+        [Instance] private readonly IDataDirectoryProvider _dataDirectory;
+        [Instance] private readonly ITimestampedPluginListingsPreferences _timestampedPrefs;
+        [Instance] private readonly IPluginListingsPathContext _listingsPathContext;
+        [Instance] private readonly ILiveLoadOrderTimings _liveLoadOrderTimings;
+        private readonly FilePath? _cccLoadOrderFilePath;
+        [Factory] private ICreationClubListingsPathProvider CreateCccPathProvider(
+            IGameCategoryContext categoryContext,
+            ICreationClubEnabledProvider isUsed,
+            IGameDirectoryProvider gameDirectoryProvider) => _cccLoadOrderFilePath == null
+            ? new CreationClubListingsPathProvider(categoryContext, isUsed, gameDirectoryProvider)
+            : new CreationClubListingsPathInjection(_cccLoadOrderFilePath);
+
+        public GetLiveLoadOrderListingsPluginsListingsOverrideModule(
+            GameRelease release,
+            FilePath loadOrderFilePath,
+            DirectoryPath dataFolderPath,
+            bool throwOnMissingMods,
+            FilePath? cccLoadOrderFilePath,
+            ILiveLoadOrderTimings? timings,
+            IFileSystem? fileSystem)
+        {
+            _cccLoadOrderFilePath = cccLoadOrderFilePath;
+            _liveLoadOrderTimings = timings ?? new LiveLoadOrderTimings();
+            _listingsPathContext = new PluginListingsPathInjection(loadOrderFilePath);
+            _release = new GameReleaseInjection(release);
+            _dataDirectory = new DataDirectoryInjection(dataFolderPath);
+            _fileSystem = fileSystem.GetOrDefault();
+            _timestampedPrefs = new TimestampedPluginListingsPreferences()
+            {
+                ThrowOnMissingMods = throwOnMissingMods
+            };
+        }
+    }
+    
     public static IObservable<IChangeSet<ILoadOrderListingGetter>> GetLiveLoadOrderListings(
         GameRelease game,
         FilePath loadOrderFilePath,
@@ -252,46 +345,9 @@ public static class LoadOrder
         IFileSystem? fileSystem = null,
         ILiveLoadOrderTimings? timings = null)
     {
-        fileSystem ??= IFileSystemExt.DefaultFilesystem;
-        var dataDir = new DataDirectoryInjection(dataFolderPath);
-        var gameRelease = new GameReleaseInjection(game);
-        var pluginPath = new PluginListingsPathInjection(loadOrderFilePath);
-        var cccPath = new CreationClubListingsPathInjection(cccLoadOrderFilePath);
-        var pluginListingsProv = PluginListingsProvider(
-            dataDir,
-            gameRelease,
-            pluginPath,
-            throwOnMissingMods,
-            fileSystem);
-        var creationClubRawListingsReader = new CreationClubRawListingsReader();
-        var cccListingsProv = new CreationClubListingsProvider(
-            fileSystem,
-            dataDir,
-            cccPath,
-            creationClubRawListingsReader);
-        return new LiveLoadOrderProvider(
-                new PluginLiveLoadOrderProvider(
-                    fileSystem,
-                    pluginListingsProv,
-                    pluginPath),
-                new CreationClubLiveLoadOrderProvider(
-                    new CreationClubLiveListingsFileReader(
-                        fileSystem,
-                        creationClubRawListingsReader,
-                        cccPath),
-                    new CreationClubLiveLoadOrderFolderWatcher(
-                        fileSystem,
-                        dataDir)),
-                new LoadOrderListingsProvider(
-                    Orderer,
-                    new ImplicitListingsProvider(
-                        fileSystem,
-                        dataDir,
-                        new ImplicitListingModKeyProvider(gameRelease)),
-                    pluginListingsProv,
-                    cccListingsProv),
-                timings ?? new LiveLoadOrderTimings())
-            .Get(out state, scheduler);
+        var prov = new GetLiveLoadOrderListingsPluginsListingsOverrideModule(
+            game, loadOrderFilePath, dataFolderPath, throwOnMissingMods, cccLoadOrderFilePath, timings, fileSystem);
+        return prov.Resolve().Value.Get(out state, scheduler);
     }
 
     public static IObservable<IChangeSet<ILoadOrderListingGetter>> GetLiveLoadOrderListings(
@@ -327,6 +383,28 @@ public static class LoadOrder
         return obs.Select(x => x.LoadOrder)
             .Switch();
     }
+    
+    [RegisterModule(typeof(CommonModule))]
+    internal partial class ImportDataFolderModule<TMod> : IContainer<LoadOrderImporter<TMod>>
+        where TMod : class, IModGetter
+    {
+        [Instance] private readonly IGameReleaseContext _release;
+        [Instance] private readonly IFileSystem _fileSystem;
+        [Instance] private readonly IDataDirectoryProvider _dataDirectory;
+        [Instance] private readonly ILoadOrderListingsProvider _loadOrder;
+
+        public ImportDataFolderModule(
+            GameRelease release,
+            DirectoryPath dataPath,
+            IEnumerable<ILoadOrderListingGetter> loadOrder,
+            IFileSystem? fileSystem)
+        {
+            _release = new GameReleaseInjection(release);
+            _dataDirectory = new DataDirectoryInjection(dataPath);
+            _fileSystem = fileSystem.GetOrDefault();
+            _loadOrder = new LoadOrderListingsInjection(loadOrder);
+        }
+    }
 
     /// <summary>
     /// Constructs a load order filled with mods constructed
@@ -344,21 +422,8 @@ public static class LoadOrder
         IFileSystem? fileSystem = null)
         where TMod : class, IModGetter
     {
-        fileSystem ??= IFileSystemExt.DefaultFilesystem;
-        var gameReleaseInjection = new GameReleaseInjection(gameRelease);
-        var dataDirInjection = new DataDirectoryInjection(dataFolder);
-        return new LoadOrderImporter<TMod>(
-                fileSystem,
-                dataDirInjection,
-                new LoadOrderListingsInjection(loadOrder),
-                new ModImporter<TMod>(
-                    fileSystem,
-                    gameReleaseInjection),
-                new MasterFlagsLookupProvider(
-                    gameReleaseInjection,
-                    fileSystem,
-                    dataDirInjection))
-            .Import();
+        return new ImportDataFolderModule<TMod>(gameRelease, dataFolder, loadOrder, fileSystem)
+            .Resolve().Value.Import();
     }
 
     /// <summary>
@@ -377,22 +442,36 @@ public static class LoadOrder
         IFileSystem? fileSystem = null)
         where TMod : class, IModGetter
     {
-        fileSystem ??= IFileSystemExt.DefaultFilesystem;
-        var gameReleaseInjection = new GameReleaseInjection(gameRelease);
-        var dataDirInjection = new DataDirectoryInjection(dataFolder);
-        return new LoadOrderImporter<TMod>(
-                fileSystem,
-                dataDirInjection,
-                new LoadOrderListingsInjection(
-                    loadOrder.Select(x => new LoadOrderListing(x, true))),
-                new ModImporter<TMod>(
-                    fileSystem,
-                    gameReleaseInjection),
-                new MasterFlagsLookupProvider(
-                    gameReleaseInjection,
-                    fileSystem,
-                    dataDirInjection))
-            .Import();
+        return Import<TMod>(
+            dataFolder,
+            loadOrder.Select(x => new LoadOrderListing(x, true)),
+            gameRelease,
+            fileSystem);
+    }
+    
+    [RegisterModule(typeof(CommonModule))]
+    internal partial class ImportDataFolderModFactoryModule<TMod> : IContainer<LoadOrderImporter<TMod>>
+        where TMod : class, IModKeyed
+    {
+        [Instance] private readonly IGameReleaseContext _release;
+        [Instance] private readonly IFileSystem _fileSystem;
+        [Instance] private readonly IDataDirectoryProvider _dataDirectory;
+        [Instance] private readonly IModImporter<TMod> _modImporter;
+        [Instance] private readonly ILoadOrderListingsProvider _loadOrder;
+
+        public ImportDataFolderModFactoryModule(
+            GameRelease release,
+            DirectoryPath dataPath,
+            IEnumerable<ILoadOrderListingGetter> loadOrder,
+            Func<ModPath, TMod> factory,
+            IFileSystem? fileSystem)
+        {
+            _release = new GameReleaseInjection(release);
+            _dataDirectory = new DataDirectoryInjection(dataPath);
+            _fileSystem = fileSystem.GetOrDefault();
+            _modImporter = new ModImporterWrapper<TMod>(factory);
+            _loadOrder = new LoadOrderListingsInjection(loadOrder);
+        }
     }
 
     /// <summary>
@@ -400,7 +479,7 @@ public static class LoadOrder
     /// </summary>
     /// <param name="dataFolder">Path data folder containing mods</param>
     /// <param name="loadOrder">Unique list of mod keys to import</param>
-    /// <param name="gameRelease">GameRelease associated with the mods to create<br/>
+    /// <param name="gameRelease">GameRelease associated with the mods to create</param>
     /// <param name="factory">Func to use to create a new mod from a path</param>
     /// <param name="fileSystem">Filesystem to use</param>
     public static ILoadOrder<IModListing<TMod>> Import<TMod>(
@@ -411,20 +490,8 @@ public static class LoadOrder
         IFileSystem? fileSystem = null)
         where TMod : class, IModKeyed
     {
-        fileSystem ??= IFileSystemExt.DefaultFilesystem;
-        var gameReleaseInjection = new GameReleaseInjection(gameRelease);
-        var dataDirInjection = new DataDirectoryInjection(dataFolder);
-        return new LoadOrderImporter<TMod>(
-                fileSystem,
-                new DataDirectoryInjection(dataFolder),
-                new LoadOrderListingsInjection(
-                    loadOrder.Select(x => new LoadOrderListing(x, true))),
-                new ModImporterWrapper<TMod>(factory),
-                new MasterFlagsLookupProvider(
-                    gameReleaseInjection,
-                    fileSystem,
-                    dataDirInjection))
-            .Import();
+        return new ImportDataFolderModFactoryModule<TMod>(gameRelease, dataFolder, loadOrder.Select(x => new LoadOrderListing(x, true)), factory, fileSystem)
+            .Resolve().Value.Import();
     }
 
     /// <summary>
@@ -432,6 +499,7 @@ public static class LoadOrder
     /// </summary>
     /// <param name="dataFolder">Path data folder containing mods</param>
     /// <param name="loadOrder">Unique list of listings to import</param>
+    /// <param name="gameRelease">GameRelease associated with the mods to create</param>
     /// <param name="factory">Func to use to create a new mod from a path</param>
     /// <param name="fileSystem">Filesystem to use</param>
     public static ILoadOrder<IModListing<TMod>> Import<TMod>(
@@ -442,21 +510,29 @@ public static class LoadOrder
         IFileSystem? fileSystem = null)
         where TMod : class, IModKeyed
     {
-        fileSystem ??= IFileSystemExt.DefaultFilesystem;
-        var gameReleaseInjection = new GameReleaseInjection(gameRelease);
-        var dataDirInjection = new DataDirectoryInjection(dataFolder);
-        return new LoadOrderImporter<TMod>(
-                fileSystem,
-                dataDirInjection,
-                new LoadOrderListingsInjection(loadOrder),
-                new ModImporterWrapper<TMod>(factory),
-                new MasterFlagsLookupProvider(
-                    gameReleaseInjection,
-                    fileSystem,
-                    dataDirInjection))
-            .Import();
+        return new ImportDataFolderModFactoryModule<TMod>(gameRelease, dataFolder, loadOrder, factory, fileSystem)
+            .Resolve().Value.Import();
     }
+    
+    [RegisterModule(typeof(CommonModule))]
+    internal partial class ImportModule<TMod> : IContainer<LoadOrderImporter<TMod>>
+        where TMod : class, IModGetter
+    {
+        [Instance] private readonly IGameReleaseContext _release;
+        [Instance] private readonly IFileSystem _fileSystem;
+        [Instance] private readonly ILoadOrderListingsProvider _loadOrder;
 
+        public ImportModule(
+            GameRelease release,
+            IEnumerable<ILoadOrderListingGetter> loadOrder,
+            IFileSystem? fileSystem)
+        {
+            _release = new GameReleaseInjection(release);
+            _fileSystem = fileSystem.GetOrDefault();
+            _loadOrder = new LoadOrderListingsInjection(loadOrder);
+        }
+    }
+    
     /// <summary>
     /// Constructs a load order filled with mods constructed
     /// </summary>
@@ -471,22 +547,8 @@ public static class LoadOrder
         IFileSystem? fileSystem = null)
         where TMod : class, IModGetter
     {
-        fileSystem ??= IFileSystemExt.DefaultFilesystem;
-        var gameReleaseInjection = new GameReleaseInjection(gameRelease);
-        var dataDirectory = new DataDirectoryProvider(gameReleaseInjection,
-            GameLocatorLookupCache.Instance);
-        return new LoadOrderImporter<TMod>(
-                fileSystem,
-                dataDirectory,
-                new LoadOrderListingsInjection(loadOrder),
-                new ModImporter<TMod>(
-                    fileSystem,
-                    gameReleaseInjection),
-                new MasterFlagsLookupProvider(
-                    gameReleaseInjection,
-                    fileSystem,
-                    dataDirectory))
-            .Import();
+        return new ImportModule<TMod>(gameRelease, loadOrder, fileSystem)
+            .Resolve().Value.Import();
     }
 
     /// <summary>
@@ -503,25 +565,34 @@ public static class LoadOrder
         IFileSystem? fileSystem = null)
         where TMod : class, IModGetter
     {
-        fileSystem ??= IFileSystemExt.DefaultFilesystem;
-        var gameReleaseInjection = new GameReleaseInjection(gameRelease);
-        var dataDirectory = new DataDirectoryProvider(gameReleaseInjection,
-            GameLocatorLookupCache.Instance);
-        return new LoadOrderImporter<TMod>(
-                fileSystem,
-                dataDirectory,
-                new LoadOrderListingsInjection(
-                    loadOrder.Select(x => new LoadOrderListing(x, true))),
-                new ModImporter<TMod>(
-                    fileSystem,
-                    gameReleaseInjection),
-                new MasterFlagsLookupProvider(
-                    gameReleaseInjection,
-                    fileSystem,
-                    dataDirectory))
-            .Import();
+        return Import<TMod>(
+            loadOrder.Select(x => new LoadOrderListing(x, true)),
+            gameRelease,
+            fileSystem);
     }
+    
+    [RegisterModule(typeof(CommonModule))]
+    internal partial class ImportModFactoryModule<TMod> : IContainer<LoadOrderImporter<TMod>>
+        where TMod : class, IModKeyed
+    {
+        [Instance] private readonly IGameReleaseContext _release;
+        [Instance] private readonly IFileSystem _fileSystem;
+        [Instance] private readonly IModImporter<TMod> _modImporter;
+        [Instance] private readonly ILoadOrderListingsProvider _loadOrder;
 
+        public ImportModFactoryModule(
+            GameRelease release,
+            IEnumerable<ILoadOrderListingGetter> loadOrder,
+            Func<ModPath, TMod> factory,
+            IFileSystem? fileSystem)
+        {
+            _release = new GameReleaseInjection(release);
+            _fileSystem = fileSystem.GetOrDefault();
+            _modImporter = new ModImporterWrapper<TMod>(factory);
+            _loadOrder = new LoadOrderListingsInjection(loadOrder);
+        }
+    }
+    
     /// <summary>
     /// Constructs a load order filled with mods constructed by given importer func
     /// </summary>
@@ -538,21 +609,10 @@ public static class LoadOrder
         IFileSystem? fileSystem = null)
         where TMod : class, IModKeyed
     {
-        fileSystem ??= IFileSystemExt.DefaultFilesystem;
-        var gameReleaseInjection = new GameReleaseInjection(gameRelease);
-        var dataDirectory = new DataDirectoryProvider(gameReleaseInjection,
-            GameLocatorLookupCache.Instance);
-        return new LoadOrderImporter<TMod>(
-                fileSystem,
-                dataDirectory,
-                new LoadOrderListingsInjection(
-                    loadOrder.Select(x => new LoadOrderListing(x, true))),
-                new ModImporterWrapper<TMod>(factory),
-                new MasterFlagsLookupProvider(
-                    gameReleaseInjection,
-                    fileSystem,
-                    dataDirectory))
-            .Import();
+        return new ImportModFactoryModule<TMod>(gameRelease, 
+                loadOrder.Select(x => new LoadOrderListing(x, true)),
+                factory, fileSystem)
+            .Resolve().Value.Import();
     }
 
     /// <summary>
@@ -571,20 +631,26 @@ public static class LoadOrder
         IFileSystem? fileSystem = null)
         where TMod : class, IModKeyed
     {
-        fileSystem ??= IFileSystemExt.DefaultFilesystem;
-        var gameReleaseInjection = new GameReleaseInjection(gameRelease);
-        var dataDirectory = new DataDirectoryProvider(gameReleaseInjection,
-            GameLocatorLookupCache.Instance);
-        return new LoadOrderImporter<TMod>(
-                fileSystem,
-                dataDirectory,
-                new LoadOrderListingsInjection(loadOrder),
-                new ModImporterWrapper<TMod>(factory),
-                new MasterFlagsLookupProvider(
-                    gameReleaseInjection,
-                    fileSystem,
-                    dataDirectory))
-            .Import();
+        return new ImportModFactoryModule<TMod>(
+                gameRelease, loadOrder,
+                factory, fileSystem)
+            .Resolve().Value.Import();
+    }
+
+    [RegisterModule(typeof(CommonModule))]
+    internal partial class LoadOrderImporterModule<TMod> : IContainer<LoadOrderImporter<TMod>>
+        where TMod : class, IModGetter
+    {
+        [Instance] private readonly IGameReleaseContext _release;
+        [Instance] private readonly IFileSystem _fileSystem;
+
+        public LoadOrderImporterModule(
+            GameRelease release,
+            IFileSystem? fileSystem)
+        {
+            _release = new GameReleaseInjection(release);
+            _fileSystem = fileSystem.GetOrDefault();
+        }
     }
 
     /// <summary>
@@ -599,66 +665,26 @@ public static class LoadOrder
         IFileSystem? fileSystem = null)
         where TMod : class, IModGetter
     {
-        fileSystem ??= IFileSystemExt.DefaultFilesystem;
-        var gameReleaseInjection = new GameReleaseInjection(gameRelease);
-        var category = new GameCategoryContext(gameReleaseInjection);
+        return new LoadOrderImporterModule<TMod>(gameRelease, fileSystem).Resolve().Value.Import();
+    }
 
-        var dataDirectory = new DataDirectoryProvider(gameReleaseInjection,
-            GameLocatorLookupCache.Instance);
-        var pluginRawListingsReader = new PluginRawListingsReader(
-            IFileSystemExt.DefaultFilesystem,
-            new PluginListingsParser(
-                new PluginListingCommentTrimmer(),
-                new LoadOrderListingParser(
-                    new HasEnabledMarkersProvider(
-                        gameReleaseInjection))));
+    [RegisterModule(typeof(CommonModule))]
+    internal partial class LoadOrderImporterFactoryModule<TMod> : IContainer<LoadOrderImporter<TMod>>
+        where TMod : class, IModKeyed
+    {
+        [Instance] private readonly IGameReleaseContext _release;
+        [Instance] private readonly IFileSystem _fileSystem;
+        [Instance] private readonly IModImporter<TMod> _modImporter;
 
-        var pluginListingsPathProvider = new PluginListingsPathContext(
-            new PluginListingsPathProvider(),
-            gameReleaseInjection);
-        var gameDirLocator = new GameDirectoryProvider(gameReleaseInjection, GameLocatorLookupCache.Instance);
-        var creationClubListingsPathProvider = new CreationClubListingsPathProvider(
-            category,
-            new CreationClubEnabledProvider(
-                category),
-            gameDirLocator);
-        var loadOrderProvider = new LoadOrderListingsProvider(
-            new OrderListings(),
-            new ImplicitListingsProvider(
-                IFileSystemExt.DefaultFilesystem,
-                dataDirectory,
-                new ImplicitListingModKeyProvider(
-                    gameReleaseInjection)),
-            new PluginListingsProvider(
-                gameReleaseInjection,
-                new TimestampedPluginListingsProvider(
-                    IFileSystemExt.DefaultFilesystem,
-                    new TimestampAligner(IFileSystemExt.DefaultFilesystem),
-                    new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
-                    pluginRawListingsReader,
-                    dataDirectory,
-                    pluginListingsPathProvider),
-                new EnabledPluginListingsProvider(
-                    IFileSystemExt.DefaultFilesystem,
-                    pluginRawListingsReader,
-                    pluginListingsPathProvider)),
-            new CreationClubListingsProvider(
-                IFileSystemExt.DefaultFilesystem,
-                dataDirectory,
-                creationClubListingsPathProvider,
-                new CreationClubRawListingsReader()));
-        return new LoadOrderImporter<TMod>(
-                fileSystem,
-                dataDirectory,
-                loadOrderProvider,
-                new ModImporter<TMod>(
-                    fileSystem,
-                    gameReleaseInjection),
-                new MasterFlagsLookupProvider(
-                    gameReleaseInjection,
-                    IFileSystemExt.DefaultFilesystem,
-                    dataDirectory))
-            .Import();
+        public LoadOrderImporterFactoryModule(
+            GameRelease release,
+            IFileSystem? fileSystem,
+            Func<ModPath, TMod> factory)
+        {
+            _release = new GameReleaseInjection(release);
+            _fileSystem = fileSystem.GetOrDefault();
+            _modImporter = new ModImporterWrapper<TMod>(factory);
+        }
     }
 
     /// <summary>
@@ -675,64 +701,26 @@ public static class LoadOrder
         IFileSystem? fileSystem = null)
         where TMod : class, IModKeyed
     {
-        fileSystem ??= IFileSystemExt.DefaultFilesystem;
-        var gameReleaseInjection = new GameReleaseInjection(gameRelease);
-        var category = new GameCategoryContext(gameReleaseInjection);
+        return new LoadOrderImporterFactoryModule<TMod>(gameRelease, fileSystem, factory).Resolve().Value.Import();
+    }
 
-        var dataDirectory = new DataDirectoryProvider(gameReleaseInjection,
-            GameLocatorLookupCache.Instance);
-        var pluginRawListingsReader = new PluginRawListingsReader(
-            IFileSystemExt.DefaultFilesystem,
-            new PluginListingsParser(
-                new PluginListingCommentTrimmer(),
-                new LoadOrderListingParser(
-                    new HasEnabledMarkersProvider(
-                        gameReleaseInjection))));
+    [RegisterModule(typeof(CommonModule))]
+    internal partial class LoadOrderImporterDataFolderModule<TMod> : IContainer<LoadOrderImporter<TMod>>
+        where TMod : class, IModGetter
+    {
+        [Instance] private readonly IGameReleaseContext _release;
+        [Instance] private readonly IFileSystem _fileSystem;
+        [Instance] private readonly IDataDirectoryProvider _dataDirectory;
 
-        var pluginListingsPathProvider = new PluginListingsPathContext(
-            new PluginListingsPathProvider(),
-            gameReleaseInjection);
-        var gameDirLocator = new GameDirectoryProvider(gameReleaseInjection, GameLocatorLookupCache.Instance);
-        var creationClubListingsPathProvider = new CreationClubListingsPathProvider(
-            category,
-            new CreationClubEnabledProvider(
-                category),
-            gameDirLocator);
-        var loadOrderProvider = new LoadOrderListingsProvider(
-            new OrderListings(),
-            new ImplicitListingsProvider(
-                IFileSystemExt.DefaultFilesystem,
-                dataDirectory,
-                new ImplicitListingModKeyProvider(
-                    gameReleaseInjection)),
-            new PluginListingsProvider(
-                gameReleaseInjection,
-                new TimestampedPluginListingsProvider(
-                    IFileSystemExt.DefaultFilesystem,
-                    new TimestampAligner(IFileSystemExt.DefaultFilesystem),
-                    new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
-                    pluginRawListingsReader,
-                    dataDirectory,
-                    pluginListingsPathProvider),
-                new EnabledPluginListingsProvider(
-                    IFileSystemExt.DefaultFilesystem,
-                    pluginRawListingsReader,
-                    pluginListingsPathProvider)),
-            new CreationClubListingsProvider(
-                IFileSystemExt.DefaultFilesystem,
-                dataDirectory,
-                creationClubListingsPathProvider,
-                new CreationClubRawListingsReader()));
-        return new LoadOrderImporter<TMod>(
-                fileSystem,
-                dataDirectory,
-                loadOrderProvider,
-        new ModImporterWrapper<TMod>(factory),
-                new MasterFlagsLookupProvider(
-                    gameReleaseInjection,
-                    IFileSystemExt.DefaultFilesystem,
-                    dataDirectory))
-            .Import();
+        public LoadOrderImporterDataFolderModule(
+            GameRelease release,
+            IFileSystem? fileSystem,
+            DirectoryPath dataFolder)
+        {
+            _release = new GameReleaseInjection(release);
+            _fileSystem = fileSystem.GetOrDefault();
+            _dataDirectory = new DataDirectoryInjection(dataFolder);
+        }
     }
 
     /// <summary>
@@ -749,67 +737,31 @@ public static class LoadOrder
         IFileSystem? fileSystem = null)
         where TMod : class, IModGetter
     {
-        fileSystem ??= IFileSystemExt.DefaultFilesystem;
-        var gameReleaseInjection = new GameReleaseInjection(gameRelease);
-        var category = new GameCategoryContext(gameReleaseInjection);
-
-        var dataDirectory = new DataDirectoryInjection(dataFolder);
-        var pluginRawListingsReader = new PluginRawListingsReader(
-            IFileSystemExt.DefaultFilesystem,
-            new PluginListingsParser(
-                new PluginListingCommentTrimmer(),
-                new LoadOrderListingParser(
-                    new HasEnabledMarkersProvider(
-                        gameReleaseInjection))));
-
-        var pluginListingsPathProvider = new PluginListingsPathContext(
-            new PluginListingsPathProvider(),
-            gameReleaseInjection);
-        var gameDirLocator = new GameDirectoryProvider(gameReleaseInjection, GameLocatorLookupCache.Instance);
-        var creationClubListingsPathProvider = new CreationClubListingsPathProvider(
-            category,
-            new CreationClubEnabledProvider(
-                category),
-            gameDirLocator);
-        var loadOrderProvider = new LoadOrderListingsProvider(
-            new OrderListings(),
-            new ImplicitListingsProvider(
-                IFileSystemExt.DefaultFilesystem,
-                dataDirectory,
-                new ImplicitListingModKeyProvider(
-                    gameReleaseInjection)),
-            new PluginListingsProvider(
-                gameReleaseInjection,
-                new TimestampedPluginListingsProvider(
-                    IFileSystemExt.DefaultFilesystem,
-                    new TimestampAligner(IFileSystemExt.DefaultFilesystem),
-                    new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
-                    pluginRawListingsReader,
-                    dataDirectory,
-                    pluginListingsPathProvider),
-                new EnabledPluginListingsProvider(
-                    IFileSystemExt.DefaultFilesystem,
-                    pluginRawListingsReader,
-                    pluginListingsPathProvider)),
-            new CreationClubListingsProvider(
-                IFileSystemExt.DefaultFilesystem,
-                dataDirectory,
-                creationClubListingsPathProvider,
-                new CreationClubRawListingsReader()));
-        return new LoadOrderImporter<TMod>(
-                fileSystem,
-                dataDirectory,
-                loadOrderProvider,
-                new ModImporter<TMod>(
-                    fileSystem,
-                    gameReleaseInjection),
-                new MasterFlagsLookupProvider(
-                    gameReleaseInjection,
-                    IFileSystemExt.DefaultFilesystem,
-                    dataDirectory))
-            .Import();
+        return new LoadOrderImporterDataFolderModule<TMod>(gameRelease, fileSystem, dataFolder).Resolve().Value.Import();
     }
 
+    [RegisterModule(typeof(CommonModule))]
+    internal partial class LoadOrderImporterDataFolderFactoryModule<TMod> : IContainer<LoadOrderImporter<TMod>>
+        where TMod : class, IModKeyed
+    {
+        [Instance] private readonly IGameReleaseContext _release;
+        [Instance] private readonly IFileSystem _fileSystem;
+        [Instance] private readonly IDataDirectoryProvider _dataDirectory;
+        [Instance] private readonly IModImporter<TMod> _modImporter;
+
+        public LoadOrderImporterDataFolderFactoryModule(
+            GameRelease release,
+            IFileSystem? fileSystem,
+            Func<ModPath, TMod> factory,
+            DirectoryPath dataFolder)
+        {
+            _release = new GameReleaseInjection(release);
+            _fileSystem = fileSystem.GetOrDefault();
+            _dataDirectory = new DataDirectoryInjection(dataFolder);
+            _modImporter = new ModImporterWrapper<TMod>(factory);
+        }
+    }
+    
     /// <summary>
     /// Constructs a load order filled with mods constructed by given importer func
     /// </summary>
@@ -826,63 +778,7 @@ public static class LoadOrder
         IFileSystem? fileSystem = null)
         where TMod : class, IModKeyed
     {
-        fileSystem ??= IFileSystemExt.DefaultFilesystem;
-        var gameReleaseInjection = new GameReleaseInjection(gameRelease);
-        var category = new GameCategoryContext(gameReleaseInjection);
-
-        var dataDirectory = new DataDirectoryInjection(dataFolder);
-        var pluginRawListingsReader = new PluginRawListingsReader(
-            IFileSystemExt.DefaultFilesystem,
-            new PluginListingsParser(
-                new PluginListingCommentTrimmer(),
-                new LoadOrderListingParser(
-                    new HasEnabledMarkersProvider(
-                        gameReleaseInjection))));
-
-        var pluginListingsPathProvider = new PluginListingsPathContext(
-            new PluginListingsPathProvider(),
-            gameReleaseInjection);
-        var gameDirLocator = new GameDirectoryProvider(gameReleaseInjection, GameLocatorLookupCache.Instance);
-        var creationClubListingsPathProvider = new CreationClubListingsPathProvider(
-            category,
-            new CreationClubEnabledProvider(
-                category),
-            gameDirLocator);
-        var loadOrderProvider = new LoadOrderListingsProvider(
-            new OrderListings(),
-            new ImplicitListingsProvider(
-                IFileSystemExt.DefaultFilesystem,
-                dataDirectory,
-                new ImplicitListingModKeyProvider(
-                    gameReleaseInjection)),
-            new PluginListingsProvider(
-                gameReleaseInjection,
-                new TimestampedPluginListingsProvider(
-                    IFileSystemExt.DefaultFilesystem,
-                    new TimestampAligner(IFileSystemExt.DefaultFilesystem),
-                    new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
-                    pluginRawListingsReader,
-                    dataDirectory,
-                    pluginListingsPathProvider),
-                new EnabledPluginListingsProvider(
-                    IFileSystemExt.DefaultFilesystem,
-                    pluginRawListingsReader,
-                    pluginListingsPathProvider)),
-            new CreationClubListingsProvider(
-                IFileSystemExt.DefaultFilesystem,
-                dataDirectory,
-                creationClubListingsPathProvider,
-                new CreationClubRawListingsReader()));
-        return new LoadOrderImporter<TMod>(
-                fileSystem,
-                dataDirectory,
-                loadOrderProvider,
-        new ModImporterWrapper<TMod>(factory),
-                new MasterFlagsLookupProvider(
-                    gameReleaseInjection,
-                    IFileSystemExt.DefaultFilesystem,
-                    dataDirectory))
-            .Import();
+        return new LoadOrderImporterDataFolderFactoryModule<TMod>(gameRelease, fileSystem, factory, dataFolder).Resolve().Value.Import();
     }
 
     public static void Write(
@@ -914,37 +810,6 @@ public static class LoadOrder
             loadOrder: loadOrder.ListedOrder,
             removeImplicitMods: removeImplicitMods,
             fileSystem: fileSystem);
-    }
-
-    private static PluginListingsProvider PluginListingsProvider(
-        IDataDirectoryProvider dataDirectory,
-        IGameReleaseContext gameContext,
-        IPluginListingsPathContext listingsPathContext,
-        bool throwOnMissingMods,
-        IFileSystem fs)
-    {
-        var pluginListingParser = new PluginListingsParser(
-            new PluginListingCommentTrimmer(),
-            new LoadOrderListingParser(
-                new HasEnabledMarkersProvider(gameContext)));
-        var provider = new PluginListingsProvider(
-            gameContext,
-            new TimestampedPluginListingsProvider(
-                fs,
-                new TimestampAligner(fs),
-                new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = throwOnMissingMods },
-                new PluginRawListingsReader(
-                    fs,
-                    pluginListingParser),
-                dataDirectory,
-                listingsPathContext),
-            new EnabledPluginListingsProvider(
-                fs,
-                new PluginRawListingsReader(
-                    fs,
-                    pluginListingParser),
-                listingsPathContext));
-        return provider;
     }
 
     public static ILoadOrderGetter CreateReadonly(IEnumerable<ModKey> modKeys)
