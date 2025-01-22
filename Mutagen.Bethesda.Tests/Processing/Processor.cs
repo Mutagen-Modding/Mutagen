@@ -223,8 +223,6 @@ public abstract class Processor
                 frame = stream.ReadMajorRecord(readSafe: true);
             }
 
-            if (frame.IsDeleted) return;
-
             if (procs != null)
             {
                 foreach (var proc in procs)
@@ -248,6 +246,7 @@ public abstract class Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
+        if (majorFrame.IsDeleted) return;
         if (!majorFrame.TryFindSubrecord("EDID", out var edidFrame)) return;
         var formKey = FormKey.Factory(Masters, majorFrame.FormID, reference: false);
         ProcessStringTermination(
@@ -260,6 +259,7 @@ public abstract class Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
+        if (majorFrame.IsDeleted) return;
         var formID = majorFrame.FormID;
         if (!CheckIsFormIDOverflow(formID)) return;
         // Need to zero out master
