@@ -3,7 +3,6 @@ using Mutagen.Bethesda.Plugins;
 using Noggog;
 using Mutagen.Bethesda.Archives.DI;
 using Mutagen.Bethesda.Environments.DI;
-using Mutagen.Bethesda.Inis.DI;
 using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins.Utility;
 using StrongInject;
@@ -30,10 +29,8 @@ partial class ArchiveContainer : IContainer<IGetApplicableArchivePaths>
     }
 }
 
-[Register(typeof(IniPathLookup), typeof(IIniPathLookup))]
-[Register(typeof(IniPathProvider), typeof(IIniPathProvider))]
-[Register(typeof(GetArchiveIniListings))]
-partial class GetArchiveIniListingsContainer : IContainer<GetArchiveIniListings>
+[RegisterModule(typeof(MutagenStrongInjectModule))]
+partial class GetArchiveIniListingsContainer : IContainer<IGetArchiveIniListings>
 {
     [Instance] private readonly IFileSystem _fileSystem;
     [Instance] private readonly IGameReleaseContext _gameReleaseContext;

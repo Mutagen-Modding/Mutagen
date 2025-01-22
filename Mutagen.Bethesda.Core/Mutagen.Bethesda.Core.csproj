@@ -143,6 +143,7 @@
         <Compile Include="Inis\DI\IIniPathProvider.cs" />
         <Compile Include="Inis\DI\IniModule.cs" />
         <Compile Include="Installs\DI\GameLocatorLookupCache.cs" />
+        <Compile Include="Installs\DI\InstallsModule.cs" />
         <Compile Include="Installs\GameLocator.cs" />
         <Compile Include="Installs\GameSource.cs" />
         <Compile Include="Installs\GameLocations.cs" />
@@ -431,6 +432,7 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Plugins\Order\DI\LoadOrderModule.cs" />
         <Compile Include="Plugins\Order\DI\LoadOrderWriter.cs">
             <CodeLanguage>cs</CodeLanguage>
             <DefaultPackFolder>content</DefaultPackFolder>
@@ -504,6 +506,7 @@
         <Compile Include="Plugins\Records\AListGroup.cs" />
         <Compile Include="Plugins\Records\DI\ModActivator.cs" />
         <Compile Include="Plugins\Records\DI\ModImporter.cs" />
+        <Compile Include="Plugins\Records\DI\RecordsModule.cs" />
         <Compile Include="Plugins\Records\GroupMergeGetter.cs" />
         <Compile Include="Plugins\Records\IFormKeyGetter.cs" />
         <Compile Include="Plugins\Records\IFormLinkContainerGetter.cs" />

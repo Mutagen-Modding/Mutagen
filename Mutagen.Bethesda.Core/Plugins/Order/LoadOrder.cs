@@ -12,6 +12,7 @@ using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Implicit.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Plugins.Records.DI;
+using Mutagen.Bethesda.Plugins.Utility;
 using StrongInject;
 
 namespace Mutagen.Bethesda.Plugins.Order;
@@ -24,43 +25,6 @@ public static partial class LoadOrder
     private static TimestampAligner Aligner = new(IFileSystemExt.DefaultFilesystem);
     private static OrderListings Orderer = new();
     
-    [Register(typeof(DataDirectoryProvider), typeof(IDataDirectoryProvider))]
-    [Register(typeof(ModImporter<>), typeof(IModImporter<>))]
-    [Register(typeof(LoadOrderImporter<>), typeof(LoadOrderImporter<>), typeof(ILoadOrderImporter<>))]
-    [Register(typeof(LiveLoadOrderTimings), typeof(ILiveLoadOrderTimings))]
-    [Register(typeof(MasterFlagsLookupProvider), typeof(IMasterFlagsLookupProvider))]
-    [Register(typeof(PluginLiveLoadOrderProvider), typeof(IPluginLiveLoadOrderProvider))]
-    [Register(typeof(CreationClubLiveLoadOrderFolderWatcher), typeof(ICreationClubLiveLoadOrderFolderWatcher))]
-    [Register(typeof(CreationClubLiveListingsFileReader), typeof(ICreationClubLiveListingsFileReader))]
-    [Register(typeof(CreationClubLiveLoadOrderProvider), typeof(ICreationClubLiveLoadOrderProvider))]
-    [Register(typeof(LiveLoadOrderProvider), typeof(LiveLoadOrderProvider), typeof(ILiveLoadOrderProvider))]
-    [Register(typeof(CreationClubRawListingsReader), typeof(ICreationClubRawListingsReader))]
-    [Register(typeof(GameDirectoryProvider), typeof(IGameDirectoryProvider))]
-    [Register(typeof(GameCategoryContext), typeof(IGameCategoryContext))]
-    [Register(typeof(CreationClubEnabledProvider), typeof(ICreationClubEnabledProvider))]
-    [Register(typeof(CreationClubListingsPathProvider), typeof(ICreationClubListingsPathProvider))]
-    [Register(typeof(PluginListingCommentTrimmer), typeof(IPluginListingCommentTrimmer))]
-    [Register(typeof(EnabledPluginListingsProvider), typeof(IEnabledPluginListingsProvider))]
-    [Register(typeof(CreationClubListingsProvider), typeof(ICreationClubListingsProvider))]
-    [Register(typeof(HasEnabledMarkersProvider), typeof(IHasEnabledMarkersProvider))]
-    [Register(typeof(LoadOrderListingParser), typeof(ILoadOrderListingParser))]
-    [Register(typeof(PluginListingsParser), typeof(IPluginListingsParser))]
-    [Register(typeof(PluginListingsPathProvider), typeof(IPluginListingsPathProvider))]
-    [Register(typeof(PluginRawListingsReader), typeof(IPluginRawListingsReader))]
-    [Register(typeof(PluginListingsPathContext), typeof(IPluginListingsPathContext))]
-    [Register(typeof(TimestampAligner), typeof(ITimestampAligner))]
-    [Register(typeof(TimestampedPluginListingsProvider), typeof(ITimestampedPluginListingsProvider))]
-    [Register(typeof(ImplicitListingModKeyProvider), typeof(IImplicitListingModKeyProvider))]
-    [Register(typeof(PluginListingsProvider), typeof(IPluginListingsProvider))]
-    [Register(typeof(ImplicitListingsProvider), typeof(IImplicitListingsProvider))]
-    [Register(typeof(OrderListings), typeof(IOrderListings))]
-    [Register(typeof(TimestampedPluginListingsPreferences), typeof(ITimestampedPluginListingsPreferences))]
-    [Register(typeof(LoadOrderListingsProvider), typeof(LoadOrderListingsProvider), typeof(ILoadOrderListingsProvider))]
-    internal partial class CommonModule
-    {
-        [Instance(Options.AsImplementedInterfaces)] public static GameLocatorLookupCache LookupCache = GameLocatorLookupCache.Instance;
-    }
-
     #region Timestamps
 
     /// <summary>
@@ -124,8 +88,8 @@ public static partial class LoadOrder
 
     #endregion
 
-    [RegisterModule(typeof(CommonModule))]
-    internal partial class GetLoadOrderListingsModule : IContainer<LoadOrderListingsProvider>
+    [RegisterModule(typeof(MutagenStrongInjectModule))]
+    internal partial class GetLoadOrderListingsModule : IContainer<ILoadOrderListingsProvider>
     {
         [Instance] private readonly IGameReleaseContext _release;
         [Instance] private readonly IFileSystem _fileSystem;
@@ -170,8 +134,8 @@ public static partial class LoadOrder
         return prov.Get();
     }
 
-    [RegisterModule(typeof(CommonModule))]
-    internal partial class GetLoadOrderListingsPluginsOverrideModule : IContainer<LoadOrderListingsProvider>
+    [RegisterModule(typeof(MutagenStrongInjectModule))]
+    internal partial class GetLoadOrderListingsPluginsOverrideModule : IContainer<ILoadOrderListingsProvider>
     {
         [Instance] private readonly IGameReleaseContext _release;
         [Instance] private readonly IFileSystem _fileSystem;
@@ -229,8 +193,8 @@ public static partial class LoadOrder
         return Orderer.Order(implicitListings, pluginsListings, creationClubListings, selector);
     }
 
-    [RegisterModule(typeof(CommonModule))]
-    internal partial class LiveLoadOrderProviderModule : IContainer<LiveLoadOrderProvider>
+    [RegisterModule(typeof(MutagenStrongInjectModule))]
+    internal partial class LiveLoadOrderProviderModule : IContainer<ILiveLoadOrderProvider>
     {
         [Instance] private readonly IGameReleaseContext _release;
         [Instance] private readonly IFileSystem _fileSystem;
@@ -295,8 +259,8 @@ public static partial class LoadOrder
             .Switch();
     }
 
-    [RegisterModule(typeof(CommonModule))]
-    internal partial class GetLiveLoadOrderListingsPluginsListingsOverrideModule : IContainer<LiveLoadOrderProvider>
+    [RegisterModule(typeof(MutagenStrongInjectModule))]
+    internal partial class GetLiveLoadOrderListingsPluginsListingsOverrideModule : IContainer<ILiveLoadOrderProvider>
     {
         [Instance] private readonly IGameReleaseContext _release;
         [Instance] private readonly IFileSystem _fileSystem;
@@ -384,8 +348,8 @@ public static partial class LoadOrder
             .Switch();
     }
     
-    [RegisterModule(typeof(CommonModule))]
-    internal partial class ImportDataFolderModule<TMod> : IContainer<LoadOrderImporter<TMod>>
+    [RegisterModule(typeof(MutagenStrongInjectModule))]
+    internal partial class ImportDataFolderModule<TMod> : IContainer<ILoadOrderImporter<TMod>>
         where TMod : class, IModGetter
     {
         [Instance] private readonly IGameReleaseContext _release;
@@ -449,8 +413,8 @@ public static partial class LoadOrder
             fileSystem);
     }
     
-    [RegisterModule(typeof(CommonModule))]
-    internal partial class ImportDataFolderModFactoryModule<TMod> : IContainer<LoadOrderImporter<TMod>>
+    [RegisterModule(typeof(MutagenStrongInjectModule))]
+    internal partial class ImportDataFolderModFactoryModule<TMod> : IContainer<ILoadOrderImporter<TMod>>
         where TMod : class, IModKeyed
     {
         [Instance] private readonly IGameReleaseContext _release;
@@ -514,8 +478,8 @@ public static partial class LoadOrder
             .Resolve().Value.Import();
     }
     
-    [RegisterModule(typeof(CommonModule))]
-    internal partial class ImportModule<TMod> : IContainer<LoadOrderImporter<TMod>>
+    [RegisterModule(typeof(MutagenStrongInjectModule))]
+    internal partial class ImportModule<TMod> : IContainer<ILoadOrderImporter<TMod>>
         where TMod : class, IModGetter
     {
         [Instance] private readonly IGameReleaseContext _release;
@@ -571,8 +535,8 @@ public static partial class LoadOrder
             fileSystem);
     }
     
-    [RegisterModule(typeof(CommonModule))]
-    internal partial class ImportModFactoryModule<TMod> : IContainer<LoadOrderImporter<TMod>>
+    [RegisterModule(typeof(MutagenStrongInjectModule))]
+    internal partial class ImportModFactoryModule<TMod> : IContainer<ILoadOrderImporter<TMod>>
         where TMod : class, IModKeyed
     {
         [Instance] private readonly IGameReleaseContext _release;
@@ -637,8 +601,8 @@ public static partial class LoadOrder
             .Resolve().Value.Import();
     }
 
-    [RegisterModule(typeof(CommonModule))]
-    internal partial class LoadOrderImporterModule<TMod> : IContainer<LoadOrderImporter<TMod>>
+    [RegisterModule(typeof(MutagenStrongInjectModule))]
+    internal partial class LoadOrderImporterModule<TMod> : IContainer<ILoadOrderImporter<TMod>>
         where TMod : class, IModGetter
     {
         [Instance] private readonly IGameReleaseContext _release;
@@ -668,8 +632,8 @@ public static partial class LoadOrder
         return new LoadOrderImporterModule<TMod>(gameRelease, fileSystem).Resolve().Value.Import();
     }
 
-    [RegisterModule(typeof(CommonModule))]
-    internal partial class LoadOrderImporterFactoryModule<TMod> : IContainer<LoadOrderImporter<TMod>>
+    [RegisterModule(typeof(MutagenStrongInjectModule))]
+    internal partial class LoadOrderImporterFactoryModule<TMod> : IContainer<ILoadOrderImporter<TMod>>
         where TMod : class, IModKeyed
     {
         [Instance] private readonly IGameReleaseContext _release;
@@ -704,8 +668,8 @@ public static partial class LoadOrder
         return new LoadOrderImporterFactoryModule<TMod>(gameRelease, fileSystem, factory).Resolve().Value.Import();
     }
 
-    [RegisterModule(typeof(CommonModule))]
-    internal partial class LoadOrderImporterDataFolderModule<TMod> : IContainer<LoadOrderImporter<TMod>>
+    [RegisterModule(typeof(MutagenStrongInjectModule))]
+    internal partial class LoadOrderImporterDataFolderModule<TMod> : IContainer<ILoadOrderImporter<TMod>>
         where TMod : class, IModGetter
     {
         [Instance] private readonly IGameReleaseContext _release;
@@ -740,8 +704,8 @@ public static partial class LoadOrder
         return new LoadOrderImporterDataFolderModule<TMod>(gameRelease, fileSystem, dataFolder).Resolve().Value.Import();
     }
 
-    [RegisterModule(typeof(CommonModule))]
-    internal partial class LoadOrderImporterDataFolderFactoryModule<TMod> : IContainer<LoadOrderImporter<TMod>>
+    [RegisterModule(typeof(MutagenStrongInjectModule))]
+    internal partial class LoadOrderImporterDataFolderFactoryModule<TMod> : IContainer<ILoadOrderImporter<TMod>>
         where TMod : class, IModKeyed
     {
         [Instance] private readonly IGameReleaseContext _release;
