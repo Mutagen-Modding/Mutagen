@@ -5,6 +5,7 @@ using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins.Implicit.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Plugins.Records.DI;
+using Mutagen.Bethesda.Strings.DI;
 using StrongInject;
 
 namespace Mutagen.Bethesda.Plugins.Utility;
@@ -17,6 +18,7 @@ namespace Mutagen.Bethesda.Plugins.Utility;
 [RegisterModule(typeof(InstallsModule))]
 [RegisterModule(typeof(LoadOrderModule))]
 [RegisterModule(typeof(RecordsModule))]
+[RegisterModule(typeof(StringsModule))]
 internal class MutagenStrongInjectModule
 {
 }

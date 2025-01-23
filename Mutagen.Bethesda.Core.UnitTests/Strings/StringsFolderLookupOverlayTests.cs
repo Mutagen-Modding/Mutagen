@@ -28,7 +28,7 @@ public class StringsFolderLookupOverlayTests
             ilId = writer.Register(ilStr, Language.English, StringsSource.IL);
             dlId = writer.Register(dlStr, Language.English, StringsSource.DL);
         }
-        var overlay = factory.Factory(GameRelease.SkyrimSE, modKey, new StringsReadParameters()
+        var overlay = factory.Factory(modKey, new StringsReadParameters()
         {
             StringsFolderOverride = existingPath
         });
@@ -66,7 +66,7 @@ public class StringsFolderLookupOverlayTests
             id2 = writer.Register(str2, Language.English, StringsSource.Normal);
         }
         
-        var overlay = factory.Factory(GameRelease.SkyrimSE, modKey1, new StringsReadParameters()
+        var overlay = factory.Factory(modKey1, new StringsReadParameters()
         {
             StringsFolderOverride = existingPath
         });

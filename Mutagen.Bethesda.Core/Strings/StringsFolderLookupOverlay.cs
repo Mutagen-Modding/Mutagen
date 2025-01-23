@@ -3,9 +3,29 @@ using Noggog;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings.DI;
+using StrongInject;
 
 namespace Mutagen.Bethesda.Strings;
+
+[RegisterModule(typeof(MutagenStrongInjectModule))]
+internal partial class StringsFolderLookupOverlayFactoryContainer : IContainer<IStringsFolderLookupFactory>
+{
+    [Instance] private readonly IGameReleaseContext _release;
+    [Instance] private readonly IFileSystem _fileSystem;
+    [Instance] private readonly IDataDirectoryProvider _dataDirectory;
+
+    public StringsFolderLookupOverlayFactoryContainer(
+        GameRelease release,
+        IFileSystem? fileSystem,
+        DirectoryPath dataDirectory)
+    {
+        _release = new GameReleaseInjection(release);
+        _fileSystem = fileSystem.GetOrDefault();
+        _dataDirectory = new DataDirectoryInjection(dataDirectory);
+    }
+}
 
 public sealed class StringsFolderLookupOverlay : IStringsFolderLookup
 {
@@ -48,6 +68,7 @@ public sealed class StringsFolderLookupOverlay : IStringsFolderLookup
         ModKey = modKey;
     }
 
+    
     // todo integrate IAssetProvider
     public static StringsFolderLookupOverlay TypicalFactory(
         GameRelease release, 
@@ -56,10 +77,8 @@ public sealed class StringsFolderLookupOverlay : IStringsFolderLookup
         StringsReadParameters? instructions,
         IFileSystem? fileSystem = null)
     {
-        var factory = new StringsFolderLookupFactory(
-            new DataDirectoryInjection(dataPath),
-            fileSystem.GetOrDefault());
-        return factory.InternalFactory(release, modKey, instructions);
+        return new StringsFolderLookupOverlayFactoryContainer(release, fileSystem, dataPath).Resolve().Value
+            .InternalFactory(modKey, instructions);
     }
 
     /// <inheritdoc />

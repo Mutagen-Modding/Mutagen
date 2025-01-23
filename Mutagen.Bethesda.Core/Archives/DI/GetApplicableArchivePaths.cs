@@ -67,6 +67,11 @@ public sealed class GetApplicableArchivePaths : IGetApplicableArchivePaths
         {
             return [];
         }
+
+        if (!_fileSystem.Directory.Exists(_dataDirectoryProvider.Path))
+        {
+            return [];
+        }
             
         var ret = _fileSystem.Directory.EnumerateFilePaths(_dataDirectoryProvider.Path, searchPattern: $"*{_archiveExtension.Get()}");
         if (modKey != null)

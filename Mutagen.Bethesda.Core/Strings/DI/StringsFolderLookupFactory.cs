@@ -1,5 +1,6 @@
-﻿using System.IO.Abstractions;
+using System.IO.Abstractions;
 using Mutagen.Bethesda.Archives;
+using Mutagen.Bethesda.Archives.DI;
 using Mutagen.Bethesda.Archives.Exceptions;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
@@ -7,33 +8,47 @@ using Mutagen.Bethesda.Plugins.Meta;
 
 namespace Mutagen.Bethesda.Strings.DI;
 
-public class StringsFolderLookupFactory
+public interface IStringsFolderLookupFactory
 {
+    IStringsFolderLookup Factory(
+        ModKey modKey,
+        StringsReadParameters? instructions);
+    internal StringsFolderLookupOverlay InternalFactory(
+        ModKey modKey,
+        StringsReadParameters? instructions);
+}
+
+public class StringsFolderLookupFactory : IStringsFolderLookupFactory
+{
+    private readonly IGameReleaseContext _gameRelease;
     private readonly IDataDirectoryProvider _dataDirectoryProvider;
+    private readonly IGetApplicableArchivePaths _getApplicableArchivePaths;
     private readonly IFileSystem _fileSystem;
     
     public StringsFolderLookupFactory(
+        IGameReleaseContext gameRelease,
         IDataDirectoryProvider dataDirectoryProvider,
+        IGetApplicableArchivePaths GetApplicableArchivePaths,
         IFileSystem fileSystem)
     {
+        _gameRelease = gameRelease;
         _dataDirectoryProvider = dataDirectoryProvider;
+        _getApplicableArchivePaths = GetApplicableArchivePaths;
         _fileSystem = fileSystem;
     }
 
     public IStringsFolderLookup Factory(
-        GameRelease release,
         ModKey modKey,
         StringsReadParameters? instructions)
     {
-        return InternalFactory(release, modKey, instructions);
+        return InternalFactory(modKey, instructions);
     }
 
-    internal StringsFolderLookupOverlay InternalFactory(
-        GameRelease release, 
+    public StringsFolderLookupOverlay InternalFactory(
         ModKey modKey,
         StringsReadParameters? instructions)
     {
-        var languageFormat = GameConstants.Get(release).StringsLanguageFormat ?? throw new ArgumentException($"Tried to get language format for an unsupported game: {release}", nameof(release));
+        var languageFormat = GameConstants.Get(_gameRelease.Release).StringsLanguageFormat ?? throw new ArgumentException($"Tried to get language format for an unsupported game: {_gameRelease.Release}", nameof(_gameRelease.Release));
         var encodings = instructions?.EncodingProvider ?? new MutagenEncodingProvider();
         var stringsFolderPath = instructions?.StringsFolderOverride;
         if (stringsFolderPath == null)
@@ -71,18 +86,17 @@ public class StringsFolderLookupFactory
                             dict[lang] = new Lazy<StringsFolderLookupOverlay.LookupItem>(() =>
                                 {
                                     return new StringsFolderLookupOverlay.LookupItem(
-                                        new StringsLookupOverlay(file.Path, type, encodings.GetEncoding(release, lang), fileSystem: _fileSystem),
+                                        new StringsLookupOverlay(file.Path, type, encodings.GetEncoding(_gameRelease.Release, lang), fileSystem: _fileSystem),
                                         file.Path);
                                 },
                                 LazyThreadSafetyMode.ExecutionAndPublication);
                         }
                     }
-                    foreach (var bsaFile in Archive.GetApplicableArchivePaths(
-                        release, dataPath, modKey, fileSystem: _fileSystem))
+                    foreach (var bsaFile in _getApplicableArchivePaths.Get(modKey))
                     {
                         try
                         {
-                            var bsaReader = Archive.CreateReader(release, bsaFile, _fileSystem);
+                            var bsaReader = Archive.CreateReader(_gameRelease.Release, bsaFile, _fileSystem);
                             if (!bsaReader.TryGetFolder("strings", out var stringsFolder)) continue;
                             try
                             {
@@ -105,7 +119,7 @@ public class StringsFolderLookupFactory
                                         try
                                         {
                                             return new StringsFolderLookupOverlay.LookupItem(
-                                                new StringsLookupOverlay(item.GetMemorySlice(), type, encodings.GetEncoding(release, lang)),
+                                                new StringsLookupOverlay(item.GetMemorySlice(), type, encodings.GetEncoding(_gameRelease.Release, lang)),
                                                 Path.Combine(bsaFile, item.Path));
                                         }
                                         catch (Exception ex)

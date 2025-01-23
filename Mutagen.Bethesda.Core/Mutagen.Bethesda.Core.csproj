@@ -573,6 +573,7 @@
         </Compile>
         <Compile Include="Strings\DI\MutagenEncodingProvider.cs" />
         <Compile Include="Strings\DI\StringsFolderLookupFactory.cs" />
+        <Compile Include="Strings\DI\StringsModule.cs" />
         <Compile Include="Strings\IOptionalStringsKeyGetter.cs" />
         <Compile Include="Strings\Language.cs" />
         <Compile Include="Plugins\Binary\Translations\FloatBinaryTranslationExt.cs" />
