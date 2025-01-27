@@ -15,21 +15,24 @@ namespace Mutagen.Bethesda.UnitTests.Archives;
 public class GetApplicableArchivePathsTests
 {
     private const string SomeExplicitListingBsa = "SomeExplicitListing.bsa";
-    private const string UnusedExplicitListingBsa = "SomeExplicitListing2.bsa";
+    private const string SomeExplicitListingBsa2 = "SomeExplicitListing2.bsa";
+    private const string UnusedExplicitListingBsa = "UnusedExplicitListingBsa.bsa";
     private const string SkyrimBsa = "Skyrim.bsa";
     private const string MyModBsa = "MyMod.bsa";
-    
-    #region No ModKey
+    private const string UnlistedModBsa = "UnlistedMod.bsa";
     
     [Theory, MutagenContainerAutoData]
     public void NoModKey(
         IFileSystem fs,
+        ManualLoadOrderProvider loadOrderProvider,
         ManualArchiveIniListings manualArchiveIniListings,
         IDataDirectoryProvider dataDir,
         GetApplicableArchivePaths sut)
     {
+        loadOrderProvider.SetTo("Skyrim.esm", "MyMod.esp");
         manualArchiveIniListings.SetTo(SomeExplicitListingBsa, UnusedExplicitListingBsa);
         fs.File.WriteAllText(Path.Combine(dataDir.Path, MyModBsa), string.Empty);
+        fs.File.WriteAllText(Path.Combine(dataDir.Path, UnlistedModBsa), string.Empty);
         fs.File.WriteAllText(Path.Combine(dataDir.Path, SkyrimBsa), string.Empty);
         fs.File.WriteAllText(Path.Combine(dataDir.Path, SomeExplicitListingBsa), string.Empty);
         var applicable = sut.Get()
@@ -44,9 +47,6 @@ public class GetApplicableArchivePathsTests
         });
     }
 
-    #endregion
-
-    #region GetApplicableArchivePaths
     [Theory, MutagenContainerAutoData]
     public void Empty(
         ManualArchiveIniListings manualArchiveIniListings,
@@ -75,10 +75,12 @@ public class GetApplicableArchivePathsTests
     [Theory, MutagenContainerAutoData]
     public void BaseMod(
         IFileSystem fs,
+        ManualLoadOrderProvider loadOrderProvider,
         ManualArchiveIniListings manualArchiveIniListings,
         IDataDirectoryProvider dataDir,
         GetApplicableArchivePaths sut)
     {
+        loadOrderProvider.SetTo("Skyrim.esm");
         manualArchiveIniListings.SetTo(SomeExplicitListingBsa, UnusedExplicitListingBsa);
         fs.File.WriteAllText(Path.Combine(dataDir.Path, SkyrimBsa), string.Empty);
         fs.File.WriteAllText(Path.Combine(dataDir.Path, SomeExplicitListingBsa), string.Empty);
@@ -111,5 +113,71 @@ public class GetApplicableArchivePathsTests
             Path.Combine(dataDir.Path, $"{TestConstants.MasterModKey2.Name}.bsa")
         });
     }
-    #endregion
+    
+    [Theory, MutagenContainerAutoData]
+    public void SuffixNaming(
+        IFileSystem fs,
+        ManualArchiveIniListings manualArchiveIniListings,
+        IDataDirectoryProvider dataDir,
+        GetApplicableArchivePaths sut)
+    {
+        manualArchiveIniListings.SetTo(SomeExplicitListingBsa, UnusedExplicitListingBsa);
+        fs.File.WriteAllText(Path.Combine(dataDir.Path, $"{TestConstants.MasterModKey2.Name}.bsa"), string.Empty);
+        fs.File.WriteAllText(Path.Combine(dataDir.Path, $"{TestConstants.MasterModKey2.Name} - Textures.bsa"), string.Empty);
+        fs.File.WriteAllText(Path.Combine(dataDir.Path, $"{TestConstants.MasterModKey2.Name} - Meshes.bsa"), string.Empty);
+        fs.File.WriteAllText(Path.Combine(dataDir.Path, SomeExplicitListingBsa), string.Empty);
+        fs.File.WriteAllText(Path.Combine(dataDir.Path, MyModBsa), string.Empty);
+        var applicable = sut.Get(TestConstants.MasterModKey2)
+            .ToArray();
+        applicable.Should().Equal(new FilePath[]
+        {
+            Path.Combine(dataDir.Path, SomeExplicitListingBsa),
+            Path.Combine(dataDir.Path, $"{TestConstants.MasterModKey2.Name}.bsa"),
+            Path.Combine(dataDir.Path, $"{TestConstants.MasterModKey2.Name} - Textures.bsa"),
+            Path.Combine(dataDir.Path, $"{TestConstants.MasterModKey2.Name} - Meshes.bsa")
+        });
+    }
+    
+    [Theory, MutagenContainerAutoData]
+    public void TwoInis(
+        IFileSystem fs,
+        ManualArchiveIniListings manualArchiveIniListings,
+        IDataDirectoryProvider dataDir,
+        GetApplicableArchivePaths sut)
+    {
+        manualArchiveIniListings.SetTo(SomeExplicitListingBsa2, SomeExplicitListingBsa, UnusedExplicitListingBsa);
+        fs.File.WriteAllText(Path.Combine(dataDir.Path, $"{TestConstants.MasterModKey2.Name}.bsa"), string.Empty);
+        fs.File.WriteAllText(Path.Combine(dataDir.Path, SomeExplicitListingBsa), string.Empty);
+        fs.File.WriteAllText(Path.Combine(dataDir.Path, SomeExplicitListingBsa2), string.Empty);
+        fs.File.WriteAllText(Path.Combine(dataDir.Path, MyModBsa), string.Empty);
+        var applicable = sut.Get(TestConstants.MasterModKey2)
+            .ToArray();
+        applicable.Should().Equal(new FilePath[]
+        {
+            Path.Combine(dataDir.Path, SomeExplicitListingBsa2),
+            Path.Combine(dataDir.Path, SomeExplicitListingBsa),
+            Path.Combine(dataDir.Path, $"{TestConstants.MasterModKey2.Name}.bsa")
+        });
+    }
+    
+    [Theory, MutagenContainerAutoData]
+    public void DuplicateInis(
+        IFileSystem fs,
+        ManualArchiveIniListings manualArchiveIniListings,
+        IDataDirectoryProvider dataDir,
+        GetApplicableArchivePaths sut)
+    {
+        manualArchiveIniListings.SetTo(SomeExplicitListingBsa, SomeExplicitListingBsa, UnusedExplicitListingBsa);
+        fs.File.WriteAllText(Path.Combine(dataDir.Path, $"{TestConstants.MasterModKey2.Name}.bsa"), string.Empty);
+        fs.File.WriteAllText(Path.Combine(dataDir.Path, SomeExplicitListingBsa), string.Empty);
+        fs.File.WriteAllText(Path.Combine(dataDir.Path, SomeExplicitListingBsa2), string.Empty);
+        fs.File.WriteAllText(Path.Combine(dataDir.Path, MyModBsa), string.Empty);
+        var applicable = sut.Get(TestConstants.MasterModKey2)
+            .ToArray();
+        applicable.Should().Equal(new FilePath[]
+        {
+            Path.Combine(dataDir.Path, SomeExplicitListingBsa),
+            Path.Combine(dataDir.Path, $"{TestConstants.MasterModKey2.Name}.bsa")
+        });
+    }
 }

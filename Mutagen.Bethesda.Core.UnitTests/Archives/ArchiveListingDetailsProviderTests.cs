@@ -3,6 +3,7 @@ using FluentAssertions;
 using Mutagen.Bethesda.Archives.DI;
 using Mutagen.Bethesda.Testing.AutoData;
 using Mutagen.Bethesda.Testing.Fakes;
+using Noggog;
 using NSubstitute;
 using Xunit;
 
@@ -20,14 +21,22 @@ public class ArchiveListingDetailsProviderTests
         loadOrderListingsProvider.SetTo("ModC.esm", "ModD.esp");
         getArchiveIniListings.SetTo("ArchiveA.bsa", "ArchiveB.bsa");
         var sut = lazySut.Value;
-        sut.Empty.Should().BeFalse();
         sut.Contains("ArchiveA.bsa").Should().BeTrue();
         sut.Contains("ArchiveB.bsa").Should().BeTrue();
         sut.Contains("ModC.bsa").Should().BeTrue();
         sut.Contains("ModD.bsa").Should().BeTrue();
-        sut.PriorityIndexFor("ArchiveA.bsa").Should().Be(3);
-        sut.PriorityIndexFor("ArchiveB.bsa").Should().Be(2);
-        sut.PriorityIndexFor("ModC.bsa").Should().Be(1);
-        sut.PriorityIndexFor("ModD.bsa").Should().Be(0);
+        var list = new FileName[]
+        {
+            "ArchiveA.bsa",
+            "ArchiveB.bsa",
+            "ModC.bsa",
+            "ModD.bsa",
+        };
+        list.Order(sut.GetComparerFor(null));
+        list.Should().Equal(
+            "ArchiveA.bsa",
+            "ArchiveB.bsa",
+            "ModC.bsa",
+            "ModD.bsa");
     }
 }

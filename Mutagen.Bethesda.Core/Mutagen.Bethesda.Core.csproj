@@ -47,7 +47,7 @@
         <Compile Include="Archives\Bsa\BsaFileNameBlock.cs" />
         <Compile Include="Archives\DI\ArchiveExtensionProvider.cs" />
         <Compile Include="Archives\DI\ArchiveModule.cs" />
-        <Compile Include="Archives\DI\CachedArchiveListingDetailsProvider.cs" />
+        <Compile Include="Archives\DI\IArchiveListingDetailsProvider.cs" />
         <Compile Include="Archives\DI\ArchiveReaderProvider.cs">
             <CodeLanguage>cs</CodeLanguage>
             <DefaultPackFolder>content</DefaultPackFolder>
@@ -68,7 +68,6 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
-        <Compile Include="Archives\DI\IArchiveListingDetailsProvider.cs" />
         <Compile Include="Archives\DI\IArchiveNameFromModKeyProvider.cs" />
         <Compile Include="Archives\Exceptions\ArchiveException.cs" />
         <Compile Include="Archives\IArchiveFile.cs" />

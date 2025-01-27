@@ -35,33 +35,28 @@ public sealed class GetApplicableArchivePaths : IGetApplicableArchivePaths
         ICheckArchiveApplicability applicability,
         IDataDirectoryProvider dataDirectoryProvider,
         IArchiveExtensionProvider archiveExtension,
-        IArchiveListingDetailsProvider ArchiveListingDetailsProvider)
+        IArchiveListingDetailsProvider archiveListingDetailsProvider)
     {
         _fileSystem = fileSystem;
         _applicability = applicability;
         _dataDirectoryProvider = dataDirectoryProvider;
         _archiveExtension = archiveExtension;
-        _archiveListingDetailsProvider = ArchiveListingDetailsProvider;
+        _archiveListingDetailsProvider = archiveListingDetailsProvider;
     }
         
     /// <inheritdoc />
     public IEnumerable<FilePath> Get()
     {
-        return GetInternal(default(ModKey?), GetPriorityOrderComparer());
+        return GetInternal(default(ModKey?));
     }
 
     /// <inheritdoc />
     public IEnumerable<FilePath> Get(ModKey modKey)
     {
-        return Get(modKey, GetPriorityOrderComparer());
-    }
-
-    private IEnumerable<FilePath> Get(ModKey modKey, IComparer<FileName>? archiveOrdering)
-    {
-        return GetInternal(modKey, archiveOrdering);
+        return GetInternal(modKey);
     }
         
-    private IEnumerable<FilePath> GetInternal(ModKey? modKey, IComparer<FileName>? archiveOrdering)
+    private IEnumerable<FilePath> GetInternal(ModKey? modKey)
     {
         if (modKey.HasValue && modKey.Value.IsNull)
         {
@@ -73,35 +68,18 @@ public sealed class GetApplicableArchivePaths : IGetApplicableArchivePaths
             return [];
         }
             
-        var ret = _fileSystem.Directory.EnumerateFilePaths(_dataDirectoryProvider.Path, searchPattern: $"*{_archiveExtension.Get()}");
-        if (modKey != null)
+        var ret = _fileSystem.Directory
+            .EnumerateFilePaths(_dataDirectoryProvider.Path, searchPattern: $"*{_archiveExtension.Get()}");
+        if (modKey != null && !modKey.Value.IsNull)
         {
             ret = ret
-                .Where(archive =>
-                {
-                    if (_archiveListingDetailsProvider.Contains(archive.Name)) return true;
-                    return _applicability.IsApplicable(modKey.Value, archive.Name);
-                });
+                .Where(x => _archiveListingDetailsProvider.IsIni(x.Name) || _applicability.IsApplicable(modKey.Value, x.Name));
         }
-        if (archiveOrdering != null)
+        else
         {
-            return ret.OrderBy(x => x.Name, archiveOrdering);
+            ret = ret
+                .Where(x => _archiveListingDetailsProvider.Contains(x.Name));
         }
-        return ret;
-    }
-
-
-    private IComparer<FileName>? GetPriorityOrderComparer()
-    {
-        if (_archiveListingDetailsProvider.Empty) return null;
-        return Comparer<FileName>.Create((a, b) =>
-        {
-            var indexA = _archiveListingDetailsProvider.PriorityIndexFor(a);
-            var indexB = _archiveListingDetailsProvider.PriorityIndexFor(b);
-            if (indexA == -1 && indexB == -1) return 0;
-            if (indexA == -1) return 1;
-            if (indexB == -1) return -1;
-            return indexA - indexB;
-        });
+        return ret.OrderBy(x => x.Name, _archiveListingDetailsProvider.GetComparerFor(modKey));
     }
 }
