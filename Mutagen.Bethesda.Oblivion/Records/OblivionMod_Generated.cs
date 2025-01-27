@@ -6283,7 +6283,7 @@ namespace Mutagen.Bethesda.Oblivion
             toDo.Add(() => WriteGroupParallel(item.EffectShaders, 55, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
-                outputStreams.NotNull(),
+                outputStreams.WhereNotNull(),
                 writer.BaseStream);
         }
         

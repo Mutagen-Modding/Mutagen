@@ -6960,7 +6960,7 @@ namespace Mutagen.Bethesda.Fallout4
             yield return FormLinkInformation.Factory(obj.ExplodableSubsegmentExplosion);
             if (obj.SkeletalModel is {} SkeletalModelItem)
             {
-                foreach (var item in SkeletalModelItem.NotNull().SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in SkeletalModelItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -6984,7 +6984,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.BodyData.NotNull().SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.BodyData.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -6992,7 +6992,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 yield return BodyPartDataInfo;
             }
-            foreach (var item in obj.BehaviorGraph.NotNull().SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.BehaviorGraph.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -7058,7 +7058,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (obj.HeadData is {} HeadDataItem)
             {
-                foreach (var item in HeadDataItem.NotNull().SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in HeadDataItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }

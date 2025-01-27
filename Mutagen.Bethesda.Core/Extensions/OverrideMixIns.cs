@@ -83,7 +83,7 @@ public static class OverrideMixIns
     {
         return modListings
             .Select(l => l.Mod)
-            .NotNull()
+            .WhereNotNull()
             .WinningOverrides<TMajor>(includeDeletedRecords: includeDeletedRecords);
     }
 
@@ -109,7 +109,7 @@ public static class OverrideMixIns
     {
         return modListings
             .Select(l => l.Mod)
-            .NotNull()
+            .WhereNotNull()
             .WinningOverrides(type, includeDeletedRecords: includeDeletedRecords);
     }
 
@@ -275,7 +275,7 @@ public static class OverrideMixIns
     {
         return modListings
             .Select(l => l.Mod)
-            .NotNull()
+            .WhereNotNull()
             .WinningContextOverrides<TMod, TModGetter, TSetter, TGetter>(linkCache, includeDeletedRecords: includeDeletedRecords);
     }
 
@@ -310,7 +310,7 @@ public static class OverrideMixIns
     {
         return modListings
             .Select(l => l.Mod)
-            .NotNull()
+            .WhereNotNull()
             .WinningContextOverrides<TMod, TModGetter>(linkCache, type, includeDeletedRecords: includeDeletedRecords);
     }
 

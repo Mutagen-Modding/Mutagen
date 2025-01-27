@@ -11838,7 +11838,7 @@ namespace Mutagen.Bethesda.Skyrim
             toDo.Add(() => WriteGroupParallel(item.LensFlares, 113, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
-                outputStreams.NotNull(),
+                outputStreams.WhereNotNull(),
                 writer.BaseStream);
         }
         

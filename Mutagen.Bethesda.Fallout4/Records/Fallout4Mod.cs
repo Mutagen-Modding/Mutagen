@@ -416,7 +416,7 @@ partial class Fallout4ModCommon
             }
 
             worldGroupWriter.Position = 4;
-            worldGroupWriter.Write((uint)(subStreams.NotNull().Select(s => s.Length).Sum()));
+            worldGroupWriter.Write((uint)(subStreams.WhereNotNull().Select(s => s.Length).Sum()));
             streams[worldspaceCounter + 1] = new CompositeReadStream(worldTrib.AsEnumerable().And(subStreams), resetPositions: true);
         });
         PluginUtilityTranslation.CompileSetGroupLength(streams, groupBytes);

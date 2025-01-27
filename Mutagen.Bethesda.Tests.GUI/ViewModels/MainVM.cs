@@ -154,7 +154,7 @@ public class MainVM : ViewModel
                                             return null;
                                         }
                                     })
-                                    .NotNull()
+                                    .WhereNotNull()
                                     .ToList()
                             })
                             .ToList();

@@ -154,7 +154,7 @@ public sealed class LoadOrderImporter : ILoadOrderImporter
                         if (!_fileSystem.File.Exists(modPath)) return null;
                         return _keyedMasterStyleReader.ReadFrom(modPath);
                     })
-                    .NotNull())
+                    .WhereNotNull())
             };
         }
         try

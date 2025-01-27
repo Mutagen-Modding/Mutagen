@@ -1872,14 +1872,14 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (obj.WorldModel is {} WorldModelItem)
             {
-                foreach (var item in WorldModelItem.NotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
+                foreach (var item in WorldModelItem.WhereNotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
                 {
                     yield return item;
                 }
             }
             if (obj.FirstPersonModel is {} FirstPersonModelItem)
             {
-                foreach (var item in FirstPersonModelItem.NotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
+                foreach (var item in FirstPersonModelItem.WhereNotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
                 {
                     yield return item;
                 }
@@ -2419,14 +2419,14 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (obj.WorldModel is {} WorldModelItem)
             {
-                foreach (var item in WorldModelItem.NotNull().SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in WorldModelItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.FirstPersonModel is {} FirstPersonModelItem)
             {
-                foreach (var item in FirstPersonModelItem.NotNull().SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in FirstPersonModelItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -2447,7 +2447,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (obj.Morphs is {} MorphsItem)
             {
-                foreach (var item in MorphsItem.NotNull().SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in MorphsItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -2484,14 +2484,14 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (obj.WorldModel is {} WorldModelItem)
             {
-                foreach (var item in WorldModelItem.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                foreach (var item in WorldModelItem.WhereNotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
                 {
                     yield return item;
                 }
             }
             if (obj.FirstPersonModel is {} FirstPersonModelItem)
             {
-                foreach (var item in FirstPersonModelItem.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                foreach (var item in FirstPersonModelItem.WhereNotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
                 {
                     yield return item;
                 }

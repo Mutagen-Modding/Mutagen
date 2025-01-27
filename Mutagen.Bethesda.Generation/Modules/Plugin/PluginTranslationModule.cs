@@ -2005,7 +2005,7 @@ public class PluginTranslationModule : BinaryTranslationModule
         {
             if (doubleUsages.TryGetValue(k, out var doubles)) return doubles;
             return null;
-        }).NotNull().ToArray();
+        }).WhereNotNull().ToArray();
 
         if (doubled.All(x => x.Handled))
         {

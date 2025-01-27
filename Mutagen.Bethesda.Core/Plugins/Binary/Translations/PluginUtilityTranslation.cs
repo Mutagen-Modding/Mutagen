@@ -487,7 +487,7 @@ internal static class PluginUtilityTranslation
         IEnumerable<Stream> streams,
         byte[] bytes)
     {
-        SetGroupLength(bytes, (uint)streams.NotNull().Sum(i => i.Length));
+        SetGroupLength(bytes, (uint)streams.WhereNotNull().Sum(i => i.Length));
     }
 
     internal static void SkipPastAll(IBinaryReadStream stream, GameConstants meta, RecordType recordType)

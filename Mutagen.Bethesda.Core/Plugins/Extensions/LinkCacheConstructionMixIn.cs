@@ -88,7 +88,7 @@ public static class LinkCacheConstructionMixIn
         return new ImmutableLoadOrderLinkCache(
             loadOrder.ListedOrder
                 .Select(listing => listing.Mod)
-                .NotNull(),
+                .WhereNotNull(),
             GameCategoryHelper.TryFromModType<TMod>(),
             prefs ?? LinkCachePreferences.Default);
     }
@@ -111,7 +111,7 @@ public static class LinkCacheConstructionMixIn
         return new ImmutableLoadOrderLinkCache(
             loadOrder.ListedOrder
                 .Select(listing => listing.Mod)
-                .NotNull()
+                .WhereNotNull()
                 .Select(x =>
                 {
                     if (x.GameRelease.ToCategory() != category)
@@ -142,7 +142,7 @@ public static class LinkCacheConstructionMixIn
         return new ImmutableLoadOrderLinkCache(
             loadOrder
                 .Select(listing => listing.Mod)
-                .NotNull(),
+                .WhereNotNull(),
             GameCategoryHelper.TryFromModType<TMod>(),
             prefs ?? LinkCachePreferences.Default);
     }
@@ -165,7 +165,7 @@ public static class LinkCacheConstructionMixIn
         return new ImmutableLoadOrderLinkCache(
             loadOrder
                 .Select(listing => listing.Mod)
-                .NotNull()
+                .WhereNotNull()
                 .Select(x =>
                 {
                     if (x.GameRelease.ToCategory() != category)
@@ -311,7 +311,7 @@ public static class LinkCacheConstructionMixIn
         return new ImmutableLoadOrderLinkCache<TMod, TModGetter>(
             loadOrder
                 .Select(listing => listing.Value.Mod)
-                .NotNull(),
+                .WhereNotNull(),
             prefs ?? LinkCachePreferences.Default);
     }
 
@@ -333,7 +333,7 @@ public static class LinkCacheConstructionMixIn
         return new ImmutableLoadOrderLinkCache<TMod, TModGetter>(
             loadOrder
                 .Select(listing => listing.Mod)
-                .NotNull(),
+                .WhereNotNull(),
             prefs ?? LinkCachePreferences.Default);
     }
 

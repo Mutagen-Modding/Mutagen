@@ -3626,7 +3626,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return item;
             }
-            foreach (var item in obj.CloudTextures.NotNull())
+            foreach (var item in obj.CloudTextures.WhereNotNull())
             {
                 yield return item;
             }
@@ -4731,7 +4731,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if (queryCategories.HasFlag(AssetLinkQuery.Listed))
             {
-                foreach (var item in obj.CloudTextures.NotNull())
+                foreach (var item in obj.CloudTextures.WhereNotNull())
                 {
                     yield return item;
                 }

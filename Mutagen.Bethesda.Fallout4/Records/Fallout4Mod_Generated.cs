@@ -12507,7 +12507,7 @@ namespace Mutagen.Bethesda.Fallout4
             toDo.Add(() => WriteGroupParallel(item.ObjectVisibilityManagers, 125, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
-                outputStreams.NotNull(),
+                outputStreams.WhereNotNull(),
                 writer.BaseStream);
         }
         

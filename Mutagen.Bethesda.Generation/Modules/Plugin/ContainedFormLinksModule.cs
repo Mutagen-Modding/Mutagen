@@ -133,7 +133,7 @@ public class ContainedFormLinksModule : AContainedLinksModule<FormLinkType>
                         if (cont.SubTypeGeneration is LoquiType contLoqui
                             && await HasLinks(contLoqui, includeBaseClass: true) != Case.No)
                         {
-                            string filterNulls = cont is GenderedType && ((GenderedType)cont).ItemNullable ? ".NotNull()" : null;
+                            string filterNulls = cont is GenderedType && ((GenderedType)cont).ItemNullable ? ".WhereNotNull()" : null;
                             var linktype = await HasLinks(contLoqui, includeBaseClass: true);
                             if (linktype != Case.No)
                             {
@@ -157,7 +157,7 @@ public class ContainedFormLinksModule : AContainedLinksModule<FormLinkType>
                         else if (cont.SubTypeGeneration is FormLinkType formIDType
                                  && formIDType.FormIDType == FormLinkType.FormIDTypeEnum.Normal)
                         {
-                            string filterNulls = cont is GenderedType && ((GenderedType)cont).ItemNullable ? ".NotNull()" : null;
+                            string filterNulls = cont is GenderedType && ((GenderedType)cont).ItemNullable ? ".WhereNotNull()" : null;
                             subFg.AppendLine($"foreach (var item in {access}{filterNulls})");
                         }
                         else

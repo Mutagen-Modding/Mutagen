@@ -4836,22 +4836,22 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if (obj.SkeletalModel is {} SkeletalModelItem)
             {
-                foreach (var item in SkeletalModelItem.NotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
+                foreach (var item in SkeletalModelItem.WhereNotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.BodyData.NotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
+            foreach (var item in obj.BodyData.WhereNotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
             {
                 yield return item;
             }
-            foreach (var item in obj.BehaviorGraph.NotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
+            foreach (var item in obj.BehaviorGraph.WhereNotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
             {
                 yield return item;
             }
             if (obj.HeadData is {} HeadDataItem)
             {
-                foreach (var item in HeadDataItem.NotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
+                foreach (var item in HeadDataItem.WhereNotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
                 {
                     yield return item;
                 }
@@ -6090,7 +6090,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if (obj.SkeletalModel is {} SkeletalModelItem)
             {
-                foreach (var item in SkeletalModelItem.NotNull().WhereCastable<ISimpleModelGetter, IFormLinkContainerGetter>()
+                foreach (var item in SkeletalModelItem.WhereNotNull().WhereCastable<ISimpleModelGetter, IFormLinkContainerGetter>()
                     .SelectMany((f) => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
@@ -6122,7 +6122,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.BodyData.NotNull().SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.BodyData.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -6144,7 +6144,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return BodyPartDataInfo;
             }
-            foreach (var item in obj.BehaviorGraph.NotNull().SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.BehaviorGraph.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -6206,7 +6206,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if (obj.HeadData is {} HeadDataItem)
             {
-                foreach (var item in HeadDataItem.NotNull().SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in HeadDataItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -6230,22 +6230,22 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if (obj.SkeletalModel is {} SkeletalModelItem)
             {
-                foreach (var item in SkeletalModelItem.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                foreach (var item in SkeletalModelItem.WhereNotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.BodyData.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+            foreach (var item in obj.BodyData.WhereNotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
             {
                 yield return item;
             }
-            foreach (var item in obj.BehaviorGraph.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+            foreach (var item in obj.BehaviorGraph.WhereNotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
             {
                 yield return item;
             }
             if (obj.HeadData is {} HeadDataItem)
             {
-                foreach (var item in HeadDataItem.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                foreach (var item in HeadDataItem.WhereNotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
                 {
                     yield return item;
                 }

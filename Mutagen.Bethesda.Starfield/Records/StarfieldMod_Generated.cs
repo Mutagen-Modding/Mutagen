@@ -17095,7 +17095,7 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.PERS, 175, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
-                outputStreams.NotNull(),
+                outputStreams.WhereNotNull(),
                 writer.BaseStream);
         }
         

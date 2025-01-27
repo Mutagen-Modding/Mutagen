@@ -4075,12 +4075,12 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (obj.SkeletalModel is {} SkeletalModelItem)
             {
-                foreach (var item in SkeletalModelItem.NotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
+                foreach (var item in SkeletalModelItem.WhereNotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.BodyData.NotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
+            foreach (var item in obj.BodyData.WhereNotNull().SelectMany(f => f.EnumerateListedAssetLinks()))
             {
                 yield return item;
             }
@@ -5138,7 +5138,7 @@ namespace Mutagen.Bethesda.Starfield
             yield return FormLinkInformation.Factory(obj.ImpactDataSet);
             if (obj.SkeletalModel is {} SkeletalModelItem)
             {
-                foreach (var item in SkeletalModelItem.NotNull().SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in SkeletalModelItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -5151,7 +5151,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.BodyData.NotNull().SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.BodyData.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
@@ -5207,7 +5207,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (obj.ChargenAndSkintones is {} ChargenAndSkintonesItem)
             {
-                foreach (var item in ChargenAndSkintonesItem.NotNull().SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in ChargenAndSkintonesItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -5230,7 +5230,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (obj.HeadPartsAndBoneModifiers is {} HeadPartsAndBoneModifiersItem)
             {
-                foreach (var item in HeadPartsAndBoneModifiersItem.NotNull().SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in HeadPartsAndBoneModifiersItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -5255,12 +5255,12 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (obj.SkeletalModel is {} SkeletalModelItem)
             {
-                foreach (var item in SkeletalModelItem.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+                foreach (var item in SkeletalModelItem.WhereNotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
                 {
                     yield return item;
                 }
             }
-            foreach (var item in obj.BodyData.NotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+            foreach (var item in obj.BodyData.WhereNotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
             {
                 yield return item;
             }
