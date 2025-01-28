@@ -161,6 +161,14 @@ public interface IBinaryModdedWriteBuilderLoadOrderChoice
     /// </summary>
     /// <param name="loadOrder">Load order to reference</param>
     /// <returns>Builder object to continue customization</returns>
+    public IBinaryModdedWriteBuilderDataFolderChoice WithLoadOrder(
+        ILoadOrderGetter<ModKey> loadOrder);
+
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
     public IBinaryModdedWriteBuilder WithLoadOrder(
         IEnumerable<IModMasterStyledGetter> loadOrder);
 
@@ -277,6 +285,18 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
         });
     }
     IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(ILoadOrderGetter<IModMasterStyledGetter> loadOrder) => WithLoadOrder(loadOrder);
+
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilderDataFolderChoice<TModGetter> WithLoadOrder(
+        ILoadOrderGetter<ModKey> loadOrder)
+    {
+        return WithLoadOrder(loadOrder.ListedOrder);
+    }
+    IBinaryModdedWriteBuilderDataFolderChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(ILoadOrderGetter<ModKey> loadOrder) => WithLoadOrder(loadOrder);
     
     /// <summary>
     /// Writes the mod with given load order as reference
