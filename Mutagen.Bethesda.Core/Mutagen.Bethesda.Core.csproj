@@ -336,6 +336,7 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Plugins\Masters\DI\MastersModule.cs" />
         <Compile Include="Plugins\Masters\DI\TransitiveMasterLocator.cs" />
         <Compile Include="Plugins\Masters\MasterStyle.cs" />
         <Compile Include="Plugins\Masters\SeparatedMasterPackage.cs" />

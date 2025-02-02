@@ -6,7 +6,12 @@ using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Plugins.Masters.DI;
 
-public class MasterFlagsLookupCompiler
+public interface IMasterFlagsLookupCompiler
+{
+    Noggog.Cache<IModMasterStyledGetter, ModKey>? ConstructFor(ModPath path);
+}
+
+public class MasterFlagsLookupCompiler : IMasterFlagsLookupCompiler
 {
     private readonly IFileSystem _fileSystem;
     private readonly IGameReleaseContext _gameReleaseContext;
