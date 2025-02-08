@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Testing.AutoData;
 using Xunit;
@@ -11,7 +11,7 @@ public class TimestampPluginListingsProviderTests
     public void Typical(TimestampedPluginListingsProvider sut)
     {
         sut.Get()
-            .Should().Equal(
+            .ShouldBe(
                 sut.Aligner.AlignToTimestamps(
                     sut.RawListingsReader.Read(sut.ListingsPathContext.Path),
                     sut.DirectoryProvider.Path,

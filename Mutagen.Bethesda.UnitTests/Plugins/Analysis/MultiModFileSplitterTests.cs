@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Analysis.DI;
 using Mutagen.Bethesda.Plugins.Records;
@@ -145,7 +145,7 @@ public class MultiModFileSplitterTests
 
         var sut = new MultiModFileSplitter();
         var outputList = sut.Split<ISkyrimMod, ISkyrimModGetter>(inputMod, 10);
-        outputList.Count.Should().Be(1);
+        outputList.Count.ShouldBe(1);
     }
     
     [Theory, MutagenModAutoData]
@@ -170,12 +170,12 @@ public class MultiModFileSplitterTests
         var outputList = sut.Split<ISkyrimMod, ISkyrimModGetter>(payload.Mod, 10);
 
         // now, we expect 5 clusters, each containing one of the 7-sized FLSTs and one of the 3-sized FLSTs
-        outputList.Count.Should().Be(5);
+        outputList.Count.ShouldBe(5);
         
         foreach (var mod in outputList)
         {
             var modMasters = GetAllMasters(mod);
-            modMasters.Count.Should().BeLessOrEqualTo(10);
+            modMasters.Count.ShouldBeLessThanOrEqualTo(10);
             var recs = mod.EnumerateMajorRecords();
     
             foreach (var rec in recs)
@@ -188,7 +188,7 @@ public class MultiModFileSplitterTests
             }
         }
 
-        expectedEdids.Count.Should().Be(0, "Not all generated dummy records were found in the split files");
+        expectedEdids.Count.ShouldBe(0, "Not all generated dummy records were found in the split files");
     }
     
     [Theory, MutagenModAutoData]
@@ -283,7 +283,7 @@ public class MultiModFileSplitterTests
         var outputList = sut.Split<ISkyrimMod, ISkyrimModGetter>(tracker.Mod, 255);
         // expecting one file exactly, everything in expectedEdids to be present, and overrides to have stayed overrides
         // essentially, we should recieve one file, which is pretty much identical to inputMod (besides the formIDs)
-        outputList.Count().Should().Be(1);
+        outputList.Count().ShouldBe(1);
         var mod = outputList.First();
         var recs = mod.EnumerateMajorRecords();
     
@@ -313,7 +313,7 @@ public class MultiModFileSplitterTests
                 edidsLocal.Remove(edid);
             }
         }
-        edidsLocal.Count.Should().Be(0, "Not all local forms were found in output file");
-        edidsOverride.Count.Should().Be(0, "Not all overridden forms were found in output file");
+        edidsLocal.Count.ShouldBe(0, "Not all local forms were found in output file");
+        edidsOverride.Count.ShouldBe(0, "Not all overridden forms were found in output file");
     }
 }

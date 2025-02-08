@@ -1,9 +1,10 @@
 ﻿using AutoFixture.Xunit2;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Archives.DI;
 using Mutagen.Bethesda.Testing.AutoData;
 using Mutagen.Bethesda.Testing.Fakes;
 using Noggog;
+using Noggog.Testing.Extensions;
 using NSubstitute;
 using Xunit;
 
@@ -21,10 +22,10 @@ public class ArchiveListingDetailsProviderTests
         loadOrderListingsProvider.SetTo("ModC.esm", "ModD.esp");
         getArchiveIniListings.SetTo("ArchiveA.bsa", "ArchiveB.bsa");
         var sut = lazySut.Value;
-        sut.Contains("ArchiveA.bsa").Should().BeTrue();
-        sut.Contains("ArchiveB.bsa").Should().BeTrue();
-        sut.Contains("ModC.bsa").Should().BeTrue();
-        sut.Contains("ModD.bsa").Should().BeTrue();
+        sut.Contains("ArchiveA.bsa").ShouldBeTrue();
+        sut.Contains("ArchiveB.bsa").ShouldBeTrue();
+        sut.Contains("ModC.bsa").ShouldBeTrue();
+        sut.Contains("ModD.bsa").ShouldBeTrue();
         var list = new FileName[]
         {
             "ArchiveA.bsa",
@@ -33,7 +34,7 @@ public class ArchiveListingDetailsProviderTests
             "ModD.bsa",
         };
         list.Order(sut.GetComparerFor(null));
-        list.Should().Equal(
+        list.ShouldEqual(
             "ArchiveA.bsa",
             "ArchiveB.bsa",
             "ModC.bsa",

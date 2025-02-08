@@ -2,13 +2,14 @@
 using System.Reactive;
 using AutoFixture.Xunit2;
 using DynamicData;
-using FluentAssertions;
+using Shouldly;
 using Microsoft.Reactive.Testing;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
+using Noggog.Testing.Extensions;
 using Noggog.Testing.FileSystem;
 using NSubstitute;
 using Xunit;
@@ -24,12 +25,11 @@ public class PluginLiveLoadOrderProviderTests
         [Frozen]MockFileSystem fs)
     {
         fs.File.WriteAllLines(pluginsTxt,
-            new string[]
-            {
-                TestConstants.PluginModKey.ToString(),
+        [
+            TestConstants.PluginModKey.ToString(),
                 TestConstants.PluginModKey2.ToString(),
-                TestConstants.PluginModKey3.ToString(),
-            });
+                TestConstants.PluginModKey3.ToString()
+        ]);
         var live = PluginListings.GetLiveLoadOrder(
             GameRelease.SkyrimLE,
             pluginsTxt, 
@@ -42,22 +42,20 @@ public class PluginLiveLoadOrderProviderTests
         Assert.Equal(TestConstants.PluginModKey2, list.Items.ElementAt(1).ModKey);
         Assert.Equal(TestConstants.PluginModKey3, list.Items.ElementAt(2).ModKey);
         fs.File.WriteAllLines(pluginsTxt,
-            new string[]
-            {
-                TestConstants.PluginModKey.ToString(),
-                TestConstants.PluginModKey3.ToString(),
-            });
+        [
+            TestConstants.PluginModKey.ToString(),
+                TestConstants.PluginModKey3.ToString()
+        ]);
         watcher.MarkChanged(pluginsTxt);
         Assert.Equal(2, list.Count);
         Assert.Equal(TestConstants.PluginModKey, list.Items.ElementAt(0).ModKey);
         Assert.Equal(TestConstants.PluginModKey3, list.Items.ElementAt(1).ModKey);
         fs.File.WriteAllLines(pluginsTxt,
-            new string[]
-            {
-                TestConstants.PluginModKey.ToString(),
+        [
+            TestConstants.PluginModKey.ToString(),
                 TestConstants.PluginModKey3.ToString(),
-                TestConstants.PluginModKey4.ToString(),
-            });
+                TestConstants.PluginModKey4.ToString()
+        ]);
         watcher.MarkChanged(pluginsTxt);
         Assert.Equal(3, list.Count);
         Assert.Equal(TestConstants.PluginModKey, list.Items.ElementAt(0).ModKey);
@@ -77,7 +75,7 @@ public class PluginLiveLoadOrderProviderTests
                 new PluginListingsPathInjection(pluginPath))
             .Get(out _)
             .AsObservableList();
-        list.Items.Should().BeEmpty();
+        list.Items.ShouldBeEmpty();
         listings.Received(1).Get();
     }
 
@@ -94,7 +92,7 @@ public class PluginLiveLoadOrderProviderTests
                 new PluginListingsPathInjection(pluginPath))
             .Get(out _)
             .AsObservableList();
-        list.Items.Should().BeEmpty();
+        list.Items.ShouldBeEmpty();
         listings.Received(1).Get();
             
         modified.MarkChanged(pluginPath);
@@ -107,11 +105,11 @@ public class PluginLiveLoadOrderProviderTests
         [Frozen]MockFileSystemWatcher modified,
         [Frozen]MockFileSystem fs)
     {
-        var listings = new LoadOrderListing[]
-        {
+        LoadOrderListing[] listings =
+        [
             new LoadOrderListing(TestConstants.MasterModKey, true),
-            new LoadOrderListing(TestConstants.MasterModKey2, false),
-        };
+            new LoadOrderListing(TestConstants.MasterModKey2, false)
+        ];
         var listingsProv = Substitute.For<IPluginListingsProvider>();
         listingsProv.Get().Returns(listings);
         var list = new PluginLiveLoadOrderProvider(
@@ -120,17 +118,17 @@ public class PluginLiveLoadOrderProviderTests
                 new PluginListingsPathInjection(pluginPath))
             .Get(out _)
             .AsObservableList();
-        list.Items.Should().Equal(listings);
+        list.Items.ShouldBe(listings);
             
-        var listings2 = new LoadOrderListing[]
-        {
+        LoadOrderListing[] listings2 =
+        [
             new LoadOrderListing(TestConstants.MasterModKey, true),
             new LoadOrderListing(TestConstants.MasterModKey2, false),
-            new LoadOrderListing(TestConstants.MasterModKey3, true),
-        };
+            new LoadOrderListing(TestConstants.MasterModKey3, true)
+        ];
         listingsProv.Get().Returns(listings2);
         modified.MarkChanged(pluginPath);
-        list.Items.Should().Equal(listings2);
+        list.Items.ShouldBe(listings2);
     }
 
     [Theory, MutagenAutoData]
@@ -149,13 +147,13 @@ public class PluginLiveLoadOrderProviderTests
         TestScheduler scheduler = new TestScheduler();
         var testableObs = scheduler.CreateObserver<ErrorResponse>();
         using var sub = state.Subscribe(testableObs);
-        testableObs.Messages.Should().HaveCount(1);
-        testableObs.Messages[0].Value.Kind.Should().Be(NotificationKind.OnNext);
-        testableObs.Messages[0].Value.Value.Succeeded.Should().BeTrue();
+        testableObs.Messages.ShouldHaveCount(1);
+        testableObs.Messages[0].Value.Kind.ShouldBe(NotificationKind.OnNext);
+        testableObs.Messages[0].Value.Value.Succeeded.ShouldBeTrue();
         modified.MarkChanged(pluginPath);
-        testableObs.Messages.Should().HaveCount(2);
-        testableObs.Messages[1].Value.Kind.Should().Be(NotificationKind.OnNext);
-        testableObs.Messages[1].Value.Value.Succeeded.Should().BeTrue();
+        testableObs.Messages.ShouldHaveCount(2);
+        testableObs.Messages[1].Value.Kind.ShouldBe(NotificationKind.OnNext);
+        testableObs.Messages[1].Value.Value.Succeeded.ShouldBeTrue();
     }
 
     [Theory, MutagenAutoData]
@@ -165,11 +163,11 @@ public class PluginLiveLoadOrderProviderTests
         [Frozen]MockFileSystem fs)
     {
         TestScheduler scheduler = new();
-        var listings = new LoadOrderListing[]
-        {
+        LoadOrderListing[] listings =
+        [
             new LoadOrderListing(TestConstants.MasterModKey, true),
-            new LoadOrderListing(TestConstants.MasterModKey2, false),
-        };
+            new LoadOrderListing(TestConstants.MasterModKey2, false)
+        ];
         var listingsProv = Substitute.For<IPluginListingsProvider>();
         listingsProv.Get().Returns(
             _ => listings,
@@ -181,23 +179,23 @@ public class PluginLiveLoadOrderProviderTests
                 new PluginListingsPathInjection(pluginPath))
             .Get(out var state)
             .AsObservableList();
-        list.Count.Should().Be(2);
+        list.Count.ShouldBe(2);
         var testableObs = scheduler.CreateObserver<ErrorResponse>();
         using var sub = state.Subscribe(testableObs);
-        testableObs.Messages.Should().HaveCount(1);
-        testableObs.Messages[0].Value.Kind.Should().Be(NotificationKind.OnNext);
-        testableObs.Messages[0].Value.Value.Succeeded.Should().BeTrue();
+        testableObs.Messages.ShouldHaveCount(1);
+        testableObs.Messages[0].Value.Kind.ShouldBe(NotificationKind.OnNext);
+        testableObs.Messages[0].Value.Value.Succeeded.ShouldBeTrue();
 
         modified.MarkChanged(pluginPath);
-        testableObs.Messages.Should().HaveCount(2);
-        testableObs.Messages[1].Value.Kind.Should().Be(NotificationKind.OnNext);
-        testableObs.Messages[1].Value.Value.Succeeded.Should().BeFalse();
+        testableObs.Messages.ShouldHaveCount(2);
+        testableObs.Messages[1].Value.Kind.ShouldBe(NotificationKind.OnNext);
+        testableObs.Messages[1].Value.Value.Succeeded.ShouldBeFalse();
 
         modified.MarkChanged(pluginPath);
-        list.Count.Should().Be(2);
-        testableObs.Messages.Should().HaveCount(3);
-        testableObs.Messages[2].Value.Kind.Should().Be(NotificationKind.OnNext);
-        testableObs.Messages[2].Value.Value.Succeeded.Should().BeTrue();
+        list.Count.ShouldBe(2);
+        testableObs.Messages.ShouldHaveCount(3);
+        testableObs.Messages[2].Value.Kind.ShouldBe(NotificationKind.OnNext);
+        testableObs.Messages[2].Value.Value.Succeeded.ShouldBeTrue();
     }
 
     [Theory, MutagenAutoData]
@@ -216,11 +214,11 @@ public class PluginLiveLoadOrderProviderTests
             .Subscribe(testableObs);
         testableObs.ShouldNotBeCompleted();
         testableObs.ShouldHaveNoErrors();
-        testableObs.Messages.Should().HaveCount(1);
+        testableObs.Messages.ShouldHaveCount(1);
             
         modified.MarkChanged(existingPluginPath);
         testableObs.ShouldNotBeCompleted();
         testableObs.ShouldHaveNoErrors();
-        testableObs.Messages.Should().HaveCount(2);
+        testableObs.Messages.ShouldHaveCount(2);
     }
 }

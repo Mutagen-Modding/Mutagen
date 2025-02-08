@@ -1,7 +1,8 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Testing;
+using Noggog.Testing.Extensions;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Fallout4;
 
@@ -13,14 +14,14 @@ public class SubgraphOutOfOrderTests : ASpecificCaseTest<Subgraph, ISubgraphGett
     
     public override void TestItem(ISubgraphGetter subgraph)
     {       
-        subgraph.ActorKeywords.Should().Equal(
+        subgraph.ActorKeywords.ShouldEqual(
             new FormLink<IKeywordGetter>(FormKey.Factory("030B00:Fallout4.esm")),
             new FormLink<IKeywordGetter>(FormKey.Factory("030B01:Fallout4.esm")));
-        subgraph.BehaviorGraph.Should().Be(@"Actors\Shared\Behaviors\AlienSharedCoreWrappingBehavior.hkx");
-        subgraph.AnimationPaths.Should().Equal(
+        subgraph.BehaviorGraph.ShouldBe(@"Actors\Shared\Behaviors\AlienSharedCoreWrappingBehavior.hkx");
+        subgraph.AnimationPaths.ShouldEqual(
             @"Actors\Alien\Animations\Injured\BothLegs",
             @"Actors\Alien\Animations");
-        subgraph.Role.Should().Be(Subgraph.SubgraphRole.Weapon);
-        subgraph.Perspective.Should().Be(Perspective.Third);
+        subgraph.Role.ShouldBe(Subgraph.SubgraphRole.Weapon);
+        subgraph.Perspective.ShouldBe(Perspective.Third);
     }
 }

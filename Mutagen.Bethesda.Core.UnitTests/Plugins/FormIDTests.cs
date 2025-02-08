@@ -1,5 +1,6 @@
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
+using Noggog.Testing.Extensions;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins;
@@ -11,8 +12,8 @@ public class FormIDTests
     {
         byte[] bytes = new byte[4];
         FormID id = FormID.Factory(bytes);
-        id.FullMasterIndex.Should().Be(0);
-        id.FullId.Should().Be(uint.MinValue);
+        id.FullMasterIndex.ShouldEqual(0);
+        id.FullId.ShouldBe(uint.MinValue);
     }
 
     [Fact]
@@ -26,17 +27,17 @@ public class FormIDTests
             5,
         };
         FormID id = FormID.Factory(bytes);
-        id.FullMasterIndex.Should().Be(5);
-        id.FullId.Should().Be(0xCBD8);
+        id.FullMasterIndex.ShouldEqual(5);
+        id.FullId.ShouldEqual(0xCBD8);
     }
 
     [Fact]
     public void Import_String()
     {
-        FormID.TryFactory("0100C51A", out FormID id).Should().BeTrue();
-        id.FullMasterIndex.Should().Be(1);
-        id.FullId.Should().Be(0x00C51A);
-        id.Should().Be(new FormID(0x0100C51A));
+        FormID.TryFactory("0100C51A", out FormID id).ShouldBeTrue();
+        id.FullMasterIndex.ShouldEqual(1);
+        id.FullId.ShouldEqual(0x00C51A);
+        id.ShouldBe(new FormID(0x0100C51A));
     }
 
     [Fact]
@@ -44,18 +45,18 @@ public class FormIDTests
     {
         Assert.True(
             FormID.TryFactory("0x0100C51A", out FormID id));
-        id.FullMasterIndex.Should().Be(1);
-        id.FullId.Should().Be(0x00C51A);
-        id.Should().Be(new FormID(0x0100C51A));
+        id.FullMasterIndex.ShouldEqual(1);
+        id.FullId.ShouldEqual(0x00C51A);
+        id.ShouldBe(new FormID(0x0100C51A));
     }
 
     [Fact]
     public void Ctor_Typical()
     {
         FormID id = new FormID(0x12345678);
-        id.FullId.Should().Be(0x345678);
-        id.FullMasterIndex.Should().Be(0x12);
-        id.Raw.Should().Be(0x12345678);
+        id.FullId.ShouldEqual(0x345678);
+        id.FullMasterIndex.ShouldEqual(0x12);
+        id.Raw.ShouldEqual(0x12345678);
     }
 
     [Fact]

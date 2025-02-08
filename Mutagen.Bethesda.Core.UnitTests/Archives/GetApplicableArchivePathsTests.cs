@@ -1,5 +1,5 @@
 using System.IO.Abstractions;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Archives.DI;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
@@ -7,6 +7,7 @@ using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.Testing.AutoData;
 using Mutagen.Bethesda.Testing.Fakes;
 using Noggog;
+using Noggog.Testing.Extensions;
 using Xunit;
 using Path = System.IO.Path;
 
@@ -37,14 +38,10 @@ public class GetApplicableArchivePathsTests
         fs.File.WriteAllText(Path.Combine(dataDir.Path, SomeExplicitListingBsa), string.Empty);
         var applicable = sut.Get()
             .ToArray();
-        applicable.Should().StartWith(new FilePath(
-            Path.Combine(dataDir.Path, SomeExplicitListingBsa)));
-        applicable.Should().BeEquivalentTo(new FilePath[]
-        {
+        applicable.ShouldEqual(
             Path.Combine(dataDir.Path, SomeExplicitListingBsa),
             Path.Combine(dataDir.Path, SkyrimBsa),
-            Path.Combine(dataDir.Path, MyModBsa)
-        });
+            Path.Combine(dataDir.Path, MyModBsa));
     }
 
     [Theory, MutagenContainerAutoData]
@@ -54,7 +51,7 @@ public class GetApplicableArchivePathsTests
     {
         manualArchiveIniListings.SetTo(SomeExplicitListingBsa, UnusedExplicitListingBsa);
         sut.Get(TestConstants.Skyrim)
-            .Should().BeEmpty();
+            .ShouldBeEmpty();
     }
 
     [Theory, MutagenContainerAutoData]
@@ -68,8 +65,8 @@ public class GetApplicableArchivePathsTests
         fs.File.WriteAllText(Path.Combine(dataDir.Path, SkyrimBsa), string.Empty);
         fs.File.WriteAllText(Path.Combine(dataDir.Path, SomeExplicitListingBsa), string.Empty);
         fs.File.WriteAllText(Path.Combine(dataDir.Path, MyModBsa), string.Empty);
-        var applicable = sut.Get(ModKey.Null)
-            .Should().BeEmpty();
+        sut.Get(ModKey.Null)
+            .ShouldBeEmpty();
     }
 
     [Theory, MutagenContainerAutoData]
@@ -87,11 +84,10 @@ public class GetApplicableArchivePathsTests
         fs.File.WriteAllText(Path.Combine(dataDir.Path, MyModBsa), string.Empty);
         var applicable = sut.Get(TestConstants.Skyrim)
             .ToArray();
-        applicable.Should().Equal(new FilePath[]
-        {
+        applicable.ShouldBe([
             Path.Combine(dataDir.Path, SomeExplicitListingBsa),
-            Path.Combine(dataDir.Path, SkyrimBsa),
-        });
+            Path.Combine(dataDir.Path, SkyrimBsa)
+        ]);
     }
 
     [Theory, MutagenContainerAutoData]
@@ -107,11 +103,10 @@ public class GetApplicableArchivePathsTests
         fs.File.WriteAllText(Path.Combine(dataDir.Path, MyModBsa), string.Empty);
         var applicable = sut.Get(TestConstants.MasterModKey2)
             .ToArray();
-        applicable.Should().Equal(new FilePath[]
-        {
+        applicable.ShouldBe([
             Path.Combine(dataDir.Path, SomeExplicitListingBsa),
             Path.Combine(dataDir.Path, $"{TestConstants.MasterModKey2.Name}.bsa")
-        });
+        ]);
     }
     
     [Theory, MutagenContainerAutoData]
@@ -129,13 +124,12 @@ public class GetApplicableArchivePathsTests
         fs.File.WriteAllText(Path.Combine(dataDir.Path, MyModBsa), string.Empty);
         var applicable = sut.Get(TestConstants.MasterModKey2)
             .ToArray();
-        applicable.Should().Equal(new FilePath[]
-        {
+        applicable.ShouldBe([
             Path.Combine(dataDir.Path, SomeExplicitListingBsa),
             Path.Combine(dataDir.Path, $"{TestConstants.MasterModKey2.Name}.bsa"),
             Path.Combine(dataDir.Path, $"{TestConstants.MasterModKey2.Name} - Textures.bsa"),
             Path.Combine(dataDir.Path, $"{TestConstants.MasterModKey2.Name} - Meshes.bsa")
-        });
+        ]);
     }
     
     [Theory, MutagenContainerAutoData]
@@ -152,12 +146,11 @@ public class GetApplicableArchivePathsTests
         fs.File.WriteAllText(Path.Combine(dataDir.Path, MyModBsa), string.Empty);
         var applicable = sut.Get(TestConstants.MasterModKey2)
             .ToArray();
-        applicable.Should().Equal(new FilePath[]
-        {
+        applicable.ShouldBe([
             Path.Combine(dataDir.Path, SomeExplicitListingBsa2),
             Path.Combine(dataDir.Path, SomeExplicitListingBsa),
             Path.Combine(dataDir.Path, $"{TestConstants.MasterModKey2.Name}.bsa")
-        });
+        ]);
     }
     
     [Theory, MutagenContainerAutoData]
@@ -174,10 +167,9 @@ public class GetApplicableArchivePathsTests
         fs.File.WriteAllText(Path.Combine(dataDir.Path, MyModBsa), string.Empty);
         var applicable = sut.Get(TestConstants.MasterModKey2)
             .ToArray();
-        applicable.Should().Equal(new FilePath[]
-        {
+        applicable.ShouldBe([
             Path.Combine(dataDir.Path, SomeExplicitListingBsa),
             Path.Combine(dataDir.Path, $"{TestConstants.MasterModKey2.Name}.bsa")
-        });
+        ]);
     }
 }

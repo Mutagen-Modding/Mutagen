@@ -1,5 +1,4 @@
 ﻿using System.IO.Abstractions;
-using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Masters;
@@ -8,8 +7,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Testing.AutoData;
-using Noggog;
-using Xunit;
+using Noggog.Testing.Extensions;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins;
 
@@ -40,7 +38,7 @@ public class ListTests
         {
             var rec = stream.ReadMajorRecord();
             var llct = rec.FindSubrecord(RecordTypes.LLCT);
-            llct.AsInt8().Should().Be(55);
+            llct.AsInt8().ShouldEqual(55);
         }
     }
     
@@ -68,7 +66,7 @@ public class ListTests
         {
             var rec = stream.ReadMajorRecord();
             var llct = rec.FindSubrecord(RecordTypes.LLCT);
-            llct.AsInt8().Should().Be(0);
+            llct.AsInt8().ShouldEqual(0);
         }
     }
 }

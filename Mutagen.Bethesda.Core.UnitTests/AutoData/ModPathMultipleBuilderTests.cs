@@ -1,10 +1,11 @@
 ﻿using AutoFixture.Kernel;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
 using Noggog.Testing.AutoFixture.Testing;
+using Noggog.Testing.Extensions;
 using NSubstitute;
 using Xunit;
 
@@ -20,7 +21,7 @@ public class ModPathMultipleBuilderTests
         context.MockToReturn<IDataDirectoryProvider>();
             
         sut.Create(new MultipleRequest(typeof(ModPath)), context)
-            .Should().BeAssignableTo<IEnumerable<ModPath>>();
+            .ShouldBeAssignableTo<IEnumerable<ModPath>>();
     }
         
     [Theory, BasicAutoData]
@@ -33,7 +34,7 @@ public class ModPathMultipleBuilderTests
         var keys = sut.Create(new MultipleRequest(typeof(ModPath)), context) as IEnumerable<ModPath>;
         foreach (var key in keys!)
         {
-            keys.Where(x => x == key).Should().HaveCount(1);
+            keys.Where(x => x == key).ShouldHaveCount(1);
         }
     }
         
@@ -46,7 +47,7 @@ public class ModPathMultipleBuilderTests
             
         var keys = sut.Create(new MultipleRequest(typeof(ModPath)), context) as IEnumerable<ModPath>;
             
-        keys.Should().Equal(keys);
+        keys.ShouldBe(keys);
     }
         
     [Theory, BasicAutoData]
@@ -60,7 +61,7 @@ public class ModPathMultipleBuilderTests
         var keys2 = sut.Create(new MultipleRequest(typeof(ModPath)), context) as IEnumerable<ModPath>;
         foreach (var key in keys!)
         {
-            keys2.Should().NotContain(key);
+            keys2!.ShouldNotContain(key);
         }
     }
         

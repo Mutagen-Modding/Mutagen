@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Testing.AutoData;
@@ -18,7 +18,7 @@ public class LinkCacheApiTests
 
         IInstanceNamingRulesGetter foundRecord;
         linkCache.TryResolve(formLink, out foundRecord);
-        foundRecord.Should().NotBeNull();
+        foundRecord.ShouldNotBeNull();
         foundRecord = linkCache.Resolve(formLink);
     }
 }

@@ -1,11 +1,12 @@
 ﻿using System.IO.Abstractions;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.IO;
 using Mutagen.Bethesda.Plugins.IO.DI;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
+using Noggog.Testing.Extensions;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Utility;
@@ -18,7 +19,7 @@ public class AssociatedFilesLocatorTests
         AssociatedFilesLocator sut)
     {
         sut.GetAssociatedFiles(modPath)
-            .Should().BeEmpty();
+            .ShouldBeEmpty();
     }
     
     [Theory, MutagenAutoData]
@@ -27,11 +28,11 @@ public class AssociatedFilesLocatorTests
         AssociatedFilesLocator sut)
     {
         sut.GetAssociatedFiles(existingModPath)
-            .Should().Equal(existingModPath);
+            .ShouldEqual(existingModPath);
         sut.GetAssociatedFiles(existingModPath, 
                 AssociatedModFileCategory.Archives 
                 | AssociatedModFileCategory.RawStrings)
-            .Should().BeEmpty();
+            .ShouldBeEmpty();
     }
     
     [Theory, MutagenAutoData]
@@ -65,14 +66,14 @@ public class AssociatedFilesLocatorTests
             fileSystem.File.Create(f);
         }
         sut.GetAssociatedFiles(existingModPath)
-            .Should().Equal(
+            .ShouldBe(
                 existingModPath.AsEnumerable()
                     .Select(x => x.Path)
                     .And(stringsFiles));
         sut.GetAssociatedFiles(existingModPath, 
                 AssociatedModFileCategory.Plugin 
                 | AssociatedModFileCategory.Archives)
-            .Should().Equal(existingModPath);
+            .ShouldEqual(existingModPath);
     }
     
     [Theory, MutagenAutoData]
@@ -98,13 +99,14 @@ public class AssociatedFilesLocatorTests
             fileSystem.File.Create(f);
         }
         sut.GetAssociatedFiles(existingModPath)
-            .Should().Equal(
+            .ShouldBe(
                 existingModPath.AsEnumerable()
                     .Select(x => x.Path)
                     .And(files));
         sut.GetAssociatedFiles(existingModPath, 
                 AssociatedModFileCategory.Plugin 
                 | AssociatedModFileCategory.RawStrings)
-            .Should().Equal(existingModPath);
+            .Select(x => (ModPath)x)
+            .ShouldEqual(existingModPath);
     }
 }

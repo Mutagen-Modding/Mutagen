@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Testing.AutoData;
 
@@ -10,21 +10,21 @@ public class FormKeyBuilderTests
     public void FormKeyFuncBuilder(Func<FormKey> formKeyFunc)
     {
         var formKey = formKeyFunc();
-        formKey.ModKey.Should().NotBeNull();
-        formKey.ID.Should().Be(0x800);
+        formKey.ModKey.ShouldNotBe(ModKey.Null);
+        formKey.ID.ShouldBe(0x800u);
         var formKey2 = formKeyFunc();
-        formKey2.ModKey.Should().NotBeNull();
-        formKey2.ModKey.Should().NotBe(formKey.ModKey);
-        formKey2.ID.Should().Be(0x800);
+        formKey2.ModKey.ShouldNotBe(ModKey.Null);
+        formKey2.ModKey.ShouldNotBe(formKey.ModKey);
+        formKey2.ID.ShouldBe(0x800u);
     }
     
     [Theory, MutagenAutoData]
     public void FormKeyBuilder(FormKey formKey, FormKey formKey2)
     {
-        formKey.ModKey.Should().NotBeNull();
-        formKey.ID.Should().Be(0x800);
-        formKey2.ModKey.Should().NotBeNull();
-        formKey2.ModKey.Should().NotBe(formKey.ModKey);
-        formKey2.ID.Should().Be(0x800);
+        formKey.ModKey.ShouldNotBe(ModKey.Null);
+        formKey.ID.ShouldBe(0x800u);
+        formKey2.ModKey.ShouldNotBe(ModKey.Null);
+        formKey2.ModKey.ShouldNotBe(formKey.ModKey);
+        formKey2.ID.ShouldBe(0x800u);
     }
 }

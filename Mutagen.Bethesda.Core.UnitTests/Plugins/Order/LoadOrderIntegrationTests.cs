@@ -1,10 +1,11 @@
 ﻿using System.IO.Abstractions;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
+using Noggog.Testing.Extensions;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order;
@@ -86,18 +87,16 @@ public class LoadOrderIntegrationTests
                 creationClubFilePath: cccPath,
                 fileSystem: fileSystem)
             .ToList();
-        results.Should().HaveCount(7);
+        results.ShouldHaveCount(7);
         results.Select(x => new LoadOrderListing(x.ModKey, x.Enabled, x.GhostSuffix))
-            .Should().Equal(new LoadOrderListing[]
-        {
-            new LoadOrderListing(TestConstants.LightModKey, enabled: true),
-            new LoadOrderListing(TestConstants.MasterModKey, enabled: true),
-            new LoadOrderListing(TestConstants.MasterModKey2, enabled: false),
-            new LoadOrderListing(TestConstants.LightModKey3, enabled: true),
-            new LoadOrderListing(TestConstants.LightModKey4, enabled: false),
-            new LoadOrderListing(TestConstants.PluginModKey, enabled: true),
-            new LoadOrderListing(TestConstants.PluginModKey2, enabled: false),
-        });
+            .ShouldEqual(
+                new LoadOrderListing(TestConstants.LightModKey, enabled: true),
+                new LoadOrderListing(TestConstants.MasterModKey, enabled: true),
+                new LoadOrderListing(TestConstants.MasterModKey2, enabled: false),
+                new LoadOrderListing(TestConstants.LightModKey3, enabled: true),
+                new LoadOrderListing(TestConstants.LightModKey4, enabled: false),
+                new LoadOrderListing(TestConstants.PluginModKey, enabled: true),
+                new LoadOrderListing(TestConstants.PluginModKey2, enabled: false));
     }
 
     [Theory, MutagenAutoData]
@@ -132,16 +131,14 @@ public class LoadOrderIntegrationTests
                 creationClubFilePath: cccPath,
                 fileSystem: fileSystem)
             .ToList();
-        results.Should().HaveCount(6);
-        results.Should().Equal(new LoadOrderListing[]
-        {
+        results.ShouldHaveCount(6);
+        results.ShouldEqual(
             new LoadOrderListing(TestConstants.MasterModKey, enabled: true),
             new LoadOrderListing(TestConstants.MasterModKey2, enabled: false),
             new LoadOrderListing(TestConstants.LightModKey3, enabled: true),
             new LoadOrderListing(TestConstants.LightModKey4, enabled: false),
             new LoadOrderListing(TestConstants.PluginModKey, enabled: true),
-            new LoadOrderListing(TestConstants.PluginModKey2, enabled: false),
-        });
+            new LoadOrderListing(TestConstants.PluginModKey2, enabled: false));
     }
 
     [Theory, MutagenAutoData]
@@ -167,12 +164,10 @@ public class LoadOrderIntegrationTests
                 creationClubFilePath: null,
                 fileSystem: fileSystem)
             .ToList();
-        results.Should().HaveCount(2);
-        results.Should().Equal(new LoadOrderListing[]
-        {
+        results.ShouldHaveCount(2);
+        results.ShouldEqual(
             new LoadOrderListing(TestConstants.MasterModKey, enabled: true),
-            new LoadOrderListing(TestConstants.PluginModKey, enabled: true),
-        });
+            new LoadOrderListing(TestConstants.PluginModKey, enabled: true));
     }
 
     /// <summary>
@@ -221,11 +216,10 @@ public class LoadOrderIntegrationTests
                 creationClubFilePath: cccPath,
                 fileSystem: fileSystem)
             .ToList();
-        results.Should().HaveCount(8);
+        results.ShouldHaveCount(8);
         results
             .Select(x => new LoadOrderListing(x.ModKey, x.Enabled, x.GhostSuffix))
-            .Should().Equal(new LoadOrderListing[]
-            {
+            .ShouldEqual(
                 new LoadOrderListing(TestConstants.LightModKey2, enabled: true),
                 new LoadOrderListing(TestConstants.LightModKey, enabled: true),
                 new LoadOrderListing(TestConstants.MasterModKey, enabled: true),
@@ -233,8 +227,7 @@ public class LoadOrderIntegrationTests
                 new LoadOrderListing(TestConstants.LightModKey3, enabled: true),
                 new LoadOrderListing(TestConstants.LightModKey4, enabled: false),
                 new LoadOrderListing(TestConstants.PluginModKey, enabled: true),
-                new LoadOrderListing(TestConstants.PluginModKey2, enabled: false),
-            });
+                new LoadOrderListing(TestConstants.PluginModKey2, enabled: false));
     }
 
     [Fact]
@@ -277,7 +270,7 @@ public class LoadOrderIntegrationTests
                 },
                 selector: m => m)
             .ToList();
-        ordered.Should().Equal(new ModKey[]
+        ordered.ShouldBe(new ModKey[]
         {
             baseEsm,
             baseEsm2,
@@ -305,31 +298,21 @@ public class LoadOrderIntegrationTests
 
         LoadOrder.OrderListings(
                 implicitListings: Array.Empty<ModKey>(),
-                creationClubListings: new ModKey[]
-                {
+                creationClubListings:
+                [
                     ccEsm,
                     ccEsm2,
-                    ccEsm3,
-                },
-                pluginsListings: new ModKey[]
-                {
+                    ccEsm3
+                ],
+                pluginsListings:
+                [
                     ccEsm2,
                     esm,
                     ccEsm,
-                    esm2,
-                },
+                    esm2
+                ],
                 selector: m => m)
-            .Should().Equal(new ModKey[]
-            {
-                // First, because wasn't listed on plugins
-                ccEsm3,
-                // 2nd because it was first on the plugins listings
-                ccEsm2,
-                // Was listed last on the plugins listing
-                ccEsm,
-                esm,
-                esm2,
-            });
+            .ShouldEqual(ccEsm3, ccEsm2, ccEsm, esm, esm2);
     }
 
     [Theory, MutagenAutoData]
@@ -429,7 +412,7 @@ public class LoadOrderIntegrationTests
     {
         Enumerable.Empty<LoadOrderListing>()
             .ListsMod(TestConstants.LightModKey)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 
     [Fact]
@@ -443,16 +426,16 @@ public class LoadOrderIntegrationTests
         };
         listings
             .ListsMod(TestConstants.LightModKey)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ListsMod(TestConstants.LightModKey2)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ListsMod(TestConstants.LightModKey3)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ListsMod(TestConstants.LightModKey4)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 
     [Fact]
@@ -466,22 +449,22 @@ public class LoadOrderIntegrationTests
         };
         listings
             .ListsMod(TestConstants.LightModKey, enabled: true)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ListsMod(TestConstants.LightModKey, enabled: false)
-            .Should().BeFalse();
+            .ShouldBeFalse();
         listings
             .ListsMod(TestConstants.LightModKey2, enabled: false)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ListsMod(TestConstants.LightModKey2, enabled: true)
-            .Should().BeFalse();
+            .ShouldBeFalse();
         listings
             .ListsMod(TestConstants.LightModKey3, enabled: true)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ListsMod(TestConstants.LightModKey3, enabled: false)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 
     [Fact]
@@ -489,7 +472,7 @@ public class LoadOrderIntegrationTests
     {
         Enumerable.Empty<LoadOrderListing>()
             .ListsMods(TestConstants.LightModKey, TestConstants.LightModKey2)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 
     [Fact]
@@ -497,7 +480,7 @@ public class LoadOrderIntegrationTests
     {
         Enumerable.Empty<LoadOrderListing>()
             .ListsMods()
-            .Should().BeTrue();
+            .ShouldBeTrue();
     }
 
     [Fact]
@@ -511,16 +494,16 @@ public class LoadOrderIntegrationTests
         };
         listings
             .ListsMods(TestConstants.LightModKey)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ListsMods(TestConstants.LightModKey2)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ListsMods(TestConstants.LightModKey3)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ListsMods(TestConstants.LightModKey4)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 
     [Fact]
@@ -534,13 +517,13 @@ public class LoadOrderIntegrationTests
         };
         listings
             .ListsMods(TestConstants.LightModKey, TestConstants.LightModKey2, TestConstants.LightModKey3)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ListsMods(TestConstants.LightModKey, TestConstants.LightModKey2)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ListsMods(TestConstants.LightModKey, TestConstants.LightModKey2, TestConstants.LightModKey4)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 
     [Fact]
@@ -548,10 +531,10 @@ public class LoadOrderIntegrationTests
     {
         Enumerable.Empty<LoadOrderListing>()
             .ListsMods(true, TestConstants.LightModKey, TestConstants.LightModKey2)
-            .Should().BeFalse();
+            .ShouldBeFalse();
         Enumerable.Empty<LoadOrderListing>()
             .ListsMods(false, TestConstants.LightModKey, TestConstants.LightModKey2)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 
     [Fact]
@@ -559,10 +542,10 @@ public class LoadOrderIntegrationTests
     {
         Enumerable.Empty<LoadOrderListing>()
             .ListsMods(true)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         Enumerable.Empty<LoadOrderListing>()
             .ListsMods(false)
-            .Should().BeTrue();
+            .ShouldBeTrue();
     }
 
     [Fact]
@@ -576,28 +559,28 @@ public class LoadOrderIntegrationTests
         };
         listings
             .ListsMods(true, TestConstants.LightModKey)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ListsMods(false, TestConstants.LightModKey)
-            .Should().BeFalse();
+            .ShouldBeFalse();
         listings
             .ListsMods(false, TestConstants.LightModKey2)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ListsMods(true, TestConstants.LightModKey2)
-            .Should().BeFalse();
+            .ShouldBeFalse();
         listings
             .ListsMods(true, TestConstants.LightModKey3)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ListsMods(false, TestConstants.LightModKey3)
-            .Should().BeFalse();
+            .ShouldBeFalse();
         listings
             .ListsMods(true, TestConstants.LightModKey4)
-            .Should().BeFalse();
+            .ShouldBeFalse();
         listings
             .ListsMods(false, TestConstants.LightModKey4)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 
     [Fact]
@@ -613,20 +596,20 @@ public class LoadOrderIntegrationTests
             .ListsMods(
                 true,
                 TestConstants.LightModKey, TestConstants.LightModKey3)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ListsMods(false, TestConstants.LightModKey2)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ListsMods(
                 true,
                 TestConstants.LightModKey, TestConstants.LightModKey2, TestConstants.LightModKey3)
-            .Should().BeFalse();
+            .ShouldBeFalse();
         listings
             .ListsMods(
                 true,
                 TestConstants.LightModKey, TestConstants.LightModKey2, TestConstants.LightModKey4)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
     #endregion
 }

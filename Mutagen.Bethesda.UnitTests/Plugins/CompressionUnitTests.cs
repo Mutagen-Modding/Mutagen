@@ -1,8 +1,9 @@
 ﻿using System.IO.Abstractions;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing.AutoData;
+using Noggog.Testing.Extensions;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins;
 
@@ -28,6 +29,6 @@ public class CompressionUnitTests
             .WithFileSystem(fileSystem)
             .Construct();
         reimport.Npcs.Select(x => x.EditorID)
-            .Should().Equal("Test123");
+            .ShouldEqual("Test123");
     }
 }

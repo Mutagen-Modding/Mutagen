@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Xunit;
@@ -22,6 +22,6 @@ public class EnumerateFormLinksTests
                 }
             }
         };
-        package.EnumerateFormLinks().Select(x => x.FormKey).Should().Contain(key);
+        package.EnumerateFormLinks().Select(x => x.FormKey).ShouldContain(key);
     }
 }

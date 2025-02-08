@@ -1,6 +1,6 @@
 ﻿using System.IO.Abstractions;
 using AutoFixture.Xunit2;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Environments;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
@@ -20,7 +20,7 @@ public class GameEnvironmentBuilderTests
         IGameEnvironment env)
     {
         fs.File.Exists(path.Path);
-        env.LoadOrderFilePath.Should().Be(path.Path);
+        env.LoadOrderFilePath.ShouldBe(path.Path);
     }
     
     [Theory]
@@ -31,7 +31,7 @@ public class GameEnvironmentBuilderTests
         IGameEnvironment<ISkyrimMod, ISkyrimModGetter> env)
     {
         fs.File.Exists(path.Path);
-        env.LoadOrderFilePath.Should().Be(path.Path);
+        env.LoadOrderFilePath.ShouldBe(path.Path);
     }
     
     [Theory]
@@ -42,7 +42,7 @@ public class GameEnvironmentBuilderTests
         IGameEnvironment env)
     {
         fs.Directory.Exists(path.Path);
-        env.DataFolderPath.Should().Be(path.Path);
+        env.DataFolderPath.ShouldBe(path.Path);
     }
     
     [Theory]
@@ -53,7 +53,7 @@ public class GameEnvironmentBuilderTests
         IGameEnvironment<ISkyrimMod, ISkyrimModGetter> env)
     {
         fs.Directory.Exists(path.Path);
-        env.DataFolderPath.Should().Be(path.Path);
+        env.DataFolderPath.ShouldBe(path.Path);
     }
     
     [Theory]
@@ -63,7 +63,7 @@ public class GameEnvironmentBuilderTests
         [Frozen] ICreationClubListingsPathProvider path,
         IGameEnvironment env)
     {
-        env.CreationClubListingsFilePath.Should().Be(path.Path);
+        env.CreationClubListingsFilePath.ShouldBe(path.Path);
     }
     
     [Theory]
@@ -73,7 +73,7 @@ public class GameEnvironmentBuilderTests
         [Frozen] ICreationClubListingsPathProvider path,
         IGameEnvironment<ISkyrimMod, ISkyrimModGetter> env)
     {
-        env.CreationClubListingsFilePath.Should().Be(path.Path);
+        env.CreationClubListingsFilePath.ShouldBe(path.Path);
     }
     
     [Theory]
@@ -81,7 +81,7 @@ public class GameEnvironmentBuilderTests
     public void GameReleaseShouldMatch(
         IGameEnvironment env)
     {
-        env.GameRelease.Should().Be(GameRelease.SkyrimSE);
+        env.GameRelease.ShouldBe(GameRelease.SkyrimSE);
     }
     
     [Theory]
@@ -89,7 +89,7 @@ public class GameEnvironmentBuilderTests
     public void GameReleaseShouldMatchGeneric(
         IGameEnvironment<ISkyrimMod, ISkyrimModGetter> env)
     {
-        env.GameRelease.Should().Be(GameRelease.SkyrimSE);
+        env.GameRelease.ShouldBe(GameRelease.SkyrimSE);
     }
     
     [Theory]
@@ -97,8 +97,8 @@ public class GameEnvironmentBuilderTests
     public void LoadOrderContents(
         IGameEnvironment env)
     {
-        env.LoadOrder.Should().NotBeEmpty();
-        env.LoadOrder.ListedOrder.Select(x => x.Mod).Should().AllSatisfy(x => x.Should().NotBeNull());
+        env.LoadOrder.ShouldNotBeEmpty();
+        env.LoadOrder.ListedOrder.Select(x => x.Mod).ShouldAllBe(x => x != null);
     }
     
     [Theory]
@@ -106,7 +106,7 @@ public class GameEnvironmentBuilderTests
     public void LoadOrderContentsGeneric(
         IGameEnvironment<ISkyrimMod, ISkyrimModGetter> env)
     {
-        env.LoadOrder.Should().NotBeEmpty();
-        env.LoadOrder.ListedOrder.Select(x => x.Mod).Should().AllSatisfy(x => x.Should().NotBeNull());
+        env.LoadOrder.ShouldNotBeEmpty();
+        env.LoadOrder.ListedOrder.Select(x => x.Mod).ShouldAllBe(x => x != null);
     }
 }

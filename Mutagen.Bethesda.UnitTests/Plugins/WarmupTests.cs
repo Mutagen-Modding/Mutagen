@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Noggog;
 using Xunit;
@@ -14,7 +14,7 @@ public class WarmupTests
 
         foreach (var category in Enums<GameCategory>.Values)
         {
-            init.Should().Contain(category);
+            init.ShouldContain(category);
         }
     }
 }

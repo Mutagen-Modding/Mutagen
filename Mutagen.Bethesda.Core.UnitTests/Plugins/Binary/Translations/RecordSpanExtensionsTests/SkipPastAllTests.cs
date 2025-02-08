@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
@@ -15,8 +15,8 @@ public class SkipPastAllTests : RecordSpanExtensionTests
         RecordSpanExtensions.SkipPastAll(
                 new ReadOnlyMemorySlice<byte>(b), GameConstants.Oblivion,
                 TestRecordTypes.EDID, out var numPassed)
-            .Should().Be(0);
-        numPassed.Should().Be(0);
+            .ShouldBe(0);
+        numPassed.ShouldBe(0);
     }
     
     [Fact]
@@ -25,8 +25,8 @@ public class SkipPastAllTests : RecordSpanExtensionTests
         RecordSpanExtensions.SkipPastAll(
                 Repeating(), GameConstants.Oblivion,
                 TestRecordTypes.EDID, out var numPassed)
-            .Should().Be(0x26);
-        numPassed.Should().Be(4);
+            .ShouldBe(0x26);
+        numPassed.ShouldBe(4);
     }
     
     [Fact]
@@ -35,7 +35,7 @@ public class SkipPastAllTests : RecordSpanExtensionTests
         RecordSpanExtensions.SkipPastAll(
                 Repeating(), GameConstants.Oblivion,
                 TestRecordTypes.FNAM, out var numPassed)
-            .Should().Be(0);
-        numPassed.Should().Be(0);
+            .ShouldBe(0);
+        numPassed.ShouldBe(0);
     }
 }

@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing.AutoData;
@@ -12,8 +12,8 @@ public class DeepCopyTests
     {
         var mod = new SkyrimMod(modKey, SkyrimRelease.EnderalSE);
         var mod2 = mod.DeepCopy();
-        mod2.ModKey.Should().Be(modKey);
-        mod2.SkyrimRelease.Should().Be(SkyrimRelease.EnderalSE);
-        mod2.GameRelease.Should().Be(GameRelease.EnderalSE);
+        mod2.ModKey.ShouldBe(modKey);
+        mod2.SkyrimRelease.ShouldBe(SkyrimRelease.EnderalSE);
+        mod2.GameRelease.ShouldBe(GameRelease.EnderalSE);
     }
 }

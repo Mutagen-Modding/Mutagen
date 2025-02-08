@@ -140,7 +140,7 @@ public class CachedArchiveListingDetailsProvider : IArchiveListingDetailsProvide
             var listedY = FindListedIndex(y, out var suffixY);
             if (listedY != listedX)
             {
-                return listedX.CompareTo(listedY);
+                return listedY.CompareTo(listedX);
             }
 
             if (suffixX == suffixY) throw new NotImplementedException();

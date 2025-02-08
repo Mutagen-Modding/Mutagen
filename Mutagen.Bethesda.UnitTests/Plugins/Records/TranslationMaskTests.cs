@@ -1,7 +1,8 @@
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
 using Noggog;
+using Noggog.Testing.Extensions;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records;
@@ -19,7 +20,7 @@ public class TranslationMaskTests
         {
             Landscape = false
         });
-        copy.Landscape.Should().BeNull();
+        copy.Landscape.ShouldBeNull();
     }
 
     private Npc GetNpc()
@@ -39,8 +40,8 @@ public class TranslationMaskTests
 
     private void AssertHasDestructible(INpcGetter n)
     {
-        n.Destructible.Should().NotBeNull();
-        n.Destructible!.Stages.Should().HaveCount(1);
+        n.Destructible.ShouldNotBeNull();
+        n.Destructible!.Stages.ShouldHaveCount(1);
     }
 
     [Theory]
@@ -53,7 +54,7 @@ public class TranslationMaskTests
         {
             Name = false
         });
-        copy.Name.Should().BeNull();
+        copy.Name.ShouldBeNull();
         AssertHasDestructible(copy);
     }
 
@@ -67,8 +68,8 @@ public class TranslationMaskTests
         {
             Name = true
         });
-        copy.Name!.String.Should().Be(Name);
-        copy.Destructible.Should().BeNull();
+        copy.Name!.String.ShouldBe(Name);
+        copy.Destructible.ShouldBeNull();
     }
 
     [Theory]
@@ -82,7 +83,7 @@ public class TranslationMaskTests
             Name = true,
             Destructible = new Destructible.TranslationMask(defaultOn: true, onOverall: true)
         });
-        copy.Name!.String.Should().Be(Name);
+        copy.Name!.String.ShouldBe(Name);
         AssertHasDestructible(copy);
     }
 
@@ -97,8 +98,8 @@ public class TranslationMaskTests
             Name = true,
             Destructible = new Destructible.TranslationMask(defaultOn: true, onOverall: false)
         });
-        copy.Name!.String.Should().Be(Name);
-        copy.Destructible.Should().BeNull();
+        copy.Name!.String.ShouldBe(Name);
+        copy.Destructible.ShouldBeNull();
     }
 
     [Theory]
@@ -115,7 +116,7 @@ public class TranslationMaskTests
                 Stages = true
             }
         });
-        copy.Name!.String.Should().Be(Name);
+        copy.Name!.String.ShouldBe(Name);
         AssertHasDestructible(copy);
     }
 
@@ -130,8 +131,8 @@ public class TranslationMaskTests
             Name = true,
             Destructible = new Destructible.TranslationMask(defaultOn: true, onOverall: false)
         });
-        copy.Name!.String.Should().Be(Name);
-        copy.Destructible.Should().BeNull();
+        copy.Name!.String.ShouldBe(Name);
+        copy.Destructible.ShouldBeNull();
     }
 
     [Theory]
@@ -145,8 +146,8 @@ public class TranslationMaskTests
             Name = true,
             Destructible = new Destructible.TranslationMask(defaultOn: false, onOverall: true)
         });
-        copy.Name!.String.Should().Be(Name);
-        copy.Destructible.Should().NotBeNull();
-        copy.Destructible!.Stages.Should().BeEmpty();
+        copy.Name!.String.ShouldBe(Name);
+        copy.Destructible.ShouldNotBeNull();
+        copy.Destructible!.Stages.ShouldBeEmpty();
     }
 }

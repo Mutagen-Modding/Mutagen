@@ -1,5 +1,5 @@
 using System.IO.Abstractions;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Exceptions;
@@ -7,6 +7,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
+using Noggog.Testing.Extensions;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Builders;
@@ -62,8 +63,8 @@ public class WriteBuilderTests
             .WithLoadOrder(master, extraMaster)
             .WithFileSystem(fileSystem)
             .Construct();
-        reimport.MasterReferences.Select(x => x.Master).Should()
-            .Equal(masterModKey, extraMasterKey);
+        reimport.MasterReferences.Select(x => x.Master)
+            .ShouldEqual(masterModKey, extraMasterKey);
     }
     
     [Theory, MutagenAutoData]
@@ -92,8 +93,8 @@ public class WriteBuilderTests
             .WithLoadOrder(master, overrideMod)
             .WithFileSystem(fileSystem)
             .Construct();
-        reimport.MasterReferences.Select(x => x.Master).Should()
-            .Equal(masterModKey, overrideMasterKey);
+        reimport.MasterReferences.Select(x => x.Master)
+            .ShouldEqual(masterModKey, overrideMasterKey);
     }
     
     [Theory, MutagenAutoData]
@@ -142,8 +143,8 @@ public class WriteBuilderTests
             .WithKnownMasters(transientMasterMod, master)
             .WithFileSystem(fileSystem)
             .Construct();
-        reimport.MasterReferences.Select(x => x.Master).Should()
-            .Equal(transientMasterModKey, masterModKey);
+        reimport.MasterReferences.Select(x => x.Master)
+            .ShouldEqual(transientMasterModKey, masterModKey);
     }
     
     [Theory, MutagenAutoData]
@@ -183,8 +184,8 @@ public class WriteBuilderTests
             .WithFileSystem(fileSystem)
             .WithDataFolder(existingDataDir)
             .Construct();
-        reimport.MasterReferences.Select(x => x.Master).Should()
-            .Equal(transientMasterModKey, masterModKey);
+        reimport.MasterReferences.Select(x => x.Master)
+            .ShouldEqual(transientMasterModKey, masterModKey);
     }
     
     [Theory, MutagenAutoData]
@@ -228,7 +229,7 @@ public class WriteBuilderTests
             .WithFileSystem(fileSystem)
             .WithDataFolder(existingDataDir)
             .Construct();
-        reimport.MasterReferences.Select(x => x.Master).Should()
-            .Equal(transientMasterModKey, masterModKey);
+        reimport.MasterReferences.Select(x => x.Master)
+            .ShouldEqual(transientMasterModKey, masterModKey);
     }
 }

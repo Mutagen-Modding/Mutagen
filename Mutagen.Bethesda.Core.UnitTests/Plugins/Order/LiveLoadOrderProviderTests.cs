@@ -4,13 +4,14 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using AutoFixture.Xunit2;
 using DynamicData;
-using FluentAssertions;
+using Shouldly;
 using Microsoft.Reactive.Testing;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
+using Noggog.Testing.Extensions;
 using NSubstitute;
 using Xunit;
 
@@ -43,13 +44,13 @@ public class LiveLoadOrderProviderTests
         sut.CccLive.Changed.Returns(Observable.Empty<Unit>());
         var list = sut.Get(out var state, scheduler)
             .AsObservableList();
-        list.Items.Should().Equal(listings);
+        list.Items.ShouldBe(listings);
         sut.ListingsProvider.Received(1).Get();
         var obsScheduler = new TestScheduler();
         var err = obsScheduler.Start(() => state);
         err.ShouldHaveNoErrors();
         err.ShouldNotBeCompleted();
-        err.Messages.Select(x => x.Value.Value.Succeeded).Should().AllBeEquivalentTo(true);
+        err.Messages.Select(x => x.Value.Value.Succeeded).ShouldAllBe(x => x == true);
     }
 
     [Theory, MutagenAutoData(ConfigureMembers: false)]
@@ -103,13 +104,13 @@ public class LiveLoadOrderProviderTests
             .AsObservableList();
         ErrorResponse err = ErrorResponse.Failure;
         using var sub = state.Subscribe(x => err = x);
-        err.Succeeded.Should().BeTrue();
+        err.Succeeded.ShouldBeTrue();
 
         pluginSubj.OnNext(Unit.Default);
-        err.Succeeded.Should().BeFalse();
+        err.Succeeded.ShouldBeFalse();
             
         pluginSubj.OnNext(Unit.Default);
-        err.Succeeded.Should().BeTrue();
+        err.Succeeded.ShouldBeTrue();
     }
 
     [Theory, MutagenAutoData]
@@ -133,15 +134,15 @@ public class LiveLoadOrderProviderTests
             .AsObservableList();
         ErrorResponse err = ErrorResponse.Failure;
         using var sub = state.Subscribe(x => err = x);
-        err.Succeeded.Should().BeFalse();
+        err.Succeeded.ShouldBeFalse();
         sut.ListingsProvider.Received(1).Get();
 
         scheduler.AdvanceBy(TimeSpan.FromMilliseconds(250).Ticks);
-        err.Succeeded.Should().BeFalse();
+        err.Succeeded.ShouldBeFalse();
         sut.ListingsProvider.Received(2).Get();
             
         scheduler.AdvanceBy(TimeSpan.FromMilliseconds(500).Ticks);
-        err.Succeeded.Should().BeTrue();
+        err.Succeeded.ShouldBeTrue();
         sut.ListingsProvider.Received(3).Get();
     }
 }

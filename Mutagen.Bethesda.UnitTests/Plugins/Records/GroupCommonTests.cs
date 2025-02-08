@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Testing;
 using Xunit;
@@ -33,6 +33,6 @@ public class GroupCommonTests
         var rec = mod.Npcs.AddNew(TestConstants.Form1);
         Assert.Equal(1, mod.Npcs.Count);
         Assert.Same(mod.Npcs.Records.First(), rec);
-        rec.FormKey.Should().Be(TestConstants.Form1);
+        rec.FormKey.ShouldBe(TestConstants.Form1);
     }
 }

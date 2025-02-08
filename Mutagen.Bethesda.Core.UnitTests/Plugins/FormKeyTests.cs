@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Masters;
@@ -27,8 +27,8 @@ public class FormKeyTests
     public void Import_FilesafeString(FormKey fk)
     {
         FormKey.TryFactory(fk.ToFilesafeString(), out var id)
-            .Should().BeTrue();
-        id.Should().Be(fk);
+            .ShouldBeTrue();
+        id.ShouldBe(fk);
     }
 
     [Fact]
@@ -194,31 +194,31 @@ public class FormKeyTests
     [Fact]
     public void Null_TypicalNotNull()
     {
-        TestConstants.Skyrim.IsNull.Should().BeFalse();
+        TestConstants.Skyrim.IsNull.ShouldBeFalse();
     }
 
     [Fact]
     public void Null_NullIsNull()
     {
-        FormKey.Null.IsNull.Should().BeTrue();
+        FormKey.Null.IsNull.ShouldBeTrue();
     }
 
     [Fact]
     public void Null_NoneIsNull()
     {
-        FormKey.None.IsNull.Should().BeTrue();
+        FormKey.None.IsNull.ShouldBeTrue();
     }
 
     [Fact]
     public void Null_ExistingModKeyIsNotNull()
     {
-        new FormKey(TestConstants.Skyrim, 0).IsNull.Should().BeFalse();
+        new FormKey(TestConstants.Skyrim, 0).IsNull.ShouldBeFalse();
     }
 
     [Fact]
     public void Null_ExistingIdIsNull()
     {
-        new FormKey(ModKey.Null, 123456).IsNull.Should().BeTrue();
+        new FormKey(ModKey.Null, 123456).IsNull.ShouldBeTrue();
     }
     #endregion
     
@@ -228,28 +228,28 @@ public class FormKeyTests
     public void SelfEquality()
     {
         var fk = FormKey.Factory("123456:Skyrim.esm");
-        fk.Should().Be(fk);
+        fk.ShouldBe(fk);
     }
 
     [Fact]
     public void NullEquality()
     {
         var fk = FormKey.Null;
-        fk.Should().Be(fk);
+        fk.ShouldBe(fk);
     }
 
     [Fact]
     public void NoneEquality()
     {
         var fk = FormKey.None;
-        fk.Should().Be(fk);
+        fk.ShouldBe(fk);
     }
 
     [Fact]
     public void NotNullEquality()
     {
         var fk = FormKey.Factory("123456:Skyrim.esm");
-        fk.Should().NotBe(FormKey.Null);
+        fk.ShouldNotBe(FormKey.Null);
     }
 
     [Fact]
@@ -257,7 +257,7 @@ public class FormKeyTests
     {
         var fk = FormKey.Factory("123456:Skyrim.esm");
         var fk2 = FormKey.Factory("123456:Skyrim2.esm");
-        fk.Should().NotBe(fk2);
+        fk.ShouldNotBe(fk2);
     }
     
     #endregion
@@ -479,7 +479,7 @@ public class FormKeyTests
         var str = "123456:Skyrim.esm";
         FormKey.Factory(str)
             .ToString()
-            .Should().Be(str);
+            .ShouldBe(str);
     }
 
     [Fact]
@@ -487,7 +487,7 @@ public class FormKeyTests
     {
         FormKey.None
             .ToString()
-            .Should().Be(FormKey.NoneStr);
+            .ShouldBe(FormKey.NoneStr);
     }
 
     [Fact]
@@ -495,16 +495,16 @@ public class FormKeyTests
     {
         FormKey.Null
             .ToString()
-            .Should().Be(FormKey.NullStr);
+            .ShouldBe(FormKey.NullStr);
         FormKey.Factory("000000:Null")
             .ToString()
-            .Should().Be("Null");
+            .ShouldBe("Null");
         FormKey.Factory("000000:Skyrim.esm")
             .ToString()
-            .Should().Be("000000:Skyrim.esm");
+            .ShouldBe("000000:Skyrim.esm");
         FormKey.Factory("123456:Null")
             .ToString()
-            .Should().Be("123456:Null");
+            .ShouldBe("123456:Null");
     }
 
     #endregion

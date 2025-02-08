@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
 using Xunit;
@@ -18,8 +18,8 @@ public class DuplicateInAsNewRecordTests
         };
         var mod = new SkyrimMod(TestConstants.PluginModKey4, SkyrimRelease.SkyrimSE);
         var npc2 = mod.Npcs.DuplicateInAsNewRecord(npc);
-        npc2.FormKey.ModKey.Should().Be(mod.ModKey);
-        npc2.Name!.String.Should().Be(Name);
+        npc2.FormKey.ModKey.ShouldBe(mod.ModKey);
+        npc2.Name!.String.ShouldBe(Name);
     }
 
     [Fact]
@@ -33,8 +33,8 @@ public class DuplicateInAsNewRecordTests
         };
         var mod = new SkyrimMod(TestConstants.PluginModKey4, SkyrimRelease.SkyrimSE);
         var glob2 = (GlobalInt)mod.Globals.DuplicateInAsNewRecord(glob);
-        glob2.FormKey.ModKey.Should().Be(mod.ModKey);
-        glob2.Data.Should().Be(Data);
+        glob2.FormKey.ModKey.ShouldBe(mod.ModKey);
+        glob2.Data.ShouldBe(Data);
     }
 
     [Fact]
@@ -48,7 +48,7 @@ public class DuplicateInAsNewRecordTests
         };
         var mod = new SkyrimMod(TestConstants.PluginModKey4, SkyrimRelease.SkyrimSE);
         var glob2 = (GlobalInt)mod.Globals.DuplicateInAsNewRecord<Global, IGlobalIntGetter, IGlobalGetter>(glob);
-        glob2.FormKey.ModKey.Should().Be(mod.ModKey);
-        glob2.Data.Should().Be(Data);
+        glob2.FormKey.ModKey.ShouldBe(mod.ModKey);
+        glob2.Data.ShouldBe(Data);
     }
 }

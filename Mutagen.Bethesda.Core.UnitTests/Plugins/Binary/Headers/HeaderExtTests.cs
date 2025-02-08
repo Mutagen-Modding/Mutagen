@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -8,6 +8,7 @@ using Mutagen.Bethesda.Strings.DI;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.UnitTests.Placeholders;
 using Xunit;
+using Noggog.Testing.Extensions;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Binary.Headers;
 
@@ -92,14 +93,14 @@ public class HeaderExtTests
         byte[] b = TestDataPathing.GetBytes(TestDataPathing.HeaderOverflow);
         var modHeader = new ModHeaderFrame(GameConstants.SkyrimSE, b);
         var recs = modHeader.ToList();
-        recs.Should().HaveCount(3);
-        recs[0].RecordType.Should().Be(RecordTypes.MAST);
-        recs[1].RecordType.Should().Be(RecordTypes.DATA);
-        recs[2].RecordType.Should().Be(RecordTypes.ONAM);
-        recs[0].ContentLength.Should().Be(0x0E);
-        recs[1].ContentLength.Should().Be(0x08);
-        recs[2].ContentLength.Should().Be(0x04);
-        recs[2].AsInt32().Should().Be(0x04030201);
+        recs.ShouldHaveCount(3);
+        recs[0].RecordType.ShouldBe(RecordTypes.MAST);
+        recs[1].RecordType.ShouldBe(RecordTypes.DATA);
+        recs[2].RecordType.ShouldBe(RecordTypes.ONAM);
+        recs[0].ContentLength.ShouldBe(0x0E);
+        recs[1].ContentLength.ShouldBe(0x08);
+        recs[2].ContentLength.ShouldBe(0x04);
+        recs[2].AsInt32().ShouldBe(0x04030201);
     }
 
     [Fact]
@@ -108,7 +109,7 @@ public class HeaderExtTests
         byte[] b = TestDataPathing.GetBytes(TestDataPathing.HeaderOverflow);
         var modHeader = new ModHeaderFrame(GameConstants.SkyrimSE, b);
         modHeader.MasterSubrecords().Select(x => x.AsString(MutagenEncoding._1252))
-            .Should().Equal("Dawnguard.esm");
+            .ShouldEqual("Dawnguard.esm");
     }
 
     private MutagenBinaryReadStream GetModStream()
@@ -127,7 +128,7 @@ public class HeaderExtTests
     {
         using var stream = GetModStream();
         stream.ReadModHeaderFrame();
-        stream.Position.Should().Be(0x45);
+        stream.Position.ShouldBe(0x45);
     }
 
     [Fact]
@@ -141,7 +142,7 @@ public class HeaderExtTests
             types.Add(g.ContainedRecordType);
         }
 
-        types.Should().Equal(new RecordType[]
+        types.ShouldBe(new[]
         {
             RecordTypes.RACE,
             RecordTypes.WEAP,
@@ -161,31 +162,31 @@ public class HeaderExtTests
             {
                 i++;
                 var recs = group.ToArray();
-                recs.Length.Should().Be(1);
-                recs[0].Location.Should().Be(0x14);
-                recs[0].IsGroup.Should().BeFalse();
-                recs[0].RecordType.Should().Be(RecordTypes.NPC_);
+                recs.Length.ShouldBe(1);
+                recs[0].Location.ShouldBe(0x14);
+                recs[0].IsGroup.ShouldBeFalse();
+                recs[0].RecordType.ShouldBe(RecordTypes.NPC_);
             }
             else if (group.ContainedRecordType == RecordTypes.WEAP)
             {
                 i++;
                 var recs = group.ToArray();
-                recs.Length.Should().Be(2);
-                recs[0].Location.Should().Be(0x14);
-                recs[0].IsGroup.Should().BeFalse();
-                recs[0].RecordType.Should().Be(RecordTypes.WEAP);
-                recs[1].Location.Should().Be(0x28);
-                recs[1].IsGroup.Should().BeFalse();
-                recs[1].RecordType.Should().Be(RecordTypes.WEAP);
+                recs.Length.ShouldBe(2);
+                recs[0].Location.ShouldBe(0x14);
+                recs[0].IsGroup.ShouldBeFalse();
+                recs[0].RecordType.ShouldBe(RecordTypes.WEAP);
+                recs[1].Location.ShouldBe(0x28);
+                recs[1].IsGroup.ShouldBeFalse();
+                recs[1].RecordType.ShouldBe(RecordTypes.WEAP);
             }
             else if (group.ContainedRecordType == RecordTypes.RACE)
             {
                 i++;
                 var recs = group.ToArray();
-                recs.Length.Should().Be(1);
-                recs[0].Location.Should().Be(0x14);
-                recs[0].IsGroup.Should().BeFalse();
-                recs[0].RecordType.Should().Be(RecordTypes.RACE);
+                recs.Length.ShouldBe(1);
+                recs[0].Location.ShouldBe(0x14);
+                recs[0].IsGroup.ShouldBeFalse();
+                recs[0].RecordType.ShouldBe(RecordTypes.RACE);
             }
             else
             {
@@ -193,7 +194,7 @@ public class HeaderExtTests
             }
         }
 
-        i.Should().Be(3);
+        i.ShouldBe(3);
     }
 
     [Fact]
@@ -208,27 +209,27 @@ public class HeaderExtTests
             {
                 i++;
                 var recs = group.EnumerateMajorRecords().ToArray();
-                recs.Length.Should().Be(1);
-                recs[0].Location.Should().Be(0x14);
-                recs[0].FormID.Raw.Should().Be(0x01000D62);
+                recs.Length.ShouldBe(1);
+                recs[0].Location.ShouldBe(0x14);
+                recs[0].FormID.Raw.ShouldEqual(0x01000D62);
             }
             else if (group.ContainedRecordType == RecordTypes.WEAP)
             {
                 i++;
                 var recs = group.EnumerateMajorRecords().ToArray();
-                recs.Length.Should().Be(2);
-                recs[0].Location.Should().Be(0x14);
-                recs[0].FormID.Raw.Should().Be(0x00123456);
-                recs[1].Location.Should().Be(0x28);
-                recs[1].FormID.Raw.Should().Be(0x00123457);
+                recs.Length.ShouldBe(2);
+                recs[0].Location.ShouldBe(0x14);
+                recs[0].FormID.Raw.ShouldEqual(0x00123456);
+                recs[1].Location.ShouldBe(0x28);
+                recs[1].FormID.Raw.ShouldEqual(0x00123457);
             }
             else if (group.ContainedRecordType == RecordTypes.RACE)
             {
                 i++;
                 var recs = group.EnumerateMajorRecords().ToArray();
-                recs.Length.Should().Be(1);
-                recs[0].Location.Should().Be(0x14);
-                recs[0].FormID.Raw.Should().Be(0x01000D63);
+                recs.Length.ShouldBe(1);
+                recs[0].Location.ShouldBe(0x14);
+                recs[0].FormID.Raw.ShouldEqual(0x01000D63);
             }
             else
             {
@@ -236,6 +237,6 @@ public class HeaderExtTests
             }
         }
 
-        i.Should().Be(3);
+        i.ShouldBe(3);
     }
 }

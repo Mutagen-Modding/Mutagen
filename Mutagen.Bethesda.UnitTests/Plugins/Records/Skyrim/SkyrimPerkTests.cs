@@ -1,7 +1,8 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
+using Noggog.Testing.Extensions;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Skyrim;
 
@@ -13,6 +14,6 @@ public class SkyrimPerkTests : ASpecificCaseTest<Perk, IPerkGetter>
 
     public override void TestItem(IPerkGetter item)
     {
-        item.Effects.Should().HaveCount(2);
+        item.Effects.ShouldHaveCount(2);
     }
 }

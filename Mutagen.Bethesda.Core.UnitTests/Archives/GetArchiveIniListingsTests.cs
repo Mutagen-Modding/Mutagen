@@ -1,5 +1,5 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Archives.DI;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Inis;
@@ -31,7 +31,7 @@ sResourceArchiveList2=Skyrim - Voices_en0.bsa, Skyrim - Textures0.bsa") }
                     GameLocatorLookupCache.Instance)));
             
         get.Get(Ini.GetTypicalPath(GameRelease.SkyrimSE))
-            .Should().Equal(new FileName[]
+            .ShouldBe(new FileName[]
             {
                 "Skyrim - Misc.bsa",
                 "Skyrim - Shaders.bsa",

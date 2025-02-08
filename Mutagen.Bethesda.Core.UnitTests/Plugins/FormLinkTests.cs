@@ -1,8 +1,9 @@
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.UnitTests.Placeholders;
+using Noggog.Testing.Extensions;
 using NSubstitute;
 using Xunit;
 
@@ -15,8 +16,8 @@ public class FormLinkTests
     {
         FormLink<ITestMajorRecordGetter> link1 = new(TestConstants.Form1);
         FormLink<ITestMajorRecordGetter> link2 = new(TestConstants.Form1);
-        link1.Should().Be(link2);
-        link2.Should().Be(link1);
+        link1.ShouldBe(link2);
+        link2.ShouldBe(link1);
     }
 
     [Fact]
@@ -25,12 +26,12 @@ public class FormLinkTests
         FormLink<ITestMajorRecordGetter> getter = new(TestConstants.Form1);
         FormLink<ITestMajorRecord> setter = new(TestConstants.Form1);
         FormLink<TestMajorRecord> direct = new(TestConstants.Form1);
-        getter.Should().Be(setter);
-        getter.Should().Be(direct);
-        setter.Should().Be(direct);
-        setter.Should().Be(getter);
-        direct.Should().Be(getter);
-        direct.Should().Be(setter);
+        getter.ShouldEqual(setter);
+        getter.ShouldEqual(direct);
+        setter.ShouldEqual(direct);
+        setter.ShouldEqual(getter);
+        direct.ShouldEqual(getter);
+        direct.ShouldEqual(setter);
     }
 
     [Fact]
@@ -38,8 +39,8 @@ public class FormLinkTests
     {
         FormLink<ITestMajorRecordGetter> link1 = new(TestConstants.Form1);
         FormLink<IOtherTestMajorRecordGetter> link2 = new(TestConstants.Form1);
-        link1.Should().NotBe(link2);
-        link2.Should().NotBe(link1);
+        link1.ShouldNotBe<object>(link2);
+        link2.ShouldNotBe<object>(link1);
     }
 
     [Fact]
@@ -47,8 +48,8 @@ public class FormLinkTests
     {
         FormLink<ITestMajorRecordGetter> link1 = new(TestConstants.Form1);
         FormLink<ILeafTestMajorRecordGetter> link2 = new(TestConstants.Form1);
-        link1.Should().Be(link2);
-        link2.Should().Be(link1);
+        link1.ShouldEqual(link2);
+        link2.ShouldEqual(link1);
     }
 
     [Fact]
@@ -61,7 +62,7 @@ public class FormLinkTests
             link1,
             link2
         };
-        set.Should().HaveCount(1);
+        set.Count.ShouldBe(1);
     }
 
     [Fact]
@@ -76,7 +77,7 @@ public class FormLinkTests
             setter,
             direct,
         };
-        set.Should().HaveCount(1);
+        set.Count.ShouldBe(1);
     }
 
     [Fact]
@@ -89,7 +90,7 @@ public class FormLinkTests
             link1,
             link2,
         };
-        set.Should().HaveCount(1);
+        set.Count.ShouldBe(1);
     }
         
     [Fact]
@@ -98,9 +99,9 @@ public class FormLinkTests
         var n = new TestMajorRecord(TestConstants.Form1);
         var r = Substitute.For<IOtherTestMajorRecordGetter>();
         r.FormKey.Returns(TestConstants.Form2);
-        n.FormLink.IsNull.Should().BeTrue();
+        n.FormLink.IsNull.ShouldBeTrue();
         n.FormLink.SetTo(r);
-        n.FormLink.FormKey.Should().Be(TestConstants.Form2);
+        n.FormLink.FormKey.ShouldBe(TestConstants.Form2);
     }
 
     [Fact]
@@ -108,8 +109,8 @@ public class FormLinkTests
     {
         var set = new HashSet<IFormLinkGetter<IMajorRecordGetter>>();
         set.Add(new FormLink<ITestMajorRecordGetter>(TestConstants.Form1));
-        set.Contains(new FormLink<ITestMajorRecordGetter>(TestConstants.Form1)).Should().BeTrue();
-        set.Contains(new FormLink<IOtherTestMajorRecordGetter>(TestConstants.Form1)).Should().BeFalse();
+        set.Contains(new FormLink<ITestMajorRecordGetter>(TestConstants.Form1)).ShouldBeTrue();
+        set.Contains(new FormLink<IOtherTestMajorRecordGetter>(TestConstants.Form1)).ShouldBeFalse();
     }
 
     [Fact]
@@ -117,7 +118,7 @@ public class FormLinkTests
     {
         var set = new HashSet<IFormLinkGetter<IMajorRecordGetter>>(FormLink<IMajorRecordGetter>.TypelessComparer);
         set.Add(new FormLink<ITestMajorRecordGetter>(TestConstants.Form1));
-        set.Contains(new FormLink<ITestMajorRecordGetter>(TestConstants.Form1)).Should().BeTrue();
-        set.Contains(new FormLink<IOtherTestMajorRecordGetter>(TestConstants.Form1)).Should().BeTrue();
+        set.Contains(new FormLink<ITestMajorRecordGetter>(TestConstants.Form1)).ShouldBeTrue();
+        set.Contains(new FormLink<IOtherTestMajorRecordGetter>(TestConstants.Form1)).ShouldBeTrue();
     }
 }

@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Skyrim;
@@ -108,9 +108,9 @@ public class GetContainingCellTests
             var editorID = placedContext.Record.EditorID!;
             var expectedCellEditorID = editorID.Split("_")[1];
             if (placedContext.TryGetContainingCell(worldspaceCellLocationCache, out var containingCell))
-                expectedCellEditorID.Should().Be(containingCell.Record.EditorID);
+                expectedCellEditorID.ShouldBe(containingCell.Record.EditorID);
             else
-                expectedCellEditorID.Should().Be("NULL");
+                expectedCellEditorID.ShouldBe("NULL");
         }
     }
 }

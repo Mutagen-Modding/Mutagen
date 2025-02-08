@@ -1,6 +1,6 @@
 ﻿using System.Buffers.Binary;
 using System.IO.Abstractions;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Analysis;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
@@ -14,6 +14,7 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
+using Noggog.Testing.Extensions;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Masters;
@@ -66,7 +67,7 @@ public class SeparatedMastersTesting
         var locs = RecordLocator.GetLocations(modPath, GameRelease.SkyrimSE,
             loadOrder: lo,
             fileSystem: fileSystem);
-        locs.ListedRecords.Select(x => x.Value.FormKey).Should().Equal(
+        locs.ListedRecords.Select(x => x.Value.FormKey).ShouldEqual(
             modBWeapon.FormKey, 
             originatingWeapon.FormKey,
             modANpc.FormKey,
@@ -78,17 +79,17 @@ public class SeparatedMastersTesting
             }, GameRelease.SkyrimSE, modPath);
             using var stream = new MutagenBinaryReadStream(modPath, meta);
             var modANpcFrame = ReadFrame(stream, locs, modANpc.FormKey);
-            modANpcFrame.FormID.Raw.Should().Be(FormID.Factory(MasterStyle.Full, 0, modANpc.FormKey.ID).Raw);
+            modANpcFrame.FormID.Raw.ShouldBe(FormID.Factory(MasterStyle.Full, 0, modANpc.FormKey.ID).Raw);
             var modBWeaponFrame = ReadFrame(stream, locs, modBWeapon.FormKey);
-            modBWeaponFrame.FormID.Raw.Should().Be(FormID.Factory(MasterStyle.Full, 1, modBWeapon.FormKey.ID).Raw);
+            modBWeaponFrame.FormID.Raw.ShouldBe(FormID.Factory(MasterStyle.Full, 1, modBWeapon.FormKey.ID).Raw);
             var origNpcFrame = ReadFrame(stream, locs, originatingNpc.FormKey);
-            origNpcFrame.FormID.Raw.Should().Be(FormID.Factory(MasterStyle.Full, 2, originatingNpc.FormKey.ID).Raw);
+            origNpcFrame.FormID.Raw.ShouldBe(FormID.Factory(MasterStyle.Full, 2, originatingNpc.FormKey.ID).Raw);
             var npcTplt = origNpcFrame.FindSubrecord(RecordTypes.TPLT);
-            npcTplt.AsFormID().Should().Be(FormID.Factory(MasterStyle.Full, 0, modANpc.FormKey.ID));
+            npcTplt.AsFormID().ShouldBe(FormID.Factory(MasterStyle.Full, 0, modANpc.FormKey.ID));
             var origWeaponFrame = ReadFrame(stream, locs, originatingWeapon.FormKey);
-            origWeaponFrame.FormID.Raw.Should().Be(FormID.Factory(MasterStyle.Full, 2, originatingWeapon.FormKey.ID).Raw);
+            origWeaponFrame.FormID.Raw.ShouldBe(FormID.Factory(MasterStyle.Full, 2, originatingWeapon.FormKey.ID).Raw);
             var weaponCnam = origWeaponFrame.FindSubrecord(RecordTypes.CNAM);
-            weaponCnam.AsFormID().Should().Be(FormID.Factory(MasterStyle.Full, 1, modBWeapon.FormKey.ID));
+            weaponCnam.AsFormID().ShouldBe(FormID.Factory(MasterStyle.Full, 1, modBWeapon.FormKey.ID));
         }
 
         using var reimport = SkyrimMod.CreateFromBinaryOverlay(modPath, SkyrimRelease.SkyrimSE, new BinaryReadParameters()
@@ -96,12 +97,12 @@ public class SeparatedMastersTesting
             FileSystem = fileSystem,
             MasterFlagsLookup = lo
         });
-        reimport.Npcs.Select(x => x.FormKey).Should().Equal(modANpc.FormKey, originatingNpc.FormKey);
+        reimport.Npcs.Select(x => x.FormKey).ShouldEqual(modANpc.FormKey, originatingNpc.FormKey);
         var reimportNpc = reimport.Npcs[originatingNpc.FormKey];
-        reimportNpc.Template.FormKey.Should().Be(modANpc.FormKey);
-        reimport.Weapons.Select(x => x.FormKey).Should().Equal(modBWeapon.FormKey, originatingWeapon.FormKey);
+        reimportNpc.Template.FormKey.ShouldBe(modANpc.FormKey);
+        reimport.Weapons.Select(x => x.FormKey).ShouldEqual(modBWeapon.FormKey, originatingWeapon.FormKey);
         var reimportWeapon = reimport.Weapons[originatingWeapon.FormKey];
-        reimportWeapon.Template.FormKey.Should().Be(modBWeapon.FormKey);
+        reimportWeapon.Template.FormKey.ShouldBe(modBWeapon.FormKey);
     }
 
     private RecordType waim = new RecordType("WAIM");
@@ -173,7 +174,7 @@ public class SeparatedMastersTesting
         var locs = RecordLocator.GetLocations(modPath, GameRelease.Starfield,
             loadOrder: lo,
             fileSystem: fileSystem);
-        locs.ListedRecords.Select(x => x.Value.FormKey).Should().Equal(
+        locs.ListedRecords.Select(x => x.Value.FormKey).ShouldEqual(
             originatingWeapon.FormKey,
             originatingLightWeapon.FormKey,
             originatingMediumWeapon.FormKey,
@@ -194,62 +195,62 @@ public class SeparatedMastersTesting
             using var stream = new MutagenBinaryReadStream(modPath, meta);
             var modANpcFrame = ReadFrame(stream, locs, modANpc.FormKey);
             modANpcFrame.FormID.Raw
-                .Should().Be(FormID.Factory(MasterStyle.Full, 0, modANpc.FormKey.ID).Raw);
+                .ShouldBe(FormID.Factory(MasterStyle.Full, 0, modANpc.FormKey.ID).Raw);
             var modBAimFrame = ReadFrame(stream, locs, modBAim.FormKey);
             modBAimFrame.FormID.Raw
-                .Should().Be(FormID.Factory(MasterStyle.Full, 1, modBAim.FormKey.ID).Raw);
+                .ShouldBe(FormID.Factory(MasterStyle.Full, 1, modBAim.FormKey.ID).Raw);
             var lightModANpcFrame = ReadFrame(stream, locs, lightModANpc.FormKey);
             lightModANpcFrame.FormID.Raw
-                .Should().Be(FormID.Factory(MasterStyle.Small, 0, lightModANpc.FormKey.ID).Raw);
+                .ShouldBe(FormID.Factory(MasterStyle.Small, 0, lightModANpc.FormKey.ID).Raw);
             var lightModBAimFrame = ReadFrame(stream, locs, lightModBAim.FormKey);
             lightModBAimFrame.FormID.Raw
-                .Should().Be(FormID.Factory(MasterStyle.Small, 1, lightModBAim.FormKey.ID).Raw);
+                .ShouldBe(FormID.Factory(MasterStyle.Small, 1, lightModBAim.FormKey.ID).Raw);
             var mediumModANpcFrame = ReadFrame(stream, locs, mediumModANpc.FormKey);
             mediumModANpcFrame.FormID.Raw
-                .Should().Be(FormID.Factory(MasterStyle.Medium, 0, mediumModANpc.FormKey.ID).Raw);
+                .ShouldBe(FormID.Factory(MasterStyle.Medium, 0, mediumModANpc.FormKey.ID).Raw);
             var mediumModBAimFrame = ReadFrame(stream, locs, mediumModBAim.FormKey);
             mediumModBAimFrame.FormID.Raw
-                .Should().Be(FormID.Factory(MasterStyle.Medium, 1, mediumModBAim.FormKey.ID).Raw);
+                .ShouldBe(FormID.Factory(MasterStyle.Medium, 1, mediumModBAim.FormKey.ID).Raw);
             
             
             var origNpcFrame = ReadFrame(stream, locs, originatingNpc.FormKey);
             origNpcFrame.FormID.Raw
-                .Should().Be(FormID.Factory(MasterStyle.Full, 2, originatingNpc.FormKey.ID).Raw);
+                .ShouldBe(FormID.Factory(MasterStyle.Full, 2, originatingNpc.FormKey.ID).Raw);
             var npcCscr = origNpcFrame.FindSubrecord(RecordTypes.CSCR);
             npcCscr.AsFormID()
-                .Should().Be(FormID.Factory(MasterStyle.Full, 0, modANpc.FormKey.ID));
+                .ShouldBe(FormID.Factory(MasterStyle.Full, 0, modANpc.FormKey.ID));
             var origWeaponFrame = ReadFrame(stream, locs, originatingWeapon.FormKey);
             origWeaponFrame.FormID.Raw
-                .Should().Be(FormID.Factory(MasterStyle.Full, 2, originatingWeapon.FormKey.ID).Raw);
+                .ShouldBe(FormID.Factory(MasterStyle.Full, 2, originatingWeapon.FormKey.ID).Raw);
             var weaponWaim = origWeaponFrame.FindSubrecord(waim);
             new FormID(BinaryPrimitives.ReadUInt32LittleEndian(weaponWaim.Content.Slice(8)))
-                .Should().Be(FormID.Factory(MasterStyle.Full, 1, modBAim.FormKey.ID));
+                .ShouldBe(FormID.Factory(MasterStyle.Full, 1, modBAim.FormKey.ID));
             
             var origLightNpcFrame = ReadFrame(stream, locs, originatingLightNpc.FormKey);
             origLightNpcFrame.FormID.Raw
-                .Should().Be(FormID.Factory(MasterStyle.Full, 2, originatingLightNpc.FormKey.ID).Raw);
+                .ShouldBe(FormID.Factory(MasterStyle.Full, 2, originatingLightNpc.FormKey.ID).Raw);
             var lightNpcCscr = origLightNpcFrame.FindSubrecord(RecordTypes.CSCR);
             lightNpcCscr.AsFormID()
-                .Should().Be(FormID.Factory(MasterStyle.Small, 0, lightModANpc.FormKey.ID));
+                .ShouldBe(FormID.Factory(MasterStyle.Small, 0, lightModANpc.FormKey.ID));
             var origLightWeaponFrame = ReadFrame(stream, locs, originatingLightWeapon.FormKey);
             origLightWeaponFrame.FormID.Raw
-                .Should().Be(FormID.Factory(MasterStyle.Full, 2, originatingLightWeapon.FormKey.ID).Raw);
+                .ShouldBe(FormID.Factory(MasterStyle.Full, 2, originatingLightWeapon.FormKey.ID).Raw);
             var lightWeaponWaim = origLightWeaponFrame.FindSubrecord(waim);
             new FormID(BinaryPrimitives.ReadUInt32LittleEndian(lightWeaponWaim.Content.Slice(8)))
-                .Should().Be(FormID.Factory(MasterStyle.Small, 1, lightModBAim.FormKey.ID));
+                .ShouldBe(FormID.Factory(MasterStyle.Small, 1, lightModBAim.FormKey.ID));
             
             var origMediumNpcFrame = ReadFrame(stream, locs, originatingMediumNpc.FormKey);
             origMediumNpcFrame.FormID.Raw
-                .Should().Be(FormID.Factory(MasterStyle.Full, 2, originatingMediumNpc.FormKey.ID).Raw);
+                .ShouldBe(FormID.Factory(MasterStyle.Full, 2, originatingMediumNpc.FormKey.ID).Raw);
             var mediumNpcCscr = origMediumNpcFrame.FindSubrecord(RecordTypes.CSCR);
             mediumNpcCscr.AsFormID()
-                .Should().Be(FormID.Factory(MasterStyle.Medium, 0, mediumModANpc.FormKey.ID));
+                .ShouldBe(FormID.Factory(MasterStyle.Medium, 0, mediumModANpc.FormKey.ID));
             var origMediumWeaponFrame = ReadFrame(stream, locs, originatingMediumWeapon.FormKey);
             origMediumWeaponFrame.FormID.Raw
-                .Should().Be(FormID.Factory(MasterStyle.Full, 2, originatingMediumWeapon.FormKey.ID).Raw);
+                .ShouldBe(FormID.Factory(MasterStyle.Full, 2, originatingMediumWeapon.FormKey.ID).Raw);
             var mediumWeaponWaim = origMediumWeaponFrame.FindSubrecord(waim);
             new FormID(BinaryPrimitives.ReadUInt32LittleEndian(mediumWeaponWaim.Content.Slice(8)))
-                .Should().Be(FormID.Factory(MasterStyle.Medium, 1, mediumModBAim.FormKey.ID));
+                .ShouldBe(FormID.Factory(MasterStyle.Medium, 1, mediumModBAim.FormKey.ID));
         }
         
         using var reimport = StarfieldMod.CreateFromBinaryOverlay(modPath, StarfieldRelease.Starfield, new BinaryReadParameters()
@@ -257,7 +258,7 @@ public class SeparatedMastersTesting
             FileSystem = fileSystem,
             MasterFlagsLookup = lo
         });
-        reimport.Npcs.Select(x => x.FormKey).Should().Equal(
+        reimport.Npcs.Select(x => x.FormKey).ShouldEqual(
             modANpc.FormKey,
             lightModANpc.FormKey,
             mediumModANpc.FormKey,
@@ -265,22 +266,22 @@ public class SeparatedMastersTesting
             originatingLightNpc.FormKey,
             originatingMediumNpc.FormKey);
         var reimportNpc = reimport.Npcs[originatingNpc.FormKey];
-        reimportNpc.InheritsSoundsFrom.FormKey.Should().Be(modANpc.FormKey);
+        reimportNpc.InheritsSoundsFrom.FormKey.ShouldBe(modANpc.FormKey);
         var reimportLightNpc = reimport.Npcs[originatingLightNpc.FormKey];
-        reimportLightNpc.InheritsSoundsFrom.FormKey.Should().Be(lightModANpc.FormKey);
+        reimportLightNpc.InheritsSoundsFrom.FormKey.ShouldBe(lightModANpc.FormKey);
         var reimportMediumNpc = reimport.Npcs[originatingMediumNpc.FormKey];
-        reimportMediumNpc.InheritsSoundsFrom.FormKey.Should().Be(mediumModANpc.FormKey);
-        reimport.Weapons.Select(x => x.FormKey).Should().Equal(
+        reimportMediumNpc.InheritsSoundsFrom.FormKey.ShouldBe(mediumModANpc.FormKey);
+        reimport.Weapons.Select(x => x.FormKey).ShouldEqual(
             originatingWeapon.FormKey,
             originatingLightWeapon.FormKey,
             originatingMediumWeapon.FormKey);
         var reimportWeapon = reimport.Weapons[originatingWeapon.FormKey];
-        reimportWeapon.AimModel.FormKey.Should().Be(modBAim.FormKey);
+        reimportWeapon.AimModel.FormKey.ShouldBe(modBAim.FormKey);
         var reimportLightWeapon = reimport.Weapons[originatingLightWeapon.FormKey];
-        reimportLightWeapon.AimModel.FormKey.Should().Be(lightModBAim.FormKey);
+        reimportLightWeapon.AimModel.FormKey.ShouldBe(lightModBAim.FormKey);
         var reimportMediumWeapon = reimport.Weapons[originatingMediumWeapon.FormKey];
-        reimportMediumWeapon.AimModel.FormKey.Should().Be(mediumModBAim.FormKey);
-        reimport.AimModels.Select(x => x.FormKey).Should().Equal(
+        reimportMediumWeapon.AimModel.FormKey.ShouldBe(mediumModBAim.FormKey);
+        reimport.AimModels.Select(x => x.FormKey).ShouldEqual(
             modBAim.FormKey,
             lightModBAim.FormKey,
             mediumModBAim.FormKey);

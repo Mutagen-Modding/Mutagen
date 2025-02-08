@@ -1,7 +1,7 @@
 ﻿using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using AutoFixture.Xunit2;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.Testing.AutoData;
 using Mutagen.Bethesda.UnitTests.Placeholders;
+using Noggog.Testing.Extensions;
 using Noggog.Testing.IO;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -48,9 +49,9 @@ public class LoadOrderImporterTests
         var expected = modPaths
             .Select(x => importer.Import(x))
             .ToArray();
-        lo.Count.Should().Be(modPaths.Count());
+        lo.Count.ShouldBe(modPaths.Count());
         lo.Select(x => x.Value.Mod)
-            .Should().Equal(expected);
+            .ShouldBe(expected);
     }
 
     [Fact]
@@ -70,8 +71,8 @@ public class LoadOrderImporterTests
                     Substitute.For<IMasterFlagsLookupProvider>())
                 .Import();
         };
-        a.Should().Throw<AggregateException>()
-            .WithInnerException<RecordException>();
+        a.ShouldThrow<AggregateException>()
+            .InnerException.ShouldBeOfType<RecordException>();
     }
 
     [Fact]
@@ -132,12 +133,12 @@ public class LoadOrderImporterTests
                 importer,
                 Substitute.For<IMasterFlagsLookupProvider>())
             .Import();
-        lo.Count.Should().Be(3);
-        lo.First().Value.Mod.Should().BeNull();
-        lo.First().Value.ModKey.Should().Be(TestConstants.MasterModKey);
+        lo.Count.ShouldBe(3);
+        lo.First().Value.Mod.ShouldBeNull();
+        lo.First().Value.ModKey.ShouldBe(TestConstants.MasterModKey);
         lo.Select(x => x.Value.Mod)
             .Skip(1)
-            .Should().Equal(
+            .ShouldBe(
                 modPaths
                     .Skip(1)
                     .Select(x => importer.Import(x)));

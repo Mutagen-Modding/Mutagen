@@ -1,5 +1,5 @@
 ﻿using System.IO.Abstractions;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Records.DI;
 using Mutagen.Bethesda.Skyrim;
@@ -26,7 +26,7 @@ public class ModImporterTests
             .WithFileSystem(fileSystem)
             .Write();
         var import = sut.Import(path);
-        import.Should().BeOfType<SkyrimModBinaryOverlay>();
+        import.ShouldBeOfType<SkyrimModBinaryOverlay>();
     }
     
     [Theory, MutagenModAutoData]
@@ -44,7 +44,7 @@ public class ModImporterTests
             .WithFileSystem(fileSystem)
             .Write();
         var import = sut.Import(path);
-        import.Should().BeOfType<SkyrimModBinaryOverlay>();
+        import.ShouldBeOfType<SkyrimModBinaryOverlay>();
     }
     
     [Theory, MutagenModAutoData]
@@ -62,7 +62,7 @@ public class ModImporterTests
             .WithFileSystem(fileSystem)
             .Write();
         var import = sut.Import(path);
-        import.Should().BeOfType<SkyrimMod>();
+        import.ShouldBeOfType<SkyrimMod>();
     }
     
     [Theory, MutagenModAutoData]
@@ -80,7 +80,7 @@ public class ModImporterTests
             .WithFileSystem(fileSystem)
             .Write();
         var import = sut.Import(path);
-        import.Should().BeOfType<SkyrimMod>();
+        import.ShouldBeOfType<SkyrimMod>();
     }
     
     [Theory, MutagenModAutoData]
@@ -98,7 +98,7 @@ public class ModImporterTests
             .WithFileSystem(fileSystem)
             .Write();
         var import = sut.Import<ISkyrimModGetter>(path);
-        import.Should().BeOfType<SkyrimModBinaryOverlay>();
+        import.ShouldBeOfType<SkyrimModBinaryOverlay>();
     }
     
     [Theory, MutagenModAutoData]
@@ -116,7 +116,7 @@ public class ModImporterTests
             .WithFileSystem(fileSystem)
             .Write();
         var import = sut.Import<ISkyrimMod>(path);
-        import.Should().BeOfType<SkyrimMod>();
+        import.ShouldBeOfType<SkyrimMod>();
     }
     
     [Theory, MutagenModAutoData]
@@ -134,7 +134,7 @@ public class ModImporterTests
             .WithFileSystem(fileSystem)
             .Write();
         var import = sut.Import<SkyrimMod>(path);
-        import.Should().BeOfType<SkyrimMod>();
+        import.ShouldBeOfType<SkyrimMod>();
     }
     
     [Theory, MutagenModAutoData]
@@ -152,6 +152,6 @@ public class ModImporterTests
             .WithFileSystem(fileSystem)
             .Write();
         var import = sut.Import(path);
-        import.Should().BeOfType<SkyrimModBinaryOverlay>();
+        import.ShouldBeOfType<SkyrimModBinaryOverlay>();
     }
 }

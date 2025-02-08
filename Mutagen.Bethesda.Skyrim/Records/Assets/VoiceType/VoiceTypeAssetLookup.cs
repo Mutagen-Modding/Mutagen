@@ -681,7 +681,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
     private IEnumerable<string> GetVoiceTypes(FormKey speaker)
     {
-        return _speakerVoices.TryGetValue(speaker, out var speakerVoiceTypes) ? speakerVoiceTypes : Array.Empty<string>();
+        return _speakerVoices.TryGetValue(speaker, out var speakerVoiceTypes) ? speakerVoiceTypes : [];
     }
 
     #region Voice Parser

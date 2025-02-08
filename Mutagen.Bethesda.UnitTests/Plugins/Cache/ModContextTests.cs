@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
@@ -6,6 +6,7 @@ using Mutagen.Bethesda.Plugins;
 using Xunit;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Testing;
+using Noggog.Testing.Extensions;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Cache;
 
@@ -20,13 +21,13 @@ public class ModContextTests
 
         var mod2 = new SkyrimMod(TestConstants.PluginModKey2, SkyrimRelease.SkyrimSE);
         var contexts = mod.EnumerateMajorRecordContexts<INpc, INpcGetter>(linkCache: null!).ToArray();
-        contexts.Should().HaveCount(2);
-        contexts[0].Record.Should().Be(npc1);
-        contexts[1].Record.Should().Be(npc2);
+        contexts.ShouldHaveCount(2);
+        contexts[0].Record.ShouldBe(npc1);
+        contexts[1].Record.ShouldBe(npc2);
         var npc2Override = contexts[1].GetOrAddAsOverride(mod2);
-        npc2.FormKey.Should().Be(npc2Override.FormKey);
-        mod2.Npcs.Should().HaveCount(1);
-        mod.Npcs.Should().HaveCount(2);
+        npc2.FormKey.ShouldBe(npc2Override.FormKey);
+        mod2.Npcs.ShouldHaveCount(1);
+        mod.Npcs.ShouldHaveCount(2);
     }
 
     [Fact]
@@ -66,15 +67,15 @@ public class ModContextTests
 
         var mod2 = new SkyrimMod(TestConstants.PluginModKey2, SkyrimRelease.SkyrimSE);
         var contexts = mod.EnumerateMajorRecordContexts<ICell, ICellGetter>(linkCache: null!).ToArray();
-        contexts.Should().HaveCount(3);
+        contexts.ShouldHaveCount(3);
         Assert.Same(contexts[0].Record, cell1);
         Assert.Same(contexts[1].Record, cell2);
         Assert.Same(contexts[2].Record, cell3);
         var cell2Override = contexts[1].GetOrAddAsOverride(mod2);
         Assert.Equal(cell2.FormKey, cell2Override.FormKey);
-        mod2.Cells.Records.Should().HaveCount(1);
-        mod2.Cells.Records.First().SubBlocks.Should().HaveCount(1);
-        mod2.Cells.Records.First().SubBlocks.First().Cells.Should().HaveCount(1);
+        mod2.Cells.Records.ShouldHaveCount(1);
+        mod2.Cells.Records.First().SubBlocks.ShouldHaveCount(1);
+        mod2.Cells.Records.First().SubBlocks.First().Cells.ShouldHaveCount(1);
     }
 
     [Fact]
@@ -119,15 +120,15 @@ public class ModContextTests
 
         var cache = mod.ToImmutableLinkCache();
         var contexts = mod.EnumerateMajorRecordContexts<IPlacedObject, IPlacedObjectGetter>(linkCache: cache).ToArray();
-        contexts.Should().HaveCount(1);
+        contexts.ShouldHaveCount(1);
 
         var mod2 = new SkyrimMod(TestConstants.PluginModKey2, SkyrimRelease.SkyrimSE);
         var placedObjOverride = contexts[0].GetOrAddAsOverride(mod2);
         Assert.Equal(placedObj.FormKey, placedObjOverride.FormKey);
-        mod2.Cells.Records.Should().HaveCount(1);
-        mod2.Cells.Records.First().SubBlocks.Should().HaveCount(1);
-        mod2.Cells.Records.First().SubBlocks.First().Cells.Should().HaveCount(1);
-        mod2.Cells.Records.First().SubBlocks.First().Cells.First().Persistent.Should().HaveCount(1);
+        mod2.Cells.Records.ShouldHaveCount(1);
+        mod2.Cells.Records.First().SubBlocks.ShouldHaveCount(1);
+        mod2.Cells.Records.First().SubBlocks.First().Cells.ShouldHaveCount(1);
+        mod2.Cells.Records.First().SubBlocks.First().Cells.First().Persistent.ShouldHaveCount(1);
         Assert.Same(placedObjOverride, mod2.Cells.Records.First().SubBlocks.First().Cells.First().Persistent.First());
     }
 
@@ -180,10 +181,10 @@ public class ModContextTests
         var placedObjOverride = contexts[1].GetOrAddAsOverride(mod2);
         Assert.Equal(placedNpc.FormKey, placedNpcOverride.FormKey);
         Assert.Equal(placedObj.FormKey, placedObjOverride.FormKey);
-        mod2.Cells.Records.Should().HaveCount(1);
-        mod2.Cells.Records.First().SubBlocks.Should().HaveCount(1);
-        mod2.Cells.Records.First().SubBlocks.First().Cells.Should().HaveCount(1);
-        mod2.Cells.Records.First().SubBlocks.First().Cells.First().Persistent.Should().HaveCount(2);
+        mod2.Cells.Records.ShouldHaveCount(1);
+        mod2.Cells.Records.First().SubBlocks.ShouldHaveCount(1);
+        mod2.Cells.Records.First().SubBlocks.First().Cells.ShouldHaveCount(1);
+        mod2.Cells.Records.First().SubBlocks.First().Cells.First().Persistent.ShouldHaveCount(2);
         Assert.Same(placedNpcOverride, mod2.Cells.Records.First().SubBlocks.First().Cells.First().Persistent.First());
     }
 
@@ -238,10 +239,10 @@ public class ModContextTests
         var mod2 = new SkyrimMod(TestConstants.PluginModKey2, SkyrimRelease.SkyrimSE);
         var cell2Override = contexts[1].GetOrAddAsOverride(mod2);
         Assert.Equal(cell2.FormKey, cell2Override.FormKey);
-        mod2.Worldspaces.Should().HaveCount(1);
-        mod2.Worldspaces.First().SubCells.Should().HaveCount(1);
-        mod2.Worldspaces.First().SubCells.First().Items.Should().HaveCount(1);
-        mod2.Worldspaces.First().SubCells.First().Items.First().Items.Should().HaveCount(1);
+        mod2.Worldspaces.ShouldHaveCount(1);
+        mod2.Worldspaces.First().SubCells.ShouldHaveCount(1);
+        mod2.Worldspaces.First().SubCells.First().Items.ShouldHaveCount(1);
+        mod2.Worldspaces.First().SubCells.First().Items.First().Items.ShouldHaveCount(1);
         Assert.Same(cell2Override, mod2.Worldspaces.First().SubCells.First().Items.First().Items.First());
     }
 
@@ -293,16 +294,16 @@ public class ModContextTests
 
         var cache = mod.ToImmutableLinkCache();
         var contexts = mod.EnumerateMajorRecordContexts<IPlacedObject, IPlacedObjectGetter>(linkCache: cache).ToArray();
-        contexts.Should().HaveCount(1);
+        contexts.ShouldHaveCount(1);
 
         var mod2 = new SkyrimMod(TestConstants.PluginModKey2, SkyrimRelease.SkyrimSE);
         var placedObjOverride = contexts[0].GetOrAddAsOverride(mod2);
         Assert.Equal(placedObj.FormKey, placedObjOverride.FormKey);
-        mod2.Worldspaces.Should().HaveCount(1);
-        mod2.Worldspaces.First().SubCells.Should().HaveCount(1);
-        mod2.Worldspaces.First().SubCells.First().Items.Should().HaveCount(1);
-        mod2.Worldspaces.First().SubCells.First().Items.First().Items.Should().HaveCount(1);
-        mod2.Worldspaces.First().SubCells.First().Items.First().Items.First().Persistent.Should().HaveCount(1);
+        mod2.Worldspaces.ShouldHaveCount(1);
+        mod2.Worldspaces.First().SubCells.ShouldHaveCount(1);
+        mod2.Worldspaces.First().SubCells.First().Items.ShouldHaveCount(1);
+        mod2.Worldspaces.First().SubCells.First().Items.First().Items.ShouldHaveCount(1);
+        mod2.Worldspaces.First().SubCells.First().Items.First().Items.First().Persistent.ShouldHaveCount(1);
         Assert.Same(placedObjOverride, mod2.Worldspaces.First().SubCells.First().Items.First().Items.First().Persistent.First());
     }
 
@@ -361,11 +362,11 @@ public class ModContextTests
         var placedObjOverride = contexts[1].GetOrAddAsOverride(mod2);
         Assert.Equal(placedNpc.FormKey, placedNpcOverride.FormKey);
         Assert.Equal(placedObj.FormKey, placedObjOverride.FormKey);
-        mod2.Worldspaces.Should().HaveCount(1);
-        mod2.Worldspaces.First().SubCells.Should().HaveCount(1);
-        mod2.Worldspaces.First().SubCells.First().Items.Should().HaveCount(1);
-        mod2.Worldspaces.First().SubCells.First().Items.First().Items.Should().HaveCount(1);
-        mod2.Worldspaces.First().SubCells.First().Items.First().Items.First().Persistent.Should().HaveCount(2);
+        mod2.Worldspaces.ShouldHaveCount(1);
+        mod2.Worldspaces.First().SubCells.ShouldHaveCount(1);
+        mod2.Worldspaces.First().SubCells.First().Items.ShouldHaveCount(1);
+        mod2.Worldspaces.First().SubCells.First().Items.First().Items.ShouldHaveCount(1);
+        mod2.Worldspaces.First().SubCells.First().Items.First().Items.First().Persistent.ShouldHaveCount(2);
         Assert.Same(placedNpcOverride, mod2.Worldspaces.First().SubCells.First().Items.First().Items.First().Persistent.First());
     }
 
@@ -437,15 +438,15 @@ public class ModContextTests
         var cache = loadOrder.ToImmutableLinkCache();
 
         var contexts = mod.EnumerateMajorRecordContexts<IPlaced, IPlacedGetter>(linkCache: cache).ToArray();
-        contexts.Should().HaveCount(1);
+        contexts.ShouldHaveCount(1);
 
         var mod4 = new SkyrimMod(TestConstants.PluginModKey4, SkyrimRelease.SkyrimSE);
         var placedObjOverride = contexts[0].GetOrAddAsOverride(mod4);
-        placedObjOverride.EditorID.Should().Be(Mod1Name);
+        placedObjOverride.EditorID.ShouldBe(Mod1Name);
         var cellOverride = mod4.Worldspaces.First().SubCells.First().Items.First().Items.First();
-        cellOverride.EditorID.Should().Be(Mod2Name);
+        cellOverride.EditorID.ShouldBe(Mod2Name);
         var worldspaceOverride = mod4.Worldspaces.First();
-        worldspaceOverride.EditorID.Should().Be(Mod3Name);
+        worldspaceOverride.EditorID.ShouldBe(Mod3Name);
     }
 
     [Fact]
@@ -478,8 +479,8 @@ public class ModContextTests
 
         var cache = mod.ToImmutableLinkCache();
         var contexts = mod.EnumerateMajorRecordContexts<IPlacedObject, IPlacedObjectGetter>(linkCache: cache).ToArray();
-        contexts.Should().HaveCount(1);
-        contexts[0].ModKey.Should().Be(TestConstants.PluginModKey);
+        contexts.ShouldHaveCount(1);
+        contexts[0].ModKey.ShouldBe(TestConstants.PluginModKey);
     }
 
     [Fact]
@@ -512,21 +513,21 @@ public class ModContextTests
 
         var cache = mod.ToImmutableLinkCache();
         var contexts = mod.EnumerateMajorRecordContexts<IPlacedObject, IPlacedObjectGetter>(linkCache: cache).ToArray();
-        contexts.Should().HaveCount(1);
+        contexts.ShouldHaveCount(1);
         var baseContext = contexts[0];
         var cellContext = baseContext.Parent;
-        cellContext.Should().BeOfType(typeof(ModContext<ISkyrimMod, ISkyrimModGetter, ICell, ICellGetter>));
-        cellContext!.Record.Should().Be(cell);
+        cellContext.ShouldBeOfType(typeof(ModContext<ISkyrimMod, ISkyrimModGetter, ICell, ICellGetter>));
+        cellContext!.Record.ShouldBe(cell);
         var subBlockContext = cellContext.Parent;
-        subBlockContext!.Record.Should().Be(subBlock);
+        subBlockContext!.Record.ShouldBe(subBlock);
         var blockContext = subBlockContext.Parent;
-        blockContext!.Record.Should().Be(block);
+        blockContext!.Record.ShouldBe(block);
         var worldspaceContext = blockContext.Parent;
-        worldspaceContext!.Record.Should().Be(worldspace);
-        baseContext.IsUnderneath<IWorldspaceGetter>().Should().BeTrue();
-        baseContext.TryGetParent<IWorldspaceGetter>(out var worldParent).Should().BeTrue();
-        worldParent.Should().Be(worldspace);
-        baseContext.TryGetParentContext<IWorldspace, IWorldspaceGetter>(out var worldParentContext).Should().BeTrue();
-        worldParentContext!.Record.Should().Be(worldspace);
+        worldspaceContext!.Record.ShouldBe(worldspace);
+        baseContext.IsUnderneath<IWorldspaceGetter>().ShouldBeTrue();
+        baseContext.TryGetParent<IWorldspaceGetter>(out var worldParent).ShouldBeTrue();
+        worldParent.ShouldBe(worldspace);
+        baseContext.TryGetParentContext<IWorldspace, IWorldspaceGetter>(out var worldParentContext).ShouldBeTrue();
+        worldParentContext!.Record.ShouldBe(worldspace);
     }
 }

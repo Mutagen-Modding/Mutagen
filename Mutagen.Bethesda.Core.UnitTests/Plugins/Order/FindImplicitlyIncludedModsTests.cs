@@ -1,5 +1,5 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins;
@@ -9,6 +9,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
+using Noggog.Testing.Extensions;
 using NSubstitute;
 using Xunit;
 
@@ -73,7 +74,7 @@ public class FindImplicitlyIncludedModsTests
         };
         var found = sut.Find(list)
             .ToList();
-        found.Should().BeEmpty();
+        found.ShouldBeEmpty();
     }
         
     [Theory, MutagenAutoData]
@@ -97,8 +98,8 @@ public class FindImplicitlyIncludedModsTests
         };
         var found = sut.Find(list)
             .ToList();
-        found.Should().HaveCount(1);
-        found[0].Should().Be(ModC);
+        found.ShouldHaveCount(1);
+        found[0].ShouldBe(ModC);
     }
         
     [Theory, MutagenAutoData]
@@ -121,7 +122,7 @@ public class FindImplicitlyIncludedModsTests
         };
         var found = sut.Find(list)
             .ToList();
-        found.Should().BeEmpty();
+        found.ShouldBeEmpty();
     }
         
     [Theory, MutagenAutoData]
@@ -147,8 +148,8 @@ public class FindImplicitlyIncludedModsTests
         };
         var found = sut.Find(list)
             .ToList();
-        found.Should().HaveCount(2);
-        found.Should().Equal(
+        found.ShouldHaveCount(2);
+        found.ShouldEqual(
             ModC,
             ModD);
     }
@@ -176,8 +177,8 @@ public class FindImplicitlyIncludedModsTests
         };
         var found = sut.Find(list)
             .ToArray();
-        found.Should().HaveCount(2);
-        found.Should().Equal(
+        found.ShouldHaveCount(2);
+        found.ShouldEqual(
             ModC,
             ModD);
     }
@@ -202,7 +203,7 @@ public class FindImplicitlyIncludedModsTests
         };
         var found = sut.Find(list)
             .ToList();
-        found.Should().BeEmpty();
+        found.ShouldBeEmpty();
     }
 
     [Theory, MutagenAutoData]
@@ -264,6 +265,6 @@ public class FindImplicitlyIncludedModsTests
             
         var found = sut.Find(list, skipMissingMods: true)
             .ToArray();
-        found.Should().Equal(ModD);
+        found.ShouldEqual(ModD);
     }
 }

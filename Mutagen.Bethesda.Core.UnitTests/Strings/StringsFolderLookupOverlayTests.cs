@@ -1,5 +1,5 @@
 ﻿using System.IO.Abstractions;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
@@ -34,14 +34,14 @@ public class StringsFolderLookupOverlayTests
         });
         
         overlay.TryLookup(StringsSource.Normal, Language.English, normalId, out var normalStrOut)
-            .Should().BeTrue();
-        normalStrOut.Should().Be(normalStr);
+            .ShouldBeTrue();
+        normalStrOut.ShouldBe(normalStr);
         overlay.TryLookup(StringsSource.IL, Language.English, ilId, out var ilStrOut)
-            .Should().BeTrue();
-        ilStrOut.Should().Be(ilStr);
+            .ShouldBeTrue();
+        ilStrOut.ShouldBe(ilStr);
         overlay.TryLookup(StringsSource.DL, Language.English, dlId, out var dlStrOut)
-            .Should().BeTrue();
-        dlStrOut.Should().Be(dlStr);
+            .ShouldBeTrue();
+        dlStrOut.ShouldBe(dlStr);
     }
     
     [Theory, MutagenContainerAutoData]
@@ -72,7 +72,7 @@ public class StringsFolderLookupOverlayTests
         });
         
         overlay.TryLookup(StringsSource.Normal, Language.English, id1, out var strOut)
-            .Should().BeTrue();
-        strOut.Should().Be(str1);
+            .ShouldBeTrue();
+        strOut.ShouldBe(str1);
     }
 }

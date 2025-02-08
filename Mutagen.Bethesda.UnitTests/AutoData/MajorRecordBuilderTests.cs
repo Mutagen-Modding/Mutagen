@@ -1,7 +1,8 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing.AutoData;
+using Noggog.Testing.Extensions;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.AutoData;
@@ -14,8 +15,8 @@ public class MajorRecordBuilderTests
         SkyrimMod mod,
         Npc npc)
     {
-        npc.FormKey.ModKey.Should().Be(mod.ModKey);
-        mod.Npcs.Records.Should().Contain(n => n == npc);
+        npc.FormKey.ModKey.ShouldBe(mod.ModKey);
+        mod.Npcs.Records.ShouldContain(n => n == npc);
     }
     
     [Theory]
@@ -24,8 +25,8 @@ public class MajorRecordBuilderTests
         SkyrimMod mod,
         Npc npc)
     {
-        npc.FormKey.ModKey.Should().Be(mod.ModKey);
-        mod.Npcs.Records.Should().Contain(n => n == npc);
+        npc.FormKey.ModKey.ShouldBe(mod.ModKey);
+        mod.Npcs.Records.ShouldContain(n => n == npc);
     }
     
     [Theory]
@@ -35,13 +36,13 @@ public class MajorRecordBuilderTests
         Npc npc1,
         Npc npc2)
     {
-        npc1.Should().NotBeSameAs(npc2);
-        npc1.FormKey.ModKey.Should().Be(mod.ModKey);
-        npc2.FormKey.ModKey.Should().Be(mod.ModKey);
-        npc1.FormKey.Should().NotBe(npc2.FormKey);
-        mod.Npcs.Records.Should().Contain(n => n == npc1);
-        mod.Npcs.Records.Should().Contain(n => n == npc2);
-        mod.Npcs.Records.Should().HaveCount(2);
+        npc1.ShouldNotBeSameAs(npc2);
+        npc1.FormKey.ModKey.ShouldBe(mod.ModKey);
+        npc2.FormKey.ModKey.ShouldBe(mod.ModKey);
+        npc1.FormKey.ShouldNotBe(npc2.FormKey);
+        mod.Npcs.Records.ShouldContain(n => n == npc1);
+        mod.Npcs.Records.ShouldContain(n => n == npc2);
+        mod.Npcs.Records.ShouldHaveCount(2);
     }
     
     [Theory]
@@ -50,7 +51,7 @@ public class MajorRecordBuilderTests
         SkyrimMod mod,
         DialogResponses responses)
     {
-        responses.FormKey.ModKey.Should().Be(mod.ModKey);
+        responses.FormKey.ModKey.ShouldBe(mod.ModKey);
     }
     
     [Theory]
@@ -59,8 +60,8 @@ public class MajorRecordBuilderTests
         SkyrimMod mod,
         Cell cell)
     {
-        cell.FormKey.ModKey.Should().Be(mod.ModKey);
-        cell.Temporary.Should().NotBeEmpty();
+        cell.FormKey.ModKey.ShouldBe(mod.ModKey);
+        cell.Temporary.ShouldNotBeEmpty();
     }
     
     [Theory]
@@ -69,8 +70,8 @@ public class MajorRecordBuilderTests
         SkyrimMod mod,
         Weapon weapon)
     {
-        weapon.Data.Should().NotBeNull();
-        weapon.Data!.Unknown3.Length.Should().Be(12);
+        weapon.Data.ShouldNotBeNull();
+        weapon.Data!.Unknown3.Length.ShouldBe(12);
     }
     
     [Theory]
@@ -79,9 +80,9 @@ public class MajorRecordBuilderTests
         SkyrimMod mod,
         IPlaced placed)
     {
-        placed.FormKey.ModKey.Should().Be(mod.ModKey);
-        placed.IsCompressed.Should().BeFalse();
-        placed.IsDeleted.Should().BeFalse();
+        placed.FormKey.ModKey.ShouldBe(mod.ModKey);
+        placed.IsCompressed.ShouldBeFalse();
+        placed.IsDeleted.ShouldBeFalse();
     }
     
     [Theory]
@@ -89,8 +90,8 @@ public class MajorRecordBuilderTests
     public void IPlacedNoMod(
         IPlaced placed)
     {
-        placed.FormKey.Should().NotBe(FormKey.Null);
-        placed.IsCompressed.Should().BeFalse();
-        placed.IsDeleted.Should().BeFalse();
+        placed.FormKey.ShouldNotBe(FormKey.Null);
+        placed.IsCompressed.ShouldBeFalse();
+        placed.IsDeleted.ShouldBeFalse();
     }
 }

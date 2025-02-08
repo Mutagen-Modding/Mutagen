@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Skyrim;
@@ -13,7 +13,7 @@ public class RecordExceptionTests
     {
         var ex = new Exception();
         var rec = RecordException.Enrich<IItem>(ex, FormKey.Null, "SomeEdid");
-        rec.RecordType.Should().Be(typeof(IItem));
+        rec.RecordType.ShouldBe(typeof(IItem));
     }
         
     [Fact]
@@ -21,6 +21,6 @@ public class RecordExceptionTests
     {
         var ex = new Exception();
         var rec = RecordException.Create<IItem>("Message", FormKey.Null, "SomeEdid");
-        rec.RecordType.Should().Be(typeof(IItem));
+        rec.RecordType.ShouldBe(typeof(IItem));
     }
 }
