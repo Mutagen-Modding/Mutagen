@@ -20,12 +20,12 @@ partial class ArchiveContainer : IContainer<IGetApplicableArchivePaths>
 
     public ArchiveContainer(
         IFileSystem fileSystem, 
-        IGameReleaseContext GameReleaseContext,
-        IDataDirectoryProvider DataDirectoryProvider)
+        IGameReleaseContext gameReleaseContext,
+        IDataDirectoryProvider dataDirectoryProvider)
     {
         _fileSystem = fileSystem;
-        _gameReleaseContext = GameReleaseContext;
-        _dataDirectoryProvider = DataDirectoryProvider;
+        _gameReleaseContext = gameReleaseContext;
+        _dataDirectoryProvider = dataDirectoryProvider;
     }
 }
 

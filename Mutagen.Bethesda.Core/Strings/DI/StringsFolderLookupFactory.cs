@@ -28,12 +28,12 @@ public class StringsFolderLookupFactory : IStringsFolderLookupFactory
     public StringsFolderLookupFactory(
         IGameReleaseContext gameRelease,
         IDataDirectoryProvider dataDirectoryProvider,
-        IGetApplicableArchivePaths GetApplicableArchivePaths,
+        IGetApplicableArchivePaths getApplicableArchivePaths,
         IFileSystem fileSystem)
     {
         _gameRelease = gameRelease;
         _dataDirectoryProvider = dataDirectoryProvider;
-        _getApplicableArchivePaths = GetApplicableArchivePaths;
+        _getApplicableArchivePaths = getApplicableArchivePaths;
         _fileSystem = fileSystem;
     }
 

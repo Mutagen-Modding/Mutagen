@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.UnitTests.Strings;
 
 public class StringsFolderLookupOverlayTests
 {
-    [Theory, MutagenContainerAutoData]
+    [Theory, MutagenModAutoData]
     internal void Typical(IFileSystem fileSystem,
         ModKey modKey,
         DirectoryPath existingPath,
@@ -44,7 +44,7 @@ public class StringsFolderLookupOverlayTests
         dlStrOut.ShouldBe(dlStr);
     }
     
-    [Theory, MutagenContainerAutoData]
+    [Theory, MutagenModAutoData]
     internal void SuffixCollision(IFileSystem fileSystem,
         DirectoryPath existingPath,
         MutagenEncodingProvider encodingProvider,
