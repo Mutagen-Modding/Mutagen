@@ -1,7 +1,9 @@
-﻿using Mutagen.Bethesda.Plugins;
+﻿using System.IO.Abstractions;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Exceptions;
-using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Records;
+using Noggog.IO;
 
 namespace Mutagen.Bethesda;
 
@@ -90,5 +92,46 @@ public static class IModExt
         if (small) return MasterStyle.Small;
         if (medium) return MasterStyle.Medium;
         return MasterStyle.Full;
+    }
+
+    public static IMod Duplicate(this IModGetter mod, ModKey newModKey, BinaryWriteParameters? writeParameters = null, BinaryReadParameters? readParameters = null)
+    {
+        if (mod.ModKey.Type != newModKey.Type) throw new ArgumentException("ModKey types must match");
+
+        var oldModKey = mod.ModKey;
+        var fileSystem = new FileSystem();
+        using var tmp = TempFolder.Factory();
+        var fileSystemRoot = tmp.Dir;
+        var oldModPath = new ModPath(oldModKey, fileSystem.Path.Combine(fileSystemRoot, oldModKey.FileName.String));
+
+        // Write mod to in memory file system
+        writeParameters ??= BinaryWriteParameters.Default;
+        mod.WriteToBinary(oldModPath, writeParameters with
+        {
+            FileSystem = fileSystem
+        });
+
+        // Rename mod file
+        var newModPath = new ModPath(newModKey, fileSystem.Path.Combine(fileSystemRoot, newModKey.FileName.String));
+        fileSystem.File.Move(oldModPath, newModPath);
+
+        // Rename strings files
+        var stringsDir = fileSystem.Path.Combine(fileSystemRoot, "Strings");
+        foreach (var file in fileSystem.Directory.EnumerateFiles(stringsDir))
+        {
+            var fileName = fileSystem.Path.GetFileName(file);
+            if (fileName.StartsWith(oldModKey.Name))
+            {
+                fileSystem.File.Move(file, fileSystem.Path.Combine(stringsDir, newModKey.Name + fileName[oldModKey.Name.Length..]));
+            }
+        }
+
+        // Read renamed mod as new mod
+        readParameters ??= BinaryReadParameters.Default;
+        var duplicateInto = ModInstantiator.ImportSetter(newModPath, mod.GameRelease, readParameters with
+        {
+            FileSystem = fileSystem
+        });
+        return duplicateInto;
     }
 }
