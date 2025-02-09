@@ -12,6 +12,7 @@ using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.DI;
+using Mutagen.Bethesda.Plugins.Utility;
 using Noggog;
 using StrongInject;
 
@@ -112,41 +113,7 @@ public interface IGameEnvironment<TModSetter, TModGetter> : IGameEnvironment<TMo
     new ILinkCache<TModSetter, TModGetter> LinkCache { get; }
 }
 
-[Register(typeof(ArchiveNameFromModKeyProvider), typeof(IArchiveNameFromModKeyProvider))]
-[Register(typeof(ModImporter<>), typeof(IModImporter<>))]
-[Register(typeof(HasEnabledMarkersProvider), typeof(IHasEnabledMarkersProvider))]
-[Register(typeof(LoadOrderListingParser), typeof(ILoadOrderListingParser))]
-[Register(typeof(PluginListingCommentTrimmer), typeof(IPluginListingCommentTrimmer))]
-[Register(typeof(ImplicitListingModKeyProvider), typeof(IImplicitListingModKeyProvider))]
-[Register(typeof(TimestampedPluginListingsPreferences), typeof(ITimestampedPluginListingsPreferences))]
-[Register(typeof(PluginListingsParser), typeof(IPluginListingsParser))]
-[Register(typeof(IniPathLookup), typeof(IIniPathLookup))]
-[Register(typeof(PluginRawListingsReader), typeof(IPluginRawListingsReader))]
-[Register(typeof(TimestampAligner), typeof(ITimestampAligner))]
-[Register(typeof(TimestampedPluginListingsProvider), typeof(ITimestampedPluginListingsProvider))]
-[Register(typeof(CreationClubEnabledProvider), typeof(ICreationClubEnabledProvider))]
-[Register(typeof(EnabledPluginListingsProvider), typeof(IEnabledPluginListingsProvider))]
-[Register(typeof(CreationClubRawListingsReader), typeof(ICreationClubRawListingsReader))]
-[Register(typeof(GameCategoryContext), typeof(IGameCategoryContext))]
-[Register(typeof(IniPathProvider), typeof(IIniPathProvider))]
-[Register(typeof(CreationClubListingsPathProvider), typeof(ICreationClubListingsPathProvider))]
-[Register(typeof(PluginListingsProvider), typeof(IPluginListingsProvider))]
-[Register(typeof(ImplicitListingsProvider), typeof(IImplicitListingsProvider))]
-[Register(typeof(OrderListings), typeof(IOrderListings))]
-[Register(typeof(GetArchiveIniListings), typeof(IGetArchiveIniListings))]
-[Register(typeof(MasterFlagsLookupProvider), typeof(IMasterFlagsLookupProvider))]
-[Register(typeof(LoadOrderListingsProvider), typeof(ILoadOrderListingsProvider))]
-[Register(typeof(CachedArchiveListingDetailsProvider), typeof(IArchiveListingDetailsProvider))]
-[Register(typeof(ArchiveExtensionProvider), typeof(IArchiveExtensionProvider))]
-[Register(typeof(CheckArchiveApplicability), typeof(ICheckArchiveApplicability))]
-[Register(typeof(GetApplicableArchivePaths), typeof(IGetApplicableArchivePaths))]
-[Register(typeof(PluginListingsPathProvider), typeof(IPluginListingsPathProvider))]
-[Register(typeof(LoadOrderImporter<>), typeof(ILoadOrderImporter<>))]
-[Register(typeof(CreationClubListingsProvider), typeof(ICreationClubListingsProvider))]
-[Register(typeof(DataDirectoryAssetProvider), typeof(DataDirectoryAssetProvider))]
-[Register(typeof(ArchiveAssetProvider), typeof(ArchiveAssetProvider))]
-[Register(typeof(GameAssetProvider), typeof(IAssetProvider))]
-[Register(typeof(PluginListingsPathContext), typeof(IPluginListingsPathContext))]
+[RegisterModule(typeof(MutagenStrongInjectModule))]
 [Register(typeof(GameEnvironmentProvider<>))]
 partial class GameEnvironmentProviderContainer<TMod> : IContainer<GameEnvironmentProvider<TMod>>
     where TMod : class, IModGetter
@@ -311,42 +278,7 @@ public sealed class GameEnvironmentState<TMod> :
     ILoadOrderGetter<IModListingGetter<IModGetter>> IGameEnvironment.LoadOrder => LoadOrder;
 }
 
-
-[Register(typeof(ArchiveNameFromModKeyProvider), typeof(IArchiveNameFromModKeyProvider))]
-[Register(typeof(ModImporter<>), typeof(IModImporter<>))]
-[Register(typeof(HasEnabledMarkersProvider), typeof(IHasEnabledMarkersProvider))]
-[Register(typeof(LoadOrderListingParser), typeof(ILoadOrderListingParser))]
-[Register(typeof(PluginListingCommentTrimmer), typeof(IPluginListingCommentTrimmer))]
-[Register(typeof(ImplicitListingModKeyProvider), typeof(IImplicitListingModKeyProvider))]
-[Register(typeof(TimestampedPluginListingsPreferences), typeof(ITimestampedPluginListingsPreferences))]
-[Register(typeof(PluginListingsParser), typeof(IPluginListingsParser))]
-[Register(typeof(IniPathLookup), typeof(IIniPathLookup))]
-[Register(typeof(PluginRawListingsReader), typeof(IPluginRawListingsReader))]
-[Register(typeof(TimestampAligner), typeof(ITimestampAligner))]
-[Register(typeof(TimestampedPluginListingsProvider), typeof(ITimestampedPluginListingsProvider))]
-[Register(typeof(CreationClubEnabledProvider), typeof(ICreationClubEnabledProvider))]
-[Register(typeof(EnabledPluginListingsProvider), typeof(IEnabledPluginListingsProvider))]
-[Register(typeof(CreationClubRawListingsReader), typeof(ICreationClubRawListingsReader))]
-[Register(typeof(GameCategoryContext), typeof(IGameCategoryContext))]
-[Register(typeof(IniPathProvider), typeof(IIniPathProvider))]
-[Register(typeof(CreationClubListingsPathProvider), typeof(ICreationClubListingsPathProvider))]
-[Register(typeof(PluginListingsProvider), typeof(IPluginListingsProvider))]
-[Register(typeof(ImplicitListingsProvider), typeof(IImplicitListingsProvider))]
-[Register(typeof(OrderListings), typeof(IOrderListings))]
-[Register(typeof(GetArchiveIniListings), typeof(IGetArchiveIniListings))]
-[Register(typeof(MasterFlagsLookupProvider), typeof(IMasterFlagsLookupProvider))]
-[Register(typeof(LoadOrderListingsProvider), typeof(ILoadOrderListingsProvider))]
-[Register(typeof(CachedArchiveListingDetailsProvider), typeof(IArchiveListingDetailsProvider))]
-[Register(typeof(ArchiveExtensionProvider), typeof(IArchiveExtensionProvider))]
-[Register(typeof(CheckArchiveApplicability), typeof(ICheckArchiveApplicability))]
-[Register(typeof(GetApplicableArchivePaths), typeof(IGetApplicableArchivePaths))]
-[Register(typeof(PluginListingsPathProvider), typeof(IPluginListingsPathProvider))]
-[Register(typeof(LoadOrderImporter<>), typeof(ILoadOrderImporter<>))]
-[Register(typeof(CreationClubListingsProvider), typeof(ICreationClubListingsProvider))]
-[Register(typeof(DataDirectoryAssetProvider), typeof(DataDirectoryAssetProvider))]
-[Register(typeof(ArchiveAssetProvider), typeof(ArchiveAssetProvider))]
-[Register(typeof(GameAssetProvider), typeof(IAssetProvider))]
-[Register(typeof(PluginListingsPathContext), typeof(IPluginListingsPathContext))]
+[RegisterModule(typeof(MutagenStrongInjectModule))]
 [Register(typeof(GameEnvironmentProvider<,>))]
 partial class GameEnvironmentProviderGenericContainer<TModSetter, TModGetter> : IContainer<GameEnvironmentProvider<TModSetter, TModGetter>>
     where TModSetter : class, IContextMod<TModSetter, TModGetter>, TModGetter

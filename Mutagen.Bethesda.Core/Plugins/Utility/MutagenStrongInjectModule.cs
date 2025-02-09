@@ -1,4 +1,5 @@
 ﻿using Mutagen.Bethesda.Archives.DI;
+using Mutagen.Bethesda.Assets.DI;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Inis.DI;
 using Mutagen.Bethesda.Installs.DI;
@@ -21,6 +22,7 @@ namespace Mutagen.Bethesda.Plugins.Utility;
 [RegisterModule(typeof(RecordsModule))]
 [RegisterModule(typeof(StringsModule))]
 [RegisterModule(typeof(MastersModule))]
+[RegisterModule(typeof(AssetModule))]
 internal class MutagenStrongInjectModule
 {
 }
