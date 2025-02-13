@@ -3649,7 +3649,8 @@ namespace Mutagen.Bethesda.Fallout4
                     item.HeaderText = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Terminal_FieldIndex.HeaderText;
                 }
                 case RecordTypeInts.WNAM:
@@ -3658,7 +3659,8 @@ namespace Mutagen.Bethesda.Fallout4
                     item.WelcomeText = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Terminal_FieldIndex.WelcomeText;
                 }
                 case RecordTypeInts.FULL:
@@ -3667,7 +3669,8 @@ namespace Mutagen.Bethesda.Fallout4
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Terminal_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
@@ -3748,7 +3751,8 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MarkerModel = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Terminal_FieldIndex.MarkerModel;
                 }
                 case RecordTypeInts.SNAM:

@@ -1485,7 +1485,8 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ATAN = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Activity_FieldIndex.ATAN;
                 }
                 case RecordTypeInts.FULL:
@@ -1494,7 +1495,8 @@ namespace Mutagen.Bethesda.Starfield
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Activity_FieldIndex.Name;
                 }
                 case RecordTypeInts.DESC:
@@ -1503,7 +1505,8 @@ namespace Mutagen.Bethesda.Starfield
                     item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Activity_FieldIndex.Description;
                 }
                 case RecordTypeInts.DNAM:
@@ -1523,7 +1526,8 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ANAM = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Activity_FieldIndex.ANAM;
                 }
                 case RecordTypeInts.ATAV:
@@ -1531,7 +1535,8 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Configuration = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.Plain);
+                        stringBinaryType: StringBinaryType.Plain,
+                        parseWhole: true);
                     return (int)Activity_FieldIndex.Configuration;
                 }
                 case RecordTypeInts.ATAF: // End Marker

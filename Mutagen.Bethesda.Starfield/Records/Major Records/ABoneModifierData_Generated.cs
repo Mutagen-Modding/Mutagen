@@ -1017,10 +1017,12 @@ namespace Mutagen.Bethesda.Starfield
         {
             item.UnknownString1 = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
+                parseWhole: true);
             item.UnknownString2 = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
+                parseWhole: true);
         }
 
     }

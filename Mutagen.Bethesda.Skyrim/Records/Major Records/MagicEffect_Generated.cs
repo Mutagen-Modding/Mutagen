@@ -4646,7 +4646,8 @@ namespace Mutagen.Bethesda.Skyrim
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)MagicEffect_FieldIndex.Name;
                 }
                 case RecordTypeInts.MDOB:
@@ -4794,7 +4795,8 @@ namespace Mutagen.Bethesda.Skyrim
                     item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)MagicEffect_FieldIndex.Description;
                 }
                 case RecordTypeInts.CTDA:

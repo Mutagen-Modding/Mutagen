@@ -3677,7 +3677,8 @@ namespace Mutagen.Bethesda.Starfield
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Book_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
@@ -3701,7 +3702,8 @@ namespace Mutagen.Bethesda.Starfield
                     item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Book_FieldIndex.Description;
                 }
                 case RecordTypeInts.PUSH:
@@ -3769,7 +3771,8 @@ namespace Mutagen.Bethesda.Starfield
                     item.CNAM = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Book_FieldIndex.CNAM;
                 }
                 case RecordTypeInts.ENAM:
@@ -3778,7 +3781,8 @@ namespace Mutagen.Bethesda.Starfield
                     item.ENAM = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Book_FieldIndex.ENAM;
                 }
                 case RecordTypeInts.FNAM:
@@ -3787,7 +3791,8 @@ namespace Mutagen.Bethesda.Starfield
                     item.FNAM = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Book_FieldIndex.FNAM;
                 }
                 case RecordTypeInts.INAM:

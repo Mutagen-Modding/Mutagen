@@ -1454,7 +1454,8 @@ namespace Mutagen.Bethesda.Skyrim
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)WordOfPower_FieldIndex.Name;
                 }
                 case RecordTypeInts.TNAM:
@@ -1463,7 +1464,8 @@ namespace Mutagen.Bethesda.Skyrim
                     item.Translation = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)WordOfPower_FieldIndex.Translation;
                 }
                 default:

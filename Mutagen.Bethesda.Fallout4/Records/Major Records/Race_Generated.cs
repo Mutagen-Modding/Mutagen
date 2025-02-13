@@ -8694,7 +8694,8 @@ namespace Mutagen.Bethesda.Fallout4
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Race_FieldIndex.Name;
                 }
                 case RecordTypeInts.DESC:
@@ -8703,7 +8704,8 @@ namespace Mutagen.Bethesda.Fallout4
                     item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Race_FieldIndex.Description;
                 }
                 case RecordTypeInts.SPLO:
@@ -9210,7 +9212,8 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HairColorLookupTexture = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Race_FieldIndex.HairColorLookupTexture;
                 }
                 case RecordTypeInts.HLTX:
@@ -9218,7 +9221,8 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HairColorExtendedLookupTexture = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Race_FieldIndex.HairColorExtendedLookupTexture;
                 }
                 case RecordTypeInts.QSTI:

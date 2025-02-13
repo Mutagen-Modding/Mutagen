@@ -2789,7 +2789,8 @@ namespace Mutagen.Bethesda.Fallout4
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)DialogTopic_FieldIndex.Name;
                 }
                 case RecordTypeInts.PNAM:

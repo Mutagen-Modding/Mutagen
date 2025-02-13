@@ -1570,7 +1570,8 @@ namespace Mutagen.Bethesda.Fallout4
                     item.ItemText = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)TerminalMenuItem_FieldIndex.ItemText;
                 }
                 case RecordTypeInts.RNAM:
@@ -1579,7 +1580,8 @@ namespace Mutagen.Bethesda.Fallout4
                     item.ResponseText = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)TerminalMenuItem_FieldIndex.ResponseText;
                 }
                 case RecordTypeInts.ANAM:
@@ -1602,7 +1604,8 @@ namespace Mutagen.Bethesda.Fallout4
                     item.DisplayText = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)TerminalMenuItem_FieldIndex.DisplayText;
                 }
                 case RecordTypeInts.VNAM:
@@ -1610,7 +1613,8 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ImageFile = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)TerminalMenuItem_FieldIndex.ImageFile;
                 }
                 case RecordTypeInts.TNAM:

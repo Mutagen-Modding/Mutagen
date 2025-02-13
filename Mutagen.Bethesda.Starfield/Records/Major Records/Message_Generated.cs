@@ -2008,7 +2008,8 @@ namespace Mutagen.Bethesda.Starfield
                     item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Message_FieldIndex.Description;
                 }
                 case RecordTypeInts.FULL:
@@ -2017,7 +2018,8 @@ namespace Mutagen.Bethesda.Starfield
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Message_FieldIndex.Name;
                 }
                 case RecordTypeInts.INAM:
@@ -2058,7 +2060,8 @@ namespace Mutagen.Bethesda.Starfield
                     item.ShortTitle = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Message_FieldIndex.ShortTitle;
                 }
                 case RecordTypeInts.ITXT:

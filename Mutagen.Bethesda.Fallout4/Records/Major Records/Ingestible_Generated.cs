@@ -3128,7 +3128,8 @@ namespace Mutagen.Bethesda.Fallout4
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Ingestible_FieldIndex.Name;
                 }
                 case RecordTypeInts.KSIZ:
@@ -3201,7 +3202,8 @@ namespace Mutagen.Bethesda.Fallout4
                     item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Ingestible_FieldIndex.Description;
                 }
                 case RecordTypeInts.DATA:
@@ -3234,7 +3236,8 @@ namespace Mutagen.Bethesda.Fallout4
                     item.AddictionName = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Ingestible_FieldIndex.AddictionName;
                 }
                 case RecordTypeInts.EFID:

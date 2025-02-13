@@ -4140,7 +4140,8 @@ namespace Mutagen.Bethesda.Fallout4
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Armor_FieldIndex.Name;
                 }
                 case RecordTypeInts.EITM:
@@ -4237,7 +4238,8 @@ namespace Mutagen.Bethesda.Fallout4
                     item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Armor_FieldIndex.Description;
                 }
                 case RecordTypeInts.INRD:

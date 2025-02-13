@@ -2405,7 +2405,8 @@ namespace Mutagen.Bethesda.Starfield
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)ResearchProject_FieldIndex.Name;
                 }
                 case RecordTypeInts.DESC:
@@ -2414,7 +2415,8 @@ namespace Mutagen.Bethesda.Starfield
                     item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)ResearchProject_FieldIndex.Description;
                 }
                 case RecordTypeInts.BNAM:

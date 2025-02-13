@@ -37,10 +37,10 @@ public sealed class StringBinaryTranslation
     public string Parse<TReader>(
         TReader reader,
         StringBinaryType stringBinaryType,
-        bool parseWhole = true)
+        bool parseWhole)
         where TReader : IMutagenReadStream
     {
-        return Parse(reader, reader.MetaData.Encodings.NonTranslated, stringBinaryType, parseWhole);
+        return Parse(reader, reader.MetaData.Encodings.NonTranslated, stringBinaryType, parseWhole: parseWhole);
     }
 
     public string Parse<TReader>(
@@ -127,7 +127,10 @@ public sealed class StringBinaryTranslation
         }
         else
         {
-            return Parse(reader, reader.MetaData.Encodings.NonLocalized, stringBinaryType, parseWhole);
+            return Parse(reader,
+                reader.MetaData.Encodings.NonLocalized,
+                stringBinaryType: stringBinaryType,
+                parseWhole: parseWhole);
         }
     }
 
@@ -138,7 +141,7 @@ public sealed class StringBinaryTranslation
         out TranslatedString item,
         bool parseWhole)
     {
-        item = Parse(reader, source, binaryType, parseWhole);
+        item = Parse(reader, source, binaryType, parseWhole: parseWhole);
         return true;
     }
 
@@ -166,7 +169,7 @@ public sealed class StringBinaryTranslation
     public string Parse(
         ReadOnlyMemorySlice<byte> data,
         IMutagenEncoding encoding,
-        bool parseWhole = true)
+        bool parseWhole)
     {
         if (parseWhole)
         {

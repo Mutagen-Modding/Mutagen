@@ -1325,7 +1325,8 @@ namespace Mutagen.Bethesda.Starfield
                     item.ButtonLabel = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel;
                 }
                 case RecordTypeInts.EPF3:

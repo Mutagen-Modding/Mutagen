@@ -2636,7 +2636,8 @@ namespace Mutagen.Bethesda.Skyrim
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)SoulGem_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:

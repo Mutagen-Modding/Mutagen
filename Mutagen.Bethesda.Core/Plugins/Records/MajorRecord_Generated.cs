@@ -1651,7 +1651,8 @@ namespace Mutagen.Bethesda.Plugins.Records
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.EditorID = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)MajorRecord_FieldIndex.EditorID;
                 }
                 default:

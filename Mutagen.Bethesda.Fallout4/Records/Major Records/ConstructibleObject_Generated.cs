@@ -2682,7 +2682,8 @@ namespace Mutagen.Bethesda.Fallout4
                     item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)ConstructibleObject_FieldIndex.Description;
                 }
                 case RecordTypeInts.CTDA:

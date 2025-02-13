@@ -2725,7 +2725,8 @@ namespace Mutagen.Bethesda.Starfield
                         item.Name = StringBinaryTranslation.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             source: StringsSource.Normal,
-                            stringBinaryType: StringBinaryType.NullTerminate);
+                            stringBinaryType: StringBinaryType.NullTerminate,
+                            parseWhole: true);
                         return new ParseResult((int)GenericBaseForm_FieldIndex.Name, nextRecordType);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)GenericBaseForm_FieldIndex.STRVs)
@@ -2750,7 +2751,8 @@ namespace Mutagen.Bethesda.Starfield
                                 item.Name = StringBinaryTranslation.Instance.Parse(
                                     reader: frame.SpawnWithLength(contentLength),
                                     source: StringsSource.Normal,
-                                    stringBinaryType: StringBinaryType.NullTerminate);
+                                    stringBinaryType: StringBinaryType.NullTerminate,
+                                    parseWhole: true);
                                 return new ParseResult((int)GenericBaseForm_FieldIndex.Name, nextRecordType);
                             case 1:
                                 item.ObjectTemplates = 
@@ -2800,7 +2802,8 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Filter = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)GenericBaseForm_FieldIndex.Filter;
                 }
                 case RecordTypeInts.ANAM:

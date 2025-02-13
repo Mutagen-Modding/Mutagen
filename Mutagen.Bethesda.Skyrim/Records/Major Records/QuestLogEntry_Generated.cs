@@ -1584,7 +1584,8 @@ namespace Mutagen.Bethesda.Skyrim
                     item.Entry = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)QuestLogEntry_FieldIndex.Entry;
                 }
                 case RecordTypeInts.NAM0:

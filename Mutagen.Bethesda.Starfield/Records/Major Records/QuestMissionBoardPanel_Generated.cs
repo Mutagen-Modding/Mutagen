@@ -1138,7 +1138,8 @@ namespace Mutagen.Bethesda.Starfield
                     item.Header = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)QuestMissionBoardPanel_FieldIndex.Header;
                 }
                 case RecordTypeInts.QMDP:
@@ -1148,7 +1149,8 @@ namespace Mutagen.Bethesda.Starfield
                     item.Line1 = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)QuestMissionBoardPanel_FieldIndex.Line1;
                 }
                 case RecordTypeInts.QMDS:
@@ -1158,7 +1160,8 @@ namespace Mutagen.Bethesda.Starfield
                     item.Line2 = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)QuestMissionBoardPanel_FieldIndex.Line2;
                 }
                 default:

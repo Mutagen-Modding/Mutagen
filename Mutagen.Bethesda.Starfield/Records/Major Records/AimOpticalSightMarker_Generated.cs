@@ -2127,7 +2127,8 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     item.NodeName = StringBinaryTranslation.Instance.Parse(
                         reader: dataFrame,
-                        stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
+                        stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
+                        parseWhole: true);
                     if (dataFrame.Remaining < 4) return null;
                     item.BeamReactivationDelayAfterEquipOrReloadSeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;

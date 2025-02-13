@@ -6046,7 +6046,8 @@ namespace Mutagen.Bethesda.Skyrim
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Npc_FieldIndex.Name;
                 }
                 case RecordTypeInts.SHRT:
@@ -6055,7 +6056,8 @@ namespace Mutagen.Bethesda.Skyrim
                     item.ShortName = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Npc_FieldIndex.ShortName;
                 }
                 case RecordTypeInts.DATA:

@@ -2998,7 +2998,8 @@ namespace Mutagen.Bethesda.Skyrim
                     item.Prompt = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)DialogResponses_FieldIndex.Prompt;
                 }
                 case RecordTypeInts.ANAM:

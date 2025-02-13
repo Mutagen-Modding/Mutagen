@@ -1728,7 +1728,8 @@ namespace Mutagen.Bethesda.Starfield
                     item.Text = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)TerminalMenuItem_FieldIndex.Text;
                 }
                 case RecordTypeInts.ISTX:
@@ -1737,7 +1738,8 @@ namespace Mutagen.Bethesda.Starfield
                     item.ShortText = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)TerminalMenuItem_FieldIndex.ShortText;
                 }
                 case RecordTypeInts.ISET:

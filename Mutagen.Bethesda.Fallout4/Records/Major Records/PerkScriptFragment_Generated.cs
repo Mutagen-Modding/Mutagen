@@ -1193,10 +1193,12 @@ namespace Mutagen.Bethesda.Fallout4
             item.Unknown2 = frame.ReadInt8();
             item.ScriptName = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthUShort);
+                stringBinaryType: StringBinaryType.PrependLengthUShort,
+                parseWhole: true);
             item.FragmentName = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthUShort);
+                stringBinaryType: StringBinaryType.PrependLengthUShort,
+                parseWhole: true);
         }
 
     }

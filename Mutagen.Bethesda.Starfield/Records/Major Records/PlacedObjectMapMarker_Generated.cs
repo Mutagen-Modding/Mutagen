@@ -1404,7 +1404,8 @@ namespace Mutagen.Bethesda.Starfield
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)PlacedObjectMapMarker_FieldIndex.Name;
                 }
                 case RecordTypeInts.TNAM:
@@ -1429,7 +1430,8 @@ namespace Mutagen.Bethesda.Starfield
                     item.UNAM = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)PlacedObjectMapMarker_FieldIndex.UNAM;
                 }
                 case RecordTypeInts.VISI:

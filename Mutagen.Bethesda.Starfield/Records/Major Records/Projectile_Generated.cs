@@ -4856,7 +4856,8 @@ namespace Mutagen.Bethesda.Starfield
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Projectile_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
@@ -4971,7 +4972,8 @@ namespace Mutagen.Bethesda.Starfield
                     item.UnknownPROD1 = dataFrame.ReadUInt32();
                     item.UnknownPRODString1 = StringBinaryTranslation.Instance.Parse(
                         reader: dataFrame,
-                        stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
+                        stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
+                        parseWhole: true);
                     if (dataFrame.Remaining < 4) return null;
                     item.UnknownPROD2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
@@ -4980,7 +4982,8 @@ namespace Mutagen.Bethesda.Starfield
                     item.UnknownPROD4 = dataFrame.ReadUInt8();
                     item.UnknownPRODString2 = StringBinaryTranslation.Instance.Parse(
                         reader: dataFrame,
-                        stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
+                        stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
+                        parseWhole: true);
                     if (dataFrame.Remaining < 4) return null;
                     item.UnknownPROD5 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
@@ -4996,7 +4999,8 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MuzzleFlashModel = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Projectile_FieldIndex.MuzzleFlashModel;
                 }
                 case RecordTypeInts.NAM2:

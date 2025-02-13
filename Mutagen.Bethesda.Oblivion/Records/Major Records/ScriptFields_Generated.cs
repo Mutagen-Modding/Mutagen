@@ -1560,7 +1560,8 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SourceCode = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.Plain);
+                        stringBinaryType: StringBinaryType.Plain,
+                        parseWhole: true);
                     return (int)ScriptFields_FieldIndex.SourceCode;
                 }
                 case RecordTypeInts.SLSD:

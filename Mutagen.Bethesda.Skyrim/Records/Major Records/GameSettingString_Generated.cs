@@ -1452,7 +1452,8 @@ namespace Mutagen.Bethesda.Skyrim
                     item.Data = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)GameSettingString_FieldIndex.Data;
                 }
                 default:

@@ -3283,7 +3283,8 @@ namespace Mutagen.Bethesda.Starfield
                     item.Prompt = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)DialogResponses_FieldIndex.Prompt;
                 }
                 case RecordTypeInts.ANAM:
@@ -3320,7 +3321,8 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.StartScenePhase = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)DialogResponses_FieldIndex.StartScenePhase;
                 }
                 case RecordTypeInts.MODQ:

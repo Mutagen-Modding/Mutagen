@@ -108,14 +108,12 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
         extraArgs.Add($"stringBinaryType: {nameof(StringBinaryType)}.{str.BinaryType}"); 
         switch (str.BinaryType) 
         {  
-            case StringBinaryType.NullTerminate:  
-                if (!data.HasTrigger)  
-                {  
-                    extraArgs.Add("parseWhole: false");  
-                }  
-                break;  
-            default:  
-                break;  
+            case StringBinaryType.NullTerminate when !data.HasTrigger:   
+                extraArgs.Add("parseWhole: false");   
+                break;   
+            default:   
+                extraArgs.Add("parseWhole: true");   
+                break;   
         }  
   
         TranslationGeneration.WrapParseCall(  

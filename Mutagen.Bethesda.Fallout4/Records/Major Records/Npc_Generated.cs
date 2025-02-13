@@ -9375,7 +9375,8 @@ namespace Mutagen.Bethesda.Fallout4
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Npc_FieldIndex.Name;
                 }
                 case RecordTypeInts.SHRT:
@@ -9384,7 +9385,8 @@ namespace Mutagen.Bethesda.Fallout4
                     item.ShortName = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Npc_FieldIndex.ShortName;
                 }
                 case RecordTypeInts.DATA:
@@ -9595,7 +9597,8 @@ namespace Mutagen.Bethesda.Fallout4
                     item.ActivateTextOverride = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Npc_FieldIndex.ActivateTextOverride;
                 }
                 case RecordTypeInts.XXXX:

@@ -5658,12 +5658,6 @@
     <Compile Include="Records\Major Records\MorphGroup_Generated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\FaceMorphPhenotype_Generated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\FaceMorphPhenotypeItem_Generated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\ArmorMorph_Generated.cs">
       <DependentUpon>Armor.xml</DependentUpon>
     </Compile>

@@ -3090,7 +3090,8 @@ namespace Mutagen.Bethesda.Skyrim
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Book_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
@@ -3113,7 +3114,8 @@ namespace Mutagen.Bethesda.Skyrim
                     item.BookText = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Book_FieldIndex.BookText;
                 }
                 case RecordTypeInts.DEST:
@@ -3184,7 +3186,8 @@ namespace Mutagen.Bethesda.Skyrim
                     item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Book_FieldIndex.Description;
                 }
                 case RecordTypeInts.XXXX:
