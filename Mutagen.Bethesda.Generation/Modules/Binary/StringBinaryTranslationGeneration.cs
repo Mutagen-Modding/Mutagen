@@ -103,17 +103,18 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
         extraArgs.Add($"reader: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : null)}");  
         if (str.Translated.HasValue) 
         { 
+            extraArgs.Add($"eager: true");
             extraArgs.Add($"source: {nameof(StringsSource)}.{str.Translated.Value}"); 
         } 
         extraArgs.Add($"stringBinaryType: {nameof(StringBinaryType)}.{str.BinaryType}"); 
         switch (str.BinaryType) 
         {  
-            case StringBinaryType.NullTerminate when !data.HasTrigger:   
-                extraArgs.Add("parseWhole: false");   
-                break;   
-            default:   
-                extraArgs.Add("parseWhole: true");   
-                break;   
+            case StringBinaryType.NullTerminate when !data.HasTrigger:  
+                extraArgs.Add("parseWhole: false");  
+                break;  
+            default:  
+                extraArgs.Add("parseWhole: true");  
+                break;  
         }  
   
         TranslationGeneration.WrapParseCall(  
@@ -166,10 +167,11 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
             if (data.Length.HasValue)  
             {  
                 args.Add($"length: {data.Length.Value}");  
-            }  
+            }
             args.Add($"binaryType: {nameof(StringBinaryType)}.{stringType.BinaryType}");  
             if (stringType.Translated.HasValue)  
             {  
+                args.Add($"eager: true");
                 args.Add($"source: {nameof(StringsSource)}.{stringType.Translated.Value}");  
             }  
         }  
@@ -213,7 +215,7 @@ public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGener
         StringType str = typeGen as StringType;  
         if (str.Translated.HasValue)  
         {  
-            return $"StringBinaryTranslation.Instance.Parse({dataAccessor}, {nameof(StringsSource)}.{str.Translated.Value}, parsingBundle: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)})";  
+            return $"StringBinaryTranslation.Instance.Parse({dataAccessor}, {nameof(StringsSource)}.{str.Translated.Value}, parsingBundle: {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}, eager: false)";  
         }  
         else  
         {  

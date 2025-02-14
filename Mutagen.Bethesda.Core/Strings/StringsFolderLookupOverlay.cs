@@ -128,12 +128,14 @@ public sealed class StringsFolderLookupOverlay : IStringsFolderLookup
 
     public TranslatedString CreateString(StringsSource source, uint key, Language defaultLanguage)
     {
-        return new TranslatedString(defaultLanguage)
+        var ret = new TranslatedString(defaultLanguage)
         {
             StringsLookup = this,
             StringsKey = key,
             StringsSource = source,
         };
+        ret.ResolveAllStringSources();
+        return ret;
     }
 
     public IReadOnlyCollection<Language> AvailableLanguages(StringsSource source)

@@ -254,7 +254,7 @@ partial class PerkBinaryCreateTranslation
                             entryPointEffect = new PerkEntryPointAddActivateChoice()
                             {
                                 Spell = FormLinkBinaryTranslation.Instance.FactoryNullable<ISpellGetter>(stream.MetaData, epfd),
-                                ButtonLabel = epf2.HasValue ? StringBinaryTranslation.Instance.Parse(epf2.Value, StringsSource.Normal, stream.MetaData) : null,
+                                ButtonLabel = epf2.HasValue ? StringBinaryTranslation.Instance.Parse(epf2.Value, StringsSource.Normal, stream.MetaData, eager: true) : null,
                                 Flags = new PerkScriptFlag()
                                 {
                                     Flags = (PerkScriptFlag.Flag)BinaryPrimitives.ReadInt16LittleEndian(epf3.Value),
@@ -298,7 +298,7 @@ partial class PerkBinaryCreateTranslation
                             }
                             entryPointEffect = new PerkEntryPointSetText()
                             {
-                                Text = epfd.HasValue ? StringBinaryTranslation.Instance.Parse(epfd.Value, StringsSource.Normal, stream.MetaData) : (TranslatedString)string.Empty,
+                                Text = epfd.HasValue ? StringBinaryTranslation.Instance.Parse(epfd.Value, StringsSource.Normal, stream.MetaData, eager: true) : (TranslatedString)string.Empty,
                             };
                             break;
                         default:

@@ -1146,6 +1146,7 @@ namespace Mutagen.Bethesda.Starfield
                 frame: frame);
             item.Text = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
+                eager: true,
                 source: StringsSource.Normal,
                 stringBinaryType: StringBinaryType.NullTerminate,
                 parseWhole: false);
