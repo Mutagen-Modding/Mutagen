@@ -94,7 +94,7 @@ public static class IModExt
         return MasterStyle.Full;
     }
 
-    public static IMod Duplicate(this IModGetter mod, ModKey newModKey, BinaryWriteParameters? writeParameters = null, BinaryReadParameters? readParameters = null)
+    public static IMod Duplicate(this IModGetter mod, ModKey newModKey)
     {
         if (mod.ModKey.Type != newModKey.Type) throw new ArgumentException("ModKey types must match");
 
@@ -105,8 +105,7 @@ public static class IModExt
         var oldModPath = new ModPath(oldModKey, fileSystem.Path.Combine(fileSystemRoot, oldModKey.FileName.String));
 
         // Write mod to file system
-        writeParameters ??= BinaryWriteParameters.Default;
-        mod.WriteToBinary(oldModPath, writeParameters with
+        mod.WriteToBinary(oldModPath, BinaryWriteParameters.Default with
         {
             FileSystem = fileSystem
         });
@@ -127,8 +126,7 @@ public static class IModExt
         }
 
         // Read renamed mod as new mod
-        readParameters ??= BinaryReadParameters.Default;
-        var duplicateInto = ModInstantiator.ImportSetter(newModPath, mod.GameRelease, readParameters with
+        var duplicateInto = ModInstantiator.ImportSetter(newModPath, mod.GameRelease, BinaryReadParameters.Default with
         {
             FileSystem = fileSystem
         });
