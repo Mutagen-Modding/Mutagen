@@ -104,7 +104,7 @@ public static class IModExt
         var fileSystemRoot = tmp.Dir;
         var oldModPath = new ModPath(oldModKey, fileSystem.Path.Combine(fileSystemRoot, oldModKey.FileName.String));
 
-        // Write mod to in memory file system
+        // Write mod to file system
         writeParameters ??= BinaryWriteParameters.Default;
         mod.WriteToBinary(oldModPath, writeParameters with
         {
