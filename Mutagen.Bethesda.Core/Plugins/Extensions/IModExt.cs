@@ -94,6 +94,13 @@ public static class IModExt
         return MasterStyle.Full;
     }
 
+    /// <summary>
+    /// Duplicates a mod with a new ModKey.
+    /// </summary>
+    /// <param name="mod">Mod to duplicate</param>
+    /// <param name="newModKey">ModKey for the duplicated mod</param>
+    /// <returns>The duplicated mod with ModKey newModKey</returns>
+    /// <exception cref="ArgumentException">If  ModKey types of mod.ModKey and newModKey do not match</exception>
     public static IMod Duplicate(this IModGetter mod, ModKey newModKey)
     {
         if (mod.ModKey.Type != newModKey.Type) throw new ArgumentException("ModKey types must match");
