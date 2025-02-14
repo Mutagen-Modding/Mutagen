@@ -10,12 +10,8 @@ namespace Mutagen.Bethesda.Strings.DI;
 
 public interface IStringsFolderLookupFactory
 {
-    IStringsFolderLookup Factory(
-        ModKey modKey,
-        StringsReadParameters? instructions);
-    internal StringsFolderLookupOverlay InternalFactory(
-        ModKey modKey,
-        StringsReadParameters? instructions);
+    IStringsFolderLookup Factory(ModKey modKey);
+    internal StringsFolderLookupOverlay InternalFactory(ModKey modKey);
 }
 
 public class StringsFolderLookupFactory : IStringsFolderLookupFactory
@@ -24,43 +20,38 @@ public class StringsFolderLookupFactory : IStringsFolderLookupFactory
     private readonly IDataDirectoryProvider _dataDirectoryProvider;
     private readonly IGetApplicableArchivePaths _getApplicableArchivePaths;
     private readonly IFileSystem _fileSystem;
-    
+    private readonly StringsReadParameters? _readParameters;
+
     public StringsFolderLookupFactory(
         IGameReleaseContext gameRelease,
         IDataDirectoryProvider dataDirectoryProvider,
         IGetApplicableArchivePaths getApplicableArchivePaths,
-        IFileSystem fileSystem)
+        IFileSystem fileSystem,
+        StringsReadParameters? readParameters)
     {
         _gameRelease = gameRelease;
         _dataDirectoryProvider = dataDirectoryProvider;
         _getApplicableArchivePaths = getApplicableArchivePaths;
         _fileSystem = fileSystem;
+        _readParameters = readParameters;
     }
 
-    public IStringsFolderLookup Factory(
-        ModKey modKey,
-        StringsReadParameters? instructions)
+    public IStringsFolderLookup Factory(ModKey modKey)
     {
-        return InternalFactory(modKey, instructions);
+        return InternalFactory(modKey);
     }
 
-    public StringsFolderLookupOverlay InternalFactory(
-        ModKey modKey,
-        StringsReadParameters? instructions)
+    public StringsFolderLookupOverlay InternalFactory(ModKey modKey)
     {
         var languageFormat = GameConstants.Get(_gameRelease.Release).StringsLanguageFormat ?? throw new ArgumentException($"Tried to get language format for an unsupported game: {_gameRelease.Release}", nameof(_gameRelease.Release));
-        var encodings = instructions?.EncodingProvider ?? new MutagenEncodingProvider();
-        var stringsFolderPath = instructions?.StringsFolderOverride;
+        var encodings = _readParameters?.EncodingProvider ?? new MutagenEncodingProvider();
+        var stringsFolderPath = _readParameters?.StringsFolderOverride;
         if (stringsFolderPath == null)
         {
             stringsFolderPath = Path.Combine(_dataDirectoryProvider.Path, "Strings");
         }
 
         var dataPath = _dataDirectoryProvider.Path;
-        if (instructions?.BsaFolderOverride != null)
-        {
-            dataPath = instructions.BsaFolderOverride.Value;
-        }
         
         return new StringsFolderLookupOverlay(new Lazy<StringsFolderLookupOverlay.DictionaryBundle>(
                 isThreadSafe: true,

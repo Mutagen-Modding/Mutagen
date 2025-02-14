@@ -15,15 +15,22 @@ internal partial class StringsFolderLookupOverlayFactoryContainer : IContainer<I
     [Instance] private readonly IGameReleaseContext _release;
     [Instance] private readonly IFileSystem _fileSystem;
     [Instance] private readonly IDataDirectoryProvider _dataDirectory;
+    [Instance] private readonly StringsReadParameters? _readParameters;
 
     public StringsFolderLookupOverlayFactoryContainer(
         GameRelease release,
         IFileSystem? fileSystem,
-        DirectoryPath dataDirectory)
+        DirectoryPath dataDirectory,
+        StringsReadParameters? readParameters)
     {
+        _readParameters = readParameters;
         _release = new GameReleaseInjection(release);
         _fileSystem = fileSystem.GetOrDefault();
         _dataDirectory = new DataDirectoryInjection(dataDirectory);
+        if (_readParameters?.BsaFolderOverride != null)
+        {
+            _dataDirectory = new DataDirectoryInjection(_readParameters.BsaFolderOverride.Value);
+        }
     }
 }
 
@@ -77,8 +84,8 @@ public sealed class StringsFolderLookupOverlay : IStringsFolderLookup
         StringsReadParameters? instructions,
         IFileSystem? fileSystem = null)
     {
-        return new StringsFolderLookupOverlayFactoryContainer(release, fileSystem, dataPath).Resolve().Value
-            .InternalFactory(modKey, instructions);
+        return new StringsFolderLookupOverlayFactoryContainer(release, fileSystem, dataPath, instructions).Resolve().Value
+            .InternalFactory(modKey);
     }
 
     /// <inheritdoc />
