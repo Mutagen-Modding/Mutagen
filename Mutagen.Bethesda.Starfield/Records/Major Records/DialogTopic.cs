@@ -204,7 +204,9 @@ partial class DialogTopicBinaryCreateTranslation
                         new FormID(BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)),
                         reference: true) != obj.FormKey)
                 {
-                    throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
+                    throw RecordException.Enrich(
+                        new ArgumentException("Dialog children group did not match the FormID of the parent."),
+                        obj);
                 }
             }
             else
@@ -304,7 +306,9 @@ partial class DialogTopicBinaryOverlay
                 reference: true);
             if (formKey != this.FormKey)
             {
-                throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
+                throw RecordException.Enrich(
+                    new ArgumentException("Dialog children group did not match the FormID of the parent."),
+                    this);
             }
             var contentSpan = this._grupData.Value.Slice(_package.MetaData.Constants.GroupConstants.HeaderLength);
             this.Responses = BinaryOverlayList.FactoryByArray<IDialogResponsesGetter>(

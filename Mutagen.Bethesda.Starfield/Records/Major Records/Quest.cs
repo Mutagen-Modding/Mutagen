@@ -162,7 +162,9 @@ partial class QuestBinaryCreateTranslation
                         new FormID(BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)),
                         reference: true) != obj.FormKey)
                 {
-                    throw new ArgumentException("Quest children group did not match the FormID of the parent.");
+                    throw RecordException.Enrich(
+                        new ArgumentException("Quest children group did not match the FormID of the parent."),
+                        obj);
                 }
             }
             else
@@ -446,7 +448,9 @@ partial class QuestBinaryOverlay
                 reference: true);
             if (formKey != this.FormKey)
             {
-                throw new ArgumentException("Quest children group did not match the FormID of the parent.");
+                throw RecordException.Enrich(
+                    new ArgumentException("Quest children group did not match the FormID of the parent."),
+                    this);
             }
             var contentSpan = this._grupData.Value.Slice(_package.MetaData.Constants.GroupConstants.HeaderLength);
             var locs = ParseRecordLocations(
