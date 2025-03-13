@@ -1,6 +1,7 @@
 ﻿using Loqui;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Cache.Internals;
+using Mutagen.Bethesda.Plugins.Exceptions;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Records.Mapping;
@@ -100,7 +101,7 @@ internal static class InterfaceEnumerationHelper
             interfaces = Enumerable.Empty<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>();
             return true;
         }
-        
+
         interfaces = inheritingTypes.Registrations
             .SelectMany(t => obj.EnumerateMajorRecordContexts(linkCache, inheritingTypes.Setter ? t.SetterType : t.GetterType));
         return true;
@@ -198,7 +199,10 @@ internal static class InterfaceEnumerationHelper
     {
         if (!srcGroup.ContainedRecordType.InheritsFrom(type)) yield break;
 
-        foreach (var item in srcGroup.Records)
+        foreach (var item in srcGroup.Records.Catch(ex =>
+                 {
+                     throw RecordException.Enrich(ex, modKey);
+                 }))
         {
             yield return new GroupModContext<TMod, TModGetter, TMajor, TMajorTarget>(
                 modKey: modKey,

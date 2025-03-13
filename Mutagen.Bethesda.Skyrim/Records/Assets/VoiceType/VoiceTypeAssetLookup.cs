@@ -283,6 +283,9 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
             foreach (var response in responses.Responses)
             {
+                // Skip responses with sound override
+                if (!response.Sound.IsNull) continue;
+
                 var responseNumber = response.ResponseNumber;
                 foreach (var voiceType in voices.GetVoiceTypes(_defaultVoiceTypes[topic.FormKey.ModKey]))
                 {
@@ -678,7 +681,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
     private IEnumerable<string> GetVoiceTypes(FormKey speaker)
     {
-        return _speakerVoices.TryGetValue(speaker, out var speakerVoiceTypes) ? speakerVoiceTypes : Array.Empty<string>();
+        return _speakerVoices.TryGetValue(speaker, out var speakerVoiceTypes) ? speakerVoiceTypes : [];
     }
 
     #region Voice Parser

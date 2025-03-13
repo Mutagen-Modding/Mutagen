@@ -1575,7 +1575,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface ILeveledItem :
         IAssetLinkContainer,
         IBaseObject,
-        IConstructible,
+        IConstructibleObjectTarget,
         IFormLinkContainer,
         IHarvestTarget,
         IHaveVirtualMachineAdapter,
@@ -1632,7 +1632,7 @@ namespace Mutagen.Bethesda.Starfield
         IAssetLinkContainerGetter,
         IBaseObjectGetter,
         IBinaryItem,
-        IConstructibleGetter,
+        IConstructibleObjectTargetGetter,
         IFormLinkContainerGetter,
         IHarvestTargetGetter,
         IHaveVirtualMachineAdapterGetter,
@@ -3379,30 +3379,13 @@ namespace Mutagen.Bethesda.Starfield
             ILeveledItemGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.LVLI)))
-            {
-                try
-                {
-                    StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.LVLI,
+                writeEmbedded: StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -3581,8 +3564,10 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.OverrideName = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)LeveledItem_FieldIndex.OverrideName;
                 }
                 case RecordTypeInts.MODL:
@@ -3741,7 +3726,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region OverrideName
         private int? _OverrideNameLocation;
-        public ITranslatedStringGetter? OverrideName => _OverrideNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OverrideNameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? OverrideName => _OverrideNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OverrideNameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
         public IModelGetter? Model { get; private set; }
         public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; private set; }

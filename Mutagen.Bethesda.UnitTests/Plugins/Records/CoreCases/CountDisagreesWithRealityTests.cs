@@ -1,7 +1,8 @@
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Testing;
+using Noggog.Testing.Extensions;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records.CoreCases;
 
@@ -13,7 +14,7 @@ public class CountDisagreesWithRealityTests : ASpecificCaseTest<Npc, INpcGetter>
     
     public override void TestItem(INpcGetter item)
     {
-        item.Items.Should().HaveCount(1);
-        item.Class.FormKey.Should().Be(FormKey.Factory("123456:CountDisagreesWithReality.esp"));
+        item.Items.ShouldHaveCount(1);
+        item.Class.FormKey.ShouldBe(FormKey.Factory("123456:CountDisagreesWithReality.esp"));
     }
 }

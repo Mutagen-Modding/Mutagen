@@ -1,18 +1,18 @@
 namespace Mutagen.Bethesda.Starfield;
 
-public partial class GetVMScriptVariableConditionData : IConditionStringParameter
+public partial class GetVMScriptVariableConditionData : IConditionParameters
 {
-    string? IConditionStringParameterGetter.FirstStringParameter => FirstParameter;
+    string? IConditionParametersGetter.StringParameter1 => FirstParameter;
 
-    string? IConditionStringParameterGetter.SecondStringParameter => SecondParameter;
+    string? IConditionParametersGetter.StringParameter2 => SecondParameter;
 
-    string? IConditionStringParameter.FirstStringParameter
+    string? IConditionParameters.StringParameter1
     {
         get => FirstParameter;
         set => FirstParameter = value;
     }
 
-    string? IConditionStringParameter.SecondStringParameter
+    string? IConditionParameters.StringParameter2
     {
         get => SecondParameter;
         set => SecondParameter = value;

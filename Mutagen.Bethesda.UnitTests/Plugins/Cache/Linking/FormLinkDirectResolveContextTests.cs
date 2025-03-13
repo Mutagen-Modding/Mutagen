@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim;
@@ -18,7 +18,7 @@ public partial class ALinkingTests
         var (style, package) = GetLinkCache(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
         WrapPotentialThrow(cacheType, style, () =>
         {
-            contextRetriever.TryResolveContext<IEffectRecord, IEffectRecordGetter>(formLink, package, out _).Should().BeFalse();
+            contextRetriever.TryResolveContext<IEffectRecord, IEffectRecordGetter>(formLink, package, out _).ShouldBeFalse();
         });
     }
 
@@ -30,7 +30,7 @@ public partial class ALinkingTests
         var (style, package) = GetLinkCache(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
         WrapPotentialThrow(cacheType, style, () =>
         {
-            contextRetriever.TryResolveContext<IPlacedGetter, IPlacedNpc, IPlacedNpcGetter>(formLink, package, out _).Should().BeFalse();
+            contextRetriever.TryResolveContext<IPlacedGetter, IPlacedNpc, IPlacedNpcGetter>(formLink, package, out _).ShouldBeFalse();
         });
     }
 
@@ -44,11 +44,11 @@ public partial class ALinkingTests
         var formLink = new FormLink<INpcGetter>(npc.FormKey);
         WrapPotentialThrow(cacheType, style, () =>
         {
-            contextRetriever.TryResolveContext<INpc, INpcGetter>(formLink, package, out var resolved).Should().BeTrue();
-            resolved.Should().NotBeNull();
-            resolved!.Record.Should().BeSameAs(npc);
-            resolved!.ModKey.Should().Be(TestConstants.PluginModKey);
-            resolved!.Parent.Should().BeNull();
+            contextRetriever.TryResolveContext<INpc, INpcGetter>(formLink, package, out var resolved).ShouldBeTrue();
+            resolved.ShouldNotBeNull();
+            resolved!.Record.ShouldBeSameAs(npc);
+            resolved!.ModKey.ShouldBe(TestConstants.PluginModKey);
+            resolved!.Parent.ShouldBeNull();
         });
     }
 }

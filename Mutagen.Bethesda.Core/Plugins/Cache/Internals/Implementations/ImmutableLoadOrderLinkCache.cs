@@ -53,7 +53,8 @@ public sealed class ImmutableLoadOrderLinkCache : ILinkCache
             this,
             loadOrderArr,
             m => TryGet<FormKey>.Succeed(m.FormKey),
-            f => f.IsNull);
+            f => f.IsNull,
+            equalityComparer: null);
         _editorIdContexts = new ImmutableLoadOrderLinkCacheSimpleContextCategory<string>(
             gameCategory.Value,
             metaInterfaceMapGetter: prefs?.MetaInterfaceMapGetterOverride ?? MetaInterfaceMapping.Instance,
@@ -66,7 +67,8 @@ public sealed class ImmutableLoadOrderLinkCache : ILinkCache
                 var edid = m.EditorID;
                 return TryGet<string>.Create(successful: !string.IsNullOrWhiteSpace(edid), edid!);
             },
-            e => e.IsNullOrWhitespace());
+            e => e.IsNullOrWhitespace(),
+            equalityComparer: StringComparer.OrdinalIgnoreCase);
             
         var modsByKey = new Dictionary<ModKey, ILinkCache>();
         foreach (var modGetter in loadOrderArr) 
@@ -845,7 +847,8 @@ public sealed class ImmutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<T
             linkCache: this,
             listedOrder: listedOrder,
             m => TryGet<FormKey>.Succeed(m.FormKey),
-            f => f.IsNull);
+            f => f.IsNull,
+            equalityComparer: null);
         _editorIdContextCache = new ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, string>(
             category: gameCategory,
             metaInterfaceMapGetter: prefs.MetaInterfaceMapGetterOverride ?? MetaInterfaceMapping.Instance,
@@ -858,7 +861,8 @@ public sealed class ImmutableLoadOrderLinkCache<TMod, TModGetter> : ILinkCache<T
                 var edid = m.EditorID;
                 return TryGet<string>.Create(successful: !string.IsNullOrWhiteSpace(edid), edid!);
             },
-            e => e.IsNullOrWhitespace());
+            e => e.IsNullOrWhitespace(),
+            equalityComparer: StringComparer.OrdinalIgnoreCase);
             
         var modsByKey = new Dictionary<ModKey, ILinkCache<TMod, TModGetter>>();
         foreach (var modGetter in listedOrder) 

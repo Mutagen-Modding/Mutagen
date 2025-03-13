@@ -29,6 +29,22 @@ internal static class ModContextExt
         SubCellsTimestamp = false,
     };
 
+    public static readonly Quest.TranslationMask QuestCopyMask = new(true)
+    {
+        Timestamp = false,
+        Unknown = false,
+        DialogBranches = false,
+        DialogConditions = false,
+        Scenes = false,
+    };
+
+    public static readonly DialogTopic.TranslationMask DialogTopicCopyMask = new(true)
+    {
+        Timestamp = false,
+        Unknown = false,
+        Responses = false
+    };
+
     private static readonly string CellObjectKey =
         LoquiRegistration.StaticRegister.GetRegister(typeof(ICell)).FullName; 
 

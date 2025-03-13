@@ -1,9 +1,10 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
+using Noggog.Testing.Extensions;
 using Xunit;
 
 #nullable disable
@@ -18,7 +19,7 @@ public partial class ALinkingTests
     {
         var package = TypicalLoadOrder().ToImmutableLinkCache();
         FormLink<INpcGetter> formLink = new FormLink<INpcGetter>(UnusedFormKey);
-        formLink.ResolveAll(package).Should().BeEmpty();
+        formLink.ResolveAll(package).ShouldBeEmpty();
     }
 
     [Theory]
@@ -38,8 +39,8 @@ public partial class ALinkingTests
         WrapPotentialThrow(cacheType, style, () =>
         {
             var resolved = formLink.ResolveAll(package).ToArray();
-            resolved.Should().HaveCount(1);
-            resolved.First().Should().BeSameAs(npc);
+            resolved.ShouldHaveCount(1);
+            resolved.First().ShouldBeSameAs(npc);
         });
     }
 
@@ -64,9 +65,9 @@ public partial class ALinkingTests
         WrapPotentialThrow(cacheType, style, () =>
         {
             var resolved = formLink.ResolveAll(package).ToArray();
-            resolved.Should().HaveCount(2);
-            resolved.First().Should().BeSameAs(npcOverride);
-            resolved.Last().Should().BeSameAs(npc);
+            resolved.ShouldHaveCount(2);
+            resolved.First().ShouldBeSameAs(npcOverride);
+            resolved.Last().ShouldBeSameAs(npc);
         });
     }
 
@@ -91,9 +92,9 @@ public partial class ALinkingTests
         WrapPotentialThrow(cacheType, style, () =>
         {
             var resolved = formLink.ResolveAll(package).ToArray();
-            resolved.Should().HaveCount(2);
-            resolved.First().Should().BeSameAs(npcOverride);
-            resolved.Last().Should().BeSameAs(npc);
+            resolved.ShouldHaveCount(2);
+            resolved.First().ShouldBeSameAs(npcOverride);
+            resolved.Last().ShouldBeSameAs(npc);
         });
     }
 
@@ -119,9 +120,9 @@ public partial class ALinkingTests
         WrapPotentialThrow(cacheType, style, () =>
         {
             var resolved = formLink.ResolveAll(package).ToArray();
-            resolved.Should().HaveCount(2);
-            resolved.First().Should().BeSameAs(npcOverride);
-            resolved.Last().Should().BeSameAs(npc);
+            resolved.ShouldHaveCount(2);
+            resolved.First().ShouldBeSameAs(npcOverride);
+            resolved.Last().ShouldBeSameAs(npc);
         });
     }
 
@@ -147,16 +148,16 @@ public partial class ALinkingTests
         WrapPotentialThrow(cacheType, style, () =>
         {
             var resolved = formLink.ResolveAll(package).ToArray();
-            resolved.Should().HaveCount(2);
-            resolved.First().Should().BeSameAs(npcOverride);
-            resolved.Last().Should().BeSameAs(npc);
+            resolved.ShouldHaveCount(2);
+            resolved.First().ShouldBeSameAs(npcOverride);
+            resolved.Last().ShouldBeSameAs(npc);
         });
         formLink = new FormLink<INpcGetter>(unrelatedNpc.FormKey);
         WrapPotentialThrow(cacheType, style, () =>
         {
             var resolved = formLink.ResolveAll(package).ToArray();
-            resolved.Should().HaveCount(1);
-            resolved.First().Should().BeSameAs(unrelatedNpc);
+            resolved.ShouldHaveCount(1);
+            resolved.First().ShouldBeSameAs(unrelatedNpc);
         });
     }
 }

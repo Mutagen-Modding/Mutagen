@@ -1,6 +1,7 @@
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Testing.AutoData;
+using Noggog.Testing.Extensions;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Strings;
@@ -14,15 +15,15 @@ public class StringsWriterTests
         sut.Register(StringsSource.Normal,
                 new KeyValuePair<Language, string>(Language.English, "Hello"),
                 new KeyValuePair<Language, string>(Language.French, "Bonjour"))
-            .Should().Be(1);
+            .ShouldEqual(1);
         sut.Register(StringsSource.DL,
                 new KeyValuePair<Language, string>(Language.English, "There"),
                 new KeyValuePair<Language, string>(Language.French, "Le"))
-            .Should().Be(2);
+            .ShouldEqual(2);
         sut.Register(StringsSource.IL,
                 new KeyValuePair<Language, string>(Language.English, "World"),
                 new KeyValuePair<Language, string>(Language.French, "Monde"))
-            .Should().Be(3);
+            .ShouldEqual(3);
         sut.Dispose();
         AssertStringInFile(sut, Language.English, StringsSource.Normal, "Hello", 1);
         AssertStringInFile(sut, Language.English, StringsSource.DL, "There", 2);
@@ -40,10 +41,10 @@ public class StringsWriterTests
         uint index)
     {
         StringsLookupOverlay reader = GetStringOverlay(sut, lang, source);
-        reader.Count.Should().Be(1);
+        reader.Count.ShouldBe(1);
         var kv = reader.First();
-        kv.Key.Should().Be(index);
-        kv.Value.Should().Be(str);
+        kv.Key.ShouldBe(index);
+        kv.Value.ShouldBe(str);
     }
 
     private static StringsLookupOverlay GetStringOverlay(StringsWriter sut, Language lang, StringsSource source)
@@ -70,7 +71,7 @@ public class StringsWriterTests
         sut.Dispose();
         foreach (var source in Enum.GetValues<StringsSource>())
         {
-            sut.FileSystem.File.Exists(GetStringPath(sut, Language.English, source)).Should().BeFalse();
+            sut.FileSystem.File.Exists(GetStringPath(sut, Language.English, source)).ShouldBeFalse();
         }
     }
 
@@ -80,11 +81,11 @@ public class StringsWriterTests
     {
         sut.Register(StringsSource.Normal,
                 new KeyValuePair<Language, string>(Language.English, "Hello"))
-            .Should().Be(1);
+            .ShouldEqual(1);
         sut.Dispose();
         foreach (var source in Enum.GetValues<StringsSource>())
         {
-            sut.FileSystem.File.Exists(GetStringPath(sut, Language.English, source)).Should().BeTrue();
+            sut.FileSystem.File.Exists(GetStringPath(sut, Language.English, source)).ShouldBeTrue();
         }
     }
 
@@ -93,7 +94,7 @@ public class StringsWriterTests
     public void FirstRegistrationIsNotZero(StringsWriter sut)
     {
         var str = new TranslatedString(Language.English, "Hello");
-        sut.Register(StringsSource.Normal, str).Should().Be(1);
+        sut.Register(StringsSource.Normal, str).ShouldEqual(1);
     }
 
     [Theory]
@@ -101,7 +102,7 @@ public class StringsWriterTests
     public void RegisterNullsReturnZero(StringsWriter sut)
     {
         var str = new TranslatedString(Language.English, default(string?));
-        sut.Register(StringsSource.Normal, str).Should().Be(0);
+        sut.Register(StringsSource.Normal, str).ShouldEqual(0);
     }
 
     [Theory]
@@ -109,6 +110,6 @@ public class StringsWriterTests
     public void RegisterEmptyReturnsValidIndex(StringsWriter sut)
     {
         var str = new TranslatedString(Language.English, string.Empty);
-        sut.Register(StringsSource.Normal, str).Should().NotBe(0);
+        sut.Register(StringsSource.Normal, str).ShouldNotBe<uint>(0);
     }
 }

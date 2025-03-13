@@ -60,7 +60,7 @@ partial class WorldspaceBinaryCreateTranslation
                 var formKey = FormKeyBinaryTranslation.Instance.Parse(groupHeader.ContainedRecordTypeData, frame.MetaData.MasterReferences);
                 if (formKey != obj.FormKey)
                 {
-                    throw new ArgumentException("Cell children group did not match the FormID of the parent worldspace.");
+                    throw new ArgumentException("Worldspace children group did not match the FormID of the parent worldspace.");
                 }
             }
             else
@@ -199,7 +199,7 @@ partial class WorldspaceBinaryOverlay
                     new FormID(BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)),
                     reference: true))
             {
-                throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
+                throw new ArgumentException("Worldspace children group did not match the FormID of the parent cell.");
             }
 
             this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));

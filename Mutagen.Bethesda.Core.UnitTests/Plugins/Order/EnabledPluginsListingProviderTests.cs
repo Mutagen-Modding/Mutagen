@@ -1,8 +1,9 @@
 ﻿using AutoFixture.Xunit2;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Testing.AutoData;
+using Noggog.Testing.Extensions;
 using NSubstitute;
 using Xunit;
 
@@ -19,6 +20,6 @@ public class EnabledPluginsListingProviderTests
     {
         reader.Read(pathContext.Path).Returns(listings);
         sut.Get()
-            .Should().Equal(listings);
+            .ShouldBe(listings);
     }
 }

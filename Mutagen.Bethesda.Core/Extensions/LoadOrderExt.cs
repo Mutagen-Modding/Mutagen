@@ -80,6 +80,27 @@ public static class LoadOrderExt
     }
 
     /// <summary>
+    /// Locates and returns a mod from a given set of listings.  Will throw if mod does not exist
+    /// </summary>
+    /// <param name="loadOrder">Listings to resolve from</param>
+    /// <param name="modKey">ModKey to resolve</param>
+    /// <exception cref="MissingModException">Thrown if listing is missing</exception>
+    /// <returns>Mod contained in the listings</returns>
+    public static TModItem ResolveMod<TModItem>( 
+        this ILoadOrderGetter<IModListingGetter<TModItem>> loadOrder,
+        ModKey modKey)
+        where TModItem : class, IModKeyed
+    {
+        if (!loadOrder.TryGetValue(modKey, out var listing)
+            || listing.Mod == null)
+        {
+            throw new MissingModException(modKey);
+        }
+
+        return listing.Mod;
+    }
+
+    /// <summary>
     /// Converts any listings that have mods into Mods.  Will not throw
     /// </summary>
     /// <param name="loadOrder">Listings to convert</param>
@@ -89,7 +110,7 @@ public static class LoadOrderExt
     {
         return loadOrder
             .Select(x => x.Mod)
-            .NotNull();
+            .WhereNotNull();
     }
 
     /// <summary>
@@ -183,5 +204,34 @@ public static class LoadOrderExt
         return new LoadOrder<TListing>(
             loadOrder.ListedOrder
                 .Where(filter));
+    }
+
+    public static LoadOrder<TListing> WhereEnabled<TListing>(this ILoadOrderGetter<TListing> loadOrder)
+        where TListing : ILoadOrderListingGetter
+    {
+        return new LoadOrder<TListing>(
+            loadOrder.ListedOrder
+                .Where(x => x.Enabled));
+    }
+
+    public static ILoadOrderGetter<IModListingGetter<TModItem>> WhereEnabledAndExisting<TModItem>(this ILoadOrderGetter<IModListingGetter<TModItem>> loadOrder)
+        where TModItem : class, IModKeyed
+    {
+        return loadOrder
+            .Where(x => x.Enabled && x.ExistsOnDisk);
+    }
+
+    public static LoadOrder<TListing> FilterToMods<TListing>(this ILoadOrderGetter<TListing> loadOrder, IReadOnlyCollection<ModKey> modKeys)
+        where TListing : IModKeyed
+    {
+        return new LoadOrder<TListing>(
+            loadOrder.ListedOrder
+                .Where(x => modKeys.Contains(x.ModKey)));
+    }
+
+    public static LoadOrder<TListing> FilterToMods<TListing>(this ILoadOrderGetter<TListing> loadOrder, params ModKey[] modKeys)
+        where TListing : IModKeyed
+    {
+        return FilterToMods(loadOrder, modKeys.ToHashSet());
     }
 }

@@ -25,7 +25,6 @@ public class MutagenModule : Module
             .InNamespacesOf(
                 typeof(IArchiveReaderProvider),
                 // typeof(IGetFontConfig),
-                typeof(IAssetProvider),
                 typeof(IDataDirectoryLookup),
                 typeof(IImplicitBaseMasterProvider),
                 typeof(ILoadOrderWriter),
@@ -48,5 +47,14 @@ public class MutagenModule : Module
         builder.RegisterType<GameLocatorLookupCache>()
             .As<IGameDirectoryLookup>()
             .As<IDataDirectoryLookup>();
+        builder.RegisterType<GameAssetProvider>()
+            .As<IAssetProvider>()
+            .AsSelf();
+        builder.RegisterType<DataDirectoryAssetProvider>()
+            .AsSelf();
+        builder.RegisterType<ArchiveAssetProvider>()
+            .AsSelf();
+        builder.RegisterType<CachedArchiveListingDetailsProvider>()
+            .AsImplementedInterfaces();
     }
 }

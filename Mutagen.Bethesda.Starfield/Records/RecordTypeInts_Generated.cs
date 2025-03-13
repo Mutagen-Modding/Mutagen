@@ -209,6 +209,7 @@ public partial class RecordTypeInts
     public const int CHAL = 0x4C414843;
     public const int CHGL = 0x4C474843;
     public const int CHRR = 0x52524843;
+    public const int CIFK = 0x4B464943;
     public const int CIS1 = 0x31534943;
     public const int CIS2 = 0x32534943;
     public const int CITC = 0x43544943;
@@ -747,6 +748,7 @@ public partial class RecordTypeInts
     public const int PTTA = 0x41545450;
     public const int PUSE = 0x45535550;
     public const int PUSH = 0x48535550;
+    public const int QDUP = 0x50554451;
     public const int QMDP = 0x50444D51;
     public const int QMDS = 0x53444D51;
     public const int QMDT = 0x54444D51;

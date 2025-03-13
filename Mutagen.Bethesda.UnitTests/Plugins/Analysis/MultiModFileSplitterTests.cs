@@ -1,11 +1,10 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Analysis.DI;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
-using Xunit;
 using FormList = Mutagen.Bethesda.Skyrim.FormList;
 using MiscItem = Mutagen.Bethesda.Skyrim.MiscItem;
 
@@ -14,49 +13,61 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Analysis;
 public class MultiModFileSplitterTests
 {
     #region Util
-    
-    // just to be able to create unique edids
-    private int lastEdidIndex = 0;
 
-    /// <summary>
-    /// Stores EDIDs of generated forms in the input class, to be able to track them in the generated files
-    /// </summary>
-    private HashSet<string> expectedEdids = new();
-    
-    /// <summary>
-    /// Generates MISC items from NOT within the current file
-    /// </summary>
-    private void FillFormListWithRemoteRecords(FormList flst, int numFiles, string fileNameBase = "foobar_", uint startFormId = 0x666)
+    public class Payload
     {
-        for (uint i = 0; i < numFiles; i++)
+        private readonly Func<FormKey> _formKeyGen;
+        private readonly Func<string> _edidFunc;
+        public SkyrimMod Mod { get; }
+        
+        // just to be able to create unique edids
+        private int lastEdidIndex = 0;
+
+        /// <summary>
+        /// Stores EDIDs of generated forms in the input class, to be able to track them in the generated files
+        /// </summary>
+        private HashSet<string> expectedEdids = new();
+
+        public Payload(SkyrimMod mod, Func<FormKey> formKeyGen, Func<string> edidFunc)
         {
-            var curFileName = fileNameBase + i;
-            var dummyItem = new MiscItem(new FormKey(new ModKey(curFileName, ModType.Plugin), startFormId + i), SkyrimRelease.SkyrimSE);
-            dummyItem.EditorID = getNewEdid("TestMisc", false);
-            dummyItem.Name = "Test Item from file " + curFileName;
-    
-            flst.Items.Add(dummyItem);
+            _formKeyGen = formKeyGen;
+            _edidFunc = edidFunc;
+            Mod = mod;
         }
-    }
-    
-    private FormList CreateFormListWithContents(FormKey key, int numFiles, string fileNameBase, uint startFormId)
-    {
-        var result = new FormList(key, SkyrimRelease.SkyrimSE);
-        result.EditorID = getNewEdid("testFormList_" + fileNameBase);
-    
-        FillFormListWithRemoteRecords(result, numFiles, fileNameBase, startFormId);
-    
-        return result;
-    }
-    private string getNewEdid(string baseEdid, bool addToExpected = true)
-    {
-        var newEdid = baseEdid + lastEdidIndex;
-        lastEdidIndex++;
-        if (addToExpected)
+        
+        public string GetNewEdid(string baseEdid, bool addToExpected = true)
         {
-            expectedEdids.Add(newEdid);
+            var newEdid = baseEdid + lastEdidIndex;
+            lastEdidIndex++;
+            if (addToExpected)
+            {
+                expectedEdids.Add(newEdid);
+            }
+            return newEdid;
         }
-        return newEdid;
+    
+        /// <summary>
+        /// Generates MISC items from NOT within the current file
+        /// </summary>
+        public void FillFormListWithRemoteRecords(FormList flst, int numFiles)
+        {
+            for (uint i = 0; i < numFiles; i++)
+            {
+                var dummyItem = new MiscItem(_formKeyGen(), SkyrimRelease.SkyrimSE);
+                dummyItem.EditorID = GetNewEdid("TestMisc", false);
+                dummyItem.Name = "Test Item from file " + dummyItem.FormKey.ModKey;
+    
+                flst.Items.Add(dummyItem);
+            }
+        }
+    
+        public FormList CreateFormListWithContents(int numFiles)
+        {
+            var flst = Mod.FormLists.AddNew();
+            flst.EditorID = GetNewEdid("testFormList_" + _edidFunc());
+            FillFormListWithRemoteRecords(flst, numFiles);
+            return flst;
+        }
     }
     
     private static HashSet<ModKey> GetAllMasters(IModGetter mod)
@@ -134,41 +145,37 @@ public class MultiModFileSplitterTests
 
         var sut = new MultiModFileSplitter();
         var outputList = sut.Split<ISkyrimMod, ISkyrimModGetter>(inputMod, 10);
-        outputList.Count.Should().Be(1);
+        outputList.Count.ShouldBe(1);
     }
     
     [Theory, MutagenModAutoData]
-    public void GenerateClustersTest(SkyrimMod inputMod)
+    public void GenerateClustersTest(Payload payload)
     {
         for (uint i = 0; i < 5; i++)
         {
-            var flst = CreateFormListWithContents(new FormKey(inputMod.ModKey, 0x23 + i), 7, "dummyFile_" + i + "_", 0x666 + i);
-    
-            inputMod.FormLists.Add(flst);
+            payload.CreateFormListWithContents(7);
         }
     
         for (uint i = 0; i < 5; i++)
         {
-            var flst = CreateFormListWithContents(new FormKey(inputMod.ModKey, 0x523 + i), 3, "dummyFile2_" + i + "_", 0x777 + i);
-    
-            inputMod.FormLists.Add(flst);
+            payload.CreateFormListWithContents(3);
         }
 
-        var expectedEdids = inputMod.EnumerateMajorRecords()
+        var expectedEdids = payload.Mod.EnumerateMajorRecords()
             .Select(x => x.EditorID)
-            .NotNull()
+            .WhereNotNull()
             .ToHashSet();
         
         var sut = new MultiModFileSplitter();
-        var outputList = sut.Split<ISkyrimMod, ISkyrimModGetter>(inputMod, 10);
+        var outputList = sut.Split<ISkyrimMod, ISkyrimModGetter>(payload.Mod, 10);
 
         // now, we expect 5 clusters, each containing one of the 7-sized FLSTs and one of the 3-sized FLSTs
-        outputList.Count.Should().Be(5);
+        outputList.Count.ShouldBe(5);
         
         foreach (var mod in outputList)
         {
             var modMasters = GetAllMasters(mod);
-            modMasters.Count.Should().BeLessOrEqualTo(10);
+            modMasters.Count.ShouldBeLessThanOrEqualTo(10);
             var recs = mod.EnumerateMajorRecords();
     
             foreach (var rec in recs)
@@ -181,37 +188,37 @@ public class MultiModFileSplitterTests
             }
         }
 
-        expectedEdids.Count.Should().Be(0, "Not all generated dummy records were found in the split files");
+        expectedEdids.Count.ShouldBe(0, "Not all generated dummy records were found in the split files");
     }
     
     [Theory, MutagenModAutoData]
-    public void OverridesArePreservedTest(SkyrimMod inputMod)
+    public void OverridesArePreservedTest(Payload tracker)
     {
         HashSet<string> edidsLocal = new();
         HashSet<string> edidsOverride = new();
         HashSet<string> edidsRemote = new();
     
-        var localFlst = new FormList(inputMod.GetNextFormKey(), SkyrimRelease.SkyrimSE)
+        var localFlst = new FormList(tracker.Mod.GetNextFormKey(), SkyrimRelease.SkyrimSE)
         {
             EditorID = "LocalFlst"
         };
         edidsLocal.Add(localFlst.EditorID);
     
-        inputMod.FormLists.Add(localFlst);
+        tracker.Mod.FormLists.Add(localFlst);
     
         for (var i = 0; i < 5; i++)
         {
-            var curMisc = new MiscItem(inputMod.GetNextFormKey(), SkyrimRelease.SkyrimSE)
+            var curMisc = new MiscItem(tracker.Mod.GetNextFormKey(), SkyrimRelease.SkyrimSE)
             {
                 EditorID = "localMisc1_" + i
             };
             edidsLocal.Add(curMisc.EditorID);
-            inputMod.MiscItems.Add(curMisc);
+            tracker.Mod.MiscItems.Add(curMisc);
             localFlst.Items.Add(curMisc);
         }
     
         // now a local list, with some overrides
-        var localWithOverridesFlst = new FormList(inputMod.GetNextFormKey(), SkyrimRelease.SkyrimSE)
+        var localWithOverridesFlst = new FormList(tracker.Mod.GetNextFormKey(), SkyrimRelease.SkyrimSE)
         {
             EditorID = "LocalWithOverridesFlst"
         };
@@ -225,27 +232,27 @@ public class MultiModFileSplitterTests
                 EditorID = "overrideMisc_" + i
             };
             edidsOverride.Add(curMisc.EditorID);
-            inputMod.MiscItems.Add(curMisc);
+            tracker.Mod.MiscItems.Add(curMisc);
             localWithOverridesFlst.Items.Add(curMisc);
         }
-        inputMod.FormLists.Add(localWithOverridesFlst);
+        tracker.Mod.FormLists.Add(localWithOverridesFlst);
     
         // now a formlist which is an override
         var overrideFlst = new FormList(new FormKey(otherFileModKey, 0x900), SkyrimRelease.SkyrimSE)
         {
-            EditorID = getNewEdid("overrideFlst")
+            EditorID = tracker.GetNewEdid("overrideFlst")
         };
         edidsOverride.Add(overrideFlst.EditorID);
     
         // add some local records
         for (var i = 0; i < 5; i++)
         {
-            var curMisc = new MiscItem(inputMod.GetNextFormKey(), SkyrimRelease.SkyrimSE)
+            var curMisc = new MiscItem(tracker.Mod.GetNextFormKey(), SkyrimRelease.SkyrimSE)
             {
-                EditorID = getNewEdid("localMisc")
+                EditorID = tracker.GetNewEdid("localMisc")
             };
             edidsLocal.Add(curMisc.EditorID);
-            inputMod.MiscItems.Add(curMisc);
+            tracker.Mod.MiscItems.Add(curMisc);
             overrideFlst.Items.Add(curMisc);
         }
         // and some overrides
@@ -253,10 +260,10 @@ public class MultiModFileSplitterTests
         {
             var curMisc = new MiscItem(new FormKey(otherFileModKey, 0xa00 + i), SkyrimRelease.SkyrimSE)
             {
-                EditorID = getNewEdid("ovrMisc")
+                EditorID = tracker.GetNewEdid("ovrMisc")
             };
             edidsOverride.Add(curMisc.EditorID);
-            inputMod.MiscItems.Add(curMisc);
+            tracker.Mod.MiscItems.Add(curMisc);
             overrideFlst.Items.Add(curMisc);
         }
     
@@ -265,18 +272,18 @@ public class MultiModFileSplitterTests
         {
             var curMisc = new MiscItem(new FormKey(otherFileModKey, 0xf00 + i), SkyrimRelease.SkyrimSE)
             {
-                EditorID = getNewEdid("remoteMisc", false)
+                EditorID = tracker.GetNewEdid("remoteMisc", false)
             };
             overrideFlst.Items.Add(curMisc);
             edidsRemote.Add(curMisc.EditorID);
         }
-        inputMod.FormLists.Add(overrideFlst);
+        tracker.Mod.FormLists.Add(overrideFlst);
 
         var sut = new MultiModFileSplitter();
-        var outputList = sut.Split<ISkyrimMod, ISkyrimModGetter>(inputMod, 255);
+        var outputList = sut.Split<ISkyrimMod, ISkyrimModGetter>(tracker.Mod, 255);
         // expecting one file exactly, everything in expectedEdids to be present, and overrides to have stayed overrides
         // essentially, we should recieve one file, which is pretty much identical to inputMod (besides the formIDs)
-        outputList.Count().Should().Be(1);
+        outputList.Count().ShouldBe(1);
         var mod = outputList.First();
         var recs = mod.EnumerateMajorRecords();
     
@@ -306,7 +313,7 @@ public class MultiModFileSplitterTests
                 edidsLocal.Remove(edid);
             }
         }
-        edidsLocal.Count.Should().Be(0, "Not all local forms were found in output file");
-        edidsOverride.Count.Should().Be(0, "Not all overridden forms were found in output file");
+        edidsLocal.Count.ShouldBe(0, "Not all local forms were found in output file");
+        edidsOverride.Count.ShouldBe(0, "Not all overridden forms were found in output file");
     }
 }

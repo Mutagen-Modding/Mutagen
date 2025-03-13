@@ -1,7 +1,7 @@
 ﻿using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using DynamicData;
-using FluentAssertions;
+using Shouldly;
 using Microsoft.Reactive.Testing;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order;
@@ -33,7 +33,7 @@ public class CreationClubLiveLoadOrderProviderTests
             stateObs.ReceivedWithAnyArgs(1).Subscribe(default!);
             return ret;
         });
-        obs.Messages.Count.Should().Be(0);
+        obs.Messages.Count.ShouldBe(0);
     }
 
     [Theory, MutagenAutoData]
@@ -60,7 +60,7 @@ public class CreationClubLiveLoadOrderProviderTests
             stateObs.ReceivedWithAnyArgs(1).Subscribe(default!);
             return ret;
         });
-        obs.Messages.Count.Should().Be(0);
+        obs.Messages.Count.ShouldBe(0);
     }
 
     [Theory, MutagenAutoData]
@@ -85,7 +85,7 @@ public class CreationClubLiveLoadOrderProviderTests
             stateObs.ReceivedWithAnyArgs(1).Subscribe(default!);
             return ret;
         });
-        obs.Messages.Count.Should().Be(0);
+        obs.Messages.Count.ShouldBe(0);
     }
 
     [Theory, MutagenAutoData]
@@ -113,8 +113,8 @@ public class CreationClubLiveLoadOrderProviderTests
             .Get(out var state)
             .AsObservableList();
         state.Subscribe();
-        list.Count.Should().Be(1);
-        list.Items.First().Should().Be(
+        list.Count.ShouldBe(1);
+        list.Items.First().ShouldBe(
             new LoadOrderListing("ModA.esp", true));
         stateObs.ReceivedWithAnyArgs(1).Subscribe(default!);
     }
@@ -140,7 +140,7 @@ public class CreationClubLiveLoadOrderProviderTests
         var list = sut.Get(out var state)
             .AsObservableList();
         state.Subscribe();
-        list.Count.Should().Be(0);
+        list.Count.ShouldBe(0);
         fileSubj.OnNext(new ChangeSet<ILoadOrderListingGetter>(
             new Change<ILoadOrderListingGetter>[]
             {
@@ -148,8 +148,8 @@ public class CreationClubLiveLoadOrderProviderTests
                     ListChangeReason.Add,
                     new LoadOrderListing("ModA.esp", true))
             }));
-        list.Count.Should().Be(1);
-        list.Items.First().Should().Be(
+        list.Count.ShouldBe(1);
+        list.Items.First().ShouldBe(
             new LoadOrderListing("ModA.esp", true));
         stateObs.ReceivedWithAnyArgs(1).Subscribe(default!);
     }
@@ -177,7 +177,7 @@ public class CreationClubLiveLoadOrderProviderTests
         var list = sut.Get(out var state)
             .AsObservableList();
         state.Subscribe();
-        list.Count.Should().Be(0);
+        list.Count.ShouldBe(0);
         folderSubj.OnNext(new ChangeSet<ModKey, ModKey>(
             new Change<ModKey, ModKey>[]
             {
@@ -186,8 +186,8 @@ public class CreationClubLiveLoadOrderProviderTests
                     ModKey.FromNameAndExtension("ModA.esp"),
                     ModKey.FromNameAndExtension("ModA.esp"))
             }));
-        list.Count.Should().Be(1);
-        list.Items.First().Should().Be(
+        list.Count.ShouldBe(1);
+        list.Items.First().ShouldBe(
             new LoadOrderListing("ModA.esp", true));
         stateObs.ReceivedWithAnyArgs(1).Subscribe(default!);
     }
@@ -219,8 +219,8 @@ public class CreationClubLiveLoadOrderProviderTests
                     ListChangeReason.Add,
                     new LoadOrderListing("ModA.esp", true))
             }));
-        list.Count.Should().Be(1);
-        list.Items.First().Should().Be(
+        list.Count.ShouldBe(1);
+        list.Items.First().ShouldBe(
             new LoadOrderListing("ModA.esp", true));
         fileSubj.OnNext(new ChangeSet<ILoadOrderListingGetter>(
             new Change<ILoadOrderListingGetter>[]
@@ -230,7 +230,7 @@ public class CreationClubLiveLoadOrderProviderTests
                     new LoadOrderListing("ModA.esp", true),
                     0)
             }));
-        list.Count.Should().Be(0);
+        list.Count.ShouldBe(0);
         stateObs.ReceivedWithAnyArgs(1).Subscribe(default!);
     }
 
@@ -263,8 +263,8 @@ public class CreationClubLiveLoadOrderProviderTests
                     ModKey.FromNameAndExtension("ModA.esp"),
                     ModKey.FromNameAndExtension("ModA.esp"))
             }));
-        list.Count.Should().Be(1);
-        list.Items.First().Should().Be(
+        list.Count.ShouldBe(1);
+        list.Items.First().ShouldBe(
             new LoadOrderListing("ModA.esp", true));
         folderSubj.OnNext(new ChangeSet<ModKey, ModKey>(
             new Change<ModKey, ModKey>[]
@@ -275,7 +275,7 @@ public class CreationClubLiveLoadOrderProviderTests
                     ModKey.FromNameAndExtension("ModA.esp"),
                     0)
             }));
-        list.Count.Should().Be(0);
+        list.Count.ShouldBe(0);
         stateObs.ReceivedWithAnyArgs(1).Subscribe(default!);
     }
 }

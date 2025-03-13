@@ -83,7 +83,7 @@ public static class OverrideMixIns
     {
         return modListings
             .Select(l => l.Mod)
-            .NotNull()
+            .WhereNotNull()
             .WinningOverrides<TMajor>(includeDeletedRecords: includeDeletedRecords);
     }
 
@@ -109,7 +109,7 @@ public static class OverrideMixIns
     {
         return modListings
             .Select(l => l.Mod)
-            .NotNull()
+            .WhereNotNull()
             .WinningOverrides(type, includeDeletedRecords: includeDeletedRecords);
     }
 
@@ -275,7 +275,7 @@ public static class OverrideMixIns
     {
         return modListings
             .Select(l => l.Mod)
-            .NotNull()
+            .WhereNotNull()
             .WinningContextOverrides<TMod, TModGetter, TSetter, TGetter>(linkCache, includeDeletedRecords: includeDeletedRecords);
     }
 
@@ -310,7 +310,7 @@ public static class OverrideMixIns
     {
         return modListings
             .Select(l => l.Mod)
-            .NotNull()
+            .WhereNotNull()
             .WinningContextOverrides<TMod, TModGetter>(linkCache, type, includeDeletedRecords: includeDeletedRecords);
     }
 
@@ -389,7 +389,11 @@ public static class OverrideMixIns
         var passedRecords = new HashSet<FormKey>();
         foreach (var mod in mods)
         {
-            foreach (var record in mod.EnumerateMajorRecordContexts(linkCache, type))
+            foreach (var record in mod.EnumerateMajorRecordContexts(linkCache, type)
+                         .Catch((e) =>
+                         {
+                             throw RecordException.Enrich(e, mod.ModKey);
+                         }))
             {
                 if (!passedRecords.Add(record.Record.FormKey)) continue;
                 if (!includeDeletedRecords && record.Record.IsDeleted) continue;
@@ -607,8 +611,8 @@ public static class OverrideMixIns
     /// <param name="major">Major record to query and potentially copy</param>
     /// <returns>Existing override record, or a copy of the given record that has already been inserted into the group</returns>
     public static TMajor GetOrAddAsOverride<TMajor, TMajorGetter>(this IGroup<TMajor> group, TMajorGetter major)
-        where TMajor : class, IMajorRecordInternal, TMajorGetter
-        where TMajorGetter : class, IMajorRecordGetter
+        where TMajor : IMajorRecordInternal, TMajorGetter
+        where TMajorGetter : IMajorRecordGetter
     {
         try
         {
@@ -617,7 +621,12 @@ public static class OverrideMixIns
                 return existingMajor;
             }
             var mask = OverrideMaskRegistrations.Get<TMajor>();
-            existingMajor = (major.DeepCopy(mask as MajorRecord.TranslationMask) as TMajor)!;
+            var copy = major.DeepCopy(mask as MajorRecord.TranslationMask);
+            if (copy is not TMajor rhs)
+            {
+                throw new InvalidOperationException($"DeepCopy did not return a record of the expected type {typeof(TMajor).Name}");
+            }
+            existingMajor = rhs;
             group.RecordCache.Set(existingMajor);
             return existingMajor;
         }

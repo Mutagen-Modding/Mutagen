@@ -55,6 +55,7 @@ partial class MaterialSwapBinaryCreateTranslation
         var header = frame.ReadSubrecordHeader();
         item.TreeFolder = StringBinaryTranslation.Instance.Parse(
             reader: frame.SpawnWithLength(header.ContentLength),
+            parseWhole: true,
             stringBinaryType: StringBinaryType.NullTerminate);
     }
 

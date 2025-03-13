@@ -1,7 +1,8 @@
 ﻿using AutoFixture.Kernel;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Testing.AutoData;
+using Noggog.Testing.Extensions;
 using NSubstitute;
 using Xunit;
 
@@ -23,7 +24,8 @@ public class ModKeyParameterBuilderTests
     {
         var param = typeof(NonInterestingClass).Methods().First().GetParameters().First();
         ModKey mk = (ModKey)sut.Create(param, context);
-        mk.Name.Should().StartWith(param.Name);
+        param.Name.ShouldNotBeNull();
+        mk.Name.ShouldStartWith(param.Name);
     }
         
     class ExistingName
@@ -50,7 +52,8 @@ public class ModKeyParameterBuilderTests
         {
             var param = method.GetParameters().First();
             ModKey mk = (ModKey)sut.Create(param, context);
-            mk.Name.Should().StartWith(param.Name);
+            param.Name.ShouldNotBeNull();
+            mk.Name.ShouldStartWith(param.Name);
         }
     }
         
@@ -86,7 +89,7 @@ public class ModKeyParameterBuilderTests
         {
             var param = method.GetParameters().First();
             ModKey mk = (ModKey)sut.Create(param, context);
-            mk.Type.Should().Be(ModType.Plugin);
+            mk.Type.ShouldBe(ModType.Plugin);
         }
     }
         
@@ -106,7 +109,7 @@ public class ModKeyParameterBuilderTests
         {
             var param = method.GetParameters().First();
             ModKey mk = (ModKey)sut.Create(param, context);
-            mk.Type.Should().Be(ModType.Master);
+            mk.Type.ShouldBe(ModType.Master);
         }
     }
         
@@ -130,7 +133,7 @@ public class ModKeyParameterBuilderTests
         {
             var param = method.GetParameters().First();
             ModKey mk = (ModKey)sut.Create(param, context);
-            mk.Type.Should().Be(ModType.Light);
+            mk.Type.ShouldBe(ModType.Light);
         }
     }
 }

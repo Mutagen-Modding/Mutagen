@@ -37,10 +37,10 @@ public sealed class StringBinaryTranslation
     public string Parse<TReader>(
         TReader reader,
         StringBinaryType stringBinaryType,
-        bool parseWhole = true)
+        bool parseWhole)
         where TReader : IMutagenReadStream
     {
-        return Parse(reader, reader.MetaData.Encodings.NonTranslated, stringBinaryType, parseWhole);
+        return Parse(reader, reader.MetaData.Encodings.NonTranslated, stringBinaryType, parseWhole: parseWhole);
     }
 
     public string Parse<TReader>(
@@ -112,7 +112,8 @@ public sealed class StringBinaryTranslation
         TReader reader,
         StringsSource source,
         StringBinaryType stringBinaryType,
-        bool parseWhole = true)
+        bool eager,
+        bool parseWhole)
         where TReader : IMutagenReadStream
     {
         if (reader.MetaData.StringsLookup != null)
@@ -123,11 +124,28 @@ public sealed class StringBinaryTranslation
             }
             uint key = reader.ReadUInt32();
             if (key == 0) return new TranslatedString(reader.MetaData.TranslatedTargetLanguage, directString: null);
-            return reader.MetaData.StringsLookup.CreateString(source, key, reader.MetaData.TranslatedTargetLanguage);
+            if (eager)
+            {
+                // Default lookup is eager
+                return reader.MetaData.StringsLookup.CreateString(source, key, reader.MetaData.TranslatedTargetLanguage);
+            }
+            else
+            {
+                // This is lazy, as it's missing the followup Resolve call
+                return new TranslatedString(reader.MetaData.TranslatedTargetLanguage)
+                {
+                    StringsLookup = reader.MetaData.StringsLookup,
+                    StringsKey = key,
+                    StringsSource = source,
+                };
+            }
         }
         else
         {
-            return Parse(reader, reader.MetaData.Encodings.NonLocalized, stringBinaryType, parseWhole);
+            return Parse(reader,
+                reader.MetaData.Encodings.NonLocalized,
+                stringBinaryType: stringBinaryType,
+                parseWhole: parseWhole);
         }
     }
 
@@ -136,16 +154,18 @@ public sealed class StringBinaryTranslation
         StringsSource source,
         StringBinaryType binaryType,
         out TranslatedString item,
+        bool eager,
         bool parseWhole)
     {
-        item = Parse(reader, source, binaryType, parseWhole);
+        item = Parse(reader, source, binaryType, eager: eager, parseWhole: parseWhole);
         return true;
     }
 
     public TranslatedString Parse(
         ReadOnlyMemorySlice<byte> data,
         StringsSource source,
-        ParsingMeta parsingBundle)
+        ParsingMeta parsingBundle,
+        bool eager)
     {
         if (parsingBundle.StringsLookup != null)
         {
@@ -155,7 +175,21 @@ public sealed class StringBinaryTranslation
             }
             uint key = BinaryPrimitives.ReadUInt32LittleEndian(data);
             if (key == 0) return new TranslatedString(parsingBundle.TranslatedTargetLanguage, directString: null);
-            return parsingBundle.StringsLookup.CreateString(source, key, parsingBundle.TranslatedTargetLanguage);
+            if (eager)
+            {
+                // Default lookup is eager
+                return parsingBundle.StringsLookup.CreateString(source, key, parsingBundle.TranslatedTargetLanguage);
+            }
+            else
+            {
+                // This is lazy, as it's missing the followup Resolve call
+                return new TranslatedString(parsingBundle.TranslatedTargetLanguage)
+                {
+                    StringsLookup = parsingBundle.StringsLookup,
+                    StringsKey = key,
+                    StringsSource = source,
+                };
+            }
         }
         else
         {
@@ -166,7 +200,7 @@ public sealed class StringBinaryTranslation
     public string Parse(
         ReadOnlyMemorySlice<byte> data,
         IMutagenEncoding encoding,
-        bool parseWhole = true)
+        bool parseWhole)
     {
         if (parseWhole)
         {

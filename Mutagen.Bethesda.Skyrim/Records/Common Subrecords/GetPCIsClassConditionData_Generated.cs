@@ -466,16 +466,20 @@ namespace Mutagen.Bethesda.Skyrim
         #region Mutagen
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GetPCIsClassConditionDataCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetPCIsClassConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
-        public override object? Parameter1
+        object? IConditionParameters.Parameter1
         {
             get => Class;
             set => Class = (value is IFormLinkOrIndex<IClassGetter> v ? v : throw new ArgumentException());
         }
-        public override Type? Parameter1Type
+        object? IConditionParametersGetter.Parameter1
+        {
+            get => Class;
+        }
+        Type? IConditionParametersGetter.Parameter1Type
         {
             get => typeof(IFormLinkOrIndexGetter<IClassGetter>);
         }
-        public override object? Parameter2
+        object? IConditionParameters.Parameter2
         {
             get => null;
             set
@@ -483,7 +487,11 @@ namespace Mutagen.Bethesda.Skyrim
 
             }
         }
-        public override Type? Parameter2Type
+        object? IConditionParametersGetter.Parameter2
+        {
+            get => null;
+        }
+        Type? IConditionParametersGetter.Parameter2Type
         {
             get => null;
         }

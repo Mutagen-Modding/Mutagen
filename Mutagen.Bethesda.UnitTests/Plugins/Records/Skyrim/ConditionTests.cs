@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
@@ -12,9 +12,9 @@ public class ConditionTests : ASpecificCaseTest<Condition, IConditionGetter>
     
     public override void TestItem(IConditionGetter item)
     {
-        var data = item.Data as IConditionStringParameterGetter;
-        data.Should().NotBeNull();
-        data!.FirstStringParameter.Should().Be("Hello");
-        data.SecondStringParameter.Should().Be("World");
+        var data = item.Data as IConditionParametersGetter;
+        data.ShouldNotBeNull();
+        data!.StringParameter1.ShouldBe("Hello");
+        data.StringParameter2.ShouldBe("World");
     }
 }

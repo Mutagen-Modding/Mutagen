@@ -76,7 +76,7 @@ partial class HolotapeBinaryCreateTranslation
                 switch (item.Data)
                 {
                     case HolotapeProgram prog:
-                        prog.File = StringBinaryTranslation.Instance.Parse(frame, StringBinaryType.NullTerminate);
+                        prog.File = StringBinaryTranslation.Instance.Parse(frame, StringBinaryType.NullTerminate, parseWhole: true);
                         break;
                     case HolotapeSound _:
                     case HolotapeVoice _:
@@ -193,7 +193,7 @@ partial class HolotapeBinaryOverlay
                     var prog = new HolotapeProgram();
                     if (_dataContentLocation.HasValue)
                     {
-                        prog.File = StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _dataContentLocation.Value, _package.MetaData.Constants), _package.MetaData.Encodings.NonTranslated);
+                        prog.File = StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _dataContentLocation.Value, _package.MetaData.Constants), _package.MetaData.Encodings.NonTranslated, parseWhole: true);
                     }
                     return prog;
                 case Holotape.Types.Terminal:

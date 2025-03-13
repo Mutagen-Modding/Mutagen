@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Xunit;
@@ -11,15 +11,15 @@ public class FormLinkInformationTests
     public void String()
     {
         var fk = new FormLinkInformation(FormKey.Factory("123456:Skyrim.esm"), typeof(Npc));
-        fk.ToString().Should().Be("123456:Skyrim.esm<Skyrim.Npc>");
+        fk.ToString().ShouldBe("123456:Skyrim.esm<Skyrim.Npc>");
     }
     
     [Fact]
     public void FromString()
     {
         var fk = FormLinkInformation.Factory("123456:Skyrim.esm<Skyrim.Npc>");
-        fk.FormKey.Should().Be(FormKey.Factory("123456:Skyrim.esm"));
-        fk.Type.Should().Be(typeof(Npc));
+        fk.FormKey.ShouldBe(FormKey.Factory("123456:Skyrim.esm"));
+        fk.Type.ShouldBe(typeof(Npc));
     }
 
     [Fact]
@@ -27,8 +27,8 @@ public class FormLinkInformationTests
     {
         var fk = FormLinkInformation.Factory("123456:Skyrim.esm<Skyrim.Npc>");
         fk.TryToStandardizedIdentifier(out var standardized)
-            .Should().BeTrue();
-        standardized.FormKey.Should().Be(FormKey.Factory("123456:Skyrim.esm"));
-        standardized.Type.Should().Be(typeof(INpcGetter));
+            .ShouldBeTrue();
+        standardized.FormKey.ShouldBe(FormKey.Factory("123456:Skyrim.esm"));
+        standardized.Type.ShouldBe(typeof(INpcGetter));
     }
 }

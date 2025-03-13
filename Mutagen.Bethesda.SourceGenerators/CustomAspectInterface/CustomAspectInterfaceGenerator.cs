@@ -111,7 +111,7 @@ public class CustomAspectInterfaceGenerator : IIncrementalGenerator
         HashSet<string> requiredUsings = new(targets.SelectMany(x => x.Value.UsedInterfaces)
             .SelectMany(x => x.Types)
             .Select(i => i.Symbol)
-            .NotNull()
+            .WhereNotNull()
             .Select(x => x.ContainingNamespace.ToString()));
 
         // Generate

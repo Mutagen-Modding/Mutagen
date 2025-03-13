@@ -287,9 +287,12 @@ public sealed class TranslatedString : ITranslatedString, IEquatable<TranslatedS
         }
     }
 
-    public static implicit operator TranslatedString(string? str)
+    [return: NotNullIfNotNull(parameterName: "str")]
+    public static implicit operator TranslatedString?(string? str)
     {
-        return new TranslatedString(DefaultLanguage, str);
+        return str == null
+            ? default(TranslatedString?) 
+            : new TranslatedString(DefaultLanguage, str);
     }
 
     public static implicit operator string?(TranslatedString? str)

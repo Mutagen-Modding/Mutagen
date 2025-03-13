@@ -31,7 +31,7 @@ partial class AvailableMorphsBinaryCreateTranslation
             }
             if (!frame.Reader.TryReadSubrecord(MPAV, out var dataFrame))
             {
-                throw new ArgumentException($"Did not read in expected morph data record MPAI");
+                continue;
             }
             if (dataFrame.Content.Length != 32)
             {
@@ -73,11 +73,11 @@ partial class AvailableMorphsBinaryWriteTranslation
 {
     static void WriteMorph(MutagenWriter writer, MorphEnum e, IMorphGetter? morph)
     {
-        if (morph == null) return;
         using (HeaderExport.Subrecord(writer, RecordTypes.MPAI))
         {
             writer.Write((int)e);
         }
+        if (morph == null) return;
         using (HeaderExport.Subrecord(writer, AvailableMorphsBinaryCreateTranslation.MPAV))
         {
             writer.Write(morph.Data);

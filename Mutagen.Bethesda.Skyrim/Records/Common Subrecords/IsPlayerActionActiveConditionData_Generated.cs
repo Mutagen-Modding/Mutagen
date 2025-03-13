@@ -455,16 +455,20 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public override object? Parameter1
+        object? IConditionParameters.Parameter1
         {
             get => PlayerAction;
             set => PlayerAction = (value is PlayerAction v ? v : throw new ArgumentException());
         }
-        public override Type? Parameter1Type
+        object? IConditionParametersGetter.Parameter1
+        {
+            get => PlayerAction;
+        }
+        Type? IConditionParametersGetter.Parameter1Type
         {
             get => typeof(PlayerAction);
         }
-        public override object? Parameter2
+        object? IConditionParameters.Parameter2
         {
             get => null;
             set
@@ -472,7 +476,11 @@ namespace Mutagen.Bethesda.Skyrim
 
             }
         }
-        public override Type? Parameter2Type
+        object? IConditionParametersGetter.Parameter2
+        {
+            get => null;
+        }
+        Type? IConditionParametersGetter.Parameter2Type
         {
             get => null;
         }

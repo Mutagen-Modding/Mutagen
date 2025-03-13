@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Loqui;
+using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Noggog;
@@ -199,15 +200,22 @@ internal sealed class ImmutableModLinkCacheContextCategory<TMod, TModGetter, TKe
 
     private IReadOnlyCache<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>, TKey> ConstructContextCache(Type type)
     {
-        var cache = new Cache<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>, TKey>(x => _keyGetter(x.Record).Value);
-        // ToDo
-        // Upgrade to call EnumerateGroups(), which will perform much better
-        foreach (var majorRec in _parent._sourceMod.EnumerateMajorRecordContexts(_parent, type, throwIfUnknown: false))
+        try
         {
-            var key = _keyGetter(majorRec.Record);
-            if (key.Failed) continue;
-            cache.Set(majorRec);
+            var cache = new Cache<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>, TKey>(x => _keyGetter(x.Record).Value);
+            // ToDo
+            // Upgrade to call EnumerateGroups(), which will perform much better
+            foreach (var majorRec in _parent._sourceMod.EnumerateMajorRecordContexts(_parent, type, throwIfUnknown: false))
+            {
+                var key = _keyGetter(majorRec.Record);
+                if (key.Failed) continue;
+                cache.Set(majorRec);
+            }
+            return cache;
         }
-        return cache;
+        catch (Exception e)
+        {
+            throw RecordException.Enrich(e, _parent._sourceMod.ModKey);
+        }
     }
 }

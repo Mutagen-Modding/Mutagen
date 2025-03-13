@@ -3,7 +3,6 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Starfield.Internals;
-using NexusMods.Paths.Trees.Traits;
 
 namespace Mutagen.Bethesda.Starfield;
 

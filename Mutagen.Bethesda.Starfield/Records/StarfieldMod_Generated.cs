@@ -9964,7 +9964,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             return ((StarfieldModCommon)((IStarfieldModGetter)obj).CommonInstance()!).EnumerateMajorRecordContexts(
                 obj: obj,
-                linkCache: null!);
+                linkCache: null!)
+                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -9978,7 +9979,8 @@ namespace Mutagen.Bethesda.Starfield
                 obj: obj,
                 linkCache: linkCache,
                 type: type,
-                throwIfUnknown: throwIfUnknown);
+                throwIfUnknown: throwIfUnknown)
+                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         #endregion
@@ -12504,8 +12506,8 @@ namespace Mutagen.Bethesda.Starfield
                 case "IIdleRelationGetter":
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
                     break;
-                case "IConstructible":
-                case "IConstructibleGetter":
+                case "IConstructibleObjectTarget":
+                case "IConstructibleObjectTargetGetter":
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IActivatorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IAmmunitionGetter), throwIfUnknown: throwIfUnknown);
@@ -12520,6 +12522,7 @@ namespace Mutagen.Bethesda.Starfield
                     Remove(obj, keys, typeof(IMiscItemGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IMoveableStaticGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IAObjectModificationGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IPackInGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IStaticGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ITerminalGetter), throwIfUnknown: throwIfUnknown);
@@ -12695,10 +12698,6 @@ namespace Mutagen.Bethesda.Starfield
                 case "IEffectRecordGetter":
                     Remove(obj, keys, typeof(IObjectEffectGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown);
-                    break;
-                case "IConstructibleObjectTarget":
-                case "IConstructibleObjectTargetGetter":
-                    Remove(obj, keys, typeof(IAObjectModificationGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IPlaced":
                 case "IPlacedGetter":
@@ -17096,7 +17095,7 @@ namespace Mutagen.Bethesda.Starfield
             toDo.Add(() => WriteGroupParallel(item.PERS, 175, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
-                outputStreams.NotNull(),
+                outputStreams.WhereNotNull(),
                 writer.BaseStream);
         }
         
@@ -28801,11 +28800,12 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy);
         #endregion
         
+        public partial StarfieldMod DeepCopyGetNew(IStarfieldModGetter item);
         public StarfieldMod DeepCopy(
             IStarfieldModGetter item,
             StarfieldMod.TranslationMask? copyMask = null)
         {
-            StarfieldMod ret = (StarfieldMod)((StarfieldModCommon)((IStarfieldModGetter)item).CommonInstance()!).GetNew();
+            var ret = DeepCopyGetNew(item);
             ((StarfieldModSetterTranslationCommon)((IStarfieldModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
@@ -28821,7 +28821,7 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMod.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            StarfieldMod ret = (StarfieldMod)((StarfieldModCommon)((IStarfieldModGetter)item).CommonInstance()!).GetNew();
+            var ret = DeepCopyGetNew(item);
             ((StarfieldModSetterTranslationCommon)((IStarfieldModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
@@ -28837,7 +28837,7 @@ namespace Mutagen.Bethesda.Starfield
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            StarfieldMod ret = (StarfieldMod)((StarfieldModCommon)((IStarfieldModGetter)item).CommonInstance()!).GetNew();
+            var ret = DeepCopyGetNew(item);
             ((StarfieldModSetterTranslationCommon)((IStarfieldModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,

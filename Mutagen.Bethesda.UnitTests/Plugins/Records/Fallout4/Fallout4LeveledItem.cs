@@ -1,8 +1,9 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Testing;
 using Noggog;
+using Noggog.Testing.Extensions;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Fallout4;
 
@@ -13,9 +14,9 @@ public class Fallout4LeveledItemChanceNoneTests : ASpecificCaseTest<LeveledItem,
     
     public override void TestItem(ILeveledItemGetter item)
     {
-        item.Entries.Should().HaveCount(1);
-        item.Entries[0].Data.Should().NotBeNull();
-        item.Entries[0].Data.ChanceNone.Should().Be(new Percent(0.83));
+        item.Entries.ShouldHaveCount(1);
+        item.Entries![0].Data.ShouldNotBeNull();
+        item.Entries[0].Data!.ChanceNone.ShouldBe(new Percent(0.83));
     }
 }
 
@@ -27,8 +28,8 @@ public class Fallout4LeveledItemChanceNoneOverflowTests : ASpecificCaseTest<Leve
 
     public override void TestItem(ILeveledItemGetter item)
     {
-        item.Entries.Should().HaveCount(1);
-        item.Entries[0].Data.Should().NotBeNull();
-        item.Entries[0].Data.ChanceNone.Should().Be(new Percent(0));
+        item.Entries.ShouldHaveCount(1);
+        item.Entries![0].Data.ShouldNotBeNull();
+        item.Entries[0].Data!.ChanceNone.ShouldBe(new Percent(0));
     }
 }

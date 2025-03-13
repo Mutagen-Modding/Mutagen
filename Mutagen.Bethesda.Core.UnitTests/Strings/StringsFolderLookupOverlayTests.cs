@@ -1,5 +1,7 @@
 ﻿using System.IO.Abstractions;
-using FluentAssertions;
+using Mutagen.Bethesda.Archives.DI;
+using Mutagen.Bethesda.Environments.DI;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
@@ -11,15 +13,22 @@ namespace Mutagen.Bethesda.UnitTests.Strings;
 
 public class StringsFolderLookupOverlayTests
 {
-    [Theory, MutagenAutoData]
+    [Theory, MutagenModAutoData]
     internal void Typical(IFileSystem fileSystem,
         ModKey modKey,
         DirectoryPath existingPath,
         MutagenEncodingProvider encodingProvider,
         string normalStr,
         string ilStr,
-        string dlStr)
+        string dlStr,
+        IGameReleaseContext gameRelease,
+        IDataDirectoryProvider dataDirectoryProvider,
+        IGetApplicableArchivePaths getApplicableArchivePaths)
     {
+        var factory = new StringsFolderLookupFactory(gameRelease, dataDirectoryProvider, getApplicableArchivePaths, fileSystem, new StringsReadParameters()
+        {
+            StringsFolderOverride = existingPath
+        });
         uint normalId, ilId, dlId;
         using (var writer = new StringsWriter(GameRelease.SkyrimSE, modKey, existingPath, encodingProvider, fileSystem))
         {
@@ -27,30 +36,34 @@ public class StringsFolderLookupOverlayTests
             ilId = writer.Register(ilStr, Language.English, StringsSource.IL);
             dlId = writer.Register(dlStr, Language.English, StringsSource.DL);
         }
-        var overlay = StringsFolderLookupOverlay.TypicalFactory(GameRelease.SkyrimSE, modKey, existingPath, new StringsReadParameters()
-        {
-            BsaOrdering = Enumerable.Empty<FileName>(),
-            StringsFolderOverride = existingPath
-        }, fileSystem: fileSystem);
+        var overlay = factory.Factory(modKey);
         
         overlay.TryLookup(StringsSource.Normal, Language.English, normalId, out var normalStrOut)
-            .Should().BeTrue();
-        normalStrOut.Should().Be(normalStr);
+            .ShouldBeTrue();
+        normalStrOut.ShouldBe(normalStr);
         overlay.TryLookup(StringsSource.IL, Language.English, ilId, out var ilStrOut)
-            .Should().BeTrue();
-        ilStrOut.Should().Be(ilStr);
+            .ShouldBeTrue();
+        ilStrOut.ShouldBe(ilStr);
         overlay.TryLookup(StringsSource.DL, Language.English, dlId, out var dlStrOut)
-            .Should().BeTrue();
-        dlStrOut.Should().Be(dlStr);
+            .ShouldBeTrue();
+        dlStrOut.ShouldBe(dlStr);
     }
     
-    [Theory, MutagenAutoData]
+    [Theory, MutagenModAutoData]
     internal void SuffixCollision(IFileSystem fileSystem,
         DirectoryPath existingPath,
         MutagenEncodingProvider encodingProvider,
         string str1,
-        string str2)
+        string str2,
+        IGameReleaseContext gameRelease,
+        IDataDirectoryProvider dataDirectoryProvider,
+        IGetApplicableArchivePaths getApplicableArchivePaths)
     {
+        var factory = new StringsFolderLookupFactory(gameRelease, dataDirectoryProvider, getApplicableArchivePaths, fileSystem, new StringsReadParameters()
+        {
+            StringsFolderOverride = existingPath
+        });
+        
         var modKey1 = ModKey.FromFileName("FileName.esm");
         uint id1;
         using (var writer = new StringsWriter(GameRelease.SkyrimSE, modKey1, existingPath, encodingProvider, fileSystem))
@@ -65,14 +78,10 @@ public class StringsFolderLookupOverlayTests
             id2 = writer.Register(str2, Language.English, StringsSource.Normal);
         }
         
-        var overlay = StringsFolderLookupOverlay.TypicalFactory(GameRelease.SkyrimSE, modKey1, existingPath, new StringsReadParameters()
-        {
-            BsaOrdering = Enumerable.Empty<FileName>(),
-            StringsFolderOverride = existingPath
-        }, fileSystem: fileSystem);
+        var overlay = factory.Factory(modKey1);
         
         overlay.TryLookup(StringsSource.Normal, Language.English, id1, out var strOut)
-            .Should().BeTrue();
-        strOut.Should().Be(str1);
+            .ShouldBeTrue();
+        strOut.ShouldBe(str1);
     }
 }

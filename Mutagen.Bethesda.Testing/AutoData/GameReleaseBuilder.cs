@@ -31,7 +31,7 @@ public class GameReleaseBuilder : ISpecimenBuilder
         
         if (t.Name.EndsWith("Release"))
         {
-            if (Enum.TryParse<GameCategory>(t.Name.TrimEnd("Release"), out var cata))
+            if (Enum.TryParse<GameCategory>(t.Name.TrimStringFromEnd("Release"), out var cata))
             {
                 switch (cata)
                 {

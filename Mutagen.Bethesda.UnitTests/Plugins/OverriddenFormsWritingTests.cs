@@ -1,5 +1,5 @@
 ﻿using System.IO.Abstractions;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Records;
@@ -7,6 +7,7 @@ using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
+using Noggog.Testing.Extensions;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins;
@@ -36,10 +37,10 @@ public class OverriddenFormsWritingTests
             .WithKnownMasters(master)
             .WithFileSystem(fileSystem)
             .Construct();
-        reimport.ModHeader.OverriddenForms.Should().NotBeNull();
+        reimport.ModHeader.OverriddenForms.ShouldNotBeNull();
         reimport.ModHeader.OverriddenForms!
             .Select(x => x.FormKey)
-            .Should().Equal(expectedFormkeys);
+            .ShouldBe(expectedFormkeys);
     }
 
     private void ConstructCells(
@@ -107,10 +108,10 @@ public class OverriddenFormsWritingTests
             .WithKnownMasters(mod2)
             .WithFileSystem(fileSystem)
             .Construct();
-        reimport.ModHeader.OverriddenForms.Should().NotBeNull();
+        reimport.ModHeader.OverriddenForms.ShouldNotBeNull();
         reimport.ModHeader.OverriddenForms!
             .Select(x => x.FormKey)
-            .Should().Equal(fk);
+            .ShouldEqual(fk);
     }
 
     /*[Theory, MutagenAutoData]

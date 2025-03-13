@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
@@ -17,7 +17,7 @@ public class OverlayPrimitiveBreakHandlingTests
         var obj = PlacedObjectBinaryOverlay.PlacedObjectFactory(
             overlayStream,
             new BinaryOverlayFactoryPackage(overlayStream.MetaData));
-        obj.Reflections.Count.Should().Be(1);
-        obj.Reflections.First().Type.Should().Be(default);
+        obj.Reflections.Count.ShouldBe(1);
+        obj.Reflections.First().Type.ShouldBe(default);
     }
 }

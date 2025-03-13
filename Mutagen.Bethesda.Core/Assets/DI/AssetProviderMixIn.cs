@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Plugins.Assets;
+
 namespace Mutagen.Bethesda.Assets.DI;
 
 public static class AssetProviderMixIn

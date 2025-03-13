@@ -455,7 +455,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public override object? Parameter1
+        object? IConditionParameters.Parameter1
         {
             get => null;
             set
@@ -463,16 +463,24 @@ namespace Mutagen.Bethesda.Skyrim
 
             }
         }
-        public override Type? Parameter1Type
+        object? IConditionParametersGetter.Parameter1
         {
             get => null;
         }
-        public override object? Parameter2
+        Type? IConditionParametersGetter.Parameter1Type
+        {
+            get => null;
+        }
+        object? IConditionParameters.Parameter2
         {
             get => GraphVariable;
             set => GraphVariable = (value is String v ? v : throw new ArgumentException());
         }
-        public override Type? Parameter2Type
+        object? IConditionParametersGetter.Parameter2
+        {
+            get => GraphVariable;
+        }
+        Type? IConditionParametersGetter.Parameter2Type
         {
             get => typeof(String);
         }

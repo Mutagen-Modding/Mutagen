@@ -25,16 +25,16 @@ If you're just copy pasting code, often it will not compile because some require
 [:octicons-arrow-right-24: Environments](environment/index.md)
 
 ## Retrieve a Mod From a Load Order
+=== "Resolve"
+    ``` cs
+    var mod = myLoadOrder.ResolveMod("MyMod.esp");
+    ```
 === "TryGet"
     ``` cs
     if (myLoadOrder.TryGetValue("MyMod.esp", out var mod))
     {
         // ..
     }
-    ```
-=== "Direct Index"
-    ``` cs
-    var mod = myLoadOrder["MyMod.esp"];
     ```
 
 [:octicons-arrow-right-24: Mod Retrieval](loadorder/index.md#accessing-specific-listings)
@@ -338,6 +338,23 @@ catch (Exception e)
 ```
 
 [:octicons-arrow-right-24: Exception Enrichment](best-practices/Enrich-Exceptions.md)
+
+## Detect if PlacedObject is inside Worldspace
+```cs
+var loadOrder = ...;
+var linkCache = ...;
+
+foreach (var placedObjectContext in loadOrder.PriorityOrder.PlacedObject().WinningContextOverrides(linkCache))
+{
+    Console.WriteLine($"Checking placed object: {placedObjectContext.Record}");
+    if (placedObjectContext.TryGetParent<IWorldspaceGetter>(out var worldspace))
+    {
+        Console.WriteLine($"Was in worldspace: {worldspace}");
+    }
+}
+```
+
+[:octicons-arrow-right-24: Mod Context Parents](linkcache/ModContexts.md/#parent-concepts)
 
 ## Call Generic Function by Mod Type
 ```cs

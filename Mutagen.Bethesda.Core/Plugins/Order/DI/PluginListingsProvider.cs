@@ -2,6 +2,9 @@
 
 namespace Mutagen.Bethesda.Plugins.Order.DI;
 
+/// <summary>
+/// Provides load order listings explicitly listed in plugins.txt
+/// </summary>
 public interface IPluginListingsProvider : IListingsProvider
 {
 }

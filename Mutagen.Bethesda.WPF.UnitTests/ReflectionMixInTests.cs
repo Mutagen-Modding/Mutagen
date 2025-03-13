@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
-using Mutagen.Bethesda.WPF.Reflection;
+﻿using Mutagen.Bethesda.WPF.Reflection;
 using Mutagen.Bethesda.WPF.Reflection.Attributes;
+using Shouldly;
 using Xunit;
 
 namespace Mutagen.Bethesda.WPF.UnitTests;
@@ -11,7 +11,7 @@ public class ReflectionMixInTests
     public void IsNamedTypical()
     {
         ReflectionMixIn.IsNamed(typeof(Tooltip), nameof(Tooltip))
-            .Should().BeTrue();
+            .ShouldBeTrue();
     }
 
     class OtherAttribute : Tooltip
@@ -25,6 +25,6 @@ public class ReflectionMixInTests
     public void IsNamedInherit()
     {
         ReflectionMixIn.IsNamed(typeof(OtherAttribute), nameof(Tooltip))
-            .Should().BeTrue();
+            .ShouldBeTrue();
     }
 }

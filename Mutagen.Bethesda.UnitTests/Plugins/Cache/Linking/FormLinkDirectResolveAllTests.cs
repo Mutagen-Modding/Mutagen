@@ -1,8 +1,9 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
+using Noggog.Testing.Extensions;
 using Xunit;
 
 #nullable disable
@@ -19,7 +20,7 @@ public partial class ALinkingTests
     {
         var formLink = new FormLink<IEffectRecordGetter>(UnusedFormKey);
         var (style, package) = GetLinkCache(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-        formLink.ResolveAll(package).Should().BeEmpty();
+        formLink.ResolveAll(package).ShouldBeEmpty();
     }
 
     [Theory]
@@ -29,7 +30,7 @@ public partial class ALinkingTests
     {
         var formLink = new FormLink<IPlacedGetter>(UnusedFormKey);
         var (style, package) = GetLinkCache(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
-        formLink.ResolveAll<IPlacedGetter, IPlacedNpcGetter>(package).Should().BeEmpty();
+        formLink.ResolveAll<IPlacedGetter, IPlacedNpcGetter>(package).ShouldBeEmpty();
     }
 
     [Theory]
@@ -44,8 +45,8 @@ public partial class ALinkingTests
         WrapPotentialThrow(cacheType, style, () =>
         {
             var resolved = formLink.ResolveAll(package).ToArray();
-            resolved.Should().HaveCount(1);
-            resolved.First().Should().BeSameAs(npc);
+            resolved.ShouldHaveCount(1);
+            resolved.First().ShouldBeSameAs(npc);
         });
     }
 }

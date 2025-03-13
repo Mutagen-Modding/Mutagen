@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Testing.AutoData;
 using Xunit;
@@ -12,6 +12,6 @@ public class DataRelativePathBuilderTests
     public void Typical(
         DataRelativePath dataRelative)
     {
-        Path.IsPathRooted(dataRelative.Path).Should().BeFalse();
+        Path.IsPathRooted(dataRelative.Path).ShouldBeFalse();
     }
 }

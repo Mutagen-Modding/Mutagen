@@ -1,9 +1,10 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Helpers;
+using Noggog.Testing.Extensions;
 using Xunit;
 
 #nullable disable
@@ -21,7 +22,7 @@ public partial class ALinkingTests
         var (style, package) = GetLinkCache(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
         WrapPotentialThrow(cacheType, style, () =>
         {
-            contextRetriever.ResolveAllContexts<IEffectRecord, IEffectRecordGetter>(formLink, package).Should().BeEmpty();
+            contextRetriever.ResolveAllContexts<IEffectRecord, IEffectRecordGetter>(formLink, package).ShouldBeEmpty();
         });
     }
 
@@ -33,7 +34,7 @@ public partial class ALinkingTests
         var (style, package) = GetLinkCache(new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE), cacheType);
         WrapPotentialThrow(cacheType, style, () =>
         {
-            contextRetriever.ResolveAllContexts<IPlacedGetter, IPlacedNpc, IPlacedNpcGetter>(formLink, package).Should().BeEmpty();
+            contextRetriever.ResolveAllContexts<IPlacedGetter, IPlacedNpc, IPlacedNpcGetter>(formLink, package).ShouldBeEmpty();
         });
     }
 
@@ -48,10 +49,10 @@ public partial class ALinkingTests
         WrapPotentialThrow(cacheType, style, () =>
         {
             var resolved = contextRetriever.ResolveAllContexts<INpc, INpcGetter>(formLink, package).ToArray();
-            resolved.Should().HaveCount(1);
-            resolved.First().Record.Should().BeSameAs(npc);
-            resolved.First().ModKey.Should().Be(TestConstants.PluginModKey);
-            resolved.First().Parent.Should().BeNull();
+            resolved.ShouldHaveCount(1);
+            resolved.First().Record.ShouldBeSameAs(npc);
+            resolved.First().ModKey.ShouldBe(TestConstants.PluginModKey);
+            resolved.First().Parent.ShouldBeNull();
         });
     }
 }

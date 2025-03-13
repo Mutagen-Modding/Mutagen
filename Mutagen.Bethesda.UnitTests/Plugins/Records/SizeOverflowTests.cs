@@ -1,6 +1,6 @@
 ﻿using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -23,18 +23,18 @@ public abstract class SizeOverflowTests
     public void WorldspaceOffsetOverflowReadTest()
     {
         var worldspace = Get(IFileSystemExt.DefaultFilesystem, TestDataPathing.SizeOverflow);
-        worldspace.OffsetData.HasValue.Should().BeTrue();
-        worldspace.OffsetData!.Value.Length.Should().Be(0x3B);
+        worldspace.OffsetData.HasValue.ShouldBeTrue();
+        worldspace.OffsetData!.Value.Length.ShouldBe(0x3B);
     }
         
     [Fact]
     public void WorldspaceMaxHeightOverflowReadTest()
     {
         var worldspace = Get(IFileSystemExt.DefaultFilesystem, TestDataPathing.SubObjectSizeOverflow);
-        worldspace.MaxHeight.Should().NotBeNull();
-        worldspace.MaxHeight!.Min.Should().Be(new P2Int16(-96, -96));
-        worldspace.MaxHeight!.Max.Should().Be(new P2Int16(96, 97));
-        worldspace.MaxHeight!.CellData.Length.Should().Be(0x33);
+        worldspace.MaxHeight.ShouldNotBeNull();
+        worldspace.MaxHeight!.Min.ShouldBe(new P2Int16(-96, -96));
+        worldspace.MaxHeight!.Max.ShouldBe(new P2Int16(96, 97));
+        worldspace.MaxHeight!.CellData.Length.ShouldBe(0x33);
     }
         
     [Fact]
@@ -52,8 +52,8 @@ public abstract class SizeOverflowTests
         }
 
         var worldspaceRead = Get(mockFileSystem, path);
-        worldspaceRead.OffsetData.Should().NotBeNull();
-        worldspaceRead.OffsetData!.Value.Length.Should().Be(ushort.MaxValue + 1);
+        worldspaceRead.OffsetData.ShouldNotBeNull();
+        worldspaceRead.OffsetData!.Value.Length.ShouldBe(ushort.MaxValue + 1);
     }
         
     [Fact]
@@ -74,8 +74,8 @@ public abstract class SizeOverflowTests
         }
 
         var worldspaceRead = Get(mockFileSystem, path);
-        worldspaceRead.MaxHeight.Should().NotBeNull();
-        worldspaceRead.MaxHeight!.CellData.Length.Should().Be(ushort.MaxValue + 1);
+        worldspaceRead.MaxHeight.ShouldNotBeNull();
+        worldspaceRead.MaxHeight!.CellData.Length.ShouldBe(ushort.MaxValue + 1);
     }
 }
     

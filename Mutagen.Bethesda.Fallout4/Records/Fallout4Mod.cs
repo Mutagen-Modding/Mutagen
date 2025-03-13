@@ -194,6 +194,11 @@ partial class Fallout4ModSetterTranslationCommon
         }
         mod.SetModKey(rhs.ModKey);
     }
+
+    public partial Fallout4Mod DeepCopyGetNew(IFallout4ModGetter item)
+    {
+        return new Fallout4Mod(item.ModKey, item.Fallout4Release);
+    }
 }
 
 internal partial class Fallout4ModBinaryOverlay
@@ -411,7 +416,7 @@ partial class Fallout4ModCommon
             }
 
             worldGroupWriter.Position = 4;
-            worldGroupWriter.Write((uint)(subStreams.NotNull().Select(s => s.Length).Sum()));
+            worldGroupWriter.Write((uint)(subStreams.WhereNotNull().Select(s => s.Length).Sum()));
             streams[worldspaceCounter + 1] = new CompositeReadStream(worldTrib.AsEnumerable().And(subStreams), resetPositions: true);
         });
         PluginUtilityTranslation.CompileSetGroupLength(streams, groupBytes);

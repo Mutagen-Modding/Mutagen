@@ -4,7 +4,7 @@ namespace Mutagen.Bethesda.Skyrim;
 public partial class GetVATSValueWeaponConditionData
 {
 
-    public override object? Parameter1
+    object? IConditionParameters.Parameter1
     {
         get => ValueFunction.WeaponIs;
         set
@@ -12,12 +12,12 @@ public partial class GetVATSValueWeaponConditionData
 
         }
     }
-    public override Type? Parameter1Type => typeof(ValueFunction);
+    Type? IConditionParametersGetter.Parameter1Type => typeof(ValueFunction);
 
-    public override object? Parameter2
+    object? IConditionParameters.Parameter2
     {
         get => null;
         set => Value = value is IFormLink<IWeaponGetter> v ? v : throw new ArgumentException();
     }
-    public override Type? Parameter2Type => typeof(IFormLink<IWeaponGetter>);
+    Type? IConditionParametersGetter.Parameter2Type => typeof(IFormLink<IWeaponGetter>);
 }

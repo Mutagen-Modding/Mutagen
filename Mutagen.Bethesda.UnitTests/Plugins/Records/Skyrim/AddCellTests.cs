@@ -1,8 +1,9 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
+using Noggog.Testing.Extensions;
 using Xunit;
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Skyrim;
 
@@ -20,14 +21,14 @@ public class AddCellTests
 
 		mod.Cells.AddInteriorCell(cell);
 
-		mod.Cells.Should().HaveCount(1);
+		mod.Cells.ShouldHaveCount(1);
 		var block = mod.Cells.FirstOrDefault(b => b.BlockNumber == 5);
-		block.Should().NotBeNull();
-		block!.SubBlocks.Should().HaveCount(1);
+		block.ShouldNotBeNull();
+		block!.SubBlocks.ShouldHaveCount(1);
 		var subBlock = block.SubBlocks[0];
-		subBlock.BlockNumber.Should().Be(1);
-		subBlock.Cells.Should().HaveCount(1);
-		subBlock.Cells[0].Should().Be(cell);
+		subBlock.BlockNumber.ShouldBe(1);
+		subBlock.Cells.ShouldHaveCount(1);
+		subBlock.Cells[0].ShouldBe(cell);
 
 		// Add add to 8 -> 0
 		cell = new Cell(FormKey.Factory($"000008:{mod.ModKey.FileName}"), SkyrimRelease.SkyrimSE)
@@ -37,14 +38,14 @@ public class AddCellTests
 
 		mod.Cells.AddInteriorCell(cell);
 
-		mod.Cells.Should().HaveCount(2);
+		mod.Cells.ShouldHaveCount(2);
 		block = mod.Cells.FirstOrDefault(b => b.BlockNumber == 8);
-		block.Should().NotBeNull();
-		block!.SubBlocks.Should().HaveCount(1);
+		block.ShouldNotBeNull();
+		block!.SubBlocks.ShouldHaveCount(1);
 		subBlock = block.SubBlocks[0];
-		subBlock.BlockNumber.Should().Be(0);
-		subBlock.Cells.Should().HaveCount(1);
-		subBlock.Cells[0].Should().Be(cell);
+		subBlock.BlockNumber.ShouldBe(0);
+		subBlock.Cells.ShouldHaveCount(1);
+		subBlock.Cells[0].ShouldBe(cell);
 
 		// Add add to 5 -> 0
 		cell = new Cell(FormKey.Factory($"000005:{mod.ModKey.FileName}"), SkyrimRelease.SkyrimSE)
@@ -54,14 +55,14 @@ public class AddCellTests
 
 		mod.Cells.AddInteriorCell(cell);
 
-		mod.Cells.Should().HaveCount(2);
+		mod.Cells.ShouldHaveCount(2);
 		block = mod.Cells.FirstOrDefault(b => b.BlockNumber == 5);
-		block.Should().NotBeNull();
-		block!.SubBlocks.Should().HaveCount(2);
+		block.ShouldNotBeNull();
+		block!.SubBlocks.ShouldHaveCount(2);
 		subBlock = block.SubBlocks[1];
-		subBlock.BlockNumber.Should().Be(0);
-		subBlock.Cells.Should().HaveCount(1);
-		subBlock.Cells[0].Should().Be(cell);
+		subBlock.BlockNumber.ShouldBe(0);
+		subBlock.Cells.ShouldHaveCount(1);
+		subBlock.Cells[0].ShouldBe(cell);
 	}
 
 	[Theory]
@@ -81,15 +82,15 @@ public class AddCellTests
 
 		worldspace.AddCell(cell);
 
-		worldspace.SubCells.Should().HaveCount(1);
+		worldspace.SubCells.ShouldHaveCount(1);
 		var block = worldspace.SubCells.FirstOrDefault(b => b.BlockNumberX == 1 && b.BlockNumberY == -1);
-		block.Should().NotBeNull();
-		block!.Items.Should().HaveCount(1);
+		block.ShouldNotBeNull();
+		block!.Items.ShouldHaveCount(1);
 		var subBlock = block.Items[0];
-		subBlock.BlockNumberX.Should().Be(4);
-		subBlock.BlockNumberY.Should().Be(-1);
-		subBlock.Items.Should().HaveCount(1);
-		subBlock.Items[0].Should().Be(cell);
+		subBlock.BlockNumberX.ShouldEqual(4);
+		subBlock.BlockNumberY.ShouldEqual(-1);
+		subBlock.Items.ShouldHaveCount(1);
+		subBlock.Items[0].ShouldBe(cell);
 
 		// Add to 0,0 -> 0,0
 		cell = new Cell(FormKey.Null, SkyrimRelease.SkyrimSE)
@@ -102,15 +103,15 @@ public class AddCellTests
 
 		worldspace.AddCell(cell);
 
-		worldspace.SubCells.Should().HaveCount(2);
+		worldspace.SubCells.ShouldHaveCount(2);
 		block = worldspace.SubCells.FirstOrDefault(b => b.BlockNumberX == 0 && b.BlockNumberY == 0);
-		block.Should().NotBeNull();
-		block!.Items.Should().HaveCount(1);
+		block.ShouldNotBeNull();
+		block!.Items.ShouldHaveCount(1);
 		subBlock = block.Items[0];
-		subBlock.BlockNumberX.Should().Be(0);
-		subBlock.BlockNumberY.Should().Be(0);
-		subBlock.Items.Should().HaveCount(1);
-		subBlock.Items[0].Should().Be(cell);
+		subBlock.BlockNumberX.ShouldEqual(0);
+		subBlock.BlockNumberY.ShouldEqual(0);
+		subBlock.Items.ShouldHaveCount(1);
+		subBlock.Items[0].ShouldBe(cell);
 
 		// Add to 1,-1 -> 5,-1
 		cell = new Cell(FormKey.Null, SkyrimRelease.SkyrimSE)
@@ -123,14 +124,14 @@ public class AddCellTests
 
 		worldspace.AddCell(cell);
 
-		worldspace.SubCells.Should().HaveCount(2);
+		worldspace.SubCells.ShouldHaveCount(2);
 		block = worldspace.SubCells.FirstOrDefault(b => b.BlockNumberX == 1 && b.BlockNumberY == -1);
-		block.Should().NotBeNull();
-		block!.Items.Should().HaveCount(2);
+		block.ShouldNotBeNull();
+		block!.Items.ShouldHaveCount(2);
 		subBlock = block.Items[1];
-		subBlock.BlockNumberX.Should().Be(5);
-		subBlock.BlockNumberY.Should().Be(-1);
-		subBlock.Items.Should().HaveCount(1);
-		subBlock.Items[0].Should().Be(cell);
+		subBlock.BlockNumberX.ShouldEqual(5);
+		subBlock.BlockNumberY.ShouldEqual(-1);
+		subBlock.Items.ShouldHaveCount(1);
+		subBlock.Items[0].ShouldBe(cell);
 	}
 }

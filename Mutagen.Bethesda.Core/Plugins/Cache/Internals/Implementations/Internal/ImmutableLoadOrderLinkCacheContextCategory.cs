@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Loqui;
+using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Noggog;
@@ -37,6 +38,7 @@ internal sealed class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGette
     private readonly IReadOnlyList<TModGetter> _listedOrder;
     private readonly Func<IMajorRecordGetter, TryGet<TKey>> _keyGetter;
     private readonly Func<TKey, bool> _shortCircuit;
+    private readonly IEqualityComparer<TKey>? _equalityComparer;
     private readonly Dictionary<Type, DepthCache<TKey, IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>> _winningContexts = new();
     private readonly Dictionary<Type, DepthCache<TKey, ImmutableList<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>>> _allContexts = new();
 
@@ -53,7 +55,8 @@ internal sealed class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGette
         ILinkCache linkCache,
         IReadOnlyList<TModGetter> listedOrder,
         Func<IMajorRecordGetter, TryGet<TKey>> keyGetter,
-        Func<TKey, bool> shortCircuit)
+        Func<TKey, bool> shortCircuit,
+        IEqualityComparer<TKey>? equalityComparer)
     {
         _category = category;
         _metaInterfaceMapGetter = metaInterfaceMapGetter;
@@ -63,6 +66,7 @@ internal sealed class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGette
         _listedOrder = listedOrder;
         _keyGetter = keyGetter;
         _shortCircuit = shortCircuit;
+        _equalityComparer = equalityComparer;
     }
 
     public bool TryResolveContext(
@@ -88,7 +92,7 @@ internal sealed class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGette
             // Get cache object by type
             if (!_winningContexts.TryGetValue(type, out cache))
             {
-                cache = new DepthCache<TKey, IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>();
+                cache = new DepthCache<TKey, IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>(_equalityComparer);
                 if (type.Equals(typeof(IMajorRecord))
                     || type.Equals(typeof(IMajorRecordGetter)))
                 {
@@ -150,11 +154,18 @@ internal sealed class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGette
 
                 void AddRecords(TModGetter mod, Type type, bool throwIfUnknown)
                 {
-                    foreach (var record in mod.EnumerateMajorRecordContexts(_linkCache, type, throwIfUnknown: throwIfUnknown))
+                    try
                     {
-                        var key = _keyGetter(record.Record);
-                        if (key.Failed) continue;
-                        cache.AddIfMissing(key.Value, record);
+                        foreach (var record in mod.EnumerateMajorRecordContexts(_linkCache, type, throwIfUnknown: throwIfUnknown))
+                        {
+                            var key = _keyGetter(record.Record);
+                            if (key.Failed) continue;
+                            cache.AddIfMissing(key.Value, record);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        throw RecordException.Enrich(e, mod.ModKey);
                     }
                 }
 
@@ -196,7 +207,7 @@ internal sealed class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGette
         DepthCache<TKey, ImmutableList<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>> cache;
         lock (_allContexts)
         {
-            cache = _allContexts.GetOrAdd(type);
+            cache = _allContexts.GetOrAdd(type, () => new DepthCache<TKey, ImmutableList<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>>(_equalityComparer));
         }
 
         // Grab the formkey's list
@@ -238,19 +249,26 @@ internal sealed class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGette
 
                     void AddRecords(TModGetter mod, Type type, bool throwIfUnknown)
                     {
-                        foreach (var item in mod.EnumerateMajorRecordContexts(_linkCache, type, throwIfUnknown: throwIfUnknown))
+                        try
                         {
-                            var iterKey = _keyGetter(item.Record);
-                            if (iterKey.Failed) continue;
-                            if (!cache.TryGetValue(iterKey.Value, out var targetList))
+                            foreach (var item in mod.EnumerateMajorRecordContexts(_linkCache, type, throwIfUnknown: throwIfUnknown))
                             {
-                                targetList = ImmutableList<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>.Empty;
+                                var iterKey = _keyGetter(item.Record);
+                                if (iterKey.Failed) continue;
+                                if (!cache.TryGetValue(iterKey.Value, out var targetList))
+                                {
+                                    targetList = ImmutableList<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>.Empty;
+                                }
+                                cache.Set(iterKey.Value, targetList.Add(item));
                             }
-                            cache.Set(iterKey.Value, targetList.Add(item));
+                            if (cache.TryGetValue(key, out var requeriedList))
+                            {
+                                list = requeriedList;
+                            }
                         }
-                        if (cache.TryGetValue(key, out var requeriedList))
+                        catch (Exception e)
                         {
-                            list = requeriedList;
+                            throw RecordException.Enrich(e, mod.ModKey);
                         }
                     }
 

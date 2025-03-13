@@ -36,7 +36,7 @@ If found, the record returned will be from the mod latest in the load order whic
 
     if (myLinkCache.TryResolve(myLink, out var record))
     {
-        Console.WriteLine($"Found a record! {record.EditorID}");
+        Console.WriteLine($"Found the npc! {npc.EditorID}");
     }
     ```
 
@@ -45,9 +45,9 @@ If found, the record returned will be from the mod latest in the load order whic
     ILinkCache myLinkCache = ...;
     string myEditorID = ...;
 
-    if (myLinkCache.TryResolve(myEditorId, out var record))
+    if (myLinkCache.TryResolve<INpcGetter>(myEditorId, out var npc))
     {
-        Console.WriteLine($"Found a record! {record.EditorID}");
+        Console.WriteLine($"Found the npc! {npc.EditorID}");
     }
     ```
 
@@ -58,7 +58,7 @@ If found, the record returned will be from the mod latest in the load order whic
 
     if (myLinkCache.TryResolve(myFormKey, out var record))
     {
-        Console.WriteLine($"Found a record! {record.EditorID}");
+        Console.WriteLine($"Found the npc! {npc.EditorID}");
     }
     ```
 

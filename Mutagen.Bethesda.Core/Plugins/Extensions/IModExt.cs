@@ -1,7 +1,9 @@
-﻿using Mutagen.Bethesda.Plugins;
+﻿using System.IO.Abstractions;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Exceptions;
-using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Records;
+using Noggog.IO;
 
 namespace Mutagen.Bethesda;
 
@@ -90,5 +92,51 @@ public static class IModExt
         if (small) return MasterStyle.Small;
         if (medium) return MasterStyle.Medium;
         return MasterStyle.Full;
+    }
+
+    /// <summary>
+    /// Duplicates a mod with a new ModKey.
+    /// </summary>
+    /// <param name="mod">Mod to duplicate</param>
+    /// <param name="newModKey">ModKey for the duplicated mod</param>
+    /// <returns>The duplicated mod with ModKey newModKey</returns>
+    /// <exception cref="ArgumentException">If  ModKey types of mod.ModKey and newModKey do not match</exception>
+    public static IMod Duplicate(this IModGetter mod, ModKey newModKey)
+    {
+        if (mod.ModKey.Type != newModKey.Type) throw new ArgumentException("ModKey types must match");
+
+        var oldModKey = mod.ModKey;
+        var fileSystem = new FileSystem();
+        using var tmp = TempFolder.Factory();
+        var fileSystemRoot = tmp.Dir;
+        var oldModPath = new ModPath(oldModKey, fileSystem.Path.Combine(fileSystemRoot, oldModKey.FileName.String));
+
+        // Write mod to file system
+        mod.WriteToBinary(oldModPath, BinaryWriteParameters.Default with
+        {
+            FileSystem = fileSystem
+        });
+
+        // Rename mod file
+        var newModPath = new ModPath(newModKey, fileSystem.Path.Combine(fileSystemRoot, newModKey.FileName.String));
+        fileSystem.File.Move(oldModPath, newModPath);
+
+        // Rename strings files
+        var stringsDir = fileSystem.Path.Combine(fileSystemRoot, "Strings");
+        foreach (var file in fileSystem.Directory.EnumerateFiles(stringsDir))
+        {
+            var fileName = fileSystem.Path.GetFileName(file);
+            if (fileName.StartsWith(oldModKey.Name))
+            {
+                fileSystem.File.Move(file, fileSystem.Path.Combine(stringsDir, newModKey.Name + fileName[oldModKey.Name.Length..]));
+            }
+        }
+
+        // Read renamed mod as new mod
+        var duplicateInto = ModInstantiator.ImportSetter(newModPath, mod.GameRelease, BinaryReadParameters.Default with
+        {
+            FileSystem = fileSystem
+        });
+        return duplicateInto;
     }
 }

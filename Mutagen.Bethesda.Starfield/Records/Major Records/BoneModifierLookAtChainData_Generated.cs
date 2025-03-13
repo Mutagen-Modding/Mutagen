@@ -1086,7 +1086,8 @@ namespace Mutagen.Bethesda.Starfield
             item.Unknown1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.UnknownString3 = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
+                parseWhole: true);
         }
 
     }

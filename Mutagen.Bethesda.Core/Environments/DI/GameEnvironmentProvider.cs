@@ -1,4 +1,5 @@
-﻿using Mutagen.Bethesda.Plugins.Cache;
+﻿using Mutagen.Bethesda.Assets.DI;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Plugins.Records;
 
@@ -29,19 +30,22 @@ public sealed class GameEnvironmentProvider : IGameEnvironmentProvider
     private readonly IDataDirectoryProvider _dataDirectoryProvider;
     private readonly IPluginListingsPathContext _pluginListingsPathContext;
     private readonly ICreationClubListingsPathProvider _cccPath;
+    private readonly IAssetProvider _assetProvider;
 
     public GameEnvironmentProvider(
         IGameReleaseContext gameReleaseContext,
         ILoadOrderImporter loadOrderImporter,
         IDataDirectoryProvider dataDirectoryProvider,
         IPluginListingsPathContext pluginListingsPathContext,
-        ICreationClubListingsPathProvider cccPath)
+        ICreationClubListingsPathProvider cccPath,
+        IAssetProvider assetProvider)
     {
         _gameReleaseContext = gameReleaseContext;
         _loadOrderImporter = loadOrderImporter;
         _dataDirectoryProvider = dataDirectoryProvider;
         _pluginListingsPathContext = pluginListingsPathContext;
         _cccPath = cccPath;
+        _assetProvider = assetProvider;
     }
 
     public IGameEnvironment Construct(LinkCachePreferences? linkCachePrefs = null)        
@@ -55,6 +59,7 @@ public sealed class GameEnvironmentProvider : IGameEnvironmentProvider
             creationClubListingsFilePath: _cccPath.Path,
             loadOrder: loadOrder,
             linkCache: loadOrder.ToUntypedImmutableLinkCache(linkCachePrefs),
+            assetProvider: _assetProvider,
             dispose: true);
     }
 }
@@ -67,19 +72,22 @@ public sealed class GameEnvironmentProvider<TMod> : IGameEnvironmentProvider<TMo
     private readonly IDataDirectoryProvider _dataDirectoryProvider;
     private readonly IPluginListingsPathContext _pluginListingsPathContext;
     private readonly ICreationClubListingsPathProvider _cccPath;
+    private readonly IAssetProvider _assetProvider;
 
     public GameEnvironmentProvider(
         IGameReleaseContext gameReleaseContext,
         ILoadOrderImporter<TMod> loadOrderImporter,
         IDataDirectoryProvider dataDirectoryProvider,
         IPluginListingsPathContext pluginListingsPathContext,
-        ICreationClubListingsPathProvider cccPath)
+        ICreationClubListingsPathProvider cccPath,
+        IAssetProvider assetProvider)
     {
         _gameReleaseContext = gameReleaseContext;
         _loadOrderImporter = loadOrderImporter;
         _dataDirectoryProvider = dataDirectoryProvider;
         _pluginListingsPathContext = pluginListingsPathContext;
         _cccPath = cccPath;
+        _assetProvider = assetProvider;
     }
 
     public IGameEnvironment<TMod> Construct(LinkCachePreferences? linkCachePrefs = null)        
@@ -93,6 +101,7 @@ public sealed class GameEnvironmentProvider<TMod> : IGameEnvironmentProvider<TMo
             creationClubListingsFilePath: _cccPath.Path,
             loadOrder: loadOrder,
             linkCache: loadOrder.ToUntypedImmutableLinkCache(linkCachePrefs),
+            assetProvider: _assetProvider,
             dispose: true);
     }
 }
@@ -106,19 +115,22 @@ public sealed class GameEnvironmentProvider<TModSetter, TModGetter> : IGameEnvir
     private readonly IDataDirectoryProvider _dataDirectoryProvider;
     private readonly IPluginListingsPathContext _pluginListingsPathContext;
     private readonly ICreationClubListingsPathProvider _cccPath;
+    private readonly IAssetProvider _assetProvider;
 
     public GameEnvironmentProvider(
         IGameReleaseContext gameReleaseContext,
         ILoadOrderImporter<TModGetter> loadOrderImporter,
         IDataDirectoryProvider dataDirectoryProvider,
         IPluginListingsPathContext pluginListingsPathContext,
-        ICreationClubListingsPathProvider cccPath)
+        ICreationClubListingsPathProvider cccPath,
+        IAssetProvider assetProvider)
     {
         _gameReleaseContext = gameReleaseContext;
         _loadOrderImporter = loadOrderImporter;
         _dataDirectoryProvider = dataDirectoryProvider;
         _pluginListingsPathContext = pluginListingsPathContext;
         _cccPath = cccPath;
+        _assetProvider = assetProvider;
     }
 
     public IGameEnvironment<TModSetter, TModGetter> Construct(LinkCachePreferences? linkCachePrefs = null)        
@@ -132,6 +144,7 @@ public sealed class GameEnvironmentProvider<TModSetter, TModGetter> : IGameEnvir
             creationClubListingsFilePath: _cccPath.Path,
             loadOrder: loadOrder,
             linkCache: loadOrder.ToImmutableLinkCache<TModSetter, TModGetter>(linkCachePrefs),
+            assetProvider: _assetProvider,
             dispose: true);
     }
 }

@@ -1,18 +1,18 @@
 namespace Mutagen.Bethesda.Starfield;
 
-public partial class GetVMQuestVariableConditionData : IConditionStringParameter
+public partial class GetVMQuestVariableConditionData : IConditionParameters
 {
-    string? IConditionStringParameterGetter.FirstStringParameter => FirstUnusedStringParameter;
+    string? IConditionParametersGetter.StringParameter1 => FirstUnusedStringParameter;
 
-    string? IConditionStringParameterGetter.SecondStringParameter => SecondParameter;
+    string? IConditionParametersGetter.StringParameter2 => SecondParameter;
 
-    string? IConditionStringParameter.FirstStringParameter
+    string? IConditionParameters.StringParameter1
     {
         get => FirstUnusedStringParameter;
         set => FirstUnusedStringParameter = value;
     }
 
-    string? IConditionStringParameter.SecondStringParameter
+    string? IConditionParameters.StringParameter2
     {
         get => SecondParameter;
         set => SecondParameter = value;

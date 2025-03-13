@@ -23,6 +23,7 @@
         <PackageReference Include="Loqui" />
         <PackageReference Include="Noggog.CSharpExt" />
         <PackageReference Include="SharpZipLib" />
+        <PackageReference Include="StrongInject" />
         <PackageReference Include="System.Collections.Immutable" />
         <PackageReference Include="System.IO.Compression" />
         <PackageReference Include="System.Text.Encoding.CodePages" />
@@ -45,6 +46,8 @@
         <Compile Include="Archives\Bsa\BsaVersionType.cs" />
         <Compile Include="Archives\Bsa\BsaFileNameBlock.cs" />
         <Compile Include="Archives\DI\ArchiveExtensionProvider.cs" />
+        <Compile Include="Archives\DI\ArchiveModule.cs" />
+        <Compile Include="Archives\DI\IArchiveListingDetailsProvider.cs" />
         <Compile Include="Archives\DI\ArchiveReaderProvider.cs">
             <CodeLanguage>cs</CodeLanguage>
             <DefaultPackFolder>content</DefaultPackFolder>
@@ -65,6 +68,7 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Archives\DI\IArchiveNameFromModKeyProvider.cs" />
         <Compile Include="Archives\Exceptions\ArchiveException.cs" />
         <Compile Include="Archives\IArchiveFile.cs" />
         <Compile Include="Archives\IArchiveFolder.cs" />
@@ -72,11 +76,13 @@
         <Compile Include="Assets\DataRelativePath.cs" />
         <Compile Include="Assets\AssetTypeLocator.cs" />
         <Compile Include="Assets\DI\ArchiveAssetProvider.cs" />
+        <Compile Include="Assets\DI\AssetModule.cs" />
         <Compile Include="Assets\DI\AssetProviderMixIn.cs" />
         <Compile Include="Assets\DI\DataDirectoryAssetProvider.cs" />
         <Compile Include="Assets\DI\GameAssetProvider.cs" />
         <Compile Include="Assets\DI\IAssetProvider.cs" />
         <Compile Include="Assets\IAssetType.cs" />
+        <Compile Include="Environments\DI\EnvironmentsModule.cs" />
         <Compile Include="Environments\DI\GameEnvironmentProvider.cs" />
         <Compile Include="Environments\DI\IDataDirectoryProvider.cs">
             <CodeLanguage>cs</CodeLanguage>
@@ -135,7 +141,9 @@
         <Compile Include="Fonts\FontMapping.cs" />
         <Compile Include="Inis\DI\IIniPathLookup.cs" />
         <Compile Include="Inis\DI\IIniPathProvider.cs" />
+        <Compile Include="Inis\DI\IniModule.cs" />
         <Compile Include="Installs\DI\GameLocatorLookupCache.cs" />
+        <Compile Include="Installs\DI\InstallsModule.cs" />
         <Compile Include="Installs\GameLocator.cs" />
         <Compile Include="Installs\GameSource.cs" />
         <Compile Include="Installs\GameLocations.cs" />
@@ -241,6 +249,7 @@
         <Compile Include="Plugins\Binary\Translations\AssetLinkBinaryTranslation.cs" />
         <Compile Include="Plugins\Binary\Translations\BinaryReadBuilder.cs" />
         <Compile Include="Plugins\Binary\Translations\BinaryWriteBuilder.cs" />
+        <Compile Include="Plugins\Binary\Translations\CompressionExport.cs" />
         <Compile Include="Plugins\Binary\Translations\FormLinkOrIndexBinaryTranslation.cs" />
         <Compile Include="Plugins\Binary\Translations\GuidBinaryTranslation.cs" />
         <Compile Include="Plugins\Binary\Translations\PreviousParse.cs" />
@@ -306,6 +315,7 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Plugins\Implicit\DI\ImplicitModule.cs" />
         <Compile Include="Plugins\Implicit\DI\ImplicitRecordFormKeyProvider.cs">
             <CodeLanguage>cs</CodeLanguage>
             <DefaultPackFolder>content</DefaultPackFolder>
@@ -327,10 +337,11 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Plugins\Masters\DI\MastersModule.cs" />
+        <Compile Include="Plugins\Masters\DI\TransitiveMasterLocator.cs" />
         <Compile Include="Plugins\Masters\MasterStyle.cs" />
         <Compile Include="Plugins\Masters\SeparatedMasterPackage.cs" />
         <Compile Include="Plugins\Masters\MasterReferenceCollection.cs" />
-        <Compile Include="Plugins\Masters\TransitiveMasterLocator.cs" />
         <Compile Include="Plugins\Meta\ObjectType.cs">
             <CodeLanguage>cs</CodeLanguage>
             <DefaultPackFolder>content</DefaultPackFolder>
@@ -422,6 +433,7 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Plugins\Order\DI\LoadOrderModule.cs" />
         <Compile Include="Plugins\Order\DI\LoadOrderWriter.cs">
             <CodeLanguage>cs</CodeLanguage>
             <DefaultPackFolder>content</DefaultPackFolder>
@@ -439,6 +451,7 @@
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
+        <Compile Include="Plugins\Order\DI\OrderModule.cs" />
         <Compile Include="Plugins\Order\DI\PluginListingCommentTrimmer.cs" />
         <Compile Include="Plugins\Order\DI\PluginListingsParser.cs">
             <CodeLanguage>cs</CodeLanguage>
@@ -494,6 +507,7 @@
         <Compile Include="Plugins\Records\AListGroup.cs" />
         <Compile Include="Plugins\Records\DI\ModActivator.cs" />
         <Compile Include="Plugins\Records\DI\ModImporter.cs" />
+        <Compile Include="Plugins\Records\DI\RecordsModule.cs" />
         <Compile Include="Plugins\Records\GroupMergeGetter.cs" />
         <Compile Include="Plugins\Records\IFormKeyGetter.cs" />
         <Compile Include="Plugins\Records\IFormLinkContainerGetter.cs" />
@@ -552,12 +566,15 @@
         <Compile Include="Plugins\Utility\DI\ModCompactor.cs" />
         <Compile Include="Plugins\Utility\HeaderVersionHelper.cs" />
         <Compile Include="Plugins\Utility\ModCompaction.cs" />
+        <Compile Include="Plugins\Utility\MutagenStrongInjectModule.cs" />
         <Compile Include="Plugins\Warmup.cs">
             <CodeLanguage>cs</CodeLanguage>
             <DefaultPackFolder>content</DefaultPackFolder>
             <BuildAction>Compile</BuildAction>
         </Compile>
         <Compile Include="Strings\DI\MutagenEncodingProvider.cs" />
+        <Compile Include="Strings\DI\StringsFolderLookupFactory.cs" />
+        <Compile Include="Strings\DI\StringsModule.cs" />
         <Compile Include="Strings\IOptionalStringsKeyGetter.cs" />
         <Compile Include="Strings\Language.cs" />
         <Compile Include="Plugins\Binary\Translations\FloatBinaryTranslationExt.cs" />

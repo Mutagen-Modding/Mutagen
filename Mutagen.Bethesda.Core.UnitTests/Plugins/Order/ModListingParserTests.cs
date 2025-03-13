@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Testing;
@@ -130,11 +130,11 @@ public class ModListingParserTests
             Enabled = false
         };
 
-        listing1.Should().Be(listing1Eq);
-        listing1.Should().NotBe(listing1Disabled);
-        listing1.Should().NotBe(listing2);
-        listing2.Should().Be(listing2Eq);
-        listing2.Should().NotBe(listing2Disabled);
-        listing2.Should().NotBe(listing1);
+        listing1.ShouldBe(listing1Eq);
+        listing1.ShouldNotBe(listing1Disabled);
+        listing1.ShouldNotBe(listing2);
+        listing2.ShouldBe(listing2Eq);
+        listing2.ShouldNotBe(listing2Disabled);
+        listing2.ShouldNotBe(listing1);
     }
 }

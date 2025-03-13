@@ -498,21 +498,29 @@ namespace Mutagen.Bethesda.Starfield
         #region Mutagen
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => GetEventDataConditionDataCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GetEventDataConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
-        public override object? Parameter1
+        object? IConditionParameters.Parameter1
         {
             get => Function;
             set => Function = (value is GetEventDataConditionData.EventFunction v ? v : throw new ArgumentException());
         }
-        public override Type? Parameter1Type
+        object? IConditionParametersGetter.Parameter1
+        {
+            get => Function;
+        }
+        Type? IConditionParametersGetter.Parameter1Type
         {
             get => typeof(GetEventDataConditionData.EventFunction);
         }
-        public override object? Parameter2
+        object? IConditionParameters.Parameter2
         {
             get => Member;
             set => Member = (value is GetEventDataConditionData.EventMember v ? v : throw new ArgumentException());
         }
-        public override Type? Parameter2Type
+        object? IConditionParametersGetter.Parameter2
+        {
+            get => Member;
+        }
+        Type? IConditionParametersGetter.Parameter2Type
         {
             get => typeof(GetEventDataConditionData.EventMember);
         }

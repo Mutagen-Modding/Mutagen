@@ -6,6 +6,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using Loqui;
 using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Overlay;
 
@@ -117,6 +118,10 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         while (!stream.Complete && stream.Position < finalPos)
         {
             MajorRecordHeader majorMeta = stream.GetMajorRecordHeader();
+            if (majorMeta.RecordType == RecordTypes.GRUP)
+            {
+                throw new DataMisalignedException("Unexpected GRUP");
+            }
             try
             {
                 var minimumFinalPos = stream.Position + majorMeta.TotalLength;

@@ -84,7 +84,7 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(IIdleRelation),
                 Getter: typeof(IIdleRelationGetter)));
         dict[typeof(IIdleRelationGetter)] = dict[typeof(IIdleRelation)] with { Setter = false };
-        dict[typeof(IConstructible)] = new InterfaceMappingResult(
+        dict[typeof(IConstructibleObjectTarget)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]
             {
@@ -102,15 +102,16 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
                 MiscItem_Registration.Instance,
                 MoveableStatic_Registration.Instance,
                 Npc_Registration.Instance,
+                AObjectModification_Registration.Instance,
                 PackIn_Registration.Instance,
                 Static_Registration.Instance,
                 Terminal_Registration.Instance,
                 Weapon_Registration.Instance,
             },
             new InterfaceMappingTypes(
-                Setter: typeof(IConstructible),
-                Getter: typeof(IConstructibleGetter)));
-        dict[typeof(IConstructibleGetter)] = dict[typeof(IConstructible)] with { Setter = false };
+                Setter: typeof(IConstructibleObjectTarget),
+                Getter: typeof(IConstructibleObjectTargetGetter)));
+        dict[typeof(IConstructibleObjectTargetGetter)] = dict[typeof(IConstructibleObjectTarget)] with { Setter = false };
         dict[typeof(IStaticTarget)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]
@@ -413,16 +414,6 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(IEffectRecord),
                 Getter: typeof(IEffectRecordGetter)));
         dict[typeof(IEffectRecordGetter)] = dict[typeof(IEffectRecord)] with { Setter = false };
-        dict[typeof(IConstructibleObjectTarget)] = new InterfaceMappingResult(
-            true,
-            new ILoquiRegistration[]
-            {
-                AObjectModification_Registration.Instance,
-            },
-            new InterfaceMappingTypes(
-                Setter: typeof(IConstructibleObjectTarget),
-                Getter: typeof(IConstructibleObjectTargetGetter)));
-        dict[typeof(IConstructibleObjectTargetGetter)] = dict[typeof(IConstructibleObjectTarget)] with { Setter = false };
         dict[typeof(IPlaced)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]

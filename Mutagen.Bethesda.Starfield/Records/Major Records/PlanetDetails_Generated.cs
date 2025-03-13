@@ -2231,28 +2231,36 @@ namespace Mutagen.Bethesda.Starfield
             item.Unknown1 = frame.ReadInt32();
             item.SpectralClass = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
+                parseWhole: true);
             item.CatalogueId = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
+                parseWhole: true);
             item.Life = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
+                parseWhole: true);
             item.Magnetosphere = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
+                parseWhole: true);
             item.MassInKg = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
+                parseWhole: true);
             item.Type = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
+                parseWhole: true);
             item.SettledStar = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
+                parseWhole: true);
             item.Special = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
+                parseWhole: true);
             item.Perihelion = frame.ReadDouble();
             item.Stardust = frame.ReadDouble();
             item.Density = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);

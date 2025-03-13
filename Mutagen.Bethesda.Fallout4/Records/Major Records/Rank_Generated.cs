@@ -1175,6 +1175,7 @@ namespace Mutagen.Bethesda.Fallout4
                                 item: out genSubItem,
                                 parseWhole: false,
                                 binaryType: StringBinaryType.NullTerminate,
+                                eager: true,
                                 source: StringsSource.Normal);
                         });
                     return (int)Rank_FieldIndex.Title;
@@ -1185,7 +1186,8 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.InsigniaUnused = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Rank_FieldIndex.InsigniaUnused;
                 }
                 default:
@@ -1346,7 +1348,7 @@ namespace Mutagen.Bethesda.Fallout4
                         male: RecordTypes.MNAM,
                         female: RecordTypes.FNAM,
                         stream: stream,
-                        creator: static (m, p) => StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants), StringsSource.Normal, parsingBundle: p.MetaData));
+                        creator: static (m, p) => StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants), StringsSource.Normal, parsingBundle: p.MetaData, eager: false));
                     return (int)Rank_FieldIndex.Title;
                 }
                 case RecordTypeInts.INAM:

@@ -175,6 +175,7 @@ public abstract class Processor
     {
         AddDynamicProcessing(RecordType.Null, ProcessEDID);
         AddDynamicProcessing(RecordType.Null, ProcessMajorRecordFormIDOverflow);
+        AddDynamicProcessing(RecordType.Null, ProcessCompression);
     }
 
     protected void AddDynamicProcessing(RecordType type, DynamicProcessor processor)
@@ -222,8 +223,6 @@ public abstract class Processor
                 frame = stream.ReadMajorRecord(readSafe: true);
             }
 
-            if (frame.IsDeleted) return;
-
             if (procs != null)
             {
                 foreach (var proc in procs)
@@ -247,6 +246,7 @@ public abstract class Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
+        if (majorFrame.IsDeleted) return;
         if (!majorFrame.TryFindSubrecord("EDID", out var edidFrame)) return;
         var formKey = FormKey.Factory(Masters, majorFrame.FormID, reference: false);
         ProcessStringTermination(
@@ -259,6 +259,7 @@ public abstract class Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
+        if (majorFrame.IsDeleted) return;
         var formID = majorFrame.FormID;
         if (!CheckIsFormIDOverflow(formID)) return;
         // Need to zero out master
@@ -284,10 +285,24 @@ public abstract class Processor
         return false;
     }
 
+    public void ProcessCompression(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (!majorFrame.IsCompressed) return;
+        var flags = BinaryPrimitives.ReadInt32LittleEndian(
+            majorFrame.HeaderData.Slice(Meta.MajorConstants.FlagLocationOffset));
+        flags &= ~Constants.CompressedFlag;
+        byte[] b = new byte[4];
+        BinaryPrimitives.WriteInt32LittleEndian(b, flags);
+        Instructions.SetSubstitution(
+            fileOffset + Meta.MajorConstants.FlagLocationOffset,
+            b);
+    }
+
     private bool CheckIsFormIDOverflow(FormID formID)
     {
         if (formID.FullMasterIndex <= _numMasters) return false;
-        // if (IsStarfieldMaster(ModKey)) return true;
         if (formID.FullMasterIndex == FormID.SmallMasterMarker && Meta.SmallMasterFlag != null) return false; 
         if (formID.FullMasterIndex == FormID.MediumMasterMarker && Meta.MediumMasterFlag != null) return false; 
         return true;
@@ -998,12 +1013,7 @@ public abstract class Processor
             })
             .ToArray();
 
-        var bsaOrder = Archive.GetIniListings(GameRelease).ToList();
-        var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(GameRelease, ModKey, DataFolder,
-            new StringsReadParameters()
-            {
-                BsaOrdering = bsaOrder
-            });
+        var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(GameRelease, ModKey, DataFolder, null);
 
         var overlays = Enums<StringsSource>.Values
             .Select(x => (x, stringsOverlay.Get(x)))

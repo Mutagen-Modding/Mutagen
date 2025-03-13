@@ -1088,10 +1088,12 @@ namespace Mutagen.Bethesda.Starfield
             item.ExtraBindDataVersion = frame.ReadUInt8();
             item.ScriptName = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthUShort);
+                stringBinaryType: StringBinaryType.PrependLengthUShort,
+                parseWhole: true);
             item.FragmentName = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthUShort);
+                stringBinaryType: StringBinaryType.PrependLengthUShort,
+                parseWhole: true);
         }
 
     }

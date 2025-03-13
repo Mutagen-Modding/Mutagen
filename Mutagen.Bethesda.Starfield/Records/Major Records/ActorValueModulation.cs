@@ -4,20 +4,21 @@ public partial class ActorValueModulation
 {
     public enum TypeEnum
     {
-        SimpleGroup,
-        ComplexGroup,
+        None,
+        Simple,
+        Complex,
         Modulation
     }
 
+    [Flags]
     public enum TextureTypeEnum
     {
-        None = 0,
-        Rough = 1,
-        Opacity = 2,
-        Normal = 3,
-        AO = 4,
-        Metal = 5,
-        Conditions = 6,
-        Emissive = 7,
+        Rough = 0x0001,
+        Opacity = 0x0002,
+        Normal = 0x0004,
+        AO = 0x0008,
+        Metal = 0x0010,
+        Conditions = 0x0020,
+        Emissive = 0x0040,
     }
 }

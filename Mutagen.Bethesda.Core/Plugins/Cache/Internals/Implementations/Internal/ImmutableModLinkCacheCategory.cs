@@ -13,6 +13,7 @@ internal sealed class ImmutableModLinkCacheCategory<TKey>
     private readonly IMetaInterfaceMapGetter _metaInterfaceMapGetter;
     private readonly Func<LinkCacheItem, TryGet<TKey>> _keyGetter;
     private readonly Func<TKey, bool> _shortCircuit;
+    private readonly IEqualityComparer<TKey>? _equalityComparer;
     internal readonly Lazy<IReadOnlyCache<LinkCacheItem, TKey>> _untypedMajorRecords;
     private readonly Dictionary<Type, IReadOnlyCache<LinkCacheItem, TKey>> _majorRecords = new();
 
@@ -25,12 +26,14 @@ internal sealed class ImmutableModLinkCacheCategory<TKey>
         InternalImmutableModLinkCache parent,
         IMetaInterfaceMapGetter metaInterfaceMapGetter,
         Func<LinkCacheItem, TryGet<TKey>> keyGetter,
-        Func<TKey, bool> shortCircuit)
+        Func<TKey, bool> shortCircuit,
+        IEqualityComparer<TKey>? equalityComparer)
     {
         _parent = parent;
         _metaInterfaceMapGetter = metaInterfaceMapGetter;
         _keyGetter = keyGetter;
         _shortCircuit = shortCircuit;
+        _equalityComparer = equalityComparer;
         _untypedMajorRecords = new Lazy<IReadOnlyCache<LinkCacheItem, TKey>>(
             isThreadSafe: true,
             valueFactory: () => ConstructUntypedCache());
@@ -56,7 +59,7 @@ internal sealed class ImmutableModLinkCacheCategory<TKey>
         Type type,
         IModGetter sourceMod)
     {
-        var cache = new Cache<LinkCacheItem, TKey>(x => _keyGetter(x).Value);
+        var cache = new Cache<LinkCacheItem, TKey>(x => _keyGetter(x).Value, _equalityComparer);
         foreach (var majorRec in sourceMod.EnumerateMajorRecords(type)
                      // ToDo
                      // Capture and expose errors optionally via TryResolve /w out param

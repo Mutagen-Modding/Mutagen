@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Masters;
@@ -22,6 +22,6 @@ public class MutagenBinaryReadStreamTests
                 GameConstants.Get(GameRelease.SkyrimSE),
                 ModKey.FromNameAndExtension("Skyrim.esm"),
                 SeparatedMasterPackage.EmptyNull));
-        stream.Disposed.Should().BeFalse();
+        stream.Disposed.ShouldBeFalse();
     }
 }

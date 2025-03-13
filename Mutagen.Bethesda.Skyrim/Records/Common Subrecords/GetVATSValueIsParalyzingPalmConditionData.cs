@@ -4,7 +4,7 @@ namespace Mutagen.Bethesda.Skyrim;
 public partial class GetVATSValueIsParalyzingPalmConditionData
 {
 
-    public override object? Parameter1
+    object? IConditionParameters.Parameter1
     {
         get => ValueFunction.IsParalyzingPalm;
         set
@@ -12,9 +12,9 @@ public partial class GetVATSValueIsParalyzingPalmConditionData
 
         }
     }
-    public override Type? Parameter1Type => typeof(ValueFunction);
+    Type? IConditionParametersGetter.Parameter1Type => typeof(ValueFunction);
 
-    public override object? Parameter2
+    object? IConditionParameters.Parameter2
     {
         get => null;
         set
@@ -22,5 +22,5 @@ public partial class GetVATSValueIsParalyzingPalmConditionData
 
         }
     }
-    public override Type? Parameter2Type => null;
+    Type? IConditionParametersGetter.Parameter2Type => null;
 }

@@ -1050,7 +1050,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             item.Rule = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthUInt8);
+                stringBinaryType: StringBinaryType.PrependLengthUInt8,
+                parseWhole: true);
             item.BoundObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 

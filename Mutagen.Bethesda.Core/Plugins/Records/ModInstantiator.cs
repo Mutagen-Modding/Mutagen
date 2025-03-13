@@ -81,11 +81,6 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// Function to call to import a new Mod of type T
         /// </summary>
         public static readonly ImporterDelegate Importer;
-        //
-        // /// <summary>
-        // /// Function to call to import a new Mod of type T
-        // /// </summary>
-        // public static readonly Func<ModPath, GameRelease, IFileSystem?, TMod> FileSystemImporter;
 
         static ModInstantiator()
         {
@@ -94,34 +89,54 @@ namespace Mutagen.Bethesda.Plugins.Records
             var type = typeof(TMod);
             if (type.Name.EndsWith("DisposableGetter"))
             {
-                var className = type.Name.TrimEnd("DisposableGetter") + "Getter";
+                var className = type.Name.TrimStringFromEnd("DisposableGetter") + "Getter";
                 type = Type.GetType($"{type.Namespace}.{className}, {type.Namespace}");
                 createActivator = false;
             }
             
-            if (type == null || !LoquiRegistration.TryGetRegister(type, out var regis))
+            if (type == null)
             {
                 throw new ArgumentException();
             }
 
-            if (createActivator)
+            if (type == typeof(IModGetter) || type == typeof(IMod))
             {
-                Activator = ModInstantiatorReflection.GetActivator<TMod>(regis);
-            }
-            else
-            {
-                Activator = (Key, Release, Version, Ranges) =>
+                Activator = (modKey, release, headerVersion, forceUseLowerFormIDRanges) => (TMod)ModInstantiator.Activator(modKey, release, headerVersion, forceUseLowerFormIDRanges);
+                if (type == typeof(IModGetter))
                 {
-                    throw new ArgumentException($"Cannot create a new mod of type {type}");
-                };
-            }
-            if (typeof(TMod).InheritsFrom(typeof(IMod)))
-            {
-                Importer = ModInstantiatorReflection.GetImporter<TMod>(regis);
+                    Importer = (path, release, param) => (TMod)ModInstantiator.ImportGetter(path, release, param);
+                }
+                else
+                {
+                    Importer = (path, release, param) => (TMod)ModInstantiator.ImportSetter(path, release, param);
+                }
             }
             else
             {
-                Importer = ModInstantiatorReflection.GetOverlay<TMod>(regis);
+                if (!LoquiRegistration.TryGetRegister(type, out var regis))
+                {
+                    throw new ArgumentException();
+                }
+
+                if (createActivator)
+                {
+                    Activator = ModInstantiatorReflection.GetActivator<TMod>(regis);
+                }
+                else
+                {
+                    Activator = (Key, Release, Version, Ranges) =>
+                    {
+                        throw new ArgumentException($"Cannot create a new mod of type {type}");
+                    };
+                }
+                if (typeof(TMod).InheritsFrom(typeof(IMod)))
+                {
+                    Importer = ModInstantiatorReflection.GetImporter<TMod>(regis);
+                }
+                else
+                {
+                    Importer = ModInstantiatorReflection.GetOverlay<TMod>(regis);
+                }
             }
         }
     }

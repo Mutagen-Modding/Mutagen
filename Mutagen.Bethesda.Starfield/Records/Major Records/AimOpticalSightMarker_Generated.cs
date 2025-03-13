@@ -2053,30 +2053,13 @@ namespace Mutagen.Bethesda.Starfield
             IAimOpticalSightMarkerGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.AOPS)))
-            {
-                try
-                {
-                    StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.AOPS,
+                writeEmbedded: StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -2144,7 +2127,8 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     item.NodeName = StringBinaryTranslation.Instance.Parse(
                         reader: dataFrame,
-                        stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
+                        stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
+                        parseWhole: true);
                     if (dataFrame.Remaining < 4) return null;
                     item.BeamReactivationDelayAfterEquipOrReloadSeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;

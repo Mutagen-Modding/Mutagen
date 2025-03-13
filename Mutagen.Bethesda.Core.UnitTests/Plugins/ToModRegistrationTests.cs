@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins;
@@ -9,6 +9,6 @@ public class ToModRegistrationTests
     public void NotFound()
     {
         var regis = GameCategory.Starfield.TryGetModRegistration();
-        regis.Should().BeNull();
+        regis.ShouldBeNull();
     }
 }

@@ -1192,7 +1192,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IGenericBaseForm :
         IAssetLinkContainer,
         IBaseObject,
-        IConstructible,
+        IConstructibleObjectTarget,
         IExternalBaseTemplate,
         IFormLinkContainer,
         IGenericBaseFormGetter,
@@ -1243,7 +1243,7 @@ namespace Mutagen.Bethesda.Starfield
         IAssetLinkContainerGetter,
         IBaseObjectGetter,
         IBinaryItem,
-        IConstructibleGetter,
+        IConstructibleObjectTargetGetter,
         IExternalBaseTemplateGetter,
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,
@@ -2643,30 +2643,13 @@ namespace Mutagen.Bethesda.Starfield
             IGenericBaseFormGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.GBFM)))
-            {
-                try
-                {
-                    StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.GBFM,
+                writeEmbedded: StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -2741,8 +2724,10 @@ namespace Mutagen.Bethesda.Starfield
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                         item.Name = StringBinaryTranslation.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
+                            eager: true,
                             source: StringsSource.Normal,
-                            stringBinaryType: StringBinaryType.NullTerminate);
+                            stringBinaryType: StringBinaryType.NullTerminate,
+                            parseWhole: true);
                         return new ParseResult((int)GenericBaseForm_FieldIndex.Name, nextRecordType);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)GenericBaseForm_FieldIndex.STRVs)
@@ -2766,8 +2751,10 @@ namespace Mutagen.Bethesda.Starfield
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                                 item.Name = StringBinaryTranslation.Instance.Parse(
                                     reader: frame.SpawnWithLength(contentLength),
+                                    eager: true,
                                     source: StringsSource.Normal,
-                                    stringBinaryType: StringBinaryType.NullTerminate);
+                                    stringBinaryType: StringBinaryType.NullTerminate,
+                                    parseWhole: true);
                                 return new ParseResult((int)GenericBaseForm_FieldIndex.Name, nextRecordType);
                             case 1:
                                 item.ObjectTemplates = 
@@ -2817,7 +2804,8 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Filter = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)GenericBaseForm_FieldIndex.Filter;
                 }
                 case RecordTypeInts.ANAM:
@@ -2963,7 +2951,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;

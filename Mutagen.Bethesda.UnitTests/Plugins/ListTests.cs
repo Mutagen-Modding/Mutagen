@@ -1,5 +1,4 @@
 ﻿using System.IO.Abstractions;
-using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Masters;
@@ -8,8 +7,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Testing.AutoData;
-using Noggog;
-using Xunit;
+using Noggog.Testing.Extensions;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins;
 
@@ -17,6 +15,7 @@ public class ListTests
 {
     [Theory, MutagenModAutoData]
     public void LListCounter(
+        SkyrimMod mod,
         LeveledItem leveledItem,
         MasterReferenceCollection masters,
         ModPath path,
@@ -30,8 +29,8 @@ public class ListTests
 
         using (var writer = new MutagenWriter(fileSystem.File.OpenWrite(path), GameConstants.SkyrimSE, dispose: true))
         {
-            writer.MetaData.MasterReferences = masters;
-            writer.MetaData.SeparatedMasterPackage = SeparatedMasterPackage.NotSeparate(masters);
+            writer.MetaData.MasterReferences = new MasterReferenceCollection(mod.ModKey);
+            writer.MetaData.SeparatedMasterPackage = SeparatedMasterPackage.NotSeparate(writer.MetaData.MasterReferences);
             leveledItem.WriteToBinary(writer);
         }
 
@@ -39,14 +38,14 @@ public class ListTests
         {
             var rec = stream.ReadMajorRecord();
             var llct = rec.FindSubrecord(RecordTypes.LLCT);
-            llct.AsInt8().Should().Be(55);
+            llct.AsInt8().ShouldEqual(55);
         }
     }
     
     [Theory, MutagenModAutoData]
     public void LListOverflowPrintsZeroCounter(
+        SkyrimMod mod,
         LeveledItem leveledItem,
-        MasterReferenceCollection masters,
         ModPath path,
         IFileSystem fileSystem)
     {
@@ -58,8 +57,8 @@ public class ListTests
 
         using (var writer = new MutagenWriter(fileSystem.File.OpenWrite(path), GameConstants.SkyrimSE, dispose: true))
         {
-            writer.MetaData.MasterReferences = masters;
-            writer.MetaData.SeparatedMasterPackage = SeparatedMasterPackage.NotSeparate(masters);
+            writer.MetaData.MasterReferences = new MasterReferenceCollection(mod.ModKey);
+            writer.MetaData.SeparatedMasterPackage = SeparatedMasterPackage.NotSeparate(writer.MetaData.MasterReferences);
             leveledItem.WriteToBinary(writer);
         }
 
@@ -67,7 +66,7 @@ public class ListTests
         {
             var rec = stream.ReadMajorRecord();
             var llct = rec.FindSubrecord(RecordTypes.LLCT);
-            llct.AsInt8().Should().Be(0);
+            llct.AsInt8().ShouldEqual(0);
         }
     }
 }

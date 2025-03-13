@@ -27,7 +27,7 @@
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IOutfitTarget</LinkInterface>
     <LinkInterface>IResourceTarget</LinkInterface>
-    <LinkInterface>IConstructible</LinkInterface>
+    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
     <LinkInterface>IHarvestTarget</LinkInterface>
     <LinkInterface>IBaseObject</LinkInterface>
   </Object>

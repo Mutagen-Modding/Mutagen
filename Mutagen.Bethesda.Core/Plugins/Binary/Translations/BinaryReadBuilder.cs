@@ -635,29 +635,6 @@ public record BinaryReadBuilder<TMod, TModGetter, TGroupMask>
     }
 
     /// <summary>
-    /// How to order BSAs when searching for content.<br/>
-    /// Null is the default, which will fall back on typical ini files for the bsa ordering.
-    /// </summary>
-    /// <param name="ordering">Filename order to consider BSAs with</param>
-    /// <returns>Builder object to continue customization</returns>
-    public BinaryReadBuilder<TMod, TModGetter, TGroupMask> WithBsaOrdering(IEnumerable<FileName> ordering)
-    {
-        return this with
-        {
-            _param = _param with
-            {
-                Params = _param.Params with
-                {
-                    StringsParam = (_param.Params.StringsParam ?? new()) with
-                    {
-                        BsaOrdering = ordering
-                    }
-                }
-            }
-        };
-    }
-
-    /// <summary>
     /// Overrides the string encodings to be used
     /// </summary>
     /// <param name="encodingProvider">Encoding provider to use for strings</param>
@@ -950,29 +927,6 @@ public record BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> : BinaryRea
                     StringsParam = (_param.Params.StringsParam ?? new()) with
                     {
                         BsaFolderOverride = dir
-                    }
-                }
-            }
-        };
-    }
-
-    /// <summary>
-    /// How to order BSAs when searching for content.<br/>
-    /// Null is the default, which will fall back on typical ini files for the bsa ordering.
-    /// </summary>
-    /// <param name="ordering">Filename order to consider BSAs with</param>
-    /// <returns>Builder object to continue customization</returns>
-    public BinaryReadMutableBuilder<TMod, TModGetter, TGroupMask> WithBsaOrdering(IEnumerable<FileName> ordering)
-    {
-        return this with
-        {
-            _param = _param with
-            {
-                Params = _param.Params with
-                {
-                    StringsParam = (_param.Params.StringsParam ?? new()) with
-                    {
-                        BsaOrdering = ordering
                     }
                 }
             }

@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
@@ -183,7 +183,7 @@ public abstract class AMajorRecordEnumerationTests
             }
         });
         var conv = ConvertMod(mod);
-        RunTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(conv).Any(p => p.FormKey == placed.FormKey).Should().BeTrue();
+        RunTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(conv).Any(p => p.FormKey == placed.FormKey).ShouldBeTrue();
     }
 
     [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
@@ -196,9 +196,9 @@ public abstract class AMajorRecordEnumerationTests
         Assert.Equal(Getter ? 0 : 1, RunTest<IHasIcons, IHasIcons>(conv).Count());
         Assert.Single(RunTest<IHasIcons, IHasIconsGetter>(conv));
         var item = RunTest<IHasIcons, IHasIconsGetter>(conv).First();
-        item.Icons.Should().NotBeNull();
-        item.Icons!.LargeIconFilename.GivenPath.Should().Be("Hello");
-        item.Icons!.SmallIconFilename!.GivenPath.Should().Be("World");
+        item.Icons.ShouldNotBeNull();
+        item.Icons!.LargeIconFilename.GivenPath.ShouldBe("Hello");
+        item.Icons!.SmallIconFilename!.GivenPath.ShouldBe("World");
     }
 
     [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
@@ -214,7 +214,7 @@ public abstract class AMajorRecordEnumerationTests
         Assert.Single(RunTest<INamed, INamedGetter>(conv));
         Assert.Equal(Getter ? 0 : 1, RunTest<INamedRequired, INamedRequired>(conv).Count());
         Assert.Single(RunTest<INamedRequired, INamedRequiredGetter>(conv));
-        RunTest<INamed, INamedGetter>(conv).First().Name.Should().Be("Hello");
+        RunTest<INamed, INamedGetter>(conv).First().Name.ShouldBe("Hello");
     }
 
     [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
@@ -230,7 +230,7 @@ public abstract class AMajorRecordEnumerationTests
         Assert.Single(RunTest<INamedRequired, INamedRequiredGetter>(conv));
         Assert.Equal(Getter ? 0 : 1, RunTest<ITranslatedNamedRequired, ITranslatedNamedRequired>(conv).Count());
         Assert.Single(RunTest<ITranslatedNamedRequired, ITranslatedNamedRequiredGetter>(conv));
-        RunTest<INamedRequired, INamedRequiredGetter>(conv).First().Name.Should().Be("Hello");
+        RunTest<INamedRequired, INamedRequiredGetter>(conv).First().Name.ShouldBe("Hello");
     }
 
     [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]

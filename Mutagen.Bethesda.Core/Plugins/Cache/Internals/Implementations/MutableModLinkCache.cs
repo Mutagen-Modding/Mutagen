@@ -1205,7 +1205,7 @@ public sealed class MutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, TMo
                      .Catch((Exception ex) => { }))
         {
             if (item is IMajorRecordGetter majRec
-                && editorId.Equals(majRec.EditorID))
+                && editorId.Equals(majRec.EditorID, StringComparison.OrdinalIgnoreCase))
             {
                 majorRec = item;
                 return true;

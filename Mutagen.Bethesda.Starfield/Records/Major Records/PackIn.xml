@@ -29,7 +29,7 @@
       </List>
       <String name="Name" recordType="FULL" translated="Normal" />
     </Fields>
-    <LinkInterface>IConstructible</LinkInterface>
+    <LinkInterface>IConstructibleObjectTarget</LinkInterface>
     <LinkInterface>ILeveledPackInTarget</LinkInterface>
     <LinkInterface>IBaseObject</LinkInterface>
     <LinkInterface>IPlanetContentTarget</LinkInterface>

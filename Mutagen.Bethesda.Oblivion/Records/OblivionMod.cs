@@ -185,6 +185,11 @@ partial class OblivionModSetterTranslationCommon
         }
         mod.SetModKey(rhs.ModKey);
     }
+
+    public partial OblivionMod DeepCopyGetNew(IOblivionModGetter item)
+    {
+        return new OblivionMod(item.ModKey);
+    }
 }
 
 internal partial class OblivionModBinaryOverlay
@@ -392,7 +397,7 @@ partial class OblivionModCommon
             }
 
             worldGroupWriter.Position = 4;
-            worldGroupWriter.Write((uint)(subStreams.NotNull().Select(s => s.Length).Sum()));
+            worldGroupWriter.Write((uint)(subStreams.WhereNotNull().Select(s => s.Length).Sum()));
             streams[worldspaceCounter + 1] = new CompositeReadStream(worldTrib.AsEnumerable().And(subStreams), resetPositions: true);
         });
         PluginUtilityTranslation.CompileSetGroupLength(streams, groupBytes);

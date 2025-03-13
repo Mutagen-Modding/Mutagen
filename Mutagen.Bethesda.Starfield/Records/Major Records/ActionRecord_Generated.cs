@@ -590,7 +590,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IActionRecord :
         IActionRecordGetter,
-        IConstructible,
+        IConstructibleObjectTarget,
         IIdleRelation,
         ILoquiObjectSetter<IActionRecordInternal>,
         IStarfieldMajorRecordInternal
@@ -616,7 +616,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IActionRecordGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
-        IConstructibleGetter,
+        IConstructibleObjectTargetGetter,
         IIdleRelationGetter,
         ILoquiObject<IActionRecordGetter>,
         IMapsToGetter<IActionRecordGetter>
@@ -1494,30 +1494,13 @@ namespace Mutagen.Bethesda.Starfield
             IActionRecordGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.AACT)))
-            {
-                try
-                {
-                    StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.AACT,
+                writeEmbedded: StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -1583,7 +1566,8 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Notes = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)ActionRecord_FieldIndex.Notes;
                 }
                 case RecordTypeInts.TNAM:

@@ -37,7 +37,8 @@ internal sealed class InternalImmutableLoadOrderLinkCache
             listedOrder: _listedOrder,
             metaInterfaceMapGetter: prefs?.MetaInterfaceMapGetterOverride ?? MetaInterfaceMapping.Instance,
             m => TryGet<FormKey>.Succeed(m.FormKey),
-            f => f.IsNull);
+            f => f.IsNull,
+            equalityComparer: null);
         _editorIdCache = new ImmutableLoadOrderLinkCacheCategory<string>(
             gameCategory,
             hasAny: hasAny,
@@ -49,7 +50,8 @@ internal sealed class InternalImmutableLoadOrderLinkCache
                 var edid = m.EditorID;
                 return TryGet<string>.Create(successful: !string.IsNullOrWhiteSpace(edid), edid!);
             },
-            e => e.IsNullOrWhitespace());
+            e => e.IsNullOrWhitespace(),
+            equalityComparer: StringComparer.OrdinalIgnoreCase);
             
         var modsByKey = new Dictionary<ModKey, ILinkCache>();
         foreach (var modGetter in _listedOrder) 

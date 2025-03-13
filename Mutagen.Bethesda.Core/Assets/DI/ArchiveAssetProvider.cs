@@ -3,7 +3,7 @@ using System.IO.Abstractions;
 using Mutagen.Bethesda.Archives;
 using Mutagen.Bethesda.Archives.DI;
 using Mutagen.Bethesda.Environments.DI;
-using Mutagen.Bethesda.Plugins;
+
 namespace Mutagen.Bethesda.Assets.DI;
 
 public class ArchiveAssetProvider : IAssetProvider
@@ -29,12 +29,7 @@ public class ArchiveAssetProvider : IAssetProvider
 
     public bool TryGetStream(DataRelativePath assetPath, [MaybeNullWhen(false)] out Stream stream)
     {
-        return TryGetStream(assetPath, null, out stream);
-    }
-
-    public bool TryGetStream(DataRelativePath assetPath, IEnumerable<ModKey>? modOrdering, [MaybeNullWhen(false)] out Stream stream)
-    {
-        var archiveFile = GetArchiveFile(assetPath, modOrdering);
+        var archiveFile = GetArchiveFile(assetPath);
         if (archiveFile is null)
         {
             stream = null;
@@ -47,12 +42,7 @@ public class ArchiveAssetProvider : IAssetProvider
 
     public bool TryGetSize(DataRelativePath assetPath, out uint size)
     {
-        return TryGetSize(assetPath, null, out size);
-    }
-
-    public bool TryGetSize(DataRelativePath assetPath, IEnumerable<ModKey>? modOrdering, out uint size)
-    {
-        var archiveFile = GetArchiveFile(assetPath, modOrdering);
+        var archiveFile = GetArchiveFile(assetPath);
         if (archiveFile is null)
         {
             size = 0;
@@ -63,13 +53,13 @@ public class ArchiveAssetProvider : IAssetProvider
         return true;
     }
 
-    private IArchiveFile? GetArchiveFile(DataRelativePath assetPath, IEnumerable<ModKey>? modOrdering = null)
+    private IArchiveFile? GetArchiveFile(DataRelativePath assetPath)
     {
         var dataRelativeDirectoryPath = _fileSystem.Path.GetDirectoryName(assetPath.Path);
         if (dataRelativeDirectoryPath is null) return null;
 
         var fileName = _fileSystem.Path.GetFileName(assetPath.Path);
-        var applicableArchivePaths = _getApplicableArchivePaths.Get(modOrdering);
+        var applicableArchivePaths = _getApplicableArchivePaths.Get();
         foreach (var archivePath in applicableArchivePaths)
         {
             var archiveReader = Archive.CreateReader(_gameReleaseContext.Release, archivePath, _fileSystem);

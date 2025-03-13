@@ -1,10 +1,11 @@
 ﻿using System.IO.Abstractions;
 using AutoFixture.Xunit2;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
+using Noggog.Testing.Extensions;
 using NSubstitute;
 using Xunit;
 
@@ -19,7 +20,7 @@ public class PluginRawListingsReaderTests
     {
         Assert.Throws<FileNotFoundException>(() =>
         {
-            sut.Read(missingPath).ToArray();
+            return sut.Read(missingPath).ToArray();
         });
     }
 
@@ -35,6 +36,6 @@ public class PluginRawListingsReaderTests
         };
         sut.Parser.Parse(default!).ReturnsForAnyArgs(listings);
         sut.Read(existingPath)
-            .Should().BeEquivalentTo(listings);
+            .ShouldEqual(listings);
     }
 }

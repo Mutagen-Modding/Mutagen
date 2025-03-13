@@ -371,4 +371,17 @@ public partial class ALinkingTests
             Assert.False(package.TryResolve<Npc>(TestFileEditorID, out var rec));
         });
     }
+
+    [Theory]
+    [InlineData(LinkCachePreferences.RetentionType.OnlyIdentifiers)]
+    [InlineData(LinkCachePreferences.RetentionType.WholeRecord)]
+    public void EditorIdCaseDifferences(LinkCachePreferences.RetentionType cacheType)
+    {
+        var wrapper = SkyrimMod.CreateFromBinaryOverlay(TestDataPathing.SkyrimTestMod, SkyrimRelease.SkyrimSE);
+        var (style, package) = GetLinkCache(wrapper, cacheType);
+        WrapPotentialThrow(cacheType, style, () =>
+        {
+            Assert.True(package.TryResolve<INpcGetter>(TestFileEditorID.ToLower(), out var rec));
+        });
+    }
 }

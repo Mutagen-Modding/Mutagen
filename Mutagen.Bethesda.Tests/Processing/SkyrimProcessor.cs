@@ -545,7 +545,7 @@ public class SkyrimProcessor : Processor
                 int finalLoc;
                 if (recs[0] == null)
                 {
-                    finalLoc = recs.NotNull().Select(x => x.Location).Max();
+                    finalLoc = recs.WhereNotNull().Select(x => x.Location).Max();
                 }
                 else if (recs[0]!.Value.Location == 0)
                 {
@@ -558,7 +558,7 @@ public class SkyrimProcessor : Processor
                 else
                 {
                     finalLoc = recs
-                        .NotNull()
+                        .WhereNotNull()
                         .Select(x => x.Location)
                         .Where(i => i < recs[0]!.Value.Location)
                         .Max();
@@ -656,7 +656,7 @@ public class SkyrimProcessor : Processor
             int finalLoc;
             if (recs[0] == null)
             {
-                finalLoc = recs.NotNull().Select(x => x.Location).Max();
+                finalLoc = recs.WhereNotNull().Select(x => x.Location).Max();
             }
             else if (recs[0].Value.Location == 0)
             {
@@ -668,7 +668,7 @@ public class SkyrimProcessor : Processor
             else
             {
                 finalLoc = recs
-                    .NotNull()
+                    .WhereNotNull()
                     .Select(x => x.Location)
                     .Where(i => i < recs[0]!.Value.Location)
                     .Max();

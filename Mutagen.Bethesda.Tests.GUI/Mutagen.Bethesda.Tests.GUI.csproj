@@ -15,6 +15,7 @@
     <PackageReference Include="ReactiveUI" />
     <PackageReference Include="ReactiveUI.Fody" />
     <PackageReference Include="Simple.Wpf.Terminal" />
+      <PackageReference Include="ReactiveMarbles.ObservableEvents.SourceGenerator" />
   </ItemGroup>
 
   <ItemGroup>

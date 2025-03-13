@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Installs;
 using Mutagen.Bethesda.Installs.DI;
 using Noggog;
@@ -14,7 +14,7 @@ public class GamesDictCompleteness
         foreach (var rel in Enums<GameRelease>.Values)
         {
             GameLocator.Games.ContainsKey(rel)
-                .Should().BeTrue();
+                .ShouldBeTrue();
         }
     }
 }

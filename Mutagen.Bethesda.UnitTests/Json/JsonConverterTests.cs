@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Json;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
@@ -29,7 +29,7 @@ public class JsonConverterTests
             Interface = new FormLinkInformation(TestConstants.Form2, typeof(IBookGetter)),
         };
         JsonConvert.SerializeObject(toSerialize, settings)
-            .Should().Be($"{{\"Interface\":\"{toSerialize.Direct.FormKey}<Skyrim.Book>\",\"Direct\":\"{toSerialize.Direct.FormKey}<Skyrim.Book>\"}}");
+            .ShouldBe($"{{\"Interface\":\"{toSerialize.Direct.FormKey}<Skyrim.Book>\",\"Direct\":\"{toSerialize.Direct.FormKey}<Skyrim.Book>\"}}");
     }
 
     [Fact]
@@ -46,7 +46,7 @@ public class JsonConverterTests
         var toDeserialize = $"{{\"Interface\":\"{target.Direct.FormKey}<Skyrim.Book>\",\"Direct\":\"{target.Direct.FormKey}<Skyrim.Book>\"}}";
         JsonConvert.DeserializeObject<FormLinkInformationClass>(toDeserialize, settings)!
             .Direct
-            .Should().Be(target.Direct);
+            .ShouldBe(target.Direct);
     }
     
     #endregion

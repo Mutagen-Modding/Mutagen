@@ -213,7 +213,7 @@ public class ModModule : GenerationModule
 
     public static string ModName(ObjectGeneration obj)
     {
-        return obj.Name.TrimEnd("Mod");
+        return obj.Name.TrimStringFromEnd("Mod");
     }
 
     public override async Task GenerateInVoid(ObjectGeneration obj, StructuredStringBuilder sb)
@@ -579,7 +579,7 @@ public class ModModule : GenerationModule
             using (var args = sb.Call(
                        $"{nameof(PluginUtilityTranslation)}.{nameof(PluginUtilityTranslation.CompileStreamsInto)}"))
             {
-                args.Add("outputStreams.NotNull()");
+                args.Add("outputStreams.WhereNotNull()");
                 args.Add("writer.BaseStream");
             }
         }

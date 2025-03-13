@@ -1206,7 +1206,8 @@ namespace Mutagen.Bethesda.Skyrim
             item.ExtraBindDataVersion = frame.ReadUInt8();
             item.FileName = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthUShort);
+                stringBinaryType: StringBinaryType.PrependLengthUShort,
+                parseWhole: true);
             item.Fragments.SetTo(
                 Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IndexedScriptFragment>.Instance.Parse(
                     amount: frame.ReadUInt16(),

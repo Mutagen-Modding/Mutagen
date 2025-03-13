@@ -5,12 +5,12 @@
     <Description>A C# library for manipulating, creating, and analyzing Starfield mods</Description>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <IsPackable>true</IsPackable>
-      <DebugType>portable</DebugType>
-      <DebugSymbols>true</DebugSymbols>
-      <PublishRepositoryUrl>true</PublishRepositoryUrl>
-      <EmbedUntrackedSources>true</EmbedUntrackedSources>
-      <IncludeSymbols>true</IncludeSymbols>
-      <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
@@ -167,6 +167,7 @@
     </Compile>
     <Compile Include="Interfaces\Link\IStaticTarget_Generated.cs" />
     <Compile Include="InternalsPermissions.cs" />
+    <Compile Include="Plugins\Cache\Internal\StarfieldOverrideMaskRegistration.cs" />
     <Compile Include="Records\Common Subrecords\AComponent.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
@@ -4391,7 +4392,7 @@
     <Compile Include="Records\Common Subrecords\ConditionGlobal.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\IConditionStringParameter.cs">
+    <Compile Include="Records\Common Subrecords\IConditionParameters.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\LocationTargetRadius.cs">
@@ -5657,12 +5658,6 @@
     <Compile Include="Records\Major Records\MorphGroup_Generated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\FaceMorphPhenotype_Generated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\FaceMorphPhenotypeItem_Generated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\ArmorMorph_Generated.cs">
       <DependentUpon>Armor.xml</DependentUpon>
     </Compile>
@@ -6739,6 +6734,9 @@
     </Compile>
     <Compile Include="Records\Major Records\SceneCollectionItem_Generated.cs">
       <DependentUpon>SceneCollection.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\VolumesUnknownEnderEmpty_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

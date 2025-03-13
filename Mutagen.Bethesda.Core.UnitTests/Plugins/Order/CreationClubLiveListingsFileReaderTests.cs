@@ -3,12 +3,13 @@ using System.IO.Abstractions.TestingHelpers;
 using System.Reactive;
 using AutoFixture.Xunit2;
 using DynamicData;
-using FluentAssertions;
+using Shouldly;
 using Microsoft.Reactive.Testing;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
+using Noggog.Testing.Extensions;
 using Noggog.Testing.FileSystem;
 using Noggog.Testing.IO;
 using NSubstitute;
@@ -30,13 +31,13 @@ public class CreationClubLiveListingsFileReaderTests
             stateTest = scheduler.Start(() => state);
             return ret;
         });
-        obs.Messages.Count.Should().Be(1);
+        obs.Messages.Count.ShouldBe(1);
         obs.Messages.Where(x => x.Value.Kind == NotificationKind.OnCompleted)
-            .Should().HaveCount(1);
-        stateTest.Messages.Should().HaveCount(2);
-        stateTest.Messages[0].Value.Kind.Should().Be(NotificationKind.OnNext);
-        stateTest.Messages[0].Value.Value.Succeeded.Should().BeTrue();
-        stateTest.Messages[1].Value.Kind.Should().Be(NotificationKind.OnCompleted);
+            .ShouldHaveCount(1);
+        stateTest.Messages.ShouldHaveCount(2);
+        stateTest.Messages[0].Value.Kind.ShouldBe(NotificationKind.OnNext);
+        stateTest.Messages[0].Value.Value.Succeeded.ShouldBeTrue();
+        stateTest.Messages[1].Value.Kind.ShouldBe(NotificationKind.OnCompleted);
     }
 
     [Theory, MutagenAutoData]
@@ -55,9 +56,9 @@ public class CreationClubLiveListingsFileReaderTests
             stateTest = scheduler.Start(() => state);
             return ret;
         });
-        stateTest.Messages.Should().HaveCount(1);
-        stateTest.Messages[0].Value.Kind.Should().Be(NotificationKind.OnNext);
-        stateTest.Messages[0].Value.Value.Succeeded.Should().BeFalse();
+        stateTest.Messages.ShouldHaveCount(1);
+        stateTest.Messages[0].Value.Kind.ShouldBe(NotificationKind.OnNext);
+        stateTest.Messages[0].Value.Value.Succeeded.ShouldBeFalse();
     }
 
     [Theory, MutagenAutoData]
@@ -76,12 +77,12 @@ public class CreationClubLiveListingsFileReaderTests
                 new CreationClubListingsPathInjection(path))
             .Get(out var state)
             .AsObservableList();
-        list.Items.Should().HaveCount(1);
-        list.Items.First().Should().Be(listingA);
+        list.Items.ShouldHaveCount(1);
+        list.Items.First().ShouldBe(listingA);
         var stateTest = scheduler.Start(() => state);
-        stateTest.Messages.Should().HaveCount(1);
-        stateTest.Messages[0].Value.Kind.Should().Be(NotificationKind.OnNext);
-        stateTest.Messages[0].Value.Value.Succeeded.Should().BeTrue();
+        stateTest.Messages.ShouldHaveCount(1);
+        stateTest.Messages[0].Value.Kind.ShouldBe(NotificationKind.OnNext);
+        stateTest.Messages[0].Value.Value.Succeeded.ShouldBeTrue();
     }
 
     [Theory, MutagenAutoData]
@@ -99,19 +100,19 @@ public class CreationClubLiveListingsFileReaderTests
                 new CreationClubListingsPathInjection(path))
             .Get(out var state)
             .AsObservableList();
-        list.Items.Should().HaveCount(0);
+        list.Items.ShouldHaveCount(0);
         var scheduler = new TestScheduler();
         var stateTest = scheduler.Start(() => state);
-        stateTest.Messages.Should().HaveCount(1);
-        stateTest.Messages[0].Value.Kind.Should().Be(NotificationKind.OnNext);
-        stateTest.Messages[0].Value.Value.Succeeded.Should().BeFalse();
+        stateTest.Messages.ShouldHaveCount(1);
+        stateTest.Messages[0].Value.Kind.ShouldBe(NotificationKind.OnNext);
+        stateTest.Messages[0].Value.Value.Succeeded.ShouldBeFalse();
         fs.File.WriteAllText(path, string.Empty);
         fileChanges.MarkCreated(path);
-        list.Items.Should().HaveCount(1);
-        list.Items.First().Should().Be(listingA);
+        list.Items.ShouldHaveCount(1);
+        list.Items.First().ShouldBe(listingA);
         stateTest = scheduler.Start(() => state);
-        stateTest.Messages[^1].Value.Kind.Should().Be(NotificationKind.OnNext);
-        stateTest.Messages[^1].Value.Value.Succeeded.Should().BeTrue();
+        stateTest.Messages[^1].Value.Kind.ShouldBe(NotificationKind.OnNext);
+        stateTest.Messages[^1].Value.Value.Succeeded.ShouldBeTrue();
     }
 
     [Theory, MutagenAutoData]
@@ -130,19 +131,19 @@ public class CreationClubLiveListingsFileReaderTests
                 new CreationClubListingsPathInjection(path))
             .Get(out var state)
             .AsObservableList();
-        list.Items.Should().HaveCount(1);
-        list.Items.First().Should().Be(listingA);
+        list.Items.ShouldHaveCount(1);
+        list.Items.First().ShouldBe(listingA);
         var scheduler = new TestScheduler();
         var stateTest = scheduler.Start(() => state);
-        stateTest.Messages.Should().HaveCount(1);
-        stateTest.Messages[0].Value.Kind.Should().Be(NotificationKind.OnNext);
-        stateTest.Messages[0].Value.Value.Succeeded.Should().BeTrue();
+        stateTest.Messages.ShouldHaveCount(1);
+        stateTest.Messages[0].Value.Kind.ShouldBe(NotificationKind.OnNext);
+        stateTest.Messages[0].Value.Value.Succeeded.ShouldBeTrue();
         fs.File.Delete(path);
         fileChanges.MarkDeleted(path);
-        list.Items.Should().HaveCount(0);
+        list.Items.ShouldHaveCount(0);
         stateTest = scheduler.Start(() => state);
-        stateTest.Messages[^1].Value.Kind.Should().Be(NotificationKind.OnNext);
-        stateTest.Messages[^1].Value.Value.Succeeded.Should().BeFalse();
+        stateTest.Messages[^1].Value.Kind.ShouldBe(NotificationKind.OnNext);
+        stateTest.Messages[^1].Value.Value.Succeeded.ShouldBeFalse();
     }
 
     [Theory, MutagenAutoData]
@@ -162,22 +163,22 @@ public class CreationClubLiveListingsFileReaderTests
                 new CreationClubListingsPathInjection(path))
             .Get(out var state)
             .AsObservableList();
-        list.Items.Should().HaveCount(1);
-        list.Items.First().Should().Be(listingA);
+        list.Items.ShouldHaveCount(1);
+        list.Items.First().ShouldBe(listingA);
         var scheduler = new TestScheduler();
         var stateTest = scheduler.Start(() => state);
-        stateTest.Messages.Should().HaveCount(1);
-        stateTest.Messages[0].Value.Kind.Should().Be(NotificationKind.OnNext);
-        stateTest.Messages[0].Value.Value.Succeeded.Should().BeTrue();
+        stateTest.Messages.ShouldHaveCount(1);
+        stateTest.Messages[0].Value.Kind.ShouldBe(NotificationKind.OnNext);
+        stateTest.Messages[0].Value.Value.Succeeded.ShouldBeTrue();
             
         reader.Read(Arg.Any<Stream>()).Returns(listingA.AsEnumerable().And(listingB));
         fileChanges.MarkChanged(path);
-        list.Items.Should().HaveCount(2);
-        list.Items.Should().Equal(
+        list.Items.ShouldHaveCount(2);
+        list.Items.ShouldEqual(
             listingA,
             listingB);
         stateTest = scheduler.Start(() => state);
-        stateTest.Messages[^1].Value.Kind.Should().Be(NotificationKind.OnNext);
-        stateTest.Messages[^1].Value.Value.Succeeded.Should().BeTrue();
+        stateTest.Messages[^1].Value.Kind.ShouldBe(NotificationKind.OnNext);
+        stateTest.Messages[^1].Value.Value.Succeeded.ShouldBeTrue();
     }
 }

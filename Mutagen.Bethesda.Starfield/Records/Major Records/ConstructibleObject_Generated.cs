@@ -222,6 +222,16 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
+        #region InstantiationFilterKeyword
+        private readonly IFormLinkNullable<IKeywordGetter> _InstantiationFilterKeyword = new FormLinkNullable<IKeywordGetter>();
+        public IFormLinkNullable<IKeywordGetter> InstantiationFilterKeyword
+        {
+            get => _InstantiationFilterKeyword;
+            set => _InstantiationFilterKeyword.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IKeywordGetter> IConstructibleObjectGetter.InstantiationFilterKeyword => this.InstantiationFilterKeyword;
+        #endregion
         #region RECF
         public UInt64? RECF { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -270,6 +280,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.MenuArtObject = initialValue;
                 this.BuildLimit = initialValue;
                 this.Categories = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.InstantiationFilterKeyword = initialValue;
                 this.RECF = initialValue;
             }
 
@@ -299,6 +310,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem MenuArtObject,
                 TItem BuildLimit,
                 TItem Categories,
+                TItem InstantiationFilterKeyword,
                 TItem RECF)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -327,6 +339,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.MenuArtObject = MenuArtObject;
                 this.BuildLimit = BuildLimit;
                 this.Categories = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Categories, Enumerable.Empty<(int Index, TItem Value)>());
+                this.InstantiationFilterKeyword = InstantiationFilterKeyword;
                 this.RECF = RECF;
             }
 
@@ -357,6 +370,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem MenuArtObject;
             public TItem BuildLimit;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Categories;
+            public TItem InstantiationFilterKeyword;
             public TItem RECF;
             #endregion
 
@@ -389,6 +403,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.MenuArtObject, rhs.MenuArtObject)) return false;
                 if (!object.Equals(this.BuildLimit, rhs.BuildLimit)) return false;
                 if (!object.Equals(this.Categories, rhs.Categories)) return false;
+                if (!object.Equals(this.InstantiationFilterKeyword, rhs.InstantiationFilterKeyword)) return false;
                 if (!object.Equals(this.RECF, rhs.RECF)) return false;
                 return true;
             }
@@ -413,6 +428,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.MenuArtObject);
                 hash.Add(this.BuildLimit);
                 hash.Add(this.Categories);
+                hash.Add(this.InstantiationFilterKeyword);
                 hash.Add(this.RECF);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -508,6 +524,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (!eval(this.InstantiationFilterKeyword)) return false;
                 if (!eval(this.RECF)) return false;
                 return true;
             }
@@ -601,6 +618,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (eval(this.InstantiationFilterKeyword)) return true;
                 if (eval(this.RECF)) return true;
                 return false;
             }
@@ -704,6 +722,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                obj.InstantiationFilterKeyword = eval(this.InstantiationFilterKeyword);
                 obj.RECF = eval(this.RECF);
             }
             #endregion
@@ -872,6 +891,10 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
+                    if (printMask?.InstantiationFilterKeyword ?? true)
+                    {
+                        sb.AppendItem(InstantiationFilterKeyword, "InstantiationFilterKeyword");
+                    }
                     if (printMask?.RECF ?? true)
                     {
                         sb.AppendItem(RECF, "RECF");
@@ -905,6 +928,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? MenuArtObject;
             public Exception? BuildLimit;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Categories;
+            public Exception? InstantiationFilterKeyword;
             public Exception? RECF;
             #endregion
 
@@ -950,6 +974,8 @@ namespace Mutagen.Bethesda.Starfield
                         return BuildLimit;
                     case ConstructibleObject_FieldIndex.Categories:
                         return Categories;
+                    case ConstructibleObject_FieldIndex.InstantiationFilterKeyword:
+                        return InstantiationFilterKeyword;
                     case ConstructibleObject_FieldIndex.RECF:
                         return RECF;
                     default:
@@ -1015,6 +1041,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case ConstructibleObject_FieldIndex.Categories:
                         this.Categories = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case ConstructibleObject_FieldIndex.InstantiationFilterKeyword:
+                        this.InstantiationFilterKeyword = ex;
                         break;
                     case ConstructibleObject_FieldIndex.RECF:
                         this.RECF = ex;
@@ -1084,6 +1113,9 @@ namespace Mutagen.Bethesda.Starfield
                     case ConstructibleObject_FieldIndex.Categories:
                         this.Categories = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
+                    case ConstructibleObject_FieldIndex.InstantiationFilterKeyword:
+                        this.InstantiationFilterKeyword = (Exception?)obj;
+                        break;
                     case ConstructibleObject_FieldIndex.RECF:
                         this.RECF = (Exception?)obj;
                         break;
@@ -1114,6 +1146,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (MenuArtObject != null) return true;
                 if (BuildLimit != null) return true;
                 if (Categories != null) return true;
+                if (InstantiationFilterKeyword != null) return true;
                 if (RECF != null) return true;
                 return false;
             }
@@ -1267,6 +1300,9 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 {
+                    sb.AppendItem(InstantiationFilterKeyword, "InstantiationFilterKeyword");
+                }
+                {
                     sb.AppendItem(RECF, "RECF");
                 }
             }
@@ -1295,6 +1331,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.MenuArtObject = this.MenuArtObject.Combine(rhs.MenuArtObject);
                 ret.BuildLimit = this.BuildLimit.Combine(rhs.BuildLimit);
                 ret.Categories = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Categories?.Overall, rhs.Categories?.Overall), Noggog.ExceptionExt.Combine(this.Categories?.Specific, rhs.Categories?.Specific));
+                ret.InstantiationFilterKeyword = this.InstantiationFilterKeyword.Combine(rhs.InstantiationFilterKeyword);
                 ret.RECF = this.RECF.Combine(rhs.RECF);
                 return ret;
             }
@@ -1336,6 +1373,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool MenuArtObject;
             public bool BuildLimit;
             public bool Categories;
+            public bool InstantiationFilterKeyword;
             public bool RECF;
             #endregion
 
@@ -1356,6 +1394,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.MenuArtObject = defaultOn;
                 this.BuildLimit = defaultOn;
                 this.Categories = defaultOn;
+                this.InstantiationFilterKeyword = defaultOn;
                 this.RECF = defaultOn;
             }
 
@@ -1382,6 +1421,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((MenuArtObject, null));
                 ret.Add((BuildLimit, null));
                 ret.Add((Categories, null));
+                ret.Add((InstantiationFilterKeyword, null));
                 ret.Add((RECF, null));
             }
 
@@ -1555,6 +1595,7 @@ namespace Mutagen.Bethesda.Starfield
         new IFormLinkNullable<IArtObjectGetter> MenuArtObject { get; set; }
         new IFormLinkNullable<IGlobalGetter> BuildLimit { get; set; }
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Categories { get; set; }
+        new IFormLinkNullable<IKeywordGetter> InstantiationFilterKeyword { get; set; }
         new UInt64? RECF { get; set; }
     }
 
@@ -1595,6 +1636,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<IArtObjectGetter> MenuArtObject { get; }
         IFormLinkNullableGetter<IGlobalGetter> BuildLimit { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Categories { get; }
+        IFormLinkNullableGetter<IKeywordGetter> InstantiationFilterKeyword { get; }
         UInt64? RECF { get; }
 
     }
@@ -1790,7 +1832,8 @@ namespace Mutagen.Bethesda.Starfield
         MenuArtObject = 22,
         BuildLimit = 23,
         Categories = 24,
-        RECF = 25,
+        InstantiationFilterKeyword = 25,
+        RECF = 26,
     }
     #endregion
 
@@ -1801,9 +1844,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 19;
+        public const ushort AdditionalFieldCount = 20;
 
-        public const ushort FieldCount = 26;
+        public const ushort FieldCount = 27;
 
         public static readonly Type MaskType = typeof(ConstructibleObject.Mask<>);
 
@@ -1858,6 +1901,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.ANAM,
                 RecordTypes.JNAM,
                 RecordTypes.FNAM,
+                RecordTypes.CIFK,
                 RecordTypes.RECF);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
@@ -1921,6 +1965,7 @@ namespace Mutagen.Bethesda.Starfield
             item.MenuArtObject.Clear();
             item.BuildLimit.Clear();
             item.Categories = null;
+            item.InstantiationFilterKeyword.Clear();
             item.RECF = default;
             base.Clear(item);
         }
@@ -1951,6 +1996,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.MenuArtObject.Relink(mapping);
             obj.BuildLimit.Relink(mapping);
             obj.Categories?.RemapLinks(mapping);
+            obj.InstantiationFilterKeyword.Relink(mapping);
         }
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IConstructibleObject obj)
@@ -2087,6 +2133,7 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Categories,
                 (l, r) => object.Equals(l, r),
                 include);
+            ret.InstantiationFilterKeyword = item.InstantiationFilterKeyword.Equals(rhs.InstantiationFilterKeyword);
             ret.RECF = item.RECF == rhs.RECF;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -2267,6 +2314,10 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
+            if (printMask?.InstantiationFilterKeyword ?? true)
+            {
+                sb.AppendItem(item.InstantiationFilterKeyword.FormKeyNullable, "InstantiationFilterKeyword");
+            }
             if ((printMask?.RECF ?? true)
                 && item.RECF is {} RECFItem)
             {
@@ -2406,6 +2457,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Categories.SequenceEqualNullable(rhs.Categories)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.InstantiationFilterKeyword) ?? true))
+            {
+                if (!lhs.InstantiationFilterKeyword.Equals(rhs.InstantiationFilterKeyword)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.RECF) ?? true))
             {
                 if (lhs.RECF != rhs.RECF) return false;
@@ -2471,6 +2526,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.MenuArtObject);
             hash.Add(item.BuildLimit);
             hash.Add(item.Categories);
+            hash.Add(item.InstantiationFilterKeyword);
             if (item.RECF is {} RECFitem)
             {
                 hash.Add(RECFitem);
@@ -2570,6 +2626,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
+            }
+            if (FormLinkInformation.TryFactory(obj.InstantiationFilterKeyword, out var InstantiationFilterKeywordInfo))
+            {
+                yield return InstantiationFilterKeywordInfo;
             }
             yield break;
         }
@@ -2916,6 +2976,10 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.InstantiationFilterKeyword) ?? true))
+            {
+                item.InstantiationFilterKeyword.SetTo(rhs.InstantiationFilterKeyword.FormKeyNullable);
+            }
             if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.RECF) ?? true))
             {
                 item.RECF = rhs.RECF;
@@ -3218,6 +3282,10 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         item: subItem);
                 });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.InstantiationFilterKeyword,
+                header: translationParams.ConvertToCustom(RecordTypes.CIFK));
             UInt64BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.RECF,
@@ -3229,30 +3297,13 @@ namespace Mutagen.Bethesda.Starfield
             IConstructibleObjectGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.COBJ)))
-            {
-                try
-                {
-                    StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.COBJ,
+                writeEmbedded: StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -3322,8 +3373,10 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
                         source: StringsSource.DL,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)ConstructibleObject_FieldIndex.Description;
                 }
                 case RecordTypeInts.BNAM:
@@ -3440,6 +3493,12 @@ namespace Mutagen.Bethesda.Starfield
                         .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     return (int)ConstructibleObject_FieldIndex.Categories;
                 }
+                case RecordTypeInts.CIFK:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.InstantiationFilterKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ConstructibleObject_FieldIndex.InstantiationFilterKeyword;
+                }
                 case RecordTypeInts.RECF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -3509,7 +3568,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         #region Description
         private int? _DescriptionLocation;
-        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
         #region WorkbenchKeyword
         private int? _WorkbenchKeywordLocation;
@@ -3554,6 +3613,10 @@ namespace Mutagen.Bethesda.Starfield
         public IFormLinkNullableGetter<IGlobalGetter> BuildLimit => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _BuildLimitLocation);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Categories { get; private set; }
+        #region InstantiationFilterKeyword
+        private int? _InstantiationFilterKeywordLocation;
+        public IFormLinkNullableGetter<IKeywordGetter> InstantiationFilterKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _InstantiationFilterKeywordLocation);
+        #endregion
         #region RECF
         private int? _RECFLocation;
         public UInt64? RECF => _RECFLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RECFLocation.Value, _package.MetaData.Constants)) : default(UInt64?);
@@ -3757,6 +3820,11 @@ namespace Mutagen.Bethesda.Starfield
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)ConstructibleObject_FieldIndex.Categories;
+                }
+                case RecordTypeInts.CIFK:
+                {
+                    _InstantiationFilterKeywordLocation = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.InstantiationFilterKeyword;
                 }
                 case RecordTypeInts.RECF:
                 {

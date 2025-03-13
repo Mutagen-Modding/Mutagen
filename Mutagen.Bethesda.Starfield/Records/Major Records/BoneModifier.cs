@@ -22,7 +22,7 @@ partial class BoneModifierBinaryCreateTranslation
         PreviousParse lastParsed)
     {
         frame.ReadSubrecordHeader(RecordTypes.DATA);
-        var dataTypeStr = StringBinaryTranslation.Instance.Parse(frame, StringBinaryType.PrependLengthWithNullIfContent);
+        var dataTypeStr = StringBinaryTranslation.Instance.Parse(frame, StringBinaryType.PrependLengthWithNullIfContent, parseWhole: true);
         var dataType = Enum.Parse<DataType>(dataTypeStr);
         ABoneModifierData data;
         switch (dataType)

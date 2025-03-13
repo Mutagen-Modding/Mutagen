@@ -3,6 +3,9 @@ using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using System.Collections.Immutable;
 using System.IO.Abstractions;
+using Mutagen.Bethesda.Archives.DI;
+using Mutagen.Bethesda.Assets.DI;
+using Mutagen.Bethesda.Inis.DI;
 using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
@@ -93,6 +96,16 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
     }
 
     /// <summary>
+    /// Sets the load order to the given listings
+    /// </summary>
+    /// <param name="loadOrder">Load Order to get listings from</param>
+    /// <returns>New builder with the new rules</returns>
+    public GameEnvironmentBuilder<TMod, TModGetter> WithLoadOrder(ILoadOrderGetter loadOrder)
+    {
+        return TransformLoadOrderListings(_ => loadOrder.ListedOrder.Select(x => (ILoadOrderListingGetter)new LoadOrderListing(x, enabled: true)).ToArray());
+    }
+
+    /// <summary>
     /// Exposes the load order for transformation by the user with mod objects loaded and accessible
     /// </summary>
     /// <param name="transformer">Transformation lambda to process the incoming enumerable and return a new desired one</param>
@@ -175,6 +188,9 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
                 Release,
                 GameLocatorLookupCache.Instance), 
             DataDirectoryProvider);
+        
+        var gameDirectoryLookup = Resolve<IGameDirectoryLookup>(
+            () => new GameDirectoryLookupInjection(Release.Release, dataDirectory.Path.Directory));
 
         var pluginPathProvider = Resolve<IPluginListingsPathContext>(
             () => new PluginListingsPathContext(
@@ -240,10 +256,11 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
             filteredListings = filter(filteredListings);
         }
 
+        var loListings = new LoadOrderListingsInjection(filteredListings);
         var loGetter = new LoadOrderImporter<TModGetter>(
             fs,
             dataDirectory,
-            new LoadOrderListingsInjection(filteredListings),
+            loListings,
             new ModImporter<TModGetter>(
                 fs,
                 Release),
@@ -260,13 +277,38 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
 
         var linkCache = lo.ToMutableLinkCache(MutableMods.ToArray());
 
+        var archiveExt = new ArchiveExtensionProvider(Release);
+        var assetProvider = new GameAssetProvider(
+            new DataDirectoryAssetProvider(
+                fs,
+                dataDirectory),
+            new ArchiveAssetProvider(
+                fs,
+                new GetApplicableArchivePaths(
+                    fs,
+                    new CheckArchiveApplicability(
+                        archiveExt),
+                    dataDirectory,
+                    archiveExt,
+                    new CachedArchiveListingDetailsProvider(
+                        loListings,
+                        new GetArchiveIniListings(
+                            fs,
+                            new IniPathProvider(
+                                Release,
+                                new IniPathLookup(
+                                    gameDirectoryLookup))),
+                        new ArchiveNameFromModKeyProvider(Release))),
+                Release));
+
         return new GameEnvironmentState<TMod, TModGetter>(
             Release.Release,
             dataFolderPath: dataDirectory.Path,
             loadOrderFilePath: pluginPathProvider.Path,
             creationClubListingsFilePath: cccPath.Path,
             loadOrder: lo,
-            linkCache: linkCache);
+            linkCache: linkCache,
+            assetProvider: assetProvider);
     }
 }
 
@@ -430,6 +472,9 @@ public sealed record GameEnvironmentBuilder
                 GameLocatorLookupCache.Instance), 
             DataDirectoryProvider);
         
+        var gameDirectoryLookup = Resolve<IGameDirectoryLookup>(
+            () => new GameDirectoryLookupInjection(Release.Release, dataDirectory.Path.Directory));
+        
         var pluginPathProvider = Resolve<IPluginListingsPathContext>(
             () => new PluginListingsPathContext(
                 new PluginListingsPathProvider(),
@@ -494,11 +539,12 @@ public sealed record GameEnvironmentBuilder
             filteredListings = filter(filteredListings);
         }
 
+        var loListings = new LoadOrderListingsInjection(filteredListings);
         var loGetter = new LoadOrderImporter(
             fs,
             Release,
             dataDirectory,
-            new LoadOrderListingsInjection(filteredListings),
+            loListings,
             new KeyedMasterStyleReader(
                 Release,
                 fs),
@@ -517,13 +563,38 @@ public sealed record GameEnvironmentBuilder
 
         var linkCache = lo.ToUntypedMutableLinkCache(Release.Release.ToCategory(), MutableMods.ToArray());
 
+        var archiveExt = new ArchiveExtensionProvider(Release);
+        var assetProvider = new GameAssetProvider(
+            new DataDirectoryAssetProvider(
+                fs,
+                dataDirectory),
+            new ArchiveAssetProvider(
+                fs,
+                new GetApplicableArchivePaths(
+                    fs,
+                    new CheckArchiveApplicability(
+                        archiveExt),
+                    dataDirectory,
+                    archiveExt,
+                    new CachedArchiveListingDetailsProvider(
+                        loListings,
+                        new GetArchiveIniListings(
+                            fs,
+                            new IniPathProvider(
+                                Release,
+                                new IniPathLookup(
+                                    gameDirectoryLookup))),
+                        new ArchiveNameFromModKeyProvider(Release))),
+                Release));
+        
         return new GameEnvironmentState(
             Release.Release,
             dataFolderPath: dataDirectory.Path,
             loadOrderFilePath: pluginPathProvider.Path,
             creationClubListingsFilePath: cccPath.Path,
             loadOrder: lo,
-            linkCache: linkCache);
+            linkCache: linkCache,
+            assetProvider: assetProvider);
     }
 }
 

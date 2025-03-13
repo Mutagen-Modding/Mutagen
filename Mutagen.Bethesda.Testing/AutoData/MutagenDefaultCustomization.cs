@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using Noggog.Testing.AutoFixture;
+using NSubstitute;
 
 namespace Mutagen.Bethesda.Testing.AutoData;
 
@@ -31,5 +32,6 @@ public class MutagenDefaultCustomization : ICustomization
         fixture.Customize(new MutagenBaseCustomization());
         fixture.Customize(new MutagenReleaseCustomization(_release));
         fixture.Customize(new DefaultCustomization(_targetFileSystem));
+        fixture.Customizations.Add(new OrderBuilder());
     }
 }
