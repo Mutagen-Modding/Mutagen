@@ -50,7 +50,6 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.PHZD, ProcessHazards);
         AddDynamicProcessing(RecordTypes.NPC_, ProcessNpcs);
         AddDynamicProcessing(RecordTypes.LCTN, ProcessLocations);
-        AddDynamicProcessing(RecordTypes.WRLD, ProcessWorldspaces);
         AddDynamicProcessing(RecordTypes.PACK, ProcessPackages);
         AddDynamicProcessing(RecordTypes.STMP, ProcessSnapTemplates);
         AddDynamicProcessing(RecordTypes.FURN, ProcessFurniture);
@@ -684,17 +683,6 @@ public class StarfieldProcessor : Processor
                 ProcessBool(acep, offsetLoc: fileOffset, loc + 8, 4, 1);
                 loc += 12;
             }
-        }
-    }
-    
-    private void ProcessWorldspaces(
-        IMutagenReadStream stream,
-        MajorRecordFrame majorFrame,
-        long fileOffset)
-    {
-        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.XCLW))
-        {
-            ProcessZeroFloats(subRec, fileOffset);
         }
     }
 
