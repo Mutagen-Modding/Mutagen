@@ -213,6 +213,10 @@ public static class IGroupMixIns
             {
                 throw new InvalidOperationException($"Duplicate did not return a record of the expected type {typeof(TMajor).Name}");
             }
+            if (edid != null)
+            {
+                dup.EditorID = edid;
+            }
             group.Add(newRec);
             return newRec;
         }
@@ -250,6 +254,10 @@ public static class IGroupMixIns
         try
         {
             var newRec = source.Duplicate(formKey ?? group.SourceMod.GetNextFormKey(edid));
+            if (edid != null)
+            {
+                newRec.EditorID = edid;
+            }
             group.AddUntyped(newRec);
             return newRec;
         }
