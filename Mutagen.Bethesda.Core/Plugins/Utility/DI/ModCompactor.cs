@@ -173,7 +173,7 @@ public class ModCompactor : IModCompactor
         {
             throw new FormIDCompactionOutOfBoundsException(
                 small: mod.IsSmallMaster,
-                Medium: mod.IsMediumMaster,
+                medium: mod.IsMediumMaster,
                 range: range
             );
         }
@@ -192,7 +192,7 @@ public class ModCompactor : IModCompactor
                 {
                     throw new FormIDCompactionOutOfBoundsException(
                         small: mod.IsSmallMaster,
-                        Medium: mod.IsMediumMaster,
+                        medium: mod.IsMediumMaster,
                         range: range
                     );
                 }
