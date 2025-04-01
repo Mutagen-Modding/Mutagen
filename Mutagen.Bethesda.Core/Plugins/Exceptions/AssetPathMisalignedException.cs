@@ -20,4 +20,9 @@ public class AssetPathMisalignedException : Exception
         Path = path;
         AssetType = null;
     }
+
+    public override string ToString()
+    {
+        return $"{GetType().Name} - Path: {Path}: {Message} {InnerException}{StackTrace}";
+    }
 }
