@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -37,30 +38,34 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class PlanetINAM :
-        IEquatable<IPlanetINAMGetter>,
-        ILoquiObjectSetter<PlanetINAM>,
-        IPlanetINAM
+    public partial class MasterWorldspace :
+        IEquatable<IMasterWorldspaceGetter>,
+        ILoquiObjectSetter<MasterWorldspace>,
+        IMasterWorldspace
     {
         #region Ctor
-        public PlanetINAM()
+        public MasterWorldspace()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region AtmosHandle
-        public UInt32 AtmosHandle { get; set; } = default(UInt32);
+        #region Longitude
+        public Double Longitude { get; set; } = default(Double);
         #endregion
-        #region Unknown1
-        public Int32 Unknown1 { get; set; } = default(Int32);
+        #region Latitude
+        public Double Latitude { get; set; } = default(Double);
         #endregion
-        #region Unknown2
-        public Int32 Unknown2 { get; set; } = default(Int32);
-        #endregion
-        #region Unknown3
-        public Int32 Unknown3 { get; set; } = default(Int32);
+        #region Worldspace
+        private readonly IFormLink<IWorldspaceGetter> _Worldspace = new FormLink<IWorldspaceGetter>();
+        public IFormLink<IWorldspaceGetter> Worldspace
+        {
+            get => _Worldspace;
+            set => _Worldspace.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IWorldspaceGetter> IMasterWorldspaceGetter.Worldspace => this.Worldspace;
         #endregion
 
         #region To String
@@ -69,7 +74,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            PlanetINAMMixIn.Print(
+            MasterWorldspaceMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -80,16 +85,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IPlanetINAMGetter rhs) return false;
-            return ((PlanetINAMCommon)((IPlanetINAMGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IMasterWorldspaceGetter rhs) return false;
+            return ((MasterWorldspaceCommon)((IMasterWorldspaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IPlanetINAMGetter? obj)
+        public bool Equals(IMasterWorldspaceGetter? obj)
         {
-            return ((PlanetINAMCommon)((IPlanetINAMGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((MasterWorldspaceCommon)((IMasterWorldspaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((PlanetINAMCommon)((IPlanetINAMGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((MasterWorldspaceCommon)((IMasterWorldspaceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -101,22 +106,19 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.AtmosHandle = initialValue;
-                this.Unknown1 = initialValue;
-                this.Unknown2 = initialValue;
-                this.Unknown3 = initialValue;
+                this.Longitude = initialValue;
+                this.Latitude = initialValue;
+                this.Worldspace = initialValue;
             }
 
             public Mask(
-                TItem AtmosHandle,
-                TItem Unknown1,
-                TItem Unknown2,
-                TItem Unknown3)
+                TItem Longitude,
+                TItem Latitude,
+                TItem Worldspace)
             {
-                this.AtmosHandle = AtmosHandle;
-                this.Unknown1 = Unknown1;
-                this.Unknown2 = Unknown2;
-                this.Unknown3 = Unknown3;
+                this.Longitude = Longitude;
+                this.Latitude = Latitude;
+                this.Worldspace = Worldspace;
             }
 
             #pragma warning disable CS8618
@@ -128,10 +130,9 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem AtmosHandle;
-            public TItem Unknown1;
-            public TItem Unknown2;
-            public TItem Unknown3;
+            public TItem Longitude;
+            public TItem Latitude;
+            public TItem Worldspace;
             #endregion
 
             #region Equals
@@ -144,19 +145,17 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.AtmosHandle, rhs.AtmosHandle)) return false;
-                if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
-                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
+                if (!object.Equals(this.Longitude, rhs.Longitude)) return false;
+                if (!object.Equals(this.Latitude, rhs.Latitude)) return false;
+                if (!object.Equals(this.Worldspace, rhs.Worldspace)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.AtmosHandle);
-                hash.Add(this.Unknown1);
-                hash.Add(this.Unknown2);
-                hash.Add(this.Unknown3);
+                hash.Add(this.Longitude);
+                hash.Add(this.Latitude);
+                hash.Add(this.Worldspace);
                 return hash.ToHashCode();
             }
 
@@ -165,10 +164,9 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.AtmosHandle)) return false;
-                if (!eval(this.Unknown1)) return false;
-                if (!eval(this.Unknown2)) return false;
-                if (!eval(this.Unknown3)) return false;
+                if (!eval(this.Longitude)) return false;
+                if (!eval(this.Latitude)) return false;
+                if (!eval(this.Worldspace)) return false;
                 return true;
             }
             #endregion
@@ -176,10 +174,9 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.AtmosHandle)) return true;
-                if (eval(this.Unknown1)) return true;
-                if (eval(this.Unknown2)) return true;
-                if (eval(this.Unknown3)) return true;
+                if (eval(this.Longitude)) return true;
+                if (eval(this.Latitude)) return true;
+                if (eval(this.Worldspace)) return true;
                 return false;
             }
             #endregion
@@ -187,50 +184,45 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new PlanetINAM.Mask<R>();
+                var ret = new MasterWorldspace.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.AtmosHandle = eval(this.AtmosHandle);
-                obj.Unknown1 = eval(this.Unknown1);
-                obj.Unknown2 = eval(this.Unknown2);
-                obj.Unknown3 = eval(this.Unknown3);
+                obj.Longitude = eval(this.Longitude);
+                obj.Latitude = eval(this.Latitude);
+                obj.Worldspace = eval(this.Worldspace);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(PlanetINAM.Mask<bool>? printMask = null)
+            public string Print(MasterWorldspace.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, PlanetINAM.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, MasterWorldspace.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(PlanetINAM.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(MasterWorldspace.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.AtmosHandle ?? true)
+                    if (printMask?.Longitude ?? true)
                     {
-                        sb.AppendItem(AtmosHandle, "AtmosHandle");
+                        sb.AppendItem(Longitude, "Longitude");
                     }
-                    if (printMask?.Unknown1 ?? true)
+                    if (printMask?.Latitude ?? true)
                     {
-                        sb.AppendItem(Unknown1, "Unknown1");
+                        sb.AppendItem(Latitude, "Latitude");
                     }
-                    if (printMask?.Unknown2 ?? true)
+                    if (printMask?.Worldspace ?? true)
                     {
-                        sb.AppendItem(Unknown2, "Unknown2");
-                    }
-                    if (printMask?.Unknown3 ?? true)
-                    {
-                        sb.AppendItem(Unknown3, "Unknown3");
+                        sb.AppendItem(Worldspace, "Worldspace");
                     }
                 }
             }
@@ -256,26 +248,23 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? AtmosHandle;
-            public Exception? Unknown1;
-            public Exception? Unknown2;
-            public Exception? Unknown3;
+            public Exception? Longitude;
+            public Exception? Latitude;
+            public Exception? Worldspace;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                PlanetINAM_FieldIndex enu = (PlanetINAM_FieldIndex)index;
+                MasterWorldspace_FieldIndex enu = (MasterWorldspace_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlanetINAM_FieldIndex.AtmosHandle:
-                        return AtmosHandle;
-                    case PlanetINAM_FieldIndex.Unknown1:
-                        return Unknown1;
-                    case PlanetINAM_FieldIndex.Unknown2:
-                        return Unknown2;
-                    case PlanetINAM_FieldIndex.Unknown3:
-                        return Unknown3;
+                    case MasterWorldspace_FieldIndex.Longitude:
+                        return Longitude;
+                    case MasterWorldspace_FieldIndex.Latitude:
+                        return Latitude;
+                    case MasterWorldspace_FieldIndex.Worldspace:
+                        return Worldspace;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -283,20 +272,17 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                PlanetINAM_FieldIndex enu = (PlanetINAM_FieldIndex)index;
+                MasterWorldspace_FieldIndex enu = (MasterWorldspace_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlanetINAM_FieldIndex.AtmosHandle:
-                        this.AtmosHandle = ex;
+                    case MasterWorldspace_FieldIndex.Longitude:
+                        this.Longitude = ex;
                         break;
-                    case PlanetINAM_FieldIndex.Unknown1:
-                        this.Unknown1 = ex;
+                    case MasterWorldspace_FieldIndex.Latitude:
+                        this.Latitude = ex;
                         break;
-                    case PlanetINAM_FieldIndex.Unknown2:
-                        this.Unknown2 = ex;
-                        break;
-                    case PlanetINAM_FieldIndex.Unknown3:
-                        this.Unknown3 = ex;
+                    case MasterWorldspace_FieldIndex.Worldspace:
+                        this.Worldspace = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -305,20 +291,17 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                PlanetINAM_FieldIndex enu = (PlanetINAM_FieldIndex)index;
+                MasterWorldspace_FieldIndex enu = (MasterWorldspace_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlanetINAM_FieldIndex.AtmosHandle:
-                        this.AtmosHandle = (Exception?)obj;
+                    case MasterWorldspace_FieldIndex.Longitude:
+                        this.Longitude = (Exception?)obj;
                         break;
-                    case PlanetINAM_FieldIndex.Unknown1:
-                        this.Unknown1 = (Exception?)obj;
+                    case MasterWorldspace_FieldIndex.Latitude:
+                        this.Latitude = (Exception?)obj;
                         break;
-                    case PlanetINAM_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception?)obj;
-                        break;
-                    case PlanetINAM_FieldIndex.Unknown3:
-                        this.Unknown3 = (Exception?)obj;
+                    case MasterWorldspace_FieldIndex.Worldspace:
+                        this.Worldspace = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -328,10 +311,9 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (AtmosHandle != null) return true;
-                if (Unknown1 != null) return true;
-                if (Unknown2 != null) return true;
-                if (Unknown3 != null) return true;
+                if (Longitude != null) return true;
+                if (Latitude != null) return true;
+                if (Worldspace != null) return true;
                 return false;
             }
             #endregion
@@ -358,16 +340,13 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(AtmosHandle, "AtmosHandle");
+                    sb.AppendItem(Longitude, "Longitude");
                 }
                 {
-                    sb.AppendItem(Unknown1, "Unknown1");
+                    sb.AppendItem(Latitude, "Latitude");
                 }
                 {
-                    sb.AppendItem(Unknown2, "Unknown2");
-                }
-                {
-                    sb.AppendItem(Unknown3, "Unknown3");
+                    sb.AppendItem(Worldspace, "Worldspace");
                 }
             }
             #endregion
@@ -377,10 +356,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.AtmosHandle = this.AtmosHandle.Combine(rhs.AtmosHandle);
-                ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
-                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
-                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
+                ret.Longitude = this.Longitude.Combine(rhs.Longitude);
+                ret.Latitude = this.Latitude.Combine(rhs.Latitude);
+                ret.Worldspace = this.Worldspace.Combine(rhs.Worldspace);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -404,10 +382,9 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool AtmosHandle;
-            public bool Unknown1;
-            public bool Unknown2;
-            public bool Unknown3;
+            public bool Longitude;
+            public bool Latitude;
+            public bool Worldspace;
             #endregion
 
             #region Ctors
@@ -417,10 +394,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.AtmosHandle = defaultOn;
-                this.Unknown1 = defaultOn;
-                this.Unknown2 = defaultOn;
-                this.Unknown3 = defaultOn;
+                this.Longitude = defaultOn;
+                this.Latitude = defaultOn;
+                this.Worldspace = defaultOn;
             }
 
             #endregion
@@ -436,10 +412,9 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((AtmosHandle, null));
-                ret.Add((Unknown1, null));
-                ret.Add((Unknown2, null));
-                ret.Add((Unknown3, null));
+                ret.Add((Longitude, null));
+                ret.Add((Latitude, null));
+                ret.Add((Worldspace, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -450,27 +425,32 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
 
+        #region Mutagen
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MasterWorldspaceCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MasterWorldspaceSetterCommon.Instance.RemapLinks(this, mapping);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => PlanetINAMBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => MasterWorldspaceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((PlanetINAMBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((MasterWorldspaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static PlanetINAM CreateFromBinary(
+        public static MasterWorldspace CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new PlanetINAM();
-            ((PlanetINAMSetterCommon)((IPlanetINAMGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new MasterWorldspace();
+            ((MasterWorldspaceSetterCommon)((IMasterWorldspaceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -481,7 +461,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out PlanetINAM item,
+            out MasterWorldspace item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -496,32 +476,33 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((PlanetINAMSetterCommon)((IPlanetINAMGetter)this).CommonSetterInstance()!).Clear(this);
+            ((MasterWorldspaceSetterCommon)((IMasterWorldspaceGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static PlanetINAM GetNew()
+        internal static MasterWorldspace GetNew()
         {
-            return new PlanetINAM();
+            return new MasterWorldspace();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IPlanetINAM :
-        ILoquiObjectSetter<IPlanetINAM>,
-        IPlanetINAMGetter
+    public partial interface IMasterWorldspace :
+        IFormLinkContainer,
+        ILoquiObjectSetter<IMasterWorldspace>,
+        IMasterWorldspaceGetter
     {
-        new UInt32 AtmosHandle { get; set; }
-        new Int32 Unknown1 { get; set; }
-        new Int32 Unknown2 { get; set; }
-        new Int32 Unknown3 { get; set; }
+        new Double Longitude { get; set; }
+        new Double Latitude { get; set; }
+        new IFormLink<IWorldspaceGetter> Worldspace { get; set; }
     }
 
-    public partial interface IPlanetINAMGetter :
+    public partial interface IMasterWorldspaceGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IPlanetINAMGetter>
+        IFormLinkContainerGetter,
+        ILoquiObject<IMasterWorldspaceGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -529,53 +510,52 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => PlanetINAM_Registration.Instance;
-        UInt32 AtmosHandle { get; }
-        Int32 Unknown1 { get; }
-        Int32 Unknown2 { get; }
-        Int32 Unknown3 { get; }
+        static ILoquiRegistration StaticRegistration => MasterWorldspace_Registration.Instance;
+        Double Longitude { get; }
+        Double Latitude { get; }
+        IFormLinkGetter<IWorldspaceGetter> Worldspace { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class PlanetINAMMixIn
+    public static partial class MasterWorldspaceMixIn
     {
-        public static void Clear(this IPlanetINAM item)
+        public static void Clear(this IMasterWorldspace item)
         {
-            ((PlanetINAMSetterCommon)((IPlanetINAMGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((MasterWorldspaceSetterCommon)((IMasterWorldspaceGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static PlanetINAM.Mask<bool> GetEqualsMask(
-            this IPlanetINAMGetter item,
-            IPlanetINAMGetter rhs,
+        public static MasterWorldspace.Mask<bool> GetEqualsMask(
+            this IMasterWorldspaceGetter item,
+            IMasterWorldspaceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((PlanetINAMCommon)((IPlanetINAMGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((MasterWorldspaceCommon)((IMasterWorldspaceGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IPlanetINAMGetter item,
+            this IMasterWorldspaceGetter item,
             string? name = null,
-            PlanetINAM.Mask<bool>? printMask = null)
+            MasterWorldspace.Mask<bool>? printMask = null)
         {
-            return ((PlanetINAMCommon)((IPlanetINAMGetter)item).CommonInstance()!).Print(
+            return ((MasterWorldspaceCommon)((IMasterWorldspaceGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IPlanetINAMGetter item,
+            this IMasterWorldspaceGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            PlanetINAM.Mask<bool>? printMask = null)
+            MasterWorldspace.Mask<bool>? printMask = null)
         {
-            ((PlanetINAMCommon)((IPlanetINAMGetter)item).CommonInstance()!).Print(
+            ((MasterWorldspaceCommon)((IMasterWorldspaceGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -583,21 +563,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IPlanetINAMGetter item,
-            IPlanetINAMGetter rhs,
-            PlanetINAM.TranslationMask? equalsMask = null)
+            this IMasterWorldspaceGetter item,
+            IMasterWorldspaceGetter rhs,
+            MasterWorldspace.TranslationMask? equalsMask = null)
         {
-            return ((PlanetINAMCommon)((IPlanetINAMGetter)item).CommonInstance()!).Equals(
+            return ((MasterWorldspaceCommon)((IMasterWorldspaceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IPlanetINAM lhs,
-            IPlanetINAMGetter rhs)
+            this IMasterWorldspace lhs,
+            IMasterWorldspaceGetter rhs)
         {
-            ((PlanetINAMSetterTranslationCommon)((IPlanetINAMGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MasterWorldspaceSetterTranslationCommon)((IMasterWorldspaceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -606,11 +586,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IPlanetINAM lhs,
-            IPlanetINAMGetter rhs,
-            PlanetINAM.TranslationMask? copyMask = null)
+            this IMasterWorldspace lhs,
+            IMasterWorldspaceGetter rhs,
+            MasterWorldspace.TranslationMask? copyMask = null)
         {
-            ((PlanetINAMSetterTranslationCommon)((IPlanetINAMGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MasterWorldspaceSetterTranslationCommon)((IMasterWorldspaceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -619,28 +599,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IPlanetINAM lhs,
-            IPlanetINAMGetter rhs,
-            out PlanetINAM.ErrorMask errorMask,
-            PlanetINAM.TranslationMask? copyMask = null)
+            this IMasterWorldspace lhs,
+            IMasterWorldspaceGetter rhs,
+            out MasterWorldspace.ErrorMask errorMask,
+            MasterWorldspace.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((PlanetINAMSetterTranslationCommon)((IPlanetINAMGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MasterWorldspaceSetterTranslationCommon)((IMasterWorldspaceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = PlanetINAM.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MasterWorldspace.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IPlanetINAM lhs,
-            IPlanetINAMGetter rhs,
+            this IMasterWorldspace lhs,
+            IMasterWorldspaceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((PlanetINAMSetterTranslationCommon)((IPlanetINAMGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MasterWorldspaceSetterTranslationCommon)((IMasterWorldspaceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -648,32 +628,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static PlanetINAM DeepCopy(
-            this IPlanetINAMGetter item,
-            PlanetINAM.TranslationMask? copyMask = null)
+        public static MasterWorldspace DeepCopy(
+            this IMasterWorldspaceGetter item,
+            MasterWorldspace.TranslationMask? copyMask = null)
         {
-            return ((PlanetINAMSetterTranslationCommon)((IPlanetINAMGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MasterWorldspaceSetterTranslationCommon)((IMasterWorldspaceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static PlanetINAM DeepCopy(
-            this IPlanetINAMGetter item,
-            out PlanetINAM.ErrorMask errorMask,
-            PlanetINAM.TranslationMask? copyMask = null)
+        public static MasterWorldspace DeepCopy(
+            this IMasterWorldspaceGetter item,
+            out MasterWorldspace.ErrorMask errorMask,
+            MasterWorldspace.TranslationMask? copyMask = null)
         {
-            return ((PlanetINAMSetterTranslationCommon)((IPlanetINAMGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MasterWorldspaceSetterTranslationCommon)((IMasterWorldspaceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static PlanetINAM DeepCopy(
-            this IPlanetINAMGetter item,
+        public static MasterWorldspace DeepCopy(
+            this IMasterWorldspaceGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((PlanetINAMSetterTranslationCommon)((IPlanetINAMGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MasterWorldspaceSetterTranslationCommon)((IMasterWorldspaceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -681,11 +661,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IPlanetINAM item,
+            this IMasterWorldspace item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((PlanetINAMSetterCommon)((IPlanetINAMGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((MasterWorldspaceSetterCommon)((IMasterWorldspaceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -701,43 +681,42 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum PlanetINAM_FieldIndex
+    internal enum MasterWorldspace_FieldIndex
     {
-        AtmosHandle = 0,
-        Unknown1 = 1,
-        Unknown2 = 2,
-        Unknown3 = 3,
+        Longitude = 0,
+        Latitude = 1,
+        Worldspace = 2,
     }
     #endregion
 
     #region Registration
-    internal partial class PlanetINAM_Registration : ILoquiRegistration
+    internal partial class MasterWorldspace_Registration : ILoquiRegistration
     {
-        public static readonly PlanetINAM_Registration Instance = new PlanetINAM_Registration();
+        public static readonly MasterWorldspace_Registration Instance = new MasterWorldspace_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(PlanetINAM.Mask<>);
+        public static readonly Type MaskType = typeof(MasterWorldspace.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(PlanetINAM.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(MasterWorldspace.ErrorMask);
 
-        public static readonly Type ClassType = typeof(PlanetINAM);
+        public static readonly Type ClassType = typeof(MasterWorldspace);
 
-        public static readonly Type GetterType = typeof(IPlanetINAMGetter);
+        public static readonly Type GetterType = typeof(IMasterWorldspaceGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IPlanetINAM);
+        public static readonly Type SetterType = typeof(IMasterWorldspace);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.PlanetINAM";
+        public const string FullName = "Mutagen.Bethesda.Starfield.MasterWorldspace";
 
-        public const string Name = "PlanetINAM";
+        public const string Name = "MasterWorldspace";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -745,14 +724,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.INAM;
-        public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
-        private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
-        {
-            var all = RecordCollection.Factory(RecordTypes.INAM);
-            return new RecordTriggerSpecs(allRecordTypes: all);
-        });
-        public static readonly Type BinaryWriteTranslation = typeof(PlanetINAMBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(MasterWorldspaceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -783,59 +755,55 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class PlanetINAMSetterCommon
+    internal partial class MasterWorldspaceSetterCommon
     {
-        public static readonly PlanetINAMSetterCommon Instance = new PlanetINAMSetterCommon();
+        public static readonly MasterWorldspaceSetterCommon Instance = new MasterWorldspaceSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IPlanetINAM item)
+        public void Clear(IMasterWorldspace item)
         {
             ClearPartial();
-            item.AtmosHandle = default(UInt32);
-            item.Unknown1 = default(Int32);
-            item.Unknown2 = default(Int32);
-            item.Unknown3 = default(Int32);
+            item.Longitude = default(Double);
+            item.Latitude = default(Double);
+            item.Worldspace.Clear();
         }
         
         #region Mutagen
-        public void RemapLinks(IPlanetINAM obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IMasterWorldspace obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.Worldspace.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IPlanetINAM item,
+            IMasterWorldspace item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
-                frame.Reader,
-                translationParams.ConvertToCustom(RecordTypes.INAM),
-                translationParams.LengthOverride));
             PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: PlanetINAMBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: MasterWorldspaceBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class PlanetINAMCommon
+    internal partial class MasterWorldspaceCommon
     {
-        public static readonly PlanetINAMCommon Instance = new PlanetINAMCommon();
+        public static readonly MasterWorldspaceCommon Instance = new MasterWorldspaceCommon();
 
-        public PlanetINAM.Mask<bool> GetEqualsMask(
-            IPlanetINAMGetter item,
-            IPlanetINAMGetter rhs,
+        public MasterWorldspace.Mask<bool> GetEqualsMask(
+            IMasterWorldspaceGetter item,
+            IMasterWorldspaceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new PlanetINAM.Mask<bool>(false);
-            ((PlanetINAMCommon)((IPlanetINAMGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new MasterWorldspace.Mask<bool>(false);
+            ((MasterWorldspaceCommon)((IMasterWorldspaceGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -844,21 +812,20 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IPlanetINAMGetter item,
-            IPlanetINAMGetter rhs,
-            PlanetINAM.Mask<bool> ret,
+            IMasterWorldspaceGetter item,
+            IMasterWorldspaceGetter rhs,
+            MasterWorldspace.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.AtmosHandle = item.AtmosHandle == rhs.AtmosHandle;
-            ret.Unknown1 = item.Unknown1 == rhs.Unknown1;
-            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
-            ret.Unknown3 = item.Unknown3 == rhs.Unknown3;
+            ret.Longitude = item.Longitude.EqualsWithin(rhs.Longitude);
+            ret.Latitude = item.Latitude.EqualsWithin(rhs.Latitude);
+            ret.Worldspace = item.Worldspace.Equals(rhs.Worldspace);
         }
         
         public string Print(
-            IPlanetINAMGetter item,
+            IMasterWorldspaceGetter item,
             string? name = null,
-            PlanetINAM.Mask<bool>? printMask = null)
+            MasterWorldspace.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -870,18 +837,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IPlanetINAMGetter item,
+            IMasterWorldspaceGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            PlanetINAM.Mask<bool>? printMask = null)
+            MasterWorldspace.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"PlanetINAM =>");
+                sb.AppendLine($"MasterWorldspace =>");
             }
             else
             {
-                sb.AppendLine($"{name} (PlanetINAM) =>");
+                sb.AppendLine($"{name} (MasterWorldspace) =>");
             }
             using (sb.Brace())
             {
@@ -893,61 +860,52 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IPlanetINAMGetter item,
+            IMasterWorldspaceGetter item,
             StructuredStringBuilder sb,
-            PlanetINAM.Mask<bool>? printMask = null)
+            MasterWorldspace.Mask<bool>? printMask = null)
         {
-            if (printMask?.AtmosHandle ?? true)
+            if (printMask?.Longitude ?? true)
             {
-                sb.AppendItem(item.AtmosHandle, "AtmosHandle");
+                sb.AppendItem(item.Longitude, "Longitude");
             }
-            if (printMask?.Unknown1 ?? true)
+            if (printMask?.Latitude ?? true)
             {
-                sb.AppendItem(item.Unknown1, "Unknown1");
+                sb.AppendItem(item.Latitude, "Latitude");
             }
-            if (printMask?.Unknown2 ?? true)
+            if (printMask?.Worldspace ?? true)
             {
-                sb.AppendItem(item.Unknown2, "Unknown2");
-            }
-            if (printMask?.Unknown3 ?? true)
-            {
-                sb.AppendItem(item.Unknown3, "Unknown3");
+                sb.AppendItem(item.Worldspace.FormKey, "Worldspace");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IPlanetINAMGetter? lhs,
-            IPlanetINAMGetter? rhs,
+            IMasterWorldspaceGetter? lhs,
+            IMasterWorldspaceGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)PlanetINAM_FieldIndex.AtmosHandle) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MasterWorldspace_FieldIndex.Longitude) ?? true))
             {
-                if (lhs.AtmosHandle != rhs.AtmosHandle) return false;
+                if (!lhs.Longitude.EqualsWithin(rhs.Longitude)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetINAM_FieldIndex.Unknown1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MasterWorldspace_FieldIndex.Latitude) ?? true))
             {
-                if (lhs.Unknown1 != rhs.Unknown1) return false;
+                if (!lhs.Latitude.EqualsWithin(rhs.Latitude)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetINAM_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MasterWorldspace_FieldIndex.Worldspace) ?? true))
             {
-                if (lhs.Unknown2 != rhs.Unknown2) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetINAM_FieldIndex.Unknown3) ?? true))
-            {
-                if (lhs.Unknown3 != rhs.Unknown3) return false;
+                if (!lhs.Worldspace.Equals(rhs.Worldspace)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IPlanetINAMGetter item)
+        public virtual int GetHashCode(IMasterWorldspaceGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.AtmosHandle);
-            hash.Add(item.Unknown1);
-            hash.Add(item.Unknown2);
-            hash.Add(item.Unknown3);
+            hash.Add(item.Longitude);
+            hash.Add(item.Latitude);
+            hash.Add(item.Worldspace);
             return hash.ToHashCode();
         }
         
@@ -956,45 +914,42 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return PlanetINAM.GetNew();
+            return MasterWorldspace.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlanetINAMGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMasterWorldspaceGetter obj)
         {
+            yield return FormLinkInformation.Factory(obj.Worldspace);
             yield break;
         }
         
         #endregion
         
     }
-    internal partial class PlanetINAMSetterTranslationCommon
+    internal partial class MasterWorldspaceSetterTranslationCommon
     {
-        public static readonly PlanetINAMSetterTranslationCommon Instance = new PlanetINAMSetterTranslationCommon();
+        public static readonly MasterWorldspaceSetterTranslationCommon Instance = new MasterWorldspaceSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IPlanetINAM item,
-            IPlanetINAMGetter rhs,
+            IMasterWorldspace item,
+            IMasterWorldspaceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)PlanetINAM_FieldIndex.AtmosHandle) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MasterWorldspace_FieldIndex.Longitude) ?? true))
             {
-                item.AtmosHandle = rhs.AtmosHandle;
+                item.Longitude = rhs.Longitude;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetINAM_FieldIndex.Unknown1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MasterWorldspace_FieldIndex.Latitude) ?? true))
             {
-                item.Unknown1 = rhs.Unknown1;
+                item.Latitude = rhs.Latitude;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetINAM_FieldIndex.Unknown2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MasterWorldspace_FieldIndex.Worldspace) ?? true))
             {
-                item.Unknown2 = rhs.Unknown2;
-            }
-            if ((copyMask?.GetShouldTranslate((int)PlanetINAM_FieldIndex.Unknown3) ?? true))
-            {
-                item.Unknown3 = rhs.Unknown3;
+                item.Worldspace.SetTo(rhs.Worldspace.FormKey);
             }
             DeepCopyInCustom(
                 item: item,
@@ -1005,19 +960,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         partial void DeepCopyInCustom(
-            IPlanetINAM item,
-            IPlanetINAMGetter rhs,
+            IMasterWorldspace item,
+            IMasterWorldspaceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
         #endregion
         
-        public PlanetINAM DeepCopy(
-            IPlanetINAMGetter item,
-            PlanetINAM.TranslationMask? copyMask = null)
+        public MasterWorldspace DeepCopy(
+            IMasterWorldspaceGetter item,
+            MasterWorldspace.TranslationMask? copyMask = null)
         {
-            PlanetINAM ret = (PlanetINAM)((PlanetINAMCommon)((IPlanetINAMGetter)item).CommonInstance()!).GetNew();
-            ((PlanetINAMSetterTranslationCommon)((IPlanetINAMGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MasterWorldspace ret = (MasterWorldspace)((MasterWorldspaceCommon)((IMasterWorldspaceGetter)item).CommonInstance()!).GetNew();
+            ((MasterWorldspaceSetterTranslationCommon)((IMasterWorldspaceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1026,30 +981,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public PlanetINAM DeepCopy(
-            IPlanetINAMGetter item,
-            out PlanetINAM.ErrorMask errorMask,
-            PlanetINAM.TranslationMask? copyMask = null)
+        public MasterWorldspace DeepCopy(
+            IMasterWorldspaceGetter item,
+            out MasterWorldspace.ErrorMask errorMask,
+            MasterWorldspace.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            PlanetINAM ret = (PlanetINAM)((PlanetINAMCommon)((IPlanetINAMGetter)item).CommonInstance()!).GetNew();
-            ((PlanetINAMSetterTranslationCommon)((IPlanetINAMGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MasterWorldspace ret = (MasterWorldspace)((MasterWorldspaceCommon)((IMasterWorldspaceGetter)item).CommonInstance()!).GetNew();
+            ((MasterWorldspaceSetterTranslationCommon)((IMasterWorldspaceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = PlanetINAM.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MasterWorldspace.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public PlanetINAM DeepCopy(
-            IPlanetINAMGetter item,
+        public MasterWorldspace DeepCopy(
+            IMasterWorldspaceGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            PlanetINAM ret = (PlanetINAM)((PlanetINAMCommon)((IPlanetINAMGetter)item).CommonInstance()!).GetNew();
-            ((PlanetINAMSetterTranslationCommon)((IPlanetINAMGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MasterWorldspace ret = (MasterWorldspace)((MasterWorldspaceCommon)((IMasterWorldspaceGetter)item).CommonInstance()!).GetNew();
+            ((MasterWorldspaceSetterTranslationCommon)((IMasterWorldspaceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1065,27 +1020,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class PlanetINAM
+    public partial class MasterWorldspace
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => PlanetINAM_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => PlanetINAM_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => MasterWorldspace_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MasterWorldspace_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => PlanetINAMCommon.Instance;
+        protected object CommonInstance() => MasterWorldspaceCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return PlanetINAMSetterCommon.Instance;
+            return MasterWorldspaceSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => PlanetINAMSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => MasterWorldspaceSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IPlanetINAMGetter.CommonInstance() => this.CommonInstance();
+        object IMasterWorldspaceGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IPlanetINAMGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IMasterWorldspaceGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IPlanetINAMGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IMasterWorldspaceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1096,35 +1051,29 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class PlanetINAMBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class MasterWorldspaceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PlanetINAMBinaryWriteTranslation Instance = new();
+        public static readonly MasterWorldspaceBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            IPlanetINAMGetter item,
+            IMasterWorldspaceGetter item,
             MutagenWriter writer)
         {
-            writer.Write(item.AtmosHandle);
-            writer.Write(item.Unknown1);
-            writer.Write(item.Unknown2);
-            writer.Write(item.Unknown3);
+            writer.Write(item.Longitude);
+            writer.Write(item.Latitude);
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Worldspace);
         }
 
         public void Write(
             MutagenWriter writer,
-            IPlanetINAMGetter item,
+            IMasterWorldspaceGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Subrecord(
-                writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.INAM),
-                overflowRecord: translationParams.OverflowRecordType,
-                out var writerToUse))
-            {
-                WriteEmbedded(
-                    item: item,
-                    writer: writerToUse);
-            }
+            WriteEmbedded(
+                item: item,
+                writer: writer);
         }
 
         public void Write(
@@ -1133,25 +1082,24 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IPlanetINAMGetter)item,
+                item: (IMasterWorldspaceGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class PlanetINAMBinaryCreateTranslation
+    internal partial class MasterWorldspaceBinaryCreateTranslation
     {
-        public static readonly PlanetINAMBinaryCreateTranslation Instance = new PlanetINAMBinaryCreateTranslation();
+        public static readonly MasterWorldspaceBinaryCreateTranslation Instance = new MasterWorldspaceBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IPlanetINAM item,
+            IMasterWorldspace item,
             MutagenFrame frame)
         {
-            item.AtmosHandle = frame.ReadUInt32();
-            item.Unknown1 = frame.ReadInt32();
-            item.Unknown2 = frame.ReadInt32();
-            item.Unknown3 = frame.ReadInt32();
+            item.Longitude = frame.ReadDouble();
+            item.Latitude = frame.ReadDouble();
+            item.Worldspace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }
@@ -1160,14 +1108,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class PlanetINAMBinaryTranslationMixIn
+    public static class MasterWorldspaceBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IPlanetINAMGetter item,
+            this IMasterWorldspaceGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((PlanetINAMBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((MasterWorldspaceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1180,54 +1128,54 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class PlanetINAMBinaryOverlay :
+    internal partial class MasterWorldspaceBinaryOverlay :
         PluginBinaryOverlay,
-        IPlanetINAMGetter
+        IMasterWorldspaceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => PlanetINAM_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => PlanetINAM_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => MasterWorldspace_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => MasterWorldspace_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => PlanetINAMCommon.Instance;
+        protected object CommonInstance() => MasterWorldspaceCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => PlanetINAMSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => MasterWorldspaceSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IPlanetINAMGetter.CommonInstance() => this.CommonInstance();
+        object IMasterWorldspaceGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IPlanetINAMGetter.CommonSetterInstance() => null;
+        object? IMasterWorldspaceGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IPlanetINAMGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IMasterWorldspaceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => MasterWorldspaceCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => PlanetINAMBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => MasterWorldspaceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((PlanetINAMBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((MasterWorldspaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public UInt32 AtmosHandle => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x0, 0x4));
-        public Int32 Unknown1 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x4, 0x4));
-        public Int32 Unknown2 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
-        public Int32 Unknown3 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4));
+        public Double Longitude => BinaryPrimitives.ReadDoubleLittleEndian(_structData.Slice(0x0, 0x8));
+        public Double Latitude => BinaryPrimitives.ReadDoubleLittleEndian(_structData.Slice(0x8, 0x8));
+        public IFormLinkGetter<IWorldspaceGetter> Worldspace => FormLinkBinaryTranslation.Instance.OverlayFactory<IWorldspaceGetter>(_package, _structData.Span.Slice(0x10, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected PlanetINAMBinaryOverlay(
+        protected MasterWorldspaceBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1237,22 +1185,22 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IPlanetINAMGetter PlanetINAMFactory(
+        public static IMasterWorldspaceGetter MasterWorldspaceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            stream = ExtractSubrecordStructMemory(
+            stream = ExtractTypelessSubrecordStructMemory(
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
-                length: 0x10,
+                length: 0x14,
                 memoryPair: out var memoryPair,
                 offset: out var offset);
-            var ret = new PlanetINAMBinaryOverlay(
+            var ret = new MasterWorldspaceBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            stream.Position += 0x10 + package.MetaData.Constants.SubConstants.HeaderLength;
+            stream.Position += 0x14;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1260,12 +1208,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IPlanetINAMGetter PlanetINAMFactory(
+        public static IMasterWorldspaceGetter MasterWorldspaceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return PlanetINAMFactory(
+            return MasterWorldspaceFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1277,7 +1225,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            PlanetINAMMixIn.Print(
+            MasterWorldspaceMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1288,16 +1236,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IPlanetINAMGetter rhs) return false;
-            return ((PlanetINAMCommon)((IPlanetINAMGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IMasterWorldspaceGetter rhs) return false;
+            return ((MasterWorldspaceCommon)((IMasterWorldspaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IPlanetINAMGetter? obj)
+        public bool Equals(IMasterWorldspaceGetter? obj)
         {
-            return ((PlanetINAMCommon)((IPlanetINAMGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((MasterWorldspaceCommon)((IMasterWorldspaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((PlanetINAMCommon)((IPlanetINAMGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((MasterWorldspaceCommon)((IMasterWorldspaceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

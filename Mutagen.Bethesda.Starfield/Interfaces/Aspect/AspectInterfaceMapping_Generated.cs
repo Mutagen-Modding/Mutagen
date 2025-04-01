@@ -259,7 +259,6 @@ namespace Mutagen.Bethesda.Starfield
                     PackIn_Registration.Instance,
                     Perk_Registration.Instance,
                     PhotoModeFeature_Registration.Instance,
-                    Planet_Registration.Instance,
                     ProgressionEvaluatorArgument_Registration.Instance,
                     Projectile_Registration.Instance,
                     Quest_Registration.Instance,

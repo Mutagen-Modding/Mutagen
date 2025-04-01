@@ -37,24 +37,21 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class PlanetFNAM :
-        IEquatable<IPlanetFNAMGetter>,
-        ILoquiObjectSetter<PlanetFNAM>,
-        IPlanetFNAM
+    public partial class OrbitedData :
+        IEquatable<IOrbitedDataGetter>,
+        ILoquiObjectSetter<OrbitedData>,
+        IOrbitedData
     {
         #region Ctor
-        public PlanetFNAM()
+        public OrbitedData()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Unknown1
-        public Int32 Unknown1 { get; set; } = default(Int32);
-        #endregion
-        #region SpawnInProjectionOffset
-        public Single SpawnInProjectionOffset { get; set; } = default(Single);
+        #region GravityWell
+        public Double GravityWell { get; set; } = default(Double);
         #endregion
         #region MassComparedToEarth
         public Int32 MassComparedToEarth { get; set; } = default(Int32);
@@ -75,7 +72,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            PlanetFNAMMixIn.Print(
+            OrbitedDataMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -86,16 +83,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IPlanetFNAMGetter rhs) return false;
-            return ((PlanetFNAMCommon)((IPlanetFNAMGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IOrbitedDataGetter rhs) return false;
+            return ((OrbitedDataCommon)((IOrbitedDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IPlanetFNAMGetter? obj)
+        public bool Equals(IOrbitedDataGetter? obj)
         {
-            return ((PlanetFNAMCommon)((IPlanetFNAMGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((OrbitedDataCommon)((IOrbitedDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((PlanetFNAMCommon)((IPlanetFNAMGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((OrbitedDataCommon)((IOrbitedDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -107,8 +104,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Unknown1 = initialValue;
-                this.SpawnInProjectionOffset = initialValue;
+                this.GravityWell = initialValue;
                 this.MassComparedToEarth = initialValue;
                 this.RadiusInKilometers = initialValue;
                 this.Gravity = initialValue;
@@ -116,15 +112,13 @@ namespace Mutagen.Bethesda.Starfield
             }
 
             public Mask(
-                TItem Unknown1,
-                TItem SpawnInProjectionOffset,
+                TItem GravityWell,
                 TItem MassComparedToEarth,
                 TItem RadiusInKilometers,
                 TItem Gravity,
                 TItem Unknown2)
             {
-                this.Unknown1 = Unknown1;
-                this.SpawnInProjectionOffset = SpawnInProjectionOffset;
+                this.GravityWell = GravityWell;
                 this.MassComparedToEarth = MassComparedToEarth;
                 this.RadiusInKilometers = RadiusInKilometers;
                 this.Gravity = Gravity;
@@ -140,8 +134,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Unknown1;
-            public TItem SpawnInProjectionOffset;
+            public TItem GravityWell;
             public TItem MassComparedToEarth;
             public TItem RadiusInKilometers;
             public TItem Gravity;
@@ -158,8 +151,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
-                if (!object.Equals(this.SpawnInProjectionOffset, rhs.SpawnInProjectionOffset)) return false;
+                if (!object.Equals(this.GravityWell, rhs.GravityWell)) return false;
                 if (!object.Equals(this.MassComparedToEarth, rhs.MassComparedToEarth)) return false;
                 if (!object.Equals(this.RadiusInKilometers, rhs.RadiusInKilometers)) return false;
                 if (!object.Equals(this.Gravity, rhs.Gravity)) return false;
@@ -169,8 +161,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Unknown1);
-                hash.Add(this.SpawnInProjectionOffset);
+                hash.Add(this.GravityWell);
                 hash.Add(this.MassComparedToEarth);
                 hash.Add(this.RadiusInKilometers);
                 hash.Add(this.Gravity);
@@ -183,8 +174,7 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Unknown1)) return false;
-                if (!eval(this.SpawnInProjectionOffset)) return false;
+                if (!eval(this.GravityWell)) return false;
                 if (!eval(this.MassComparedToEarth)) return false;
                 if (!eval(this.RadiusInKilometers)) return false;
                 if (!eval(this.Gravity)) return false;
@@ -196,8 +186,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Unknown1)) return true;
-                if (eval(this.SpawnInProjectionOffset)) return true;
+                if (eval(this.GravityWell)) return true;
                 if (eval(this.MassComparedToEarth)) return true;
                 if (eval(this.RadiusInKilometers)) return true;
                 if (eval(this.Gravity)) return true;
@@ -209,15 +198,14 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new PlanetFNAM.Mask<R>();
+                var ret = new OrbitedData.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Unknown1 = eval(this.Unknown1);
-                obj.SpawnInProjectionOffset = eval(this.SpawnInProjectionOffset);
+                obj.GravityWell = eval(this.GravityWell);
                 obj.MassComparedToEarth = eval(this.MassComparedToEarth);
                 obj.RadiusInKilometers = eval(this.RadiusInKilometers);
                 obj.Gravity = eval(this.Gravity);
@@ -228,25 +216,21 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(PlanetFNAM.Mask<bool>? printMask = null)
+            public string Print(OrbitedData.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, PlanetFNAM.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, OrbitedData.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(PlanetFNAM.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(OrbitedData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Unknown1 ?? true)
+                    if (printMask?.GravityWell ?? true)
                     {
-                        sb.AppendItem(Unknown1, "Unknown1");
-                    }
-                    if (printMask?.SpawnInProjectionOffset ?? true)
-                    {
-                        sb.AppendItem(SpawnInProjectionOffset, "SpawnInProjectionOffset");
+                        sb.AppendItem(GravityWell, "GravityWell");
                     }
                     if (printMask?.MassComparedToEarth ?? true)
                     {
@@ -288,8 +272,7 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? Unknown1;
-            public Exception? SpawnInProjectionOffset;
+            public Exception? GravityWell;
             public Exception? MassComparedToEarth;
             public Exception? RadiusInKilometers;
             public Exception? Gravity;
@@ -299,20 +282,18 @@ namespace Mutagen.Bethesda.Starfield
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                PlanetFNAM_FieldIndex enu = (PlanetFNAM_FieldIndex)index;
+                OrbitedData_FieldIndex enu = (OrbitedData_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlanetFNAM_FieldIndex.Unknown1:
-                        return Unknown1;
-                    case PlanetFNAM_FieldIndex.SpawnInProjectionOffset:
-                        return SpawnInProjectionOffset;
-                    case PlanetFNAM_FieldIndex.MassComparedToEarth:
+                    case OrbitedData_FieldIndex.GravityWell:
+                        return GravityWell;
+                    case OrbitedData_FieldIndex.MassComparedToEarth:
                         return MassComparedToEarth;
-                    case PlanetFNAM_FieldIndex.RadiusInKilometers:
+                    case OrbitedData_FieldIndex.RadiusInKilometers:
                         return RadiusInKilometers;
-                    case PlanetFNAM_FieldIndex.Gravity:
+                    case OrbitedData_FieldIndex.Gravity:
                         return Gravity;
-                    case PlanetFNAM_FieldIndex.Unknown2:
+                    case OrbitedData_FieldIndex.Unknown2:
                         return Unknown2;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -321,25 +302,22 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                PlanetFNAM_FieldIndex enu = (PlanetFNAM_FieldIndex)index;
+                OrbitedData_FieldIndex enu = (OrbitedData_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlanetFNAM_FieldIndex.Unknown1:
-                        this.Unknown1 = ex;
+                    case OrbitedData_FieldIndex.GravityWell:
+                        this.GravityWell = ex;
                         break;
-                    case PlanetFNAM_FieldIndex.SpawnInProjectionOffset:
-                        this.SpawnInProjectionOffset = ex;
-                        break;
-                    case PlanetFNAM_FieldIndex.MassComparedToEarth:
+                    case OrbitedData_FieldIndex.MassComparedToEarth:
                         this.MassComparedToEarth = ex;
                         break;
-                    case PlanetFNAM_FieldIndex.RadiusInKilometers:
+                    case OrbitedData_FieldIndex.RadiusInKilometers:
                         this.RadiusInKilometers = ex;
                         break;
-                    case PlanetFNAM_FieldIndex.Gravity:
+                    case OrbitedData_FieldIndex.Gravity:
                         this.Gravity = ex;
                         break;
-                    case PlanetFNAM_FieldIndex.Unknown2:
+                    case OrbitedData_FieldIndex.Unknown2:
                         this.Unknown2 = ex;
                         break;
                     default:
@@ -349,25 +327,22 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                PlanetFNAM_FieldIndex enu = (PlanetFNAM_FieldIndex)index;
+                OrbitedData_FieldIndex enu = (OrbitedData_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlanetFNAM_FieldIndex.Unknown1:
-                        this.Unknown1 = (Exception?)obj;
+                    case OrbitedData_FieldIndex.GravityWell:
+                        this.GravityWell = (Exception?)obj;
                         break;
-                    case PlanetFNAM_FieldIndex.SpawnInProjectionOffset:
-                        this.SpawnInProjectionOffset = (Exception?)obj;
-                        break;
-                    case PlanetFNAM_FieldIndex.MassComparedToEarth:
+                    case OrbitedData_FieldIndex.MassComparedToEarth:
                         this.MassComparedToEarth = (Exception?)obj;
                         break;
-                    case PlanetFNAM_FieldIndex.RadiusInKilometers:
+                    case OrbitedData_FieldIndex.RadiusInKilometers:
                         this.RadiusInKilometers = (Exception?)obj;
                         break;
-                    case PlanetFNAM_FieldIndex.Gravity:
+                    case OrbitedData_FieldIndex.Gravity:
                         this.Gravity = (Exception?)obj;
                         break;
-                    case PlanetFNAM_FieldIndex.Unknown2:
+                    case OrbitedData_FieldIndex.Unknown2:
                         this.Unknown2 = (Exception?)obj;
                         break;
                     default:
@@ -378,8 +353,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Unknown1 != null) return true;
-                if (SpawnInProjectionOffset != null) return true;
+                if (GravityWell != null) return true;
                 if (MassComparedToEarth != null) return true;
                 if (RadiusInKilometers != null) return true;
                 if (Gravity != null) return true;
@@ -410,10 +384,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Unknown1, "Unknown1");
-                }
-                {
-                    sb.AppendItem(SpawnInProjectionOffset, "SpawnInProjectionOffset");
+                    sb.AppendItem(GravityWell, "GravityWell");
                 }
                 {
                     sb.AppendItem(MassComparedToEarth, "MassComparedToEarth");
@@ -435,8 +406,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
-                ret.SpawnInProjectionOffset = this.SpawnInProjectionOffset.Combine(rhs.SpawnInProjectionOffset);
+                ret.GravityWell = this.GravityWell.Combine(rhs.GravityWell);
                 ret.MassComparedToEarth = this.MassComparedToEarth.Combine(rhs.MassComparedToEarth);
                 ret.RadiusInKilometers = this.RadiusInKilometers.Combine(rhs.RadiusInKilometers);
                 ret.Gravity = this.Gravity.Combine(rhs.Gravity);
@@ -464,8 +434,7 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Unknown1;
-            public bool SpawnInProjectionOffset;
+            public bool GravityWell;
             public bool MassComparedToEarth;
             public bool RadiusInKilometers;
             public bool Gravity;
@@ -479,8 +448,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Unknown1 = defaultOn;
-                this.SpawnInProjectionOffset = defaultOn;
+                this.GravityWell = defaultOn;
                 this.MassComparedToEarth = defaultOn;
                 this.RadiusInKilometers = defaultOn;
                 this.Gravity = defaultOn;
@@ -500,8 +468,7 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Unknown1, null));
-                ret.Add((SpawnInProjectionOffset, null));
+                ret.Add((GravityWell, null));
                 ret.Add((MassComparedToEarth, null));
                 ret.Add((RadiusInKilometers, null));
                 ret.Add((Gravity, null));
@@ -518,25 +485,25 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => PlanetFNAMBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => OrbitedDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((PlanetFNAMBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((OrbitedDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static PlanetFNAM CreateFromBinary(
+        public static OrbitedData CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new PlanetFNAM();
-            ((PlanetFNAMSetterCommon)((IPlanetFNAMGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new OrbitedData();
+            ((OrbitedDataSetterCommon)((IOrbitedDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -547,7 +514,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out PlanetFNAM item,
+            out OrbitedData item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -562,34 +529,33 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((PlanetFNAMSetterCommon)((IPlanetFNAMGetter)this).CommonSetterInstance()!).Clear(this);
+            ((OrbitedDataSetterCommon)((IOrbitedDataGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static PlanetFNAM GetNew()
+        internal static OrbitedData GetNew()
         {
-            return new PlanetFNAM();
+            return new OrbitedData();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IPlanetFNAM :
-        ILoquiObjectSetter<IPlanetFNAM>,
-        IPlanetFNAMGetter
+    public partial interface IOrbitedData :
+        ILoquiObjectSetter<IOrbitedData>,
+        IOrbitedDataGetter
     {
-        new Int32 Unknown1 { get; set; }
-        new Single SpawnInProjectionOffset { get; set; }
+        new Double GravityWell { get; set; }
         new Int32 MassComparedToEarth { get; set; }
         new Single RadiusInKilometers { get; set; }
         new Single Gravity { get; set; }
         new Int32 Unknown2 { get; set; }
     }
 
-    public partial interface IPlanetFNAMGetter :
+    public partial interface IOrbitedDataGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IPlanetFNAMGetter>
+        ILoquiObject<IOrbitedDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -597,9 +563,8 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => PlanetFNAM_Registration.Instance;
-        Int32 Unknown1 { get; }
-        Single SpawnInProjectionOffset { get; }
+        static ILoquiRegistration StaticRegistration => OrbitedData_Registration.Instance;
+        Double GravityWell { get; }
         Int32 MassComparedToEarth { get; }
         Single RadiusInKilometers { get; }
         Single Gravity { get; }
@@ -610,42 +575,42 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common MixIn
-    public static partial class PlanetFNAMMixIn
+    public static partial class OrbitedDataMixIn
     {
-        public static void Clear(this IPlanetFNAM item)
+        public static void Clear(this IOrbitedData item)
         {
-            ((PlanetFNAMSetterCommon)((IPlanetFNAMGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((OrbitedDataSetterCommon)((IOrbitedDataGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static PlanetFNAM.Mask<bool> GetEqualsMask(
-            this IPlanetFNAMGetter item,
-            IPlanetFNAMGetter rhs,
+        public static OrbitedData.Mask<bool> GetEqualsMask(
+            this IOrbitedDataGetter item,
+            IOrbitedDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((PlanetFNAMCommon)((IPlanetFNAMGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((OrbitedDataCommon)((IOrbitedDataGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IPlanetFNAMGetter item,
+            this IOrbitedDataGetter item,
             string? name = null,
-            PlanetFNAM.Mask<bool>? printMask = null)
+            OrbitedData.Mask<bool>? printMask = null)
         {
-            return ((PlanetFNAMCommon)((IPlanetFNAMGetter)item).CommonInstance()!).Print(
+            return ((OrbitedDataCommon)((IOrbitedDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IPlanetFNAMGetter item,
+            this IOrbitedDataGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            PlanetFNAM.Mask<bool>? printMask = null)
+            OrbitedData.Mask<bool>? printMask = null)
         {
-            ((PlanetFNAMCommon)((IPlanetFNAMGetter)item).CommonInstance()!).Print(
+            ((OrbitedDataCommon)((IOrbitedDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -653,21 +618,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IPlanetFNAMGetter item,
-            IPlanetFNAMGetter rhs,
-            PlanetFNAM.TranslationMask? equalsMask = null)
+            this IOrbitedDataGetter item,
+            IOrbitedDataGetter rhs,
+            OrbitedData.TranslationMask? equalsMask = null)
         {
-            return ((PlanetFNAMCommon)((IPlanetFNAMGetter)item).CommonInstance()!).Equals(
+            return ((OrbitedDataCommon)((IOrbitedDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IPlanetFNAM lhs,
-            IPlanetFNAMGetter rhs)
+            this IOrbitedData lhs,
+            IOrbitedDataGetter rhs)
         {
-            ((PlanetFNAMSetterTranslationCommon)((IPlanetFNAMGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((OrbitedDataSetterTranslationCommon)((IOrbitedDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -676,11 +641,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IPlanetFNAM lhs,
-            IPlanetFNAMGetter rhs,
-            PlanetFNAM.TranslationMask? copyMask = null)
+            this IOrbitedData lhs,
+            IOrbitedDataGetter rhs,
+            OrbitedData.TranslationMask? copyMask = null)
         {
-            ((PlanetFNAMSetterTranslationCommon)((IPlanetFNAMGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((OrbitedDataSetterTranslationCommon)((IOrbitedDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -689,28 +654,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IPlanetFNAM lhs,
-            IPlanetFNAMGetter rhs,
-            out PlanetFNAM.ErrorMask errorMask,
-            PlanetFNAM.TranslationMask? copyMask = null)
+            this IOrbitedData lhs,
+            IOrbitedDataGetter rhs,
+            out OrbitedData.ErrorMask errorMask,
+            OrbitedData.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((PlanetFNAMSetterTranslationCommon)((IPlanetFNAMGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((OrbitedDataSetterTranslationCommon)((IOrbitedDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = PlanetFNAM.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = OrbitedData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IPlanetFNAM lhs,
-            IPlanetFNAMGetter rhs,
+            this IOrbitedData lhs,
+            IOrbitedDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((PlanetFNAMSetterTranslationCommon)((IPlanetFNAMGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((OrbitedDataSetterTranslationCommon)((IOrbitedDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -718,32 +683,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static PlanetFNAM DeepCopy(
-            this IPlanetFNAMGetter item,
-            PlanetFNAM.TranslationMask? copyMask = null)
+        public static OrbitedData DeepCopy(
+            this IOrbitedDataGetter item,
+            OrbitedData.TranslationMask? copyMask = null)
         {
-            return ((PlanetFNAMSetterTranslationCommon)((IPlanetFNAMGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((OrbitedDataSetterTranslationCommon)((IOrbitedDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static PlanetFNAM DeepCopy(
-            this IPlanetFNAMGetter item,
-            out PlanetFNAM.ErrorMask errorMask,
-            PlanetFNAM.TranslationMask? copyMask = null)
+        public static OrbitedData DeepCopy(
+            this IOrbitedDataGetter item,
+            out OrbitedData.ErrorMask errorMask,
+            OrbitedData.TranslationMask? copyMask = null)
         {
-            return ((PlanetFNAMSetterTranslationCommon)((IPlanetFNAMGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((OrbitedDataSetterTranslationCommon)((IOrbitedDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static PlanetFNAM DeepCopy(
-            this IPlanetFNAMGetter item,
+        public static OrbitedData DeepCopy(
+            this IOrbitedDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((PlanetFNAMSetterTranslationCommon)((IPlanetFNAMGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((OrbitedDataSetterTranslationCommon)((IOrbitedDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -751,11 +716,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IPlanetFNAM item,
+            this IOrbitedData item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((PlanetFNAMSetterCommon)((IPlanetFNAMGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((OrbitedDataSetterCommon)((IOrbitedDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -771,45 +736,44 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum PlanetFNAM_FieldIndex
+    internal enum OrbitedData_FieldIndex
     {
-        Unknown1 = 0,
-        SpawnInProjectionOffset = 1,
-        MassComparedToEarth = 2,
-        RadiusInKilometers = 3,
-        Gravity = 4,
-        Unknown2 = 5,
+        GravityWell = 0,
+        MassComparedToEarth = 1,
+        RadiusInKilometers = 2,
+        Gravity = 3,
+        Unknown2 = 4,
     }
     #endregion
 
     #region Registration
-    internal partial class PlanetFNAM_Registration : ILoquiRegistration
+    internal partial class OrbitedData_Registration : ILoquiRegistration
     {
-        public static readonly PlanetFNAM_Registration Instance = new PlanetFNAM_Registration();
+        public static readonly OrbitedData_Registration Instance = new OrbitedData_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 6;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 5;
 
-        public static readonly Type MaskType = typeof(PlanetFNAM.Mask<>);
+        public static readonly Type MaskType = typeof(OrbitedData.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(PlanetFNAM.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(OrbitedData.ErrorMask);
 
-        public static readonly Type ClassType = typeof(PlanetFNAM);
+        public static readonly Type ClassType = typeof(OrbitedData);
 
-        public static readonly Type GetterType = typeof(IPlanetFNAMGetter);
+        public static readonly Type GetterType = typeof(IOrbitedDataGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IPlanetFNAM);
+        public static readonly Type SetterType = typeof(IOrbitedData);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.PlanetFNAM";
+        public const string FullName = "Mutagen.Bethesda.Starfield.OrbitedData";
 
-        public const string Name = "PlanetFNAM";
+        public const string Name = "OrbitedData";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -824,7 +788,7 @@ namespace Mutagen.Bethesda.Starfield
             var all = RecordCollection.Factory(RecordTypes.FNAM);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(PlanetFNAMBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(OrbitedDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -855,17 +819,16 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class PlanetFNAMSetterCommon
+    internal partial class OrbitedDataSetterCommon
     {
-        public static readonly PlanetFNAMSetterCommon Instance = new PlanetFNAMSetterCommon();
+        public static readonly OrbitedDataSetterCommon Instance = new OrbitedDataSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IPlanetFNAM item)
+        public void Clear(IOrbitedData item)
         {
             ClearPartial();
-            item.Unknown1 = default(Int32);
-            item.SpawnInProjectionOffset = default(Single);
+            item.GravityWell = default(Double);
             item.MassComparedToEarth = default(Int32);
             item.RadiusInKilometers = default(Single);
             item.Gravity = default(Single);
@@ -873,7 +836,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public void RemapLinks(IPlanetFNAM obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IOrbitedData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
         }
         
@@ -881,7 +844,7 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IPlanetFNAM item,
+            IOrbitedData item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -893,23 +856,23 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: PlanetFNAMBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: OrbitedDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class PlanetFNAMCommon
+    internal partial class OrbitedDataCommon
     {
-        public static readonly PlanetFNAMCommon Instance = new PlanetFNAMCommon();
+        public static readonly OrbitedDataCommon Instance = new OrbitedDataCommon();
 
-        public PlanetFNAM.Mask<bool> GetEqualsMask(
-            IPlanetFNAMGetter item,
-            IPlanetFNAMGetter rhs,
+        public OrbitedData.Mask<bool> GetEqualsMask(
+            IOrbitedDataGetter item,
+            IOrbitedDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new PlanetFNAM.Mask<bool>(false);
-            ((PlanetFNAMCommon)((IPlanetFNAMGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new OrbitedData.Mask<bool>(false);
+            ((OrbitedDataCommon)((IOrbitedDataGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -918,13 +881,12 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IPlanetFNAMGetter item,
-            IPlanetFNAMGetter rhs,
-            PlanetFNAM.Mask<bool> ret,
+            IOrbitedDataGetter item,
+            IOrbitedDataGetter rhs,
+            OrbitedData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Unknown1 = item.Unknown1 == rhs.Unknown1;
-            ret.SpawnInProjectionOffset = item.SpawnInProjectionOffset.EqualsWithin(rhs.SpawnInProjectionOffset);
+            ret.GravityWell = item.GravityWell.EqualsWithin(rhs.GravityWell);
             ret.MassComparedToEarth = item.MassComparedToEarth == rhs.MassComparedToEarth;
             ret.RadiusInKilometers = item.RadiusInKilometers.EqualsWithin(rhs.RadiusInKilometers);
             ret.Gravity = item.Gravity.EqualsWithin(rhs.Gravity);
@@ -932,9 +894,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public string Print(
-            IPlanetFNAMGetter item,
+            IOrbitedDataGetter item,
             string? name = null,
-            PlanetFNAM.Mask<bool>? printMask = null)
+            OrbitedData.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -946,18 +908,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IPlanetFNAMGetter item,
+            IOrbitedDataGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            PlanetFNAM.Mask<bool>? printMask = null)
+            OrbitedData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"PlanetFNAM =>");
+                sb.AppendLine($"OrbitedData =>");
             }
             else
             {
-                sb.AppendLine($"{name} (PlanetFNAM) =>");
+                sb.AppendLine($"{name} (OrbitedData) =>");
             }
             using (sb.Brace())
             {
@@ -969,17 +931,13 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IPlanetFNAMGetter item,
+            IOrbitedDataGetter item,
             StructuredStringBuilder sb,
-            PlanetFNAM.Mask<bool>? printMask = null)
+            OrbitedData.Mask<bool>? printMask = null)
         {
-            if (printMask?.Unknown1 ?? true)
+            if (printMask?.GravityWell ?? true)
             {
-                sb.AppendItem(item.Unknown1, "Unknown1");
-            }
-            if (printMask?.SpawnInProjectionOffset ?? true)
-            {
-                sb.AppendItem(item.SpawnInProjectionOffset, "SpawnInProjectionOffset");
+                sb.AppendItem(item.GravityWell, "GravityWell");
             }
             if (printMask?.MassComparedToEarth ?? true)
             {
@@ -1001,43 +959,38 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IPlanetFNAMGetter? lhs,
-            IPlanetFNAMGetter? rhs,
+            IOrbitedDataGetter? lhs,
+            IOrbitedDataGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)PlanetFNAM_FieldIndex.Unknown1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OrbitedData_FieldIndex.GravityWell) ?? true))
             {
-                if (lhs.Unknown1 != rhs.Unknown1) return false;
+                if (!lhs.GravityWell.EqualsWithin(rhs.GravityWell)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetFNAM_FieldIndex.SpawnInProjectionOffset) ?? true))
-            {
-                if (!lhs.SpawnInProjectionOffset.EqualsWithin(rhs.SpawnInProjectionOffset)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetFNAM_FieldIndex.MassComparedToEarth) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OrbitedData_FieldIndex.MassComparedToEarth) ?? true))
             {
                 if (lhs.MassComparedToEarth != rhs.MassComparedToEarth) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetFNAM_FieldIndex.RadiusInKilometers) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OrbitedData_FieldIndex.RadiusInKilometers) ?? true))
             {
                 if (!lhs.RadiusInKilometers.EqualsWithin(rhs.RadiusInKilometers)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetFNAM_FieldIndex.Gravity) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OrbitedData_FieldIndex.Gravity) ?? true))
             {
                 if (!lhs.Gravity.EqualsWithin(rhs.Gravity)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetFNAM_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OrbitedData_FieldIndex.Unknown2) ?? true))
             {
                 if (lhs.Unknown2 != rhs.Unknown2) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IPlanetFNAMGetter item)
+        public virtual int GetHashCode(IOrbitedDataGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Unknown1);
-            hash.Add(item.SpawnInProjectionOffset);
+            hash.Add(item.GravityWell);
             hash.Add(item.MassComparedToEarth);
             hash.Add(item.RadiusInKilometers);
             hash.Add(item.Gravity);
@@ -1050,11 +1003,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return PlanetFNAM.GetNew();
+            return OrbitedData.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlanetFNAMGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IOrbitedDataGetter obj)
         {
             yield break;
         }
@@ -1062,39 +1015,35 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class PlanetFNAMSetterTranslationCommon
+    internal partial class OrbitedDataSetterTranslationCommon
     {
-        public static readonly PlanetFNAMSetterTranslationCommon Instance = new PlanetFNAMSetterTranslationCommon();
+        public static readonly OrbitedDataSetterTranslationCommon Instance = new OrbitedDataSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IPlanetFNAM item,
-            IPlanetFNAMGetter rhs,
+            IOrbitedData item,
+            IOrbitedDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)PlanetFNAM_FieldIndex.Unknown1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)OrbitedData_FieldIndex.GravityWell) ?? true))
             {
-                item.Unknown1 = rhs.Unknown1;
+                item.GravityWell = rhs.GravityWell;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetFNAM_FieldIndex.SpawnInProjectionOffset) ?? true))
-            {
-                item.SpawnInProjectionOffset = rhs.SpawnInProjectionOffset;
-            }
-            if ((copyMask?.GetShouldTranslate((int)PlanetFNAM_FieldIndex.MassComparedToEarth) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)OrbitedData_FieldIndex.MassComparedToEarth) ?? true))
             {
                 item.MassComparedToEarth = rhs.MassComparedToEarth;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetFNAM_FieldIndex.RadiusInKilometers) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)OrbitedData_FieldIndex.RadiusInKilometers) ?? true))
             {
                 item.RadiusInKilometers = rhs.RadiusInKilometers;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetFNAM_FieldIndex.Gravity) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)OrbitedData_FieldIndex.Gravity) ?? true))
             {
                 item.Gravity = rhs.Gravity;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetFNAM_FieldIndex.Unknown2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)OrbitedData_FieldIndex.Unknown2) ?? true))
             {
                 item.Unknown2 = rhs.Unknown2;
             }
@@ -1107,19 +1056,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         partial void DeepCopyInCustom(
-            IPlanetFNAM item,
-            IPlanetFNAMGetter rhs,
+            IOrbitedData item,
+            IOrbitedDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
         #endregion
         
-        public PlanetFNAM DeepCopy(
-            IPlanetFNAMGetter item,
-            PlanetFNAM.TranslationMask? copyMask = null)
+        public OrbitedData DeepCopy(
+            IOrbitedDataGetter item,
+            OrbitedData.TranslationMask? copyMask = null)
         {
-            PlanetFNAM ret = (PlanetFNAM)((PlanetFNAMCommon)((IPlanetFNAMGetter)item).CommonInstance()!).GetNew();
-            ((PlanetFNAMSetterTranslationCommon)((IPlanetFNAMGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            OrbitedData ret = (OrbitedData)((OrbitedDataCommon)((IOrbitedDataGetter)item).CommonInstance()!).GetNew();
+            ((OrbitedDataSetterTranslationCommon)((IOrbitedDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1128,30 +1077,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public PlanetFNAM DeepCopy(
-            IPlanetFNAMGetter item,
-            out PlanetFNAM.ErrorMask errorMask,
-            PlanetFNAM.TranslationMask? copyMask = null)
+        public OrbitedData DeepCopy(
+            IOrbitedDataGetter item,
+            out OrbitedData.ErrorMask errorMask,
+            OrbitedData.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            PlanetFNAM ret = (PlanetFNAM)((PlanetFNAMCommon)((IPlanetFNAMGetter)item).CommonInstance()!).GetNew();
-            ((PlanetFNAMSetterTranslationCommon)((IPlanetFNAMGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            OrbitedData ret = (OrbitedData)((OrbitedDataCommon)((IOrbitedDataGetter)item).CommonInstance()!).GetNew();
+            ((OrbitedDataSetterTranslationCommon)((IOrbitedDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = PlanetFNAM.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = OrbitedData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public PlanetFNAM DeepCopy(
-            IPlanetFNAMGetter item,
+        public OrbitedData DeepCopy(
+            IOrbitedDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            PlanetFNAM ret = (PlanetFNAM)((PlanetFNAMCommon)((IPlanetFNAMGetter)item).CommonInstance()!).GetNew();
-            ((PlanetFNAMSetterTranslationCommon)((IPlanetFNAMGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            OrbitedData ret = (OrbitedData)((OrbitedDataCommon)((IOrbitedDataGetter)item).CommonInstance()!).GetNew();
+            ((OrbitedDataSetterTranslationCommon)((IOrbitedDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1167,27 +1116,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class PlanetFNAM
+    public partial class OrbitedData
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => PlanetFNAM_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => PlanetFNAM_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => OrbitedData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => OrbitedData_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => PlanetFNAMCommon.Instance;
+        protected object CommonInstance() => OrbitedDataCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return PlanetFNAMSetterCommon.Instance;
+            return OrbitedDataSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => PlanetFNAMSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => OrbitedDataSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IPlanetFNAMGetter.CommonInstance() => this.CommonInstance();
+        object IOrbitedDataGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IPlanetFNAMGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IOrbitedDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IPlanetFNAMGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IOrbitedDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1198,18 +1147,15 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class PlanetFNAMBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class OrbitedDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly PlanetFNAMBinaryWriteTranslation Instance = new();
+        public static readonly OrbitedDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            IPlanetFNAMGetter item,
+            IOrbitedDataGetter item,
             MutagenWriter writer)
         {
-            writer.Write(item.Unknown1);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.SpawnInProjectionOffset);
+            writer.Write(item.GravityWell);
             writer.Write(item.MassComparedToEarth);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
@@ -1222,7 +1168,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public void Write(
             MutagenWriter writer,
-            IPlanetFNAMGetter item,
+            IOrbitedDataGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
@@ -1243,23 +1189,22 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IPlanetFNAMGetter)item,
+                item: (IOrbitedDataGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class PlanetFNAMBinaryCreateTranslation
+    internal partial class OrbitedDataBinaryCreateTranslation
     {
-        public static readonly PlanetFNAMBinaryCreateTranslation Instance = new PlanetFNAMBinaryCreateTranslation();
+        public static readonly OrbitedDataBinaryCreateTranslation Instance = new OrbitedDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IPlanetFNAM item,
+            IOrbitedData item,
             MutagenFrame frame)
         {
-            item.Unknown1 = frame.ReadInt32();
-            item.SpawnInProjectionOffset = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.GravityWell = frame.ReadDouble();
             item.MassComparedToEarth = frame.ReadInt32();
             item.RadiusInKilometers = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Gravity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
@@ -1272,14 +1217,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class PlanetFNAMBinaryTranslationMixIn
+    public static class OrbitedDataBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IPlanetFNAMGetter item,
+            this IOrbitedDataGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((PlanetFNAMBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((OrbitedDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1292,45 +1237,44 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class PlanetFNAMBinaryOverlay :
+    internal partial class OrbitedDataBinaryOverlay :
         PluginBinaryOverlay,
-        IPlanetFNAMGetter
+        IOrbitedDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => PlanetFNAM_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => PlanetFNAM_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => OrbitedData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => OrbitedData_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => PlanetFNAMCommon.Instance;
+        protected object CommonInstance() => OrbitedDataCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => PlanetFNAMSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => OrbitedDataSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IPlanetFNAMGetter.CommonInstance() => this.CommonInstance();
+        object IOrbitedDataGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IPlanetFNAMGetter.CommonSetterInstance() => null;
+        object? IOrbitedDataGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IPlanetFNAMGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IOrbitedDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => PlanetFNAMBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => OrbitedDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((PlanetFNAMBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((OrbitedDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public Int32 Unknown1 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x0, 0x4));
-        public Single SpawnInProjectionOffset => _structData.Slice(0x4, 0x4).Float();
+        public Double GravityWell => BinaryPrimitives.ReadDoubleLittleEndian(_structData.Slice(0x0, 0x8));
         public Int32 MassComparedToEarth => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
         public Single RadiusInKilometers => _structData.Slice(0xC, 0x4).Float();
         public Single Gravity => _structData.Slice(0x10, 0x4).Float();
@@ -1341,7 +1285,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected PlanetFNAMBinaryOverlay(
+        protected OrbitedDataBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1351,7 +1295,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IPlanetFNAMGetter PlanetFNAMFactory(
+        public static IOrbitedDataGetter OrbitedDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1363,7 +1307,7 @@ namespace Mutagen.Bethesda.Starfield
                 length: 0x18,
                 memoryPair: out var memoryPair,
                 offset: out var offset);
-            var ret = new PlanetFNAMBinaryOverlay(
+            var ret = new OrbitedDataBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             stream.Position += 0x18 + package.MetaData.Constants.SubConstants.HeaderLength;
@@ -1374,12 +1318,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IPlanetFNAMGetter PlanetFNAMFactory(
+        public static IOrbitedDataGetter OrbitedDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return PlanetFNAMFactory(
+            return OrbitedDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1391,7 +1335,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            PlanetFNAMMixIn.Print(
+            OrbitedDataMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1402,16 +1346,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IPlanetFNAMGetter rhs) return false;
-            return ((PlanetFNAMCommon)((IPlanetFNAMGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IOrbitedDataGetter rhs) return false;
+            return ((OrbitedDataCommon)((IOrbitedDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IPlanetFNAMGetter? obj)
+        public bool Equals(IOrbitedDataGetter? obj)
         {
-            return ((PlanetFNAMCommon)((IPlanetFNAMGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((OrbitedDataCommon)((IOrbitedDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((PlanetFNAMCommon)((IPlanetFNAMGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((OrbitedDataCommon)((IOrbitedDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

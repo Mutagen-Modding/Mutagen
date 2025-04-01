@@ -5252,16 +5252,7 @@
     <Compile Include="Records\Major Records\PlanetFlora_Generated.cs">
       <DependentUpon>Planet.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PlanetFNAM_Generated.cs">
-      <DependentUpon>Planet.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PlanetIds_Generated.cs">
-      <DependentUpon>Planet.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\PlanetDetails_Generated.cs">
-      <DependentUpon>Planet.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PlanetINAM_Generated.cs">
       <DependentUpon>Planet.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\PlanetContentManagerBranchNode_Generated.cs">
@@ -6737,6 +6728,30 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\VolumesUnknownEnderEmpty_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\OrbitedData_Generated.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GalaxyData_Generated.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AtmosphereData_Generated.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MasterWorldspace_Generated.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AddedWorldspace_Generated.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SpaceCell_Generated.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\OrbitalData_Generated.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BiomeNoise_Generated.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

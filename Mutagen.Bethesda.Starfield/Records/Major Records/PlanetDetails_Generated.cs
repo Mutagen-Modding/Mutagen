@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Starfield
         #region Perihelion
         public Double Perihelion { get; set; } = default(Double);
         #endregion
-        #region Stardust
-        public Double Stardust { get; set; } = default(Double);
+        #region StarDistance
+        public Double StarDistance { get; set; } = default(Double);
         #endregion
         #region Density
         public Single Density { get; set; } = default(Single);
@@ -116,8 +116,8 @@ namespace Mutagen.Bethesda.Starfield
         #region Geostationary
         public Boolean Geostationary { get; set; } = default(Boolean);
         #endregion
-        #region Unknown3
-        public Int32 Unknown3 { get; set; } = default(Int32);
+        #region RandomSeed
+        public Int32 RandomSeed { get; set; } = default(Int32);
         #endregion
         #region Rings
         public Boolean Rings { get; set; } = default(Boolean);
@@ -171,7 +171,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.SettledStar = initialValue;
                 this.Special = initialValue;
                 this.Perihelion = initialValue;
-                this.Stardust = initialValue;
+                this.StarDistance = initialValue;
                 this.Density = initialValue;
                 this.Heat = initialValue;
                 this.Hydro = initialValue;
@@ -183,7 +183,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.YearLengthInDays = initialValue;
                 this.Asteroids = initialValue;
                 this.Geostationary = initialValue;
-                this.Unknown3 = initialValue;
+                this.RandomSeed = initialValue;
                 this.Rings = initialValue;
             }
 
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem SettledStar,
                 TItem Special,
                 TItem Perihelion,
-                TItem Stardust,
+                TItem StarDistance,
                 TItem Density,
                 TItem Heat,
                 TItem Hydro,
@@ -210,7 +210,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem YearLengthInDays,
                 TItem Asteroids,
                 TItem Geostationary,
-                TItem Unknown3,
+                TItem RandomSeed,
                 TItem Rings)
             {
                 this.Unknown1 = Unknown1;
@@ -223,7 +223,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.SettledStar = SettledStar;
                 this.Special = Special;
                 this.Perihelion = Perihelion;
-                this.Stardust = Stardust;
+                this.StarDistance = StarDistance;
                 this.Density = Density;
                 this.Heat = Heat;
                 this.Hydro = Hydro;
@@ -235,7 +235,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.YearLengthInDays = YearLengthInDays;
                 this.Asteroids = Asteroids;
                 this.Geostationary = Geostationary;
-                this.Unknown3 = Unknown3;
+                this.RandomSeed = RandomSeed;
                 this.Rings = Rings;
             }
 
@@ -258,7 +258,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem SettledStar;
             public TItem Special;
             public TItem Perihelion;
-            public TItem Stardust;
+            public TItem StarDistance;
             public TItem Density;
             public TItem Heat;
             public TItem Hydro;
@@ -270,7 +270,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem YearLengthInDays;
             public TItem Asteroids;
             public TItem Geostationary;
-            public TItem Unknown3;
+            public TItem RandomSeed;
             public TItem Rings;
             #endregion
 
@@ -294,7 +294,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.SettledStar, rhs.SettledStar)) return false;
                 if (!object.Equals(this.Special, rhs.Special)) return false;
                 if (!object.Equals(this.Perihelion, rhs.Perihelion)) return false;
-                if (!object.Equals(this.Stardust, rhs.Stardust)) return false;
+                if (!object.Equals(this.StarDistance, rhs.StarDistance)) return false;
                 if (!object.Equals(this.Density, rhs.Density)) return false;
                 if (!object.Equals(this.Heat, rhs.Heat)) return false;
                 if (!object.Equals(this.Hydro, rhs.Hydro)) return false;
@@ -306,7 +306,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.YearLengthInDays, rhs.YearLengthInDays)) return false;
                 if (!object.Equals(this.Asteroids, rhs.Asteroids)) return false;
                 if (!object.Equals(this.Geostationary, rhs.Geostationary)) return false;
-                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
+                if (!object.Equals(this.RandomSeed, rhs.RandomSeed)) return false;
                 if (!object.Equals(this.Rings, rhs.Rings)) return false;
                 return true;
             }
@@ -323,7 +323,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.SettledStar);
                 hash.Add(this.Special);
                 hash.Add(this.Perihelion);
-                hash.Add(this.Stardust);
+                hash.Add(this.StarDistance);
                 hash.Add(this.Density);
                 hash.Add(this.Heat);
                 hash.Add(this.Hydro);
@@ -335,7 +335,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.YearLengthInDays);
                 hash.Add(this.Asteroids);
                 hash.Add(this.Geostationary);
-                hash.Add(this.Unknown3);
+                hash.Add(this.RandomSeed);
                 hash.Add(this.Rings);
                 return hash.ToHashCode();
             }
@@ -355,7 +355,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.SettledStar)) return false;
                 if (!eval(this.Special)) return false;
                 if (!eval(this.Perihelion)) return false;
-                if (!eval(this.Stardust)) return false;
+                if (!eval(this.StarDistance)) return false;
                 if (!eval(this.Density)) return false;
                 if (!eval(this.Heat)) return false;
                 if (!eval(this.Hydro)) return false;
@@ -367,7 +367,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.YearLengthInDays)) return false;
                 if (!eval(this.Asteroids)) return false;
                 if (!eval(this.Geostationary)) return false;
-                if (!eval(this.Unknown3)) return false;
+                if (!eval(this.RandomSeed)) return false;
                 if (!eval(this.Rings)) return false;
                 return true;
             }
@@ -386,7 +386,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.SettledStar)) return true;
                 if (eval(this.Special)) return true;
                 if (eval(this.Perihelion)) return true;
-                if (eval(this.Stardust)) return true;
+                if (eval(this.StarDistance)) return true;
                 if (eval(this.Density)) return true;
                 if (eval(this.Heat)) return true;
                 if (eval(this.Hydro)) return true;
@@ -398,7 +398,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.YearLengthInDays)) return true;
                 if (eval(this.Asteroids)) return true;
                 if (eval(this.Geostationary)) return true;
-                if (eval(this.Unknown3)) return true;
+                if (eval(this.RandomSeed)) return true;
                 if (eval(this.Rings)) return true;
                 return false;
             }
@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.SettledStar = eval(this.SettledStar);
                 obj.Special = eval(this.Special);
                 obj.Perihelion = eval(this.Perihelion);
-                obj.Stardust = eval(this.Stardust);
+                obj.StarDistance = eval(this.StarDistance);
                 obj.Density = eval(this.Density);
                 obj.Heat = eval(this.Heat);
                 obj.Hydro = eval(this.Hydro);
@@ -436,7 +436,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.YearLengthInDays = eval(this.YearLengthInDays);
                 obj.Asteroids = eval(this.Asteroids);
                 obj.Geostationary = eval(this.Geostationary);
-                obj.Unknown3 = eval(this.Unknown3);
+                obj.RandomSeed = eval(this.RandomSeed);
                 obj.Rings = eval(this.Rings);
             }
             #endregion
@@ -496,9 +496,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Perihelion, "Perihelion");
                     }
-                    if (printMask?.Stardust ?? true)
+                    if (printMask?.StarDistance ?? true)
                     {
-                        sb.AppendItem(Stardust, "Stardust");
+                        sb.AppendItem(StarDistance, "StarDistance");
                     }
                     if (printMask?.Density ?? true)
                     {
@@ -544,9 +544,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Geostationary, "Geostationary");
                     }
-                    if (printMask?.Unknown3 ?? true)
+                    if (printMask?.RandomSeed ?? true)
                     {
-                        sb.AppendItem(Unknown3, "Unknown3");
+                        sb.AppendItem(RandomSeed, "RandomSeed");
                     }
                     if (printMask?.Rings ?? true)
                     {
@@ -586,7 +586,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? SettledStar;
             public Exception? Special;
             public Exception? Perihelion;
-            public Exception? Stardust;
+            public Exception? StarDistance;
             public Exception? Density;
             public Exception? Heat;
             public Exception? Hydro;
@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? YearLengthInDays;
             public Exception? Asteroids;
             public Exception? Geostationary;
-            public Exception? Unknown3;
+            public Exception? RandomSeed;
             public Exception? Rings;
             #endregion
 
@@ -628,8 +628,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Special;
                     case PlanetDetails_FieldIndex.Perihelion:
                         return Perihelion;
-                    case PlanetDetails_FieldIndex.Stardust:
-                        return Stardust;
+                    case PlanetDetails_FieldIndex.StarDistance:
+                        return StarDistance;
                     case PlanetDetails_FieldIndex.Density:
                         return Density;
                     case PlanetDetails_FieldIndex.Heat:
@@ -652,8 +652,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Asteroids;
                     case PlanetDetails_FieldIndex.Geostationary:
                         return Geostationary;
-                    case PlanetDetails_FieldIndex.Unknown3:
-                        return Unknown3;
+                    case PlanetDetails_FieldIndex.RandomSeed:
+                        return RandomSeed;
                     case PlanetDetails_FieldIndex.Rings:
                         return Rings;
                     default:
@@ -696,8 +696,8 @@ namespace Mutagen.Bethesda.Starfield
                     case PlanetDetails_FieldIndex.Perihelion:
                         this.Perihelion = ex;
                         break;
-                    case PlanetDetails_FieldIndex.Stardust:
-                        this.Stardust = ex;
+                    case PlanetDetails_FieldIndex.StarDistance:
+                        this.StarDistance = ex;
                         break;
                     case PlanetDetails_FieldIndex.Density:
                         this.Density = ex;
@@ -732,8 +732,8 @@ namespace Mutagen.Bethesda.Starfield
                     case PlanetDetails_FieldIndex.Geostationary:
                         this.Geostationary = ex;
                         break;
-                    case PlanetDetails_FieldIndex.Unknown3:
-                        this.Unknown3 = ex;
+                    case PlanetDetails_FieldIndex.RandomSeed:
+                        this.RandomSeed = ex;
                         break;
                     case PlanetDetails_FieldIndex.Rings:
                         this.Rings = ex;
@@ -778,8 +778,8 @@ namespace Mutagen.Bethesda.Starfield
                     case PlanetDetails_FieldIndex.Perihelion:
                         this.Perihelion = (Exception?)obj;
                         break;
-                    case PlanetDetails_FieldIndex.Stardust:
-                        this.Stardust = (Exception?)obj;
+                    case PlanetDetails_FieldIndex.StarDistance:
+                        this.StarDistance = (Exception?)obj;
                         break;
                     case PlanetDetails_FieldIndex.Density:
                         this.Density = (Exception?)obj;
@@ -814,8 +814,8 @@ namespace Mutagen.Bethesda.Starfield
                     case PlanetDetails_FieldIndex.Geostationary:
                         this.Geostationary = (Exception?)obj;
                         break;
-                    case PlanetDetails_FieldIndex.Unknown3:
-                        this.Unknown3 = (Exception?)obj;
+                    case PlanetDetails_FieldIndex.RandomSeed:
+                        this.RandomSeed = (Exception?)obj;
                         break;
                     case PlanetDetails_FieldIndex.Rings:
                         this.Rings = (Exception?)obj;
@@ -838,7 +838,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (SettledStar != null) return true;
                 if (Special != null) return true;
                 if (Perihelion != null) return true;
-                if (Stardust != null) return true;
+                if (StarDistance != null) return true;
                 if (Density != null) return true;
                 if (Heat != null) return true;
                 if (Hydro != null) return true;
@@ -850,7 +850,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (YearLengthInDays != null) return true;
                 if (Asteroids != null) return true;
                 if (Geostationary != null) return true;
-                if (Unknown3 != null) return true;
+                if (RandomSeed != null) return true;
                 if (Rings != null) return true;
                 return false;
             }
@@ -908,7 +908,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Perihelion, "Perihelion");
                 }
                 {
-                    sb.AppendItem(Stardust, "Stardust");
+                    sb.AppendItem(StarDistance, "StarDistance");
                 }
                 {
                     sb.AppendItem(Density, "Density");
@@ -944,7 +944,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Geostationary, "Geostationary");
                 }
                 {
-                    sb.AppendItem(Unknown3, "Unknown3");
+                    sb.AppendItem(RandomSeed, "RandomSeed");
                 }
                 {
                     sb.AppendItem(Rings, "Rings");
@@ -967,7 +967,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.SettledStar = this.SettledStar.Combine(rhs.SettledStar);
                 ret.Special = this.Special.Combine(rhs.Special);
                 ret.Perihelion = this.Perihelion.Combine(rhs.Perihelion);
-                ret.Stardust = this.Stardust.Combine(rhs.Stardust);
+                ret.StarDistance = this.StarDistance.Combine(rhs.StarDistance);
                 ret.Density = this.Density.Combine(rhs.Density);
                 ret.Heat = this.Heat.Combine(rhs.Heat);
                 ret.Hydro = this.Hydro.Combine(rhs.Hydro);
@@ -979,7 +979,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.YearLengthInDays = this.YearLengthInDays.Combine(rhs.YearLengthInDays);
                 ret.Asteroids = this.Asteroids.Combine(rhs.Asteroids);
                 ret.Geostationary = this.Geostationary.Combine(rhs.Geostationary);
-                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
+                ret.RandomSeed = this.RandomSeed.Combine(rhs.RandomSeed);
                 ret.Rings = this.Rings.Combine(rhs.Rings);
                 return ret;
             }
@@ -1014,7 +1014,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool SettledStar;
             public bool Special;
             public bool Perihelion;
-            public bool Stardust;
+            public bool StarDistance;
             public bool Density;
             public bool Heat;
             public bool Hydro;
@@ -1026,7 +1026,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool YearLengthInDays;
             public bool Asteroids;
             public bool Geostationary;
-            public bool Unknown3;
+            public bool RandomSeed;
             public bool Rings;
             #endregion
 
@@ -1047,7 +1047,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.SettledStar = defaultOn;
                 this.Special = defaultOn;
                 this.Perihelion = defaultOn;
-                this.Stardust = defaultOn;
+                this.StarDistance = defaultOn;
                 this.Density = defaultOn;
                 this.Heat = defaultOn;
                 this.Hydro = defaultOn;
@@ -1059,7 +1059,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.YearLengthInDays = defaultOn;
                 this.Asteroids = defaultOn;
                 this.Geostationary = defaultOn;
-                this.Unknown3 = defaultOn;
+                this.RandomSeed = defaultOn;
                 this.Rings = defaultOn;
             }
 
@@ -1086,7 +1086,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((SettledStar, null));
                 ret.Add((Special, null));
                 ret.Add((Perihelion, null));
-                ret.Add((Stardust, null));
+                ret.Add((StarDistance, null));
                 ret.Add((Density, null));
                 ret.Add((Heat, null));
                 ret.Add((Hydro, null));
@@ -1098,7 +1098,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((YearLengthInDays, null));
                 ret.Add((Asteroids, null));
                 ret.Add((Geostationary, null));
-                ret.Add((Unknown3, null));
+                ret.Add((RandomSeed, null));
                 ret.Add((Rings, null));
             }
 
@@ -1182,7 +1182,7 @@ namespace Mutagen.Bethesda.Starfield
         new String SettledStar { get; set; }
         new String Special { get; set; }
         new Double Perihelion { get; set; }
-        new Double Stardust { get; set; }
+        new Double StarDistance { get; set; }
         new Single Density { get; set; }
         new Single Heat { get; set; }
         new Single Hydro { get; set; }
@@ -1194,7 +1194,7 @@ namespace Mutagen.Bethesda.Starfield
         new Single YearLengthInDays { get; set; }
         new UInt32 Asteroids { get; set; }
         new Boolean Geostationary { get; set; }
-        new Int32 Unknown3 { get; set; }
+        new Int32 RandomSeed { get; set; }
         new Boolean Rings { get; set; }
     }
 
@@ -1220,7 +1220,7 @@ namespace Mutagen.Bethesda.Starfield
         String SettledStar { get; }
         String Special { get; }
         Double Perihelion { get; }
-        Double Stardust { get; }
+        Double StarDistance { get; }
         Single Density { get; }
         Single Heat { get; }
         Single Hydro { get; }
@@ -1232,7 +1232,7 @@ namespace Mutagen.Bethesda.Starfield
         Single YearLengthInDays { get; }
         UInt32 Asteroids { get; }
         Boolean Geostationary { get; }
-        Int32 Unknown3 { get; }
+        Int32 RandomSeed { get; }
         Boolean Rings { get; }
 
     }
@@ -1413,7 +1413,7 @@ namespace Mutagen.Bethesda.Starfield
         SettledStar = 7,
         Special = 8,
         Perihelion = 9,
-        Stardust = 10,
+        StarDistance = 10,
         Density = 11,
         Heat = 12,
         Hydro = 13,
@@ -1425,7 +1425,7 @@ namespace Mutagen.Bethesda.Starfield
         YearLengthInDays = 19,
         Asteroids = 20,
         Geostationary = 21,
-        Unknown3 = 22,
+        RandomSeed = 22,
         Rings = 23,
     }
     #endregion
@@ -1522,7 +1522,7 @@ namespace Mutagen.Bethesda.Starfield
             item.SettledStar = string.Empty;
             item.Special = string.Empty;
             item.Perihelion = default(Double);
-            item.Stardust = default(Double);
+            item.StarDistance = default(Double);
             item.Density = default(Single);
             item.Heat = default(Single);
             item.Hydro = default(Single);
@@ -1534,7 +1534,7 @@ namespace Mutagen.Bethesda.Starfield
             item.YearLengthInDays = default(Single);
             item.Asteroids = default(UInt32);
             item.Geostationary = default(Boolean);
-            item.Unknown3 = default(Int32);
+            item.RandomSeed = default(Int32);
             item.Rings = default(Boolean);
         }
         
@@ -1599,7 +1599,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.SettledStar = string.Equals(item.SettledStar, rhs.SettledStar);
             ret.Special = string.Equals(item.Special, rhs.Special);
             ret.Perihelion = item.Perihelion.EqualsWithin(rhs.Perihelion);
-            ret.Stardust = item.Stardust.EqualsWithin(rhs.Stardust);
+            ret.StarDistance = item.StarDistance.EqualsWithin(rhs.StarDistance);
             ret.Density = item.Density.EqualsWithin(rhs.Density);
             ret.Heat = item.Heat.EqualsWithin(rhs.Heat);
             ret.Hydro = item.Hydro.EqualsWithin(rhs.Hydro);
@@ -1611,7 +1611,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.YearLengthInDays = item.YearLengthInDays.EqualsWithin(rhs.YearLengthInDays);
             ret.Asteroids = item.Asteroids == rhs.Asteroids;
             ret.Geostationary = item.Geostationary == rhs.Geostationary;
-            ret.Unknown3 = item.Unknown3 == rhs.Unknown3;
+            ret.RandomSeed = item.RandomSeed == rhs.RandomSeed;
             ret.Rings = item.Rings == rhs.Rings;
         }
         
@@ -1697,9 +1697,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Perihelion, "Perihelion");
             }
-            if (printMask?.Stardust ?? true)
+            if (printMask?.StarDistance ?? true)
             {
-                sb.AppendItem(item.Stardust, "Stardust");
+                sb.AppendItem(item.StarDistance, "StarDistance");
             }
             if (printMask?.Density ?? true)
             {
@@ -1745,9 +1745,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Geostationary, "Geostationary");
             }
-            if (printMask?.Unknown3 ?? true)
+            if (printMask?.RandomSeed ?? true)
             {
-                sb.AppendItem(item.Unknown3, "Unknown3");
+                sb.AppendItem(item.RandomSeed, "RandomSeed");
             }
             if (printMask?.Rings ?? true)
             {
@@ -1802,9 +1802,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Perihelion.EqualsWithin(rhs.Perihelion)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetDetails_FieldIndex.Stardust) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetDetails_FieldIndex.StarDistance) ?? true))
             {
-                if (!lhs.Stardust.EqualsWithin(rhs.Stardust)) return false;
+                if (!lhs.StarDistance.EqualsWithin(rhs.StarDistance)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlanetDetails_FieldIndex.Density) ?? true))
             {
@@ -1850,9 +1850,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.Geostationary != rhs.Geostationary) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetDetails_FieldIndex.Unknown3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetDetails_FieldIndex.RandomSeed) ?? true))
             {
-                if (lhs.Unknown3 != rhs.Unknown3) return false;
+                if (lhs.RandomSeed != rhs.RandomSeed) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)PlanetDetails_FieldIndex.Rings) ?? true))
             {
@@ -1874,7 +1874,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.SettledStar);
             hash.Add(item.Special);
             hash.Add(item.Perihelion);
-            hash.Add(item.Stardust);
+            hash.Add(item.StarDistance);
             hash.Add(item.Density);
             hash.Add(item.Heat);
             hash.Add(item.Hydro);
@@ -1886,7 +1886,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.YearLengthInDays);
             hash.Add(item.Asteroids);
             hash.Add(item.Geostationary);
-            hash.Add(item.Unknown3);
+            hash.Add(item.RandomSeed);
             hash.Add(item.Rings);
             return hash.ToHashCode();
         }
@@ -1960,9 +1960,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Perihelion = rhs.Perihelion;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetDetails_FieldIndex.Stardust) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetDetails_FieldIndex.StarDistance) ?? true))
             {
-                item.Stardust = rhs.Stardust;
+                item.StarDistance = rhs.StarDistance;
             }
             if ((copyMask?.GetShouldTranslate((int)PlanetDetails_FieldIndex.Density) ?? true))
             {
@@ -2008,9 +2008,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Geostationary = rhs.Geostationary;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetDetails_FieldIndex.Unknown3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetDetails_FieldIndex.RandomSeed) ?? true))
             {
-                item.Unknown3 = rhs.Unknown3;
+                item.RandomSeed = rhs.RandomSeed;
             }
             if ((copyMask?.GetShouldTranslate((int)PlanetDetails_FieldIndex.Rings) ?? true))
             {
@@ -2158,7 +2158,7 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.Special,
                 binaryType: StringBinaryType.PrependLengthWithNullIfContent);
             writer.Write(item.Perihelion);
-            writer.Write(item.Stardust);
+            writer.Write(item.StarDistance);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Density);
@@ -2186,7 +2186,7 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.YearLengthInDays);
             writer.Write(item.Asteroids);
             writer.Write(item.Geostationary, length: 4);
-            writer.Write(item.Unknown3);
+            writer.Write(item.RandomSeed);
             writer.Write(item.Rings, length: 4);
         }
 
@@ -2262,7 +2262,7 @@ namespace Mutagen.Bethesda.Starfield
                 stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
                 parseWhole: true);
             item.Perihelion = frame.ReadDouble();
-            item.Stardust = frame.ReadDouble();
+            item.StarDistance = frame.ReadDouble();
             item.Density = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Heat = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Hydro = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
@@ -2276,7 +2276,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Geostationary = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
                 reader: frame,
                 byteLength: 4);
-            item.Unknown3 = frame.ReadInt32();
+            item.RandomSeed = frame.ReadInt32();
             item.Rings = BooleanBinaryTranslation<MutagenFrame>.Instance.Parse(
                 reader: frame,
                 byteLength: 4);
@@ -2379,7 +2379,7 @@ namespace Mutagen.Bethesda.Starfield
         protected int SpecialEndingPos;
         #endregion
         public Double Perihelion => BinaryPrimitives.ReadDoubleLittleEndian(_structData.Slice(SpecialEndingPos, 0x8));
-        public Double Stardust => BinaryPrimitives.ReadDoubleLittleEndian(_structData.Slice(SpecialEndingPos + 0x8, 0x8));
+        public Double StarDistance => BinaryPrimitives.ReadDoubleLittleEndian(_structData.Slice(SpecialEndingPos + 0x8, 0x8));
         public Single Density => _structData.Slice(SpecialEndingPos + 0x10, 0x4).Float();
         public Single Heat => _structData.Slice(SpecialEndingPos + 0x14, 0x4).Float();
         public Single Hydro => _structData.Slice(SpecialEndingPos + 0x18, 0x4).Float();
@@ -2391,7 +2391,7 @@ namespace Mutagen.Bethesda.Starfield
         public Single YearLengthInDays => _structData.Slice(SpecialEndingPos + 0x30, 0x4).Float();
         public UInt32 Asteroids => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(SpecialEndingPos + 0x34, 0x4));
         public Boolean Geostationary => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(SpecialEndingPos + 0x38, 0x4)) >= 1;
-        public Int32 Unknown3 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(SpecialEndingPos + 0x3C, 0x4));
+        public Int32 RandomSeed => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(SpecialEndingPos + 0x3C, 0x4));
         public Boolean Rings => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(SpecialEndingPos + 0x40, 0x4)) >= 1;
         partial void CustomFactoryEnd(
             OverlayStream stream,

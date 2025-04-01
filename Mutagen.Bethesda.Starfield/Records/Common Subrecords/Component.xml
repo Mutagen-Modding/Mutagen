@@ -86,10 +86,10 @@
   </Object>
   <Object name="PlanetModelComponentXMPMSubItem" objType="Subrecord">
     <Fields>
-      <String name="Unknown1" binaryType="PrependLengthUShort" />
-      <Int32 name="Unknown2" />
-      <String name="Unknown3" binaryType="NullTerminate" />
-      <Int32 name="Unknown4" />
+      <String name="ResourceID" binaryType="PrependLengthUShort" />
+      <Int32 name="FileHash" />
+      <String name="Extension" binaryType="NullTerminate" />
+      <Int32 name="FolderHash" />
     </Fields>
   </Object>
   <Object name="HoudiniDataComponent" objType="Subrecord" baseClass="AComponent">

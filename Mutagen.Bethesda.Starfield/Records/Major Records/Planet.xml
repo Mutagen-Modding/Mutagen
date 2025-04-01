@@ -3,27 +3,29 @@
   <Object name="Planet" recordType="PNDT" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
       <RefList name="Components" refName="AComponent" />
-      <ByteArray name="EOVR" recordType="EOVR" unknown="true" />
-      <RefList name="Worldspaces" refName="PlanetWorldspace" recordType="CNAM" />
+      <RefList name="MasterWorldspaces" refName="MasterWorldspace" recordType="CNAM" />
+      <RefList name="AddedWorldspaces" refName="AddedWorldspace" recordType="EOVR" />
       <RefList name="Biomes" refName="PlanetBiome" />
       <FormLink name="SurfaceTree" refName="SurfaceTree" recordType="FNAM" />
-      <ByteArray name="GNAM" recordType="GNAM" unknown="true" />
-      <Marker name="BDST" recordType="BDST" unknown="true" />
-      <String name="Name" recordType="ANAM" />
-      <Enum name="BodyType" enumName="Planet.BodyTypeEnum" recordType="CNAM" byteLength="1" />
-      <ByteArray name="DNAM" recordType="DNAM" unknown="true" />
-      <ByteArray name="ENAM" recordType="ENAM" unknown="true" />
-      <RefDirect name="FNAM" refName="PlanetFNAM" unknown="true" />
-      <RefDirect name="IDs" refName="PlanetIds" />
+      <Float name="ScanWorldspaceMultiplier" recordType="GNAM" />
+      <Marker name="BDST" recordType="BDST" />
+      <String name="Name" recordType="ANAM" nullable="false" />
+      <String name="EnvironmentMap" recordType="XEMP" />
+      <Enum name="BodyType" enumName="Planet.BodyTypeEnum" recordType="CNAM" byteLength="1" nullable="false" />
+      <RefDirect name="SpaceCell" refName="SpaceCell" />
+      <RefDirect name="OrbitalData" refName="OrbitalData" nullable="false" />
+      <RefDirect name="OrbitedData" refName="OrbitedData" />
+      <RefDirect name="GalaxyData" refName="GalaxyData" />
       <RefDirect name="Details" refName="PlanetDetails" />
-      <RefDirect name="INAM" refName="PlanetINAM" unknown="true" />
-      <ByteArray name="KNAM" recordType="KNAM" unknown="true" />
-      <ByteArray name="NNAM" recordType="NNAM" unknown="true" />
+      <RefDirect name="AtmosphereData" refName="AtmosphereData" />
+      <RefDirect name="BiomeNoise" refName="BiomeNoise" />
+      <Enum name="PlayerKnowledge" enumName="Planet.PlayerKnowledgeFlag" byteLength="4" recordType="NNAM" />
       <Marker name="BDED" recordType="BDED" />
       <Float name="Temperature" recordType="TEMP" />
       <Float name="Density" recordType="DENS" />
-      <Float name="PerihelionAngleDegrees" recordType="PHLA" />gg
-      <ByteArray name="RSCS" recordType="RSCS" unknown="true" /></Fields>
+      <Float name="PerihelionAngleDegrees" recordType="PHLA" />
+      <Int32 name="ResourceCreationSeed" recordType="RSCS" />
+    </Fields>
   </Object>
   <Object name="PlanetBiome" objType="Subrecord" recordType="PPBD">
     <Fields>
@@ -48,10 +50,9 @@
       <UInt8 name="Frequency" />
     </Fields>
   </Object>
-  <Object name="PlanetFNAM" objType="Subrecord" recordType="FNAM">
+  <Object name="OrbitedData" objType="Subrecord" recordType="FNAM">
     <Fields>
-      <Int32 name="Unknown1" unknown="true" />
-      <Float name="SpawnInProjectionOffset" />
+      <Double name="GravityWell" />
       <!-- Need to double check scaling -->
       <Int32 name="MassComparedToEarth" />
       <Float name="RadiusInKilometers" />
@@ -59,7 +60,7 @@
       <Int32 name="Unknown2" unknown="true" />
     </Fields>
   </Object>
-  <Object name="PlanetIds" objType="Subrecord" recordType="GNAM">
+  <Object name="GalaxyData" objType="Subrecord" recordType="GNAM">
     <Fields>
       <UInt32 name="StarId" />
       <UInt32 name="PrimaryPlanetId" />
@@ -78,7 +79,7 @@
       <String name="SettledStar" binaryType="PrependLengthWithNullIfContent" />
       <String name="Special" binaryType="PrependLengthWithNullIfContent" />
       <Double name="Perihelion" />
-      <Double name="Stardust" />
+      <Double name="StarDistance" />
       <Float name="Density" />
       <Float name="Heat" />
       <Float name="Hydro" />
@@ -90,23 +91,65 @@
       <Float name="YearLengthInDays" />
       <UInt32 name="Asteroids" />
       <Bool name="Geostationary" byteLength="4" />
-      <Int32 name="Unknown3" unknown="true" />
+      <Int32 name="RandomSeed" />
       <Bool name="Rings" byteLength="4" />
     </Fields>
   </Object>
-  <Object name="PlanetINAM" objType="Subrecord" recordType="INAM">
+  <Object name="AtmosphereData" objType="Subrecord" recordType="INAM">
     <Fields>
-      <UInt32 name="AtmosHandle" />
-      <Int32 name="Unknown1" />
-      <Int32 name="Unknown2" />
-      <Int32 name="Unknown3" />
+      <FormLink name="Atmosphere" refName="Atmosphere" />
+      <Float name="AverageDensityFrac" />
+      <Float name="RayleighScatteringCoefficient" />
+      <Float name="MieScatteringCoefficient" />
     </Fields>
   </Object>
-  <Object name="PlanetWorldspace" objType="Subrecord" >
+  <Object name="MasterWorldspace" objType="Subrecord" >
     <Fields>
       <Double name="Longitude" />
       <Double name="Latitude" />
-      <FormLink name="Planet" refName="Planet" />
+      <FormLink name="Worldspace" refName="Worldspace" />
+    </Fields>
+  </Object>
+  <Object name="AddedWorldspace" objType="Subrecord" >
+    <Fields>
+      <Double name="Longitude" />
+      <Double name="Latitude" />
+      <FormLink name="Worldspace" refName="Worldspace" />
+      <UInt8 name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="SpaceCell" objType="Subrecord" recordType="DNAM" >
+    <Fields>
+      <String name="CellEditorID" binaryType="PrependLengthWithNullIfContent" />
+      <Bool name="IsUnique" byteLength="1" />
+    </Fields>
+  </Object>
+  <Object name="OrbitalData" objType="Subrecord" recordType="ENAM" >
+    <Fields>
+      <Double name="MajorAxis" />
+      <Double name="MinorAxis" />
+      <Double name="Aphelion" />
+      <Double name="Eccentricity" />
+      <Double name="Incline" />
+      <Double name="MeanOrbit" />
+      <Float name="AxialTilt" />
+      <Float name="RotationalVelocity" />
+      <Float name="StartAngle" isRotation="true" />
+      <Float name="PerihelionAngle" isRotation="true" />
+      <Bool name="ApplyOrbitalVelocity" byteLength="1" />
+      <Bool name="GeostationaryOrbit" byteLength="1" />
+      <UInt32 name="Unknown1" />
+      <UInt16 name="Unknown2" />
+    </Fields>
+  </Object>
+  <Object name="BiomeNoise" objType="Subrecord" recordType="KNAM" >
+    <Fields>
+      <String name="NoiseFilename" binaryType="PrependLengthWithNullIfContent" />
+      <Double name="BiomeFrequency" />
+      <Double name="TerrainHeightFrequency" />
+      <UInt8 name="NoiseType" />
+      <Int32 name="TerrainHeightSeed" />
+      <Float name="TerrainMaxHeightMeters" />
     </Fields>
   </Object>
 </Loqui>
