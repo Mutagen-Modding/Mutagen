@@ -321,6 +321,9 @@ internal sealed class ModHeaderWriteLogic
     {
         switch (_params.MastersListOrdering)
         {
+            case null:
+                modKeys.Sort(ModKey.AlphabeticalAndMastersFirst);
+                return;
             case MastersListOrderingEnumOption e:
                 switch (e.Option)
                 {

@@ -46,7 +46,7 @@ public sealed record BinaryWriteParameters
     /// Logic to use to keep a mod's master list ordering in sync<br/>
     /// This setting is just used to sync the order of the list, not the content
     /// </summary>
-    public AMastersListOrderingOption MastersListOrdering { get; init; } = new MastersListOrderingEnumOption();
+    public AMastersListOrderingOption? MastersListOrdering { get; init; }
 
     /// <summary>
     /// Logic to use to locate a mod header's next formID to use based on the record content

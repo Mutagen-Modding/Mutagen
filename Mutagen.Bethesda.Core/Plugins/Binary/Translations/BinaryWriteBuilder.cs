@@ -498,7 +498,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                     
                     return p._param with
                     {
-                        MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
+                        MastersListOrdering = p._param.MastersListOrdering ?? new MastersListOrderingByLoadOrder(lo),
                         LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
                     };
                 }
@@ -515,7 +515,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                         MasterFlagsLookup = lo
                             .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
                             .ResolveExistingMods(),
-                        MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
+                        MastersListOrdering = p._param.MastersListOrdering ?? new MastersListOrderingByLoadOrder(lo),
                         LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
                     };
                 }
@@ -588,7 +588,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                 {
                     MasterFlagsLookup = loadOrder
                         .Where(x => !alreadyKnownMasters.Contains(x.ModKey)),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
+                    MastersListOrdering = p._param.MastersListOrdering ?? new MastersListOrderingByLoadOrder(loadOrder),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
                 };
             }
@@ -635,7 +635,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                     MasterFlagsLookup = loadOrder
                         .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
                         .ResolveExistingMods(disposeItems: false),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
+                    MastersListOrdering = p._param.MastersListOrdering ?? new MastersListOrderingByLoadOrder(loadOrder),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
                 };
             }
@@ -659,7 +659,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                 {
                     MasterFlagsLookup = loadOrder
                         .Where(x => !alreadyKnownMasters.Contains(x.ModKey)),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
+                    MastersListOrdering = p._param.MastersListOrdering ?? new MastersListOrderingByLoadOrder(loadOrder),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
                 };
             }
@@ -711,7 +711,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                     MasterFlagsLookup = lo
                         .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
                         .ResolveExistingMods(disposeItems: false),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo)
+                    MastersListOrdering = p._param.MastersListOrdering ?? new MastersListOrderingByLoadOrder(lo)
                 };
             }
         });
@@ -738,7 +738,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                     MasterFlagsLookup = lo
                         .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
                         .ResolveExistingMods(disposeItems: false),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
+                    MastersListOrdering = p._param.MastersListOrdering ?? new MastersListOrderingByLoadOrder(lo),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
                 };
             }
@@ -772,7 +772,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                     MasterFlagsLookup = lo
                         .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
                         .ResolveExistingMods(disposeItems: false),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
+                    MastersListOrdering = p._param.MastersListOrdering ?? new MastersListOrderingByLoadOrder(lo),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
                 };
             }
