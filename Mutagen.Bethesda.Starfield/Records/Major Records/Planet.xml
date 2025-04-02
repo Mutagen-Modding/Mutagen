@@ -53,8 +53,7 @@
   <Object name="OrbitedData" objType="Subrecord" recordType="FNAM">
     <Fields>
       <Double name="GravityWell" />
-      <!-- Need to double check scaling -->
-      <Int32 name="MassComparedToEarth" />
+      <Float name="MassComparedToEarth" divisor="5.972E24" />
       <Float name="RadiusInKilometers" />
       <Float name="Gravity" />
       <Int32 name="Unknown2" unknown="true" />

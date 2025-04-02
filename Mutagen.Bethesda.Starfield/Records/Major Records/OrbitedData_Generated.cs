@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Starfield
         public Double GravityWell { get; set; } = default(Double);
         #endregion
         #region MassComparedToEarth
-        public Int32 MassComparedToEarth { get; set; } = default(Int32);
+        public Single MassComparedToEarth { get; set; } = default(Single);
         #endregion
         #region RadiusInKilometers
         public Single RadiusInKilometers { get; set; } = default(Single);
@@ -546,7 +546,7 @@ namespace Mutagen.Bethesda.Starfield
         IOrbitedDataGetter
     {
         new Double GravityWell { get; set; }
-        new Int32 MassComparedToEarth { get; set; }
+        new Single MassComparedToEarth { get; set; }
         new Single RadiusInKilometers { get; set; }
         new Single Gravity { get; set; }
         new Int32 Unknown2 { get; set; }
@@ -565,7 +565,7 @@ namespace Mutagen.Bethesda.Starfield
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => OrbitedData_Registration.Instance;
         Double GravityWell { get; }
-        Int32 MassComparedToEarth { get; }
+        Single MassComparedToEarth { get; }
         Single RadiusInKilometers { get; }
         Single Gravity { get; }
         Int32 Unknown2 { get; }
@@ -829,7 +829,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.GravityWell = default(Double);
-            item.MassComparedToEarth = default(Int32);
+            item.MassComparedToEarth = default(Single);
             item.RadiusInKilometers = default(Single);
             item.Gravity = default(Single);
             item.Unknown2 = default(Int32);
@@ -887,7 +887,7 @@ namespace Mutagen.Bethesda.Starfield
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.GravityWell = item.GravityWell.EqualsWithin(rhs.GravityWell);
-            ret.MassComparedToEarth = item.MassComparedToEarth == rhs.MassComparedToEarth;
+            ret.MassComparedToEarth = item.MassComparedToEarth.EqualsWithin(rhs.MassComparedToEarth);
             ret.RadiusInKilometers = item.RadiusInKilometers.EqualsWithin(rhs.RadiusInKilometers);
             ret.Gravity = item.Gravity.EqualsWithin(rhs.Gravity);
             ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
@@ -970,7 +970,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)OrbitedData_FieldIndex.MassComparedToEarth) ?? true))
             {
-                if (lhs.MassComparedToEarth != rhs.MassComparedToEarth) return false;
+                if (!lhs.MassComparedToEarth.EqualsWithin(rhs.MassComparedToEarth)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)OrbitedData_FieldIndex.RadiusInKilometers) ?? true))
             {
@@ -1156,7 +1156,11 @@ namespace Mutagen.Bethesda.Starfield
             MutagenWriter writer)
         {
             writer.Write(item.GravityWell);
-            writer.Write(item.MassComparedToEarth);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.MassComparedToEarth,
+                divisor: null,
+                multiplier: 5.972E+24f);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.RadiusInKilometers);
@@ -1205,7 +1209,10 @@ namespace Mutagen.Bethesda.Starfield
             MutagenFrame frame)
         {
             item.GravityWell = frame.ReadDouble();
-            item.MassComparedToEarth = frame.ReadInt32();
+            item.MassComparedToEarth = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                multiplier: null,
+                divisor: 5.972E+24f);
             item.RadiusInKilometers = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Gravity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Unknown2 = frame.ReadInt32();
@@ -1275,7 +1282,7 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public Double GravityWell => BinaryPrimitives.ReadDoubleLittleEndian(_structData.Slice(0x0, 0x8));
-        public Int32 MassComparedToEarth => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
+        public Single MassComparedToEarth => _structData.Slice(0x8, 0x4).Float() / 5.972E+24f;
         public Single RadiusInKilometers => _structData.Slice(0xC, 0x4).Float();
         public Single Gravity => _structData.Slice(0x10, 0x4).Float();
         public Int32 Unknown2 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x14, 0x4));
