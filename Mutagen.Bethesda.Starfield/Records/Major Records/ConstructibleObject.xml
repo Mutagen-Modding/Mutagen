@@ -13,15 +13,19 @@
       </FormLink>
       <UInt16 name="AmountProduced" nullable="false" recordType="NNAM" />
       <Float name="MenuSortOrder" nullable="false" recordType="SNAM" />
-      <UInt8 name="TNAM" recordType="TNAM" nullable="false" />
+      <UInt8 name="Tier" recordType="TNAM" nullable="false" />
       <RefDirect name="CraftingSound" recordType="CUSH" refName="SoundReference" />
       <RefDirect name="PickupSound" recordType="PUSH" refName="SoundReference" />
       <RefDirect name="DropdownSound" recordType="PDSH" refName="SoundReference" />
+      <RefList name="RepairComponents" recordType="REPR" refName="ConstructibleObjectComponent" />
       <Enum name="LearnMethod" enumName="ConstructibleObject.LearnMethodEnum" recordType="LRNM" byteLength="1" />
       <UInt32 name="Value" recordType="DATA" nullable="false" />
       <FormLink name="MenuArtObject" recordType="ANAM" refName="ArtObject" />
-      <FormLink name="BuildLimit" recordType="JNAM" refName="Global" />
-      <List name="Categories" recordType="FNAM" >
+      <FormLink name="LearnedFrom" recordType="GNAM" refName="StarfieldMajorRecord" />
+      <FormLink name="BaseReturnScaleTable" recordType="CVT0" refName="CurveTable" />
+      <FormLink name="LearnChance" recordType="LRNC" refName="Global" />
+      <FormLink name="MaxBuildCountGlobal" recordType="JNAM" refName="Global" />
+      <List name="RecipeFilters" recordType="FNAM" >
         <Fields>
           <FormLink refName="Keyword" />
         </Fields>

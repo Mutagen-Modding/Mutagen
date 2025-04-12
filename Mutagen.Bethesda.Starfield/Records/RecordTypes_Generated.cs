@@ -263,6 +263,7 @@ public partial class RecordTypes
     public static readonly RecordType CURV = new(0x56525543);
     public static readonly RecordType CUSH = new(0x48535543);
     public static readonly RecordType CVPA = new(0x41505643);
+    public static readonly RecordType CVT0 = new(0x30545643);
     public static readonly RecordType DALC = new(0x434C4144);
     public static readonly RecordType DAMA = new(0x414D4144);
     public static readonly RecordType DAMC = new(0x434D4144);
@@ -516,6 +517,7 @@ public partial class RecordTypes
     public static readonly RecordType LNAM = new(0x4D414E4C);
     public static readonly RecordType LOCK = new(0x4B434F4C);
     public static readonly RecordType LODB = new(0x42444F4C);
+    public static readonly RecordType LRNC = new(0x434E524C);
     public static readonly RecordType LRNM = new(0x4D4E524C);
     public static readonly RecordType LSCR = new(0x5243534C);
     public static readonly RecordType LTEX = new(0x5845544C);
@@ -791,6 +793,7 @@ public partial class RecordTypes
     public static readonly RecordType REGN = new(0x4E474552);
     public static readonly RecordType REMP = new(0x504D4552);
     public static readonly RecordType REPL = new(0x4C504552);
+    public static readonly RecordType REPR = new(0x52504552);
     public static readonly RecordType RESN = new(0x4E534552);
     public static readonly RecordType REVB = new(0x42564552);
     public static readonly RecordType RFDP = new(0x50444652);

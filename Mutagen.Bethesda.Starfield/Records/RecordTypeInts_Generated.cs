@@ -261,6 +261,7 @@ public partial class RecordTypeInts
     public const int CURV = 0x56525543;
     public const int CUSH = 0x48535543;
     public const int CVPA = 0x41505643;
+    public const int CVT0 = 0x30545643;
     public const int DALC = 0x434C4144;
     public const int DAMA = 0x414D4144;
     public const int DAMC = 0x434D4144;
@@ -514,6 +515,7 @@ public partial class RecordTypeInts
     public const int LNAM = 0x4D414E4C;
     public const int LOCK = 0x4B434F4C;
     public const int LODB = 0x42444F4C;
+    public const int LRNC = 0x434E524C;
     public const int LRNM = 0x4D4E524C;
     public const int LSCR = 0x5243534C;
     public const int LTEX = 0x5845544C;
@@ -789,6 +791,7 @@ public partial class RecordTypeInts
     public const int REGN = 0x4E474552;
     public const int REMP = 0x504D4552;
     public const int REPL = 0x4C504552;
+    public const int REPR = 0x52504552;
     public const int RESN = 0x4E534552;
     public const int REVB = 0x42564552;
     public const int RFDP = 0x50444652;
