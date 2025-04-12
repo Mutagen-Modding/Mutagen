@@ -1,3 +1,4 @@
+using AutoFixture;
 using AutoFixture.Kernel;
 using Mutagen.Bethesda.Plugins;
 
@@ -5,18 +6,22 @@ namespace Mutagen.Bethesda.Testing.AutoData;
 
 public class ModKeyBuilder : ISpecimenBuilder
 {
-    private static int _nextNum = 0;
+    private int _nextNum = 0;
     
     public object Create(object request, ISpecimenContext context)
     {
+        if (request is SeededRequest seed)
+        {
+            request = seed.Request;
+        }
         if (request is MultipleRequest mult)
         {
-            var req = mult.Request;
-            if (req is SeededRequest seed)
+            request = mult.Request;
+            if (request is SeededRequest multSeed)
             {
-                req = seed.Request;
+                request = multSeed.Request;
             }
-            if (req is Type t)
+            if (request is Type t)
             {
                 if (t == typeof(ModKey))
                 {
@@ -34,6 +39,10 @@ public class ModKeyBuilder : ISpecimenBuilder
             if (t == typeof(ModKey))
             {
                 return GetRandomModKey(ModType.Plugin);
+            }
+            if (t == typeof(Func<ModKey>))
+            {
+                return () => context.Create<ModKey>();
             }
         }
 
