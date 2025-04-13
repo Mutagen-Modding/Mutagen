@@ -6753,5 +6753,8 @@
     <Compile Include="Records\Major Records\BiomeNoise_Generated.cs">
       <DependentUpon>Planet.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\PlanetBiomeUnknownItem_Generated.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

@@ -1097,6 +1097,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             PlacedTrap_Registration.Instance,
             Planet_Registration.Instance,
             PlanetBiome_Registration.Instance,
+            PlanetBiomeUnknownItem_Registration.Instance,
             PlanetContentManagerBranchNode_Registration.Instance,
             PlanetContentManagerContentNode_Registration.Instance,
             PlanetContentManagerContentPropertiesComponent_Registration.Instance,

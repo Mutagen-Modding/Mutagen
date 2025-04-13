@@ -40,7 +40,15 @@
         <FormLink refName="Keyword" />
       </List>
       <RefList name="Flora" counterLength="4" expectedLengthLength="4" refName="PlanetFlora" />
-      <ByteArray name="Unknown4" unknown="true" />
+      <RefList name="UnknownItems" refName="PlanetBiomeUnknownItem" unknown="true" counterLength="4" />
+    </Fields>
+  </Object>
+  <Object name="PlanetBiomeUnknownItem" objType="Subrecord" >
+    <Fields>
+      <Int32 name="Unknown1" unknown="true" />
+      <Int32 name="Unknown2" unknown="true" />
+      <Int32 name="Unknown3" unknown="true" />
+      <Int32 name="Unknown4" unknown="true" />
     </Fields>
   </Object>
   <Object name="PlanetFlora" objType="Subrecord">
