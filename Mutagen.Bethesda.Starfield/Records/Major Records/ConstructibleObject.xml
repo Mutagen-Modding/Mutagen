@@ -31,7 +31,7 @@
         </Fields>
       </List>
       <FormLink name="InstantiationFilterKeyword" refName="Keyword" recordType="CIFK" />
-      <UInt64 name="RECF" recordType="RECF" unknown="true" />
+      <Enum name="Flags" recordType="RECF" enumName="ConstructibleObject.Flag" byteLength="8" />
     </Fields>
     <LinkInterface>IResourceTarget</LinkInterface>
     <LinkInterface>IBaseObject</LinkInterface>

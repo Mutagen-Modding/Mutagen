@@ -10,4 +10,11 @@ public partial class ConstructibleObject
         DefaultOrConditions,
         Plan,
     }
+
+    [Flags]
+    public enum Flag
+    {
+        FilterNotRequiredToLearn = 0x00000001,
+        ExcludeFromWorkshopLod = 0x00000004,
+    }
 }
