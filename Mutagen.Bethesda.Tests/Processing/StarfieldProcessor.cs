@@ -62,6 +62,7 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.LVLI, ProcessLeveledItems);
         AddDynamicProcessing(RecordTypes.OMOD, ProcessOMOD);
         AddDynamicProcessing(RecordTypes.LIGH, ProcessLights);
+        AddDynamicProcessing(RecordTypes.PNDT, ProcessPlanets);
     }
 
     protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
@@ -1415,6 +1416,20 @@ public class StarfieldProcessor : Processor
             loc += 10;
             ProcessBool(dat2, fileOffset, ref loc, 2, 1);
             ProcessZeroFloats(dat2, fileOffset, ref loc, 4);
+        }
+    }
+
+    private void ProcessPlanets(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        foreach (var fnam in majorFrame.FindEnumerateSubrecords(RecordTypes.FNAM))
+        {
+            if (fnam.ContentLength > 4)
+            {
+                int offset = 8;
+                ProcessRotationFloatDiv(fnam, fileOffset, ref offset, 5.972E+24f);
+            }
         }
     }
 }
