@@ -8,7 +8,7 @@ public class AssetPathMisalignedException : Exception
     public IAssetType? AssetType { get; }
     
     public AssetPathMisalignedException(string path, IAssetType assetType)
-        : base($"Path did not start with expected Asset folder prefix \"{assetType.BaseFolder}\"")
+        : base($"Path {path} did not start with expected Asset folder prefix \"{assetType.BaseFolder}\"")
     {
         Path = path;
         AssetType = assetType;
