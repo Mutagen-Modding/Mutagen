@@ -142,9 +142,7 @@ public class AssetLinkGetter<TAssetType> :
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(
-            typeof(TAssetType).GetHashCode(),
-            _DataRelativePath.GetHashCode());
+        return HashCode.Combine(_DataRelativePath.GetHashCode());
     }
 
     public int CompareTo(AssetLinkGetter<TAssetType>? other)
@@ -270,9 +268,7 @@ public class AssetLink<TAssetType> :
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(
-                typeof(TAssetType).GetHashCode(),
-                _DataRelativePath.GetHashCode());
+        return HashCode.Combine(_DataRelativePath.GetHashCode());
     }
 
     public override bool Equals(object? obj)
