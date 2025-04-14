@@ -507,17 +507,14 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         BinarySubParseDelegate<MutagenFrame, T> transl, 
         bool nullIfZero = false) 
     { 
-        if (amount == 0 && nullIfZero) return Enumerable.Empty<T>(); 
+        if (amount == 0 && nullIfZero) return []; 
  
         // Don't return early if count is zero, as we're expecting one content record still that is empty 
         // But still okay if it doesn't exist 
         var subHeader = reader.GetSubrecordHeader(); 
-        if (subHeader.RecordType != triggeringRecord) 
-        { 
-            if (amount == 0) return Enumerable.Empty<T>(); 
-            throw SubrecordException.Enrich( 
-                new MalformedDataException($"List with a non zero counter did not follow up with expected type: {subHeader.RecordType}"), 
-                triggeringRecord); 
+        if (subHeader.RecordType != triggeringRecord)
+        {
+            return [];
         } 
         if (!IsLoqui) 
         { 
@@ -765,7 +762,7 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         else if (recType == endMarker)
         {
             reader.Position += subHeader.TotalLength;
-            return Array.Empty<T>();
+            return [];
         }
         else
         { 
@@ -785,7 +782,7 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         bool nullIfZero = false,
         RecordType? endMarker = null) 
     { 
-        if (amount == 0 && nullIfZero) return Enumerable.Empty<T>(); 
+        if (amount == 0 && nullIfZero) return []; 
         translationParams = translationParams.ShortCircuit(); 
         var ret = new ExtendedList<T>(); 
         var startingPos = reader.Position; 
