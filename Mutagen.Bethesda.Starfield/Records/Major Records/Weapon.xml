@@ -8,7 +8,7 @@
       <Float name="ODRT" recordType="ODRT" unknown="true" />
       <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
       <RefDirect name="Transforms" refName="Transforms" />
-      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <UInt64 name="XALG" recordType="XALG" unknown="true" />
       <RefList name="Components" refName="AComponent" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />

@@ -132,15 +132,9 @@ namespace Mutagen.Bethesda.Starfield
 
         #endregion
         #region XALG
+        public UInt64? XALG { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _XALG;
-        public MemorySlice<Byte>? XALG
-        {
-            get => this._XALG;
-            set => this._XALG = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ILeveledItemGetter.XALG => this.XALG;
+        UInt64? ILeveledItemGetter.XALG => this.XALG;
         #endregion
         #region ChanceNone
         public Single ChanceNone { get; set; } = default(Single);
@@ -1599,7 +1593,7 @@ namespace Mutagen.Bethesda.Starfield
         new Single? ODRT { get; set; }
         new ObjectPlacementDefaults? ObjectPlacementDefaults { get; set; }
         new ExtendedList<AComponent> Components { get; }
-        new MemorySlice<Byte>? XALG { get; set; }
+        new UInt64? XALG { get; set; }
         new Single ChanceNone { get; set; }
         new Byte? MaxCount { get; set; }
         new LeveledItem.Flag Flags { get; set; }
@@ -1660,7 +1654,7 @@ namespace Mutagen.Bethesda.Starfield
         Single? ODRT { get; }
         IObjectPlacementDefaultsGetter? ObjectPlacementDefaults { get; }
         IReadOnlyList<IAComponentGetter> Components { get; }
-        ReadOnlyMemorySlice<Byte>? XALG { get; }
+        UInt64? XALG { get; }
         Single ChanceNone { get; }
         Byte? MaxCount { get; }
         LeveledItem.Flag Flags { get; }
@@ -2155,7 +2149,7 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Components,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.XALG = MemorySliceExt.SequenceEqual(item.XALG, rhs.XALG);
+            ret.XALG = item.XALG == rhs.XALG;
             ret.ChanceNone = item.ChanceNone.EqualsWithin(rhs.ChanceNone);
             ret.MaxCount = item.MaxCount == rhs.MaxCount;
             ret.Flags = item.Flags == rhs.Flags;
@@ -2273,7 +2267,7 @@ namespace Mutagen.Bethesda.Starfield
             if ((printMask?.XALG ?? true)
                 && item.XALG is {} XALGItem)
             {
-                sb.AppendLine($"XALG => {SpanExt.ToHexString(XALGItem)}");
+                sb.AppendItem(XALGItem, "XALG");
             }
             if (printMask?.ChanceNone ?? true)
             {
@@ -2459,7 +2453,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.XALG) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.XALG, rhs.XALG)) return false;
+                if (lhs.XALG != rhs.XALG) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.ChanceNone) ?? true))
             {
@@ -2556,9 +2550,9 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(ObjectPlacementDefaultsitem);
             }
             hash.Add(item.Components);
-            if (item.XALG is {} XALGItem)
+            if (item.XALG is {} XALGitem)
             {
-                hash.Add(XALGItem);
+                hash.Add(XALGitem);
             }
             hash.Add(item.ChanceNone);
             if (item.MaxCount is {} MaxCountitem)
@@ -2867,14 +2861,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.XALG) ?? true))
             {
-                if(rhs.XALG is {} XALGrhs)
-                {
-                    item.XALG = XALGrhs.ToArray();
-                }
-                else
-                {
-                    item.XALG = default;
-                }
+                item.XALG = rhs.XALG;
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.ChanceNone) ?? true))
             {
@@ -3267,7 +3254,7 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            UInt64BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.XALG,
                 header: translationParams.ConvertToCustom(RecordTypes.XALG));
@@ -3479,7 +3466,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XALG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XALG = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.XALG = frame.ReadUInt64();
                     return (int)LeveledItem_FieldIndex.XALG;
                 }
                 case RecordTypeInts.LVLD:
@@ -3688,7 +3675,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         #region XALG
         private int? _XALGLocation;
-        public ReadOnlyMemorySlice<Byte>? XALG => _XALGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public UInt64? XALG => _XALGLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants)) : default(UInt64?);
         #endregion
         #region ChanceNone
         partial void ChanceNoneCustomParse(

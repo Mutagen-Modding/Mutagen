@@ -4,7 +4,7 @@
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
-      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <UInt64 name="XALG" recordType="XALG" unknown="true" />
       <RefList name="Components" refName="AComponent" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />

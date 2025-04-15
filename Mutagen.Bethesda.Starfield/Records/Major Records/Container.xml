@@ -6,7 +6,7 @@
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
       <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
-      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <UInt64 name="XALG" recordType="XALG" unknown="true" />
       <RefDirect name="Transforms" refName="Transforms" />
       <FormLink name="SnapTemplate" refName="SnapTemplate" recordType="SNTP" />
       <FormLink name="SnapBehavior" refName="SnapTemplate" recordType="SNBH" />

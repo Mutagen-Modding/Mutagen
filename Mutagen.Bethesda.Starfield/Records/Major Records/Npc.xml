@@ -7,7 +7,7 @@
       <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
       <Float name="ODRT" recordType="ODRT" unknown="true" />
       <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
-      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <UInt64 name="XALG" recordType="XALG" unknown="true" />
       <RefDirect name="Transforms" refName="Transforms" />
       <FormLink name="SnapTemplate" refName="SnapTemplate" recordType="SNTP" />
       <RefList name="Components" refName="AComponent" />

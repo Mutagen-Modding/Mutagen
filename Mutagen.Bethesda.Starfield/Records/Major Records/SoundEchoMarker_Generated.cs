@@ -84,15 +84,9 @@ namespace Mutagen.Bethesda.Starfield
         Single? ISoundEchoMarkerGetter.ODRT => this.ODRT;
         #endregion
         #region XALG
+        public UInt64? XALG { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _XALG;
-        public MemorySlice<Byte>? XALG
-        {
-            get => this._XALG;
-            set => this._XALG = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ISoundEchoMarkerGetter.XALG => this.XALG;
+        UInt64? ISoundEchoMarkerGetter.XALG => this.XALG;
         #endregion
         #region Description
         public String? Description { get; set; }
@@ -808,7 +802,7 @@ namespace Mutagen.Bethesda.Starfield
         new ObjectBounds ObjectBounds { get; set; }
         new Percent DirtinessScale { get; set; }
         new Single? ODRT { get; set; }
-        new MemorySlice<Byte>? XALG { get; set; }
+        new UInt64? XALG { get; set; }
         new String? Description { get; set; }
         new ExtendedList<EchoMarker> Markers { get; }
         new EchoMarker? DefaultStartMarker { get; set; }
@@ -840,7 +834,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         Percent DirtinessScale { get; }
         Single? ODRT { get; }
-        ReadOnlyMemorySlice<Byte>? XALG { get; }
+        UInt64? XALG { get; }
         String? Description { get; }
         IReadOnlyList<IEchoMarkerGetter> Markers { get; }
         IEchoMarkerGetter? DefaultStartMarker { get; }
@@ -1227,7 +1221,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.DirtinessScale = item.DirtinessScale.Equals(rhs.DirtinessScale);
             ret.ODRT = item.ODRT.EqualsWithin(rhs.ODRT);
-            ret.XALG = MemorySliceExt.SequenceEqual(item.XALG, rhs.XALG);
+            ret.XALG = item.XALG == rhs.XALG;
             ret.Description = string.Equals(item.Description, rhs.Description);
             ret.Markers = item.Markers.CollectionEqualsHelper(
                 rhs.Markers,
@@ -1303,7 +1297,7 @@ namespace Mutagen.Bethesda.Starfield
             if ((printMask?.XALG ?? true)
                 && item.XALG is {} XALGItem)
             {
-                sb.AppendLine($"XALG => {SpanExt.ToHexString(XALGItem)}");
+                sb.AppendItem(XALGItem, "XALG");
             }
             if ((printMask?.Description ?? true)
                 && item.Description is {} DescriptionItem)
@@ -1397,7 +1391,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)SoundEchoMarker_FieldIndex.XALG) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.XALG, rhs.XALG)) return false;
+                if (lhs.XALG != rhs.XALG) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)SoundEchoMarker_FieldIndex.Description) ?? true))
             {
@@ -1449,9 +1443,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(ODRTitem);
             }
-            if (item.XALG is {} XALGItem)
+            if (item.XALG is {} XALGitem)
             {
-                hash.Add(XALGItem);
+                hash.Add(XALGitem);
             }
             if (item.Description is {} Descriptionitem)
             {
@@ -1608,14 +1602,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((copyMask?.GetShouldTranslate((int)SoundEchoMarker_FieldIndex.XALG) ?? true))
             {
-                if(rhs.XALG is {} XALGrhs)
-                {
-                    item.XALG = XALGrhs.ToArray();
-                }
-                else
-                {
-                    item.XALG = default;
-                }
+                item.XALG = rhs.XALG;
             }
             if ((copyMask?.GetShouldTranslate((int)SoundEchoMarker_FieldIndex.Description) ?? true))
             {
@@ -1854,7 +1841,7 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.ODRT,
                 header: translationParams.ConvertToCustom(RecordTypes.ODRT));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            UInt64BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.XALG,
                 header: translationParams.ConvertToCustom(RecordTypes.XALG));
@@ -1975,7 +1962,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XALG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XALG = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.XALG = frame.ReadUInt64();
                     return (int)SoundEchoMarker_FieldIndex.XALG;
                 }
                 case RecordTypeInts.NNAM:
@@ -2082,7 +2069,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region XALG
         private int? _XALGLocation;
-        public ReadOnlyMemorySlice<Byte>? XALG => _XALGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public UInt64? XALG => _XALGLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants)) : default(UInt64?);
         #endregion
         #region Description
         private int? _DescriptionLocation;

@@ -3,7 +3,7 @@
   <Object name="PlacedObject" recordType="REFR" baseClass="StarfieldMajorRecord" objType="Record" >
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
-      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <UInt64 name="XALG" recordType="XALG" unknown="true" />
       <RefList name="Components" refName="AComponent" />
       <FormLink name="Base" recordType="NAME" nullable="false">
         <Interface>IPlaceableObject</Interface>

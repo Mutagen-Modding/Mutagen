@@ -10,7 +10,7 @@
       <RefDirect name="Transforms" refName="Transforms" />
       <FormLink name="SnapTemplate" refName="SnapTemplate" recordType="SNTP" />
       <FormLink name="SnapBehavior" refName="SnapTemplate" recordType="SNBH" />
-      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <UInt64 name="XALG" recordType="XALG" unknown="true" />
       <RefList name="Components" refName="AComponent" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />

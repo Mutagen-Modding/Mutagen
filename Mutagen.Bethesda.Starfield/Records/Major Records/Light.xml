@@ -8,7 +8,7 @@
       <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
       <RefDirect name="Transforms" refName="Transforms" />
       <FormLink name="DefaultLayer" refName="Layer" recordType="DEFL" />
-      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <UInt64 name="XALG" recordType="XALG" unknown="true" />
       <RefList name="Components" refName="AComponent" />
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Destructible" refName="Destructible" />

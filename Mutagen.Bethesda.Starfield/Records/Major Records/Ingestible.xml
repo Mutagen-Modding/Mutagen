@@ -7,7 +7,7 @@
       <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
       <RefDirect name="Transforms" refName="Transforms" />
       <RefList name="Components" refName="AComponent" />
-      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <UInt64 name="XALG" recordType="XALG" unknown="true" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />

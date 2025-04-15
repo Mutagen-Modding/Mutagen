@@ -10,7 +10,7 @@
       <RefDirect name="Transforms" refName="Transforms" />
       <FormLink name="SnapTemplate" refName="SnapTemplate" recordType="SNTP" />
       <FormLink name="SnapBehavior" refName="SnapTemplate" recordType="SNBH" />
-      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <UInt64 name="XALG" recordType="XALG" unknown="true" />
       <FormLink name="DefaultLayer" refName="Layer" recordType="DEFL" />
       <RefList name="Components" refName="AComponent" />
       <List name="ForcedLocations" recordType="FTYP" >
