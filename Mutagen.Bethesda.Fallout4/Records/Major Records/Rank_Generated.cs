@@ -60,10 +60,10 @@ namespace Mutagen.Bethesda.Fallout4
         public IGenderedItem<TranslatedString?>? Title { get; set; }
         IGenderedItemGetter<ITranslatedStringGetter?>? IRankGetter.Title => this.Title;
         #endregion
-        #region InsigniaUnused
-        public String? InsigniaUnused { get; set; }
+        #region Insignia
+        public String? Insignia { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IRankGetter.InsigniaUnused => this.InsigniaUnused;
+        String? IRankGetter.Insignia => this.Insignia;
         #endregion
 
         #region To String
@@ -106,17 +106,17 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.Number = initialValue;
                 this.Title = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
-                this.InsigniaUnused = initialValue;
+                this.Insignia = initialValue;
             }
 
             public Mask(
                 TItem Number,
                 TItem Title,
-                TItem InsigniaUnused)
+                TItem Insignia)
             {
                 this.Number = Number;
                 this.Title = new MaskItem<TItem, GenderedItem<TItem>?>(Title, default);
-                this.InsigniaUnused = InsigniaUnused;
+                this.Insignia = Insignia;
             }
 
             #pragma warning disable CS8618
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Members
             public TItem Number;
             public MaskItem<TItem, GenderedItem<TItem>?>? Title;
-            public TItem InsigniaUnused;
+            public TItem Insignia;
             #endregion
 
             #region Equals
@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return false;
                 if (!object.Equals(this.Number, rhs.Number)) return false;
                 if (!object.Equals(this.Title, rhs.Title)) return false;
-                if (!object.Equals(this.InsigniaUnused, rhs.InsigniaUnused)) return false;
+                if (!object.Equals(this.Insignia, rhs.Insignia)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda.Fallout4
                 var hash = new HashCode();
                 hash.Add(this.Number);
                 hash.Add(this.Title);
-                hash.Add(this.InsigniaUnused);
+                hash.Add(this.Insignia);
                 return hash.ToHashCode();
             }
 
@@ -166,7 +166,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!GenderedItem.All(
                     this.Title,
                     eval: eval)) return false;
-                if (!eval(this.InsigniaUnused)) return false;
+                if (!eval(this.Insignia)) return false;
                 return true;
             }
             #endregion
@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (GenderedItem.Any(
                     this.Title,
                     eval: eval)) return true;
-                if (eval(this.InsigniaUnused)) return true;
+                if (eval(this.Insignia)) return true;
                 return false;
             }
             #endregion
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Title = GenderedItem.TranslateHelper(
                     this.Title,
                     eval);
-                obj.InsigniaUnused = eval(this.InsigniaUnused);
+                obj.Insignia = eval(this.Insignia);
             }
             #endregion
 
@@ -225,9 +225,9 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         sb.AppendLine($"Title => {Title}");
                     }
-                    if (printMask?.InsigniaUnused ?? true)
+                    if (printMask?.Insignia ?? true)
                     {
-                        sb.AppendItem(InsigniaUnused, "InsigniaUnused");
+                        sb.AppendItem(Insignia, "Insignia");
                     }
                 }
             }
@@ -255,7 +255,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             public Exception? Number;
             public MaskItem<Exception?, GenderedItem<Exception?>?>? Title;
-            public Exception? InsigniaUnused;
+            public Exception? Insignia;
             #endregion
 
             #region IErrorMask
@@ -268,8 +268,8 @@ namespace Mutagen.Bethesda.Fallout4
                         return Number;
                     case Rank_FieldIndex.Title:
                         return Title;
-                    case Rank_FieldIndex.InsigniaUnused:
-                        return InsigniaUnused;
+                    case Rank_FieldIndex.Insignia:
+                        return Insignia;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -286,8 +286,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Rank_FieldIndex.Title:
                         this.Title = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
                         break;
-                    case Rank_FieldIndex.InsigniaUnused:
-                        this.InsigniaUnused = ex;
+                    case Rank_FieldIndex.Insignia:
+                        this.Insignia = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -305,8 +305,8 @@ namespace Mutagen.Bethesda.Fallout4
                     case Rank_FieldIndex.Title:
                         this.Title = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
                         break;
-                    case Rank_FieldIndex.InsigniaUnused:
-                        this.InsigniaUnused = (Exception?)obj;
+                    case Rank_FieldIndex.Insignia:
+                        this.Insignia = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -318,7 +318,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Overall != null) return true;
                 if (Number != null) return true;
                 if (Title != null) return true;
-                if (InsigniaUnused != null) return true;
+                if (Insignia != null) return true;
                 return false;
             }
             #endregion
@@ -352,7 +352,7 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendLine($"Title => {Title}");
                 }
                 {
-                    sb.AppendItem(InsigniaUnused, "InsigniaUnused");
+                    sb.AppendItem(Insignia, "Insignia");
                 }
             }
             #endregion
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Fallout4
                 var ret = new ErrorMask();
                 ret.Number = this.Number.Combine(rhs.Number);
                 ret.Title = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.Title?.Overall, rhs.Title?.Overall), GenderedItem.Combine(this.Title?.Specific, rhs.Title?.Specific));
-                ret.InsigniaUnused = this.InsigniaUnused.Combine(rhs.InsigniaUnused);
+                ret.Insignia = this.Insignia.Combine(rhs.Insignia);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool OnOverall;
             public bool Number;
             public GenderedItem<bool>? Title;
-            public bool InsigniaUnused;
+            public bool Insignia;
             #endregion
 
             #region Ctors
@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Number = defaultOn;
-                this.InsigniaUnused = defaultOn;
+                this.Insignia = defaultOn;
             }
 
             #endregion
@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 ret.Add((Number, null));
                 ret.Add((Title != null || DefaultOn, null));
-                ret.Add((InsigniaUnused, null));
+                ret.Add((Insignia, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Fallout4
     {
         new UInt32? Number { get; set; }
         new IGenderedItem<TranslatedString?>? Title { get; set; }
-        new String? InsigniaUnused { get; set; }
+        new String? Insignia { get; set; }
     }
 
     public partial interface IRankGetter :
@@ -511,7 +511,7 @@ namespace Mutagen.Bethesda.Fallout4
         static ILoquiRegistration StaticRegistration => Rank_Registration.Instance;
         UInt32? Number { get; }
         IGenderedItemGetter<ITranslatedStringGetter?>? Title { get; }
-        String? InsigniaUnused { get; }
+        String? Insignia { get; }
 
     }
 
@@ -683,7 +683,7 @@ namespace Mutagen.Bethesda.Fallout4
     {
         Number = 0,
         Title = 1,
-        InsigniaUnused = 2,
+        Insignia = 2,
     }
     #endregion
 
@@ -774,7 +774,7 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.Number = default;
             item.Title = null;
-            item.InsigniaUnused = default;
+            item.Insignia = default;
         }
         
         #region Mutagen
@@ -830,7 +830,7 @@ namespace Mutagen.Bethesda.Fallout4
                 rhs: rhs.Title,
                 maskGetter: (l, r, i) => EqualityComparer<ITranslatedStringGetter?>.Default.Equals(l, r),
                 include: include);
-            ret.InsigniaUnused = string.Equals(item.InsigniaUnused, rhs.InsigniaUnused);
+            ret.Insignia = string.Equals(item.Insignia, rhs.Insignia);
         }
         
         public string Print(
@@ -885,10 +885,10 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 TitleItem?.Print(sb, "Title");
             }
-            if ((printMask?.InsigniaUnused ?? true)
-                && item.InsigniaUnused is {} InsigniaUnusedItem)
+            if ((printMask?.Insignia ?? true)
+                && item.Insignia is {} InsigniaItem)
             {
-                sb.AppendItem(InsigniaUnusedItem, "InsigniaUnused");
+                sb.AppendItem(InsigniaItem, "Insignia");
             }
         }
         
@@ -907,9 +907,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (!Equals(lhs.Title, rhs.Title)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Rank_FieldIndex.InsigniaUnused) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Rank_FieldIndex.Insignia) ?? true))
             {
-                if (!string.Equals(lhs.InsigniaUnused, rhs.InsigniaUnused)) return false;
+                if (!string.Equals(lhs.Insignia, rhs.Insignia)) return false;
             }
             return true;
         }
@@ -925,9 +925,9 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 hash.Add(HashCode.Combine(Titleitem.Male, Titleitem.Female));
             }
-            if (item.InsigniaUnused is {} InsigniaUnuseditem)
+            if (item.Insignia is {} Insigniaitem)
             {
-                hash.Add(InsigniaUnuseditem);
+                hash.Add(Insigniaitem);
             }
             return hash.ToHashCode();
         }
@@ -975,9 +975,9 @@ namespace Mutagen.Bethesda.Fallout4
                     male: rhsTitleitem.Male?.DeepCopy(),
                     female: rhsTitleitem.Female?.DeepCopy());
             }
-            if ((copyMask?.GetShouldTranslate((int)Rank_FieldIndex.InsigniaUnused) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Rank_FieldIndex.Insignia) ?? true))
             {
-                item.InsigniaUnused = rhs.InsigniaUnused;
+                item.Insignia = rhs.Insignia;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1107,7 +1107,7 @@ namespace Mutagen.Bethesda.Fallout4
                 });
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.InsigniaUnused,
+                item: item.Insignia,
                 header: translationParams.ConvertToCustom(RecordTypes.INAM),
                 binaryType: StringBinaryType.NullTerminate);
         }
@@ -1182,13 +1182,13 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.INAM:
                 {
-                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.InsigniaUnused, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.Insignia, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InsigniaUnused = StringBinaryTranslation.Instance.Parse(
+                    item.Insignia = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)Rank_FieldIndex.InsigniaUnused;
+                    return (int)Rank_FieldIndex.Insignia;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1266,9 +1266,9 @@ namespace Mutagen.Bethesda.Fallout4
         private IGenderedItemGetter<ITranslatedStringGetter?>? _TitleOverlay;
         public IGenderedItemGetter<ITranslatedStringGetter?>? Title => _TitleOverlay;
         #endregion
-        #region InsigniaUnused
-        private int? _InsigniaUnusedLocation;
-        public String? InsigniaUnused => _InsigniaUnusedLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _InsigniaUnusedLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region Insignia
+        private int? _InsigniaLocation;
+        public String? Insignia => _InsigniaLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _InsigniaLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1353,9 +1353,9 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 case RecordTypeInts.INAM:
                 {
-                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.InsigniaUnused, translationParams)) return ParseResult.Stop;
-                    _InsigniaUnusedLocation = (stream.Position - offset);
-                    return (int)Rank_FieldIndex.InsigniaUnused;
+                    if (lastParsed.ShortCircuit((int)Rank_FieldIndex.Insignia, translationParams)) return ParseResult.Stop;
+                    _InsigniaLocation = (stream.Position - offset);
+                    return (int)Rank_FieldIndex.Insignia;
                 }
                 default:
                     return ParseResult.Stop;
