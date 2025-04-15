@@ -3,7 +3,7 @@
   <Object name="Static" recordType="STAT" objType="Record" baseClass="StarfieldMajorRecord" majorFlags="true">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
       <Float name="ODRT" recordType="ODRT" unknown="true" />
       <RefDirect name="PTTA" refName="PTTA" unknown="true" />
       <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />

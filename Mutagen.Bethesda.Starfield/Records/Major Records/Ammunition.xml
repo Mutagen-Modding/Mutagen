@@ -3,7 +3,7 @@
   <Object name="Ammunition" recordType="AMMO" objType="Record" baseClass="StarfieldMajorRecord" majorFlag="true">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
       <Float name="ODRT" recordType="ODRT" unknown="true" />
       <RefDirect name="Transforms" refName="Transforms" />
       <String name="Name" recordType="FULL" translated="Normal" />

@@ -3,7 +3,7 @@
   <Object name="BendableSpline" recordType="BNDS" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" />
-      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
       <Float name="ODRT" recordType="ODRT" unknown="true" />
       <RefList name="Components" refName="AComponent" />
       <Data recordType="DNAM">
