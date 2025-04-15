@@ -219,6 +219,16 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISoundReferenceGetter? IIngestibleGetter.DropdownSound => this.DropdownSound;
         #endregion
+        #region EquipmentType
+        private readonly IFormLinkNullable<IEquipTypeGetter> _EquipmentType = new FormLinkNullable<IEquipTypeGetter>();
+        public IFormLinkNullable<IEquipTypeGetter> EquipmentType
+        {
+            get => _EquipmentType;
+            set => _EquipmentType.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IEquipTypeGetter> IIngestibleGetter.EquipmentType => this.EquipmentType;
+        #endregion
         #region CraftingSound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private SoundReference? _CraftingSound;
@@ -344,6 +354,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.PickupSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.DropdownSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.EquipmentType = initialValue;
                 this.CraftingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.Description = initialValue;
                 this.Resources = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ItemResource.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ItemResource.Mask<TItem>?>>());
@@ -377,6 +388,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Model,
                 TItem PickupSound,
                 TItem DropdownSound,
+                TItem EquipmentType,
                 TItem CraftingSound,
                 TItem Description,
                 TItem Resources,
@@ -409,6 +421,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.PickupSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(PickupSound, new SoundReference.Mask<TItem>(PickupSound));
                 this.DropdownSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(DropdownSound, new SoundReference.Mask<TItem>(DropdownSound));
+                this.EquipmentType = EquipmentType;
                 this.CraftingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(CraftingSound, new SoundReference.Mask<TItem>(CraftingSound));
                 this.Description = Description;
                 this.Resources = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ItemResource.Mask<TItem>?>>?>(Resources, Enumerable.Empty<MaskItemIndexed<TItem, ItemResource.Mask<TItem>?>>());
@@ -443,6 +456,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? PickupSound { get; set; }
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? DropdownSound { get; set; }
+            public TItem EquipmentType;
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? CraftingSound { get; set; }
             public TItem Description;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ItemResource.Mask<TItem>?>>?>? Resources;
@@ -479,6 +493,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.PickupSound, rhs.PickupSound)) return false;
                 if (!object.Equals(this.DropdownSound, rhs.DropdownSound)) return false;
+                if (!object.Equals(this.EquipmentType, rhs.EquipmentType)) return false;
                 if (!object.Equals(this.CraftingSound, rhs.CraftingSound)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.Resources, rhs.Resources)) return false;
@@ -507,6 +522,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Model);
                 hash.Add(this.PickupSound);
                 hash.Add(this.DropdownSound);
+                hash.Add(this.EquipmentType);
                 hash.Add(this.CraftingSound);
                 hash.Add(this.Description);
                 hash.Add(this.Resources);
@@ -585,6 +601,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.DropdownSound.Overall)) return false;
                     if (this.DropdownSound.Specific != null && !this.DropdownSound.Specific.All(eval)) return false;
                 }
+                if (!eval(this.EquipmentType)) return false;
                 if (CraftingSound != null)
                 {
                     if (!eval(this.CraftingSound.Overall)) return false;
@@ -701,6 +718,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.DropdownSound.Overall)) return true;
                     if (this.DropdownSound.Specific != null && this.DropdownSound.Specific.Any(eval)) return true;
                 }
+                if (eval(this.EquipmentType)) return true;
                 if (CraftingSound != null)
                 {
                     if (eval(this.CraftingSound.Overall)) return true;
@@ -806,6 +824,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 obj.PickupSound = this.PickupSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.PickupSound.Overall), this.PickupSound.Specific?.Translate(eval));
                 obj.DropdownSound = this.DropdownSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.DropdownSound.Overall), this.DropdownSound.Specific?.Translate(eval));
+                obj.EquipmentType = eval(this.EquipmentType);
                 obj.CraftingSound = this.CraftingSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.CraftingSound.Overall), this.CraftingSound.Specific?.Translate(eval));
                 obj.Description = eval(this.Description);
                 if (Resources != null)
@@ -953,6 +972,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         DropdownSound?.Print(sb);
                     }
+                    if (printMask?.EquipmentType ?? true)
+                    {
+                        sb.AppendItem(EquipmentType, "EquipmentType");
+                    }
                     if (printMask?.CraftingSound?.Overall ?? true)
                     {
                         CraftingSound?.Print(sb);
@@ -1070,6 +1093,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? PickupSound;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? DropdownSound;
+            public Exception? EquipmentType;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? CraftingSound;
             public Exception? Description;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemResource.ErrorMask?>>?>? Resources;
@@ -1112,6 +1136,8 @@ namespace Mutagen.Bethesda.Starfield
                         return PickupSound;
                     case Ingestible_FieldIndex.DropdownSound:
                         return DropdownSound;
+                    case Ingestible_FieldIndex.EquipmentType:
+                        return EquipmentType;
                     case Ingestible_FieldIndex.CraftingSound:
                         return CraftingSound;
                     case Ingestible_FieldIndex.Description:
@@ -1178,6 +1204,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Ingestible_FieldIndex.DropdownSound:
                         this.DropdownSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case Ingestible_FieldIndex.EquipmentType:
+                        this.EquipmentType = ex;
                         break;
                     case Ingestible_FieldIndex.CraftingSound:
                         this.CraftingSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
@@ -1259,6 +1288,9 @@ namespace Mutagen.Bethesda.Starfield
                     case Ingestible_FieldIndex.DropdownSound:
                         this.DropdownSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
                         break;
+                    case Ingestible_FieldIndex.EquipmentType:
+                        this.EquipmentType = (Exception?)obj;
+                        break;
                     case Ingestible_FieldIndex.CraftingSound:
                         this.CraftingSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
                         break;
@@ -1315,6 +1347,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Model != null) return true;
                 if (PickupSound != null) return true;
                 if (DropdownSound != null) return true;
+                if (EquipmentType != null) return true;
                 if (CraftingSound != null) return true;
                 if (Description != null) return true;
                 if (Resources != null) return true;
@@ -1406,6 +1439,9 @@ namespace Mutagen.Bethesda.Starfield
                 Model?.Print(sb);
                 PickupSound?.Print(sb);
                 DropdownSound?.Print(sb);
+                {
+                    sb.AppendItem(EquipmentType, "EquipmentType");
+                }
                 CraftingSound?.Print(sb);
                 {
                     sb.AppendItem(Description, "Description");
@@ -1504,6 +1540,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.PickupSound = this.PickupSound.Combine(rhs.PickupSound, (l, r) => l.Combine(r));
                 ret.DropdownSound = this.DropdownSound.Combine(rhs.DropdownSound, (l, r) => l.Combine(r));
+                ret.EquipmentType = this.EquipmentType.Combine(rhs.EquipmentType);
                 ret.CraftingSound = this.CraftingSound.Combine(rhs.CraftingSound, (l, r) => l.Combine(r));
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.Resources = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemResource.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Resources?.Overall, rhs.Resources?.Overall), Noggog.ExceptionExt.Combine(this.Resources?.Specific, rhs.Resources?.Specific));
@@ -1549,6 +1586,7 @@ namespace Mutagen.Bethesda.Starfield
             public Model.TranslationMask? Model;
             public SoundReference.TranslationMask? PickupSound;
             public SoundReference.TranslationMask? DropdownSound;
+            public bool EquipmentType;
             public SoundReference.TranslationMask? CraftingSound;
             public bool Description;
             public ItemResource.TranslationMask? Resources;
@@ -1573,6 +1611,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.XALG = defaultOn;
                 this.Name = defaultOn;
                 this.Keywords = defaultOn;
+                this.EquipmentType = defaultOn;
                 this.Description = defaultOn;
                 this.ComponentDisplayIndices = defaultOn;
                 this.Weight = defaultOn;
@@ -1599,6 +1638,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
                 ret.Add((PickupSound != null ? PickupSound.OnOverall : DefaultOn, PickupSound?.GetCrystal()));
                 ret.Add((DropdownSound != null ? DropdownSound.OnOverall : DefaultOn, DropdownSound?.GetCrystal()));
+                ret.Add((EquipmentType, null));
                 ret.Add((CraftingSound != null ? CraftingSound.OnOverall : DefaultOn, CraftingSound?.GetCrystal()));
                 ret.Add((Description, null));
                 ret.Add((Resources == null ? DefaultOn : !Resources.GetCrystal().CopyNothing, Resources?.GetCrystal()));
@@ -1804,6 +1844,7 @@ namespace Mutagen.Bethesda.Starfield
         new Model? Model { get; set; }
         new SoundReference? PickupSound { get; set; }
         new SoundReference? DropdownSound { get; set; }
+        new IFormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; }
         new SoundReference? CraftingSound { get; set; }
         new TranslatedString Description { get; set; }
         new ExtendedList<ItemResource>? Resources { get; set; }
@@ -1883,6 +1924,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         ISoundReferenceGetter? PickupSound { get; }
         ISoundReferenceGetter? DropdownSound { get; }
+        IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType { get; }
         ISoundReferenceGetter? CraftingSound { get; }
         ITranslatedStringGetter Description { get; }
         IReadOnlyList<IItemResourceGetter>? Resources { get; }
@@ -2086,18 +2128,19 @@ namespace Mutagen.Bethesda.Starfield
         Model = 15,
         PickupSound = 16,
         DropdownSound = 17,
-        CraftingSound = 18,
-        Description = 19,
-        Resources = 20,
-        ComponentDisplayIndices = 21,
-        Weight = 22,
-        Value = 23,
-        Flags = 24,
-        Addiction = 25,
-        AddictionChance = 26,
-        ConsumeSound = 27,
-        AddictionName = 28,
-        Effects = 29,
+        EquipmentType = 18,
+        CraftingSound = 19,
+        Description = 20,
+        Resources = 21,
+        ComponentDisplayIndices = 22,
+        Weight = 23,
+        Value = 24,
+        Flags = 25,
+        Addiction = 26,
+        AddictionChance = 27,
+        ConsumeSound = 28,
+        AddictionName = 29,
+        Effects = 30,
     }
     #endregion
 
@@ -2108,9 +2151,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 23;
+        public const ushort AdditionalFieldCount = 24;
 
-        public const ushort FieldCount = 30;
+        public const ushort FieldCount = 31;
 
         public static readonly Type MaskType = typeof(Ingestible.Mask<>);
 
@@ -2164,6 +2207,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MODF,
                 RecordTypes.PUSH,
                 RecordTypes.PDSH,
+                RecordTypes.ETYP,
                 RecordTypes.CUSH,
                 RecordTypes.DESC,
                 RecordTypes.CVPA,
@@ -2238,6 +2282,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Model = null;
             item.PickupSound = null;
             item.DropdownSound = null;
+            item.EquipmentType.Clear();
             item.CraftingSound = null;
             item.Description.Clear();
             item.Resources = null;
@@ -2273,6 +2318,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Model?.RemapLinks(mapping);
             obj.PickupSound?.RemapLinks(mapping);
             obj.DropdownSound?.RemapLinks(mapping);
+            obj.EquipmentType.Relink(mapping);
             obj.CraftingSound?.RemapLinks(mapping);
             obj.Resources?.RemapLinks(mapping);
             obj.Addiction.Relink(mapping);
@@ -2414,6 +2460,7 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.DropdownSound,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
+            ret.EquipmentType = item.EquipmentType.Equals(rhs.EquipmentType);
             ret.CraftingSound = EqualsMaskHelper.EqualsHelper(
                 item.CraftingSound,
                 rhs.CraftingSound,
@@ -2559,6 +2606,10 @@ namespace Mutagen.Bethesda.Starfield
                 && item.DropdownSound is {} DropdownSoundItem)
             {
                 DropdownSoundItem?.Print(sb, "DropdownSound");
+            }
+            if (printMask?.EquipmentType ?? true)
+            {
+                sb.AppendItem(item.EquipmentType.FormKeyNullable, "EquipmentType");
             }
             if ((printMask?.CraftingSound?.Overall ?? true)
                 && item.CraftingSound is {} CraftingSoundItem)
@@ -2760,6 +2811,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isDropdownSoundEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.EquipmentType) ?? true))
+            {
+                if (!lhs.EquipmentType.Equals(rhs.EquipmentType)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.CraftingSound) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.CraftingSound, rhs.CraftingSound, out var lhsCraftingSound, out var rhsCraftingSound, out var isCraftingSoundEqual))
@@ -2876,6 +2931,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(DropdownSounditem);
             }
+            hash.Add(item.EquipmentType);
             if (item.CraftingSound is {} CraftingSounditem)
             {
                 hash.Add(CraftingSounditem);
@@ -2962,6 +3018,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     yield return item;
                 }
+            }
+            if (FormLinkInformation.TryFactory(obj.EquipmentType, out var EquipmentTypeInfo))
+            {
+                yield return EquipmentTypeInfo;
             }
             if (obj.CraftingSound is {} CraftingSoundItems)
             {
@@ -3295,6 +3355,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ingestible_FieldIndex.EquipmentType) ?? true))
+            {
+                item.EquipmentType.SetTo(rhs.EquipmentType.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Ingestible_FieldIndex.CraftingSound) ?? true))
             {
@@ -3707,6 +3771,10 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams);
                 }
             }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.EquipmentType,
+                header: translationParams.ConvertToCustom(RecordTypes.ETYP));
             if (item.CraftingSound is {} CraftingSoundItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.CUSH))
@@ -3938,6 +4006,12 @@ namespace Mutagen.Bethesda.Starfield
                     item.DropdownSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
                     return (int)Ingestible_FieldIndex.DropdownSound;
                 }
+                case RecordTypeInts.ETYP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.EquipmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Ingestible_FieldIndex.EquipmentType;
+                }
                 case RecordTypeInts.CUSH:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
@@ -4130,6 +4204,10 @@ namespace Mutagen.Bethesda.Starfield
         public IModelGetter? Model { get; private set; }
         public ISoundReferenceGetter? PickupSound { get; private set; }
         public ISoundReferenceGetter? DropdownSound { get; private set; }
+        #region EquipmentType
+        private int? _EquipmentTypeLocation;
+        public IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEquipTypeGetter>(_package, _recordData, _EquipmentTypeLocation);
+        #endregion
         public ISoundReferenceGetter? CraftingSound { get; private set; }
         #region Description
         private int? _DescriptionLocation;
@@ -4327,6 +4405,11 @@ namespace Mutagen.Bethesda.Starfield
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)Ingestible_FieldIndex.DropdownSound;
+                }
+                case RecordTypeInts.ETYP:
+                {
+                    _EquipmentTypeLocation = (stream.Position - offset);
+                    return (int)Ingestible_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.CUSH:
                 {

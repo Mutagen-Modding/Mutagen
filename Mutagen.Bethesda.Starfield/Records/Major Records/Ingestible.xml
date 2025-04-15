@@ -15,6 +15,7 @@
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="PickupSound" refName="SoundReference" recordType="PUSH" />
       <RefDirect name="DropdownSound" refName="SoundReference" recordType="PDSH" />
+      <FormLink name="EquipmentType" refName="EquipType" recordType="ETYP" />
       <RefDirect name="CraftingSound" recordType="CUSH" refName="SoundReference" />
       <String name="Description" recordType="DESC" nullable="False" translated="DL" />
       <RefList name="Resources" refName="ItemResource" recordType="CVPA" />
