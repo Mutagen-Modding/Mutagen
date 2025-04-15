@@ -187,6 +187,20 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte>? IFactionGetter.PRIS => this.PRIS;
         #endregion
+        #region Ranks
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Rank> _Ranks = new ExtendedList<Rank>();
+        public ExtendedList<Rank> Ranks
+        {
+            get => this._Ranks;
+            init => this._Ranks = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IRankGetter> IFactionGetter.Ranks => _Ranks;
+        #endregion
+
+        #endregion
         #region VendorValues
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private VendorValues? _VendorValues;
@@ -209,6 +223,20 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILocationTargetRadiusGetter? IFactionGetter.VendorLocation => this.VendorLocation;
         #endregion
+        #region Conditions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Condition>? _Conditions;
+        public ExtendedList<Condition>? Conditions
+        {
+            get => this._Conditions;
+            set => this._Conditions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConditionGetter>? IFactionGetter.Conditions => _Conditions;
+        #endregion
+
+        #endregion
         #region VoiceType
         private readonly IFormLinkNullable<IVoiceTypeOrListGetter> _VoiceType = new FormLinkNullable<IVoiceTypeOrListGetter>();
         public IFormLinkNullable<IVoiceTypeOrListGetter> VoiceType
@@ -219,30 +247,21 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IVoiceTypeOrListGetter> IFactionGetter.VoiceType => this.VoiceType;
         #endregion
-        #region HERD
+        #region Herd
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _HERD;
-        public MemorySlice<Byte>? HERD
+        private FactionHerd? _Herd;
+        public FactionHerd? Herd
         {
-            get => this._HERD;
-            set => this._HERD = value;
+            get => _Herd;
+            set => _Herd = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IFactionGetter.HERD => this.HERD;
+        IFactionHerdGetter? IFactionGetter.Herd => this.Herd;
         #endregion
-        #region CRGP
-        public Boolean CRGP { get; set; } = default(Boolean);
-        #endregion
-        #region GRPH
+        #region FormationRadius
+        public Single? FormationRadius { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _GRPH;
-        public MemorySlice<Byte>? GRPH
-        {
-            get => this._GRPH;
-            set => this._GRPH = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IFactionGetter.GRPH => this.GRPH;
+        Single? IFactionGetter.FormationRadius => this.FormationRadius;
         #endregion
 
         #region To String
@@ -279,12 +298,13 @@ namespace Mutagen.Bethesda.Starfield
                 this.VendorBuySellList = initialValue;
                 this.MerchantContainer = initialValue;
                 this.PRIS = initialValue;
+                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>());
                 this.VendorValues = new MaskItem<TItem, VendorValues.Mask<TItem>?>(initialValue, new VendorValues.Mask<TItem>(initialValue));
                 this.VendorLocation = new MaskItem<TItem, LocationTargetRadius.Mask<TItem>?>(initialValue, new LocationTargetRadius.Mask<TItem>(initialValue));
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.VoiceType = initialValue;
-                this.HERD = initialValue;
-                this.CRGP = initialValue;
-                this.GRPH = initialValue;
+                this.Herd = new MaskItem<TItem, FactionHerd.Mask<TItem>?>(initialValue, new FactionHerd.Mask<TItem>(initialValue));
+                this.FormationRadius = initialValue;
             }
 
             public Mask(
@@ -305,12 +325,13 @@ namespace Mutagen.Bethesda.Starfield
                 TItem VendorBuySellList,
                 TItem MerchantContainer,
                 TItem PRIS,
+                TItem Ranks,
                 TItem VendorValues,
                 TItem VendorLocation,
+                TItem Conditions,
                 TItem VoiceType,
-                TItem HERD,
-                TItem CRGP,
-                TItem GRPH)
+                TItem Herd,
+                TItem FormationRadius)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -330,12 +351,13 @@ namespace Mutagen.Bethesda.Starfield
                 this.VendorBuySellList = VendorBuySellList;
                 this.MerchantContainer = MerchantContainer;
                 this.PRIS = PRIS;
+                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>(Ranks, Enumerable.Empty<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>());
                 this.VendorValues = new MaskItem<TItem, VendorValues.Mask<TItem>?>(VendorValues, new VendorValues.Mask<TItem>(VendorValues));
                 this.VendorLocation = new MaskItem<TItem, LocationTargetRadius.Mask<TItem>?>(VendorLocation, new LocationTargetRadius.Mask<TItem>(VendorLocation));
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.VoiceType = VoiceType;
-                this.HERD = HERD;
-                this.CRGP = CRGP;
-                this.GRPH = GRPH;
+                this.Herd = new MaskItem<TItem, FactionHerd.Mask<TItem>?>(Herd, new FactionHerd.Mask<TItem>(Herd));
+                this.FormationRadius = FormationRadius;
             }
 
             #pragma warning disable CS8618
@@ -357,12 +379,13 @@ namespace Mutagen.Bethesda.Starfield
             public TItem VendorBuySellList;
             public TItem MerchantContainer;
             public TItem PRIS;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>? Ranks;
             public MaskItem<TItem, VendorValues.Mask<TItem>?>? VendorValues { get; set; }
             public MaskItem<TItem, LocationTargetRadius.Mask<TItem>?>? VendorLocation { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
             public TItem VoiceType;
-            public TItem HERD;
-            public TItem CRGP;
-            public TItem GRPH;
+            public MaskItem<TItem, FactionHerd.Mask<TItem>?>? Herd { get; set; }
+            public TItem FormationRadius;
             #endregion
 
             #region Equals
@@ -386,12 +409,13 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.VendorBuySellList, rhs.VendorBuySellList)) return false;
                 if (!object.Equals(this.MerchantContainer, rhs.MerchantContainer)) return false;
                 if (!object.Equals(this.PRIS, rhs.PRIS)) return false;
+                if (!object.Equals(this.Ranks, rhs.Ranks)) return false;
                 if (!object.Equals(this.VendorValues, rhs.VendorValues)) return false;
                 if (!object.Equals(this.VendorLocation, rhs.VendorLocation)) return false;
+                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
                 if (!object.Equals(this.VoiceType, rhs.VoiceType)) return false;
-                if (!object.Equals(this.HERD, rhs.HERD)) return false;
-                if (!object.Equals(this.CRGP, rhs.CRGP)) return false;
-                if (!object.Equals(this.GRPH, rhs.GRPH)) return false;
+                if (!object.Equals(this.Herd, rhs.Herd)) return false;
+                if (!object.Equals(this.FormationRadius, rhs.FormationRadius)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -407,12 +431,13 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.VendorBuySellList);
                 hash.Add(this.MerchantContainer);
                 hash.Add(this.PRIS);
+                hash.Add(this.Ranks);
                 hash.Add(this.VendorValues);
                 hash.Add(this.VendorLocation);
+                hash.Add(this.Conditions);
                 hash.Add(this.VoiceType);
-                hash.Add(this.HERD);
-                hash.Add(this.CRGP);
-                hash.Add(this.GRPH);
+                hash.Add(this.Herd);
+                hash.Add(this.FormationRadius);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -459,6 +484,18 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.VendorBuySellList)) return false;
                 if (!eval(this.MerchantContainer)) return false;
                 if (!eval(this.PRIS)) return false;
+                if (this.Ranks != null)
+                {
+                    if (!eval(this.Ranks.Overall)) return false;
+                    if (this.Ranks.Specific != null)
+                    {
+                        foreach (var item in this.Ranks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (VendorValues != null)
                 {
                     if (!eval(this.VendorValues.Overall)) return false;
@@ -469,10 +506,25 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.VendorLocation.Overall)) return false;
                     if (this.VendorLocation.Specific != null && !this.VendorLocation.Specific.All(eval)) return false;
                 }
+                if (this.Conditions != null)
+                {
+                    if (!eval(this.Conditions.Overall)) return false;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (!eval(this.VoiceType)) return false;
-                if (!eval(this.HERD)) return false;
-                if (!eval(this.CRGP)) return false;
-                if (!eval(this.GRPH)) return false;
+                if (Herd != null)
+                {
+                    if (!eval(this.Herd.Overall)) return false;
+                    if (this.Herd.Specific != null && !this.Herd.Specific.All(eval)) return false;
+                }
+                if (!eval(this.FormationRadius)) return false;
                 return true;
             }
             #endregion
@@ -517,6 +569,18 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.VendorBuySellList)) return true;
                 if (eval(this.MerchantContainer)) return true;
                 if (eval(this.PRIS)) return true;
+                if (this.Ranks != null)
+                {
+                    if (eval(this.Ranks.Overall)) return true;
+                    if (this.Ranks.Specific != null)
+                    {
+                        foreach (var item in this.Ranks.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (VendorValues != null)
                 {
                     if (eval(this.VendorValues.Overall)) return true;
@@ -527,10 +591,25 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.VendorLocation.Overall)) return true;
                     if (this.VendorLocation.Specific != null && this.VendorLocation.Specific.Any(eval)) return true;
                 }
+                if (this.Conditions != null)
+                {
+                    if (eval(this.Conditions.Overall)) return true;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (eval(this.VoiceType)) return true;
-                if (eval(this.HERD)) return true;
-                if (eval(this.CRGP)) return true;
-                if (eval(this.GRPH)) return true;
+                if (Herd != null)
+                {
+                    if (eval(this.Herd.Overall)) return true;
+                    if (this.Herd.Specific != null && this.Herd.Specific.Any(eval)) return true;
+                }
+                if (eval(this.FormationRadius)) return true;
                 return false;
             }
             #endregion
@@ -584,12 +663,41 @@ namespace Mutagen.Bethesda.Starfield
                 obj.VendorBuySellList = eval(this.VendorBuySellList);
                 obj.MerchantContainer = eval(this.MerchantContainer);
                 obj.PRIS = eval(this.PRIS);
+                if (Ranks != null)
+                {
+                    obj.Ranks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Rank.Mask<R>?>>?>(eval(this.Ranks.Overall), Enumerable.Empty<MaskItemIndexed<R, Rank.Mask<R>?>>());
+                    if (Ranks.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Rank.Mask<R>?>>();
+                        obj.Ranks.Specific = l;
+                        foreach (var item in Ranks.Specific)
+                        {
+                            MaskItemIndexed<R, Rank.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Rank.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
                 obj.VendorValues = this.VendorValues == null ? null : new MaskItem<R, VendorValues.Mask<R>?>(eval(this.VendorValues.Overall), this.VendorValues.Specific?.Translate(eval));
                 obj.VendorLocation = this.VendorLocation == null ? null : new MaskItem<R, LocationTargetRadius.Mask<R>?>(eval(this.VendorLocation.Overall), this.VendorLocation.Specific?.Translate(eval));
+                if (Conditions != null)
+                {
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (Conditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.Conditions.Specific = l;
+                        foreach (var item in Conditions.Specific)
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
                 obj.VoiceType = eval(this.VoiceType);
-                obj.HERD = eval(this.HERD);
-                obj.CRGP = eval(this.CRGP);
-                obj.GRPH = eval(this.GRPH);
+                obj.Herd = this.Herd == null ? null : new MaskItem<R, FactionHerd.Mask<R>?>(eval(this.Herd.Overall), this.Herd.Specific?.Translate(eval));
+                obj.FormationRadius = eval(this.FormationRadius);
             }
             #endregion
 
@@ -678,6 +786,25 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(PRIS, "PRIS");
                     }
+                    if ((printMask?.Ranks?.Overall ?? true)
+                        && Ranks is {} RanksItem)
+                    {
+                        sb.AppendLine("Ranks =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(RanksItem.Overall);
+                            if (RanksItem.Specific != null)
+                            {
+                                foreach (var subItem in RanksItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                     if (printMask?.VendorValues?.Overall ?? true)
                     {
                         VendorValues?.Print(sb);
@@ -686,21 +813,36 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         VendorLocation?.Print(sb);
                     }
+                    if ((printMask?.Conditions?.Overall ?? true)
+                        && Conditions is {} ConditionsItem)
+                    {
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ConditionsItem.Overall);
+                            if (ConditionsItem.Specific != null)
+                            {
+                                foreach (var subItem in ConditionsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                     if (printMask?.VoiceType ?? true)
                     {
                         sb.AppendItem(VoiceType, "VoiceType");
                     }
-                    if (printMask?.HERD ?? true)
+                    if (printMask?.Herd?.Overall ?? true)
                     {
-                        sb.AppendItem(HERD, "HERD");
+                        Herd?.Print(sb);
                     }
-                    if (printMask?.CRGP ?? true)
+                    if (printMask?.FormationRadius ?? true)
                     {
-                        sb.AppendItem(CRGP, "CRGP");
-                    }
-                    if (printMask?.GRPH ?? true)
-                    {
-                        sb.AppendItem(GRPH, "GRPH");
+                        sb.AppendItem(FormationRadius, "FormationRadius");
                     }
                 }
             }
@@ -723,12 +865,13 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? VendorBuySellList;
             public Exception? MerchantContainer;
             public Exception? PRIS;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>? Ranks;
             public MaskItem<Exception?, VendorValues.ErrorMask?>? VendorValues;
             public MaskItem<Exception?, LocationTargetRadius.ErrorMask?>? VendorLocation;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
             public Exception? VoiceType;
-            public Exception? HERD;
-            public Exception? CRGP;
-            public Exception? GRPH;
+            public MaskItem<Exception?, FactionHerd.ErrorMask?>? Herd;
+            public Exception? FormationRadius;
             #endregion
 
             #region IErrorMask
@@ -757,18 +900,20 @@ namespace Mutagen.Bethesda.Starfield
                         return MerchantContainer;
                     case Faction_FieldIndex.PRIS:
                         return PRIS;
+                    case Faction_FieldIndex.Ranks:
+                        return Ranks;
                     case Faction_FieldIndex.VendorValues:
                         return VendorValues;
                     case Faction_FieldIndex.VendorLocation:
                         return VendorLocation;
+                    case Faction_FieldIndex.Conditions:
+                        return Conditions;
                     case Faction_FieldIndex.VoiceType:
                         return VoiceType;
-                    case Faction_FieldIndex.HERD:
-                        return HERD;
-                    case Faction_FieldIndex.CRGP:
-                        return CRGP;
-                    case Faction_FieldIndex.GRPH:
-                        return GRPH;
+                    case Faction_FieldIndex.Herd:
+                        return Herd;
+                    case Faction_FieldIndex.FormationRadius:
+                        return FormationRadius;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -809,23 +954,26 @@ namespace Mutagen.Bethesda.Starfield
                     case Faction_FieldIndex.PRIS:
                         this.PRIS = ex;
                         break;
+                    case Faction_FieldIndex.Ranks:
+                        this.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>(ex, null);
+                        break;
                     case Faction_FieldIndex.VendorValues:
                         this.VendorValues = new MaskItem<Exception?, VendorValues.ErrorMask?>(ex, null);
                         break;
                     case Faction_FieldIndex.VendorLocation:
                         this.VendorLocation = new MaskItem<Exception?, LocationTargetRadius.ErrorMask?>(ex, null);
                         break;
+                    case Faction_FieldIndex.Conditions:
+                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
                     case Faction_FieldIndex.VoiceType:
                         this.VoiceType = ex;
                         break;
-                    case Faction_FieldIndex.HERD:
-                        this.HERD = ex;
+                    case Faction_FieldIndex.Herd:
+                        this.Herd = new MaskItem<Exception?, FactionHerd.ErrorMask?>(ex, null);
                         break;
-                    case Faction_FieldIndex.CRGP:
-                        this.CRGP = ex;
-                        break;
-                    case Faction_FieldIndex.GRPH:
-                        this.GRPH = ex;
+                    case Faction_FieldIndex.FormationRadius:
+                        this.FormationRadius = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -868,23 +1016,26 @@ namespace Mutagen.Bethesda.Starfield
                     case Faction_FieldIndex.PRIS:
                         this.PRIS = (Exception?)obj;
                         break;
+                    case Faction_FieldIndex.Ranks:
+                        this.Ranks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>)obj;
+                        break;
                     case Faction_FieldIndex.VendorValues:
                         this.VendorValues = (MaskItem<Exception?, VendorValues.ErrorMask?>?)obj;
                         break;
                     case Faction_FieldIndex.VendorLocation:
                         this.VendorLocation = (MaskItem<Exception?, LocationTargetRadius.ErrorMask?>?)obj;
                         break;
+                    case Faction_FieldIndex.Conditions:
+                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
                     case Faction_FieldIndex.VoiceType:
                         this.VoiceType = (Exception?)obj;
                         break;
-                    case Faction_FieldIndex.HERD:
-                        this.HERD = (Exception?)obj;
+                    case Faction_FieldIndex.Herd:
+                        this.Herd = (MaskItem<Exception?, FactionHerd.ErrorMask?>?)obj;
                         break;
-                    case Faction_FieldIndex.CRGP:
-                        this.CRGP = (Exception?)obj;
-                        break;
-                    case Faction_FieldIndex.GRPH:
-                        this.GRPH = (Exception?)obj;
+                    case Faction_FieldIndex.FormationRadius:
+                        this.FormationRadius = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -905,12 +1056,13 @@ namespace Mutagen.Bethesda.Starfield
                 if (VendorBuySellList != null) return true;
                 if (MerchantContainer != null) return true;
                 if (PRIS != null) return true;
+                if (Ranks != null) return true;
                 if (VendorValues != null) return true;
                 if (VendorLocation != null) return true;
+                if (Conditions != null) return true;
                 if (VoiceType != null) return true;
-                if (HERD != null) return true;
-                if (CRGP != null) return true;
-                if (GRPH != null) return true;
+                if (Herd != null) return true;
+                if (FormationRadius != null) return true;
                 return false;
             }
             #endregion
@@ -995,19 +1147,50 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(PRIS, "PRIS");
                 }
+                if (Ranks is {} RanksItem)
+                {
+                    sb.AppendLine("Ranks =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(RanksItem.Overall);
+                        if (RanksItem.Specific != null)
+                        {
+                            foreach (var subItem in RanksItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
                 VendorValues?.Print(sb);
                 VendorLocation?.Print(sb);
+                if (Conditions is {} ConditionsItem)
+                {
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ConditionsItem.Overall);
+                        if (ConditionsItem.Specific != null)
+                        {
+                            foreach (var subItem in ConditionsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
                 {
                     sb.AppendItem(VoiceType, "VoiceType");
                 }
+                Herd?.Print(sb);
                 {
-                    sb.AppendItem(HERD, "HERD");
-                }
-                {
-                    sb.AppendItem(CRGP, "CRGP");
-                }
-                {
-                    sb.AppendItem(GRPH, "GRPH");
+                    sb.AppendItem(FormationRadius, "FormationRadius");
                 }
             }
             #endregion
@@ -1027,12 +1210,13 @@ namespace Mutagen.Bethesda.Starfield
                 ret.VendorBuySellList = this.VendorBuySellList.Combine(rhs.VendorBuySellList);
                 ret.MerchantContainer = this.MerchantContainer.Combine(rhs.MerchantContainer);
                 ret.PRIS = this.PRIS.Combine(rhs.PRIS);
+                ret.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Ranks?.Overall, rhs.Ranks?.Overall), Noggog.ExceptionExt.Combine(this.Ranks?.Specific, rhs.Ranks?.Specific));
                 ret.VendorValues = this.VendorValues.Combine(rhs.VendorValues, (l, r) => l.Combine(r));
                 ret.VendorLocation = this.VendorLocation.Combine(rhs.VendorLocation, (l, r) => l.Combine(r));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.VoiceType = this.VoiceType.Combine(rhs.VoiceType);
-                ret.HERD = this.HERD.Combine(rhs.HERD);
-                ret.CRGP = this.CRGP.Combine(rhs.CRGP);
-                ret.GRPH = this.GRPH.Combine(rhs.GRPH);
+                ret.Herd = this.Herd.Combine(rhs.Herd, (l, r) => l.Combine(r));
+                ret.FormationRadius = this.FormationRadius.Combine(rhs.FormationRadius);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1065,12 +1249,13 @@ namespace Mutagen.Bethesda.Starfield
             public bool VendorBuySellList;
             public bool MerchantContainer;
             public bool PRIS;
+            public Rank.TranslationMask? Ranks;
             public VendorValues.TranslationMask? VendorValues;
             public LocationTargetRadius.TranslationMask? VendorLocation;
+            public Condition.TranslationMask? Conditions;
             public bool VoiceType;
-            public bool HERD;
-            public bool CRGP;
-            public bool GRPH;
+            public FactionHerd.TranslationMask? Herd;
+            public bool FormationRadius;
             #endregion
 
             #region Ctors
@@ -1087,9 +1272,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.MerchantContainer = defaultOn;
                 this.PRIS = defaultOn;
                 this.VoiceType = defaultOn;
-                this.HERD = defaultOn;
-                this.CRGP = defaultOn;
-                this.GRPH = defaultOn;
+                this.FormationRadius = defaultOn;
             }
 
             #endregion
@@ -1107,12 +1290,13 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((VendorBuySellList, null));
                 ret.Add((MerchantContainer, null));
                 ret.Add((PRIS, null));
+                ret.Add((Ranks == null ? DefaultOn : !Ranks.GetCrystal().CopyNothing, Ranks?.GetCrystal()));
                 ret.Add((VendorValues != null ? VendorValues.OnOverall : DefaultOn, VendorValues?.GetCrystal()));
                 ret.Add((VendorLocation != null ? VendorLocation.OnOverall : DefaultOn, VendorLocation?.GetCrystal()));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
                 ret.Add((VoiceType, null));
-                ret.Add((HERD, null));
-                ret.Add((CRGP, null));
-                ret.Add((GRPH, null));
+                ret.Add((Herd != null ? Herd.OnOverall : DefaultOn, Herd?.GetCrystal()));
+                ret.Add((FormationRadius, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1286,12 +1470,13 @@ namespace Mutagen.Bethesda.Starfield
         new IFormLinkNullable<IFormListGetter> VendorBuySellList { get; set; }
         new IFormLinkNullable<IPlacedObjectGetter> MerchantContainer { get; set; }
         new MemorySlice<Byte>? PRIS { get; set; }
+        new ExtendedList<Rank> Ranks { get; }
         new VendorValues? VendorValues { get; set; }
         new LocationTargetRadius? VendorLocation { get; set; }
+        new ExtendedList<Condition>? Conditions { get; set; }
         new IFormLinkNullable<IVoiceTypeOrListGetter> VoiceType { get; set; }
-        new MemorySlice<Byte>? HERD { get; set; }
-        new Boolean CRGP { get; set; }
-        new MemorySlice<Byte>? GRPH { get; set; }
+        new FactionHerd? Herd { get; set; }
+        new Single? FormationRadius { get; set; }
     }
 
     public partial interface IFactionInternal :
@@ -1334,12 +1519,13 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<IFormListGetter> VendorBuySellList { get; }
         IFormLinkNullableGetter<IPlacedObjectGetter> MerchantContainer { get; }
         ReadOnlyMemorySlice<Byte>? PRIS { get; }
+        IReadOnlyList<IRankGetter> Ranks { get; }
         IVendorValuesGetter? VendorValues { get; }
         ILocationTargetRadiusGetter? VendorLocation { get; }
+        IReadOnlyList<IConditionGetter>? Conditions { get; }
         IFormLinkNullableGetter<IVoiceTypeOrListGetter> VoiceType { get; }
-        ReadOnlyMemorySlice<Byte>? HERD { get; }
-        Boolean CRGP { get; }
-        ReadOnlyMemorySlice<Byte>? GRPH { get; }
+        IFactionHerdGetter? Herd { get; }
+        Single? FormationRadius { get; }
 
     }
 
@@ -1526,12 +1712,13 @@ namespace Mutagen.Bethesda.Starfield
         VendorBuySellList = 14,
         MerchantContainer = 15,
         PRIS = 16,
-        VendorValues = 17,
-        VendorLocation = 18,
-        VoiceType = 19,
-        HERD = 20,
-        CRGP = 21,
-        GRPH = 22,
+        Ranks = 17,
+        VendorValues = 18,
+        VendorLocation = 19,
+        Conditions = 20,
+        VoiceType = 21,
+        Herd = 22,
+        FormationRadius = 23,
     }
     #endregion
 
@@ -1542,9 +1729,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 16;
+        public const ushort AdditionalFieldCount = 17;
 
-        public const ushort FieldCount = 23;
+        public const ushort FieldCount = 24;
 
         public static readonly Type MaskType = typeof(Faction.Mask<>);
 
@@ -1588,13 +1775,21 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.VEND,
                 RecordTypes.VENC,
                 RecordTypes.PRIS,
+                RecordTypes.RNAM,
+                RecordTypes.MNAM,
+                RecordTypes.FNAM,
+                RecordTypes.INAM,
                 RecordTypes.VENV,
                 RecordTypes.PLVD,
+                RecordTypes.CTDA,
+                RecordTypes.CITC,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
                 RecordTypes.VTCK,
                 RecordTypes.HERD,
                 RecordTypes.CRHR,
-                RecordTypes.CRGP,
-                RecordTypes.GRPH);
+                RecordTypes.GRPH,
+                RecordTypes.CRGP);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -1649,12 +1844,13 @@ namespace Mutagen.Bethesda.Starfield
             item.VendorBuySellList.Clear();
             item.MerchantContainer.Clear();
             item.PRIS = default;
+            item.Ranks.Clear();
             item.VendorValues = null;
             item.VendorLocation = null;
+            item.Conditions = null;
             item.VoiceType.Clear();
-            item.HERD = default;
-            item.CRGP = default(Boolean);
-            item.GRPH = default;
+            item.Herd = null;
+            item.FormationRadius = default;
             base.Clear(item);
         }
         
@@ -1679,6 +1875,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.VendorBuySellList.Relink(mapping);
             obj.MerchantContainer.Relink(mapping);
             obj.VendorLocation?.RemapLinks(mapping);
+            obj.Conditions?.RemapLinks(mapping);
             obj.VoiceType.Relink(mapping);
         }
         
@@ -1791,6 +1988,10 @@ namespace Mutagen.Bethesda.Starfield
             ret.VendorBuySellList = item.VendorBuySellList.Equals(rhs.VendorBuySellList);
             ret.MerchantContainer = item.MerchantContainer.Equals(rhs.MerchantContainer);
             ret.PRIS = MemorySliceExt.SequenceEqual(item.PRIS, rhs.PRIS);
+            ret.Ranks = item.Ranks.CollectionEqualsHelper(
+                rhs.Ranks,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             ret.VendorValues = EqualsMaskHelper.EqualsHelper(
                 item.VendorValues,
                 rhs.VendorValues,
@@ -1801,10 +2002,17 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.VendorLocation,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             ret.VoiceType = item.VoiceType.Equals(rhs.VoiceType);
-            ret.HERD = MemorySliceExt.SequenceEqual(item.HERD, rhs.HERD);
-            ret.CRGP = item.CRGP == rhs.CRGP;
-            ret.GRPH = MemorySliceExt.SequenceEqual(item.GRPH, rhs.GRPH);
+            ret.Herd = EqualsMaskHelper.EqualsHelper(
+                item.Herd,
+                rhs.Herd,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.FormationRadius = item.FormationRadius.EqualsWithin(rhs.FormationRadius);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1917,6 +2125,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendLine($"PRIS => {SpanExt.ToHexString(PRISItem)}");
             }
+            if (printMask?.Ranks?.Overall ?? true)
+            {
+                sb.AppendLine("Ranks =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Ranks)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
             if ((printMask?.VendorValues?.Overall ?? true)
                 && item.VendorValues is {} VendorValuesItem)
             {
@@ -1927,23 +2149,34 @@ namespace Mutagen.Bethesda.Starfield
             {
                 VendorLocationItem?.Print(sb, "VendorLocation");
             }
+            if ((printMask?.Conditions?.Overall ?? true)
+                && item.Conditions is {} ConditionsItem)
+            {
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in ConditionsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
             if (printMask?.VoiceType ?? true)
             {
                 sb.AppendItem(item.VoiceType.FormKeyNullable, "VoiceType");
             }
-            if ((printMask?.HERD ?? true)
-                && item.HERD is {} HERDItem)
+            if ((printMask?.Herd?.Overall ?? true)
+                && item.Herd is {} HerdItem)
             {
-                sb.AppendLine($"HERD => {SpanExt.ToHexString(HERDItem)}");
+                HerdItem?.Print(sb, "Herd");
             }
-            if (printMask?.CRGP ?? true)
+            if ((printMask?.FormationRadius ?? true)
+                && item.FormationRadius is {} FormationRadiusItem)
             {
-                sb.AppendItem(item.CRGP, "CRGP");
-            }
-            if ((printMask?.GRPH ?? true)
-                && item.GRPH is {} GRPHItem)
-            {
-                sb.AppendLine($"GRPH => {SpanExt.ToHexString(GRPHItem)}");
+                sb.AppendItem(FormationRadiusItem, "FormationRadius");
             }
         }
         
@@ -2039,6 +2272,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.PRIS, rhs.PRIS)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.Ranks) ?? true))
+            {
+                if (!lhs.Ranks.SequenceEqual(rhs.Ranks, (l, r) => ((RankCommon)((IRankGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Faction_FieldIndex.Ranks)))) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorValues) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.VendorValues, rhs.VendorValues, out var lhsVendorValues, out var rhsVendorValues, out var isVendorValuesEqual))
@@ -2055,21 +2292,25 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isVendorLocationEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Faction_FieldIndex.Conditions)))) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.VoiceType) ?? true))
             {
                 if (!lhs.VoiceType.Equals(rhs.VoiceType)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.HERD) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.Herd) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.HERD, rhs.HERD)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Herd, rhs.Herd, out var lhsHerd, out var rhsHerd, out var isHerdEqual))
+                {
+                    if (!((FactionHerdCommon)((IFactionHerdGetter)lhsHerd).CommonInstance()!).Equals(lhsHerd, rhsHerd, equalsMask?.GetSubCrystal((int)Faction_FieldIndex.Herd))) return false;
+                }
+                else if (!isHerdEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.CRGP) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.FormationRadius) ?? true))
             {
-                if (lhs.CRGP != rhs.CRGP) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.GRPH) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.GRPH, rhs.GRPH)) return false;
+                if (!lhs.FormationRadius.EqualsWithin(rhs.FormationRadius)) return false;
             }
             return true;
         }
@@ -2118,6 +2359,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(PRISItem);
             }
+            hash.Add(item.Ranks);
             if (item.VendorValues is {} VendorValuesitem)
             {
                 hash.Add(VendorValuesitem);
@@ -2126,15 +2368,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(VendorLocationitem);
             }
+            hash.Add(item.Conditions);
             hash.Add(item.VoiceType);
-            if (item.HERD is {} HERDItem)
+            if (item.Herd is {} Herditem)
             {
-                hash.Add(HERDItem);
+                hash.Add(Herditem);
             }
-            hash.Add(item.CRGP);
-            if (item.GRPH is {} GRPHItem)
+            if (item.FormationRadius is {} FormationRadiusitem)
             {
-                hash.Add(GRPHItem);
+                hash.Add(FormationRadiusitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -2195,6 +2437,13 @@ namespace Mutagen.Bethesda.Starfield
                 foreach (var item in VendorLocationlinkCont.EnumerateFormLinks())
                 {
                     yield return item;
+                }
+            }
+            if (obj.Conditions is {} ConditionsItem)
+            {
+                foreach (var item in ConditionsItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (FormLinkInformation.TryFactory(obj.VoiceType, out var VoiceTypeInfo))
@@ -2398,6 +2647,30 @@ namespace Mutagen.Bethesda.Starfield
                     item.PRIS = default;
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.Ranks) ?? true))
+            {
+                errorMask?.PushIndex((int)Faction_FieldIndex.Ranks);
+                try
+                {
+                    item.Ranks.SetTo(
+                        rhs.Ranks
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorValues) ?? true))
             {
                 errorMask?.PushIndex((int)Faction_FieldIndex.VendorValues);
@@ -2450,35 +2723,71 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.Conditions) ?? true))
+            {
+                errorMask?.PushIndex((int)Faction_FieldIndex.Conditions);
+                try
+                {
+                    if ((rhs.Conditions != null))
+                    {
+                        item.Conditions = 
+                            rhs.Conditions
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<Condition>();
+                    }
+                    else
+                    {
+                        item.Conditions = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.VoiceType) ?? true))
             {
                 item.VoiceType.SetTo(rhs.VoiceType.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.HERD) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.Herd) ?? true))
             {
-                if(rhs.HERD is {} HERDrhs)
+                errorMask?.PushIndex((int)Faction_FieldIndex.Herd);
+                try
                 {
-                    item.HERD = HERDrhs.ToArray();
+                    if(rhs.Herd is {} rhsHerd)
+                    {
+                        item.Herd = rhsHerd.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Faction_FieldIndex.Herd));
+                    }
+                    else
+                    {
+                        item.Herd = default;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.HERD = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.CRGP) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.FormationRadius) ?? true))
             {
-                item.CRGP = rhs.CRGP;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.GRPH) ?? true))
-            {
-                if(rhs.GRPH is {} GRPHrhs)
-                {
-                    item.GRPH = GRPHrhs.ToArray();
-                }
-                else
-                {
-                    item.GRPH = default;
-                }
+                item.FormationRadius = rhs.FormationRadius;
             }
             DeepCopyInCustom(
                 item: item,
@@ -2709,6 +3018,17 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.PRIS,
                 header: translationParams.ConvertToCustom(RecordTypes.PRIS));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IRankGetter>.Instance.Write(
+                writer: writer,
+                items: item.Ranks,
+                transl: (MutagenWriter subWriter, IRankGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((RankBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
             if (item.VendorValues is {} VendorValuesItem)
             {
                 ((VendorValuesBinaryWriteTranslation)((IBinaryItem)VendorValuesItem).BinaryWriteTranslator).Write(
@@ -2726,23 +3046,36 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams);
                 }
             }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Conditions,
+                counterType: RecordTypes.CITC,
+                counterLength: 4,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.VoiceType,
                 header: translationParams.ConvertToCustom(RecordTypes.VTCK));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            if (item.Herd is {} HerdItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.CRHR)) { }
+                ((FactionHerdBinaryWriteTranslation)((IBinaryItem)HerdItem).BinaryWriteTranslator).Write(
+                    item: HerdItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.HERD,
-                header: translationParams.ConvertToCustom(RecordTypes.HERD),
-                markerType: RecordTypes.CRHR);
-            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
-                writer: writer,
-                item: item.CRGP,
-                header: translationParams.ConvertToCustom(RecordTypes.CRGP));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.GRPH,
-                header: translationParams.ConvertToCustom(RecordTypes.GRPH));
+                item: item.FormationRadius,
+                header: translationParams.ConvertToCustom(RecordTypes.GRPH),
+                markerType: RecordTypes.CRGP);
         }
 
         public void Write(
@@ -2885,6 +3218,19 @@ namespace Mutagen.Bethesda.Starfield
                     item.PRIS = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Faction_FieldIndex.PRIS;
                 }
+                case RecordTypeInts.RNAM:
+                case RecordTypeInts.MNAM:
+                case RecordTypeInts.FNAM:
+                case RecordTypeInts.INAM:
+                {
+                    item.Ranks.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Rank>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: Rank_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: Rank.TryCreateFromBinary));
+                    return (int)Faction_FieldIndex.Ranks;
+                }
                 case RecordTypeInts.VENV:
                 {
                     item.VendorValues = Mutagen.Bethesda.Starfield.VendorValues.CreateFromBinary(frame: frame);
@@ -2895,6 +3241,20 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
                     item.VendorLocation = Mutagen.Bethesda.Starfield.LocationTargetRadius.CreateFromBinary(frame: frame);
                     return (int)Faction_FieldIndex.VendorLocation;
+                }
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CITC:
+                {
+                    item.Conditions = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.ParsePerItem(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: RecordTypes.CITC,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: Condition.TryCreateFromBinary)
+                        .CastExtendedList<Condition>();
+                    return (int)Faction_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.VTCK:
                 {
@@ -2908,20 +3268,18 @@ namespace Mutagen.Bethesda.Starfield
                     var nextRec = frame.GetSubrecord();
                     if (nextRec.RecordType != RecordTypes.HERD) throw new ArgumentException("Marker was read but not followed by expected subrecord.");
                     contentLength = nextRec.ContentLength;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HERD = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Faction_FieldIndex.HERD;
+                    item.Herd = Mutagen.Bethesda.Starfield.FactionHerd.CreateFromBinary(frame: frame);
+                    return (int)Faction_FieldIndex.Herd;
                 }
                 case RecordTypeInts.CRGP:
                 {
-                    item.CRGP = true;
-                    return (int)Faction_FieldIndex.CRGP;
-                }
-                case RecordTypeInts.GRPH:
-                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength;
+                    var nextRec = frame.GetSubrecord();
+                    if (nextRec.RecordType != RecordTypes.GRPH) throw new ArgumentException("Marker was read but not followed by expected subrecord.");
+                    contentLength = nextRec.ContentLength;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.GRPH = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Faction_FieldIndex.GRPH;
+                    item.FormationRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Faction_FieldIndex.FormationRadius;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3025,26 +3383,24 @@ namespace Mutagen.Bethesda.Starfield
         private int? _PRISLocation;
         public ReadOnlyMemorySlice<Byte>? PRIS => _PRISLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PRISLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
+        public IReadOnlyList<IRankGetter> Ranks { get; private set; } = Array.Empty<IRankGetter>();
         #region VendorValues
         private RangeInt32? _VendorValuesLocation;
         public IVendorValuesGetter? VendorValues => _VendorValuesLocation.HasValue ? VendorValuesBinaryOverlay.VendorValuesFactory(_recordData.Slice(_VendorValuesLocation!.Value.Min), _package) : default;
         #endregion
         public ILocationTargetRadiusGetter? VendorLocation { get; private set; }
+        public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
         #region VoiceType
         private int? _VoiceTypeLocation;
         public IFormLinkNullableGetter<IVoiceTypeOrListGetter> VoiceType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IVoiceTypeOrListGetter>(_package, _recordData, _VoiceTypeLocation);
         #endregion
-        #region HERD
-        private int? _HERDLocation;
-        public ReadOnlyMemorySlice<Byte>? HERD => _HERDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HERDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region Herd
+        private RangeInt32? _HerdLocation;
+        public IFactionHerdGetter? Herd => _HerdLocation.HasValue ? FactionHerdBinaryOverlay.FactionHerdFactory(_recordData.Slice(_HerdLocation!.Value.Min), _package) : default;
         #endregion
-        #region CRGP
-        private int? _CRGPLocation;
-        public Boolean CRGP => _CRGPLocation.HasValue ? true : default(Boolean);
-        #endregion
-        #region GRPH
-        private int? _GRPHLocation;
-        public ReadOnlyMemorySlice<Byte>? GRPH => _GRPHLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _GRPHLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region FormationRadius
+        private int? _FormationRadiusLocation;
+        public Single? FormationRadius => _FormationRadiusLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FormationRadiusLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3179,6 +3535,18 @@ namespace Mutagen.Bethesda.Starfield
                     _PRISLocation = (stream.Position - offset);
                     return (int)Faction_FieldIndex.PRIS;
                 }
+                case RecordTypeInts.RNAM:
+                case RecordTypeInts.MNAM:
+                case RecordTypeInts.FNAM:
+                case RecordTypeInts.INAM:
+                {
+                    this.Ranks = this.ParseRepeatedTypelessSubrecord<IRankGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: Rank_Registration.TriggerSpecs,
+                        factory: RankBinaryOverlay.RankFactory);
+                    return (int)Faction_FieldIndex.Ranks;
+                }
                 case RecordTypeInts.VENV:
                 {
                     _VendorValuesLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
@@ -3194,6 +3562,20 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)Faction_FieldIndex.VendorLocation;
                 }
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CITC:
+                {
+                    this.Conditions = BinaryOverlayList.FactoryByCountPerItem<IConditionGetter>(
+                        stream: stream,
+                        package: _package,
+                        countLength: 4,
+                        trigger: Condition_Registration.TriggerSpecs,
+                        countType: RecordTypes.CITC,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
+                    return (int)Faction_FieldIndex.Conditions;
+                }
                 case RecordTypeInts.VTCK:
                 {
                     _VoiceTypeLocation = (stream.Position - offset);
@@ -3202,19 +3584,16 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.CRHR:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength; // Skip marker
-                    _HERDLocation = (stream.Position - offset);
-                    stream.ReadSubrecord();
-                    return (int)Faction_FieldIndex.HERD;
+                    _HerdLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    stream.ReadSubrecord(); // Skip record
+                    return (int)Faction_FieldIndex.Herd;
                 }
                 case RecordTypeInts.CRGP:
                 {
-                    _CRGPLocation = (stream.Position - offset);
-                    return (int)Faction_FieldIndex.CRGP;
-                }
-                case RecordTypeInts.GRPH:
-                {
-                    _GRPHLocation = (stream.Position - offset);
-                    return (int)Faction_FieldIndex.GRPH;
+                    stream.ReadSubrecord(); // Skip marker
+                    _FormationRadiusLocation = (stream.Position - offset);
+                    stream.ReadSubrecord(); // Skip record
+                    return (int)Faction_FieldIndex.FormationRadius;
                 }
                 default:
                     return base.FillRecordType(

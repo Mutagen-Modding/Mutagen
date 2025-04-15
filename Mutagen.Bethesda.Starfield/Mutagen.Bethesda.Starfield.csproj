@@ -6756,5 +6756,11 @@
     <Compile Include="Records\Major Records\PlanetBiomeUnknownItem_Generated.cs">
       <DependentUpon>Planet.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Rank_Generated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FactionHerd_Generated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

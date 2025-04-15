@@ -12,14 +12,15 @@
       <FormLink name="VendorBuySellList" recordType="VEND" refName="FormList" />
       <FormLink name="MerchantContainer" recordType="VENC" refName="PlacedObject" />
       <ByteArray name="PRIS" recordType="PRIS" unknown="true" />
+      <RefList name="Ranks" refName="Rank" />
       <RefDirect name="VendorValues" refName="VendorValues" />
       <RefDirect name="VendorLocation" refName="LocationTargetRadius" recordType="PLVD" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
       <FormLink name="VoiceType" recordType="VTCK">
         <Interface>IVoiceTypeOrList</Interface>
       </FormLink>
-      <ByteArray name="HERD" markerType="CRHR" recordType="HERD" unknown="true" />
-      <Bool name="CRGP" recordType="CRGP" boolAsMarker="True" unknown="true" />
-      <ByteArray name="GRPH" recordType="GRPH" unknown="true" />
+      <RefDirect name="Herd" markerType="CRHR" refName="FactionHerd"/>
+      <Float name="FormationRadius" recordType="GRPH" markerType="CRGP" />
     </Fields>
     <LinkInterface>IOwner</LinkInterface>
     <LinkInterface>IObjectId</LinkInterface>
@@ -35,23 +36,42 @@
       <UInt16 name="Trespass" />
       <UInt16 name="Pickpocket" />
       <UInt16 name="Unknown" />
-      <Float name="StealMult" />
+      <Float name="StealMultiplier" />
       <UInt16 name="Escape" />
-      <UInt16 name="WerewolfUnused" />
-      <Break />F
-      <UInt32 name="Unknown2" />
+      <UInt16 name="Piracy" />
+      <Break />
+      <UInt32 name="SmuggleMultiplier" />
     </Fields>
   </Object>
   <Object name="VendorValues" objType="Subrecord" recordType="VENV">
     <Fields>
       <UInt16 name="StartHour" />
       <UInt16 name="EndHour" />
-      <UInt16 name="Radius" />
-      <UInt16 name="Unknown" />
+      <Float name="Radius" />
       <Bool name="BuysStolenItems" byteLength="1" />
       <Bool name="BuySellEverythingNotInList" byteLength="1" />
       <Bool name="BuysNonStolenItems" byteLength="1" />
-      <UInt8 name="Unknown2" />
+      <UInt8 name="Unknown" />
+    </Fields>
+  </Object>
+  <Object name="Rank" objType="Subrecord">
+    <Fields>
+      <UInt32 name="Number" recordType="RNAM" />
+      <Gendered name="Title" maleMarker="MNAM" femaleMarker="FNAM">
+        <Fields>
+          <String translated="Normal" />
+        </Fields>
+      </Gendered>
+      <String name="Insignia" recordType="INAM" />
+    </Fields>
+  </Object>
+  <Object name="FactionHerd" objType="Subrecord" recordType="HERD">
+    <Fields>
+      <Float name="SearchRadius" />
+      <UInt16 name="MinHerdMembers" />
+      <UInt16 name="MaxHerdMembers" />
+      <Float name="IdleChatterMinTime" />
+      <Float name="IdleChatterMaxTime" />
     </Fields>
   </Object>
 </Loqui>

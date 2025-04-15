@@ -36,11 +36,16 @@ public static class PrimitiveBinaryTranslationExt
         MutagenWriter writer,
         TItem? item,
         RecordType header,
-        Action<MutagenWriter, TItem>? write = null)
+        Action<MutagenWriter, TItem>? write = null,
+        RecordType? markerType = null)
         where TItem : struct
         where TReader : IMutagenReadStream
     {
         if (!item.HasValue) return;
+        if (markerType != null)
+        {
+            using (HeaderExport.Subrecord(writer, markerType.Value)) {}
+        }
         write ??= transl.Write;
         try
         {
