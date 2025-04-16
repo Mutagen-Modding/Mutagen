@@ -10652,6 +10652,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.LegendaryItems.RemapLinks(mapping);
             obj.SunPresets.RemapLinks(mapping);
             obj.PhotoModeFeatures.RemapLinks(mapping);
+            obj.GameplayOptions.RemapLinks(mapping);
             obj.GameplayOptionsGroups.RemapLinks(mapping);
             obj.TimeOfDays.RemapLinks(mapping);
             obj.ActorValueModulations.RemapLinks(mapping);
@@ -17890,6 +17891,10 @@ namespace Mutagen.Bethesda.Starfield
                 yield return item;
             }
             foreach (var item in obj.PhotoModeFeatures.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.GameplayOptions.EnumerateFormLinks())
             {
                 yield return item;
             }

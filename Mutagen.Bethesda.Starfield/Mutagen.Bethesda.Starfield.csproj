@@ -2032,6 +2032,9 @@
     <Compile Include="Records\Common Subrecords\VolumesComponentItem.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\GameplayOptions.cs">
+      <DependentUpon>GameplayOptions.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\ActionRecord.cs">
       <DependentUpon>ActionRecord.xml</DependentUpon>
     </Compile>
@@ -6761,6 +6764,21 @@
     </Compile>
     <Compile Include="Records\Major Records\FactionHerd_Generated.cs">
       <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\AGameplayOptionsData_Generated.cs">
+      <DependentUpon>GameplayOptions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\BoolGameplayOptionsData_Generated.cs">
+      <DependentUpon>GameplayOptions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\FloatGameplayOptionsData_Generated.cs">
+      <DependentUpon>GameplayOptions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\GameplayOptionDataRange_Generated.cs">
+      <DependentUpon>GameplayOptions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\GameplayOptionReward_Generated.cs">
+      <DependentUpon>GameplayOptions.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

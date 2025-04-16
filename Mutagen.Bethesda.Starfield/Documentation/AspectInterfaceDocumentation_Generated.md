@@ -61,6 +61,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Door
 - Flora
 - Furniture
+- GameplayOptions
 - IdleMarker
 - Ingestible
 - InstanceNamingRule
@@ -185,6 +186,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Furniture
 - FurnitureMarkerFile
 - FxSceneAction
+- GameplayOptionReward
+- GameplayOptions
 - GenericBaseForm
 - Hazard
 - HeadPart
@@ -251,7 +254,6 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ScriptStructProperty
 - ScriptVariableListProperty
 - ScriptVariableProperty
-- SliderEntry
 - Spell
 - Star
 - StartSceneAction
@@ -537,6 +539,11 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### FurnitureMarkerFile
 - INamed
 ### FxSceneAction
+- INamed
+### GameplayOptionReward
+- INamed
+### GameplayOptions
+- IKeyworded
 - INamed
 ### GenericBaseForm
 - IHaveVirtualMachineAdapter
@@ -832,8 +839,6 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### SkeletalModel
 - IModeled
-### SliderEntry
-- INamed
 ### SnapTemplateNode
 - IKeyworded
 - IModeled
