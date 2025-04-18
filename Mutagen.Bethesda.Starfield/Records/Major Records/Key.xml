@@ -21,5 +21,6 @@
       <UInt32 name="Flags" recordType="FLAG" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IResearchResourceTarget</LinkInterface>
   </Object>
 </Loqui>

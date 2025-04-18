@@ -42,6 +42,7 @@
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IConstructibleObjectTarget</LinkInterface>
     <LinkInterface>IBaseObject</LinkInterface>
+    <LinkInterface>IResearchResourceTarget</LinkInterface>
   </Object>
   <Object name="BookTeachTarget" abstract="true" objType="Subrecord" />
   <Object name="BookActorValue" objType="Subrecord" baseClass="BookTeachTarget">

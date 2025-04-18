@@ -38,13 +38,13 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class ResearchProjectResource :
-        IEquatable<IResearchProjectResourceGetter>,
-        ILoquiObjectSetter<ResearchProjectResource>,
-        IResearchProjectResource
+    public partial class ResearchProjectRequiredItem :
+        IEquatable<IResearchProjectRequiredItemGetter>,
+        ILoquiObjectSetter<ResearchProjectRequiredItem>,
+        IResearchProjectRequiredItem
     {
         #region Ctor
-        public ResearchProjectResource()
+        public ResearchProjectRequiredItem()
         {
             CustomCtor();
         }
@@ -59,13 +59,20 @@ namespace Mutagen.Bethesda.Starfield
             set => _Resource.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IResearchResourceTargetGetter> IResearchProjectResourceGetter.Resource => this.Resource;
+        IFormLinkGetter<IResearchResourceTargetGetter> IResearchProjectRequiredItemGetter.Resource => this.Resource;
         #endregion
         #region RequiredCount
         public UInt32 RequiredCount { get; set; } = default(UInt32);
         #endregion
-        #region Unknown
-        public UInt32 Unknown { get; set; } = default(UInt32);
+        #region CurveTable
+        private readonly IFormLink<ICurveTableGetter> _CurveTable = new FormLink<ICurveTableGetter>();
+        public IFormLink<ICurveTableGetter> CurveTable
+        {
+            get => _CurveTable;
+            set => _CurveTable.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ICurveTableGetter> IResearchProjectRequiredItemGetter.CurveTable => this.CurveTable;
         #endregion
 
         #region To String
@@ -74,7 +81,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ResearchProjectResourceMixIn.Print(
+            ResearchProjectRequiredItemMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -85,16 +92,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IResearchProjectResourceGetter rhs) return false;
-            return ((ResearchProjectResourceCommon)((IResearchProjectResourceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IResearchProjectRequiredItemGetter rhs) return false;
+            return ((ResearchProjectRequiredItemCommon)((IResearchProjectRequiredItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IResearchProjectResourceGetter? obj)
+        public bool Equals(IResearchProjectRequiredItemGetter? obj)
         {
-            return ((ResearchProjectResourceCommon)((IResearchProjectResourceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ResearchProjectRequiredItemCommon)((IResearchProjectRequiredItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((ResearchProjectResourceCommon)((IResearchProjectResourceGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ResearchProjectRequiredItemCommon)((IResearchProjectRequiredItemGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -108,17 +115,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Resource = initialValue;
                 this.RequiredCount = initialValue;
-                this.Unknown = initialValue;
+                this.CurveTable = initialValue;
             }
 
             public Mask(
                 TItem Resource,
                 TItem RequiredCount,
-                TItem Unknown)
+                TItem CurveTable)
             {
                 this.Resource = Resource;
                 this.RequiredCount = RequiredCount;
-                this.Unknown = Unknown;
+                this.CurveTable = CurveTable;
             }
 
             #pragma warning disable CS8618
@@ -132,7 +139,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public TItem Resource;
             public TItem RequiredCount;
-            public TItem Unknown;
+            public TItem CurveTable;
             #endregion
 
             #region Equals
@@ -147,7 +154,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!object.Equals(this.Resource, rhs.Resource)) return false;
                 if (!object.Equals(this.RequiredCount, rhs.RequiredCount)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.CurveTable, rhs.CurveTable)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -155,7 +162,7 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.Resource);
                 hash.Add(this.RequiredCount);
-                hash.Add(this.Unknown);
+                hash.Add(this.CurveTable);
                 return hash.ToHashCode();
             }
 
@@ -166,7 +173,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!eval(this.Resource)) return false;
                 if (!eval(this.RequiredCount)) return false;
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.CurveTable)) return false;
                 return true;
             }
             #endregion
@@ -176,7 +183,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (eval(this.Resource)) return true;
                 if (eval(this.RequiredCount)) return true;
-                if (eval(this.Unknown)) return true;
+                if (eval(this.CurveTable)) return true;
                 return false;
             }
             #endregion
@@ -184,7 +191,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new ResearchProjectResource.Mask<R>();
+                var ret = new ResearchProjectRequiredItem.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -193,23 +200,23 @@ namespace Mutagen.Bethesda.Starfield
             {
                 obj.Resource = eval(this.Resource);
                 obj.RequiredCount = eval(this.RequiredCount);
-                obj.Unknown = eval(this.Unknown);
+                obj.CurveTable = eval(this.CurveTable);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(ResearchProjectResource.Mask<bool>? printMask = null)
+            public string Print(ResearchProjectRequiredItem.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, ResearchProjectResource.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ResearchProjectRequiredItem.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(ResearchProjectResource.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(ResearchProjectRequiredItem.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                     if (printMask?.Resource ?? true)
@@ -220,9 +227,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(RequiredCount, "RequiredCount");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.CurveTable ?? true)
                     {
-                        sb.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(CurveTable, "CurveTable");
                     }
                 }
             }
@@ -250,21 +257,21 @@ namespace Mutagen.Bethesda.Starfield
             }
             public Exception? Resource;
             public Exception? RequiredCount;
-            public Exception? Unknown;
+            public Exception? CurveTable;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                ResearchProjectResource_FieldIndex enu = (ResearchProjectResource_FieldIndex)index;
+                ResearchProjectRequiredItem_FieldIndex enu = (ResearchProjectRequiredItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case ResearchProjectResource_FieldIndex.Resource:
+                    case ResearchProjectRequiredItem_FieldIndex.Resource:
                         return Resource;
-                    case ResearchProjectResource_FieldIndex.RequiredCount:
+                    case ResearchProjectRequiredItem_FieldIndex.RequiredCount:
                         return RequiredCount;
-                    case ResearchProjectResource_FieldIndex.Unknown:
-                        return Unknown;
+                    case ResearchProjectRequiredItem_FieldIndex.CurveTable:
+                        return CurveTable;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -272,17 +279,17 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                ResearchProjectResource_FieldIndex enu = (ResearchProjectResource_FieldIndex)index;
+                ResearchProjectRequiredItem_FieldIndex enu = (ResearchProjectRequiredItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case ResearchProjectResource_FieldIndex.Resource:
+                    case ResearchProjectRequiredItem_FieldIndex.Resource:
                         this.Resource = ex;
                         break;
-                    case ResearchProjectResource_FieldIndex.RequiredCount:
+                    case ResearchProjectRequiredItem_FieldIndex.RequiredCount:
                         this.RequiredCount = ex;
                         break;
-                    case ResearchProjectResource_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case ResearchProjectRequiredItem_FieldIndex.CurveTable:
+                        this.CurveTable = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -291,17 +298,17 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                ResearchProjectResource_FieldIndex enu = (ResearchProjectResource_FieldIndex)index;
+                ResearchProjectRequiredItem_FieldIndex enu = (ResearchProjectRequiredItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case ResearchProjectResource_FieldIndex.Resource:
+                    case ResearchProjectRequiredItem_FieldIndex.Resource:
                         this.Resource = (Exception?)obj;
                         break;
-                    case ResearchProjectResource_FieldIndex.RequiredCount:
+                    case ResearchProjectRequiredItem_FieldIndex.RequiredCount:
                         this.RequiredCount = (Exception?)obj;
                         break;
-                    case ResearchProjectResource_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case ResearchProjectRequiredItem_FieldIndex.CurveTable:
+                        this.CurveTable = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -313,7 +320,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (Resource != null) return true;
                 if (RequiredCount != null) return true;
-                if (Unknown != null) return true;
+                if (CurveTable != null) return true;
                 return false;
             }
             #endregion
@@ -346,7 +353,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(RequiredCount, "RequiredCount");
                 }
                 {
-                    sb.AppendItem(Unknown, "Unknown");
+                    sb.AppendItem(CurveTable, "CurveTable");
                 }
             }
             #endregion
@@ -358,7 +365,7 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.Resource = this.Resource.Combine(rhs.Resource);
                 ret.RequiredCount = this.RequiredCount.Combine(rhs.RequiredCount);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.CurveTable = this.CurveTable.Combine(rhs.CurveTable);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -384,7 +391,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool OnOverall;
             public bool Resource;
             public bool RequiredCount;
-            public bool Unknown;
+            public bool CurveTable;
             #endregion
 
             #region Ctors
@@ -396,7 +403,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.OnOverall = onOverall;
                 this.Resource = defaultOn;
                 this.RequiredCount = defaultOn;
-                this.Unknown = defaultOn;
+                this.CurveTable = defaultOn;
             }
 
             #endregion
@@ -414,7 +421,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 ret.Add((Resource, null));
                 ret.Add((RequiredCount, null));
-                ret.Add((Unknown, null));
+                ret.Add((CurveTable, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -426,31 +433,31 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ResearchProjectResourceCommon.Instance.EnumerateFormLinks(this);
-        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ResearchProjectResourceSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ResearchProjectRequiredItemCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ResearchProjectRequiredItemSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ResearchProjectResourceBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ResearchProjectRequiredItemBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ResearchProjectResourceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ResearchProjectRequiredItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static ResearchProjectResource CreateFromBinary(
+        public static ResearchProjectRequiredItem CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new ResearchProjectResource();
-            ((ResearchProjectResourceSetterCommon)((IResearchProjectResourceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new ResearchProjectRequiredItem();
+            ((ResearchProjectRequiredItemSetterCommon)((IResearchProjectRequiredItemGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -461,7 +468,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out ResearchProjectResource item,
+            out ResearchProjectRequiredItem item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -476,33 +483,33 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((ResearchProjectResourceSetterCommon)((IResearchProjectResourceGetter)this).CommonSetterInstance()!).Clear(this);
+            ((ResearchProjectRequiredItemSetterCommon)((IResearchProjectRequiredItemGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static ResearchProjectResource GetNew()
+        internal static ResearchProjectRequiredItem GetNew()
         {
-            return new ResearchProjectResource();
+            return new ResearchProjectRequiredItem();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IResearchProjectResource :
+    public partial interface IResearchProjectRequiredItem :
         IFormLinkContainer,
-        ILoquiObjectSetter<IResearchProjectResource>,
-        IResearchProjectResourceGetter
+        ILoquiObjectSetter<IResearchProjectRequiredItem>,
+        IResearchProjectRequiredItemGetter
     {
         new IFormLink<IResearchResourceTargetGetter> Resource { get; set; }
         new UInt32 RequiredCount { get; set; }
-        new UInt32 Unknown { get; set; }
+        new IFormLink<ICurveTableGetter> CurveTable { get; set; }
     }
 
-    public partial interface IResearchProjectResourceGetter :
+    public partial interface IResearchProjectRequiredItemGetter :
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IResearchProjectResourceGetter>
+        ILoquiObject<IResearchProjectRequiredItemGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -510,52 +517,52 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => ResearchProjectResource_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ResearchProjectRequiredItem_Registration.Instance;
         IFormLinkGetter<IResearchResourceTargetGetter> Resource { get; }
         UInt32 RequiredCount { get; }
-        UInt32 Unknown { get; }
+        IFormLinkGetter<ICurveTableGetter> CurveTable { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class ResearchProjectResourceMixIn
+    public static partial class ResearchProjectRequiredItemMixIn
     {
-        public static void Clear(this IResearchProjectResource item)
+        public static void Clear(this IResearchProjectRequiredItem item)
         {
-            ((ResearchProjectResourceSetterCommon)((IResearchProjectResourceGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((ResearchProjectRequiredItemSetterCommon)((IResearchProjectRequiredItemGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ResearchProjectResource.Mask<bool> GetEqualsMask(
-            this IResearchProjectResourceGetter item,
-            IResearchProjectResourceGetter rhs,
+        public static ResearchProjectRequiredItem.Mask<bool> GetEqualsMask(
+            this IResearchProjectRequiredItemGetter item,
+            IResearchProjectRequiredItemGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ResearchProjectResourceCommon)((IResearchProjectResourceGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((ResearchProjectRequiredItemCommon)((IResearchProjectRequiredItemGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IResearchProjectResourceGetter item,
+            this IResearchProjectRequiredItemGetter item,
             string? name = null,
-            ResearchProjectResource.Mask<bool>? printMask = null)
+            ResearchProjectRequiredItem.Mask<bool>? printMask = null)
         {
-            return ((ResearchProjectResourceCommon)((IResearchProjectResourceGetter)item).CommonInstance()!).Print(
+            return ((ResearchProjectRequiredItemCommon)((IResearchProjectRequiredItemGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IResearchProjectResourceGetter item,
+            this IResearchProjectRequiredItemGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ResearchProjectResource.Mask<bool>? printMask = null)
+            ResearchProjectRequiredItem.Mask<bool>? printMask = null)
         {
-            ((ResearchProjectResourceCommon)((IResearchProjectResourceGetter)item).CommonInstance()!).Print(
+            ((ResearchProjectRequiredItemCommon)((IResearchProjectRequiredItemGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -563,21 +570,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IResearchProjectResourceGetter item,
-            IResearchProjectResourceGetter rhs,
-            ResearchProjectResource.TranslationMask? equalsMask = null)
+            this IResearchProjectRequiredItemGetter item,
+            IResearchProjectRequiredItemGetter rhs,
+            ResearchProjectRequiredItem.TranslationMask? equalsMask = null)
         {
-            return ((ResearchProjectResourceCommon)((IResearchProjectResourceGetter)item).CommonInstance()!).Equals(
+            return ((ResearchProjectRequiredItemCommon)((IResearchProjectRequiredItemGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IResearchProjectResource lhs,
-            IResearchProjectResourceGetter rhs)
+            this IResearchProjectRequiredItem lhs,
+            IResearchProjectRequiredItemGetter rhs)
         {
-            ((ResearchProjectResourceSetterTranslationCommon)((IResearchProjectResourceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ResearchProjectRequiredItemSetterTranslationCommon)((IResearchProjectRequiredItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -586,11 +593,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IResearchProjectResource lhs,
-            IResearchProjectResourceGetter rhs,
-            ResearchProjectResource.TranslationMask? copyMask = null)
+            this IResearchProjectRequiredItem lhs,
+            IResearchProjectRequiredItemGetter rhs,
+            ResearchProjectRequiredItem.TranslationMask? copyMask = null)
         {
-            ((ResearchProjectResourceSetterTranslationCommon)((IResearchProjectResourceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ResearchProjectRequiredItemSetterTranslationCommon)((IResearchProjectRequiredItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -599,28 +606,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IResearchProjectResource lhs,
-            IResearchProjectResourceGetter rhs,
-            out ResearchProjectResource.ErrorMask errorMask,
-            ResearchProjectResource.TranslationMask? copyMask = null)
+            this IResearchProjectRequiredItem lhs,
+            IResearchProjectRequiredItemGetter rhs,
+            out ResearchProjectRequiredItem.ErrorMask errorMask,
+            ResearchProjectRequiredItem.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ResearchProjectResourceSetterTranslationCommon)((IResearchProjectResourceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ResearchProjectRequiredItemSetterTranslationCommon)((IResearchProjectRequiredItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = ResearchProjectResource.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ResearchProjectRequiredItem.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IResearchProjectResource lhs,
-            IResearchProjectResourceGetter rhs,
+            this IResearchProjectRequiredItem lhs,
+            IResearchProjectRequiredItemGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ResearchProjectResourceSetterTranslationCommon)((IResearchProjectResourceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ResearchProjectRequiredItemSetterTranslationCommon)((IResearchProjectRequiredItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -628,32 +635,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static ResearchProjectResource DeepCopy(
-            this IResearchProjectResourceGetter item,
-            ResearchProjectResource.TranslationMask? copyMask = null)
+        public static ResearchProjectRequiredItem DeepCopy(
+            this IResearchProjectRequiredItemGetter item,
+            ResearchProjectRequiredItem.TranslationMask? copyMask = null)
         {
-            return ((ResearchProjectResourceSetterTranslationCommon)((IResearchProjectResourceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ResearchProjectRequiredItemSetterTranslationCommon)((IResearchProjectRequiredItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static ResearchProjectResource DeepCopy(
-            this IResearchProjectResourceGetter item,
-            out ResearchProjectResource.ErrorMask errorMask,
-            ResearchProjectResource.TranslationMask? copyMask = null)
+        public static ResearchProjectRequiredItem DeepCopy(
+            this IResearchProjectRequiredItemGetter item,
+            out ResearchProjectRequiredItem.ErrorMask errorMask,
+            ResearchProjectRequiredItem.TranslationMask? copyMask = null)
         {
-            return ((ResearchProjectResourceSetterTranslationCommon)((IResearchProjectResourceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ResearchProjectRequiredItemSetterTranslationCommon)((IResearchProjectRequiredItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static ResearchProjectResource DeepCopy(
-            this IResearchProjectResourceGetter item,
+        public static ResearchProjectRequiredItem DeepCopy(
+            this IResearchProjectRequiredItemGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ResearchProjectResourceSetterTranslationCommon)((IResearchProjectResourceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ResearchProjectRequiredItemSetterTranslationCommon)((IResearchProjectRequiredItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -661,11 +668,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IResearchProjectResource item,
+            this IResearchProjectRequiredItem item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((ResearchProjectResourceSetterCommon)((IResearchProjectResourceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ResearchProjectRequiredItemSetterCommon)((IResearchProjectRequiredItemGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -681,18 +688,18 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum ResearchProjectResource_FieldIndex
+    internal enum ResearchProjectRequiredItem_FieldIndex
     {
         Resource = 0,
         RequiredCount = 1,
-        Unknown = 2,
+        CurveTable = 2,
     }
     #endregion
 
     #region Registration
-    internal partial class ResearchProjectResource_Registration : ILoquiRegistration
+    internal partial class ResearchProjectRequiredItem_Registration : ILoquiRegistration
     {
-        public static readonly ResearchProjectResource_Registration Instance = new ResearchProjectResource_Registration();
+        public static readonly ResearchProjectRequiredItem_Registration Instance = new ResearchProjectRequiredItem_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -700,23 +707,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(ResearchProjectResource.Mask<>);
+        public static readonly Type MaskType = typeof(ResearchProjectRequiredItem.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ResearchProjectResource.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ResearchProjectRequiredItem.ErrorMask);
 
-        public static readonly Type ClassType = typeof(ResearchProjectResource);
+        public static readonly Type ClassType = typeof(ResearchProjectRequiredItem);
 
-        public static readonly Type GetterType = typeof(IResearchProjectResourceGetter);
+        public static readonly Type GetterType = typeof(IResearchProjectRequiredItemGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IResearchProjectResource);
+        public static readonly Type SetterType = typeof(IResearchProjectRequiredItem);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.ResearchProjectResource";
+        public const string FullName = "Mutagen.Bethesda.Starfield.ResearchProjectRequiredItem";
 
-        public const string Name = "ResearchProjectResource";
+        public const string Name = "ResearchProjectRequiredItem";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -724,7 +731,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(ResearchProjectResourceBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(ResearchProjectRequiredItemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -755,31 +762,32 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class ResearchProjectResourceSetterCommon
+    internal partial class ResearchProjectRequiredItemSetterCommon
     {
-        public static readonly ResearchProjectResourceSetterCommon Instance = new ResearchProjectResourceSetterCommon();
+        public static readonly ResearchProjectRequiredItemSetterCommon Instance = new ResearchProjectRequiredItemSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IResearchProjectResource item)
+        public void Clear(IResearchProjectRequiredItem item)
         {
             ClearPartial();
             item.Resource.Clear();
             item.RequiredCount = default(UInt32);
-            item.Unknown = default(UInt32);
+            item.CurveTable.Clear();
         }
         
         #region Mutagen
-        public void RemapLinks(IResearchProjectResource obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IResearchProjectRequiredItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.Resource.Relink(mapping);
+            obj.CurveTable.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IResearchProjectResource item,
+            IResearchProjectRequiredItem item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -787,23 +795,23 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: ResearchProjectResourceBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: ResearchProjectRequiredItemBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class ResearchProjectResourceCommon
+    internal partial class ResearchProjectRequiredItemCommon
     {
-        public static readonly ResearchProjectResourceCommon Instance = new ResearchProjectResourceCommon();
+        public static readonly ResearchProjectRequiredItemCommon Instance = new ResearchProjectRequiredItemCommon();
 
-        public ResearchProjectResource.Mask<bool> GetEqualsMask(
-            IResearchProjectResourceGetter item,
-            IResearchProjectResourceGetter rhs,
+        public ResearchProjectRequiredItem.Mask<bool> GetEqualsMask(
+            IResearchProjectRequiredItemGetter item,
+            IResearchProjectRequiredItemGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ResearchProjectResource.Mask<bool>(false);
-            ((ResearchProjectResourceCommon)((IResearchProjectResourceGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new ResearchProjectRequiredItem.Mask<bool>(false);
+            ((ResearchProjectRequiredItemCommon)((IResearchProjectRequiredItemGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -812,20 +820,20 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IResearchProjectResourceGetter item,
-            IResearchProjectResourceGetter rhs,
-            ResearchProjectResource.Mask<bool> ret,
+            IResearchProjectRequiredItemGetter item,
+            IResearchProjectRequiredItemGetter rhs,
+            ResearchProjectRequiredItem.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Resource = item.Resource.Equals(rhs.Resource);
             ret.RequiredCount = item.RequiredCount == rhs.RequiredCount;
-            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.CurveTable = item.CurveTable.Equals(rhs.CurveTable);
         }
         
         public string Print(
-            IResearchProjectResourceGetter item,
+            IResearchProjectRequiredItemGetter item,
             string? name = null,
-            ResearchProjectResource.Mask<bool>? printMask = null)
+            ResearchProjectRequiredItem.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -837,18 +845,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IResearchProjectResourceGetter item,
+            IResearchProjectRequiredItemGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ResearchProjectResource.Mask<bool>? printMask = null)
+            ResearchProjectRequiredItem.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"ResearchProjectResource =>");
+                sb.AppendLine($"ResearchProjectRequiredItem =>");
             }
             else
             {
-                sb.AppendLine($"{name} (ResearchProjectResource) =>");
+                sb.AppendLine($"{name} (ResearchProjectRequiredItem) =>");
             }
             using (sb.Brace())
             {
@@ -860,9 +868,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IResearchProjectResourceGetter item,
+            IResearchProjectRequiredItemGetter item,
             StructuredStringBuilder sb,
-            ResearchProjectResource.Mask<bool>? printMask = null)
+            ResearchProjectRequiredItem.Mask<bool>? printMask = null)
         {
             if (printMask?.Resource ?? true)
             {
@@ -872,40 +880,40 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.RequiredCount, "RequiredCount");
             }
-            if (printMask?.Unknown ?? true)
+            if (printMask?.CurveTable ?? true)
             {
-                sb.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.CurveTable.FormKey, "CurveTable");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IResearchProjectResourceGetter? lhs,
-            IResearchProjectResourceGetter? rhs,
+            IResearchProjectRequiredItemGetter? lhs,
+            IResearchProjectRequiredItemGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)ResearchProjectResource_FieldIndex.Resource) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ResearchProjectRequiredItem_FieldIndex.Resource) ?? true))
             {
                 if (!lhs.Resource.Equals(rhs.Resource)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ResearchProjectResource_FieldIndex.RequiredCount) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ResearchProjectRequiredItem_FieldIndex.RequiredCount) ?? true))
             {
                 if (lhs.RequiredCount != rhs.RequiredCount) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ResearchProjectResource_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ResearchProjectRequiredItem_FieldIndex.CurveTable) ?? true))
             {
-                if (lhs.Unknown != rhs.Unknown) return false;
+                if (!lhs.CurveTable.Equals(rhs.CurveTable)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IResearchProjectResourceGetter item)
+        public virtual int GetHashCode(IResearchProjectRequiredItemGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.Resource);
             hash.Add(item.RequiredCount);
-            hash.Add(item.Unknown);
+            hash.Add(item.CurveTable);
             return hash.ToHashCode();
         }
         
@@ -914,42 +922,43 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return ResearchProjectResource.GetNew();
+            return ResearchProjectRequiredItem.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IResearchProjectResourceGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IResearchProjectRequiredItemGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Resource);
+            yield return FormLinkInformation.Factory(obj.CurveTable);
             yield break;
         }
         
         #endregion
         
     }
-    internal partial class ResearchProjectResourceSetterTranslationCommon
+    internal partial class ResearchProjectRequiredItemSetterTranslationCommon
     {
-        public static readonly ResearchProjectResourceSetterTranslationCommon Instance = new ResearchProjectResourceSetterTranslationCommon();
+        public static readonly ResearchProjectRequiredItemSetterTranslationCommon Instance = new ResearchProjectRequiredItemSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IResearchProjectResource item,
-            IResearchProjectResourceGetter rhs,
+            IResearchProjectRequiredItem item,
+            IResearchProjectRequiredItemGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)ResearchProjectResource_FieldIndex.Resource) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ResearchProjectRequiredItem_FieldIndex.Resource) ?? true))
             {
                 item.Resource.SetTo(rhs.Resource.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)ResearchProjectResource_FieldIndex.RequiredCount) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ResearchProjectRequiredItem_FieldIndex.RequiredCount) ?? true))
             {
                 item.RequiredCount = rhs.RequiredCount;
             }
-            if ((copyMask?.GetShouldTranslate((int)ResearchProjectResource_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ResearchProjectRequiredItem_FieldIndex.CurveTable) ?? true))
             {
-                item.Unknown = rhs.Unknown;
+                item.CurveTable.SetTo(rhs.CurveTable.FormKey);
             }
             DeepCopyInCustom(
                 item: item,
@@ -960,19 +969,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         partial void DeepCopyInCustom(
-            IResearchProjectResource item,
-            IResearchProjectResourceGetter rhs,
+            IResearchProjectRequiredItem item,
+            IResearchProjectRequiredItemGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
         #endregion
         
-        public ResearchProjectResource DeepCopy(
-            IResearchProjectResourceGetter item,
-            ResearchProjectResource.TranslationMask? copyMask = null)
+        public ResearchProjectRequiredItem DeepCopy(
+            IResearchProjectRequiredItemGetter item,
+            ResearchProjectRequiredItem.TranslationMask? copyMask = null)
         {
-            ResearchProjectResource ret = (ResearchProjectResource)((ResearchProjectResourceCommon)((IResearchProjectResourceGetter)item).CommonInstance()!).GetNew();
-            ((ResearchProjectResourceSetterTranslationCommon)((IResearchProjectResourceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ResearchProjectRequiredItem ret = (ResearchProjectRequiredItem)((ResearchProjectRequiredItemCommon)((IResearchProjectRequiredItemGetter)item).CommonInstance()!).GetNew();
+            ((ResearchProjectRequiredItemSetterTranslationCommon)((IResearchProjectRequiredItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -981,30 +990,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public ResearchProjectResource DeepCopy(
-            IResearchProjectResourceGetter item,
-            out ResearchProjectResource.ErrorMask errorMask,
-            ResearchProjectResource.TranslationMask? copyMask = null)
+        public ResearchProjectRequiredItem DeepCopy(
+            IResearchProjectRequiredItemGetter item,
+            out ResearchProjectRequiredItem.ErrorMask errorMask,
+            ResearchProjectRequiredItem.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ResearchProjectResource ret = (ResearchProjectResource)((ResearchProjectResourceCommon)((IResearchProjectResourceGetter)item).CommonInstance()!).GetNew();
-            ((ResearchProjectResourceSetterTranslationCommon)((IResearchProjectResourceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ResearchProjectRequiredItem ret = (ResearchProjectRequiredItem)((ResearchProjectRequiredItemCommon)((IResearchProjectRequiredItemGetter)item).CommonInstance()!).GetNew();
+            ((ResearchProjectRequiredItemSetterTranslationCommon)((IResearchProjectRequiredItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = ResearchProjectResource.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ResearchProjectRequiredItem.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public ResearchProjectResource DeepCopy(
-            IResearchProjectResourceGetter item,
+        public ResearchProjectRequiredItem DeepCopy(
+            IResearchProjectRequiredItemGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            ResearchProjectResource ret = (ResearchProjectResource)((ResearchProjectResourceCommon)((IResearchProjectResourceGetter)item).CommonInstance()!).GetNew();
-            ((ResearchProjectResourceSetterTranslationCommon)((IResearchProjectResourceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ResearchProjectRequiredItem ret = (ResearchProjectRequiredItem)((ResearchProjectRequiredItemCommon)((IResearchProjectRequiredItemGetter)item).CommonInstance()!).GetNew();
+            ((ResearchProjectRequiredItemSetterTranslationCommon)((IResearchProjectRequiredItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1020,27 +1029,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class ResearchProjectResource
+    public partial class ResearchProjectRequiredItem
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ResearchProjectResource_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => ResearchProjectResource_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ResearchProjectRequiredItem_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ResearchProjectRequiredItem_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ResearchProjectResourceCommon.Instance;
+        protected object CommonInstance() => ResearchProjectRequiredItemCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return ResearchProjectResourceSetterCommon.Instance;
+            return ResearchProjectRequiredItemSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ResearchProjectResourceSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ResearchProjectRequiredItemSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IResearchProjectResourceGetter.CommonInstance() => this.CommonInstance();
+        object IResearchProjectRequiredItemGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IResearchProjectResourceGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IResearchProjectRequiredItemGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IResearchProjectResourceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IResearchProjectRequiredItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1051,24 +1060,26 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class ResearchProjectResourceBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class ResearchProjectRequiredItemBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ResearchProjectResourceBinaryWriteTranslation Instance = new();
+        public static readonly ResearchProjectRequiredItemBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            IResearchProjectResourceGetter item,
+            IResearchProjectRequiredItemGetter item,
             MutagenWriter writer)
         {
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Resource);
             writer.Write(item.RequiredCount);
-            writer.Write(item.Unknown);
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.CurveTable);
         }
 
         public void Write(
             MutagenWriter writer,
-            IResearchProjectResourceGetter item,
+            IResearchProjectRequiredItemGetter item,
             TypedWriteParams translationParams)
         {
             WriteEmbedded(
@@ -1082,24 +1093,24 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IResearchProjectResourceGetter)item,
+                item: (IResearchProjectRequiredItemGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class ResearchProjectResourceBinaryCreateTranslation
+    internal partial class ResearchProjectRequiredItemBinaryCreateTranslation
     {
-        public static readonly ResearchProjectResourceBinaryCreateTranslation Instance = new ResearchProjectResourceBinaryCreateTranslation();
+        public static readonly ResearchProjectRequiredItemBinaryCreateTranslation Instance = new ResearchProjectRequiredItemBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IResearchProjectResource item,
+            IResearchProjectRequiredItem item,
             MutagenFrame frame)
         {
             item.Resource.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.RequiredCount = frame.ReadUInt32();
-            item.Unknown = frame.ReadUInt32();
+            item.CurveTable.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }
@@ -1108,14 +1119,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class ResearchProjectResourceBinaryTranslationMixIn
+    public static class ResearchProjectRequiredItemBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IResearchProjectResourceGetter item,
+            this IResearchProjectRequiredItemGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ResearchProjectResourceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((ResearchProjectRequiredItemBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1128,39 +1139,39 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class ResearchProjectResourceBinaryOverlay :
+    internal partial class ResearchProjectRequiredItemBinaryOverlay :
         PluginBinaryOverlay,
-        IResearchProjectResourceGetter
+        IResearchProjectRequiredItemGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ResearchProjectResource_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => ResearchProjectResource_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ResearchProjectRequiredItem_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ResearchProjectRequiredItem_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ResearchProjectResourceCommon.Instance;
+        protected object CommonInstance() => ResearchProjectRequiredItemCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ResearchProjectResourceSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ResearchProjectRequiredItemSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IResearchProjectResourceGetter.CommonInstance() => this.CommonInstance();
+        object IResearchProjectRequiredItemGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IResearchProjectResourceGetter.CommonSetterInstance() => null;
+        object? IResearchProjectRequiredItemGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IResearchProjectResourceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IResearchProjectRequiredItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ResearchProjectResourceCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ResearchProjectRequiredItemCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ResearchProjectResourceBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ResearchProjectRequiredItemBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ResearchProjectResourceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ResearchProjectRequiredItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
@@ -1168,14 +1179,14 @@ namespace Mutagen.Bethesda.Starfield
 
         public IFormLinkGetter<IResearchResourceTargetGetter> Resource => FormLinkBinaryTranslation.Instance.OverlayFactory<IResearchResourceTargetGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public UInt32 RequiredCount => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
-        public UInt32 Unknown => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x8, 0x4));
+        public IFormLinkGetter<ICurveTableGetter> CurveTable => FormLinkBinaryTranslation.Instance.OverlayFactory<ICurveTableGetter>(_package, _structData.Span.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected ResearchProjectResourceBinaryOverlay(
+        protected ResearchProjectRequiredItemBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1185,7 +1196,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IResearchProjectResourceGetter ResearchProjectResourceFactory(
+        public static IResearchProjectRequiredItemGetter ResearchProjectRequiredItemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1197,7 +1208,7 @@ namespace Mutagen.Bethesda.Starfield
                 length: 0xC,
                 memoryPair: out var memoryPair,
                 offset: out var offset);
-            var ret = new ResearchProjectResourceBinaryOverlay(
+            var ret = new ResearchProjectRequiredItemBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             stream.Position += 0xC;
@@ -1208,12 +1219,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IResearchProjectResourceGetter ResearchProjectResourceFactory(
+        public static IResearchProjectRequiredItemGetter ResearchProjectRequiredItemFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return ResearchProjectResourceFactory(
+            return ResearchProjectRequiredItemFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1225,7 +1236,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ResearchProjectResourceMixIn.Print(
+            ResearchProjectRequiredItemMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1236,16 +1247,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IResearchProjectResourceGetter rhs) return false;
-            return ((ResearchProjectResourceCommon)((IResearchProjectResourceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IResearchProjectRequiredItemGetter rhs) return false;
+            return ((ResearchProjectRequiredItemCommon)((IResearchProjectRequiredItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IResearchProjectResourceGetter? obj)
+        public bool Equals(IResearchProjectRequiredItemGetter? obj)
         {
-            return ((ResearchProjectResourceCommon)((IResearchProjectResourceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ResearchProjectRequiredItemCommon)((IResearchProjectRequiredItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((ResearchProjectResourceCommon)((IResearchProjectResourceGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ResearchProjectRequiredItemCommon)((IResearchProjectRequiredItemGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

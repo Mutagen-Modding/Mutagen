@@ -107,17 +107,31 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IKeywordGetter> IResearchProjectGetter.WorkbenchKeyword => this.WorkbenchKeyword;
         #endregion
-        #region Resources
+        #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ResearchProjectResource>? _Resources;
-        public ExtendedList<ResearchProjectResource>? Resources
+        private ExtendedList<Condition>? _Conditions;
+        public ExtendedList<Condition>? Conditions
         {
-            get => this._Resources;
-            set => this._Resources = value;
+            get => this._Conditions;
+            set => this._Conditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IResearchProjectResourceGetter>? IResearchProjectGetter.Resources => _Resources;
+        IReadOnlyList<IConditionGetter>? IResearchProjectGetter.Conditions => _Conditions;
+        #endregion
+
+        #endregion
+        #region RequiredItems
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ResearchProjectRequiredItem>? _RequiredItems;
+        public ExtendedList<ResearchProjectRequiredItem>? RequiredItems
+        {
+            get => this._RequiredItems;
+            set => this._RequiredItems = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IResearchProjectRequiredItemGetter>? IResearchProjectGetter.RequiredItems => _RequiredItems;
         #endregion
 
         #endregion
@@ -135,30 +149,28 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
-        #region IconSource
-        private readonly IFormLinkNullable<IStarfieldMajorRecordGetter> _IconSource = new FormLinkNullable<IStarfieldMajorRecordGetter>();
-        public IFormLinkNullable<IStarfieldMajorRecordGetter> IconSource
+        #region CreatedItem
+        private readonly IFormLinkNullable<IStarfieldMajorRecordGetter> _CreatedItem = new FormLinkNullable<IStarfieldMajorRecordGetter>();
+        public IFormLinkNullable<IStarfieldMajorRecordGetter> CreatedItem
         {
-            get => _IconSource;
-            set => _IconSource.SetTo(value);
+            get => _CreatedItem;
+            set => _CreatedItem.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IStarfieldMajorRecordGetter> IResearchProjectGetter.IconSource => this.IconSource;
+        IFormLinkNullableGetter<IStarfieldMajorRecordGetter> IResearchProjectGetter.CreatedItem => this.CreatedItem;
         #endregion
-        #region NNAM
-        public UInt16? NNAM { get; set; }
+        #region NumberCreated
+        public UInt16? NumberCreated { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt16? IResearchProjectGetter.NNAM => this.NNAM;
+        UInt16? IResearchProjectGetter.NumberCreated => this.NumberCreated;
         #endregion
-        #region MenuSortOrder
-        public Single? MenuSortOrder { get; set; }
+        #region SortingPriority
+        public Single? SortingPriority { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IResearchProjectGetter.MenuSortOrder => this.MenuSortOrder;
+        Single? IResearchProjectGetter.SortingPriority => this.SortingPriority;
         #endregion
-        #region TNAM
-        public Byte? TNAM { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte? IResearchProjectGetter.TNAM => this.TNAM;
+        #region Tier
+        public ResearchProject.TierEnum Tier { get; set; } = default(ResearchProject.TierEnum);
         #endregion
         #region CategoryKeyword
         private readonly IFormLinkNullable<IKeywordGetter> _CategoryKeyword = new FormLinkNullable<IKeywordGetter>();
@@ -212,12 +224,13 @@ namespace Mutagen.Bethesda.Starfield
                 this.Name = initialValue;
                 this.Description = initialValue;
                 this.WorkbenchKeyword = initialValue;
-                this.Resources = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ResearchProjectResource.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ResearchProjectResource.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.RequiredItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ResearchProjectRequiredItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ResearchProjectRequiredItem.Mask<TItem>?>>());
                 this.RequiredPerks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ResearchProjectRequiredPerk.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ResearchProjectRequiredPerk.Mask<TItem>?>>());
-                this.IconSource = initialValue;
-                this.NNAM = initialValue;
-                this.MenuSortOrder = initialValue;
-                this.TNAM = initialValue;
+                this.CreatedItem = initialValue;
+                this.NumberCreated = initialValue;
+                this.SortingPriority = initialValue;
+                this.Tier = initialValue;
                 this.CategoryKeyword = initialValue;
                 this.RequiredProjects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
@@ -233,12 +246,13 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Name,
                 TItem Description,
                 TItem WorkbenchKeyword,
-                TItem Resources,
+                TItem Conditions,
+                TItem RequiredItems,
                 TItem RequiredPerks,
-                TItem IconSource,
-                TItem NNAM,
-                TItem MenuSortOrder,
-                TItem TNAM,
+                TItem CreatedItem,
+                TItem NumberCreated,
+                TItem SortingPriority,
+                TItem Tier,
                 TItem CategoryKeyword,
                 TItem RequiredProjects)
             : base(
@@ -253,12 +267,13 @@ namespace Mutagen.Bethesda.Starfield
                 this.Name = Name;
                 this.Description = Description;
                 this.WorkbenchKeyword = WorkbenchKeyword;
-                this.Resources = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ResearchProjectResource.Mask<TItem>?>>?>(Resources, Enumerable.Empty<MaskItemIndexed<TItem, ResearchProjectResource.Mask<TItem>?>>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.RequiredItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ResearchProjectRequiredItem.Mask<TItem>?>>?>(RequiredItems, Enumerable.Empty<MaskItemIndexed<TItem, ResearchProjectRequiredItem.Mask<TItem>?>>());
                 this.RequiredPerks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ResearchProjectRequiredPerk.Mask<TItem>?>>?>(RequiredPerks, Enumerable.Empty<MaskItemIndexed<TItem, ResearchProjectRequiredPerk.Mask<TItem>?>>());
-                this.IconSource = IconSource;
-                this.NNAM = NNAM;
-                this.MenuSortOrder = MenuSortOrder;
-                this.TNAM = TNAM;
+                this.CreatedItem = CreatedItem;
+                this.NumberCreated = NumberCreated;
+                this.SortingPriority = SortingPriority;
+                this.Tier = Tier;
                 this.CategoryKeyword = CategoryKeyword;
                 this.RequiredProjects = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RequiredProjects, Enumerable.Empty<(int Index, TItem Value)>());
             }
@@ -275,12 +290,13 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Name;
             public TItem Description;
             public TItem WorkbenchKeyword;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ResearchProjectResource.Mask<TItem>?>>?>? Resources;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ResearchProjectRequiredItem.Mask<TItem>?>>?>? RequiredItems;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ResearchProjectRequiredPerk.Mask<TItem>?>>?>? RequiredPerks;
-            public TItem IconSource;
-            public TItem NNAM;
-            public TItem MenuSortOrder;
-            public TItem TNAM;
+            public TItem CreatedItem;
+            public TItem NumberCreated;
+            public TItem SortingPriority;
+            public TItem Tier;
             public TItem CategoryKeyword;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? RequiredProjects;
             #endregion
@@ -299,12 +315,13 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.WorkbenchKeyword, rhs.WorkbenchKeyword)) return false;
-                if (!object.Equals(this.Resources, rhs.Resources)) return false;
+                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.RequiredItems, rhs.RequiredItems)) return false;
                 if (!object.Equals(this.RequiredPerks, rhs.RequiredPerks)) return false;
-                if (!object.Equals(this.IconSource, rhs.IconSource)) return false;
-                if (!object.Equals(this.NNAM, rhs.NNAM)) return false;
-                if (!object.Equals(this.MenuSortOrder, rhs.MenuSortOrder)) return false;
-                if (!object.Equals(this.TNAM, rhs.TNAM)) return false;
+                if (!object.Equals(this.CreatedItem, rhs.CreatedItem)) return false;
+                if (!object.Equals(this.NumberCreated, rhs.NumberCreated)) return false;
+                if (!object.Equals(this.SortingPriority, rhs.SortingPriority)) return false;
+                if (!object.Equals(this.Tier, rhs.Tier)) return false;
                 if (!object.Equals(this.CategoryKeyword, rhs.CategoryKeyword)) return false;
                 if (!object.Equals(this.RequiredProjects, rhs.RequiredProjects)) return false;
                 return true;
@@ -315,12 +332,13 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Name);
                 hash.Add(this.Description);
                 hash.Add(this.WorkbenchKeyword);
-                hash.Add(this.Resources);
+                hash.Add(this.Conditions);
+                hash.Add(this.RequiredItems);
                 hash.Add(this.RequiredPerks);
-                hash.Add(this.IconSource);
-                hash.Add(this.NNAM);
-                hash.Add(this.MenuSortOrder);
-                hash.Add(this.TNAM);
+                hash.Add(this.CreatedItem);
+                hash.Add(this.NumberCreated);
+                hash.Add(this.SortingPriority);
+                hash.Add(this.Tier);
                 hash.Add(this.CategoryKeyword);
                 hash.Add(this.RequiredProjects);
                 hash.Add(base.GetHashCode());
@@ -336,12 +354,24 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.Name)) return false;
                 if (!eval(this.Description)) return false;
                 if (!eval(this.WorkbenchKeyword)) return false;
-                if (this.Resources != null)
+                if (this.Conditions != null)
                 {
-                    if (!eval(this.Resources.Overall)) return false;
-                    if (this.Resources.Specific != null)
+                    if (!eval(this.Conditions.Overall)) return false;
+                    if (this.Conditions.Specific != null)
                     {
-                        foreach (var item in this.Resources.Specific)
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.RequiredItems != null)
+                {
+                    if (!eval(this.RequiredItems.Overall)) return false;
+                    if (this.RequiredItems.Specific != null)
+                    {
+                        foreach (var item in this.RequiredItems.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -360,10 +390,10 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (!eval(this.IconSource)) return false;
-                if (!eval(this.NNAM)) return false;
-                if (!eval(this.MenuSortOrder)) return false;
-                if (!eval(this.TNAM)) return false;
+                if (!eval(this.CreatedItem)) return false;
+                if (!eval(this.NumberCreated)) return false;
+                if (!eval(this.SortingPriority)) return false;
+                if (!eval(this.Tier)) return false;
                 if (!eval(this.CategoryKeyword)) return false;
                 if (this.RequiredProjects != null)
                 {
@@ -387,12 +417,24 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.Name)) return true;
                 if (eval(this.Description)) return true;
                 if (eval(this.WorkbenchKeyword)) return true;
-                if (this.Resources != null)
+                if (this.Conditions != null)
                 {
-                    if (eval(this.Resources.Overall)) return true;
-                    if (this.Resources.Specific != null)
+                    if (eval(this.Conditions.Overall)) return true;
+                    if (this.Conditions.Specific != null)
                     {
-                        foreach (var item in this.Resources.Specific)
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.RequiredItems != null)
+                {
+                    if (eval(this.RequiredItems.Overall)) return true;
+                    if (this.RequiredItems.Specific != null)
+                    {
+                        foreach (var item in this.RequiredItems.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -411,10 +453,10 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (eval(this.IconSource)) return true;
-                if (eval(this.NNAM)) return true;
-                if (eval(this.MenuSortOrder)) return true;
-                if (eval(this.TNAM)) return true;
+                if (eval(this.CreatedItem)) return true;
+                if (eval(this.NumberCreated)) return true;
+                if (eval(this.SortingPriority)) return true;
+                if (eval(this.Tier)) return true;
                 if (eval(this.CategoryKeyword)) return true;
                 if (this.RequiredProjects != null)
                 {
@@ -445,16 +487,31 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Name = eval(this.Name);
                 obj.Description = eval(this.Description);
                 obj.WorkbenchKeyword = eval(this.WorkbenchKeyword);
-                if (Resources != null)
+                if (Conditions != null)
                 {
-                    obj.Resources = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ResearchProjectResource.Mask<R>?>>?>(eval(this.Resources.Overall), Enumerable.Empty<MaskItemIndexed<R, ResearchProjectResource.Mask<R>?>>());
-                    if (Resources.Specific != null)
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (Conditions.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, ResearchProjectResource.Mask<R>?>>();
-                        obj.Resources.Specific = l;
-                        foreach (var item in Resources.Specific)
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.Conditions.Specific = l;
+                        foreach (var item in Conditions.Specific)
                         {
-                            MaskItemIndexed<R, ResearchProjectResource.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ResearchProjectResource.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (RequiredItems != null)
+                {
+                    obj.RequiredItems = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ResearchProjectRequiredItem.Mask<R>?>>?>(eval(this.RequiredItems.Overall), Enumerable.Empty<MaskItemIndexed<R, ResearchProjectRequiredItem.Mask<R>?>>());
+                    if (RequiredItems.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ResearchProjectRequiredItem.Mask<R>?>>();
+                        obj.RequiredItems.Specific = l;
+                        foreach (var item in RequiredItems.Specific)
+                        {
+                            MaskItemIndexed<R, ResearchProjectRequiredItem.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ResearchProjectRequiredItem.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -475,10 +532,10 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                obj.IconSource = eval(this.IconSource);
-                obj.NNAM = eval(this.NNAM);
-                obj.MenuSortOrder = eval(this.MenuSortOrder);
-                obj.TNAM = eval(this.TNAM);
+                obj.CreatedItem = eval(this.CreatedItem);
+                obj.NumberCreated = eval(this.NumberCreated);
+                obj.SortingPriority = eval(this.SortingPriority);
+                obj.Tier = eval(this.Tier);
                 obj.CategoryKeyword = eval(this.CategoryKeyword);
                 if (RequiredProjects != null)
                 {
@@ -524,16 +581,35 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(WorkbenchKeyword, "WorkbenchKeyword");
                     }
-                    if ((printMask?.Resources?.Overall ?? true)
-                        && Resources is {} ResourcesItem)
+                    if ((printMask?.Conditions?.Overall ?? true)
+                        && Conditions is {} ConditionsItem)
                     {
-                        sb.AppendLine("Resources =>");
+                        sb.AppendLine("Conditions =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(ResourcesItem.Overall);
-                            if (ResourcesItem.Specific != null)
+                            sb.AppendItem(ConditionsItem.Overall);
+                            if (ConditionsItem.Specific != null)
                             {
-                                foreach (var subItem in ResourcesItem.Specific)
+                                foreach (var subItem in ConditionsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.RequiredItems?.Overall ?? true)
+                        && RequiredItems is {} RequiredItemsItem)
+                    {
+                        sb.AppendLine("RequiredItems =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(RequiredItemsItem.Overall);
+                            if (RequiredItemsItem.Specific != null)
+                            {
+                                foreach (var subItem in RequiredItemsItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -562,21 +638,21 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.IconSource ?? true)
+                    if (printMask?.CreatedItem ?? true)
                     {
-                        sb.AppendItem(IconSource, "IconSource");
+                        sb.AppendItem(CreatedItem, "CreatedItem");
                     }
-                    if (printMask?.NNAM ?? true)
+                    if (printMask?.NumberCreated ?? true)
                     {
-                        sb.AppendItem(NNAM, "NNAM");
+                        sb.AppendItem(NumberCreated, "NumberCreated");
                     }
-                    if (printMask?.MenuSortOrder ?? true)
+                    if (printMask?.SortingPriority ?? true)
                     {
-                        sb.AppendItem(MenuSortOrder, "MenuSortOrder");
+                        sb.AppendItem(SortingPriority, "SortingPriority");
                     }
-                    if (printMask?.TNAM ?? true)
+                    if (printMask?.Tier ?? true)
                     {
-                        sb.AppendItem(TNAM, "TNAM");
+                        sb.AppendItem(Tier, "Tier");
                     }
                     if (printMask?.CategoryKeyword ?? true)
                     {
@@ -617,12 +693,13 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Name;
             public Exception? Description;
             public Exception? WorkbenchKeyword;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ResearchProjectResource.ErrorMask?>>?>? Resources;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ResearchProjectRequiredItem.ErrorMask?>>?>? RequiredItems;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ResearchProjectRequiredPerk.ErrorMask?>>?>? RequiredPerks;
-            public Exception? IconSource;
-            public Exception? NNAM;
-            public Exception? MenuSortOrder;
-            public Exception? TNAM;
+            public Exception? CreatedItem;
+            public Exception? NumberCreated;
+            public Exception? SortingPriority;
+            public Exception? Tier;
             public Exception? CategoryKeyword;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? RequiredProjects;
             #endregion
@@ -639,18 +716,20 @@ namespace Mutagen.Bethesda.Starfield
                         return Description;
                     case ResearchProject_FieldIndex.WorkbenchKeyword:
                         return WorkbenchKeyword;
-                    case ResearchProject_FieldIndex.Resources:
-                        return Resources;
+                    case ResearchProject_FieldIndex.Conditions:
+                        return Conditions;
+                    case ResearchProject_FieldIndex.RequiredItems:
+                        return RequiredItems;
                     case ResearchProject_FieldIndex.RequiredPerks:
                         return RequiredPerks;
-                    case ResearchProject_FieldIndex.IconSource:
-                        return IconSource;
-                    case ResearchProject_FieldIndex.NNAM:
-                        return NNAM;
-                    case ResearchProject_FieldIndex.MenuSortOrder:
-                        return MenuSortOrder;
-                    case ResearchProject_FieldIndex.TNAM:
-                        return TNAM;
+                    case ResearchProject_FieldIndex.CreatedItem:
+                        return CreatedItem;
+                    case ResearchProject_FieldIndex.NumberCreated:
+                        return NumberCreated;
+                    case ResearchProject_FieldIndex.SortingPriority:
+                        return SortingPriority;
+                    case ResearchProject_FieldIndex.Tier:
+                        return Tier;
                     case ResearchProject_FieldIndex.CategoryKeyword:
                         return CategoryKeyword;
                     case ResearchProject_FieldIndex.RequiredProjects:
@@ -674,23 +753,26 @@ namespace Mutagen.Bethesda.Starfield
                     case ResearchProject_FieldIndex.WorkbenchKeyword:
                         this.WorkbenchKeyword = ex;
                         break;
-                    case ResearchProject_FieldIndex.Resources:
-                        this.Resources = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ResearchProjectResource.ErrorMask?>>?>(ex, null);
+                    case ResearchProject_FieldIndex.Conditions:
+                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case ResearchProject_FieldIndex.RequiredItems:
+                        this.RequiredItems = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ResearchProjectRequiredItem.ErrorMask?>>?>(ex, null);
                         break;
                     case ResearchProject_FieldIndex.RequiredPerks:
                         this.RequiredPerks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ResearchProjectRequiredPerk.ErrorMask?>>?>(ex, null);
                         break;
-                    case ResearchProject_FieldIndex.IconSource:
-                        this.IconSource = ex;
+                    case ResearchProject_FieldIndex.CreatedItem:
+                        this.CreatedItem = ex;
                         break;
-                    case ResearchProject_FieldIndex.NNAM:
-                        this.NNAM = ex;
+                    case ResearchProject_FieldIndex.NumberCreated:
+                        this.NumberCreated = ex;
                         break;
-                    case ResearchProject_FieldIndex.MenuSortOrder:
-                        this.MenuSortOrder = ex;
+                    case ResearchProject_FieldIndex.SortingPriority:
+                        this.SortingPriority = ex;
                         break;
-                    case ResearchProject_FieldIndex.TNAM:
-                        this.TNAM = ex;
+                    case ResearchProject_FieldIndex.Tier:
+                        this.Tier = ex;
                         break;
                     case ResearchProject_FieldIndex.CategoryKeyword:
                         this.CategoryKeyword = ex;
@@ -718,23 +800,26 @@ namespace Mutagen.Bethesda.Starfield
                     case ResearchProject_FieldIndex.WorkbenchKeyword:
                         this.WorkbenchKeyword = (Exception?)obj;
                         break;
-                    case ResearchProject_FieldIndex.Resources:
-                        this.Resources = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ResearchProjectResource.ErrorMask?>>?>)obj;
+                    case ResearchProject_FieldIndex.Conditions:
+                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case ResearchProject_FieldIndex.RequiredItems:
+                        this.RequiredItems = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ResearchProjectRequiredItem.ErrorMask?>>?>)obj;
                         break;
                     case ResearchProject_FieldIndex.RequiredPerks:
                         this.RequiredPerks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ResearchProjectRequiredPerk.ErrorMask?>>?>)obj;
                         break;
-                    case ResearchProject_FieldIndex.IconSource:
-                        this.IconSource = (Exception?)obj;
+                    case ResearchProject_FieldIndex.CreatedItem:
+                        this.CreatedItem = (Exception?)obj;
                         break;
-                    case ResearchProject_FieldIndex.NNAM:
-                        this.NNAM = (Exception?)obj;
+                    case ResearchProject_FieldIndex.NumberCreated:
+                        this.NumberCreated = (Exception?)obj;
                         break;
-                    case ResearchProject_FieldIndex.MenuSortOrder:
-                        this.MenuSortOrder = (Exception?)obj;
+                    case ResearchProject_FieldIndex.SortingPriority:
+                        this.SortingPriority = (Exception?)obj;
                         break;
-                    case ResearchProject_FieldIndex.TNAM:
-                        this.TNAM = (Exception?)obj;
+                    case ResearchProject_FieldIndex.Tier:
+                        this.Tier = (Exception?)obj;
                         break;
                     case ResearchProject_FieldIndex.CategoryKeyword:
                         this.CategoryKeyword = (Exception?)obj;
@@ -754,12 +839,13 @@ namespace Mutagen.Bethesda.Starfield
                 if (Name != null) return true;
                 if (Description != null) return true;
                 if (WorkbenchKeyword != null) return true;
-                if (Resources != null) return true;
+                if (Conditions != null) return true;
+                if (RequiredItems != null) return true;
                 if (RequiredPerks != null) return true;
-                if (IconSource != null) return true;
-                if (NNAM != null) return true;
-                if (MenuSortOrder != null) return true;
-                if (TNAM != null) return true;
+                if (CreatedItem != null) return true;
+                if (NumberCreated != null) return true;
+                if (SortingPriority != null) return true;
+                if (Tier != null) return true;
                 if (CategoryKeyword != null) return true;
                 if (RequiredProjects != null) return true;
                 return false;
@@ -797,15 +883,33 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(WorkbenchKeyword, "WorkbenchKeyword");
                 }
-                if (Resources is {} ResourcesItem)
+                if (Conditions is {} ConditionsItem)
                 {
-                    sb.AppendLine("Resources =>");
+                    sb.AppendLine("Conditions =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(ResourcesItem.Overall);
-                        if (ResourcesItem.Specific != null)
+                        sb.AppendItem(ConditionsItem.Overall);
+                        if (ConditionsItem.Specific != null)
                         {
-                            foreach (var subItem in ResourcesItem.Specific)
+                            foreach (var subItem in ConditionsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (RequiredItems is {} RequiredItemsItem)
+                {
+                    sb.AppendLine("RequiredItems =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(RequiredItemsItem.Overall);
+                        if (RequiredItemsItem.Specific != null)
+                        {
+                            foreach (var subItem in RequiredItemsItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -834,16 +938,16 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 {
-                    sb.AppendItem(IconSource, "IconSource");
+                    sb.AppendItem(CreatedItem, "CreatedItem");
                 }
                 {
-                    sb.AppendItem(NNAM, "NNAM");
+                    sb.AppendItem(NumberCreated, "NumberCreated");
                 }
                 {
-                    sb.AppendItem(MenuSortOrder, "MenuSortOrder");
+                    sb.AppendItem(SortingPriority, "SortingPriority");
                 }
                 {
-                    sb.AppendItem(TNAM, "TNAM");
+                    sb.AppendItem(Tier, "Tier");
                 }
                 {
                     sb.AppendItem(CategoryKeyword, "CategoryKeyword");
@@ -879,12 +983,13 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.WorkbenchKeyword = this.WorkbenchKeyword.Combine(rhs.WorkbenchKeyword);
-                ret.Resources = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ResearchProjectResource.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Resources?.Overall, rhs.Resources?.Overall), Noggog.ExceptionExt.Combine(this.Resources?.Specific, rhs.Resources?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.RequiredItems = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ResearchProjectRequiredItem.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.RequiredItems?.Overall, rhs.RequiredItems?.Overall), Noggog.ExceptionExt.Combine(this.RequiredItems?.Specific, rhs.RequiredItems?.Specific));
                 ret.RequiredPerks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ResearchProjectRequiredPerk.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.RequiredPerks?.Overall, rhs.RequiredPerks?.Overall), Noggog.ExceptionExt.Combine(this.RequiredPerks?.Specific, rhs.RequiredPerks?.Specific));
-                ret.IconSource = this.IconSource.Combine(rhs.IconSource);
-                ret.NNAM = this.NNAM.Combine(rhs.NNAM);
-                ret.MenuSortOrder = this.MenuSortOrder.Combine(rhs.MenuSortOrder);
-                ret.TNAM = this.TNAM.Combine(rhs.TNAM);
+                ret.CreatedItem = this.CreatedItem.Combine(rhs.CreatedItem);
+                ret.NumberCreated = this.NumberCreated.Combine(rhs.NumberCreated);
+                ret.SortingPriority = this.SortingPriority.Combine(rhs.SortingPriority);
+                ret.Tier = this.Tier.Combine(rhs.Tier);
                 ret.CategoryKeyword = this.CategoryKeyword.Combine(rhs.CategoryKeyword);
                 ret.RequiredProjects = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.RequiredProjects?.Overall, rhs.RequiredProjects?.Overall), Noggog.ExceptionExt.Combine(this.RequiredProjects?.Specific, rhs.RequiredProjects?.Specific));
                 return ret;
@@ -912,12 +1017,13 @@ namespace Mutagen.Bethesda.Starfield
             public bool Name;
             public bool Description;
             public bool WorkbenchKeyword;
-            public ResearchProjectResource.TranslationMask? Resources;
+            public Condition.TranslationMask? Conditions;
+            public ResearchProjectRequiredItem.TranslationMask? RequiredItems;
             public ResearchProjectRequiredPerk.TranslationMask? RequiredPerks;
-            public bool IconSource;
-            public bool NNAM;
-            public bool MenuSortOrder;
-            public bool TNAM;
+            public bool CreatedItem;
+            public bool NumberCreated;
+            public bool SortingPriority;
+            public bool Tier;
             public bool CategoryKeyword;
             public bool RequiredProjects;
             #endregion
@@ -931,10 +1037,10 @@ namespace Mutagen.Bethesda.Starfield
                 this.Name = defaultOn;
                 this.Description = defaultOn;
                 this.WorkbenchKeyword = defaultOn;
-                this.IconSource = defaultOn;
-                this.NNAM = defaultOn;
-                this.MenuSortOrder = defaultOn;
-                this.TNAM = defaultOn;
+                this.CreatedItem = defaultOn;
+                this.NumberCreated = defaultOn;
+                this.SortingPriority = defaultOn;
+                this.Tier = defaultOn;
                 this.CategoryKeyword = defaultOn;
                 this.RequiredProjects = defaultOn;
             }
@@ -947,12 +1053,13 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Name, null));
                 ret.Add((Description, null));
                 ret.Add((WorkbenchKeyword, null));
-                ret.Add((Resources == null ? DefaultOn : !Resources.GetCrystal().CopyNothing, Resources?.GetCrystal()));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
+                ret.Add((RequiredItems == null ? DefaultOn : !RequiredItems.GetCrystal().CopyNothing, RequiredItems?.GetCrystal()));
                 ret.Add((RequiredPerks == null ? DefaultOn : !RequiredPerks.GetCrystal().CopyNothing, RequiredPerks?.GetCrystal()));
-                ret.Add((IconSource, null));
-                ret.Add((NNAM, null));
-                ret.Add((MenuSortOrder, null));
-                ret.Add((TNAM, null));
+                ret.Add((CreatedItem, null));
+                ret.Add((NumberCreated, null));
+                ret.Add((SortingPriority, null));
+                ret.Add((Tier, null));
                 ret.Add((CategoryKeyword, null));
                 ret.Add((RequiredProjects, null));
             }
@@ -1112,12 +1219,13 @@ namespace Mutagen.Bethesda.Starfield
         new TranslatedString? Name { get; set; }
         new TranslatedString? Description { get; set; }
         new IFormLinkNullable<IKeywordGetter> WorkbenchKeyword { get; set; }
-        new ExtendedList<ResearchProjectResource>? Resources { get; set; }
+        new ExtendedList<Condition>? Conditions { get; set; }
+        new ExtendedList<ResearchProjectRequiredItem>? RequiredItems { get; set; }
         new ExtendedList<ResearchProjectRequiredPerk>? RequiredPerks { get; set; }
-        new IFormLinkNullable<IStarfieldMajorRecordGetter> IconSource { get; set; }
-        new UInt16? NNAM { get; set; }
-        new Single? MenuSortOrder { get; set; }
-        new Byte? TNAM { get; set; }
+        new IFormLinkNullable<IStarfieldMajorRecordGetter> CreatedItem { get; set; }
+        new UInt16? NumberCreated { get; set; }
+        new Single? SortingPriority { get; set; }
+        new ResearchProject.TierEnum Tier { get; set; }
         new IFormLinkNullable<IKeywordGetter> CategoryKeyword { get; set; }
         new ExtendedList<IFormLinkGetter<IResearchProjectGetter>> RequiredProjects { get; }
     }
@@ -1150,12 +1258,13 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         ITranslatedStringGetter? Description { get; }
         IFormLinkNullableGetter<IKeywordGetter> WorkbenchKeyword { get; }
-        IReadOnlyList<IResearchProjectResourceGetter>? Resources { get; }
+        IReadOnlyList<IConditionGetter>? Conditions { get; }
+        IReadOnlyList<IResearchProjectRequiredItemGetter>? RequiredItems { get; }
         IReadOnlyList<IResearchProjectRequiredPerkGetter>? RequiredPerks { get; }
-        IFormLinkNullableGetter<IStarfieldMajorRecordGetter> IconSource { get; }
-        UInt16? NNAM { get; }
-        Single? MenuSortOrder { get; }
-        Byte? TNAM { get; }
+        IFormLinkNullableGetter<IStarfieldMajorRecordGetter> CreatedItem { get; }
+        UInt16? NumberCreated { get; }
+        Single? SortingPriority { get; }
+        ResearchProject.TierEnum Tier { get; }
         IFormLinkNullableGetter<IKeywordGetter> CategoryKeyword { get; }
         IReadOnlyList<IFormLinkGetter<IResearchProjectGetter>> RequiredProjects { get; }
 
@@ -1337,14 +1446,15 @@ namespace Mutagen.Bethesda.Starfield
         Name = 7,
         Description = 8,
         WorkbenchKeyword = 9,
-        Resources = 10,
-        RequiredPerks = 11,
-        IconSource = 12,
-        NNAM = 13,
-        MenuSortOrder = 14,
-        TNAM = 15,
-        CategoryKeyword = 16,
-        RequiredProjects = 17,
+        Conditions = 10,
+        RequiredItems = 11,
+        RequiredPerks = 12,
+        CreatedItem = 13,
+        NumberCreated = 14,
+        SortingPriority = 15,
+        Tier = 16,
+        CategoryKeyword = 17,
+        RequiredProjects = 18,
     }
     #endregion
 
@@ -1355,9 +1465,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 11;
+        public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(ResearchProject.Mask<>);
 
@@ -1393,6 +1503,10 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.FULL,
                 RecordTypes.DESC,
                 RecordTypes.BNAM,
+                RecordTypes.CTDA,
+                RecordTypes.CITC,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2,
                 RecordTypes.FVPA,
                 RecordTypes.RQPK,
                 RecordTypes.CNAM,
@@ -1448,12 +1562,13 @@ namespace Mutagen.Bethesda.Starfield
             item.Name = default;
             item.Description = default;
             item.WorkbenchKeyword.Clear();
-            item.Resources = null;
+            item.Conditions = null;
+            item.RequiredItems = null;
             item.RequiredPerks = null;
-            item.IconSource.Clear();
-            item.NNAM = default;
-            item.MenuSortOrder = default;
-            item.TNAM = default;
+            item.CreatedItem.Clear();
+            item.NumberCreated = default;
+            item.SortingPriority = default;
+            item.Tier = default(ResearchProject.TierEnum);
             item.CategoryKeyword.Clear();
             item.RequiredProjects.Clear();
             base.Clear(item);
@@ -1474,9 +1589,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             base.RemapLinks(obj, mapping);
             obj.WorkbenchKeyword.Relink(mapping);
-            obj.Resources?.RemapLinks(mapping);
+            obj.Conditions?.RemapLinks(mapping);
+            obj.RequiredItems?.RemapLinks(mapping);
             obj.RequiredPerks?.RemapLinks(mapping);
-            obj.IconSource.Relink(mapping);
+            obj.CreatedItem.Relink(mapping);
             obj.CategoryKeyword.Relink(mapping);
             obj.RequiredProjects.RemapLinks(mapping);
         }
@@ -1549,18 +1665,22 @@ namespace Mutagen.Bethesda.Starfield
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Description = object.Equals(item.Description, rhs.Description);
             ret.WorkbenchKeyword = item.WorkbenchKeyword.Equals(rhs.WorkbenchKeyword);
-            ret.Resources = item.Resources.CollectionEqualsHelper(
-                rhs.Resources,
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.RequiredItems = item.RequiredItems.CollectionEqualsHelper(
+                rhs.RequiredItems,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.RequiredPerks = item.RequiredPerks.CollectionEqualsHelper(
                 rhs.RequiredPerks,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.IconSource = item.IconSource.Equals(rhs.IconSource);
-            ret.NNAM = item.NNAM == rhs.NNAM;
-            ret.MenuSortOrder = item.MenuSortOrder.EqualsWithin(rhs.MenuSortOrder);
-            ret.TNAM = item.TNAM == rhs.TNAM;
+            ret.CreatedItem = item.CreatedItem.Equals(rhs.CreatedItem);
+            ret.NumberCreated = item.NumberCreated == rhs.NumberCreated;
+            ret.SortingPriority = item.SortingPriority.EqualsWithin(rhs.SortingPriority);
+            ret.Tier = item.Tier == rhs.Tier;
             ret.CategoryKeyword = item.CategoryKeyword.Equals(rhs.CategoryKeyword);
             ret.RequiredProjects = item.RequiredProjects.CollectionEqualsHelper(
                 rhs.RequiredProjects,
@@ -1629,13 +1749,28 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.WorkbenchKeyword.FormKeyNullable, "WorkbenchKeyword");
             }
-            if ((printMask?.Resources?.Overall ?? true)
-                && item.Resources is {} ResourcesItem)
+            if ((printMask?.Conditions?.Overall ?? true)
+                && item.Conditions is {} ConditionsItem)
             {
-                sb.AppendLine("Resources =>");
+                sb.AppendLine("Conditions =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in ResourcesItem)
+                    foreach (var subItem in ConditionsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.RequiredItems?.Overall ?? true)
+                && item.RequiredItems is {} RequiredItemsItem)
+            {
+                sb.AppendLine("RequiredItems =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in RequiredItemsItem)
                     {
                         using (sb.Brace())
                         {
@@ -1659,24 +1794,23 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if (printMask?.IconSource ?? true)
+            if (printMask?.CreatedItem ?? true)
             {
-                sb.AppendItem(item.IconSource.FormKeyNullable, "IconSource");
+                sb.AppendItem(item.CreatedItem.FormKeyNullable, "CreatedItem");
             }
-            if ((printMask?.NNAM ?? true)
-                && item.NNAM is {} NNAMItem)
+            if ((printMask?.NumberCreated ?? true)
+                && item.NumberCreated is {} NumberCreatedItem)
             {
-                sb.AppendItem(NNAMItem, "NNAM");
+                sb.AppendItem(NumberCreatedItem, "NumberCreated");
             }
-            if ((printMask?.MenuSortOrder ?? true)
-                && item.MenuSortOrder is {} MenuSortOrderItem)
+            if ((printMask?.SortingPriority ?? true)
+                && item.SortingPriority is {} SortingPriorityItem)
             {
-                sb.AppendItem(MenuSortOrderItem, "MenuSortOrder");
+                sb.AppendItem(SortingPriorityItem, "SortingPriority");
             }
-            if ((printMask?.TNAM ?? true)
-                && item.TNAM is {} TNAMItem)
+            if (printMask?.Tier ?? true)
             {
-                sb.AppendItem(TNAMItem, "TNAM");
+                sb.AppendItem(item.Tier, "Tier");
             }
             if (printMask?.CategoryKeyword ?? true)
             {
@@ -1758,29 +1892,33 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.WorkbenchKeyword.Equals(rhs.WorkbenchKeyword)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ResearchProject_FieldIndex.Resources) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ResearchProject_FieldIndex.Conditions) ?? true))
             {
-                if (!lhs.Resources.SequenceEqualNullable(rhs.Resources, (l, r) => ((ResearchProjectResourceCommon)((IResearchProjectResourceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ResearchProject_FieldIndex.Resources)))) return false;
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ResearchProject_FieldIndex.Conditions)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ResearchProject_FieldIndex.RequiredItems) ?? true))
+            {
+                if (!lhs.RequiredItems.SequenceEqualNullable(rhs.RequiredItems, (l, r) => ((ResearchProjectRequiredItemCommon)((IResearchProjectRequiredItemGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ResearchProject_FieldIndex.RequiredItems)))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ResearchProject_FieldIndex.RequiredPerks) ?? true))
             {
                 if (!lhs.RequiredPerks.SequenceEqualNullable(rhs.RequiredPerks, (l, r) => ((ResearchProjectRequiredPerkCommon)((IResearchProjectRequiredPerkGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ResearchProject_FieldIndex.RequiredPerks)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ResearchProject_FieldIndex.IconSource) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ResearchProject_FieldIndex.CreatedItem) ?? true))
             {
-                if (!lhs.IconSource.Equals(rhs.IconSource)) return false;
+                if (!lhs.CreatedItem.Equals(rhs.CreatedItem)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ResearchProject_FieldIndex.NNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ResearchProject_FieldIndex.NumberCreated) ?? true))
             {
-                if (lhs.NNAM != rhs.NNAM) return false;
+                if (lhs.NumberCreated != rhs.NumberCreated) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ResearchProject_FieldIndex.MenuSortOrder) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ResearchProject_FieldIndex.SortingPriority) ?? true))
             {
-                if (!lhs.MenuSortOrder.EqualsWithin(rhs.MenuSortOrder)) return false;
+                if (!lhs.SortingPriority.EqualsWithin(rhs.SortingPriority)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ResearchProject_FieldIndex.TNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ResearchProject_FieldIndex.Tier) ?? true))
             {
-                if (lhs.TNAM != rhs.TNAM) return false;
+                if (lhs.Tier != rhs.Tier) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ResearchProject_FieldIndex.CategoryKeyword) ?? true))
             {
@@ -1827,21 +1965,19 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(Descriptionitem);
             }
             hash.Add(item.WorkbenchKeyword);
-            hash.Add(item.Resources);
+            hash.Add(item.Conditions);
+            hash.Add(item.RequiredItems);
             hash.Add(item.RequiredPerks);
-            hash.Add(item.IconSource);
-            if (item.NNAM is {} NNAMitem)
+            hash.Add(item.CreatedItem);
+            if (item.NumberCreated is {} NumberCreateditem)
             {
-                hash.Add(NNAMitem);
+                hash.Add(NumberCreateditem);
             }
-            if (item.MenuSortOrder is {} MenuSortOrderitem)
+            if (item.SortingPriority is {} SortingPriorityitem)
             {
-                hash.Add(MenuSortOrderitem);
+                hash.Add(SortingPriorityitem);
             }
-            if (item.TNAM is {} TNAMitem)
-            {
-                hash.Add(TNAMitem);
-            }
+            hash.Add(item.Tier);
             hash.Add(item.CategoryKeyword);
             hash.Add(item.RequiredProjects);
             hash.Add(base.GetHashCode());
@@ -1877,9 +2013,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return WorkbenchKeywordInfo;
             }
-            if (obj.Resources is {} ResourcesItem)
+            if (obj.Conditions is {} ConditionsItem)
             {
-                foreach (var item in ResourcesItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in ConditionsItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.RequiredItems is {} RequiredItemsItem)
+            {
+                foreach (var item in RequiredItemsItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -1891,9 +2034,9 @@ namespace Mutagen.Bethesda.Starfield
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (FormLinkInformation.TryFactory(obj.IconSource, out var IconSourceInfo))
+            if (FormLinkInformation.TryFactory(obj.CreatedItem, out var CreatedItemInfo))
             {
-                yield return IconSourceInfo;
+                yield return CreatedItemInfo;
             }
             if (FormLinkInformation.TryFactory(obj.CategoryKeyword, out var CategoryKeywordInfo))
             {
@@ -1989,26 +2132,58 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.WorkbenchKeyword.SetTo(rhs.WorkbenchKeyword.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)ResearchProject_FieldIndex.Resources) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ResearchProject_FieldIndex.Conditions) ?? true))
             {
-                errorMask?.PushIndex((int)ResearchProject_FieldIndex.Resources);
+                errorMask?.PushIndex((int)ResearchProject_FieldIndex.Conditions);
                 try
                 {
-                    if ((rhs.Resources != null))
+                    if ((rhs.Conditions != null))
                     {
-                        item.Resources = 
-                            rhs.Resources
+                        item.Conditions = 
+                            rhs.Conditions
                             .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
                             })
-                            .ToExtendedList<ResearchProjectResource>();
+                            .ToExtendedList<Condition>();
                     }
                     else
                     {
-                        item.Resources = null;
+                        item.Conditions = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ResearchProject_FieldIndex.RequiredItems) ?? true))
+            {
+                errorMask?.PushIndex((int)ResearchProject_FieldIndex.RequiredItems);
+                try
+                {
+                    if ((rhs.RequiredItems != null))
+                    {
+                        item.RequiredItems = 
+                            rhs.RequiredItems
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ResearchProjectRequiredItem>();
+                    }
+                    else
+                    {
+                        item.RequiredItems = null;
                     }
                 }
                 catch (Exception ex)
@@ -2053,21 +2228,21 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)ResearchProject_FieldIndex.IconSource) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ResearchProject_FieldIndex.CreatedItem) ?? true))
             {
-                item.IconSource.SetTo(rhs.IconSource.FormKeyNullable);
+                item.CreatedItem.SetTo(rhs.CreatedItem.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)ResearchProject_FieldIndex.NNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ResearchProject_FieldIndex.NumberCreated) ?? true))
             {
-                item.NNAM = rhs.NNAM;
+                item.NumberCreated = rhs.NumberCreated;
             }
-            if ((copyMask?.GetShouldTranslate((int)ResearchProject_FieldIndex.MenuSortOrder) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ResearchProject_FieldIndex.SortingPriority) ?? true))
             {
-                item.MenuSortOrder = rhs.MenuSortOrder;
+                item.SortingPriority = rhs.SortingPriority;
             }
-            if ((copyMask?.GetShouldTranslate((int)ResearchProject_FieldIndex.TNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ResearchProject_FieldIndex.Tier) ?? true))
             {
-                item.TNAM = rhs.TNAM;
+                item.Tier = rhs.Tier;
             }
             if ((copyMask?.GetShouldTranslate((int)ResearchProject_FieldIndex.CategoryKeyword) ?? true))
             {
@@ -2277,14 +2452,27 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.WorkbenchKeyword,
                 header: translationParams.ConvertToCustom(RecordTypes.BNAM));
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IResearchProjectResourceGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.WriteWithCounter(
                 writer: writer,
-                items: item.Resources,
-                recordType: translationParams.ConvertToCustom(RecordTypes.FVPA),
-                transl: (MutagenWriter subWriter, IResearchProjectResourceGetter subItem, TypedWriteParams conv) =>
+                items: item.Conditions,
+                counterType: RecordTypes.CITC,
+                counterLength: 4,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
-                    ((ResearchProjectResourceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IResearchProjectRequiredItemGetter>.Instance.Write(
+                writer: writer,
+                items: item.RequiredItems,
+                recordType: translationParams.ConvertToCustom(RecordTypes.FVPA),
+                transl: (MutagenWriter subWriter, IResearchProjectRequiredItemGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ResearchProjectRequiredItemBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
@@ -2303,19 +2491,20 @@ namespace Mutagen.Bethesda.Starfield
                 });
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.IconSource,
+                item: item.CreatedItem,
                 header: translationParams.ConvertToCustom(RecordTypes.CNAM));
             UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.NNAM,
+                item: item.NumberCreated,
                 header: translationParams.ConvertToCustom(RecordTypes.NNAM));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.MenuSortOrder,
+                item: item.SortingPriority,
                 header: translationParams.ConvertToCustom(RecordTypes.SNAM));
-            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.TNAM,
+            EnumBinaryTranslation<ResearchProject.TierEnum, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Tier,
+                length: 1,
                 header: translationParams.ConvertToCustom(RecordTypes.TNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -2427,15 +2616,29 @@ namespace Mutagen.Bethesda.Starfield
                     item.WorkbenchKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)ResearchProject_FieldIndex.WorkbenchKeyword;
                 }
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CITC:
+                {
+                    item.Conditions = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.ParsePerItem(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: RecordTypes.CITC,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: Condition.TryCreateFromBinary)
+                        .CastExtendedList<Condition>();
+                    return (int)ResearchProject_FieldIndex.Conditions;
+                }
                 case RecordTypeInts.FVPA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Resources = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ResearchProjectResource>.Instance.Parse(
+                    item.RequiredItems = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ResearchProjectRequiredItem>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
-                            transl: ResearchProjectResource.TryCreateFromBinary)
-                        .CastExtendedList<ResearchProjectResource>();
-                    return (int)ResearchProject_FieldIndex.Resources;
+                            transl: ResearchProjectRequiredItem.TryCreateFromBinary)
+                        .CastExtendedList<ResearchProjectRequiredItem>();
+                    return (int)ResearchProject_FieldIndex.RequiredItems;
                 }
                 case RecordTypeInts.RQPK:
                 {
@@ -2450,26 +2653,28 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.IconSource.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)ResearchProject_FieldIndex.IconSource;
+                    item.CreatedItem.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ResearchProject_FieldIndex.CreatedItem;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NNAM = frame.ReadUInt16();
-                    return (int)ResearchProject_FieldIndex.NNAM;
+                    item.NumberCreated = frame.ReadUInt16();
+                    return (int)ResearchProject_FieldIndex.NumberCreated;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MenuSortOrder = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)ResearchProject_FieldIndex.MenuSortOrder;
+                    item.SortingPriority = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)ResearchProject_FieldIndex.SortingPriority;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TNAM = frame.ReadUInt8();
-                    return (int)ResearchProject_FieldIndex.TNAM;
+                    item.Tier = EnumBinaryTranslation<ResearchProject.TierEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)ResearchProject_FieldIndex.Tier;
                 }
                 case RecordTypeInts.KNAM:
                 {
@@ -2565,23 +2770,24 @@ namespace Mutagen.Bethesda.Starfield
         private int? _WorkbenchKeywordLocation;
         public IFormLinkNullableGetter<IKeywordGetter> WorkbenchKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _WorkbenchKeywordLocation);
         #endregion
-        public IReadOnlyList<IResearchProjectResourceGetter>? Resources { get; private set; }
+        public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
+        public IReadOnlyList<IResearchProjectRequiredItemGetter>? RequiredItems { get; private set; }
         public IReadOnlyList<IResearchProjectRequiredPerkGetter>? RequiredPerks { get; private set; }
-        #region IconSource
-        private int? _IconSourceLocation;
-        public IFormLinkNullableGetter<IStarfieldMajorRecordGetter> IconSource => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStarfieldMajorRecordGetter>(_package, _recordData, _IconSourceLocation);
+        #region CreatedItem
+        private int? _CreatedItemLocation;
+        public IFormLinkNullableGetter<IStarfieldMajorRecordGetter> CreatedItem => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStarfieldMajorRecordGetter>(_package, _recordData, _CreatedItemLocation);
         #endregion
-        #region NNAM
-        private int? _NNAMLocation;
-        public UInt16? NNAM => _NNAMLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NNAMLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
+        #region NumberCreated
+        private int? _NumberCreatedLocation;
+        public UInt16? NumberCreated => _NumberCreatedLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NumberCreatedLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
         #endregion
-        #region MenuSortOrder
-        private int? _MenuSortOrderLocation;
-        public Single? MenuSortOrder => _MenuSortOrderLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MenuSortOrderLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region SortingPriority
+        private int? _SortingPriorityLocation;
+        public Single? SortingPriority => _SortingPriorityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SortingPriorityLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        #region TNAM
-        private int? _TNAMLocation;
-        public Byte? TNAM => _TNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TNAMLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
+        #region Tier
+        private int? _TierLocation;
+        public ResearchProject.TierEnum Tier => _TierLocation.HasValue ? (ResearchProject.TierEnum)HeaderTranslation.ExtractSubrecordMemory(_recordData, _TierLocation!.Value, _package.MetaData.Constants)[0] : default(ResearchProject.TierEnum);
         #endregion
         #region CategoryKeyword
         private int? _CategoryKeywordLocation;
@@ -2672,15 +2878,29 @@ namespace Mutagen.Bethesda.Starfield
                     _WorkbenchKeywordLocation = (stream.Position - offset);
                     return (int)ResearchProject_FieldIndex.WorkbenchKeyword;
                 }
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CITC:
+                {
+                    this.Conditions = BinaryOverlayList.FactoryByCountPerItem<IConditionGetter>(
+                        stream: stream,
+                        package: _package,
+                        countLength: 4,
+                        trigger: Condition_Registration.TriggerSpecs,
+                        countType: RecordTypes.CITC,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
+                    return (int)ResearchProject_FieldIndex.Conditions;
+                }
                 case RecordTypeInts.FVPA:
                 {
-                    this.Resources = BinaryOverlayList.FactoryByStartIndexWithTrigger<IResearchProjectResourceGetter>(
+                    this.RequiredItems = BinaryOverlayList.FactoryByStartIndexWithTrigger<IResearchProjectRequiredItemGetter>(
                         stream: stream,
                         package: _package,
                         finalPos: finalPos,
                         itemLength: 12,
-                        getter: (s, p) => ResearchProjectResourceBinaryOverlay.ResearchProjectResourceFactory(s, p));
-                    return (int)ResearchProject_FieldIndex.Resources;
+                        getter: (s, p) => ResearchProjectRequiredItemBinaryOverlay.ResearchProjectRequiredItemFactory(s, p));
+                    return (int)ResearchProject_FieldIndex.RequiredItems;
                 }
                 case RecordTypeInts.RQPK:
                 {
@@ -2694,23 +2914,23 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _IconSourceLocation = (stream.Position - offset);
-                    return (int)ResearchProject_FieldIndex.IconSource;
+                    _CreatedItemLocation = (stream.Position - offset);
+                    return (int)ResearchProject_FieldIndex.CreatedItem;
                 }
                 case RecordTypeInts.NNAM:
                 {
-                    _NNAMLocation = (stream.Position - offset);
-                    return (int)ResearchProject_FieldIndex.NNAM;
+                    _NumberCreatedLocation = (stream.Position - offset);
+                    return (int)ResearchProject_FieldIndex.NumberCreated;
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _MenuSortOrderLocation = (stream.Position - offset);
-                    return (int)ResearchProject_FieldIndex.MenuSortOrder;
+                    _SortingPriorityLocation = (stream.Position - offset);
+                    return (int)ResearchProject_FieldIndex.SortingPriority;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _TNAMLocation = (stream.Position - offset);
-                    return (int)ResearchProject_FieldIndex.TNAM;
+                    _TierLocation = (stream.Position - offset);
+                    return (int)ResearchProject_FieldIndex.Tier;
                 }
                 case RecordTypeInts.KNAM:
                 {

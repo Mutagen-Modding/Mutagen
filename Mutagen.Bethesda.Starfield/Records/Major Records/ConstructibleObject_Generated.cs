@@ -1803,6 +1803,7 @@ namespace Mutagen.Bethesda.Starfield
         IConstructibleObjectGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IConstructibleObjectInternal>,
+        IResearchResourceTarget,
         IResourceTarget,
         IStarfieldMajorRecordInternal
     {
@@ -1848,6 +1849,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkContainerGetter,
         ILoquiObject<IConstructibleObjectGetter>,
         IMapsToGetter<IConstructibleObjectGetter>,
+        IResearchResourceTargetGetter,
         IResourceTargetGetter
     {
         static new ILoquiRegistration StaticRegistration => ConstructibleObject_Registration.Instance;

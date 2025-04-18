@@ -1577,6 +1577,7 @@ namespace Mutagen.Bethesda.Starfield
         IModeled,
         IObjectBounded,
         IOutfitTarget,
+        IResearchResourceTarget,
         IResourceTarget,
         IScripted,
         IStarfieldMajorRecordInternal
@@ -1634,6 +1635,7 @@ namespace Mutagen.Bethesda.Starfield
         IModeledGetter,
         IObjectBoundedGetter,
         IOutfitTargetGetter,
+        IResearchResourceTargetGetter,
         IResourceTargetGetter,
         IScriptedGetter
     {

@@ -177,8 +177,17 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - Faction
 - Race
 ### IResearchResourceTarget
+- Ammunition
+- Armor
+- Book
+- ConstructibleObject
 - Ingestible
+- Key
+- LeveledItem
+- Light
+- MiscItem
 - Resource
+- Weapon
 ### IResourceTarget
 - ConstructibleObject
 - LeveledItem
@@ -224,6 +233,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IBaseObject
 - IConstructibleObjectTarget
 - IItem
+- IResearchResourceTarget
 - IStaticTarget
 ### AObjectModification
 - IBaseObject
@@ -239,6 +249,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IConstructibleObjectTarget
 - IItem
 - IOutfitTarget
+- IResearchResourceTarget
 ### ArtObject
 - IBaseObject
 ### AudioOcclusionPrimitive
@@ -252,6 +263,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IBaseObject
 - IConstructibleObjectTarget
 - IItem
+- IResearchResourceTarget
 - IStaticTarget
 ### Cell
 - ICellOrObject
@@ -259,6 +271,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - ISpaceCellSpawn
 ### ConstructibleObject
 - IBaseObject
+- IResearchResourceTarget
 - IResourceTarget
 ### Container
 - IBaseObject
@@ -308,6 +321,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IStaticTarget
 ### Key
 - IItem
+- IResearchResourceTarget
 ### Keyword
 - IKeywordLinkedReference
 ### LegendaryItem
@@ -322,6 +336,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IHarvestTarget
 - IItem
 - IOutfitTarget
+- IResearchResourceTarget
 - IResourceTarget
 ### LeveledNpc
 - IBaseObject
@@ -336,6 +351,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### Light
 - IBaseObject
 - IEmittance
+- IResearchResourceTarget
 ### LocationReferenceType
 - ILocationRecord
 ### MiscItem
@@ -343,6 +359,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IConstructibleObjectTarget
 - IHarvestTarget
 - IItem
+- IResearchResourceTarget
 - IStaticTarget
 ### MoveableStatic
 - IBaseObject
@@ -432,6 +449,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IBindableEquipment
 - IConstructibleObjectTarget
 - IItem
+- IResearchResourceTarget
 - IStaticTarget
 ### Worldspace
 - IComplexLocation

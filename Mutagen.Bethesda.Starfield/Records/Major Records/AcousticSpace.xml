@@ -4,17 +4,16 @@
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
-      <Float name="ODRT" recordType="ODRT" unknown="true" />
-      <RefDirect name="ASLS" recordType="ASLS" unknown="true" refName="SoundReference" />
-      <RefDirect name="WED0" recordType="WED0" unknown="true" refName="SoundReference" />
-      <RefDirect name="WED1" recordType="WED1" unknown="true" refName="SoundReference" />
+      <RefDirect name="LoopingSound" recordType="ASLS" refName="SoundReference" />
+      <RefDirect name="InteriorSound" recordType="WED0" refName="SoundReference" />
+      <RefDirect name="ExteriorSound" recordType="WED1" refName="SoundReference" />
       <FormLink name="AmbientSet" refName="AmbienceSet" recordType="AAMB" />
       <FormLink name="Music" refName="MusicType" recordType="AMUS" />
       <FormLink name="EnvironmentType" refName="ReverbParameters" recordType="BNAM" />
-      <Float name="AEAR" recordType="AEAR" unknown="true" />
-      <Float name="FLTV" recordType="FLTV" unknown="true" />
+      <Float name="ExteriorWeatherAttenuation" recordType="AEAR" nullable="false" />
+      <Float name="InteriorExteriorRatio" recordType="FLTV" />
       <Bool name="IsInterior" recordType="XTRI" byteLength="1" nullable="false" />
-      <Bool name="BOLV" recordType="BOLV" byteLength="1" />
+      <Bool name="AllowExterior" recordType="BOLV" byteLength="1" nullable="false" />
       <ByteArray name="DEVT" recordType="DEVT" />
       <ByteArray name="ASDF" recordType="ASDF" />
     </Fields>

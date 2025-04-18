@@ -30,6 +30,7 @@
     <LinkInterface>IConstructibleObjectTarget</LinkInterface>
     <LinkInterface>IHarvestTarget</LinkInterface>
     <LinkInterface>IBaseObject</LinkInterface>
+    <LinkInterface>IResearchResourceTarget</LinkInterface>
   </Object>
   <Object name="LeveledItemEntry" objType="Subrecord">
     <Fields>

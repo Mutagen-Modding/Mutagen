@@ -2470,6 +2470,9 @@
     <Compile Include="Records\Major Records\RegionWeather.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ResearchProject.cs">
+      <DependentUpon>ResearchProject.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Resource.cs">
       <DependentUpon>Resource.xml</DependentUpon>
     </Compile>
@@ -6544,9 +6547,6 @@
     <Compile Include="Records\Common Subrecords\OrbitalDataComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ResearchProjectResource_Generated.cs">
-      <DependentUpon>ResearchProject.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\ResearchProjectRequiredPerk_Generated.cs">
       <DependentUpon>ResearchProject.xml</DependentUpon>
     </Compile>
@@ -6779,6 +6779,9 @@
     </Compile>
     <Compile Include="Records\GameplayOptionReward_Generated.cs">
       <DependentUpon>GameplayOptions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ResearchProjectRequiredItem_Generated.cs">
+      <DependentUpon>ResearchProject.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>
