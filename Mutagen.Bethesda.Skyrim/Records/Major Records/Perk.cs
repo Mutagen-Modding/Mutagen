@@ -31,97 +31,99 @@ public partial class Perk
 
 partial class PerkBinaryCreateTranslation
 {
+    public record Payload
+    {
+        public SubrecordFrame? DATA { get; set; }
+        public SubrecordFrame? EPF2 { get; set; }
+        public SubrecordFrame? EPF3 { get; set; }
+        public SubrecordFrame? EPFD { get; set; }
+        public SubrecordFrame? EPFT { get; set; }
+        public List<PerkCondition>? Conditions { get; set; }
+    }
+
+    private static Payload ReadPayload<TStream>(TStream stream)
+        where TStream : IMutagenReadStream
+    {
+        var ret = new Payload();
+        while (stream.TryReadSubrecord(out var subFrame))
+        {
+            switch (subFrame.RecordTypeInt)
+            {
+                case RecordTypeInts.DATA:
+                    ret.DATA = subFrame;
+                    break;
+                case RecordTypeInts.EPF2:
+                    ret.EPF2 = subFrame;
+                    break;
+                case RecordTypeInts.EPF3:
+                    ret.EPF3 = subFrame;
+                    break;
+                case RecordTypeInts.EPFD:
+                    ret.EPFD = subFrame;
+                    break;
+                case RecordTypeInts.EPFT:
+                    ret.EPFT = subFrame;
+                    break;
+                case RecordTypeInts.PRKC:
+                case RecordTypeInts.CTDA:
+                    stream.Position -= subFrame.TotalLength;
+                    ret.Conditions = ListBinaryTranslation<PerkCondition>.Instance.Parse(
+                        reader: new MutagenFrame(stream),
+                        transl: (MutagenFrame r, [MaybeNullWhen(false)] out PerkCondition listSubItem) =>
+                        {
+                            return LoquiBinaryTranslation<PerkCondition>.Instance.Parse(
+                                frame: r,
+                                item: out listSubItem!);
+                        });
+                    break;
+                default:
+                    stream.Position -= subFrame.TotalLength;
+                    return ret;
+            }
+        }
+
+        return ret;
+    }
+    
     public static APerkEffect ParseEffect<TStream>(TStream stream, SubrecordFrame prkeFrame)
         where TStream : IMutagenReadStream
     {
         var type = (Perk.EffectType)prkeFrame.Content[0];
         var rank = prkeFrame.Content[1];
         var priority = prkeFrame.Content[2];
+
+        var payload = ReadPayload(stream);
+        
         APerkEffect effect;
-        if (stream.TryReadSubrecord(RecordTypes.DATA, out var dataFrame))
+        if (payload.DATA != null)
         {
             switch (type)
             {
                 case Perk.EffectType.Quest:
                     effect = new PerkQuestEffect()
                     {
-                        Quest = FormLinkBinaryTranslation.Instance.Factory<IQuestGetter>(stream.MetaData, dataFrame.Content),
-                        Stage = dataFrame.Content[4],
-                        Unknown = dataFrame.Content.Slice(5, 3).ToArray(),
+                        Quest = FormLinkBinaryTranslation.Instance.Factory<IQuestGetter>(stream.MetaData, payload.DATA.Value.Content),
+                        Stage = payload.DATA.Value.Content[4],
+                        Unknown = payload.DATA.Value.Content.Slice(5, 3).ToArray(),
                     };
-                    effect.Conditions.SetTo(
-                        ListBinaryTranslation<PerkCondition>.Instance.Parse(
-                            reader: new MutagenFrame(stream),
-                            transl: (MutagenFrame r, [MaybeNullWhen(false)] out PerkCondition listSubItem) =>
-                            {
-                                return LoquiBinaryTranslation<PerkCondition>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!);
-                            }));
                     break;
                 case Perk.EffectType.Ability:
                     effect = new PerkAbilityEffect()
                     {
-                        Ability = FormLinkBinaryTranslation.Instance.Factory<ISpellGetter>(stream.MetaData, dataFrame.Content),
+                        Ability = FormLinkBinaryTranslation.Instance.Factory<ISpellGetter>(stream.MetaData, payload.DATA.Value.Content),
                     };
-                    effect.Conditions.SetTo(
-                        ListBinaryTranslation<PerkCondition>.Instance.Parse(
-                            reader: new MutagenFrame(stream),
-                            transl: (MutagenFrame r, [MaybeNullWhen(false)] out PerkCondition listSubItem) =>
-                            {
-                                return LoquiBinaryTranslation<PerkCondition>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!);
-                            }));
                     break;
                 case Perk.EffectType.EntryPoint:
-                    var entryPt = (APerkEntryPointEffect.EntryType)dataFrame.Content[0];
-                    var func = (APerkEntryPointEffect.FunctionType)dataFrame.Content[1];
-                    var tabCount = dataFrame.Content[2];
-                    var conditions = ListBinaryTranslation<PerkCondition>.Instance.Parse(
-                            reader: new MutagenFrame(stream),
-                            transl: (MutagenFrame r, [MaybeNullWhen(false)] out PerkCondition listSubItem) =>
-                            {
-                                return LoquiBinaryTranslation<PerkCondition>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!);
-                            })
-                        .ToList();
-                    ReadOnlyMemorySlice<byte>? epf2 = null;
-                    ReadOnlyMemorySlice<byte>? epf3 = null;
-                    ReadOnlyMemorySlice<byte>? epfd = null;
-                    ReadOnlyMemorySlice<byte>? epft = null;
-                    while (stream.TryReadSubrecord(out var subFrame))
-                    {
-                        switch (subFrame.RecordTypeInt)
-                        {
-                            case RecordTypeInts.EPF2:
-                                epf2 = subFrame.Content;
-                                break;
-                            case RecordTypeInts.EPF3:
-                                epf3 = subFrame.Content;
-                                break;
-                            case RecordTypeInts.EPFD:
-                                epfd = subFrame.Content;
-                                break;
-                            case RecordTypeInts.EPFT:
-                                epft = subFrame.Content;
-                                break;
-                            default:
-                                stream.Position -= subFrame.Content.Length;
-                                goto searchDone;
-                        }
-                    }
-                    searchDone:
+                    var entryPt = (APerkEntryPointEffect.EntryType)payload.DATA.Value.Content[0];
+                    var func = (APerkEntryPointEffect.FunctionType)payload.DATA.Value.Content[1];
+                    var tabCount = payload.DATA.Value.Content[2];
                     APerkEntryPointEffect entryPointEffect;
                     switch (func)
                     {
                         case APerkEntryPointEffect.FunctionType.SetValue:
                         case APerkEntryPointEffect.FunctionType.AddValue:
                         case APerkEntryPointEffect.FunctionType.MultiplyValue:
-                            if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
-                            if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
-                            if (epft == null && epfd == null)
+                            if (payload.EPFT == null && payload.EPFD == null)
                             {
                                 entryPointEffect = new PerkEntryPointModifyValue()
                                 {
@@ -137,20 +139,20 @@ partial class PerkBinaryCreateTranslation
                             }
                             else
                             {
-                                if (!epft.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointModifyValue)} did not have expected EPFT record");
-                                if (!epfd.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointModifyValue)} did not have expected EPFD record");
-                                var epftType = (APerkEntryPointEffect.ParameterType)epft.Value[0];
+                                if (!payload.EPFT.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointModifyActorValue)} did not have expected EPFT record");
+                                if (!payload.EPFD.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointModifyActorValue)} did not have expected EPFD record");
+                                var epftType = (APerkEntryPointEffect.ParameterType)payload.EPFT.Value.Content[0];
                                 if (epftType != APerkEntryPointEffect.ParameterType.Float
                                     && epftType != APerkEntryPointEffect.ParameterType.FloatFloat)
                                 {
-                                    throw new MalformedDataException($"{nameof(PerkEntryPointModifyValue)} did not have expected parameter type flag: {(APerkEntryPointEffect.ParameterType)epft.Value[0]}");
+                                    throw new MalformedDataException($"{nameof(PerkEntryPointModifyValue)} did not have expected parameter type flag: {(APerkEntryPointEffect.ParameterType)payload.EPFT.Value.Content[0]}");
                                 }
 
                                 if (epftType == APerkEntryPointEffect.ParameterType.Float)
                                 {
                                     entryPointEffect = new PerkEntryPointModifyValue()
                                     {
-                                        Value = epfd.Value.Float(),
+                                        Value = payload.EPFD.Value.Content.Float(),
                                         Modification = func switch
                                         {
                                             APerkEntryPointEffect.FunctionType.SetValue => PerkEntryPointModifyValue.ModificationType.Set,
@@ -164,8 +166,8 @@ partial class PerkBinaryCreateTranslation
                                 {
                                     entryPointEffect = new PerkEntryPointModifyValues()
                                     {
-                                        Value = epfd.Value.Float(),
-                                        Value2 = epfd.Value.Slice(4).Float(),
+                                        Value = payload.EPFD.Value.Content.Float(),
+                                        Value2 = payload.EPFD.Value.Content.Slice(4).Float(),
                                         Modification = func switch
                                         {
                                             APerkEntryPointEffect.FunctionType.SetValue => PerkEntryPointModifyValue.ModificationType.Set,
@@ -178,36 +180,32 @@ partial class PerkBinaryCreateTranslation
                             }
                             break;
                         case APerkEntryPointEffect.FunctionType.AddRangeToValue:
-                            if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
-                            if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
-                            if (!epft.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointAddRangeToValue)} did not have expected EPFT record");
-                            if (!epfd.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointAddRangeToValue)} did not have expected EPFD record");
-                            if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.FloatFloat)
+                            if (!payload.EPFT.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointModifyActorValue)} did not have expected EPFT record");
+                            if (!payload.EPFD.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointModifyActorValue)} did not have expected EPFD record");
+                            if (payload.EPFT.Value.Content[0] != (byte)APerkEntryPointEffect.ParameterType.FloatFloat)
                             {
-                                throw new MalformedDataException($"{nameof(PerkEntryPointAddRangeToValue)} did not have expected parameter type flag: {(APerkEntryPointEffect.ParameterType)epft.Value[0]}");
+                                throw new MalformedDataException($"{nameof(PerkEntryPointAddRangeToValue)} did not have expected parameter type flag: {(APerkEntryPointEffect.ParameterType)payload.EPFT.Value.Content[0]}");
                             }
                             entryPointEffect = new PerkEntryPointAddRangeToValue()
                             {
-                                From = epfd.Value.Float(),
-                                To = epfd.Value.Slice(4).Float(),
+                                From = payload.EPFD.Value.Content.Float(),
+                                To = payload.EPFD.Value.Content.Slice(4).Float(),
                             };
                             break;
                         case APerkEntryPointEffect.FunctionType.SetToActorValueMult:
                         case APerkEntryPointEffect.FunctionType.MultiplyActorValueMult:
                         case APerkEntryPointEffect.FunctionType.MultiplyOnePlusActorValueMult:
                         case APerkEntryPointEffect.FunctionType.AddActorValueMult:
-                            if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyActorValue)} had EPF2 unexpectedly");
-                            if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyActorValue)} had EPF3 unexpectedly");
-                            if (!epft.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointModifyActorValue)} did not have expected EPFT record");
-                            if (!epfd.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointModifyActorValue)} did not have expected EPFD record");
-                            if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.FloatFloat)
+                            if (!payload.EPFT.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointModifyActorValue)} did not have expected EPFT record");
+                            if (!payload.EPFD.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointModifyActorValue)} did not have expected EPFD record");
+                            if (payload.EPFT.Value.Content[0] != (byte)APerkEntryPointEffect.ParameterType.FloatFloat)
                             {
-                                throw new MalformedDataException($"{nameof(PerkEntryPointModifyActorValue)} did not have expected parameter type flag: {(APerkEntryPointEffect.ParameterType)epft.Value[0]}");
+                                throw new MalformedDataException($"{nameof(PerkEntryPointModifyActorValue)} did not have expected parameter type flag: {(APerkEntryPointEffect.ParameterType)payload.EPFT.Value.Content[0]}");
                             }
                             entryPointEffect = new PerkEntryPointModifyActorValue()
                             {
-                                ActorValue = (ActorValue)BinaryPrimitives.ReadSingleLittleEndian(epfd.Value),
-                                Value = epfd.Value.Slice(4).Float(),
+                                ActorValue = (ActorValue)BinaryPrimitives.ReadSingleLittleEndian(payload.EPFD.Value.Content),
+                                Value = payload.EPFD.Value.Content.Slice(4).Float(),
                                 Modification = func switch
                                 {
                                     APerkEntryPointEffect.FunctionType.SetToActorValueMult => PerkEntryPointModifyActorValue.ModificationType.SetToAVMult,
@@ -220,11 +218,9 @@ partial class PerkBinaryCreateTranslation
                             break;
                         case APerkEntryPointEffect.FunctionType.AbsoluteValue:
                         case APerkEntryPointEffect.FunctionType.NegativeAbsoluteValue:
-                            if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointAbsoluteValue)} had EPF2 unexpectedly");
-                            if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointAbsoluteValue)} had EPF3 unexpectedly");
-                            if (epft.HasValue && epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.None)
+                            if (payload.EPFT.HasValue && payload.EPFT.Value.Content[0] != (byte)APerkEntryPointEffect.ParameterType.None)
                             {
-                                throw new MalformedDataException($"{nameof(PerkEntryPointAbsoluteValue)} did not have expected parameter type flag: {(APerkEntryPointEffect.ParameterType)epft.Value[0]}");
+                                throw new MalformedDataException($"{nameof(PerkEntryPointAbsoluteValue)} did not have expected parameter type flag: {(APerkEntryPointEffect.ParameterType)payload.EPFT.Value.Content[0]}");
                             }
                             entryPointEffect = new PerkEntryPointAbsoluteValue()
                             {
@@ -232,73 +228,58 @@ partial class PerkBinaryCreateTranslation
                             };
                             break;
                         case APerkEntryPointEffect.FunctionType.AddLeveledList:
-                            if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointAddLeveledItem)} had EPF2 unexpectedly");
-                            if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointAddLeveledItem)} had EPF3 unexpectedly");
-                            if (!epft.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointAddLeveledItem)} did not have expected EPFT record");
-                            if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.LeveledItem)
+                            if (!payload.EPFT.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointAddActivateChoice)} did not have expected EPFT record");
+                            if (payload.EPFT.Value.Content[0] != (byte)APerkEntryPointEffect.ParameterType.LeveledItem)
                             {
-                                throw new MalformedDataException($"{nameof(PerkEntryPointAddLeveledItem)} did not have expected parameter type flag: {(APerkEntryPointEffect.ParameterType)epft.Value[0]}");
+                                throw new MalformedDataException($"{nameof(PerkEntryPointAddLeveledItem)} did not have expected parameter type flag: {(APerkEntryPointEffect.ParameterType)payload.EPFT.Value.Content[0]}");
                             }
                             entryPointEffect = new PerkEntryPointAddLeveledItem()
                             {
-                                Item = FormLinkBinaryTranslation.Instance.Factory<ILeveledItemGetter>(stream.MetaData, epfd)
+                                Item = FormLinkBinaryTranslation.Instance.Factory<ILeveledItemGetter>(stream.MetaData, payload.EPFD?.Content)
                             };
                             break;
                         case APerkEntryPointEffect.FunctionType.AddActivateChoice:
-                            if (!epft.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointAddActivateChoice)} did not have expected EPFT record");
-                            if (!epf3.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointAddActivateChoice)} did not have expected EPF3 record");
-                            if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.SpellWithStrings)
+                            if (!payload.EPFT.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointAddActivateChoice)} did not have expected EPFT record");
+                            if (payload.EPFT.Value.Content[0] != (byte)APerkEntryPointEffect.ParameterType.SpellWithStrings)
                             {
-                                throw new MalformedDataException($"{nameof(PerkEntryPointAddActivateChoice)} did not have expected parameter type flag: {(APerkEntryPointEffect.ParameterType)epft.Value[0]}");
+                                throw new MalformedDataException($"{nameof(PerkEntryPointAddActivateChoice)} did not have expected parameter type flag: {(APerkEntryPointEffect.ParameterType)payload.EPFT.Value.Content[0]}");
                             }
                             entryPointEffect = new PerkEntryPointAddActivateChoice()
                             {
-                                Spell = FormLinkBinaryTranslation.Instance.FactoryNullable<ISpellGetter>(stream.MetaData, epfd),
-                                ButtonLabel = epf2.HasValue ? StringBinaryTranslation.Instance.Parse(epf2.Value, StringsSource.Normal, stream.MetaData, eager: true) : null,
-                                Flags = new PerkScriptFlag()
-                                {
-                                    Flags = (PerkScriptFlag.Flag)BinaryPrimitives.ReadInt16LittleEndian(epf3.Value),
-                                    FragmentIndex = BinaryPrimitives.ReadUInt16LittleEndian(epf3.Value.Slice(2))
-                                },
+                                Spell = FormLinkBinaryTranslation.Instance.FactoryNullable<ISpellGetter>(stream.MetaData, payload.EPFD?.Content),
                             };
                             break;
                         case APerkEntryPointEffect.FunctionType.SelectSpell:
-                            if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointSelectSpell)} had EPF2 unexpectedly");
-                            if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointSelectSpell)} had EPF3 unexpectedly");
-                            if (!epft.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointSelectSpell)} did not have expected EPFT record");
-                            if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.Spell)
+                            if (!payload.EPFT.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointSelectText)} did not have expected EPFT record");
+                            if (payload.EPFT.Value.Content[0] != (byte)APerkEntryPointEffect.ParameterType.Spell)
                             {
-                                throw new MalformedDataException($"{nameof(PerkEntryPointSelectSpell)} did not have expected parameter type flag: {(APerkEntryPointEffect.ParameterType)epft.Value[0]}");
+                                throw new MalformedDataException($"{nameof(PerkEntryPointSelectSpell)} did not have expected parameter type flag: {(APerkEntryPointEffect.ParameterType)payload.EPFT.Value.Content[0]}");
                             }
                             entryPointEffect = new PerkEntryPointSelectSpell()
                             {
-                                Spell = FormLinkBinaryTranslation.Instance.Factory<ISpellGetter>(stream.MetaData, epfd),
+                                Spell = FormLinkBinaryTranslation.Instance.Factory<ISpellGetter>(stream.MetaData, payload.EPFD?.Content),
                             };
                             break;
                         case APerkEntryPointEffect.FunctionType.SelectText:
-                            if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointSelectText)} had EPF2 unexpectedly");
-                            if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointSelectText)} had EPF3 unexpectedly");
-                            if (!epft.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointSelectText)} did not have expected EPFT record");
-                            if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.String)
+                            if (!payload.EPFT.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointSelectText)} did not have expected EPFT record");
+                            if (payload.EPFT.Value.Content[0] != (byte)APerkEntryPointEffect.ParameterType.String)
                             {
-                                throw new MalformedDataException($"{nameof(PerkEntryPointSelectText)} did not have expected parameter type flag: {(APerkEntryPointEffect.ParameterType)epft.Value[0]}");
+                                throw new MalformedDataException($"{nameof(PerkEntryPointSelectText)} did not have expected parameter type flag: {(APerkEntryPointEffect.ParameterType)payload.EPFT.Value.Content[0]}");
                             }
                             entryPointEffect = new PerkEntryPointSelectText()
                             {
-                                Text = epfd.HasValue ? BinaryStringUtility.ProcessWholeToZString(epfd.Value, stream.MetaData.Encodings.NonTranslated) : string.Empty
+                                Text = payload.EPFD.HasValue ? BinaryStringUtility.ProcessWholeToZString(payload.EPFD.Value.Content, stream.MetaData.Encodings.NonTranslated) : string.Empty
                             };
                             break;
                         case APerkEntryPointEffect.FunctionType.SetText:
-                            if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointSetText)} had EPF2 unexpectedly");
-                            if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointSetText)} had EPF3 unexpectedly");
-                            if (!epft.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointSetText)} did not have expected EPFT record");
-                            if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.LString)
+                            if (!payload.EPFT.HasValue) throw new MalformedDataException($"{nameof(PerkEntryPointSetText)} did not have expected EPFT record");
+                            if (payload.EPFT.Value.Content[0] != (byte)APerkEntryPointEffect.ParameterType.LString)
                             {
-                                throw new MalformedDataException($"{nameof(PerkEntryPointSetText)} did not have expected parameter type flag: {(APerkEntryPointEffect.ParameterType)epft.Value[0]}");
+                                throw new MalformedDataException($"{nameof(PerkEntryPointSetText)} did not have expected parameter type flag: {(APerkEntryPointEffect.ParameterType)payload.EPFT.Value.Content[0]}");
                             }
                             entryPointEffect = new PerkEntryPointSetText()
                             {
-                                Text = epfd.HasValue ? StringBinaryTranslation.Instance.Parse(epfd.Value, StringsSource.Normal, stream.MetaData, eager: true) : (TranslatedString)string.Empty,
+                                Text = payload.EPFD.HasValue ? StringBinaryTranslation.Instance.Parse(payload.EPFD.Value.Content, StringsSource.Normal, stream.MetaData, eager: true) : (TranslatedString)string.Empty,
                             };
                             break;
                         default:
@@ -306,7 +287,6 @@ partial class PerkBinaryCreateTranslation
                     }
                     entryPointEffect.EntryPoint = entryPt;
                     entryPointEffect.PerkConditionTabCount = tabCount;
-                    entryPointEffect.Conditions.SetTo(conditions);
                     effect = entryPointEffect;
                     break;
                 default:
@@ -322,8 +302,26 @@ partial class PerkBinaryCreateTranslation
                 _ => throw new MalformedDataException($"Expected DATA subrecord that did not exist."),
             };
         }
+        
         effect.Rank = rank;
         effect.Priority = priority;
+        if (payload.Conditions != null)
+        {
+            effect.Conditions.SetTo(payload.Conditions);
+        }
+        if (payload.EPF2 != null)
+        {
+            effect.ButtonLabel = StringBinaryTranslation.Instance.Parse(payload.EPF2.Value.Content, StringsSource.Normal, stream.MetaData, eager: true);
+        }
+        if (payload.EPF3 != null)
+        {
+            effect.Flags = new PerkScriptFlag()
+            {
+                Flags = (PerkScriptFlag.Flag)BinaryPrimitives.ReadInt16LittleEndian(payload.EPF3.Value.Content),
+                FragmentIndex = BinaryPrimitives.ReadUInt16LittleEndian(payload.EPF3.Value.Content.Slice(2))
+            };
+        }
+        
         if (stream.TryReadSubrecord(RecordTypes.EPFT, out var epftFrame)
             && epftFrame.ContentLength != 1
             && epftFrame.Content[0] != (byte)APerkEntryPointEffect.ParameterType.None)

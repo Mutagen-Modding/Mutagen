@@ -29,6 +29,9 @@
         </Fields>
       </Data>
       <RefList name="Conditions" refName="PerkCondition" binary="NoGeneration" />
+      <CustomLogic name="FunctionParameters" recordType="EPFT" binary="NoGeneration" />
+      <String name="ButtonLabel" translated="Normal" recordType="EPF2" nullable="True" binary="NoGeneration" />
+      <RefDirect name="Flags" refName="PerkScriptFlag" nullable="False" binary="NoGeneration" />
     </Fields>
   </Object>
   <Object name="PerkQuestEffect" objType="Subrecord" baseClass="APerkEffect">
@@ -47,7 +50,6 @@
     <Fields>
       <Enum name="EntryPoint" enumName="APerkEntryPointEffect.EntryType" byteLength="1" />
       <UInt8 name="PerkConditionTabCount" />
-      <CustomLogic name="FunctionParameters" recordType="EPFT" />
     </Fields>
   </Object>
   <Object name="PerkEntryPointModifyValue" objType="Subrecord" baseClass="APerkEntryPointEffect">
@@ -89,8 +91,6 @@
   <Object name="PerkEntryPointAddActivateChoice" objType="Subrecord" baseClass="APerkEntryPointEffect">
     <Fields>
       <FormLink name="Spell" refName="Spell" nullable="True" />
-      <String name="ButtonLabel" translated="Normal" recordType="EPF2" nullable="True" />
-      <RefDirect name="Flags" refName="PerkScriptFlag" nullable="False" />
     </Fields>
   </Object>
   <Object name="PerkEntryPointSelectSpell" objType="Subrecord" baseClass="APerkEntryPointEffect">

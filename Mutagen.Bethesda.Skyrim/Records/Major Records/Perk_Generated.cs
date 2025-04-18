@@ -1420,7 +1420,10 @@ namespace Mutagen.Bethesda.Skyrim
                 RecordTypes.NNAM,
                 RecordTypes.PRKE,
                 RecordTypes.PRKF,
-                RecordTypes.PRKC);
+                RecordTypes.PRKC,
+                RecordTypes.EPFT,
+                RecordTypes.EPF2,
+                RecordTypes.EPF3);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

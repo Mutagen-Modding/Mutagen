@@ -111,12 +111,16 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Rank,
                 TItem Priority,
                 TItem Conditions,
+                TItem ButtonLabel,
+                TItem Flags,
                 TItem EntryPoint,
                 TItem PerkConditionTabCount)
             : base(
                 Rank: Rank,
                 Priority: Priority,
-                Conditions: Conditions)
+                Conditions: Conditions,
+                ButtonLabel: ButtonLabel,
+                Flags: Flags)
             {
                 this.EntryPoint = EntryPoint;
                 this.PerkConditionTabCount = PerkConditionTabCount;
@@ -591,8 +595,10 @@ namespace Mutagen.Bethesda.Skyrim
         Rank = 0,
         Priority = 1,
         Conditions = 2,
-        EntryPoint = 3,
-        PerkConditionTabCount = 4,
+        ButtonLabel = 3,
+        Flags = 4,
+        EntryPoint = 5,
+        PerkConditionTabCount = 6,
     }
     #endregion
 
@@ -605,7 +611,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(APerkEntryPointEffect.Mask<>);
 
@@ -635,13 +641,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.PRKE);
-            var all = RecordCollection.Factory(
-                RecordTypes.PRKE,
-                RecordTypes.EPFT);
-            return new RecordTriggerSpecs(
-                allRecordTypes: all,
-                triggeringRecordTypes: triggers);
+            var all = RecordCollection.Factory(RecordTypes.PRKE);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(APerkEntryPointEffectBinaryWriteTranslation);
         #region Interface
@@ -823,6 +824,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case APerkEffect_FieldIndex.Priority:
                     return (APerkEntryPointEffect_FieldIndex)((int)index);
                 case APerkEffect_FieldIndex.Conditions:
+                    return (APerkEntryPointEffect_FieldIndex)((int)index);
+                case APerkEffect_FieldIndex.ButtonLabel:
+                    return (APerkEntryPointEffect_FieldIndex)((int)index);
+                case APerkEffect_FieldIndex.Flags:
                     return (APerkEntryPointEffect_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1047,33 +1052,6 @@ namespace Mutagen.Bethesda.Skyrim
             writer.Write(item.PerkConditionTabCount);
         }
 
-        public static void WriteRecordTypes(
-            IAPerkEntryPointEffectGetter item,
-            MutagenWriter writer,
-            TypedWriteParams translationParams)
-        {
-            APerkEffectBinaryWriteTranslation.WriteRecordTypes(
-                item: item,
-                writer: writer,
-                translationParams: translationParams);
-            APerkEntryPointEffectBinaryWriteTranslation.WriteBinaryFunctionParameters(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryFunctionParametersCustom(
-            MutagenWriter writer,
-            IAPerkEntryPointEffectGetter item);
-
-        public static void WriteBinaryFunctionParameters(
-            MutagenWriter writer,
-            IAPerkEntryPointEffectGetter item)
-        {
-            WriteBinaryFunctionParametersCustom(
-                writer: writer,
-                item: item);
-        }
-
         public virtual void Write(
             MutagenWriter writer,
             IAPerkEntryPointEffectGetter item,
@@ -1082,7 +1060,7 @@ namespace Mutagen.Bethesda.Skyrim
             WriteEmbedded(
                 item: item,
                 writer: writer);
-            WriteRecordTypes(
+            APerkEffectBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1126,42 +1104,6 @@ namespace Mutagen.Bethesda.Skyrim
                 length: 1);
             item.PerkConditionTabCount = frame.ReadUInt8();
         }
-
-        public static ParseResult FillBinaryRecordTypes(
-            IAPerkEntryPointEffect item,
-            MutagenFrame frame,
-            PreviousParse lastParsed,
-            Dictionary<RecordType, int>? recordParseCount,
-            RecordType nextRecordType,
-            int contentLength,
-            TypedParseParams translationParams = default)
-        {
-            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case RecordTypeInts.EPFT:
-                {
-                    return APerkEntryPointEffectBinaryCreateTranslation.FillBinaryFunctionParametersCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item,
-                        lastParsed: lastParsed);
-                }
-                default:
-                    return APerkEffectBinaryCreateTranslation.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        lastParsed: lastParsed,
-                        recordParseCount: recordParseCount,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        translationParams: translationParams.WithNoConverter());
-            }
-        }
-
-        public static partial ParseResult FillBinaryFunctionParametersCustom(
-            MutagenFrame frame,
-            IAPerkEntryPointEffect item,
-            PreviousParse lastParsed);
 
     }
 
@@ -1210,12 +1152,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public APerkEntryPointEffect.EntryType EntryPoint => (APerkEntryPointEffect.EntryType)_structData.Span.Slice(0x0, 0x1)[0];
         public Byte PerkConditionTabCount => _structData.Span[0x1];
-        #region FunctionParameters
-        public partial ParseResult FunctionParametersCustomParse(
-            OverlayStream stream,
-            int offset,
-            PreviousParse lastParsed);
-        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1233,36 +1169,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
 
-        public override ParseResult FillRecordType(
-            OverlayStream stream,
-            int finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed,
-            Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams translationParams = default)
-        {
-            type = translationParams.ConvertToStandard(type);
-            switch (type.TypeInt)
-            {
-                case RecordTypeInts.EPFT:
-                {
-                    return FunctionParametersCustomParse(
-                        stream,
-                        offset,
-                        lastParsed: lastParsed);
-                }
-                default:
-                    return base.FillRecordType(
-                        stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed,
-                        recordParseCount: recordParseCount,
-                        translationParams: translationParams.WithNoConverter());
-            }
-        }
         #region To String
 
         public override void Print(

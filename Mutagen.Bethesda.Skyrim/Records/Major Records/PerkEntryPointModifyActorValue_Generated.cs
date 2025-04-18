@@ -111,6 +111,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Rank,
                 TItem Priority,
                 TItem Conditions,
+                TItem ButtonLabel,
+                TItem Flags,
                 TItem EntryPoint,
                 TItem PerkConditionTabCount,
                 TItem ActorValue,
@@ -120,6 +122,8 @@ namespace Mutagen.Bethesda.Skyrim
                 Rank: Rank,
                 Priority: Priority,
                 Conditions: Conditions,
+                ButtonLabel: ButtonLabel,
+                Flags: Flags,
                 EntryPoint: EntryPoint,
                 PerkConditionTabCount: PerkConditionTabCount)
             {
@@ -639,11 +643,13 @@ namespace Mutagen.Bethesda.Skyrim
         Rank = 0,
         Priority = 1,
         Conditions = 2,
-        EntryPoint = 3,
-        PerkConditionTabCount = 4,
-        ActorValue = 5,
-        Value = 6,
-        Modification = 7,
+        ButtonLabel = 3,
+        Flags = 4,
+        EntryPoint = 5,
+        PerkConditionTabCount = 6,
+        ActorValue = 7,
+        Value = 8,
+        Modification = 9,
     }
     #endregion
 
@@ -656,7 +662,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(PerkEntryPointModifyActorValue.Mask<>);
 
@@ -892,6 +898,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (PerkEntryPointModifyActorValue_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.Conditions:
                     return (PerkEntryPointModifyActorValue_FieldIndex)((int)index);
+                case APerkEntryPointEffect_FieldIndex.ButtonLabel:
+                    return (PerkEntryPointModifyActorValue_FieldIndex)((int)index);
+                case APerkEntryPointEffect_FieldIndex.Flags:
+                    return (PerkEntryPointModifyActorValue_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.EntryPoint:
                     return (PerkEntryPointModifyActorValue_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.PerkConditionTabCount:
@@ -910,6 +920,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case APerkEffect_FieldIndex.Priority:
                     return (PerkEntryPointModifyActorValue_FieldIndex)((int)index);
                 case APerkEffect_FieldIndex.Conditions:
+                    return (PerkEntryPointModifyActorValue_FieldIndex)((int)index);
+                case APerkEffect_FieldIndex.ButtonLabel:
+                    return (PerkEntryPointModifyActorValue_FieldIndex)((int)index);
+                case APerkEffect_FieldIndex.Flags:
                     return (PerkEntryPointModifyActorValue_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1192,7 +1206,7 @@ namespace Mutagen.Bethesda.Skyrim
             WriteEmbedded(
                 item: item,
                 writer: writer);
-            APerkEntryPointEffectBinaryWriteTranslation.WriteRecordTypes(
+            APerkEffectBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
