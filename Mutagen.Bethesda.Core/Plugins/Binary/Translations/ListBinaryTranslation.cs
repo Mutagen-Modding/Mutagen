@@ -802,23 +802,19 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
             if (transl(reader, out var subIitem, translationParams)) 
             { 
                 ret.Add(subIitem); 
-            } 
+            }
             if (reader.Position == startingPos) 
             { 
                 throw SubrecordException.Enrich( 
                     new MalformedDataException($"Parsed item on the list consumed no data."), 
                     nextRecord); 
-            } 
+            }
         }
 
         if (endMarker.HasValue)
         {
             reader.TryReadSubrecord(endMarker.Value, out _);
         }
-        if (reader.Position == startingPos) 
-        { 
-            throw new MalformedDataException($"Parsed list of {amount} items consumed no data."); 
-        } 
         return ret; 
     } 
  
