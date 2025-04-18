@@ -111,17 +111,21 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Rank,
                 TItem Priority,
                 TItem Conditions,
+                TItem PerkEntryID,
+                TItem ButtonLabel,
+                TItem Flags,
                 TItem EntryPoint,
                 TItem PerkConditionTabCount,
-                TItem PerkEntryID,
                 TItem Spell)
             : base(
                 Rank: Rank,
                 Priority: Priority,
                 Conditions: Conditions,
+                PerkEntryID: PerkEntryID,
+                ButtonLabel: ButtonLabel,
+                Flags: Flags,
                 EntryPoint: EntryPoint,
-                PerkConditionTabCount: PerkConditionTabCount,
-                PerkEntryID: PerkEntryID)
+                PerkConditionTabCount: PerkConditionTabCount)
             {
                 this.Spell = Spell;
             }
@@ -586,10 +590,12 @@ namespace Mutagen.Bethesda.Fallout4
         Rank = 0,
         Priority = 1,
         Conditions = 2,
-        EntryPoint = 3,
-        PerkConditionTabCount = 4,
-        PerkEntryID = 5,
-        Spell = 6,
+        PerkEntryID = 3,
+        ButtonLabel = 4,
+        Flags = 5,
+        EntryPoint = 6,
+        PerkConditionTabCount = 7,
+        Spell = 8,
     }
     #endregion
 
@@ -602,7 +608,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(PerkEntryPointSelectSpell.Mask<>);
 
@@ -827,11 +833,15 @@ namespace Mutagen.Bethesda.Fallout4
                     return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.Conditions:
                     return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
+                case APerkEntryPointEffect_FieldIndex.PerkEntryID:
+                    return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
+                case APerkEntryPointEffect_FieldIndex.ButtonLabel:
+                    return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
+                case APerkEntryPointEffect_FieldIndex.Flags:
+                    return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.EntryPoint:
                     return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.PerkConditionTabCount:
-                    return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
-                case APerkEntryPointEffect_FieldIndex.PerkEntryID:
                     return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -847,6 +857,12 @@ namespace Mutagen.Bethesda.Fallout4
                 case APerkEffect_FieldIndex.Priority:
                     return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
                 case APerkEffect_FieldIndex.Conditions:
+                    return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
+                case APerkEffect_FieldIndex.PerkEntryID:
+                    return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
+                case APerkEffect_FieldIndex.ButtonLabel:
+                    return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
+                case APerkEffect_FieldIndex.Flags:
                     return (PerkEntryPointSelectSpell_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1104,7 +1120,7 @@ namespace Mutagen.Bethesda.Fallout4
             WriteEmbedded(
                 item: item,
                 writer: writer);
-            APerkEntryPointEffectBinaryWriteTranslation.WriteRecordTypes(
+            APerkEffectBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);

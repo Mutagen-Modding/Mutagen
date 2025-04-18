@@ -547,9 +547,6 @@
     <Compile Include="Records\Major Records\PerkAdapter.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PerkEntryPointAddActivateChoice.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\PerkEntryPointModifyActorValue.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
