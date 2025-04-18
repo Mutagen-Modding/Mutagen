@@ -105,17 +105,21 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Rank,
                 TItem Priority,
                 TItem Conditions,
+                TItem PerkEntryID,
+                TItem ButtonLabel,
+                TItem Flags,
                 TItem EntryPoint,
                 TItem PerkConditionTabCount,
-                TItem PerkEntryID,
                 TItem Text)
             : base(
                 Rank: Rank,
                 Priority: Priority,
                 Conditions: Conditions,
+                PerkEntryID: PerkEntryID,
+                ButtonLabel: ButtonLabel,
+                Flags: Flags,
                 EntryPoint: EntryPoint,
-                PerkConditionTabCount: PerkConditionTabCount,
-                PerkEntryID: PerkEntryID)
+                PerkConditionTabCount: PerkConditionTabCount)
             {
                 this.Text = Text;
             }
@@ -573,10 +577,12 @@ namespace Mutagen.Bethesda.Starfield
         Rank = 0,
         Priority = 1,
         Conditions = 2,
-        EntryPoint = 3,
-        PerkConditionTabCount = 4,
-        PerkEntryID = 5,
-        Text = 6,
+        PerkEntryID = 3,
+        ButtonLabel = 4,
+        Flags = 5,
+        EntryPoint = 6,
+        PerkConditionTabCount = 7,
+        Text = 8,
     }
     #endregion
 
@@ -589,7 +595,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(PerkEntryPointSetText.Mask<>);
 
@@ -813,11 +819,15 @@ namespace Mutagen.Bethesda.Starfield
                     return (PerkEntryPointSetText_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.Conditions:
                     return (PerkEntryPointSetText_FieldIndex)((int)index);
+                case APerkEntryPointEffect_FieldIndex.PerkEntryID:
+                    return (PerkEntryPointSetText_FieldIndex)((int)index);
+                case APerkEntryPointEffect_FieldIndex.ButtonLabel:
+                    return (PerkEntryPointSetText_FieldIndex)((int)index);
+                case APerkEntryPointEffect_FieldIndex.Flags:
+                    return (PerkEntryPointSetText_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.EntryPoint:
                     return (PerkEntryPointSetText_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.PerkConditionTabCount:
-                    return (PerkEntryPointSetText_FieldIndex)((int)index);
-                case APerkEntryPointEffect_FieldIndex.PerkEntryID:
                     return (PerkEntryPointSetText_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -833,6 +843,12 @@ namespace Mutagen.Bethesda.Starfield
                 case APerkEffect_FieldIndex.Priority:
                     return (PerkEntryPointSetText_FieldIndex)((int)index);
                 case APerkEffect_FieldIndex.Conditions:
+                    return (PerkEntryPointSetText_FieldIndex)((int)index);
+                case APerkEffect_FieldIndex.PerkEntryID:
+                    return (PerkEntryPointSetText_FieldIndex)((int)index);
+                case APerkEffect_FieldIndex.ButtonLabel:
+                    return (PerkEntryPointSetText_FieldIndex)((int)index);
+                case APerkEffect_FieldIndex.Flags:
                     return (PerkEntryPointSetText_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1091,7 +1107,7 @@ namespace Mutagen.Bethesda.Starfield
             WriteEmbedded(
                 item: item,
                 writer: writer);
-            APerkEntryPointEffectBinaryWriteTranslation.WriteRecordTypes(
+            APerkEffectBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
