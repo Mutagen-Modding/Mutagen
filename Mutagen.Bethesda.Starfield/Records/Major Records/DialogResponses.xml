@@ -7,6 +7,7 @@
       <RefDirect name="Flags" refName="DialogResponseFlags" />
       <FormLink name="SharedDialog" recordType="DNAM" refName="DialogResponses" />
       <FormLink name="DialogGroup" recordType="GNAM" refName="DialogResponses" />
+      <ByteArray name="TPIC" recordType="TPIC" unknown="true" />
       <RefList name="Responses" refName="DialogResponse" />
       <RefList name="Conditions" refName="Condition" />
       <String name="Prompt" recordType="RNAM" translated="Normal" />
