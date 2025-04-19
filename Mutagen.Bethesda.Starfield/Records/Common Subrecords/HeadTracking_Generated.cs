@@ -37,54 +37,38 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class HnamHnam :
-        IEquatable<IHnamHnamGetter>,
-        IHnamHnam,
-        ILoquiObjectSetter<HnamHnam>
+    public partial class HeadTracking :
+        IEquatable<IHeadTrackingGetter>,
+        IHeadTracking,
+        ILoquiObjectSetter<HeadTracking>
     {
         #region Ctor
-        public HnamHnam()
+        public HeadTracking()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region ReferenceAliasIDs
+        #region Aliases
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Int32>? _ReferenceAliasIDs;
-        public ExtendedList<Int32>? ReferenceAliasIDs
+        private ExtendedList<Int32>? _Aliases;
+        public ExtendedList<Int32>? Aliases
         {
-            get => this._ReferenceAliasIDs;
-            set => this._ReferenceAliasIDs = value;
+            get => this._Aliases;
+            set => this._Aliases = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<Int32>? IHnamHnamGetter.ReferenceAliasIDs => _ReferenceAliasIDs;
+        IReadOnlyList<Int32>? IHeadTrackingGetter.Aliases => _Aliases;
         #endregion
 
         #endregion
-        #region FNAM
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _FNAM;
-        public MemorySlice<Byte>? FNAM
-        {
-            get => this._FNAM;
-            set => this._FNAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IHnamHnamGetter.FNAM => this.FNAM;
+        #region ForceRotate
+        public Boolean ForceRotate { get; set; } = default(Boolean);
         #endregion
-        #region PNAM
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _PNAM;
-        public MemorySlice<Byte>? PNAM
-        {
-            get => this._PNAM;
-            set => this._PNAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IHnamHnamGetter.PNAM => this.PNAM;
+        #region ForceRotateMustComplete
+        public Boolean ForceRotateMustComplete { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -93,7 +77,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            HnamHnamMixIn.Print(
+            HeadTrackingMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -104,16 +88,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IHnamHnamGetter rhs) return false;
-            return ((HnamHnamCommon)((IHnamHnamGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IHeadTrackingGetter rhs) return false;
+            return ((HeadTrackingCommon)((IHeadTrackingGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IHnamHnamGetter? obj)
+        public bool Equals(IHeadTrackingGetter? obj)
         {
-            return ((HnamHnamCommon)((IHnamHnamGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((HeadTrackingCommon)((IHeadTrackingGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((HnamHnamCommon)((IHnamHnamGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((HeadTrackingCommon)((IHeadTrackingGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -125,19 +109,19 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.ReferenceAliasIDs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.FNAM = initialValue;
-                this.PNAM = initialValue;
+                this.Aliases = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ForceRotate = initialValue;
+                this.ForceRotateMustComplete = initialValue;
             }
 
             public Mask(
-                TItem ReferenceAliasIDs,
-                TItem FNAM,
-                TItem PNAM)
+                TItem Aliases,
+                TItem ForceRotate,
+                TItem ForceRotateMustComplete)
             {
-                this.ReferenceAliasIDs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ReferenceAliasIDs, Enumerable.Empty<(int Index, TItem Value)>());
-                this.FNAM = FNAM;
-                this.PNAM = PNAM;
+                this.Aliases = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Aliases, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ForceRotate = ForceRotate;
+                this.ForceRotateMustComplete = ForceRotateMustComplete;
             }
 
             #pragma warning disable CS8618
@@ -149,9 +133,9 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ReferenceAliasIDs;
-            public TItem FNAM;
-            public TItem PNAM;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Aliases;
+            public TItem ForceRotate;
+            public TItem ForceRotateMustComplete;
             #endregion
 
             #region Equals
@@ -164,17 +148,17 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.ReferenceAliasIDs, rhs.ReferenceAliasIDs)) return false;
-                if (!object.Equals(this.FNAM, rhs.FNAM)) return false;
-                if (!object.Equals(this.PNAM, rhs.PNAM)) return false;
+                if (!object.Equals(this.Aliases, rhs.Aliases)) return false;
+                if (!object.Equals(this.ForceRotate, rhs.ForceRotate)) return false;
+                if (!object.Equals(this.ForceRotateMustComplete, rhs.ForceRotateMustComplete)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.ReferenceAliasIDs);
-                hash.Add(this.FNAM);
-                hash.Add(this.PNAM);
+                hash.Add(this.Aliases);
+                hash.Add(this.ForceRotate);
+                hash.Add(this.ForceRotateMustComplete);
                 return hash.ToHashCode();
             }
 
@@ -183,19 +167,19 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (this.ReferenceAliasIDs != null)
+                if (this.Aliases != null)
                 {
-                    if (!eval(this.ReferenceAliasIDs.Overall)) return false;
-                    if (this.ReferenceAliasIDs.Specific != null)
+                    if (!eval(this.Aliases.Overall)) return false;
+                    if (this.Aliases.Specific != null)
                     {
-                        foreach (var item in this.ReferenceAliasIDs.Specific)
+                        foreach (var item in this.Aliases.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
-                if (!eval(this.FNAM)) return false;
-                if (!eval(this.PNAM)) return false;
+                if (!eval(this.ForceRotate)) return false;
+                if (!eval(this.ForceRotateMustComplete)) return false;
                 return true;
             }
             #endregion
@@ -203,19 +187,19 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (this.ReferenceAliasIDs != null)
+                if (this.Aliases != null)
                 {
-                    if (eval(this.ReferenceAliasIDs.Overall)) return true;
-                    if (this.ReferenceAliasIDs.Specific != null)
+                    if (eval(this.Aliases.Overall)) return true;
+                    if (this.Aliases.Specific != null)
                     {
-                        foreach (var item in this.ReferenceAliasIDs.Specific)
+                        foreach (var item in this.Aliases.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
-                if (eval(this.FNAM)) return true;
-                if (eval(this.PNAM)) return true;
+                if (eval(this.ForceRotate)) return true;
+                if (eval(this.ForceRotateMustComplete)) return true;
                 return false;
             }
             #endregion
@@ -223,57 +207,57 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new HnamHnam.Mask<R>();
+                var ret = new HeadTracking.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                if (ReferenceAliasIDs != null)
+                if (Aliases != null)
                 {
-                    obj.ReferenceAliasIDs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ReferenceAliasIDs.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (ReferenceAliasIDs.Specific != null)
+                    obj.Aliases = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Aliases.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Aliases.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
-                        obj.ReferenceAliasIDs.Specific = l;
-                        foreach (var item in ReferenceAliasIDs.Specific)
+                        obj.Aliases.Specific = l;
+                        foreach (var item in Aliases.Specific)
                         {
                             R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
                 }
-                obj.FNAM = eval(this.FNAM);
-                obj.PNAM = eval(this.PNAM);
+                obj.ForceRotate = eval(this.ForceRotate);
+                obj.ForceRotateMustComplete = eval(this.ForceRotateMustComplete);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(HnamHnam.Mask<bool>? printMask = null)
+            public string Print(HeadTracking.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, HnamHnam.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, HeadTracking.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(HnamHnam.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(HeadTracking.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if ((printMask?.ReferenceAliasIDs?.Overall ?? true)
-                        && ReferenceAliasIDs is {} ReferenceAliasIDsItem)
+                    if ((printMask?.Aliases?.Overall ?? true)
+                        && Aliases is {} AliasesItem)
                     {
-                        sb.AppendLine("ReferenceAliasIDs =>");
+                        sb.AppendLine("Aliases =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(ReferenceAliasIDsItem.Overall);
-                            if (ReferenceAliasIDsItem.Specific != null)
+                            sb.AppendItem(AliasesItem.Overall);
+                            if (AliasesItem.Specific != null)
                             {
-                                foreach (var subItem in ReferenceAliasIDsItem.Specific)
+                                foreach (var subItem in AliasesItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -285,13 +269,13 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.FNAM ?? true)
+                    if (printMask?.ForceRotate ?? true)
                     {
-                        sb.AppendItem(FNAM, "FNAM");
+                        sb.AppendItem(ForceRotate, "ForceRotate");
                     }
-                    if (printMask?.PNAM ?? true)
+                    if (printMask?.ForceRotateMustComplete ?? true)
                     {
-                        sb.AppendItem(PNAM, "PNAM");
+                        sb.AppendItem(ForceRotateMustComplete, "ForceRotateMustComplete");
                     }
                 }
             }
@@ -317,23 +301,23 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ReferenceAliasIDs;
-            public Exception? FNAM;
-            public Exception? PNAM;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Aliases;
+            public Exception? ForceRotate;
+            public Exception? ForceRotateMustComplete;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                HnamHnam_FieldIndex enu = (HnamHnam_FieldIndex)index;
+                HeadTracking_FieldIndex enu = (HeadTracking_FieldIndex)index;
                 switch (enu)
                 {
-                    case HnamHnam_FieldIndex.ReferenceAliasIDs:
-                        return ReferenceAliasIDs;
-                    case HnamHnam_FieldIndex.FNAM:
-                        return FNAM;
-                    case HnamHnam_FieldIndex.PNAM:
-                        return PNAM;
+                    case HeadTracking_FieldIndex.Aliases:
+                        return Aliases;
+                    case HeadTracking_FieldIndex.ForceRotate:
+                        return ForceRotate;
+                    case HeadTracking_FieldIndex.ForceRotateMustComplete:
+                        return ForceRotateMustComplete;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -341,17 +325,17 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                HnamHnam_FieldIndex enu = (HnamHnam_FieldIndex)index;
+                HeadTracking_FieldIndex enu = (HeadTracking_FieldIndex)index;
                 switch (enu)
                 {
-                    case HnamHnam_FieldIndex.ReferenceAliasIDs:
-                        this.ReferenceAliasIDs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case HeadTracking_FieldIndex.Aliases:
+                        this.Aliases = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case HnamHnam_FieldIndex.FNAM:
-                        this.FNAM = ex;
+                    case HeadTracking_FieldIndex.ForceRotate:
+                        this.ForceRotate = ex;
                         break;
-                    case HnamHnam_FieldIndex.PNAM:
-                        this.PNAM = ex;
+                    case HeadTracking_FieldIndex.ForceRotateMustComplete:
+                        this.ForceRotateMustComplete = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -360,17 +344,17 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                HnamHnam_FieldIndex enu = (HnamHnam_FieldIndex)index;
+                HeadTracking_FieldIndex enu = (HeadTracking_FieldIndex)index;
                 switch (enu)
                 {
-                    case HnamHnam_FieldIndex.ReferenceAliasIDs:
-                        this.ReferenceAliasIDs = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case HeadTracking_FieldIndex.Aliases:
+                        this.Aliases = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case HnamHnam_FieldIndex.FNAM:
-                        this.FNAM = (Exception?)obj;
+                    case HeadTracking_FieldIndex.ForceRotate:
+                        this.ForceRotate = (Exception?)obj;
                         break;
-                    case HnamHnam_FieldIndex.PNAM:
-                        this.PNAM = (Exception?)obj;
+                    case HeadTracking_FieldIndex.ForceRotateMustComplete:
+                        this.ForceRotateMustComplete = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -380,9 +364,9 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (ReferenceAliasIDs != null) return true;
-                if (FNAM != null) return true;
-                if (PNAM != null) return true;
+                if (Aliases != null) return true;
+                if (ForceRotate != null) return true;
+                if (ForceRotateMustComplete != null) return true;
                 return false;
             }
             #endregion
@@ -408,15 +392,15 @@ namespace Mutagen.Bethesda.Starfield
             }
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
-                if (ReferenceAliasIDs is {} ReferenceAliasIDsItem)
+                if (Aliases is {} AliasesItem)
                 {
-                    sb.AppendLine("ReferenceAliasIDs =>");
+                    sb.AppendLine("Aliases =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(ReferenceAliasIDsItem.Overall);
-                        if (ReferenceAliasIDsItem.Specific != null)
+                        sb.AppendItem(AliasesItem.Overall);
+                        if (AliasesItem.Specific != null)
                         {
-                            foreach (var subItem in ReferenceAliasIDsItem.Specific)
+                            foreach (var subItem in AliasesItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -429,10 +413,10 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 {
-                    sb.AppendItem(FNAM, "FNAM");
+                    sb.AppendItem(ForceRotate, "ForceRotate");
                 }
                 {
-                    sb.AppendItem(PNAM, "PNAM");
+                    sb.AppendItem(ForceRotateMustComplete, "ForceRotateMustComplete");
                 }
             }
             #endregion
@@ -442,9 +426,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.ReferenceAliasIDs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ReferenceAliasIDs?.Overall, rhs.ReferenceAliasIDs?.Overall), Noggog.ExceptionExt.Combine(this.ReferenceAliasIDs?.Specific, rhs.ReferenceAliasIDs?.Specific));
-                ret.FNAM = this.FNAM.Combine(rhs.FNAM);
-                ret.PNAM = this.PNAM.Combine(rhs.PNAM);
+                ret.Aliases = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Aliases?.Overall, rhs.Aliases?.Overall), Noggog.ExceptionExt.Combine(this.Aliases?.Specific, rhs.Aliases?.Specific));
+                ret.ForceRotate = this.ForceRotate.Combine(rhs.ForceRotate);
+                ret.ForceRotateMustComplete = this.ForceRotateMustComplete.Combine(rhs.ForceRotateMustComplete);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -468,9 +452,9 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool ReferenceAliasIDs;
-            public bool FNAM;
-            public bool PNAM;
+            public bool Aliases;
+            public bool ForceRotate;
+            public bool ForceRotateMustComplete;
             #endregion
 
             #region Ctors
@@ -480,9 +464,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.ReferenceAliasIDs = defaultOn;
-                this.FNAM = defaultOn;
-                this.PNAM = defaultOn;
+                this.Aliases = defaultOn;
+                this.ForceRotate = defaultOn;
+                this.ForceRotateMustComplete = defaultOn;
             }
 
             #endregion
@@ -498,9 +482,9 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((ReferenceAliasIDs, null));
-                ret.Add((FNAM, null));
-                ret.Add((PNAM, null));
+                ret.Add((Aliases, null));
+                ret.Add((ForceRotate, null));
+                ret.Add((ForceRotateMustComplete, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -513,25 +497,25 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => HnamHnamBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => HeadTrackingBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((HnamHnamBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((HeadTrackingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static HnamHnam CreateFromBinary(
+        public static HeadTracking CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new HnamHnam();
-            ((HnamHnamSetterCommon)((IHnamHnamGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new HeadTracking();
+            ((HeadTrackingSetterCommon)((IHeadTrackingGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -542,7 +526,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out HnamHnam item,
+            out HeadTracking item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -557,31 +541,31 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((HnamHnamSetterCommon)((IHnamHnamGetter)this).CommonSetterInstance()!).Clear(this);
+            ((HeadTrackingSetterCommon)((IHeadTrackingGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static HnamHnam GetNew()
+        internal static HeadTracking GetNew()
         {
-            return new HnamHnam();
+            return new HeadTracking();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IHnamHnam :
-        IHnamHnamGetter,
-        ILoquiObjectSetter<IHnamHnam>
+    public partial interface IHeadTracking :
+        IHeadTrackingGetter,
+        ILoquiObjectSetter<IHeadTracking>
     {
-        new ExtendedList<Int32>? ReferenceAliasIDs { get; set; }
-        new MemorySlice<Byte>? FNAM { get; set; }
-        new MemorySlice<Byte>? PNAM { get; set; }
+        new ExtendedList<Int32>? Aliases { get; set; }
+        new Boolean ForceRotate { get; set; }
+        new Boolean ForceRotateMustComplete { get; set; }
     }
 
-    public partial interface IHnamHnamGetter :
+    public partial interface IHeadTrackingGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IHnamHnamGetter>
+        ILoquiObject<IHeadTrackingGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -589,52 +573,52 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => HnamHnam_Registration.Instance;
-        IReadOnlyList<Int32>? ReferenceAliasIDs { get; }
-        ReadOnlyMemorySlice<Byte>? FNAM { get; }
-        ReadOnlyMemorySlice<Byte>? PNAM { get; }
+        static ILoquiRegistration StaticRegistration => HeadTracking_Registration.Instance;
+        IReadOnlyList<Int32>? Aliases { get; }
+        Boolean ForceRotate { get; }
+        Boolean ForceRotateMustComplete { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class HnamHnamMixIn
+    public static partial class HeadTrackingMixIn
     {
-        public static void Clear(this IHnamHnam item)
+        public static void Clear(this IHeadTracking item)
         {
-            ((HnamHnamSetterCommon)((IHnamHnamGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((HeadTrackingSetterCommon)((IHeadTrackingGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static HnamHnam.Mask<bool> GetEqualsMask(
-            this IHnamHnamGetter item,
-            IHnamHnamGetter rhs,
+        public static HeadTracking.Mask<bool> GetEqualsMask(
+            this IHeadTrackingGetter item,
+            IHeadTrackingGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((HnamHnamCommon)((IHnamHnamGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((HeadTrackingCommon)((IHeadTrackingGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IHnamHnamGetter item,
+            this IHeadTrackingGetter item,
             string? name = null,
-            HnamHnam.Mask<bool>? printMask = null)
+            HeadTracking.Mask<bool>? printMask = null)
         {
-            return ((HnamHnamCommon)((IHnamHnamGetter)item).CommonInstance()!).Print(
+            return ((HeadTrackingCommon)((IHeadTrackingGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IHnamHnamGetter item,
+            this IHeadTrackingGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            HnamHnam.Mask<bool>? printMask = null)
+            HeadTracking.Mask<bool>? printMask = null)
         {
-            ((HnamHnamCommon)((IHnamHnamGetter)item).CommonInstance()!).Print(
+            ((HeadTrackingCommon)((IHeadTrackingGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -642,21 +626,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IHnamHnamGetter item,
-            IHnamHnamGetter rhs,
-            HnamHnam.TranslationMask? equalsMask = null)
+            this IHeadTrackingGetter item,
+            IHeadTrackingGetter rhs,
+            HeadTracking.TranslationMask? equalsMask = null)
         {
-            return ((HnamHnamCommon)((IHnamHnamGetter)item).CommonInstance()!).Equals(
+            return ((HeadTrackingCommon)((IHeadTrackingGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IHnamHnam lhs,
-            IHnamHnamGetter rhs)
+            this IHeadTracking lhs,
+            IHeadTrackingGetter rhs)
         {
-            ((HnamHnamSetterTranslationCommon)((IHnamHnamGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((HeadTrackingSetterTranslationCommon)((IHeadTrackingGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -665,11 +649,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IHnamHnam lhs,
-            IHnamHnamGetter rhs,
-            HnamHnam.TranslationMask? copyMask = null)
+            this IHeadTracking lhs,
+            IHeadTrackingGetter rhs,
+            HeadTracking.TranslationMask? copyMask = null)
         {
-            ((HnamHnamSetterTranslationCommon)((IHnamHnamGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((HeadTrackingSetterTranslationCommon)((IHeadTrackingGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -678,28 +662,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IHnamHnam lhs,
-            IHnamHnamGetter rhs,
-            out HnamHnam.ErrorMask errorMask,
-            HnamHnam.TranslationMask? copyMask = null)
+            this IHeadTracking lhs,
+            IHeadTrackingGetter rhs,
+            out HeadTracking.ErrorMask errorMask,
+            HeadTracking.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((HnamHnamSetterTranslationCommon)((IHnamHnamGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((HeadTrackingSetterTranslationCommon)((IHeadTrackingGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = HnamHnam.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = HeadTracking.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IHnamHnam lhs,
-            IHnamHnamGetter rhs,
+            this IHeadTracking lhs,
+            IHeadTrackingGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((HnamHnamSetterTranslationCommon)((IHnamHnamGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((HeadTrackingSetterTranslationCommon)((IHeadTrackingGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -707,32 +691,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static HnamHnam DeepCopy(
-            this IHnamHnamGetter item,
-            HnamHnam.TranslationMask? copyMask = null)
+        public static HeadTracking DeepCopy(
+            this IHeadTrackingGetter item,
+            HeadTracking.TranslationMask? copyMask = null)
         {
-            return ((HnamHnamSetterTranslationCommon)((IHnamHnamGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((HeadTrackingSetterTranslationCommon)((IHeadTrackingGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static HnamHnam DeepCopy(
-            this IHnamHnamGetter item,
-            out HnamHnam.ErrorMask errorMask,
-            HnamHnam.TranslationMask? copyMask = null)
+        public static HeadTracking DeepCopy(
+            this IHeadTrackingGetter item,
+            out HeadTracking.ErrorMask errorMask,
+            HeadTracking.TranslationMask? copyMask = null)
         {
-            return ((HnamHnamSetterTranslationCommon)((IHnamHnamGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((HeadTrackingSetterTranslationCommon)((IHeadTrackingGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static HnamHnam DeepCopy(
-            this IHnamHnamGetter item,
+        public static HeadTracking DeepCopy(
+            this IHeadTrackingGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((HnamHnamSetterTranslationCommon)((IHnamHnamGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((HeadTrackingSetterTranslationCommon)((IHeadTrackingGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -740,11 +724,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IHnamHnam item,
+            this IHeadTracking item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((HnamHnamSetterCommon)((IHnamHnamGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((HeadTrackingSetterCommon)((IHeadTrackingGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -760,18 +744,18 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum HnamHnam_FieldIndex
+    internal enum HeadTracking_FieldIndex
     {
-        ReferenceAliasIDs = 0,
-        FNAM = 1,
-        PNAM = 2,
+        Aliases = 0,
+        ForceRotate = 1,
+        ForceRotateMustComplete = 2,
     }
     #endregion
 
     #region Registration
-    internal partial class HnamHnam_Registration : ILoquiRegistration
+    internal partial class HeadTracking_Registration : ILoquiRegistration
     {
-        public static readonly HnamHnam_Registration Instance = new HnamHnam_Registration();
+        public static readonly HeadTracking_Registration Instance = new HeadTracking_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -779,23 +763,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(HnamHnam.Mask<>);
+        public static readonly Type MaskType = typeof(HeadTracking.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(HnamHnam.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(HeadTracking.ErrorMask);
 
-        public static readonly Type ClassType = typeof(HnamHnam);
+        public static readonly Type ClassType = typeof(HeadTracking);
 
-        public static readonly Type GetterType = typeof(IHnamHnamGetter);
+        public static readonly Type GetterType = typeof(IHeadTrackingGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IHnamHnam);
+        public static readonly Type SetterType = typeof(IHeadTracking);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.HnamHnam";
+        public const string FullName = "Mutagen.Bethesda.Starfield.HeadTracking";
 
-        public const string Name = "HnamHnam";
+        public const string Name = "HeadTracking";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -819,7 +803,7 @@ namespace Mutagen.Bethesda.Starfield
                 triggeringRecordTypes: triggers,
                 endRecordTypes: endTriggers);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(HnamHnamBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(HeadTrackingBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -850,22 +834,22 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class HnamHnamSetterCommon
+    internal partial class HeadTrackingSetterCommon
     {
-        public static readonly HnamHnamSetterCommon Instance = new HnamHnamSetterCommon();
+        public static readonly HeadTrackingSetterCommon Instance = new HeadTrackingSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IHnamHnam item)
+        public void Clear(IHeadTracking item)
         {
             ClearPartial();
-            item.ReferenceAliasIDs = null;
-            item.FNAM = default;
-            item.PNAM = default;
+            item.Aliases = null;
+            item.ForceRotate = default(Boolean);
+            item.ForceRotateMustComplete = default(Boolean);
         }
         
         #region Mutagen
-        public void RemapLinks(IHnamHnam obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IHeadTracking obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
         }
         
@@ -873,7 +857,7 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IHnamHnam item,
+            IHeadTracking item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -882,23 +866,23 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillTyped: HnamHnamBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillTyped: HeadTrackingBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    internal partial class HnamHnamCommon
+    internal partial class HeadTrackingCommon
     {
-        public static readonly HnamHnamCommon Instance = new HnamHnamCommon();
+        public static readonly HeadTrackingCommon Instance = new HeadTrackingCommon();
 
-        public HnamHnam.Mask<bool> GetEqualsMask(
-            IHnamHnamGetter item,
-            IHnamHnamGetter rhs,
+        public HeadTracking.Mask<bool> GetEqualsMask(
+            IHeadTrackingGetter item,
+            IHeadTrackingGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new HnamHnam.Mask<bool>(false);
-            ((HnamHnamCommon)((IHnamHnamGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new HeadTracking.Mask<bool>(false);
+            ((HeadTrackingCommon)((IHeadTrackingGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -907,23 +891,23 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IHnamHnamGetter item,
-            IHnamHnamGetter rhs,
-            HnamHnam.Mask<bool> ret,
+            IHeadTrackingGetter item,
+            IHeadTrackingGetter rhs,
+            HeadTracking.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.ReferenceAliasIDs = item.ReferenceAliasIDs.CollectionEqualsHelper(
-                rhs.ReferenceAliasIDs,
+            ret.Aliases = item.Aliases.CollectionEqualsHelper(
+                rhs.Aliases,
                 (l, r) => l == r,
                 include);
-            ret.FNAM = MemorySliceExt.SequenceEqual(item.FNAM, rhs.FNAM);
-            ret.PNAM = MemorySliceExt.SequenceEqual(item.PNAM, rhs.PNAM);
+            ret.ForceRotate = item.ForceRotate == rhs.ForceRotate;
+            ret.ForceRotateMustComplete = item.ForceRotateMustComplete == rhs.ForceRotateMustComplete;
         }
         
         public string Print(
-            IHnamHnamGetter item,
+            IHeadTrackingGetter item,
             string? name = null,
-            HnamHnam.Mask<bool>? printMask = null)
+            HeadTracking.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -935,18 +919,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IHnamHnamGetter item,
+            IHeadTrackingGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            HnamHnam.Mask<bool>? printMask = null)
+            HeadTracking.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"HnamHnam =>");
+                sb.AppendLine($"HeadTracking =>");
             }
             else
             {
-                sb.AppendLine($"{name} (HnamHnam) =>");
+                sb.AppendLine($"{name} (HeadTracking) =>");
             }
             using (sb.Brace())
             {
@@ -958,17 +942,17 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IHnamHnamGetter item,
+            IHeadTrackingGetter item,
             StructuredStringBuilder sb,
-            HnamHnam.Mask<bool>? printMask = null)
+            HeadTracking.Mask<bool>? printMask = null)
         {
-            if ((printMask?.ReferenceAliasIDs?.Overall ?? true)
-                && item.ReferenceAliasIDs is {} ReferenceAliasIDsItem)
+            if ((printMask?.Aliases?.Overall ?? true)
+                && item.Aliases is {} AliasesItem)
             {
-                sb.AppendLine("ReferenceAliasIDs =>");
+                sb.AppendLine("Aliases =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in ReferenceAliasIDsItem)
+                    foreach (var subItem in AliasesItem)
                     {
                         using (sb.Brace())
                         {
@@ -977,52 +961,44 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.FNAM ?? true)
-                && item.FNAM is {} FNAMItem)
+            if (printMask?.ForceRotate ?? true)
             {
-                sb.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
+                sb.AppendItem(item.ForceRotate, "ForceRotate");
             }
-            if ((printMask?.PNAM ?? true)
-                && item.PNAM is {} PNAMItem)
+            if (printMask?.ForceRotateMustComplete ?? true)
             {
-                sb.AppendLine($"PNAM => {SpanExt.ToHexString(PNAMItem)}");
+                sb.AppendItem(item.ForceRotateMustComplete, "ForceRotateMustComplete");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IHnamHnamGetter? lhs,
-            IHnamHnamGetter? rhs,
+            IHeadTrackingGetter? lhs,
+            IHeadTrackingGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)HnamHnam_FieldIndex.ReferenceAliasIDs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadTracking_FieldIndex.Aliases) ?? true))
             {
-                if (!lhs.ReferenceAliasIDs.SequenceEqualNullable(rhs.ReferenceAliasIDs)) return false;
+                if (!lhs.Aliases.SequenceEqualNullable(rhs.Aliases)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)HnamHnam_FieldIndex.FNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadTracking_FieldIndex.ForceRotate) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.FNAM, rhs.FNAM)) return false;
+                if (lhs.ForceRotate != rhs.ForceRotate) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)HnamHnam_FieldIndex.PNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadTracking_FieldIndex.ForceRotateMustComplete) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.PNAM, rhs.PNAM)) return false;
+                if (lhs.ForceRotateMustComplete != rhs.ForceRotateMustComplete) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IHnamHnamGetter item)
+        public virtual int GetHashCode(IHeadTrackingGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.ReferenceAliasIDs);
-            if (item.FNAM is {} FNAMItem)
-            {
-                hash.Add(FNAMItem);
-            }
-            if (item.PNAM is {} PNAMItem)
-            {
-                hash.Add(PNAMItem);
-            }
+            hash.Add(item.Aliases);
+            hash.Add(item.ForceRotate);
+            hash.Add(item.ForceRotateMustComplete);
             return hash.ToHashCode();
         }
         
@@ -1031,11 +1007,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return HnamHnam.GetNew();
+            return HeadTracking.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IHnamHnamGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IHeadTrackingGetter obj)
         {
             yield break;
         }
@@ -1043,32 +1019,32 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class HnamHnamSetterTranslationCommon
+    internal partial class HeadTrackingSetterTranslationCommon
     {
-        public static readonly HnamHnamSetterTranslationCommon Instance = new HnamHnamSetterTranslationCommon();
+        public static readonly HeadTrackingSetterTranslationCommon Instance = new HeadTrackingSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IHnamHnam item,
-            IHnamHnamGetter rhs,
+            IHeadTracking item,
+            IHeadTrackingGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)HnamHnam_FieldIndex.ReferenceAliasIDs) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)HeadTracking_FieldIndex.Aliases) ?? true))
             {
-                errorMask?.PushIndex((int)HnamHnam_FieldIndex.ReferenceAliasIDs);
+                errorMask?.PushIndex((int)HeadTracking_FieldIndex.Aliases);
                 try
                 {
-                    if ((rhs.ReferenceAliasIDs != null))
+                    if ((rhs.Aliases != null))
                     {
-                        item.ReferenceAliasIDs = 
-                            rhs.ReferenceAliasIDs
+                        item.Aliases = 
+                            rhs.Aliases
                             .ToExtendedList<Int32>();
                     }
                     else
                     {
-                        item.ReferenceAliasIDs = null;
+                        item.Aliases = null;
                     }
                 }
                 catch (Exception ex)
@@ -1081,27 +1057,13 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)HnamHnam_FieldIndex.FNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)HeadTracking_FieldIndex.ForceRotate) ?? true))
             {
-                if(rhs.FNAM is {} FNAMrhs)
-                {
-                    item.FNAM = FNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.FNAM = default;
-                }
+                item.ForceRotate = rhs.ForceRotate;
             }
-            if ((copyMask?.GetShouldTranslate((int)HnamHnam_FieldIndex.PNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)HeadTracking_FieldIndex.ForceRotateMustComplete) ?? true))
             {
-                if(rhs.PNAM is {} PNAMrhs)
-                {
-                    item.PNAM = PNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.PNAM = default;
-                }
+                item.ForceRotateMustComplete = rhs.ForceRotateMustComplete;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1112,19 +1074,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         partial void DeepCopyInCustom(
-            IHnamHnam item,
-            IHnamHnamGetter rhs,
+            IHeadTracking item,
+            IHeadTrackingGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
         #endregion
         
-        public HnamHnam DeepCopy(
-            IHnamHnamGetter item,
-            HnamHnam.TranslationMask? copyMask = null)
+        public HeadTracking DeepCopy(
+            IHeadTrackingGetter item,
+            HeadTracking.TranslationMask? copyMask = null)
         {
-            HnamHnam ret = (HnamHnam)((HnamHnamCommon)((IHnamHnamGetter)item).CommonInstance()!).GetNew();
-            ((HnamHnamSetterTranslationCommon)((IHnamHnamGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            HeadTracking ret = (HeadTracking)((HeadTrackingCommon)((IHeadTrackingGetter)item).CommonInstance()!).GetNew();
+            ((HeadTrackingSetterTranslationCommon)((IHeadTrackingGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1133,30 +1095,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public HnamHnam DeepCopy(
-            IHnamHnamGetter item,
-            out HnamHnam.ErrorMask errorMask,
-            HnamHnam.TranslationMask? copyMask = null)
+        public HeadTracking DeepCopy(
+            IHeadTrackingGetter item,
+            out HeadTracking.ErrorMask errorMask,
+            HeadTracking.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            HnamHnam ret = (HnamHnam)((HnamHnamCommon)((IHnamHnamGetter)item).CommonInstance()!).GetNew();
-            ((HnamHnamSetterTranslationCommon)((IHnamHnamGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            HeadTracking ret = (HeadTracking)((HeadTrackingCommon)((IHeadTrackingGetter)item).CommonInstance()!).GetNew();
+            ((HeadTrackingSetterTranslationCommon)((IHeadTrackingGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = HnamHnam.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = HeadTracking.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public HnamHnam DeepCopy(
-            IHnamHnamGetter item,
+        public HeadTracking DeepCopy(
+            IHeadTrackingGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            HnamHnam ret = (HnamHnam)((HnamHnamCommon)((IHnamHnamGetter)item).CommonInstance()!).GetNew();
-            ((HnamHnamSetterTranslationCommon)((IHnamHnamGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            HeadTracking ret = (HeadTracking)((HeadTrackingCommon)((IHeadTrackingGetter)item).CommonInstance()!).GetNew();
+            ((HeadTrackingSetterTranslationCommon)((IHeadTrackingGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1172,27 +1134,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class HnamHnam
+    public partial class HeadTracking
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => HnamHnam_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => HnamHnam_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => HeadTracking_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => HeadTracking_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => HnamHnamCommon.Instance;
+        protected object CommonInstance() => HeadTrackingCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return HnamHnamSetterCommon.Instance;
+            return HeadTrackingSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => HnamHnamSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => HeadTrackingSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IHnamHnamGetter.CommonInstance() => this.CommonInstance();
+        object IHeadTrackingGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IHnamHnamGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IHeadTrackingGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IHnamHnamGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IHeadTrackingGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1203,33 +1165,33 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class HnamHnamBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class HeadTrackingBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly HnamHnamBinaryWriteTranslation Instance = new();
+        public static readonly HeadTrackingBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            IHnamHnamGetter item,
+            IHeadTrackingGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Int32>.Instance.Write(
                 writer: writer,
-                items: item.ReferenceAliasIDs,
+                items: item.Aliases,
                 recordType: translationParams.ConvertToCustom(RecordTypes.HTID),
                 transl: Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
-                item: item.FNAM,
+                item: item.ForceRotate,
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
-                item: item.PNAM,
+                item: item.ForceRotateMustComplete,
                 header: translationParams.ConvertToCustom(RecordTypes.PNAM));
         }
 
         public void Write(
             MutagenWriter writer,
-            IHnamHnamGetter item,
+            IHeadTrackingGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(writer, RecordTypes.HNAM)) { } // Start Marker
@@ -1246,19 +1208,19 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IHnamHnamGetter)item,
+                item: (IHeadTrackingGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class HnamHnamBinaryCreateTranslation
+    internal partial class HeadTrackingBinaryCreateTranslation
     {
-        public static readonly HnamHnamBinaryCreateTranslation Instance = new HnamHnamBinaryCreateTranslation();
+        public static readonly HeadTrackingBinaryCreateTranslation Instance = new HeadTrackingBinaryCreateTranslation();
 
         public static ParseResult FillBinaryRecordTypes(
-            IHnamHnam item,
+            IHeadTracking item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1272,24 +1234,22 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.HTID:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ReferenceAliasIDs = 
+                    item.Aliases = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Int32>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
                         .CastExtendedList<Int32>();
-                    return (int)HnamHnam_FieldIndex.ReferenceAliasIDs;
+                    return (int)HeadTracking_FieldIndex.Aliases;
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)HnamHnam_FieldIndex.FNAM;
+                    item.ForceRotate = true;
+                    return (int)HeadTracking_FieldIndex.ForceRotate;
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)HnamHnam_FieldIndex.PNAM;
+                    item.ForceRotateMustComplete = true;
+                    return (int)HeadTracking_FieldIndex.ForceRotateMustComplete;
                 }
                 case RecordTypeInts.HNAM: // End Marker
                 {
@@ -1307,14 +1267,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class HnamHnamBinaryTranslationMixIn
+    public static class HeadTrackingBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IHnamHnamGetter item,
+            this IHeadTrackingGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((HnamHnamBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((HeadTrackingBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1327,51 +1287,51 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class HnamHnamBinaryOverlay :
+    internal partial class HeadTrackingBinaryOverlay :
         PluginBinaryOverlay,
-        IHnamHnamGetter
+        IHeadTrackingGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => HnamHnam_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => HnamHnam_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => HeadTracking_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => HeadTracking_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => HnamHnamCommon.Instance;
+        protected object CommonInstance() => HeadTrackingCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => HnamHnamSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => HeadTrackingSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IHnamHnamGetter.CommonInstance() => this.CommonInstance();
+        object IHeadTrackingGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IHnamHnamGetter.CommonSetterInstance() => null;
+        object? IHeadTrackingGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IHnamHnamGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IHeadTrackingGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => HnamHnamBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => HeadTrackingBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((HnamHnamBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((HeadTrackingBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public IReadOnlyList<Int32>? ReferenceAliasIDs { get; private set; }
-        #region FNAM
-        private int? _FNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? FNAM => _FNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public IReadOnlyList<Int32>? Aliases { get; private set; }
+        #region ForceRotate
+        private int? _ForceRotateLocation;
+        public Boolean ForceRotate => _ForceRotateLocation.HasValue ? true : default(Boolean);
         #endregion
-        #region PNAM
-        private int? _PNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? PNAM => _PNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region ForceRotateMustComplete
+        private int? _ForceRotateMustCompleteLocation;
+        public Boolean ForceRotateMustComplete => _ForceRotateMustCompleteLocation.HasValue ? true : default(Boolean);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1379,7 +1339,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected HnamHnamBinaryOverlay(
+        protected HeadTrackingBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1389,7 +1349,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IHnamHnamGetter HnamHnamFactory(
+        public static IHeadTrackingGetter HeadTrackingFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1402,7 +1362,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new HnamHnamBinaryOverlay(
+            var ret = new HeadTrackingBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret.FillTypelessSubrecordTypes(
@@ -1414,12 +1374,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IHnamHnamGetter HnamHnamFactory(
+        public static IHeadTrackingGetter HeadTrackingFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return HnamHnamFactory(
+            return HeadTrackingFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1439,23 +1399,23 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.HTID:
                 {
-                    this.ReferenceAliasIDs = BinaryOverlayList.FactoryByStartIndexWithTrigger<Int32>(
+                    this.Aliases = BinaryOverlayList.FactoryByStartIndexWithTrigger<Int32>(
                         stream: stream,
                         package: _package,
                         finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => BinaryPrimitives.ReadInt32LittleEndian(s));
-                    return (int)HnamHnam_FieldIndex.ReferenceAliasIDs;
+                    return (int)HeadTracking_FieldIndex.Aliases;
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    _FNAMLocation = (stream.Position - offset);
-                    return (int)HnamHnam_FieldIndex.FNAM;
+                    _ForceRotateLocation = (stream.Position - offset);
+                    return (int)HeadTracking_FieldIndex.ForceRotate;
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _PNAMLocation = (stream.Position - offset);
-                    return (int)HnamHnam_FieldIndex.PNAM;
+                    _ForceRotateMustCompleteLocation = (stream.Position - offset);
+                    return (int)HeadTracking_FieldIndex.ForceRotateMustComplete;
                 }
                 case RecordTypeInts.HNAM: // End Marker
                 {
@@ -1472,7 +1432,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            HnamHnamMixIn.Print(
+            HeadTrackingMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1483,16 +1443,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IHnamHnamGetter rhs) return false;
-            return ((HnamHnamCommon)((IHnamHnamGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IHeadTrackingGetter rhs) return false;
+            return ((HeadTrackingCommon)((IHeadTrackingGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IHnamHnamGetter? obj)
+        public bool Equals(IHeadTrackingGetter? obj)
         {
-            return ((HnamHnamCommon)((IHnamHnamGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((HeadTrackingCommon)((IHeadTrackingGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((HnamHnamCommon)((IHnamHnamGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((HeadTrackingCommon)((IHeadTrackingGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

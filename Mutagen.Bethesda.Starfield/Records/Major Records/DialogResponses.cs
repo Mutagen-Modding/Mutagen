@@ -25,6 +25,7 @@ partial class DialogResponses
     {
         Low = 1,
         Normal = 2,
+        High = 3,
         Force = 4,
     }
 }

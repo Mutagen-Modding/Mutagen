@@ -640,7 +640,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             Hazard_Registration.Instance,
             HeadPart_Registration.Instance,
             HeadPartsAndBoneModifiers_Registration.Instance,
-            HnamHnam_Registration.Instance,
+            HeadTracking_Registration.Instance,
             HoudiniDataComponent_Registration.Instance,
             IdleAnimation_Registration.Instance,
             IdleMarker_Registration.Instance,

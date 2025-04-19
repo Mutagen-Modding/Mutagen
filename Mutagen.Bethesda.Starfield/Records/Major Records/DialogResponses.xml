@@ -12,16 +12,16 @@
       <String name="Prompt" recordType="RNAM" translated="Normal" />
       <FormLink name="Speaker" recordType="ANAM" refName="Npc" />
       <FormLink name="StartScene" recordType="TSCE" refName="Scene" />
-      <ByteArray name="INTV" recordType="INTV" />
+      <ByteArray name="INTV" recordType="INTV" unknown="true" />
       <RefDirect name="WED0" recordType="WED0" unknown="true" refName="SoundReference" />
       <RefDirect name="SetParentQuestStage" refName="DialogSetParentQuestStage" />
-      <String name="StartScenePhase" recordType="NAM0" />
+      <String name="StartScenePhase" recordType="NAM0" nullable="false" />
       <FormLink name="ResetGlobal" refName="Global" recordType="MODQ" />
       <Enum name="SubtitlePriority" enumName="DialogResponses.SubtitlePriorityLevel" recordType="INAM" byteLength="4" />
       <Bool name="COCT" recordType="COCT" boolAsMarker="True" unknown="true" />
-      <FormLink name="NAM8" refName="AffinityEvent" recordType="NAM8" unknown="true" />
-      <FormLink name="Perk" refName="Perk" recordType="PERK" />
+      <FormLink name="AffinityEvent" refName="AffinityEvent" recordType="NAM8" />
       <FormLink name="SpeechChallenge" refName="SpeechChallenge" recordType="SCSP" />
+      <FormLink name="Perk" refName="Perk" recordType="PERK" />
     </Fields>
   </Object>
   <Object name="DialogResponseFlags" objType="Subrecord" recordType="ENAM">
@@ -41,36 +41,40 @@
         <Fields>
           <FormLink name="Emotion" refName="Keyword" maxIsNone="true" />
           <UInt32 name="WEMFile" />
-          <Float name="TRDAUnknown" unknown="true" />
+          <Float name="EmotionOut" />
         </Fields>
       </Data>
       <RefList name="TROTs" refName="DialogResponseTROT" />
-      <String name="Text" recordType="NAM1" translated="IL" nullable="False" />
+      <String name="ResponseText" recordType="NAM1" translated="IL" nullable="False" />
       <String name="ScriptNotes" recordType="NAM2" nullable="False" />
       <String name="Edits" recordType="NAM3" nullable="False" />
       <String name="AlternateLipText" recordType="NAM4" nullable="False" />
       <ByteArray name="TextHash" recordType="NAM9" />
-      <FormLink name="BNAM" refName="IdleAnimation" recordType="BNAM" unknown="true" />
-      <String name="STRV" recordType="STRV" unknown="true" />
-      <FormLink name="VCLR" refName="Keyword" recordType="VCLR" unknown="true" />
-      <ByteArray name="FLMV" recordType="FLMV" unknown="true" />
-      <ByteArray name="FLAV" recordType="FLAV" unknown="true" />
-      <Bool name="QUAL" recordType="QUAL" boolAsMarker="True" unknown="true" />
-      <Bool name="DOFT" recordType="DOFT" boolAsMarker="True" unknown="true" />
-      <Bool name="DPLT" recordType="DPLT" boolAsMarker="True" unknown="true" />
-      <Bool name="OCOR" recordType="OCOR" boolAsMarker="True" unknown="true" />
-      <Float name="LVCR" recordType="LVCR" unknown="true" />
-      <ByteArray name="ATAC" recordType="ATAC" unknown="true" />
-      <Bool name="PLRL" recordType="PLRL" boolAsMarker="True" unknown="true" />
+      <FormLink name="NpcAnimation" refName="IdleAnimation" recordType="BNAM" />
+      <String name="AnimationSubgraph" recordType="STRV" />
+      <FormLink name="AnimationBodyArchetype" refName="Keyword" recordType="VCLR" />
+      <FormLink name="AnimationFaceArchetype" refName="Keyword" recordType="FLMV" />
+      <ByteArray name="AnimationFlavor" refName="Keyword" recordType="FLAV" />
+      <Bool name="UseDialogueAnimation" recordType="QUAL" boolAsMarker="True" />
+      <Bool name="UseAnimationBodyArchetype" recordType="DOFT" boolAsMarker="True" />
+      <Bool name="AnimationCompleteEndsPhase" recordType="DPLT" boolAsMarker="True" />
+      <Bool name="AnimationOnlyMovement" recordType="SPOR" boolAsMarker="True" />
+      <Bool name="UseFlavorAnimation" recordType="OCOR" boolAsMarker="True" />
+      <Float name="DelayStartTimeAction" recordType="LVCR" />
+      <FormLink name="Action" recordType="ATAC" refName="ActionRecord" />
+      <Bool name="UseActorAnimationAction" recordType="SHRT" boolAsMarker="True" />
+      <Bool name="AnimationHoldEvent" recordType="PLRL" boolAsMarker="True" />
+      <Int32 name="DTGT" recordType="DTGT" unknown="true" />
+      <Bool name="ACEP" recordType="ACEP" boolAsMarker="True" />
       <Bool name="XNAM" recordType="XNAM" boolAsMarker="True" unknown="true" />
-      <RefDirect name="HNAM" refName="HnamHnam" />
+      <RefDirect name="HeadTracking" refName="HeadTracking" />
       <RefDirect name="RVSH" recordType="RVSH" unknown="true" refName="SoundReference" />
     </Fields>
   </Object>
   <Object name="DialogResponseTROT" objType="Subrecord" recordType="TROT" >
     <Fields>
-      <FormLink name="UnknownVoiceType" refName="VoiceType" unknown="true" />
-      <Float name="UnknownFloat" unknown="true" />
+      <FormLink name="VoiceType" refName="VoiceType" unknown="true" />
+      <Float name="EmotionOut" />
     </Fields>
   </Object>
   <Object name="DialogSetParentQuestStage" objType="Subrecord" recordType="TIQS">

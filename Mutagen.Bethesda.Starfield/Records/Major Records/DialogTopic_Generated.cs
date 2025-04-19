@@ -1851,10 +1851,14 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.QUAL,
                 RecordTypes.DOFT,
                 RecordTypes.DPLT,
+                RecordTypes.SPOR,
                 RecordTypes.OCOR,
                 RecordTypes.LVCR,
                 RecordTypes.ATAC,
+                RecordTypes.SHRT,
                 RecordTypes.PLRL,
+                RecordTypes.DTGT,
+                RecordTypes.ACEP,
                 RecordTypes.XNAM,
                 RecordTypes.HNAM,
                 RecordTypes.RVSH,
@@ -1872,8 +1876,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.INAM,
                 RecordTypes.COCT,
                 RecordTypes.NAM8,
-                RecordTypes.PERK,
-                RecordTypes.SCSP);
+                RecordTypes.SCSP,
+                RecordTypes.PERK);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

@@ -88,15 +88,6 @@
       <Enum name="BehaviorFlags" enumName="SceneActor.BehaviorFlag" recordType="DNAM" byteLength="4" nullable="False" />
     </Fields>
   </Object>
-  <Object name="HnamHnam" objType="Subrecord" markerType="HNAM" endMarkerType="HNAM" >
-    <Fields>
-      <List name="ReferenceAliasIDs" recordType="HTID" >
-        <Int32 />
-      </List>
-      <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
-      <ByteArray name="PNAM" recordType="PNAM" unknown="true" />
-    </Fields>
-  </Object>
   <Object name="ASceneAction" abstract="true" objType="Subrecord">
     <Fields>
       <String name="Name" recordType="NAM0" nullable="false" />
@@ -113,7 +104,7 @@
       <FormLink name="Topic" refName="DialogTopic" recordType="DATA" />
       <Float name="LoopingMax" recordType="DMAX" />
       <Float name="LoopingMin" recordType="DMIN" />
-      <RefDirect name="HNAM" refName="HnamHnam" nullable="false" />
+      <RefDirect name="HNAM" refName="HeadTracking" nullable="false" />
       <FormLink name="DialogueSubtype" recordType="VENC" refName="Keyword" />
       <RefDirect name="WED0" recordType="WED0" unknown="true" refName="SoundReference" />
     </Fields>
@@ -137,7 +128,7 @@
   <Object name="PlayerDialogueSceneAction" objType="Subrecord" baseClass="ASceneAction">
     <Fields>
       <RefDirect name="WED0" recordType="WED0" unknown="true" refName="SoundReference" />
-      <RefDirect name="HNAM" refName="HnamHnam" nullable="false" />
+      <RefDirect name="HNAM" refName="HeadTracking" nullable="false" />
       <Int32 name="DialogueTargetActor" recordType="DTGT" />
       <RefList name="DialogueList" refName="PlayerDialogueSceneActionItem" />
       <ByteArray name="ATTR" recordType="ATTR" unknown="true" />

@@ -5865,9 +5865,6 @@
     <Compile Include="Records\Major Records\TimerSceneAction_Generated.cs">
       <DependentUpon>Scene.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\HnamHnam_Generated.cs">
-      <DependentUpon>Scene.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\PlayerDialogueSceneActionItem_Generated.cs">
       <DependentUpon>Scene.xml</DependentUpon>
     </Compile>
@@ -6782,6 +6779,9 @@
     </Compile>
     <Compile Include="Records\Major Records\ResearchProjectRequiredItem_Generated.cs">
       <DependentUpon>ResearchProject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\HeadTracking_Generated.cs">
+      <DependentUpon>HeadTracking.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>
