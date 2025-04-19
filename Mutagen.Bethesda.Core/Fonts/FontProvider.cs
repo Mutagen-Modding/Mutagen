@@ -1,6 +1,8 @@
 ﻿using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Fonts.DI;
 using Mutagen.Bethesda.Strings;
-namespace Mutagen.Bethesda.Fonts.DI;
+
+namespace Mutagen.Bethesda.Fonts;
 
 public interface IFontProvider {
 	/// <summary>
