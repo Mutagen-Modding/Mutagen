@@ -198,6 +198,7 @@ namespace Mutagen.Bethesda.Starfield
                 true,
                 new ILoquiRegistration[]
                 {
+                    ActionRecord_Registration.Instance,
                     Activator_Registration.Instance,
                     Activity_Registration.Instance,
                     ActorValueInformation_Registration.Instance,
@@ -290,6 +291,7 @@ namespace Mutagen.Bethesda.Starfield
                 true,
                 new ILoquiRegistration[]
                 {
+                    ActionRecord_Registration.Instance,
                     Activator_Registration.Instance,
                     Activity_Registration.Instance,
                     ActorValueInformation_Registration.Instance,
@@ -421,6 +423,7 @@ namespace Mutagen.Bethesda.Starfield
                 true,
                 new ILoquiRegistration[]
                 {
+                    ActionRecord_Registration.Instance,
                     Activator_Registration.Instance,
                     Activity_Registration.Instance,
                     ActorValueInformation_Registration.Instance,
@@ -497,6 +500,7 @@ namespace Mutagen.Bethesda.Starfield
                 true,
                 new ILoquiRegistration[]
                 {
+                    ActionRecord_Registration.Instance,
                     Activator_Registration.Instance,
                     Activity_Registration.Instance,
                     ActorValueInformation_Registration.Instance,

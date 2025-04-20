@@ -9,10 +9,12 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -22,6 +24,7 @@ using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -65,9 +68,9 @@ namespace Mutagen.Bethesda.Starfield
         String? IActionRecordGetter.Notes => this.Notes;
         #endregion
         #region Type
-        public ActionRecord.TypeEnum? Type { get; set; }
+        public Keyword.TypeEnum? Type { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ActionRecord.TypeEnum? IActionRecordGetter.Type => this.Type;
+        Keyword.TypeEnum? IActionRecordGetter.Type => this.Type;
         #endregion
         #region FNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -79,6 +82,57 @@ namespace Mutagen.Bethesda.Starfield
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte>? IActionRecordGetter.FNAM => this.FNAM;
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IActionRecordGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
+        {
+            get => this.Name?.String;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region AttractionRule
+        private readonly IFormLinkNullable<IAttractionRuleGetter> _AttractionRule = new FormLinkNullable<IAttractionRuleGetter>();
+        public IFormLinkNullable<IAttractionRuleGetter> AttractionRule
+        {
+            get => _AttractionRule;
+            set => _AttractionRule.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IAttractionRuleGetter> IActionRecordGetter.AttractionRule => this.AttractionRule;
+        #endregion
+        #region FlashLinkageName
+        public String? FlashLinkageName { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IActionRecordGetter.FlashLinkageName => this.FlashLinkageName;
         #endregion
 
         #region To String
@@ -109,6 +163,9 @@ namespace Mutagen.Bethesda.Starfield
                 this.Notes = initialValue;
                 this.Type = initialValue;
                 this.FNAM = initialValue;
+                this.Name = initialValue;
+                this.AttractionRule = initialValue;
+                this.FlashLinkageName = initialValue;
             }
 
             public Mask(
@@ -122,7 +179,10 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Color,
                 TItem Notes,
                 TItem Type,
-                TItem FNAM)
+                TItem FNAM,
+                TItem Name,
+                TItem AttractionRule,
+                TItem FlashLinkageName)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -136,6 +196,9 @@ namespace Mutagen.Bethesda.Starfield
                 this.Notes = Notes;
                 this.Type = Type;
                 this.FNAM = FNAM;
+                this.Name = Name;
+                this.AttractionRule = AttractionRule;
+                this.FlashLinkageName = FlashLinkageName;
             }
 
             #pragma warning disable CS8618
@@ -151,6 +214,9 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Notes;
             public TItem Type;
             public TItem FNAM;
+            public TItem Name;
+            public TItem AttractionRule;
+            public TItem FlashLinkageName;
             #endregion
 
             #region Equals
@@ -168,6 +234,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Notes, rhs.Notes)) return false;
                 if (!object.Equals(this.Type, rhs.Type)) return false;
                 if (!object.Equals(this.FNAM, rhs.FNAM)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.AttractionRule, rhs.AttractionRule)) return false;
+                if (!object.Equals(this.FlashLinkageName, rhs.FlashLinkageName)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -177,6 +246,9 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Notes);
                 hash.Add(this.Type);
                 hash.Add(this.FNAM);
+                hash.Add(this.Name);
+                hash.Add(this.AttractionRule);
+                hash.Add(this.FlashLinkageName);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -191,6 +263,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.Notes)) return false;
                 if (!eval(this.Type)) return false;
                 if (!eval(this.FNAM)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.AttractionRule)) return false;
+                if (!eval(this.FlashLinkageName)) return false;
                 return true;
             }
             #endregion
@@ -203,6 +278,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.Notes)) return true;
                 if (eval(this.Type)) return true;
                 if (eval(this.FNAM)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.AttractionRule)) return true;
+                if (eval(this.FlashLinkageName)) return true;
                 return false;
             }
             #endregion
@@ -222,6 +300,9 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Notes = eval(this.Notes);
                 obj.Type = eval(this.Type);
                 obj.FNAM = eval(this.FNAM);
+                obj.Name = eval(this.Name);
+                obj.AttractionRule = eval(this.AttractionRule);
+                obj.FlashLinkageName = eval(this.FlashLinkageName);
             }
             #endregion
 
@@ -256,6 +337,18 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(FNAM, "FNAM");
                     }
+                    if (printMask?.Name ?? true)
+                    {
+                        sb.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.AttractionRule ?? true)
+                    {
+                        sb.AppendItem(AttractionRule, "AttractionRule");
+                    }
+                    if (printMask?.FlashLinkageName ?? true)
+                    {
+                        sb.AppendItem(FlashLinkageName, "FlashLinkageName");
+                    }
                 }
             }
             #endregion
@@ -271,6 +364,9 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Notes;
             public Exception? Type;
             public Exception? FNAM;
+            public Exception? Name;
+            public Exception? AttractionRule;
+            public Exception? FlashLinkageName;
             #endregion
 
             #region IErrorMask
@@ -287,6 +383,12 @@ namespace Mutagen.Bethesda.Starfield
                         return Type;
                     case ActionRecord_FieldIndex.FNAM:
                         return FNAM;
+                    case ActionRecord_FieldIndex.Name:
+                        return Name;
+                    case ActionRecord_FieldIndex.AttractionRule:
+                        return AttractionRule;
+                    case ActionRecord_FieldIndex.FlashLinkageName:
+                        return FlashLinkageName;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -308,6 +410,15 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case ActionRecord_FieldIndex.FNAM:
                         this.FNAM = ex;
+                        break;
+                    case ActionRecord_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case ActionRecord_FieldIndex.AttractionRule:
+                        this.AttractionRule = ex;
+                        break;
+                    case ActionRecord_FieldIndex.FlashLinkageName:
+                        this.FlashLinkageName = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -332,6 +443,15 @@ namespace Mutagen.Bethesda.Starfield
                     case ActionRecord_FieldIndex.FNAM:
                         this.FNAM = (Exception?)obj;
                         break;
+                    case ActionRecord_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case ActionRecord_FieldIndex.AttractionRule:
+                        this.AttractionRule = (Exception?)obj;
+                        break;
+                    case ActionRecord_FieldIndex.FlashLinkageName:
+                        this.FlashLinkageName = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -345,6 +465,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (Notes != null) return true;
                 if (Type != null) return true;
                 if (FNAM != null) return true;
+                if (Name != null) return true;
+                if (AttractionRule != null) return true;
+                if (FlashLinkageName != null) return true;
                 return false;
             }
             #endregion
@@ -383,6 +506,15 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(FNAM, "FNAM");
                 }
+                {
+                    sb.AppendItem(Name, "Name");
+                }
+                {
+                    sb.AppendItem(AttractionRule, "AttractionRule");
+                }
+                {
+                    sb.AppendItem(FlashLinkageName, "FlashLinkageName");
+                }
             }
             #endregion
 
@@ -395,6 +527,9 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Notes = this.Notes.Combine(rhs.Notes);
                 ret.Type = this.Type.Combine(rhs.Type);
                 ret.FNAM = this.FNAM.Combine(rhs.FNAM);
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.AttractionRule = this.AttractionRule.Combine(rhs.AttractionRule);
+                ret.FlashLinkageName = this.FlashLinkageName.Combine(rhs.FlashLinkageName);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -421,6 +556,9 @@ namespace Mutagen.Bethesda.Starfield
             public bool Notes;
             public bool Type;
             public bool FNAM;
+            public bool Name;
+            public bool AttractionRule;
+            public bool FlashLinkageName;
             #endregion
 
             #region Ctors
@@ -433,6 +571,9 @@ namespace Mutagen.Bethesda.Starfield
                 this.Notes = defaultOn;
                 this.Type = defaultOn;
                 this.FNAM = defaultOn;
+                this.Name = defaultOn;
+                this.AttractionRule = defaultOn;
+                this.FlashLinkageName = defaultOn;
             }
 
             #endregion
@@ -444,6 +585,9 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Notes, null));
                 ret.Add((Type, null));
                 ret.Add((FNAM, null));
+                ret.Add((Name, null));
+                ret.Add((AttractionRule, null));
+                ret.Add((FlashLinkageName, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -456,6 +600,8 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ActionRecord_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ActionRecordCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ActionRecordSetterCommon.Instance.RemapLinks(this, mapping);
         public ActionRecord(
             FormKey formKey,
             StarfieldRelease gameRelease)
@@ -591,14 +737,25 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IActionRecord :
         IActionRecordGetter,
         IConstructibleObjectTarget,
+        IFormLinkContainer,
         IIdleRelation,
         ILoquiObjectSetter<IActionRecordInternal>,
-        IStarfieldMajorRecordInternal
+        INamed,
+        INamedRequired,
+        IStarfieldMajorRecordInternal,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
         new Color? Color { get; set; }
         new String? Notes { get; set; }
-        new ActionRecord.TypeEnum? Type { get; set; }
+        new Keyword.TypeEnum? Type { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        new IFormLinkNullable<IAttractionRuleGetter> AttractionRule { get; set; }
+        new String? FlashLinkageName { get; set; }
         #region Mutagen
         new ActionRecord.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -617,15 +774,28 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IBinaryItem,
         IConstructibleObjectTargetGetter,
+        IFormLinkContainerGetter,
         IIdleRelationGetter,
         ILoquiObject<IActionRecordGetter>,
-        IMapsToGetter<IActionRecordGetter>
+        IMapsToGetter<IActionRecordGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => ActionRecord_Registration.Instance;
         Color? Color { get; }
         String? Notes { get; }
-        ActionRecord.TypeEnum? Type { get; }
+        Keyword.TypeEnum? Type { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        IFormLinkNullableGetter<IAttractionRuleGetter> AttractionRule { get; }
+        String? FlashLinkageName { get; }
 
         #region Mutagen
         ActionRecord.MajorFlag MajorFlags { get; }
@@ -810,6 +980,9 @@ namespace Mutagen.Bethesda.Starfield
         Notes = 8,
         Type = 9,
         FNAM = 10,
+        Name = 11,
+        AttractionRule = 12,
+        FlashLinkageName = 13,
     }
     #endregion
 
@@ -820,9 +993,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(ActionRecord.Mask<>);
 
@@ -858,7 +1031,10 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.CNAM,
                 RecordTypes.DNAM,
                 RecordTypes.TNAM,
-                RecordTypes.FNAM);
+                RecordTypes.FNAM,
+                RecordTypes.FULL,
+                RecordTypes.DATA,
+                RecordTypes.ENAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -907,6 +1083,9 @@ namespace Mutagen.Bethesda.Starfield
             item.Notes = default;
             item.Type = default;
             item.FNAM = default;
+            item.Name = default;
+            item.AttractionRule.Clear();
+            item.FlashLinkageName = default;
             base.Clear(item);
         }
         
@@ -924,6 +1103,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IActionRecord obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.AttractionRule.Relink(mapping);
         }
         
         #endregion
@@ -995,6 +1175,9 @@ namespace Mutagen.Bethesda.Starfield
             ret.Notes = string.Equals(item.Notes, rhs.Notes);
             ret.Type = item.Type == rhs.Type;
             ret.FNAM = MemorySliceExt.SequenceEqual(item.FNAM, rhs.FNAM);
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.AttractionRule = item.AttractionRule.Equals(rhs.AttractionRule);
+            ret.FlashLinkageName = string.Equals(item.FlashLinkageName, rhs.FlashLinkageName);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1064,6 +1247,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
             }
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
+            {
+                sb.AppendItem(NameItem, "Name");
+            }
+            if (printMask?.AttractionRule ?? true)
+            {
+                sb.AppendItem(item.AttractionRule.FormKeyNullable, "AttractionRule");
+            }
+            if ((printMask?.FlashLinkageName ?? true)
+                && item.FlashLinkageName is {} FlashLinkageNameItem)
+            {
+                sb.AppendItem(FlashLinkageNameItem, "FlashLinkageName");
+            }
         }
         
         public static ActionRecord_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -1130,6 +1327,18 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.FNAM, rhs.FNAM)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)ActionRecord_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ActionRecord_FieldIndex.AttractionRule) ?? true))
+            {
+                if (!lhs.AttractionRule.Equals(rhs.AttractionRule)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ActionRecord_FieldIndex.FlashLinkageName) ?? true))
+            {
+                if (!string.Equals(lhs.FlashLinkageName, rhs.FlashLinkageName)) return false;
+            }
             return true;
         }
         
@@ -1174,6 +1383,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(FNAMItem);
             }
+            if (item.Name is {} Nameitem)
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.AttractionRule);
+            if (item.FlashLinkageName is {} FlashLinkageNameitem)
+            {
+                hash.Add(FlashLinkageNameitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1202,6 +1420,10 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (FormLinkInformation.TryFactory(obj.AttractionRule, out var AttractionRuleInfo))
+            {
+                yield return AttractionRuleInfo;
             }
             yield break;
         }
@@ -1299,6 +1521,18 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.FNAM = default;
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ActionRecord_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)ActionRecord_FieldIndex.AttractionRule) ?? true))
+            {
+                item.AttractionRule.SetTo(rhs.AttractionRule.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ActionRecord_FieldIndex.FlashLinkageName) ?? true))
+            {
+                item.FlashLinkageName = rhs.FlashLinkageName;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1478,7 +1712,7 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.Notes,
                 header: translationParams.ConvertToCustom(RecordTypes.DNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            EnumBinaryTranslation<ActionRecord.TypeEnum, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            EnumBinaryTranslation<Keyword.TypeEnum, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Type,
                 length: 4,
@@ -1487,6 +1721,21 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.FNAM,
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: translationParams.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.AttractionRule,
+                header: translationParams.ConvertToCustom(RecordTypes.DATA));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.FlashLinkageName,
+                header: translationParams.ConvertToCustom(RecordTypes.ENAM),
+                binaryType: StringBinaryType.NullTerminate);
         }
 
         public void Write(
@@ -1573,7 +1822,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Type = EnumBinaryTranslation<ActionRecord.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.Type = EnumBinaryTranslation<Keyword.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
                         length: contentLength);
                     return (int)ActionRecord_FieldIndex.Type;
@@ -1583,6 +1832,32 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)ActionRecord_FieldIndex.FNAM;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
+                    return (int)ActionRecord_FieldIndex.Name;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AttractionRule.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ActionRecord_FieldIndex.AttractionRule;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FlashLinkageName = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
+                    return (int)ActionRecord_FieldIndex.FlashLinkageName;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1628,6 +1903,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ActionRecordCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ActionRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1653,11 +1929,31 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Type
         private int? _TypeLocation;
-        public ActionRecord.TypeEnum? Type => _TypeLocation.HasValue ? (ActionRecord.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(ActionRecord.TypeEnum?);
+        public Keyword.TypeEnum? Type => _TypeLocation.HasValue ? (Keyword.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(Keyword.TypeEnum?);
         #endregion
         #region FNAM
         private int? _FNAMLocation;
         public ReadOnlyMemorySlice<Byte>? FNAM => _FNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
+        #endregion
+        #endregion
+        #region AttractionRule
+        private int? _AttractionRuleLocation;
+        public IFormLinkNullableGetter<IAttractionRuleGetter> AttractionRule => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAttractionRuleGetter>(_package, _recordData, _AttractionRuleLocation);
+        #endregion
+        #region FlashLinkageName
+        private int? _FlashLinkageNameLocation;
+        public String? FlashLinkageName => _FlashLinkageNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlashLinkageNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1747,6 +2043,21 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _FNAMLocation = (stream.Position - offset);
                     return (int)ActionRecord_FieldIndex.FNAM;
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)ActionRecord_FieldIndex.Name;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _AttractionRuleLocation = (stream.Position - offset);
+                    return (int)ActionRecord_FieldIndex.AttractionRule;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    _FlashLinkageNameLocation = (stream.Position - offset);
+                    return (int)ActionRecord_FieldIndex.FlashLinkageName;
                 }
                 default:
                     return base.FillRecordType(

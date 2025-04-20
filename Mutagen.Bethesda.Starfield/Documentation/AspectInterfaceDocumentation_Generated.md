@@ -146,6 +146,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Weapon
 - WeaponModification
 ### INamed
+- ActionRecord
 - Activator
 - Activity
 - ActorValueInformation
@@ -374,6 +375,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ## Concrete Classes to Interfaces
 ### AcousticSpace
 - IObjectBounded
+### ActionRecord
+- INamed
 ### Activator
 - IHaveVirtualMachineAdapter
 - IKeyworded

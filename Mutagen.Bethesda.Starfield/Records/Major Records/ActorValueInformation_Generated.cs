@@ -55,11 +55,6 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region DESC
-        public Byte? DESC { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte? IActorValueInformationGetter.DESC => this.DESC;
-        #endregion
         #region Name
         /// <summary>
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
@@ -96,10 +91,10 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
         #endregion
-        #region Context
-        public String? Context { get; set; }
+        #region ContextNotes
+        public String? ContextNotes { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IActorValueInformationGetter.Context => this.Context;
+        String? IActorValueInformationGetter.ContextNotes => this.ContextNotes;
         #endregion
         #region Abbreviation
         public TranslatedString? Abbreviation { get; set; }
@@ -156,9 +151,8 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.DESC = initialValue;
                 this.Name = initialValue;
-                this.Context = initialValue;
+                this.ContextNotes = initialValue;
                 this.Abbreviation = initialValue;
                 this.DefaultValue = initialValue;
                 this.Flags = initialValue;
@@ -175,9 +169,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
-                TItem DESC,
                 TItem Name,
-                TItem Context,
+                TItem ContextNotes,
                 TItem Abbreviation,
                 TItem DefaultValue,
                 TItem Flags,
@@ -193,9 +186,8 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.DESC = DESC;
                 this.Name = Name;
-                this.Context = Context;
+                this.ContextNotes = ContextNotes;
                 this.Abbreviation = Abbreviation;
                 this.DefaultValue = DefaultValue;
                 this.Flags = Flags;
@@ -213,9 +205,8 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem DESC;
             public TItem Name;
-            public TItem Context;
+            public TItem ContextNotes;
             public TItem Abbreviation;
             public TItem DefaultValue;
             public TItem Flags;
@@ -235,9 +226,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.DESC, rhs.DESC)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
-                if (!object.Equals(this.Context, rhs.Context)) return false;
+                if (!object.Equals(this.ContextNotes, rhs.ContextNotes)) return false;
                 if (!object.Equals(this.Abbreviation, rhs.Abbreviation)) return false;
                 if (!object.Equals(this.DefaultValue, rhs.DefaultValue)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
@@ -249,9 +239,8 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.DESC);
                 hash.Add(this.Name);
-                hash.Add(this.Context);
+                hash.Add(this.ContextNotes);
                 hash.Add(this.Abbreviation);
                 hash.Add(this.DefaultValue);
                 hash.Add(this.Flags);
@@ -268,9 +257,8 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.DESC)) return false;
                 if (!eval(this.Name)) return false;
-                if (!eval(this.Context)) return false;
+                if (!eval(this.ContextNotes)) return false;
                 if (!eval(this.Abbreviation)) return false;
                 if (!eval(this.DefaultValue)) return false;
                 if (!eval(this.Flags)) return false;
@@ -285,9 +273,8 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.DESC)) return true;
                 if (eval(this.Name)) return true;
-                if (eval(this.Context)) return true;
+                if (eval(this.ContextNotes)) return true;
                 if (eval(this.Abbreviation)) return true;
                 if (eval(this.DefaultValue)) return true;
                 if (eval(this.Flags)) return true;
@@ -309,9 +296,8 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.DESC = eval(this.DESC);
                 obj.Name = eval(this.Name);
-                obj.Context = eval(this.Context);
+                obj.ContextNotes = eval(this.ContextNotes);
                 obj.Abbreviation = eval(this.Abbreviation);
                 obj.DefaultValue = eval(this.DefaultValue);
                 obj.Flags = eval(this.Flags);
@@ -336,17 +322,13 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(ActorValueInformation.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.DESC ?? true)
-                    {
-                        sb.AppendItem(DESC, "DESC");
-                    }
                     if (printMask?.Name ?? true)
                     {
                         sb.AppendItem(Name, "Name");
                     }
-                    if (printMask?.Context ?? true)
+                    if (printMask?.ContextNotes ?? true)
                     {
-                        sb.AppendItem(Context, "Context");
+                        sb.AppendItem(ContextNotes, "ContextNotes");
                     }
                     if (printMask?.Abbreviation ?? true)
                     {
@@ -383,9 +365,8 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? DESC;
             public Exception? Name;
-            public Exception? Context;
+            public Exception? ContextNotes;
             public Exception? Abbreviation;
             public Exception? DefaultValue;
             public Exception? Flags;
@@ -400,12 +381,10 @@ namespace Mutagen.Bethesda.Starfield
                 ActorValueInformation_FieldIndex enu = (ActorValueInformation_FieldIndex)index;
                 switch (enu)
                 {
-                    case ActorValueInformation_FieldIndex.DESC:
-                        return DESC;
                     case ActorValueInformation_FieldIndex.Name:
                         return Name;
-                    case ActorValueInformation_FieldIndex.Context:
-                        return Context;
+                    case ActorValueInformation_FieldIndex.ContextNotes:
+                        return ContextNotes;
                     case ActorValueInformation_FieldIndex.Abbreviation:
                         return Abbreviation;
                     case ActorValueInformation_FieldIndex.DefaultValue:
@@ -428,14 +407,11 @@ namespace Mutagen.Bethesda.Starfield
                 ActorValueInformation_FieldIndex enu = (ActorValueInformation_FieldIndex)index;
                 switch (enu)
                 {
-                    case ActorValueInformation_FieldIndex.DESC:
-                        this.DESC = ex;
-                        break;
                     case ActorValueInformation_FieldIndex.Name:
                         this.Name = ex;
                         break;
-                    case ActorValueInformation_FieldIndex.Context:
-                        this.Context = ex;
+                    case ActorValueInformation_FieldIndex.ContextNotes:
+                        this.ContextNotes = ex;
                         break;
                     case ActorValueInformation_FieldIndex.Abbreviation:
                         this.Abbreviation = ex;
@@ -466,14 +442,11 @@ namespace Mutagen.Bethesda.Starfield
                 ActorValueInformation_FieldIndex enu = (ActorValueInformation_FieldIndex)index;
                 switch (enu)
                 {
-                    case ActorValueInformation_FieldIndex.DESC:
-                        this.DESC = (Exception?)obj;
-                        break;
                     case ActorValueInformation_FieldIndex.Name:
                         this.Name = (Exception?)obj;
                         break;
-                    case ActorValueInformation_FieldIndex.Context:
-                        this.Context = (Exception?)obj;
+                    case ActorValueInformation_FieldIndex.ContextNotes:
+                        this.ContextNotes = (Exception?)obj;
                         break;
                     case ActorValueInformation_FieldIndex.Abbreviation:
                         this.Abbreviation = (Exception?)obj;
@@ -502,9 +475,8 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (DESC != null) return true;
                 if (Name != null) return true;
-                if (Context != null) return true;
+                if (ContextNotes != null) return true;
                 if (Abbreviation != null) return true;
                 if (DefaultValue != null) return true;
                 if (Flags != null) return true;
@@ -538,13 +510,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(DESC, "DESC");
-                }
-                {
                     sb.AppendItem(Name, "Name");
                 }
                 {
-                    sb.AppendItem(Context, "Context");
+                    sb.AppendItem(ContextNotes, "ContextNotes");
                 }
                 {
                     sb.AppendItem(Abbreviation, "Abbreviation");
@@ -572,9 +541,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.DESC = this.DESC.Combine(rhs.DESC);
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Context = this.Context.Combine(rhs.Context);
+                ret.ContextNotes = this.ContextNotes.Combine(rhs.ContextNotes);
                 ret.Abbreviation = this.Abbreviation.Combine(rhs.Abbreviation);
                 ret.DefaultValue = this.DefaultValue.Combine(rhs.DefaultValue);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
@@ -603,9 +571,8 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
-            public bool DESC;
             public bool Name;
-            public bool Context;
+            public bool ContextNotes;
             public bool Abbreviation;
             public bool DefaultValue;
             public bool Flags;
@@ -620,9 +587,8 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.DESC = defaultOn;
                 this.Name = defaultOn;
-                this.Context = defaultOn;
+                this.ContextNotes = defaultOn;
                 this.Abbreviation = defaultOn;
                 this.DefaultValue = defaultOn;
                 this.Flags = defaultOn;
@@ -636,9 +602,8 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((DESC, null));
                 ret.Add((Name, null));
-                ret.Add((Context, null));
+                ret.Add((ContextNotes, null));
                 ret.Add((Abbreviation, null));
                 ret.Add((DefaultValue, null));
                 ret.Add((Flags, null));
@@ -793,12 +758,11 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
-        new Byte? DESC { get; set; }
         /// <summary>
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
-        new String? Context { get; set; }
+        new String? ContextNotes { get; set; }
         new TranslatedString? Abbreviation { get; set; }
         new Single? DefaultValue { get; set; }
         new ActorValueInformation.Flag? Flags { get; set; }
@@ -826,14 +790,13 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => ActorValueInformation_Registration.Instance;
-        Byte? DESC { get; }
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion
-        String? Context { get; }
+        String? ContextNotes { get; }
         ITranslatedStringGetter? Abbreviation { get; }
         Single? DefaultValue { get; }
         ActorValueInformation.Flag? Flags { get; }
@@ -1016,15 +979,14 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        DESC = 7,
-        Name = 8,
-        Context = 9,
-        Abbreviation = 10,
-        DefaultValue = 11,
-        Flags = 12,
-        Type = 13,
-        Min = 14,
-        Max = 15,
+        Name = 7,
+        ContextNotes = 8,
+        Abbreviation = 9,
+        DefaultValue = 10,
+        Flags = 11,
+        Type = 12,
+        Min = 13,
+        Max = 14,
     }
     #endregion
 
@@ -1035,9 +997,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 9;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 16;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(ActorValueInformation.Mask<>);
 
@@ -1070,7 +1032,6 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.AVIF);
             var all = RecordCollection.Factory(
                 RecordTypes.AVIF,
-                RecordTypes.DESC,
                 RecordTypes.FULL,
                 RecordTypes.NLDT,
                 RecordTypes.ANAM,
@@ -1123,9 +1084,8 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IActorValueInformationInternal item)
         {
             ClearPartial();
-            item.DESC = default;
             item.Name = default;
-            item.Context = default;
+            item.ContextNotes = default;
             item.Abbreviation = default;
             item.DefaultValue = default;
             item.Flags = default;
@@ -1216,9 +1176,8 @@ namespace Mutagen.Bethesda.Starfield
             ActorValueInformation.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.DESC = item.DESC == rhs.DESC;
             ret.Name = object.Equals(item.Name, rhs.Name);
-            ret.Context = string.Equals(item.Context, rhs.Context);
+            ret.ContextNotes = string.Equals(item.ContextNotes, rhs.ContextNotes);
             ret.Abbreviation = object.Equals(item.Abbreviation, rhs.Abbreviation);
             ret.DefaultValue = item.DefaultValue.EqualsWithin(rhs.DefaultValue);
             ret.Flags = item.Flags == rhs.Flags;
@@ -1274,20 +1233,15 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.DESC ?? true)
-                && item.DESC is {} DESCItem)
-            {
-                sb.AppendItem(DESCItem, "DESC");
-            }
             if ((printMask?.Name ?? true)
                 && item.Name is {} NameItem)
             {
                 sb.AppendItem(NameItem, "Name");
             }
-            if ((printMask?.Context ?? true)
-                && item.Context is {} ContextItem)
+            if ((printMask?.ContextNotes ?? true)
+                && item.ContextNotes is {} ContextNotesItem)
             {
-                sb.AppendItem(ContextItem, "Context");
+                sb.AppendItem(ContextNotesItem, "ContextNotes");
             }
             if ((printMask?.Abbreviation ?? true)
                 && item.Abbreviation is {} AbbreviationItem)
@@ -1369,17 +1323,13 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.DESC) ?? true))
-            {
-                if (lhs.DESC != rhs.DESC) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Context) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.ContextNotes) ?? true))
             {
-                if (!string.Equals(lhs.Context, rhs.Context)) return false;
+                if (!string.Equals(lhs.ContextNotes, rhs.ContextNotes)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Abbreviation) ?? true))
             {
@@ -1433,17 +1383,13 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IActorValueInformationGetter item)
         {
             var hash = new HashCode();
-            if (item.DESC is {} DESCitem)
-            {
-                hash.Add(DESCitem);
-            }
             if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
             }
-            if (item.Context is {} Contextitem)
+            if (item.ContextNotes is {} ContextNotesitem)
             {
-                hash.Add(Contextitem);
+                hash.Add(ContextNotesitem);
             }
             if (item.Abbreviation is {} Abbreviationitem)
             {
@@ -1572,17 +1518,13 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.DESC) ?? true))
-            {
-                item.DESC = rhs.DESC;
-            }
             if ((copyMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Name) ?? true))
             {
                 item.Name = rhs.Name?.DeepCopy();
             }
-            if ((copyMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Context) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.ContextNotes) ?? true))
             {
-                item.Context = rhs.Context;
+                item.ContextNotes = rhs.ContextNotes;
             }
             if ((copyMask?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Abbreviation) ?? true))
             {
@@ -1777,10 +1719,6 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.DESC,
-                header: translationParams.ConvertToCustom(RecordTypes.DESC));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
@@ -1789,7 +1727,7 @@ namespace Mutagen.Bethesda.Starfield
                 source: StringsSource.Normal);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Context,
+                item: item.ContextNotes,
                 header: translationParams.ConvertToCustom(RecordTypes.NLDT),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
@@ -1888,12 +1826,6 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.DESC:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DESC = frame.ReadUInt8();
-                    return (int)ActorValueInformation_FieldIndex.DESC;
-                }
                 case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1908,11 +1840,11 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NLDT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Context = StringBinaryTranslation.Instance.Parse(
+                    item.ContextNotes = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)ActorValueInformation_FieldIndex.Context;
+                    return (int)ActorValueInformation_FieldIndex.ContextNotes;
                 }
                 case RecordTypeInts.ANAM:
                 {
@@ -2017,10 +1949,6 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IActorValueInformation);
 
 
-        #region DESC
-        private int? _DESCLocation;
-        public Byte? DESC => _DESCLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DESCLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
-        #endregion
         #region Name
         private int? _NameLocation;
         public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
@@ -2033,9 +1961,9 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
-        #region Context
-        private int? _ContextLocation;
-        public String? Context => _ContextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ContextLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region ContextNotes
+        private int? _ContextNotesLocation;
+        public String? ContextNotes => _ContextNotesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ContextNotesLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region Abbreviation
         private int? _AbbreviationLocation;
@@ -2130,11 +2058,6 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.DESC:
-                {
-                    _DESCLocation = (stream.Position - offset);
-                    return (int)ActorValueInformation_FieldIndex.DESC;
-                }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
@@ -2142,8 +2065,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.NLDT:
                 {
-                    _ContextLocation = (stream.Position - offset);
-                    return (int)ActorValueInformation_FieldIndex.Context;
+                    _ContextNotesLocation = (stream.Position - offset);
+                    return (int)ActorValueInformation_FieldIndex.ContextNotes;
                 }
                 case RecordTypeInts.ANAM:
                 {

@@ -10526,6 +10526,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.ModHeader.RemapLinks(mapping);
             obj.Keywords.RemapLinks(mapping);
             obj.LocationReferenceTypes.RemapLinks(mapping);
+            obj.Actions.RemapLinks(mapping);
             obj.Globals.RemapLinks(mapping);
             obj.DamageTypes.RemapLinks(mapping);
             obj.Classes.RemapLinks(mapping);
@@ -17353,6 +17354,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     yield return item;
                 }
+            }
+            foreach (var item in obj.Actions.EnumerateFormLinks())
+            {
+                yield return item;
             }
             if (obj.Globals is IFormLinkContainerGetter GlobalslinkCont)
             {
