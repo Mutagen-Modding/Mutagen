@@ -886,7 +886,8 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         } 
         catch (Exception ex) 
         { 
-            throw SubrecordException.Enrich(ex, recordType); 
+            SubrecordException.EnrichAndThrow(ex, recordType);
+            throw;
         } 
     } 
  
@@ -918,7 +919,8 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         } 
         catch (Exception ex) 
         { 
-            throw SubrecordException.Enrich(ex, recordType); 
+            SubrecordException.EnrichAndThrow(ex, recordType);
+            throw;
         } 
     } 
  
@@ -956,7 +958,8 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         } 
         catch (Exception ex) 
         { 
-            throw SubrecordException.Enrich(ex, recordType); 
+            SubrecordException.EnrichAndThrow(ex, recordType);
+            throw;
         } 
     } 
  
@@ -994,7 +997,8 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         } 
         catch (Exception ex) 
         { 
-            throw SubrecordException.Enrich(ex, recordType); 
+            SubrecordException.EnrichAndThrow(ex, recordType);
+            throw;
         } 
     } 
  
@@ -1027,7 +1031,8 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         } 
         catch (Exception ex) 
         { 
-            throw SubrecordException.Enrich(ex, recordType); 
+            SubrecordException.EnrichAndThrow(ex, recordType);
+            throw;
         } 
     } 
  
@@ -1075,7 +1080,8 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         } 
         catch (Exception ex) 
         { 
-            throw SubrecordException.Enrich(ex, recordType); 
+            SubrecordException.EnrichAndThrow(ex, recordType);
+            throw;
         } 
     } 
  
@@ -1192,7 +1198,8 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         } 
         catch (Exception ex) 
         { 
-            throw SubrecordException.Enrich(ex, recordType); 
+            SubrecordException.EnrichAndThrow(ex, recordType);
+            throw;
         } 
     } 
  
@@ -1262,13 +1269,15 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         } 
         catch (OverflowException overflow)
         {
-            throw SubrecordException.Enrich(
+            SubrecordException.EnrichAndThrow(
                 EnrichOverflowException(overflow, counterType, items),
                 counterType);
+            throw;
         } 
         catch (Exception ex) 
         { 
-            throw SubrecordException.Enrich(ex, counterType); 
+            SubrecordException.EnrichAndThrow(ex, counterType);
+            throw;
         } 
         
         try 
@@ -1296,13 +1305,15 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         } 
         catch (OverflowException overflow)
         {
-            throw SubrecordException.Enrich(
+            SubrecordException.EnrichAndThrow(
                 EnrichOverflowException(overflow, recordType, items),
                 recordType);
+            throw;
         } 
         catch (Exception ex) 
         { 
-            throw SubrecordException.Enrich(ex, recordType); 
+            SubrecordException.EnrichAndThrow(ex, recordType);
+            throw;
         } 
     } 
  
@@ -1332,13 +1343,15 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         } 
         catch (OverflowException overflow)
         {
-            throw SubrecordException.Enrich(
+            SubrecordException.EnrichAndThrow(
                 EnrichOverflowException(overflow, counterType, items),
                 counterType);
+            throw;
         } 
         catch (Exception ex) 
         { 
-            throw SubrecordException.Enrich(ex, counterType); 
+            SubrecordException.EnrichAndThrow(ex, counterType);
+            throw;
         } 
         
         try 
@@ -1366,13 +1379,15 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         } 
         catch (OverflowException overflow)
         {
-            throw SubrecordException.Enrich(
+            SubrecordException.EnrichAndThrow(
                 EnrichOverflowException(overflow, recordType, items),
                 recordType);
+            throw;
         } 
         catch (Exception ex) 
         { 
-            throw SubrecordException.Enrich(ex, recordType); 
+            SubrecordException.EnrichAndThrow(ex, recordType);
+            throw;
         } 
     } 
  
@@ -1396,13 +1411,15 @@ internal sealed class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWr
         } 
         catch (OverflowException overflow)
         {
-            throw SubrecordException.Enrich(
+            SubrecordException.EnrichAndThrow(
                 EnrichOverflowException(overflow, counterType, items),
                 counterType);
+            throw;
         } 
         catch (Exception ex) 
         { 
-            throw SubrecordException.Enrich(ex, counterType); 
+            SubrecordException.EnrichAndThrow(ex, counterType);
+            throw;
         }
 
         if (items != null)

@@ -56,7 +56,8 @@ partial class WorldspaceBinaryWriteTranslation
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, obj);
+            RecordException.EnrichAndThrow(ex, obj);
+            throw;
         }
     }
 }
@@ -109,7 +110,8 @@ partial class WorldspaceBinaryCreateTranslation
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, obj);
+            RecordException.EnrichAndThrow(ex, obj);
+            throw;
         }
     }   
 }
@@ -189,7 +191,8 @@ partial class WorldspaceBinaryOverlay
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, this);
+            RecordException.EnrichAndThrow(ex, this);
+            throw;
         }
     }
 }

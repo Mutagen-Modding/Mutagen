@@ -138,7 +138,8 @@ public static class IGroupMixIns
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, source.FormKey, group.ContainedRecordRegistration.ClassType, source.EditorID);
+            RecordException.EnrichAndThrow(ex, source.FormKey, group.ContainedRecordRegistration.ClassType, source.EditorID);
+            throw;
         }
     }
 
@@ -161,7 +162,8 @@ public static class IGroupMixIns
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich<TMajor>(ex, source.FormKey, source.EditorID);
+            RecordException.EnrichAndThrow<TMajor>(ex, source.FormKey, source.EditorID);
+            throw;
         }
     }
 
@@ -222,7 +224,8 @@ public static class IGroupMixIns
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich<TMajor>(ex, source.FormKey, source.EditorID);
+            RecordException.EnrichAndThrow<TMajor>(ex, source.FormKey, source.EditorID);
+            throw;
         }
     }
 
@@ -263,7 +266,8 @@ public static class IGroupMixIns
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, source.FormKey, group.ContainedRecordRegistration.ClassType, source.EditorID);
+            RecordException.EnrichAndThrow(ex, source.FormKey, group.ContainedRecordRegistration.ClassType, source.EditorID);
+            throw;
         }
     }
 

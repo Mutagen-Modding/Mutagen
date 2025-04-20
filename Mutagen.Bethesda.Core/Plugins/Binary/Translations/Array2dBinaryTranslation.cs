@@ -79,7 +79,8 @@ internal sealed class Array2dBinaryTranslation<T>
         }
         catch (Exception ex)
         {
-            throw SubrecordException.Enrich(ex, recordType);
+            SubrecordException.EnrichAndThrow(ex, recordType);
+            throw;
         }
     }
 
@@ -106,7 +107,8 @@ internal sealed class Array2dBinaryTranslation<T>
         }
         catch (Exception ex)
         {
-            throw SubrecordException.Enrich(ex, recordType);
+            SubrecordException.EnrichAndThrow(ex, recordType);
+            throw;
         }
     }
 

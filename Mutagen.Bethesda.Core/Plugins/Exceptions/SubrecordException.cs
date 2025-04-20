@@ -1,3 +1,6 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.ExceptionServices;
+
 namespace Mutagen.Bethesda.Plugins.Exceptions;
 
 /// <summary>
@@ -41,6 +44,20 @@ public class SubrecordException : RecordException
             return sub;
         }
         return new SubrecordException(subRecord, formKey: null, majorRecordType: null, modKey: null, edid: null, innerException: ex);
+    }
+
+
+    /// <summary>
+    /// Wraps an exception to associate it with a specific subrecord
+    /// </summary>
+    [DoesNotReturn]
+    public static void EnrichAndThrow(Exception ex, RecordType subRecord)
+    {
+        if (ex is SubrecordException sub)
+        {
+            ExceptionDispatchInfo.Capture(sub).Throw();
+        }
+        throw new SubrecordException(subRecord, formKey: null, majorRecordType: null, modKey: null, edid: null, innerException: ex);
     }
 
     /// <summary>

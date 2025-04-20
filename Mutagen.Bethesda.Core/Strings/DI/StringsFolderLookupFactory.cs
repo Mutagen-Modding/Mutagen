@@ -115,7 +115,8 @@ public class StringsFolderLookupFactory : IStringsFolderLookupFactory
                                         }
                                         catch (Exception ex)
                                         {
-                                            throw ArchiveException.EnrichWithFileAccessed("String file from BSA failed to parse", ex, item.Path);
+                                            ArchiveException.EnrichWithFileAccessedAndThrow("String file from BSA failed to parse", ex, item.Path);
+                                            throw;
                                         }
                                     }, LazyThreadSafetyMode.ExecutionAndPublication);
                                 }
@@ -123,12 +124,14 @@ public class StringsFolderLookupFactory : IStringsFolderLookupFactory
                             catch (Exception ex)
                                 when (stringsFolder.Path != null)
                             {
-                                throw ArchiveException.EnrichWithFolderAccessed("BSA folder failed to parse for string file", ex, stringsFolder.Path);
+                                ArchiveException.EnrichWithFolderAccessedAndThrow("BSA folder failed to parse for string file", ex, stringsFolder.Path);
+                                throw;
                             }
                         }
                         catch (Exception ex)
                         {
-                            throw ArchiveException.EnrichWithArchivePath("BSA failed to parse for string file", ex, bsaFile);
+                            ArchiveException.EnrichWithArchivePathAndThrow("BSA failed to parse for string file", ex, bsaFile);
+                            throw;
                         }
                     }
                     return bundle;

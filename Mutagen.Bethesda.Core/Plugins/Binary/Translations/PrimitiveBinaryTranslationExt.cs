@@ -27,7 +27,8 @@ public static class PrimitiveBinaryTranslationExt
         }
         catch (Exception ex)
         {
-            throw SubrecordException.Enrich(ex, header);
+            SubrecordException.EnrichAndThrow(ex, header);
+            throw;
         }
     }
 
@@ -56,7 +57,8 @@ public static class PrimitiveBinaryTranslationExt
         }
         catch (Exception ex)
         {
-            throw SubrecordException.Enrich(ex, header);
+            SubrecordException.EnrichAndThrow(ex, header);
+            throw;
         }
     }
 

@@ -110,7 +110,8 @@ public sealed class FormKeyBinaryTranslation
         }
         catch (Exception ex)
         {
-            throw SubrecordException.Enrich(ex, header);
+            SubrecordException.EnrichAndThrow(ex, header);
+            throw;
         }
     }
 

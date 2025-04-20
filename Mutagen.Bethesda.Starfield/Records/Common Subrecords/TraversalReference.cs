@@ -138,7 +138,8 @@ partial class TraversalReferenceBinaryWriteTranslation
         } 
         catch (Exception ex) 
         { 
-            throw SubrecordException.Enrich(ex, RecordTypes.XTV2); 
+            SubrecordException.EnrichAndThrow(ex, RecordTypes.XTV2);
+            throw;
         }
     }
 }

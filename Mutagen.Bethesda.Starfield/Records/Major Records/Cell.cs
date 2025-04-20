@@ -122,7 +122,8 @@ partial class CellBinaryCreateTranslation
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, obj);
+            RecordException.EnrichAndThrow(ex, obj);
+            throw;
         }
     }
 
@@ -328,7 +329,8 @@ partial class CellBinaryWriteTranslation
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, obj);
+            RecordException.EnrichAndThrow(ex, obj);
+            throw;
         }
     }
 
@@ -435,7 +437,8 @@ partial class CellBinaryOverlay
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, ret);
+            RecordException.EnrichAndThrow(ex, ret);
+            throw;
         }
         return ret;
     }

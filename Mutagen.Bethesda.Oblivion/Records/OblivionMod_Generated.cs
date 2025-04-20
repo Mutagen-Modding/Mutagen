@@ -3197,7 +3197,8 @@ namespace Mutagen.Bethesda.Oblivion
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, path.ModKey);
+                RecordException.EnrichAndThrow(ex, path.ModKey);
+                throw;
             }
         }
 
@@ -3223,7 +3224,8 @@ namespace Mutagen.Bethesda.Oblivion
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, path.ModKey);
+                RecordException.EnrichAndThrow(ex, path.ModKey);
+                throw;
             }
         }
 
@@ -3249,7 +3251,8 @@ namespace Mutagen.Bethesda.Oblivion
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, modKey);
+                RecordException.EnrichAndThrow(ex, modKey);
+                throw;
             }
         }
 
@@ -3276,7 +3279,8 @@ namespace Mutagen.Bethesda.Oblivion
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, modKey);
+                RecordException.EnrichAndThrow(ex, modKey);
+                throw;
             }
         }
 
@@ -3319,7 +3323,8 @@ namespace Mutagen.Bethesda.Oblivion
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, frame.MetaData.ModKey);
+                RecordException.EnrichAndThrow(ex, frame.MetaData.ModKey);
+                throw;
             }
         }
 
@@ -3671,7 +3676,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(this IOblivionModGetter obj)
         {
-            return ((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => throw RecordException.Enrich(e, obj.ModKey));
+            return ((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -3685,7 +3690,7 @@ namespace Mutagen.Bethesda.Oblivion
                 type: typeof(TMajor),
                 throwIfUnknown: throwIfUnknown)
                 .Select(m => (TMajor)m)
-                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
+                .Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -3699,13 +3704,13 @@ namespace Mutagen.Bethesda.Oblivion
                 type: type,
                 throwIfUnknown: throwIfUnknown)
                 .Select(m => (IMajorRecordGetter)m)
-                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
+                .Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecord> EnumerateMajorRecords(this IOblivionMod obj)
         {
-            return ((OblivionModSetterCommon)((IOblivionModGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => throw RecordException.Enrich(e, obj.ModKey));
+            return ((OblivionModSetterCommon)((IOblivionModGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -3717,7 +3722,7 @@ namespace Mutagen.Bethesda.Oblivion
                 type: typeof(TMajor),
                 throwIfUnknown: true)
                 .Select(m => (TMajor)m)
-                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
+                .Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -3731,7 +3736,7 @@ namespace Mutagen.Bethesda.Oblivion
                 type: type,
                 throwIfUnknown: throwIfUnknown)
                 .Select(m => (IMajorRecord)m)
-                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
+                .Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -3912,7 +3917,7 @@ namespace Mutagen.Bethesda.Oblivion
                 type: typeof(TGetter),
                 throwIfUnknown: throwIfUnknown)
                 .Select(m => m.AsType<IOblivionMod, IOblivionModGetter, IMajorRecordQueryable, IMajorRecordQueryableGetter, TSetter, TGetter>())
-                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
+                .Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -3921,7 +3926,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).EnumerateMajorRecordContexts(
                 obj: obj,
                 linkCache: null!)
-                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
+                .Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -3936,7 +3941,7 @@ namespace Mutagen.Bethesda.Oblivion
                 linkCache: linkCache,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
-                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
+                .Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         #endregion
@@ -3976,7 +3981,8 @@ namespace Mutagen.Bethesda.Oblivion
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, path.ModKey);
+                RecordException.EnrichAndThrow(ex, path.ModKey);
+                throw;
             }
         }
 
@@ -4004,7 +4010,8 @@ namespace Mutagen.Bethesda.Oblivion
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, modKey);
+                RecordException.EnrichAndThrow(ex, modKey);
+                throw;
             }
         }
 

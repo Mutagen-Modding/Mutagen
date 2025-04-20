@@ -8973,7 +8973,8 @@ namespace Mutagen.Bethesda.Starfield
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, path.ModKey);
+                RecordException.EnrichAndThrow(ex, path.ModKey);
+                throw;
             }
         }
 
@@ -9011,7 +9012,8 @@ namespace Mutagen.Bethesda.Starfield
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, path.ModKey);
+                RecordException.EnrichAndThrow(ex, path.ModKey);
+                throw;
             }
         }
 
@@ -9039,7 +9041,8 @@ namespace Mutagen.Bethesda.Starfield
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, modKey);
+                RecordException.EnrichAndThrow(ex, modKey);
+                throw;
             }
         }
 
@@ -9068,7 +9071,8 @@ namespace Mutagen.Bethesda.Starfield
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, modKey);
+                RecordException.EnrichAndThrow(ex, modKey);
+                throw;
             }
         }
 
@@ -9119,7 +9123,8 @@ namespace Mutagen.Bethesda.Starfield
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, frame.MetaData.ModKey);
+                RecordException.EnrichAndThrow(ex, frame.MetaData.ModKey);
+                throw;
             }
         }
 
@@ -9715,7 +9720,7 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(this IStarfieldModGetter obj)
         {
-            return ((StarfieldModCommon)((IStarfieldModGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => throw RecordException.Enrich(e, obj.ModKey));
+            return ((StarfieldModCommon)((IStarfieldModGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -9729,7 +9734,7 @@ namespace Mutagen.Bethesda.Starfield
                 type: typeof(TMajor),
                 throwIfUnknown: throwIfUnknown)
                 .Select(m => (TMajor)m)
-                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
+                .Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -9743,13 +9748,13 @@ namespace Mutagen.Bethesda.Starfield
                 type: type,
                 throwIfUnknown: throwIfUnknown)
                 .Select(m => (IMajorRecordGetter)m)
-                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
+                .Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecord> EnumerateMajorRecords(this IStarfieldMod obj)
         {
-            return ((StarfieldModSetterCommon)((IStarfieldModGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => throw RecordException.Enrich(e, obj.ModKey));
+            return ((StarfieldModSetterCommon)((IStarfieldModGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -9761,7 +9766,7 @@ namespace Mutagen.Bethesda.Starfield
                 type: typeof(TMajor),
                 throwIfUnknown: true)
                 .Select(m => (TMajor)m)
-                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
+                .Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -9775,7 +9780,7 @@ namespace Mutagen.Bethesda.Starfield
                 type: type,
                 throwIfUnknown: throwIfUnknown)
                 .Select(m => (IMajorRecord)m)
-                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
+                .Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -9956,7 +9961,7 @@ namespace Mutagen.Bethesda.Starfield
                 type: typeof(TGetter),
                 throwIfUnknown: throwIfUnknown)
                 .Select(m => m.AsType<IStarfieldMod, IStarfieldModGetter, IMajorRecordQueryable, IMajorRecordQueryableGetter, TSetter, TGetter>())
-                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
+                .Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -9965,7 +9970,7 @@ namespace Mutagen.Bethesda.Starfield
             return ((StarfieldModCommon)((IStarfieldModGetter)obj).CommonInstance()!).EnumerateMajorRecordContexts(
                 obj: obj,
                 linkCache: null!)
-                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
+                .Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -9980,7 +9985,7 @@ namespace Mutagen.Bethesda.Starfield
                 linkCache: linkCache,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
-                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
+                .Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         #endregion
@@ -10034,7 +10039,8 @@ namespace Mutagen.Bethesda.Starfield
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, path.ModKey);
+                RecordException.EnrichAndThrow(ex, path.ModKey);
+                throw;
             }
         }
 
@@ -10064,7 +10070,8 @@ namespace Mutagen.Bethesda.Starfield
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, modKey);
+                RecordException.EnrichAndThrow(ex, modKey);
+                throw;
             }
         }
 

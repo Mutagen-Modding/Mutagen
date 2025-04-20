@@ -362,7 +362,8 @@ public class PluginTranslationModule : BinaryTranslationModule
         sb.AppendLine("catch (Exception ex)"); 
         using (sb.CurlyBrace()) 
         { 
-            sb.AppendLine("throw RecordException.Enrich(ex, modKey);"); 
+            sb.AppendLine("RecordException.EnrichAndThrow(ex, modKey);"); 
+            sb.AppendLine("throw;"); 
         } 
     }
 
@@ -473,7 +474,8 @@ public class PluginTranslationModule : BinaryTranslationModule
         sb.AppendLine("catch (Exception ex)");
         using (sb.CurlyBrace())
         {
-            sb.AppendLine("throw RecordException.Enrich(ex, path.ModKey);");
+            sb.AppendLine("RecordException.EnrichAndThrow(ex, path.ModKey);");
+            sb.AppendLine("throw;"); 
         }
     }
 
@@ -603,7 +605,8 @@ public class PluginTranslationModule : BinaryTranslationModule
                 sb.AppendLine("catch (Exception ex)");
                 using (sb.CurlyBrace())
                 {
-                    sb.AppendLine("throw RecordException.Enrich(ex, frame.MetaData.ModKey);");
+                    sb.AppendLine("RecordException.EnrichAndThrow(ex, frame.MetaData.ModKey);");
+                    sb.AppendLine("throw;"); 
                 }
             }
             sb.AppendLine();
