@@ -2056,6 +2056,9 @@
     <Compile Include="Records\Major Records\AMagicEffectArchetype.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AmbienceSet.cs">
+      <DependentUpon>AmbienceSet.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Ammunition.cs">
       <DependentUpon>Ammunition.xml</DependentUpon>
     </Compile>
@@ -6551,9 +6554,6 @@
       <DependentUpon>ResearchProject.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IResearchResourceTarget_Generated.cs" />
-    <Compile Include="Records\Major Records\AmbienceSound_Generated.cs">
-      <DependentUpon>AmbienceSet.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\SecondaryDamageItem_Generated.cs">
       <DependentUpon>SecondaryDamageList.xml</DependentUpon>
     </Compile>
@@ -6785,6 +6785,12 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\HeadTracking_Generated.cs">
       <DependentUpon>HeadTracking.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AmbientSoundEvent_Generated.cs">
+      <DependentUpon>AmbienceSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AmbientSoundPlanetCustomization_Generated.cs">
+      <DependentUpon>AmbienceSet.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

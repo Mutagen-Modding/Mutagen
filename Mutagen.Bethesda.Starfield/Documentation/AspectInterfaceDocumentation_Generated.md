@@ -150,7 +150,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Activator
 - Activity
 - ActorValueInformation
-- ActorValueModulation
+- ActorValueModulationEntry
 - Ammunition
 - AnimationSceneAction
 - AnimationSoundTag
@@ -388,7 +388,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### ActorValueInformation
 - INamed
-### ActorValueModulation
+### ActorValueModulationEntry
 - INamed
 ### AddonNode
 - IModeled

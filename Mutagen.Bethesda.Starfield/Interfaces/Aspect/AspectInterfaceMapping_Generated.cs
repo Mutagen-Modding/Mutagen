@@ -295,7 +295,7 @@ namespace Mutagen.Bethesda.Starfield
                     Activator_Registration.Instance,
                     Activity_Registration.Instance,
                     ActorValueInformation_Registration.Instance,
-                    ActorValueModulation_Registration.Instance,
+                    ActorValueModulationEntry_Registration.Instance,
                     Ammunition_Registration.Instance,
                     AnimationSceneAction_Registration.Instance,
                     AnimationSoundTag_Registration.Instance,

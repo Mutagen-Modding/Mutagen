@@ -13309,6 +13309,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.AimOpticalSightMarkers is IAssetLinkContainer AimOpticalSightMarkerslinkCont)
+            {
+                foreach (var item in AimOpticalSightMarkerslinkCont.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.LayeredMaterialSwaps is IAssetLinkContainer LayeredMaterialSwapslinkCont)
             {
                 foreach (var item in LayeredMaterialSwapslinkCont.EnumerateListedAssetLinks())
@@ -13432,6 +13439,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.PlanetContentManagerBranchNodes.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.PlanetContentManagerContentNodes.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.Stars.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.AimOpticalSightMarkers.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.LayeredMaterialSwaps.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.LegendaryItems.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.TimeOfDays.RemapAssetLinks(mapping, queryCategories, linkCache);
@@ -25216,6 +25224,13 @@ namespace Mutagen.Bethesda.Starfield
             if (obj.Stars is IAssetLinkContainerGetter StarslinkCont)
             {
                 foreach (var item in StarslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.AimOpticalSightMarkers is IAssetLinkContainerGetter AimOpticalSightMarkerslinkCont)
+            {
+                foreach (var item in AimOpticalSightMarkerslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
