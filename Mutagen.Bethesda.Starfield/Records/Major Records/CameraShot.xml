@@ -7,7 +7,7 @@
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
-      <String name="Context" recordType="NLDT" />
+      <String name="ContextNotes" recordType="NLDT" />
       <RefList name="Conditions" refName="Condition" />
       <Data>
         <Fields>

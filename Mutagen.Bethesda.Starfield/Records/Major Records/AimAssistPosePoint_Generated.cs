@@ -50,25 +50,25 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region ANAM
-        public String? ANAM { get; set; }
+        #region StartBoneName
+        public String? StartBoneName { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IAimAssistPosePointGetter.ANAM => this.ANAM;
+        String? IAimAssistPosePointGetter.StartBoneName => this.StartBoneName;
         #endregion
-        #region BNAM
-        public String? BNAM { get; set; }
+        #region EndBoneName
+        public String? EndBoneName { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IAimAssistPosePointGetter.BNAM => this.BNAM;
+        String? IAimAssistPosePointGetter.EndBoneName => this.EndBoneName;
         #endregion
-        #region RADR
-        public Single? RADR { get; set; }
+        #region Radius
+        public Single? Radius { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IAimAssistPosePointGetter.RADR => this.RADR;
+        Single? IAimAssistPosePointGetter.Radius => this.Radius;
         #endregion
-        #region WTMX
-        public Single? WTMX { get; set; }
+        #region Weight
+        public Single? Weight { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IAimAssistPosePointGetter.WTMX => this.WTMX;
+        Single? IAimAssistPosePointGetter.Weight => this.Weight;
         #endregion
 
         #region To String
@@ -109,22 +109,22 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.ANAM = initialValue;
-                this.BNAM = initialValue;
-                this.RADR = initialValue;
-                this.WTMX = initialValue;
+                this.StartBoneName = initialValue;
+                this.EndBoneName = initialValue;
+                this.Radius = initialValue;
+                this.Weight = initialValue;
             }
 
             public Mask(
-                TItem ANAM,
-                TItem BNAM,
-                TItem RADR,
-                TItem WTMX)
+                TItem StartBoneName,
+                TItem EndBoneName,
+                TItem Radius,
+                TItem Weight)
             {
-                this.ANAM = ANAM;
-                this.BNAM = BNAM;
-                this.RADR = RADR;
-                this.WTMX = WTMX;
+                this.StartBoneName = StartBoneName;
+                this.EndBoneName = EndBoneName;
+                this.Radius = Radius;
+                this.Weight = Weight;
             }
 
             #pragma warning disable CS8618
@@ -136,10 +136,10 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem ANAM;
-            public TItem BNAM;
-            public TItem RADR;
-            public TItem WTMX;
+            public TItem StartBoneName;
+            public TItem EndBoneName;
+            public TItem Radius;
+            public TItem Weight;
             #endregion
 
             #region Equals
@@ -152,19 +152,19 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.ANAM, rhs.ANAM)) return false;
-                if (!object.Equals(this.BNAM, rhs.BNAM)) return false;
-                if (!object.Equals(this.RADR, rhs.RADR)) return false;
-                if (!object.Equals(this.WTMX, rhs.WTMX)) return false;
+                if (!object.Equals(this.StartBoneName, rhs.StartBoneName)) return false;
+                if (!object.Equals(this.EndBoneName, rhs.EndBoneName)) return false;
+                if (!object.Equals(this.Radius, rhs.Radius)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.ANAM);
-                hash.Add(this.BNAM);
-                hash.Add(this.RADR);
-                hash.Add(this.WTMX);
+                hash.Add(this.StartBoneName);
+                hash.Add(this.EndBoneName);
+                hash.Add(this.Radius);
+                hash.Add(this.Weight);
                 return hash.ToHashCode();
             }
 
@@ -173,10 +173,10 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.ANAM)) return false;
-                if (!eval(this.BNAM)) return false;
-                if (!eval(this.RADR)) return false;
-                if (!eval(this.WTMX)) return false;
+                if (!eval(this.StartBoneName)) return false;
+                if (!eval(this.EndBoneName)) return false;
+                if (!eval(this.Radius)) return false;
+                if (!eval(this.Weight)) return false;
                 return true;
             }
             #endregion
@@ -184,10 +184,10 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.ANAM)) return true;
-                if (eval(this.BNAM)) return true;
-                if (eval(this.RADR)) return true;
-                if (eval(this.WTMX)) return true;
+                if (eval(this.StartBoneName)) return true;
+                if (eval(this.EndBoneName)) return true;
+                if (eval(this.Radius)) return true;
+                if (eval(this.Weight)) return true;
                 return false;
             }
             #endregion
@@ -202,10 +202,10 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.ANAM = eval(this.ANAM);
-                obj.BNAM = eval(this.BNAM);
-                obj.RADR = eval(this.RADR);
-                obj.WTMX = eval(this.WTMX);
+                obj.StartBoneName = eval(this.StartBoneName);
+                obj.EndBoneName = eval(this.EndBoneName);
+                obj.Radius = eval(this.Radius);
+                obj.Weight = eval(this.Weight);
             }
             #endregion
 
@@ -224,21 +224,21 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(AimAssistPosePoint.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.ANAM ?? true)
+                    if (printMask?.StartBoneName ?? true)
                     {
-                        sb.AppendItem(ANAM, "ANAM");
+                        sb.AppendItem(StartBoneName, "StartBoneName");
                     }
-                    if (printMask?.BNAM ?? true)
+                    if (printMask?.EndBoneName ?? true)
                     {
-                        sb.AppendItem(BNAM, "BNAM");
+                        sb.AppendItem(EndBoneName, "EndBoneName");
                     }
-                    if (printMask?.RADR ?? true)
+                    if (printMask?.Radius ?? true)
                     {
-                        sb.AppendItem(RADR, "RADR");
+                        sb.AppendItem(Radius, "Radius");
                     }
-                    if (printMask?.WTMX ?? true)
+                    if (printMask?.Weight ?? true)
                     {
-                        sb.AppendItem(WTMX, "WTMX");
+                        sb.AppendItem(Weight, "Weight");
                     }
                 }
             }
@@ -264,10 +264,10 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? ANAM;
-            public Exception? BNAM;
-            public Exception? RADR;
-            public Exception? WTMX;
+            public Exception? StartBoneName;
+            public Exception? EndBoneName;
+            public Exception? Radius;
+            public Exception? Weight;
             #endregion
 
             #region IErrorMask
@@ -276,14 +276,14 @@ namespace Mutagen.Bethesda.Starfield
                 AimAssistPosePoint_FieldIndex enu = (AimAssistPosePoint_FieldIndex)index;
                 switch (enu)
                 {
-                    case AimAssistPosePoint_FieldIndex.ANAM:
-                        return ANAM;
-                    case AimAssistPosePoint_FieldIndex.BNAM:
-                        return BNAM;
-                    case AimAssistPosePoint_FieldIndex.RADR:
-                        return RADR;
-                    case AimAssistPosePoint_FieldIndex.WTMX:
-                        return WTMX;
+                    case AimAssistPosePoint_FieldIndex.StartBoneName:
+                        return StartBoneName;
+                    case AimAssistPosePoint_FieldIndex.EndBoneName:
+                        return EndBoneName;
+                    case AimAssistPosePoint_FieldIndex.Radius:
+                        return Radius;
+                    case AimAssistPosePoint_FieldIndex.Weight:
+                        return Weight;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -294,17 +294,17 @@ namespace Mutagen.Bethesda.Starfield
                 AimAssistPosePoint_FieldIndex enu = (AimAssistPosePoint_FieldIndex)index;
                 switch (enu)
                 {
-                    case AimAssistPosePoint_FieldIndex.ANAM:
-                        this.ANAM = ex;
+                    case AimAssistPosePoint_FieldIndex.StartBoneName:
+                        this.StartBoneName = ex;
                         break;
-                    case AimAssistPosePoint_FieldIndex.BNAM:
-                        this.BNAM = ex;
+                    case AimAssistPosePoint_FieldIndex.EndBoneName:
+                        this.EndBoneName = ex;
                         break;
-                    case AimAssistPosePoint_FieldIndex.RADR:
-                        this.RADR = ex;
+                    case AimAssistPosePoint_FieldIndex.Radius:
+                        this.Radius = ex;
                         break;
-                    case AimAssistPosePoint_FieldIndex.WTMX:
-                        this.WTMX = ex;
+                    case AimAssistPosePoint_FieldIndex.Weight:
+                        this.Weight = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -316,17 +316,17 @@ namespace Mutagen.Bethesda.Starfield
                 AimAssistPosePoint_FieldIndex enu = (AimAssistPosePoint_FieldIndex)index;
                 switch (enu)
                 {
-                    case AimAssistPosePoint_FieldIndex.ANAM:
-                        this.ANAM = (Exception?)obj;
+                    case AimAssistPosePoint_FieldIndex.StartBoneName:
+                        this.StartBoneName = (Exception?)obj;
                         break;
-                    case AimAssistPosePoint_FieldIndex.BNAM:
-                        this.BNAM = (Exception?)obj;
+                    case AimAssistPosePoint_FieldIndex.EndBoneName:
+                        this.EndBoneName = (Exception?)obj;
                         break;
-                    case AimAssistPosePoint_FieldIndex.RADR:
-                        this.RADR = (Exception?)obj;
+                    case AimAssistPosePoint_FieldIndex.Radius:
+                        this.Radius = (Exception?)obj;
                         break;
-                    case AimAssistPosePoint_FieldIndex.WTMX:
-                        this.WTMX = (Exception?)obj;
+                    case AimAssistPosePoint_FieldIndex.Weight:
+                        this.Weight = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -336,10 +336,10 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (ANAM != null) return true;
-                if (BNAM != null) return true;
-                if (RADR != null) return true;
-                if (WTMX != null) return true;
+                if (StartBoneName != null) return true;
+                if (EndBoneName != null) return true;
+                if (Radius != null) return true;
+                if (Weight != null) return true;
                 return false;
             }
             #endregion
@@ -366,16 +366,16 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(ANAM, "ANAM");
+                    sb.AppendItem(StartBoneName, "StartBoneName");
                 }
                 {
-                    sb.AppendItem(BNAM, "BNAM");
+                    sb.AppendItem(EndBoneName, "EndBoneName");
                 }
                 {
-                    sb.AppendItem(RADR, "RADR");
+                    sb.AppendItem(Radius, "Radius");
                 }
                 {
-                    sb.AppendItem(WTMX, "WTMX");
+                    sb.AppendItem(Weight, "Weight");
                 }
             }
             #endregion
@@ -385,10 +385,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.ANAM = this.ANAM.Combine(rhs.ANAM);
-                ret.BNAM = this.BNAM.Combine(rhs.BNAM);
-                ret.RADR = this.RADR.Combine(rhs.RADR);
-                ret.WTMX = this.WTMX.Combine(rhs.WTMX);
+                ret.StartBoneName = this.StartBoneName.Combine(rhs.StartBoneName);
+                ret.EndBoneName = this.EndBoneName.Combine(rhs.EndBoneName);
+                ret.Radius = this.Radius.Combine(rhs.Radius);
+                ret.Weight = this.Weight.Combine(rhs.Weight);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -412,10 +412,10 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool ANAM;
-            public bool BNAM;
-            public bool RADR;
-            public bool WTMX;
+            public bool StartBoneName;
+            public bool EndBoneName;
+            public bool Radius;
+            public bool Weight;
             #endregion
 
             #region Ctors
@@ -425,10 +425,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.ANAM = defaultOn;
-                this.BNAM = defaultOn;
-                this.RADR = defaultOn;
-                this.WTMX = defaultOn;
+                this.StartBoneName = defaultOn;
+                this.EndBoneName = defaultOn;
+                this.Radius = defaultOn;
+                this.Weight = defaultOn;
             }
 
             #endregion
@@ -444,10 +444,10 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((ANAM, null));
-                ret.Add((BNAM, null));
-                ret.Add((RADR, null));
-                ret.Add((WTMX, null));
+                ret.Add((StartBoneName, null));
+                ret.Add((EndBoneName, null));
+                ret.Add((Radius, null));
+                ret.Add((Weight, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -520,10 +520,10 @@ namespace Mutagen.Bethesda.Starfield
         IAimAssistPosePointGetter,
         ILoquiObjectSetter<IAimAssistPosePoint>
     {
-        new String? ANAM { get; set; }
-        new String? BNAM { get; set; }
-        new Single? RADR { get; set; }
-        new Single? WTMX { get; set; }
+        new String? StartBoneName { get; set; }
+        new String? EndBoneName { get; set; }
+        new Single? Radius { get; set; }
+        new Single? Weight { get; set; }
     }
 
     public partial interface IAimAssistPosePointGetter :
@@ -538,10 +538,10 @@ namespace Mutagen.Bethesda.Starfield
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => AimAssistPosePoint_Registration.Instance;
-        String? ANAM { get; }
-        String? BNAM { get; }
-        Single? RADR { get; }
-        Single? WTMX { get; }
+        String? StartBoneName { get; }
+        String? EndBoneName { get; }
+        Single? Radius { get; }
+        Single? Weight { get; }
 
     }
 
@@ -711,10 +711,10 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum AimAssistPosePoint_FieldIndex
     {
-        ANAM = 0,
-        BNAM = 1,
-        RADR = 2,
-        WTMX = 3,
+        StartBoneName = 0,
+        EndBoneName = 1,
+        Radius = 2,
+        Weight = 3,
     }
     #endregion
 
@@ -803,10 +803,10 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IAimAssistPosePoint item)
         {
             ClearPartial();
-            item.ANAM = default;
-            item.BNAM = default;
-            item.RADR = default;
-            item.WTMX = default;
+            item.StartBoneName = default;
+            item.EndBoneName = default;
+            item.Radius = default;
+            item.Weight = default;
         }
         
         #region Mutagen
@@ -856,10 +856,10 @@ namespace Mutagen.Bethesda.Starfield
             AimAssistPosePoint.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.ANAM = string.Equals(item.ANAM, rhs.ANAM);
-            ret.BNAM = string.Equals(item.BNAM, rhs.BNAM);
-            ret.RADR = item.RADR.EqualsWithin(rhs.RADR);
-            ret.WTMX = item.WTMX.EqualsWithin(rhs.WTMX);
+            ret.StartBoneName = string.Equals(item.StartBoneName, rhs.StartBoneName);
+            ret.EndBoneName = string.Equals(item.EndBoneName, rhs.EndBoneName);
+            ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
+            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
         }
         
         public string Print(
@@ -904,25 +904,25 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             AimAssistPosePoint.Mask<bool>? printMask = null)
         {
-            if ((printMask?.ANAM ?? true)
-                && item.ANAM is {} ANAMItem)
+            if ((printMask?.StartBoneName ?? true)
+                && item.StartBoneName is {} StartBoneNameItem)
             {
-                sb.AppendItem(ANAMItem, "ANAM");
+                sb.AppendItem(StartBoneNameItem, "StartBoneName");
             }
-            if ((printMask?.BNAM ?? true)
-                && item.BNAM is {} BNAMItem)
+            if ((printMask?.EndBoneName ?? true)
+                && item.EndBoneName is {} EndBoneNameItem)
             {
-                sb.AppendItem(BNAMItem, "BNAM");
+                sb.AppendItem(EndBoneNameItem, "EndBoneName");
             }
-            if ((printMask?.RADR ?? true)
-                && item.RADR is {} RADRItem)
+            if ((printMask?.Radius ?? true)
+                && item.Radius is {} RadiusItem)
             {
-                sb.AppendItem(RADRItem, "RADR");
+                sb.AppendItem(RadiusItem, "Radius");
             }
-            if ((printMask?.WTMX ?? true)
-                && item.WTMX is {} WTMXItem)
+            if ((printMask?.Weight ?? true)
+                && item.Weight is {} WeightItem)
             {
-                sb.AppendItem(WTMXItem, "WTMX");
+                sb.AppendItem(WeightItem, "Weight");
             }
         }
         
@@ -933,21 +933,21 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)AimAssistPosePoint_FieldIndex.ANAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimAssistPosePoint_FieldIndex.StartBoneName) ?? true))
             {
-                if (!string.Equals(lhs.ANAM, rhs.ANAM)) return false;
+                if (!string.Equals(lhs.StartBoneName, rhs.StartBoneName)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimAssistPosePoint_FieldIndex.BNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimAssistPosePoint_FieldIndex.EndBoneName) ?? true))
             {
-                if (!string.Equals(lhs.BNAM, rhs.BNAM)) return false;
+                if (!string.Equals(lhs.EndBoneName, rhs.EndBoneName)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimAssistPosePoint_FieldIndex.RADR) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimAssistPosePoint_FieldIndex.Radius) ?? true))
             {
-                if (!lhs.RADR.EqualsWithin(rhs.RADR)) return false;
+                if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimAssistPosePoint_FieldIndex.WTMX) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimAssistPosePoint_FieldIndex.Weight) ?? true))
             {
-                if (!lhs.WTMX.EqualsWithin(rhs.WTMX)) return false;
+                if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             }
             return true;
         }
@@ -955,21 +955,21 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IAimAssistPosePointGetter item)
         {
             var hash = new HashCode();
-            if (item.ANAM is {} ANAMitem)
+            if (item.StartBoneName is {} StartBoneNameitem)
             {
-                hash.Add(ANAMitem);
+                hash.Add(StartBoneNameitem);
             }
-            if (item.BNAM is {} BNAMitem)
+            if (item.EndBoneName is {} EndBoneNameitem)
             {
-                hash.Add(BNAMitem);
+                hash.Add(EndBoneNameitem);
             }
-            if (item.RADR is {} RADRitem)
+            if (item.Radius is {} Radiusitem)
             {
-                hash.Add(RADRitem);
+                hash.Add(Radiusitem);
             }
-            if (item.WTMX is {} WTMXitem)
+            if (item.Weight is {} Weightitem)
             {
-                hash.Add(WTMXitem);
+                hash.Add(Weightitem);
             }
             return hash.ToHashCode();
         }
@@ -1003,21 +1003,21 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)AimAssistPosePoint_FieldIndex.ANAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimAssistPosePoint_FieldIndex.StartBoneName) ?? true))
             {
-                item.ANAM = rhs.ANAM;
+                item.StartBoneName = rhs.StartBoneName;
             }
-            if ((copyMask?.GetShouldTranslate((int)AimAssistPosePoint_FieldIndex.BNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimAssistPosePoint_FieldIndex.EndBoneName) ?? true))
             {
-                item.BNAM = rhs.BNAM;
+                item.EndBoneName = rhs.EndBoneName;
             }
-            if ((copyMask?.GetShouldTranslate((int)AimAssistPosePoint_FieldIndex.RADR) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimAssistPosePoint_FieldIndex.Radius) ?? true))
             {
-                item.RADR = rhs.RADR;
+                item.Radius = rhs.Radius;
             }
-            if ((copyMask?.GetShouldTranslate((int)AimAssistPosePoint_FieldIndex.WTMX) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimAssistPosePoint_FieldIndex.Weight) ?? true))
             {
-                item.WTMX = rhs.WTMX;
+                item.Weight = rhs.Weight;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1130,21 +1130,21 @@ namespace Mutagen.Bethesda.Starfield
         {
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.ANAM,
+                item: item.StartBoneName,
                 header: translationParams.ConvertToCustom(RecordTypes.ANAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.BNAM,
+                item: item.EndBoneName,
                 header: translationParams.ConvertToCustom(RecordTypes.BNAM),
                 binaryType: StringBinaryType.NullTerminate);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.RADR,
+                item: item.Radius,
                 header: translationParams.ConvertToCustom(RecordTypes.RADR));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.WTMX,
+                item: item.Weight,
                 header: translationParams.ConvertToCustom(RecordTypes.WTMX));
         }
 
@@ -1190,37 +1190,37 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.ANAM:
                 {
-                    if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.ANAM, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.StartBoneName, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ANAM = StringBinaryTranslation.Instance.Parse(
+                    item.StartBoneName = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)AimAssistPosePoint_FieldIndex.ANAM;
+                    return (int)AimAssistPosePoint_FieldIndex.StartBoneName;
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.BNAM, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.EndBoneName, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BNAM = StringBinaryTranslation.Instance.Parse(
+                    item.EndBoneName = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)AimAssistPosePoint_FieldIndex.BNAM;
+                    return (int)AimAssistPosePoint_FieldIndex.EndBoneName;
                 }
                 case RecordTypeInts.RADR:
                 {
-                    if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.RADR, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.Radius, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RADR = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)AimAssistPosePoint_FieldIndex.RADR;
+                    item.Radius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)AimAssistPosePoint_FieldIndex.Radius;
                 }
                 case RecordTypeInts.WTMX:
                 {
-                    if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.WTMX, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.Weight, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WTMX = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)AimAssistPosePoint_FieldIndex.WTMX;
+                    item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)AimAssistPosePoint_FieldIndex.Weight;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1290,21 +1290,21 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        #region ANAM
-        private int? _ANAMLocation;
-        public String? ANAM => _ANAMLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ANAMLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region StartBoneName
+        private int? _StartBoneNameLocation;
+        public String? StartBoneName => _StartBoneNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StartBoneNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        #region BNAM
-        private int? _BNAMLocation;
-        public String? BNAM => _BNAMLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BNAMLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region EndBoneName
+        private int? _EndBoneNameLocation;
+        public String? EndBoneName => _EndBoneNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EndBoneNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        #region RADR
-        private int? _RADRLocation;
-        public Single? RADR => _RADRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _RADRLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region Radius
+        private int? _RadiusLocation;
+        public Single? Radius => _RadiusLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _RadiusLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        #region WTMX
-        private int? _WTMXLocation;
-        public Single? WTMX => _WTMXLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _WTMXLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region Weight
+        private int? _WeightLocation;
+        public Single? Weight => _WeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _WeightLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1371,27 +1371,27 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.ANAM:
                 {
-                    if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.ANAM, translationParams)) return ParseResult.Stop;
-                    _ANAMLocation = (stream.Position - offset);
-                    return (int)AimAssistPosePoint_FieldIndex.ANAM;
+                    if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.StartBoneName, translationParams)) return ParseResult.Stop;
+                    _StartBoneNameLocation = (stream.Position - offset);
+                    return (int)AimAssistPosePoint_FieldIndex.StartBoneName;
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.BNAM, translationParams)) return ParseResult.Stop;
-                    _BNAMLocation = (stream.Position - offset);
-                    return (int)AimAssistPosePoint_FieldIndex.BNAM;
+                    if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.EndBoneName, translationParams)) return ParseResult.Stop;
+                    _EndBoneNameLocation = (stream.Position - offset);
+                    return (int)AimAssistPosePoint_FieldIndex.EndBoneName;
                 }
                 case RecordTypeInts.RADR:
                 {
-                    if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.RADR, translationParams)) return ParseResult.Stop;
-                    _RADRLocation = (stream.Position - offset);
-                    return (int)AimAssistPosePoint_FieldIndex.RADR;
+                    if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.Radius, translationParams)) return ParseResult.Stop;
+                    _RadiusLocation = (stream.Position - offset);
+                    return (int)AimAssistPosePoint_FieldIndex.Radius;
                 }
                 case RecordTypeInts.WTMX:
                 {
-                    if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.WTMX, translationParams)) return ParseResult.Stop;
-                    _WTMXLocation = (stream.Position - offset);
-                    return (int)AimAssistPosePoint_FieldIndex.WTMX;
+                    if (lastParsed.ShortCircuit((int)AimAssistPosePoint_FieldIndex.Weight, translationParams)) return ParseResult.Stop;
+                    _WeightLocation = (stream.Position - offset);
+                    return (int)AimAssistPosePoint_FieldIndex.Weight;
                 }
                 default:
                     return ParseResult.Stop;

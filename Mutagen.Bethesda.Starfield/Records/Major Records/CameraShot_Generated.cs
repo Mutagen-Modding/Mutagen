@@ -101,10 +101,10 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         #endregion
-        #region Context
-        public String? Context { get; set; }
+        #region ContextNotes
+        public String? ContextNotes { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ICameraShotGetter.Context => this.Context;
+        String? ICameraShotGetter.ContextNotes => this.ContextNotes;
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Description = initialValue;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Context = initialValue;
+                this.ContextNotes = initialValue;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.Action = initialValue;
                 this.Location = initialValue;
@@ -236,7 +236,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Model,
                 TItem Description,
                 TItem Keywords,
-                TItem Context,
+                TItem ContextNotes,
                 TItem Conditions,
                 TItem Action,
                 TItem Location,
@@ -266,7 +266,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Description = Description;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.Context = Context;
+                this.ContextNotes = ContextNotes;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.Action = Action;
                 this.Location = Location;
@@ -298,7 +298,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public TItem Description;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
-            public TItem Context;
+            public TItem ContextNotes;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
             public TItem Action;
             public TItem Location;
@@ -332,7 +332,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
-                if (!object.Equals(this.Context, rhs.Context)) return false;
+                if (!object.Equals(this.ContextNotes, rhs.ContextNotes)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
                 if (!object.Equals(this.Action, rhs.Action)) return false;
                 if (!object.Equals(this.Location, rhs.Location)) return false;
@@ -358,7 +358,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Model);
                 hash.Add(this.Description);
                 hash.Add(this.Keywords);
-                hash.Add(this.Context);
+                hash.Add(this.ContextNotes);
                 hash.Add(this.Conditions);
                 hash.Add(this.Action);
                 hash.Add(this.Location);
@@ -403,7 +403,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (!eval(this.Context)) return false;
+                if (!eval(this.ContextNotes)) return false;
                 if (this.Conditions != null)
                 {
                     if (!eval(this.Conditions.Overall)) return false;
@@ -457,7 +457,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (eval(this.Context)) return true;
+                if (eval(this.ContextNotes)) return true;
                 if (this.Conditions != null)
                 {
                     if (eval(this.Conditions.Overall)) return true;
@@ -517,7 +517,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                obj.Context = eval(this.Context);
+                obj.ContextNotes = eval(this.ContextNotes);
                 if (Conditions != null)
                 {
                     obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
@@ -596,9 +596,9 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.Context ?? true)
+                    if (printMask?.ContextNotes ?? true)
                     {
-                        sb.AppendItem(Context, "Context");
+                        sb.AppendItem(ContextNotes, "ContextNotes");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
@@ -697,7 +697,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public Exception? Description;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
-            public Exception? Context;
+            public Exception? ContextNotes;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
             public Exception? Action;
             public Exception? Location;
@@ -729,8 +729,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Description;
                     case CameraShot_FieldIndex.Keywords:
                         return Keywords;
-                    case CameraShot_FieldIndex.Context:
-                        return Context;
+                    case CameraShot_FieldIndex.ContextNotes:
+                        return ContextNotes;
                     case CameraShot_FieldIndex.Conditions:
                         return Conditions;
                     case CameraShot_FieldIndex.Action:
@@ -784,8 +784,8 @@ namespace Mutagen.Bethesda.Starfield
                     case CameraShot_FieldIndex.Keywords:
                         this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case CameraShot_FieldIndex.Context:
-                        this.Context = ex;
+                    case CameraShot_FieldIndex.ContextNotes:
+                        this.ContextNotes = ex;
                         break;
                     case CameraShot_FieldIndex.Conditions:
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
@@ -858,8 +858,8 @@ namespace Mutagen.Bethesda.Starfield
                     case CameraShot_FieldIndex.Keywords:
                         this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case CameraShot_FieldIndex.Context:
-                        this.Context = (Exception?)obj;
+                    case CameraShot_FieldIndex.ContextNotes:
+                        this.ContextNotes = (Exception?)obj;
                         break;
                     case CameraShot_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
@@ -924,7 +924,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Model != null) return true;
                 if (Description != null) return true;
                 if (Keywords != null) return true;
-                if (Context != null) return true;
+                if (ContextNotes != null) return true;
                 if (Conditions != null) return true;
                 if (Action != null) return true;
                 if (Location != null) return true;
@@ -993,7 +993,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 {
-                    sb.AppendItem(Context, "Context");
+                    sb.AppendItem(ContextNotes, "ContextNotes");
                 }
                 if (Conditions is {} ConditionsItem)
                 {
@@ -1072,7 +1072,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.Context = this.Context.Combine(rhs.Context);
+                ret.ContextNotes = this.ContextNotes.Combine(rhs.ContextNotes);
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.Action = this.Action.Combine(rhs.Action);
                 ret.Location = this.Location.Combine(rhs.Location);
@@ -1115,7 +1115,7 @@ namespace Mutagen.Bethesda.Starfield
             public Model.TranslationMask? Model;
             public bool Description;
             public bool Keywords;
-            public bool Context;
+            public bool ContextNotes;
             public Condition.TranslationMask? Conditions;
             public bool Action;
             public bool Location;
@@ -1143,7 +1143,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Description = defaultOn;
                 this.Keywords = defaultOn;
-                this.Context = defaultOn;
+                this.ContextNotes = defaultOn;
                 this.Action = defaultOn;
                 this.Location = defaultOn;
                 this.Target = defaultOn;
@@ -1170,7 +1170,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
                 ret.Add((Description, null));
                 ret.Add((Keywords, null));
-                ret.Add((Context, null));
+                ret.Add((ContextNotes, null));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
                 ret.Add((Action, null));
                 ret.Add((Location, null));
@@ -1351,7 +1351,7 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
-        new String? Context { get; set; }
+        new String? ContextNotes { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         new CameraShot.ActionType Action { get; set; }
         new CameraShot.LocationType Location { get; set; }
@@ -1403,7 +1403,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         #endregion
-        String? Context { get; }
+        String? ContextNotes { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         CameraShot.ActionType Action { get; }
         CameraShot.LocationType Location { get; }
@@ -1600,7 +1600,7 @@ namespace Mutagen.Bethesda.Starfield
         Model = 7,
         Description = 8,
         Keywords = 9,
-        Context = 10,
+        ContextNotes = 10,
         Conditions = 11,
         Action = 12,
         Location = 13,
@@ -1730,7 +1730,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Model = null;
             item.Description = default;
             item.Keywords = null;
-            item.Context = default;
+            item.ContextNotes = default;
             item.Conditions.Clear();
             item.Action = default(CameraShot.ActionType);
             item.Location = default(CameraShot.LocationType);
@@ -1872,7 +1872,7 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.Context = string.Equals(item.Context, rhs.Context);
+            ret.ContextNotes = string.Equals(item.ContextNotes, rhs.ContextNotes);
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1967,10 +1967,10 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.Context ?? true)
-                && item.Context is {} ContextItem)
+            if ((printMask?.ContextNotes ?? true)
+                && item.ContextNotes is {} ContextNotesItem)
             {
-                sb.AppendItem(ContextItem, "Context");
+                sb.AppendItem(ContextNotesItem, "ContextNotes");
             }
             if (printMask?.Conditions?.Overall ?? true)
             {
@@ -2117,9 +2117,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Context) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.ContextNotes) ?? true))
             {
-                if (!string.Equals(lhs.Context, rhs.Context)) return false;
+                if (!string.Equals(lhs.ContextNotes, rhs.ContextNotes)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Conditions) ?? true))
             {
@@ -2226,9 +2226,9 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(Descriptionitem);
             }
             hash.Add(item.Keywords);
-            if (item.Context is {} Contextitem)
+            if (item.ContextNotes is {} ContextNotesitem)
             {
-                hash.Add(Contextitem);
+                hash.Add(ContextNotesitem);
             }
             hash.Add(item.Conditions);
             hash.Add(item.Action);
@@ -2448,9 +2448,9 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Context) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.ContextNotes) ?? true))
             {
-                item.Context = rhs.Context;
+                item.ContextNotes = rhs.ContextNotes;
             }
             if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.Conditions) ?? true))
             {
@@ -2735,7 +2735,7 @@ namespace Mutagen.Bethesda.Starfield
                 });
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Context,
+                item: item.ContextNotes,
                 header: translationParams.ConvertToCustom(RecordTypes.NLDT),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
@@ -2915,11 +2915,11 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NLDT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Context = StringBinaryTranslation.Instance.Parse(
+                    item.ContextNotes = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)CameraShot_FieldIndex.Context;
+                    return (int)CameraShot_FieldIndex.ContextNotes;
                 }
                 case RecordTypeInts.CTDA:
                 {
@@ -3057,9 +3057,9 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
-        #region Context
-        private int? _ContextLocation;
-        public String? Context => _ContextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ContextLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region ContextNotes
+        private int? _ContextNotesLocation;
+        public String? ContextNotes => _ContextNotesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ContextNotesLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         private RangeInt32? _DATALocation;
@@ -3246,8 +3246,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.NLDT:
                 {
-                    _ContextLocation = (stream.Position - offset);
-                    return (int)CameraShot_FieldIndex.Context;
+                    _ContextNotesLocation = (stream.Position - offset);
+                    return (int)CameraShot_FieldIndex.ContextNotes;
                 }
                 case RecordTypeInts.CTDA:
                 {

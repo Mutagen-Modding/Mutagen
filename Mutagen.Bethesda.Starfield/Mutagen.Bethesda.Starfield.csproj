@@ -2050,6 +2050,9 @@
     <Compile Include="Records\Major Records\AddonNode.cs">
       <DependentUpon>AddonNode.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AffinityEvent.cs">
+      <DependentUpon>AffinityEvent.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\AMagicEffectArchetype.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>

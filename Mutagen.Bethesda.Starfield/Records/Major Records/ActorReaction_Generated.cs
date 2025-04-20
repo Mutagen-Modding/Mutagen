@@ -61,15 +61,15 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<INpcGetter> IActorReactionGetter.Actor => this.Actor;
         #endregion
-        #region Reaction
-        private readonly IFormLinkNullable<IGlobalGetter> _Reaction = new FormLinkNullable<IGlobalGetter>();
-        public IFormLinkNullable<IGlobalGetter> Reaction
+        #region ReactionValue
+        private readonly IFormLinkNullable<IGlobalGetter> _ReactionValue = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> ReactionValue
         {
-            get => _Reaction;
-            set => _Reaction.SetTo(value);
+            get => _ReactionValue;
+            set => _ReactionValue.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IGlobalGetter> IActorReactionGetter.Reaction => this.Reaction;
+        IFormLinkNullableGetter<IGlobalGetter> IActorReactionGetter.ReactionValue => this.ReactionValue;
         #endregion
 
         #region To String
@@ -111,15 +111,15 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.Actor = initialValue;
-                this.Reaction = initialValue;
+                this.ReactionValue = initialValue;
             }
 
             public Mask(
                 TItem Actor,
-                TItem Reaction)
+                TItem ReactionValue)
             {
                 this.Actor = Actor;
-                this.Reaction = Reaction;
+                this.ReactionValue = ReactionValue;
             }
 
             #pragma warning disable CS8618
@@ -132,7 +132,7 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public TItem Actor;
-            public TItem Reaction;
+            public TItem ReactionValue;
             #endregion
 
             #region Equals
@@ -146,14 +146,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Actor, rhs.Actor)) return false;
-                if (!object.Equals(this.Reaction, rhs.Reaction)) return false;
+                if (!object.Equals(this.ReactionValue, rhs.ReactionValue)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Actor);
-                hash.Add(this.Reaction);
+                hash.Add(this.ReactionValue);
                 return hash.ToHashCode();
             }
 
@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Actor)) return false;
-                if (!eval(this.Reaction)) return false;
+                if (!eval(this.ReactionValue)) return false;
                 return true;
             }
             #endregion
@@ -172,7 +172,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Actor)) return true;
-                if (eval(this.Reaction)) return true;
+                if (eval(this.ReactionValue)) return true;
                 return false;
             }
             #endregion
@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Actor = eval(this.Actor);
-                obj.Reaction = eval(this.Reaction);
+                obj.ReactionValue = eval(this.ReactionValue);
             }
             #endregion
 
@@ -211,9 +211,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Actor, "Actor");
                     }
-                    if (printMask?.Reaction ?? true)
+                    if (printMask?.ReactionValue ?? true)
                     {
-                        sb.AppendItem(Reaction, "Reaction");
+                        sb.AppendItem(ReactionValue, "ReactionValue");
                     }
                 }
             }
@@ -240,7 +240,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
             }
             public Exception? Actor;
-            public Exception? Reaction;
+            public Exception? ReactionValue;
             #endregion
 
             #region IErrorMask
@@ -251,8 +251,8 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case ActorReaction_FieldIndex.Actor:
                         return Actor;
-                    case ActorReaction_FieldIndex.Reaction:
-                        return Reaction;
+                    case ActorReaction_FieldIndex.ReactionValue:
+                        return ReactionValue;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -266,8 +266,8 @@ namespace Mutagen.Bethesda.Starfield
                     case ActorReaction_FieldIndex.Actor:
                         this.Actor = ex;
                         break;
-                    case ActorReaction_FieldIndex.Reaction:
-                        this.Reaction = ex;
+                    case ActorReaction_FieldIndex.ReactionValue:
+                        this.ReactionValue = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -282,8 +282,8 @@ namespace Mutagen.Bethesda.Starfield
                     case ActorReaction_FieldIndex.Actor:
                         this.Actor = (Exception?)obj;
                         break;
-                    case ActorReaction_FieldIndex.Reaction:
-                        this.Reaction = (Exception?)obj;
+                    case ActorReaction_FieldIndex.ReactionValue:
+                        this.ReactionValue = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -294,7 +294,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (Actor != null) return true;
-                if (Reaction != null) return true;
+                if (ReactionValue != null) return true;
                 return false;
             }
             #endregion
@@ -324,7 +324,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Actor, "Actor");
                 }
                 {
-                    sb.AppendItem(Reaction, "Reaction");
+                    sb.AppendItem(ReactionValue, "ReactionValue");
                 }
             }
             #endregion
@@ -335,7 +335,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Actor = this.Actor.Combine(rhs.Actor);
-                ret.Reaction = this.Reaction.Combine(rhs.Reaction);
+                ret.ReactionValue = this.ReactionValue.Combine(rhs.ReactionValue);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -360,7 +360,7 @@ namespace Mutagen.Bethesda.Starfield
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Actor;
-            public bool Reaction;
+            public bool ReactionValue;
             #endregion
 
             #region Ctors
@@ -371,7 +371,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Actor = defaultOn;
-                this.Reaction = defaultOn;
+                this.ReactionValue = defaultOn;
             }
 
             #endregion
@@ -388,7 +388,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Actor, null));
-                ret.Add((Reaction, null));
+                ret.Add((ReactionValue, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IActorReaction>
     {
         new IFormLinkNullable<INpcGetter> Actor { get; set; }
-        new IFormLinkNullable<IGlobalGetter> Reaction { get; set; }
+        new IFormLinkNullable<IGlobalGetter> ReactionValue { get; set; }
     }
 
     public partial interface IActorReactionGetter :
@@ -485,7 +485,7 @@ namespace Mutagen.Bethesda.Starfield
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => ActorReaction_Registration.Instance;
         IFormLinkNullableGetter<INpcGetter> Actor { get; }
-        IFormLinkNullableGetter<IGlobalGetter> Reaction { get; }
+        IFormLinkNullableGetter<IGlobalGetter> ReactionValue { get; }
 
     }
 
@@ -656,7 +656,7 @@ namespace Mutagen.Bethesda.Starfield
     internal enum ActorReaction_FieldIndex
     {
         Actor = 0,
-        Reaction = 1,
+        ReactionValue = 1,
     }
     #endregion
 
@@ -744,14 +744,14 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Actor.Clear();
-            item.Reaction.Clear();
+            item.ReactionValue.Clear();
         }
         
         #region Mutagen
         public void RemapLinks(IActorReaction obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.Actor.Relink(mapping);
-            obj.Reaction.Relink(mapping);
+            obj.ReactionValue.Relink(mapping);
         }
         
         #endregion
@@ -797,7 +797,7 @@ namespace Mutagen.Bethesda.Starfield
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Actor = item.Actor.Equals(rhs.Actor);
-            ret.Reaction = item.Reaction.Equals(rhs.Reaction);
+            ret.ReactionValue = item.ReactionValue.Equals(rhs.ReactionValue);
         }
         
         public string Print(
@@ -846,9 +846,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Actor.FormKeyNullable, "Actor");
             }
-            if (printMask?.Reaction ?? true)
+            if (printMask?.ReactionValue ?? true)
             {
-                sb.AppendItem(item.Reaction.FormKeyNullable, "Reaction");
+                sb.AppendItem(item.ReactionValue.FormKeyNullable, "ReactionValue");
             }
         }
         
@@ -863,9 +863,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Actor.Equals(rhs.Actor)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ActorReaction_FieldIndex.Reaction) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActorReaction_FieldIndex.ReactionValue) ?? true))
             {
-                if (!lhs.Reaction.Equals(rhs.Reaction)) return false;
+                if (!lhs.ReactionValue.Equals(rhs.ReactionValue)) return false;
             }
             return true;
         }
@@ -874,7 +874,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             var hash = new HashCode();
             hash.Add(item.Actor);
-            hash.Add(item.Reaction);
+            hash.Add(item.ReactionValue);
             return hash.ToHashCode();
         }
         
@@ -893,9 +893,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return ActorInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.Reaction, out var ReactionInfo))
+            if (FormLinkInformation.TryFactory(obj.ReactionValue, out var ReactionValueInfo))
             {
-                yield return ReactionInfo;
+                yield return ReactionValueInfo;
             }
             yield break;
         }
@@ -919,9 +919,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Actor.SetTo(rhs.Actor.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)ActorReaction_FieldIndex.Reaction) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ActorReaction_FieldIndex.ReactionValue) ?? true))
             {
-                item.Reaction.SetTo(rhs.Reaction.FormKeyNullable);
+                item.ReactionValue.SetTo(rhs.ReactionValue.FormKeyNullable);
             }
             DeepCopyInCustom(
                 item: item,
@@ -1038,7 +1038,7 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.NNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Reaction,
+                item: item.ReactionValue,
                 header: translationParams.ConvertToCustom(RecordTypes.RNAM));
         }
 
@@ -1091,10 +1091,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.RNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)ActorReaction_FieldIndex.Reaction, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ActorReaction_FieldIndex.ReactionValue, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Reaction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)ActorReaction_FieldIndex.Reaction;
+                    item.ReactionValue.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ActorReaction_FieldIndex.ReactionValue;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1169,9 +1169,9 @@ namespace Mutagen.Bethesda.Starfield
         private int? _ActorLocation;
         public IFormLinkNullableGetter<INpcGetter> Actor => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<INpcGetter>(_package, _recordData, _ActorLocation);
         #endregion
-        #region Reaction
-        private int? _ReactionLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> Reaction => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _ReactionLocation);
+        #region ReactionValue
+        private int? _ReactionValueLocation;
+        public IFormLinkNullableGetter<IGlobalGetter> ReactionValue => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _ReactionValueLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1244,9 +1244,9 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.RNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)ActorReaction_FieldIndex.Reaction, translationParams)) return ParseResult.Stop;
-                    _ReactionLocation = (stream.Position - offset);
-                    return (int)ActorReaction_FieldIndex.Reaction;
+                    if (lastParsed.ShortCircuit((int)ActorReaction_FieldIndex.ReactionValue, translationParams)) return ParseResult.Stop;
+                    _ReactionValueLocation = (stream.Position - offset);
+                    return (int)ActorReaction_FieldIndex.ReactionValue;
                 }
                 default:
                     return ParseResult.Stop;

@@ -9,6 +9,7 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -51,13 +52,16 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region LNAM
-        public String LNAM { get; set; } = string.Empty;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedRequired
+        /// </summary>
+        public String Name { get; set; } = string.Empty;
         #endregion
-        #region VNAM
-        public String? VNAM { get; set; }
+        #region Value
+        public String? Value { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IActorValueModulationEntryGetter.VNAM => this.VNAM;
+        String? IActorValueModulationEntryGetter.Value => this.Value;
         #endregion
         #region Color
         public Color? Color { get; set; }
@@ -103,18 +107,18 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.LNAM = initialValue;
-                this.VNAM = initialValue;
+                this.Name = initialValue;
+                this.Value = initialValue;
                 this.Color = initialValue;
             }
 
             public Mask(
-                TItem LNAM,
-                TItem VNAM,
+                TItem Name,
+                TItem Value,
                 TItem Color)
             {
-                this.LNAM = LNAM;
-                this.VNAM = VNAM;
+                this.Name = Name;
+                this.Value = Value;
                 this.Color = Color;
             }
 
@@ -127,8 +131,8 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem LNAM;
-            public TItem VNAM;
+            public TItem Name;
+            public TItem Value;
             public TItem Color;
             #endregion
 
@@ -142,16 +146,16 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.LNAM, rhs.LNAM)) return false;
-                if (!object.Equals(this.VNAM, rhs.VNAM)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
                 if (!object.Equals(this.Color, rhs.Color)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.LNAM);
-                hash.Add(this.VNAM);
+                hash.Add(this.Name);
+                hash.Add(this.Value);
                 hash.Add(this.Color);
                 return hash.ToHashCode();
             }
@@ -161,8 +165,8 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.LNAM)) return false;
-                if (!eval(this.VNAM)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.Value)) return false;
                 if (!eval(this.Color)) return false;
                 return true;
             }
@@ -171,8 +175,8 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.LNAM)) return true;
-                if (eval(this.VNAM)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.Value)) return true;
                 if (eval(this.Color)) return true;
                 return false;
             }
@@ -188,8 +192,8 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.LNAM = eval(this.LNAM);
-                obj.VNAM = eval(this.VNAM);
+                obj.Name = eval(this.Name);
+                obj.Value = eval(this.Value);
                 obj.Color = eval(this.Color);
             }
             #endregion
@@ -209,13 +213,13 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(ActorValueModulationEntry.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.LNAM ?? true)
+                    if (printMask?.Name ?? true)
                     {
-                        sb.AppendItem(LNAM, "LNAM");
+                        sb.AppendItem(Name, "Name");
                     }
-                    if (printMask?.VNAM ?? true)
+                    if (printMask?.Value ?? true)
                     {
-                        sb.AppendItem(VNAM, "VNAM");
+                        sb.AppendItem(Value, "Value");
                     }
                     if (printMask?.Color ?? true)
                     {
@@ -245,8 +249,8 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? LNAM;
-            public Exception? VNAM;
+            public Exception? Name;
+            public Exception? Value;
             public Exception? Color;
             #endregion
 
@@ -256,10 +260,10 @@ namespace Mutagen.Bethesda.Starfield
                 ActorValueModulationEntry_FieldIndex enu = (ActorValueModulationEntry_FieldIndex)index;
                 switch (enu)
                 {
-                    case ActorValueModulationEntry_FieldIndex.LNAM:
-                        return LNAM;
-                    case ActorValueModulationEntry_FieldIndex.VNAM:
-                        return VNAM;
+                    case ActorValueModulationEntry_FieldIndex.Name:
+                        return Name;
+                    case ActorValueModulationEntry_FieldIndex.Value:
+                        return Value;
                     case ActorValueModulationEntry_FieldIndex.Color:
                         return Color;
                     default:
@@ -272,11 +276,11 @@ namespace Mutagen.Bethesda.Starfield
                 ActorValueModulationEntry_FieldIndex enu = (ActorValueModulationEntry_FieldIndex)index;
                 switch (enu)
                 {
-                    case ActorValueModulationEntry_FieldIndex.LNAM:
-                        this.LNAM = ex;
+                    case ActorValueModulationEntry_FieldIndex.Name:
+                        this.Name = ex;
                         break;
-                    case ActorValueModulationEntry_FieldIndex.VNAM:
-                        this.VNAM = ex;
+                    case ActorValueModulationEntry_FieldIndex.Value:
+                        this.Value = ex;
                         break;
                     case ActorValueModulationEntry_FieldIndex.Color:
                         this.Color = ex;
@@ -291,11 +295,11 @@ namespace Mutagen.Bethesda.Starfield
                 ActorValueModulationEntry_FieldIndex enu = (ActorValueModulationEntry_FieldIndex)index;
                 switch (enu)
                 {
-                    case ActorValueModulationEntry_FieldIndex.LNAM:
-                        this.LNAM = (Exception?)obj;
+                    case ActorValueModulationEntry_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
                         break;
-                    case ActorValueModulationEntry_FieldIndex.VNAM:
-                        this.VNAM = (Exception?)obj;
+                    case ActorValueModulationEntry_FieldIndex.Value:
+                        this.Value = (Exception?)obj;
                         break;
                     case ActorValueModulationEntry_FieldIndex.Color:
                         this.Color = (Exception?)obj;
@@ -308,8 +312,8 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (LNAM != null) return true;
-                if (VNAM != null) return true;
+                if (Name != null) return true;
+                if (Value != null) return true;
                 if (Color != null) return true;
                 return false;
             }
@@ -337,10 +341,10 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(LNAM, "LNAM");
+                    sb.AppendItem(Name, "Name");
                 }
                 {
-                    sb.AppendItem(VNAM, "VNAM");
+                    sb.AppendItem(Value, "Value");
                 }
                 {
                     sb.AppendItem(Color, "Color");
@@ -353,8 +357,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.LNAM = this.LNAM.Combine(rhs.LNAM);
-                ret.VNAM = this.VNAM.Combine(rhs.VNAM);
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Value = this.Value.Combine(rhs.Value);
                 ret.Color = this.Color.Combine(rhs.Color);
                 return ret;
             }
@@ -379,8 +383,8 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool LNAM;
-            public bool VNAM;
+            public bool Name;
+            public bool Value;
             public bool Color;
             #endregion
 
@@ -391,8 +395,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.LNAM = defaultOn;
-                this.VNAM = defaultOn;
+                this.Name = defaultOn;
+                this.Value = defaultOn;
                 this.Color = defaultOn;
             }
 
@@ -409,8 +413,8 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((LNAM, null));
-                ret.Add((VNAM, null));
+                ret.Add((Name, null));
+                ret.Add((Value, null));
                 ret.Add((Color, null));
             }
 
@@ -482,17 +486,22 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IActorValueModulationEntry :
         IActorValueModulationEntryGetter,
-        ILoquiObjectSetter<IActorValueModulationEntry>
+        ILoquiObjectSetter<IActorValueModulationEntry>,
+        INamedRequired
     {
-        new String LNAM { get; set; }
-        new String? VNAM { get; set; }
+        /// <summary>
+        /// Aspects: INamedRequired
+        /// </summary>
+        new String Name { get; set; }
+        new String? Value { get; set; }
         new Color? Color { get; set; }
     }
 
     public partial interface IActorValueModulationEntryGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IActorValueModulationEntryGetter>
+        ILoquiObject<IActorValueModulationEntryGetter>,
+        INamedRequiredGetter
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -501,8 +510,13 @@ namespace Mutagen.Bethesda.Starfield
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => ActorValueModulationEntry_Registration.Instance;
-        String LNAM { get; }
-        String? VNAM { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedRequiredGetter
+        /// </summary>
+        String Name { get; }
+        #endregion
+        String? Value { get; }
         Color? Color { get; }
 
     }
@@ -673,8 +687,8 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum ActorValueModulationEntry_FieldIndex
     {
-        LNAM = 0,
-        VNAM = 1,
+        Name = 0,
+        Value = 1,
         Color = 2,
     }
     #endregion
@@ -767,8 +781,8 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IActorValueModulationEntry item)
         {
             ClearPartial();
-            item.LNAM = string.Empty;
-            item.VNAM = default;
+            item.Name = string.Empty;
+            item.Value = default;
             item.Color = default;
         }
         
@@ -819,8 +833,8 @@ namespace Mutagen.Bethesda.Starfield
             ActorValueModulationEntry.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.LNAM = string.Equals(item.LNAM, rhs.LNAM);
-            ret.VNAM = string.Equals(item.VNAM, rhs.VNAM);
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Value = string.Equals(item.Value, rhs.Value);
             ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
         }
         
@@ -866,14 +880,14 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             ActorValueModulationEntry.Mask<bool>? printMask = null)
         {
-            if (printMask?.LNAM ?? true)
+            if (printMask?.Name ?? true)
             {
-                sb.AppendItem(item.LNAM, "LNAM");
+                sb.AppendItem(item.Name, "Name");
             }
-            if ((printMask?.VNAM ?? true)
-                && item.VNAM is {} VNAMItem)
+            if ((printMask?.Value ?? true)
+                && item.Value is {} ValueItem)
             {
-                sb.AppendItem(VNAMItem, "VNAM");
+                sb.AppendItem(ValueItem, "Value");
             }
             if ((printMask?.Color ?? true)
                 && item.Color is {} ColorItem)
@@ -889,13 +903,13 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)ActorValueModulationEntry_FieldIndex.LNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueModulationEntry_FieldIndex.Name) ?? true))
             {
-                if (!string.Equals(lhs.LNAM, rhs.LNAM)) return false;
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ActorValueModulationEntry_FieldIndex.VNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ActorValueModulationEntry_FieldIndex.Value) ?? true))
             {
-                if (!string.Equals(lhs.VNAM, rhs.VNAM)) return false;
+                if (!string.Equals(lhs.Value, rhs.Value)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ActorValueModulationEntry_FieldIndex.Color) ?? true))
             {
@@ -907,10 +921,10 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IActorValueModulationEntryGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.LNAM);
-            if (item.VNAM is {} VNAMitem)
+            hash.Add(item.Name);
+            if (item.Value is {} Valueitem)
             {
-                hash.Add(VNAMitem);
+                hash.Add(Valueitem);
             }
             if (item.Color is {} Coloritem)
             {
@@ -948,13 +962,13 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)ActorValueModulationEntry_FieldIndex.LNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ActorValueModulationEntry_FieldIndex.Name) ?? true))
             {
-                item.LNAM = rhs.LNAM;
+                item.Name = rhs.Name;
             }
-            if ((copyMask?.GetShouldTranslate((int)ActorValueModulationEntry_FieldIndex.VNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ActorValueModulationEntry_FieldIndex.Value) ?? true))
             {
-                item.VNAM = rhs.VNAM;
+                item.Value = rhs.Value;
             }
             if ((copyMask?.GetShouldTranslate((int)ActorValueModulationEntry_FieldIndex.Color) ?? true))
             {
@@ -1071,12 +1085,12 @@ namespace Mutagen.Bethesda.Starfield
         {
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.LNAM,
+                item: item.Name,
                 header: translationParams.ConvertToCustom(RecordTypes.LNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.VNAM,
+                item: item.Value,
                 header: translationParams.ConvertToCustom(RecordTypes.VNAM),
                 binaryType: StringBinaryType.NullTerminate);
             ColorBinaryTranslation.Instance.WriteNullable(
@@ -1127,22 +1141,22 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.LNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)ActorValueModulationEntry_FieldIndex.LNAM, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ActorValueModulationEntry_FieldIndex.Name, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LNAM = StringBinaryTranslation.Instance.Parse(
+                    item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)ActorValueModulationEntry_FieldIndex.LNAM;
+                    return (int)ActorValueModulationEntry_FieldIndex.Name;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VNAM = StringBinaryTranslation.Instance.Parse(
+                    item.Value = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)ActorValueModulationEntry_FieldIndex.VNAM;
+                    return (int)ActorValueModulationEntry_FieldIndex.Value;
                 }
                 case RecordTypeInts.NNAM:
                 {
@@ -1218,13 +1232,13 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        #region LNAM
-        private int? _LNAMLocation;
-        public String LNAM => _LNAMLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LNAMLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        #region Name
+        private int? _NameLocation;
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
-        #region VNAM
-        private int? _VNAMLocation;
-        public String? VNAM => _VNAMLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _VNAMLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region Value
+        private int? _ValueLocation;
+        public String? Value => _ValueLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ValueLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region Color
         private int? _ColorLocation;
@@ -1295,14 +1309,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.LNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)ActorValueModulationEntry_FieldIndex.LNAM, translationParams)) return ParseResult.Stop;
-                    _LNAMLocation = (stream.Position - offset);
-                    return (int)ActorValueModulationEntry_FieldIndex.LNAM;
+                    if (lastParsed.ShortCircuit((int)ActorValueModulationEntry_FieldIndex.Name, translationParams)) return ParseResult.Stop;
+                    _NameLocation = (stream.Position - offset);
+                    return (int)ActorValueModulationEntry_FieldIndex.Name;
                 }
                 case RecordTypeInts.VNAM:
                 {
-                    _VNAMLocation = (stream.Position - offset);
-                    return (int)ActorValueModulationEntry_FieldIndex.VNAM;
+                    _ValueLocation = (stream.Position - offset);
+                    return (int)ActorValueModulationEntry_FieldIndex.Value;
                 }
                 case RecordTypeInts.NNAM:
                 {
