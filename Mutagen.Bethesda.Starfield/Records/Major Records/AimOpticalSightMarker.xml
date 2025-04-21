@@ -6,7 +6,7 @@
       <Data recordType="ANAM">
         <Fields>
           <Bool name="ActivateSightOnSightedMode" byteLength="1" />
-          <String name="OpticalSightAttachNode" />
+          <String name="OpticalSightAttachNode" binaryType="PrependLengthWithNullIfContent" />
           <Float name="DelayBeforeSightActivation" />
           <Float name="DelayBeforeSightDeactivation" />
           <FormLink name="OpticalSightLight" refName="Light" />

@@ -153,7 +153,6 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - ActorValueModulationEntry
 - Ammunition
 - AnimationSceneAction
-- AnimationSoundTag
 - AObjectModification
 - APackageData
 - Armor
@@ -402,8 +401,6 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### AnimatedObject
 - IModeled
 ### AnimationSceneAction
-- INamed
-### AnimationSoundTag
 - INamed
 ### AObjectModification
 - IModeled

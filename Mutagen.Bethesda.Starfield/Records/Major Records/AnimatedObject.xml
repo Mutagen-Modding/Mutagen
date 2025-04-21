@@ -5,7 +5,6 @@
       <Enum name="Flags" enumName="AnimatedObject.Flag" byteLength="8" recordType="XALG" />
       <RefList name="Components" refName="AComponent" />
       <RefDirect name="Model" refName="Model" />
-      <String name="UnloadEvent" recordType="BNAM" />
     </Fields>
   </Object>
 </Loqui>

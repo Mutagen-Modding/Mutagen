@@ -94,11 +94,6 @@ namespace Mutagen.Bethesda.Starfield
         IModelGetter? IModeledGetter.Model => this.Model;
         #endregion
         #endregion
-        #region UnloadEvent
-        public String? UnloadEvent { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IAnimatedObjectGetter.UnloadEvent => this.UnloadEvent;
-        #endregion
 
         #region To String
 
@@ -127,7 +122,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.Flags = initialValue;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.UnloadEvent = initialValue;
             }
 
             public Mask(
@@ -140,8 +134,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem Flags,
                 TItem Components,
-                TItem Model,
-                TItem UnloadEvent)
+                TItem Model)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -154,7 +147,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.Flags = Flags;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.UnloadEvent = UnloadEvent;
             }
 
             #pragma warning disable CS8618
@@ -169,7 +161,6 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Flags;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
-            public TItem UnloadEvent;
             #endregion
 
             #region Equals
@@ -186,7 +177,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
-                if (!object.Equals(this.UnloadEvent, rhs.UnloadEvent)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -195,7 +185,6 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Flags);
                 hash.Add(this.Components);
                 hash.Add(this.Model);
-                hash.Add(this.UnloadEvent);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -224,7 +213,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
-                if (!eval(this.UnloadEvent)) return false;
                 return true;
             }
             #endregion
@@ -251,7 +239,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
-                if (eval(this.UnloadEvent)) return true;
                 return false;
             }
             #endregion
@@ -284,7 +271,6 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-                obj.UnloadEvent = eval(this.UnloadEvent);
             }
             #endregion
 
@@ -330,10 +316,6 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         Model?.Print(sb);
                     }
-                    if (printMask?.UnloadEvent ?? true)
-                    {
-                        sb.AppendItem(UnloadEvent, "UnloadEvent");
-                    }
                 }
             }
             #endregion
@@ -348,7 +330,6 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Flags;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
-            public Exception? UnloadEvent;
             #endregion
 
             #region IErrorMask
@@ -363,8 +344,6 @@ namespace Mutagen.Bethesda.Starfield
                         return Components;
                     case AnimatedObject_FieldIndex.Model:
                         return Model;
-                    case AnimatedObject_FieldIndex.UnloadEvent:
-                        return UnloadEvent;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -383,9 +362,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case AnimatedObject_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
-                        break;
-                    case AnimatedObject_FieldIndex.UnloadEvent:
-                        this.UnloadEvent = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -407,9 +383,6 @@ namespace Mutagen.Bethesda.Starfield
                     case AnimatedObject_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case AnimatedObject_FieldIndex.UnloadEvent:
-                        this.UnloadEvent = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -422,7 +395,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (Flags != null) return true;
                 if (Components != null) return true;
                 if (Model != null) return true;
-                if (UnloadEvent != null) return true;
                 return false;
             }
             #endregion
@@ -471,9 +443,6 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 Model?.Print(sb);
-                {
-                    sb.AppendItem(UnloadEvent, "UnloadEvent");
-                }
             }
             #endregion
 
@@ -485,7 +454,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.UnloadEvent = this.UnloadEvent.Combine(rhs.UnloadEvent);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -511,7 +479,6 @@ namespace Mutagen.Bethesda.Starfield
             public bool Flags;
             public AComponent.TranslationMask? Components;
             public Model.TranslationMask? Model;
-            public bool UnloadEvent;
             #endregion
 
             #region Ctors
@@ -521,7 +488,6 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.Flags = defaultOn;
-                this.UnloadEvent = defaultOn;
             }
 
             #endregion
@@ -532,7 +498,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Flags, null));
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
-                ret.Add((UnloadEvent, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -692,7 +657,6 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new String? UnloadEvent { get; set; }
     }
 
     public partial interface IAnimatedObjectInternal :
@@ -721,7 +685,6 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
-        String? UnloadEvent { get; }
 
     }
 
@@ -901,7 +864,6 @@ namespace Mutagen.Bethesda.Starfield
         Flags = 7,
         Components = 8,
         Model = 9,
-        UnloadEvent = 10,
     }
     #endregion
 
@@ -912,9 +874,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(AnimatedObject.Mask<>);
 
@@ -958,8 +920,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
-                RecordTypes.MODF,
-                RecordTypes.BNAM);
+                RecordTypes.MODF);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -1007,7 +968,6 @@ namespace Mutagen.Bethesda.Starfield
             item.Flags = default;
             item.Components.Clear();
             item.Model = null;
-            item.UnloadEvent = default;
             base.Clear(item);
         }
         
@@ -1136,7 +1096,6 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.UnloadEvent = string.Equals(item.UnloadEvent, rhs.UnloadEvent);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1210,11 +1169,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 ModelItem?.Print(sb, "Model");
             }
-            if ((printMask?.UnloadEvent ?? true)
-                && item.UnloadEvent is {} UnloadEventItem)
-            {
-                sb.AppendItem(UnloadEventItem, "UnloadEvent");
-            }
         }
         
         public static AnimatedObject_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -1281,10 +1235,6 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AnimatedObject_FieldIndex.UnloadEvent) ?? true))
-            {
-                if (!string.Equals(lhs.UnloadEvent, rhs.UnloadEvent)) return false;
-            }
             return true;
         }
         
@@ -1321,10 +1271,6 @@ namespace Mutagen.Bethesda.Starfield
             if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
-            }
-            if (item.UnloadEvent is {} UnloadEventitem)
-            {
-                hash.Add(UnloadEventitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1515,10 +1461,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)AnimatedObject_FieldIndex.UnloadEvent) ?? true))
-            {
-                item.UnloadEvent = rhs.UnloadEvent;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1712,11 +1654,6 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     translationParams: translationParams);
             }
-            StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.UnloadEvent,
-                header: translationParams.ConvertToCustom(RecordTypes.BNAM),
-                binaryType: StringBinaryType.NullTerminate);
         }
 
         public void Write(
@@ -1818,15 +1755,6 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)AnimatedObject_FieldIndex.Model;
                 }
-                case RecordTypeInts.BNAM:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UnloadEvent = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
-                    return (int)AnimatedObject_FieldIndex.UnloadEvent;
-                }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -1893,10 +1821,6 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         public IModelGetter? Model { get; private set; }
-        #region UnloadEvent
-        private int? _UnloadEventLocation;
-        public String? UnloadEvent => _UnloadEventLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _UnloadEventLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
-        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1995,11 +1919,6 @@ namespace Mutagen.Bethesda.Starfield
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)AnimatedObject_FieldIndex.Model;
-                }
-                case RecordTypeInts.BNAM:
-                {
-                    _UnloadEventLocation = (stream.Position - offset);
-                    return (int)AnimatedObject_FieldIndex.UnloadEvent;
                 }
                 default:
                     return base.FillRecordType(

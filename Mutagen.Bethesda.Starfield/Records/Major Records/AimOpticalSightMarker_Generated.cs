@@ -2184,7 +2184,7 @@ namespace Mutagen.Bethesda.Starfield
                 StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.OpticalSightAttachNode,
-                    binaryType: StringBinaryType.NullTerminate);
+                    binaryType: StringBinaryType.PrependLengthWithNullIfContent);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.DelayBeforeSightActivation);
@@ -2302,8 +2302,8 @@ namespace Mutagen.Bethesda.Starfield
                     item.ActivateSightOnSightedMode = dataFrame.ReadBoolean();
                     item.OpticalSightAttachNode = StringBinaryTranslation.Instance.Parse(
                         reader: dataFrame,
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: false);
+                        stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
+                        parseWhole: true);
                     if (dataFrame.Remaining < 4) return null;
                     item.DelayBeforeSightActivation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
@@ -2398,7 +2398,9 @@ namespace Mutagen.Bethesda.Starfield
         public Boolean ActivateSightOnSightedMode => _ActivateSightOnSightedMode_IsSet ? _recordData.Slice(_ActivateSightOnSightedModeLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
         #region OpticalSightAttachNode
-        public String OpticalSightAttachNode { get; private set; } = string.Empty;
+        private int _OpticalSightAttachNodeLocation => _ANAMLocation!.Value.Min + 0x1;
+        private bool _OpticalSightAttachNode_IsSet => _ANAMLocation.HasValue;
+        public String OpticalSightAttachNode => _OpticalSightAttachNode_IsSet ? BinaryStringUtility.ParsePrependedString(_recordData.Slice(_OpticalSightAttachNodeLocation), lengthLength: 4, encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         protected int OpticalSightAttachNodeEndingPos;
         #endregion
         #region DelayBeforeSightActivation
@@ -2504,8 +2506,7 @@ namespace Mutagen.Bethesda.Starfield
                 offset: offset,
                 translationParams: translationParams,
                 fill: ret.FillRecordType);
-            ret.OpticalSightAttachNode = BinaryStringUtility.ParseUnknownLengthString(ret._recordData.Slice(ret._ANAMLocation!.Value.Min + 0x1), package.MetaData.Encodings.NonTranslated);
-            ret.OpticalSightAttachNodeEndingPos = ret._ANAMLocation!.Value.Min + 0x1 + ret.OpticalSightAttachNode.Length + 1;
+            ret.OpticalSightAttachNodeEndingPos = ret._ANAMLocation!.Value.Min + 0x1 + BinaryPrimitives.ReadInt32LittleEndian(ret._recordData.Slice(ret._ANAMLocation!.Value.Min + 0x1)) + 4;
             return ret;
         }
 

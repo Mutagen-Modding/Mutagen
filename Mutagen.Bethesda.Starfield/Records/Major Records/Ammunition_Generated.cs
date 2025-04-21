@@ -81,11 +81,6 @@ namespace Mutagen.Bethesda.Starfield
         #region DirtinessScale
         public Percent DirtinessScale { get; set; } = default(Percent);
         #endregion
-        #region ODRT
-        public Single? ODRT { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IAmmunitionGetter.ODRT => this.ODRT;
-        #endregion
         #region Transforms
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Transforms? _Transforms;
@@ -233,16 +228,10 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IAmmunitionGetter.CasingModel => this.CasingModel;
         #endregion
-        #region NAM2
+        #region LightLayer
+        public UInt32? LightLayer { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Model? _NAM2;
-        public Model? NAM2
-        {
-            get => _NAM2;
-            set => _NAM2 = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter? IAmmunitionGetter.NAM2 => this.NAM2;
+        UInt32? IAmmunitionGetter.LightLayer => this.LightLayer;
         #endregion
 
         #region To String
@@ -271,7 +260,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.DirtinessScale = initialValue;
-                this.ODRT = initialValue;
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
                 this.Name = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
@@ -287,7 +275,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Health = initialValue;
                 this.ShortName = initialValue;
                 this.CasingModel = initialValue;
-                this.NAM2 = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.LightLayer = initialValue;
             }
 
             public Mask(
@@ -300,7 +288,6 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem ObjectBounds,
                 TItem DirtinessScale,
-                TItem ODRT,
                 TItem Transforms,
                 TItem Name,
                 TItem Model,
@@ -316,7 +303,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Health,
                 TItem ShortName,
                 TItem CasingModel,
-                TItem NAM2)
+                TItem LightLayer)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -328,7 +315,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.DirtinessScale = DirtinessScale;
-                this.ODRT = ODRT;
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
                 this.Name = Name;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
@@ -344,7 +330,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Health = Health;
                 this.ShortName = ShortName;
                 this.CasingModel = CasingModel;
-                this.NAM2 = new MaskItem<TItem, Model.Mask<TItem>?>(NAM2, new Model.Mask<TItem>(NAM2));
+                this.LightLayer = LightLayer;
             }
 
             #pragma warning disable CS8618
@@ -358,7 +344,6 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem DirtinessScale;
-            public TItem ODRT;
             public MaskItem<TItem, Transforms.Mask<TItem>?>? Transforms { get; set; }
             public TItem Name;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
@@ -374,7 +359,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Health;
             public TItem ShortName;
             public TItem CasingModel;
-            public MaskItem<TItem, Model.Mask<TItem>?>? NAM2 { get; set; }
+            public TItem LightLayer;
             #endregion
 
             #region Equals
@@ -390,7 +375,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.DirtinessScale, rhs.DirtinessScale)) return false;
-                if (!object.Equals(this.ODRT, rhs.ODRT)) return false;
                 if (!object.Equals(this.Transforms, rhs.Transforms)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
@@ -406,7 +390,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Health, rhs.Health)) return false;
                 if (!object.Equals(this.ShortName, rhs.ShortName)) return false;
                 if (!object.Equals(this.CasingModel, rhs.CasingModel)) return false;
-                if (!object.Equals(this.NAM2, rhs.NAM2)) return false;
+                if (!object.Equals(this.LightLayer, rhs.LightLayer)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -414,7 +398,6 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.DirtinessScale);
-                hash.Add(this.ODRT);
                 hash.Add(this.Transforms);
                 hash.Add(this.Name);
                 hash.Add(this.Model);
@@ -430,7 +413,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Health);
                 hash.Add(this.ShortName);
                 hash.Add(this.CasingModel);
-                hash.Add(this.NAM2);
+                hash.Add(this.LightLayer);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -447,7 +430,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (!eval(this.DirtinessScale)) return false;
-                if (!eval(this.ODRT)) return false;
                 if (Transforms != null)
                 {
                     if (!eval(this.Transforms.Overall)) return false;
@@ -489,11 +471,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.Health)) return false;
                 if (!eval(this.ShortName)) return false;
                 if (!eval(this.CasingModel)) return false;
-                if (NAM2 != null)
-                {
-                    if (!eval(this.NAM2.Overall)) return false;
-                    if (this.NAM2.Specific != null && !this.NAM2.Specific.All(eval)) return false;
-                }
+                if (!eval(this.LightLayer)) return false;
                 return true;
             }
             #endregion
@@ -508,7 +486,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
                 if (eval(this.DirtinessScale)) return true;
-                if (eval(this.ODRT)) return true;
                 if (Transforms != null)
                 {
                     if (eval(this.Transforms.Overall)) return true;
@@ -550,11 +527,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.Health)) return true;
                 if (eval(this.ShortName)) return true;
                 if (eval(this.CasingModel)) return true;
-                if (NAM2 != null)
-                {
-                    if (eval(this.NAM2.Overall)) return true;
-                    if (this.NAM2.Specific != null && this.NAM2.Specific.Any(eval)) return true;
-                }
+                if (eval(this.LightLayer)) return true;
                 return false;
             }
             #endregion
@@ -572,7 +545,6 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.DirtinessScale = eval(this.DirtinessScale);
-                obj.ODRT = eval(this.ODRT);
                 obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Transforms.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
                 obj.Name = eval(this.Name);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
@@ -601,7 +573,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Health = eval(this.Health);
                 obj.ShortName = eval(this.ShortName);
                 obj.CasingModel = eval(this.CasingModel);
-                obj.NAM2 = this.NAM2 == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.NAM2.Overall), this.NAM2.Specific?.Translate(eval));
+                obj.LightLayer = eval(this.LightLayer);
             }
             #endregion
 
@@ -627,10 +599,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.DirtinessScale ?? true)
                     {
                         sb.AppendItem(DirtinessScale, "DirtinessScale");
-                    }
-                    if (printMask?.ODRT ?? true)
-                    {
-                        sb.AppendItem(ODRT, "ODRT");
                     }
                     if (printMask?.Transforms?.Overall ?? true)
                     {
@@ -709,9 +677,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(CasingModel, "CasingModel");
                     }
-                    if (printMask?.NAM2?.Overall ?? true)
+                    if (printMask?.LightLayer ?? true)
                     {
-                        NAM2?.Print(sb);
+                        sb.AppendItem(LightLayer, "LightLayer");
                     }
                 }
             }
@@ -726,7 +694,6 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? DirtinessScale;
-            public Exception? ODRT;
             public MaskItem<Exception?, Transforms.ErrorMask?>? Transforms;
             public Exception? Name;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
@@ -742,7 +709,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Health;
             public Exception? ShortName;
             public Exception? CasingModel;
-            public MaskItem<Exception?, Model.ErrorMask?>? NAM2;
+            public Exception? LightLayer;
             #endregion
 
             #region IErrorMask
@@ -755,8 +722,6 @@ namespace Mutagen.Bethesda.Starfield
                         return ObjectBounds;
                     case Ammunition_FieldIndex.DirtinessScale:
                         return DirtinessScale;
-                    case Ammunition_FieldIndex.ODRT:
-                        return ODRT;
                     case Ammunition_FieldIndex.Transforms:
                         return Transforms;
                     case Ammunition_FieldIndex.Name:
@@ -787,8 +752,8 @@ namespace Mutagen.Bethesda.Starfield
                         return ShortName;
                     case Ammunition_FieldIndex.CasingModel:
                         return CasingModel;
-                    case Ammunition_FieldIndex.NAM2:
-                        return NAM2;
+                    case Ammunition_FieldIndex.LightLayer:
+                        return LightLayer;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -804,9 +769,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Ammunition_FieldIndex.DirtinessScale:
                         this.DirtinessScale = ex;
-                        break;
-                    case Ammunition_FieldIndex.ODRT:
-                        this.ODRT = ex;
                         break;
                     case Ammunition_FieldIndex.Transforms:
                         this.Transforms = new MaskItem<Exception?, Transforms.ErrorMask?>(ex, null);
@@ -853,8 +815,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Ammunition_FieldIndex.CasingModel:
                         this.CasingModel = ex;
                         break;
-                    case Ammunition_FieldIndex.NAM2:
-                        this.NAM2 = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                    case Ammunition_FieldIndex.LightLayer:
+                        this.LightLayer = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -872,9 +834,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Ammunition_FieldIndex.DirtinessScale:
                         this.DirtinessScale = (Exception?)obj;
-                        break;
-                    case Ammunition_FieldIndex.ODRT:
-                        this.ODRT = (Exception?)obj;
                         break;
                     case Ammunition_FieldIndex.Transforms:
                         this.Transforms = (MaskItem<Exception?, Transforms.ErrorMask?>?)obj;
@@ -921,8 +880,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Ammunition_FieldIndex.CasingModel:
                         this.CasingModel = (Exception?)obj;
                         break;
-                    case Ammunition_FieldIndex.NAM2:
-                        this.NAM2 = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                    case Ammunition_FieldIndex.LightLayer:
+                        this.LightLayer = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -935,7 +894,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (ObjectBounds != null) return true;
                 if (DirtinessScale != null) return true;
-                if (ODRT != null) return true;
                 if (Transforms != null) return true;
                 if (Name != null) return true;
                 if (Model != null) return true;
@@ -951,7 +909,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Health != null) return true;
                 if (ShortName != null) return true;
                 if (CasingModel != null) return true;
-                if (NAM2 != null) return true;
+                if (LightLayer != null) return true;
                 return false;
             }
             #endregion
@@ -981,9 +939,6 @@ namespace Mutagen.Bethesda.Starfield
                 ObjectBounds?.Print(sb);
                 {
                     sb.AppendItem(DirtinessScale, "DirtinessScale");
-                }
-                {
-                    sb.AppendItem(ODRT, "ODRT");
                 }
                 Transforms?.Print(sb);
                 {
@@ -1039,7 +994,9 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(CasingModel, "CasingModel");
                 }
-                NAM2?.Print(sb);
+                {
+                    sb.AppendItem(LightLayer, "LightLayer");
+                }
             }
             #endregion
 
@@ -1050,7 +1007,6 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.DirtinessScale = this.DirtinessScale.Combine(rhs.DirtinessScale);
-                ret.ODRT = this.ODRT.Combine(rhs.ODRT);
                 ret.Transforms = this.Transforms.Combine(rhs.Transforms, (l, r) => l.Combine(r));
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
@@ -1066,7 +1022,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Health = this.Health.Combine(rhs.Health);
                 ret.ShortName = this.ShortName.Combine(rhs.ShortName);
                 ret.CasingModel = this.CasingModel.Combine(rhs.CasingModel);
-                ret.NAM2 = this.NAM2.Combine(rhs.NAM2, (l, r) => l.Combine(r));
+                ret.LightLayer = this.LightLayer.Combine(rhs.LightLayer);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1091,7 +1047,6 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool DirtinessScale;
-            public bool ODRT;
             public Transforms.TranslationMask? Transforms;
             public bool Name;
             public Model.TranslationMask? Model;
@@ -1107,7 +1062,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Health;
             public bool ShortName;
             public bool CasingModel;
-            public Model.TranslationMask? NAM2;
+            public bool LightLayer;
             #endregion
 
             #region Ctors
@@ -1117,7 +1072,6 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.DirtinessScale = defaultOn;
-                this.ODRT = defaultOn;
                 this.Name = defaultOn;
                 this.Description = defaultOn;
                 this.Keywords = defaultOn;
@@ -1129,6 +1083,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Health = defaultOn;
                 this.ShortName = defaultOn;
                 this.CasingModel = defaultOn;
+                this.LightLayer = defaultOn;
             }
 
             #endregion
@@ -1138,7 +1093,6 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((DirtinessScale, null));
-                ret.Add((ODRT, null));
                 ret.Add((Transforms != null ? Transforms.OnOverall : DefaultOn, Transforms?.GetCrystal()));
                 ret.Add((Name, null));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
@@ -1154,7 +1108,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Health, null));
                 ret.Add((ShortName, null));
                 ret.Add((CasingModel, null));
-                ret.Add((NAM2 != null ? NAM2.OnOverall : DefaultOn, NAM2?.GetCrystal()));
+                ret.Add((LightLayer, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1330,7 +1284,6 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new Percent DirtinessScale { get; set; }
-        new Single? ODRT { get; set; }
         new Transforms? Transforms { get; set; }
         /// <summary>
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
@@ -1355,7 +1308,7 @@ namespace Mutagen.Bethesda.Starfield
         new UInt32 Health { get; set; }
         new TranslatedString? ShortName { get; set; }
         new String? CasingModel { get; set; }
-        new Model? NAM2 { get; set; }
+        new UInt32? LightLayer { get; set; }
         #region Mutagen
         new Ammunition.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1399,7 +1352,6 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
         Percent DirtinessScale { get; }
-        Single? ODRT { get; }
         ITransformsGetter? Transforms { get; }
         #region Name
         /// <summary>
@@ -1430,7 +1382,7 @@ namespace Mutagen.Bethesda.Starfield
         UInt32 Health { get; }
         ITranslatedStringGetter? ShortName { get; }
         String? CasingModel { get; }
-        IModelGetter? NAM2 { get; }
+        UInt32? LightLayer { get; }
 
         #region Mutagen
         Ammunition.MajorFlag MajorFlags { get; }
@@ -1613,23 +1565,22 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         ObjectBounds = 7,
         DirtinessScale = 8,
-        ODRT = 9,
-        Transforms = 10,
-        Name = 11,
-        Model = 12,
-        PickupSound = 13,
-        DropdownSound = 14,
-        Description = 15,
-        Keywords = 16,
-        Value = 17,
-        Weight = 18,
-        Projectile = 19,
-        Flags = 20,
-        Damage = 21,
-        Health = 22,
-        ShortName = 23,
-        CasingModel = 24,
-        NAM2 = 25,
+        Transforms = 9,
+        Name = 10,
+        Model = 11,
+        PickupSound = 12,
+        DropdownSound = 13,
+        Description = 14,
+        Keywords = 15,
+        Value = 16,
+        Weight = 17,
+        Projectile = 18,
+        Flags = 19,
+        Damage = 20,
+        Health = 21,
+        ShortName = 22,
+        CasingModel = 23,
+        LightLayer = 24,
     }
     #endregion
 
@@ -1640,9 +1591,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 19;
+        public const ushort AdditionalFieldCount = 18;
 
-        public const ushort FieldCount = 26;
+        public const ushort FieldCount = 25;
 
         public static readonly Type MaskType = typeof(Ammunition.Mask<>);
 
@@ -1677,7 +1628,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.AMMO,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
-                RecordTypes.ODRT,
                 RecordTypes.PTT2,
                 RecordTypes.FULL,
                 RecordTypes.MODL,
@@ -1744,7 +1694,6 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.ObjectBounds.Clear();
             item.DirtinessScale = default(Percent);
-            item.ODRT = default;
             item.Transforms = null;
             item.Name = default;
             item.Model = null;
@@ -1760,7 +1709,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Health = default(UInt32);
             item.ShortName = default;
             item.CasingModel = default;
-            item.NAM2 = null;
+            item.LightLayer = default;
             base.Clear(item);
         }
         
@@ -1784,7 +1733,6 @@ namespace Mutagen.Bethesda.Starfield
             obj.DropdownSound?.RemapLinks(mapping);
             obj.Keywords?.RemapLinks(mapping);
             obj.Projectile.Relink(mapping);
-            obj.NAM2?.RemapLinks(mapping);
         }
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IAmmunition obj)
@@ -1800,13 +1748,6 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
-            if (obj.NAM2 is {} NAM2Items)
-            {
-                foreach (var item in NAM2Items.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
             yield break;
         }
         
@@ -1818,7 +1759,6 @@ namespace Mutagen.Bethesda.Starfield
         {
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
             obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
-            obj.NAM2?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -1888,7 +1828,6 @@ namespace Mutagen.Bethesda.Starfield
         {
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.DirtinessScale = item.DirtinessScale.Equals(rhs.DirtinessScale);
-            ret.ODRT = item.ODRT.EqualsWithin(rhs.ODRT);
             ret.Transforms = EqualsMaskHelper.EqualsHelper(
                 item.Transforms,
                 rhs.Transforms,
@@ -1923,11 +1862,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.Health = item.Health == rhs.Health;
             ret.ShortName = object.Equals(item.ShortName, rhs.ShortName);
             ret.CasingModel = string.Equals(item.CasingModel, rhs.CasingModel);
-            ret.NAM2 = EqualsMaskHelper.EqualsHelper(
-                item.NAM2,
-                rhs.NAM2,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.LightLayer = item.LightLayer == rhs.LightLayer;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1984,11 +1919,6 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.DirtinessScale ?? true)
             {
                 sb.AppendItem(item.DirtinessScale, "DirtinessScale");
-            }
-            if ((printMask?.ODRT ?? true)
-                && item.ODRT is {} ODRTItem)
-            {
-                sb.AppendItem(ODRTItem, "ODRT");
             }
             if ((printMask?.Transforms?.Overall ?? true)
                 && item.Transforms is {} TransformsItem)
@@ -2068,10 +1998,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(CasingModelItem, "CasingModel");
             }
-            if ((printMask?.NAM2?.Overall ?? true)
-                && item.NAM2 is {} NAM2Item)
+            if ((printMask?.LightLayer ?? true)
+                && item.LightLayer is {} LightLayerItem)
             {
-                NAM2Item?.Print(sb, "NAM2");
+                sb.AppendItem(LightLayerItem, "LightLayer");
             }
         }
         
@@ -2134,10 +2064,6 @@ namespace Mutagen.Bethesda.Starfield
             if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.DirtinessScale) ?? true))
             {
                 if (!lhs.DirtinessScale.Equals(rhs.DirtinessScale)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.ODRT) ?? true))
-            {
-                if (!lhs.ODRT.EqualsWithin(rhs.ODRT)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Transforms) ?? true))
             {
@@ -2215,13 +2141,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!string.Equals(lhs.CasingModel, rhs.CasingModel)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.NAM2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Ammunition_FieldIndex.LightLayer) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.NAM2, rhs.NAM2, out var lhsNAM2, out var rhsNAM2, out var isNAM2Equal))
-                {
-                    if (!((ModelCommon)((IModelGetter)lhsNAM2).CommonInstance()!).Equals(lhsNAM2, rhsNAM2, equalsMask?.GetSubCrystal((int)Ammunition_FieldIndex.NAM2))) return false;
-                }
-                else if (!isNAM2Equal) return false;
+                if (lhs.LightLayer != rhs.LightLayer) return false;
             }
             return true;
         }
@@ -2253,10 +2175,6 @@ namespace Mutagen.Bethesda.Starfield
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
             hash.Add(item.DirtinessScale);
-            if (item.ODRT is {} ODRTitem)
-            {
-                hash.Add(ODRTitem);
-            }
             if (item.Transforms is {} Transformsitem)
             {
                 hash.Add(Transformsitem);
@@ -2293,9 +2211,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(CasingModelitem);
             }
-            if (item.NAM2 is {} NAM2item)
+            if (item.LightLayer is {} LightLayeritem)
             {
-                hash.Add(NAM2item);
+                hash.Add(LightLayeritem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -2362,13 +2280,6 @@ namespace Mutagen.Bethesda.Starfield
                 }
             }
             yield return FormLinkInformation.Factory(obj.Projectile);
-            if (obj.NAM2 is {} NAM2Items)
-            {
-                foreach (var item in NAM2Items.EnumerateFormLinks())
-                {
-                    yield return item;
-                }
-            }
             yield break;
         }
         
@@ -2381,13 +2292,6 @@ namespace Mutagen.Bethesda.Starfield
             if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.NAM2 is {} NAM2Items)
-            {
-                foreach (var item in NAM2Items.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
@@ -2491,10 +2395,6 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.DirtinessScale) ?? true))
             {
                 item.DirtinessScale = rhs.DirtinessScale;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.ODRT) ?? true))
-            {
-                item.ODRT = rhs.ODRT;
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Transforms) ?? true))
             {
@@ -2667,31 +2567,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.CasingModel = rhs.CasingModel;
             }
-            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.NAM2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.LightLayer) ?? true))
             {
-                errorMask?.PushIndex((int)Ammunition_FieldIndex.NAM2);
-                try
-                {
-                    if(rhs.NAM2 is {} rhsNAM2)
-                    {
-                        item.NAM2 = rhsNAM2.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Ammunition_FieldIndex.NAM2));
-                    }
-                    else
-                    {
-                        item.NAM2 = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.LightLayer = rhs.LightLayer;
             }
             DeepCopyInCustom(
                 item: item,
@@ -2872,10 +2750,6 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.DirtinessScale,
                 integerType: FloatIntegerType.UInt,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.ODRT,
-                header: translationParams.ConvertToCustom(RecordTypes.ODRT));
             if (item.Transforms is {} TransformsItem)
             {
                 ((TransformsBinaryWriteTranslation)((IBinaryItem)TransformsItem).BinaryWriteTranslator).Write(
@@ -2966,13 +2840,10 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.CasingModel,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM1),
                 binaryType: StringBinaryType.NullTerminate);
-            if (item.NAM2 is {} NAM2Item)
-            {
-                ((ModelBinaryWriteTranslation)((IBinaryItem)NAM2Item).BinaryWriteTranslator).Write(
-                    item: NAM2Item,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.LightLayer,
+                header: translationParams.ConvertToCustom(RecordTypes.FLLD));
         }
 
         public void Write(
@@ -3054,12 +2925,6 @@ namespace Mutagen.Bethesda.Starfield
                         integerType: FloatIntegerType.UInt);
                     return (int)Ammunition_FieldIndex.DirtinessScale;
                 }
-                case RecordTypeInts.ODRT:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ODRT = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Ammunition_FieldIndex.ODRT;
-                }
                 case RecordTypeInts.PTT2:
                 {
                     item.Transforms = Mutagen.Bethesda.Starfield.Transforms.CreateFromBinary(frame: frame);
@@ -3081,10 +2946,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MOLM:
                 case RecordTypeInts.DMDC:
                 case RecordTypeInts.BLMS:
-                case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
                 case RecordTypeInts.MODF:
+                case RecordTypeInts.FLLD:
                 {
                     if (!lastParsed.ParsedIndex.HasValue
                         || lastParsed.ParsedIndex.Value <= (int)Ammunition_FieldIndex.Name)
@@ -3096,10 +2961,9 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)Ammunition_FieldIndex.CasingModel)
                     {
-                        item.NAM2 = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
-                            frame: frame,
-                            translationParams: translationParams.DoNotShortCircuit());
-                        return new ParseResult((int)Ammunition_FieldIndex.NAM2, nextRecordType);
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.LightLayer = frame.ReadUInt32();
+                        return new ParseResult((int)Ammunition_FieldIndex.LightLayer, nextRecordType);
                     }
                     else
                     {
@@ -3111,10 +2975,9 @@ namespace Mutagen.Bethesda.Starfield
                                     translationParams: translationParams.DoNotShortCircuit());
                                 return new ParseResult((int)Ammunition_FieldIndex.Model, nextRecordType);
                             case 1:
-                                item.NAM2 = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
-                                    frame: frame,
-                                    translationParams: translationParams.DoNotShortCircuit());
-                                return new ParseResult((int)Ammunition_FieldIndex.NAM2, nextRecordType);
+                                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                                item.LightLayer = frame.ReadUInt32();
+                                return new ParseResult((int)Ammunition_FieldIndex.LightLayer, nextRecordType);
                             default:
                                 throw new NotImplementedException();
                         }
@@ -3272,10 +3135,6 @@ namespace Mutagen.Bethesda.Starfield
         private int? _DirtinessScaleLocation;
         public Percent DirtinessScale => _DirtinessScaleLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DirtinessScaleLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region ODRT
-        private int? _ODRTLocation;
-        public Single? ODRT => _ODRTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODRTLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
-        #endregion
         #region Transforms
         private RangeInt32? _TransformsLocation;
         public ITransformsGetter? Transforms => _TransformsLocation.HasValue ? TransformsBinaryOverlay.TransformsFactory(_recordData.Slice(_TransformsLocation!.Value.Min), _package) : default;
@@ -3343,7 +3202,10 @@ namespace Mutagen.Bethesda.Starfield
         private int? _CasingModelLocation;
         public String? CasingModel => _CasingModelLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CasingModelLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IModelGetter? NAM2 { get; private set; }
+        #region LightLayer
+        private int? _LightLayerLocation;
+        public UInt32? LightLayer => _LightLayerLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LightLayerLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -3423,11 +3285,6 @@ namespace Mutagen.Bethesda.Starfield
                     _DirtinessScaleLocation = (stream.Position - offset);
                     return (int)Ammunition_FieldIndex.DirtinessScale;
                 }
-                case RecordTypeInts.ODRT:
-                {
-                    _ODRTLocation = (stream.Position - offset);
-                    return (int)Ammunition_FieldIndex.ODRT;
-                }
                 case RecordTypeInts.PTT2:
                 {
                     _TransformsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
@@ -3443,10 +3300,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MOLM:
                 case RecordTypeInts.DMDC:
                 case RecordTypeInts.BLMS:
-                case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
                 case RecordTypeInts.MODF:
+                case RecordTypeInts.FLLD:
                 {
                     if (!lastParsed.ParsedIndex.HasValue
                         || lastParsed.ParsedIndex.Value <= (int)Ammunition_FieldIndex.Name)
@@ -3459,11 +3316,8 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)Ammunition_FieldIndex.CasingModel)
                     {
-                        this.NAM2 = ModelBinaryOverlay.ModelFactory(
-                            stream: stream,
-                            package: _package,
-                            translationParams: translationParams.DoNotShortCircuit());
-                        return new ParseResult((int)Ammunition_FieldIndex.NAM2, type);
+                        _LightLayerLocation = (stream.Position - offset);
+                        return new ParseResult((int)Ammunition_FieldIndex.LightLayer, type);
                     }
                     else
                     {
@@ -3479,11 +3333,8 @@ namespace Mutagen.Bethesda.Starfield
                             }
                             case 1:
                             {
-                                this.NAM2 = ModelBinaryOverlay.ModelFactory(
-                                    stream: stream,
-                                    package: _package,
-                                    translationParams: translationParams.DoNotShortCircuit());
-                                return new ParseResult((int)Ammunition_FieldIndex.NAM2, type);
+                                _LightLayerLocation = (stream.Position - offset);
+                                return new ParseResult((int)Ammunition_FieldIndex.LightLayer, type);
                             }
                             default:
                                 throw new NotImplementedException();
