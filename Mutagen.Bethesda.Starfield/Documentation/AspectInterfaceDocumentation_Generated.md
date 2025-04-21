@@ -3,6 +3,16 @@ Aspect Interfaces expose common aspects of records.  For example, `INamed` are i
 
 Functions can then be written that take in `INamed`, allowing any record that has a name to be passed in.
 ## Interfaces to Concrete Classes
+### IHasDestructible
+- Activator
+- Container
+- DestructibleObjectComponent
+- Flora
+- Furniture
+- Light
+- MiscItem
+- MoveableStatic
+- Projectile
 ### IHaveVirtualMachineAdapter
 - Activator
 - APlacedTrap
@@ -377,6 +387,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### ActionRecord
 - INamed
 ### Activator
+- IHasDestructible
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - IModeled
@@ -473,6 +484,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### CollisionLayer
 - INamed
 ### Container
+- IHasDestructible
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - IModeled
@@ -484,6 +496,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### DamageType
 - INamed
+### DestructibleObjectComponent
+- IHasDestructible
 ### DestructionStage
 - IModeled
 ### DialogResponses
@@ -516,6 +530,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Faction
 - INamed
 ### Flora
+- IHasDestructible
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - IModeled
@@ -530,6 +545,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### FullNameComponent
 - INamed
 ### Furniture
+- IHasDestructible
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - IModeled
@@ -614,6 +630,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 - IScripted
 ### Light
+- IHasDestructible
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - IModeled
@@ -634,6 +651,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Message
 - INamed
 ### MiscItem
+- IHasDestructible
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - IModeled
@@ -647,6 +665,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### MorphGroup
 - INamed
 ### MoveableStatic
+- IHasDestructible
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - IModeled
@@ -775,6 +794,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### ProjectedDecal
 - IObjectBounded
 ### Projectile
+- IHasDestructible
 - IModeled
 - INamed
 - IObjectBounded

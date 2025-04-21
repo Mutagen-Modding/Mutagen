@@ -133,6 +133,9 @@ namespace Mutagen.Bethesda.Fallout4
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Destructible? _Destructible;
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         public Destructible? Destructible
         {
             get => _Destructible;
@@ -140,6 +143,10 @@ namespace Mutagen.Bethesda.Fallout4
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDestructibleGetter? IProjectileGetter.Destructible => this.Destructible;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
+        #endregion
         #endregion
         #region Unused
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1708,6 +1715,7 @@ namespace Mutagen.Bethesda.Fallout4
         IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
+        IHasDestructible,
         ILoquiObjectSetter<IProjectileInternal>,
         IModeled,
         INamed,
@@ -1733,6 +1741,9 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         new Destructible? Destructible { get; set; }
         new MemorySlice<Byte>? Unused { get; set; }
         new Projectile.Flag Flags { get; set; }
@@ -1778,6 +1789,7 @@ namespace Mutagen.Bethesda.Fallout4
         IBinaryItem,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
+        IHasDestructibleGetter,
         ILoquiObject<IProjectileGetter>,
         IMapsToGetter<IProjectileGetter>,
         IModeledGetter,
@@ -1810,7 +1822,12 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
+        #region Destructible
+        /// <summary>
+        /// Aspects: IHasDestructibleGetter
+        /// </summary>
         IDestructibleGetter? Destructible { get; }
+        #endregion
         ReadOnlyMemorySlice<Byte>? Unused { get; }
         Projectile.Flag Flags { get; }
         Projectile.TypeEnum Type { get; }

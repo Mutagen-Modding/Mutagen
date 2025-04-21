@@ -3,6 +3,25 @@ Aspect Interfaces expose common aspects of records.  For example, `INamed` are i
 
 Functions can then be written that take in `INamed`, allowing any record that has a name to be passed in.
 ## Interfaces to Concrete Classes
+### IHasDestructible
+- Activator
+- Ammunition
+- Armor
+- Book
+- Container
+- Door
+- Flora
+- Furniture
+- Ingestible
+- Ingredient
+- Key
+- Light
+- MiscItem
+- MovableStatic
+- Npc
+- Projectile
+- TalkingActivator
+- Weapon
 ### IHasIcons
 - ArmorModel
 - Book
@@ -338,6 +357,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### ActionRecord
 - INamed
 ### Activator
+- IHasDestructible
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - IModeled
@@ -350,6 +370,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IModeled
 - IObjectBounded
 ### Ammunition
+- IHasDestructible
 - IKeyworded
 - IModeled
 - INamed
@@ -367,6 +388,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IPositionRotation
 - IScripted
 ### Armor
+- IHasDestructible
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - INamed
@@ -395,6 +417,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Bone
 - INamed
 ### Book
+- IHasDestructible
 - IHasIcons
 - IHaveVirtualMachineAdapter
 - IKeyworded
@@ -419,6 +442,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 - IObjectBounded
 ### Container
+- IHasDestructible
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - IModeled
@@ -432,6 +456,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### DialogTopic
 - INamed
 ### Door
+- IHasDestructible
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - IModeled
@@ -449,6 +474,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Faction
 - INamed
 ### Flora
+- IHasDestructible
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - IModeled
@@ -458,6 +484,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### FormList
 - INamed
 ### Furniture
+- IHasDestructible
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - IModeled
@@ -489,6 +516,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Impact
 - IModeled
 ### Ingestible
+- IHasDestructible
 - IHasIcons
 - IKeyworded
 - IModeled
@@ -496,6 +524,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 - IWeightValue
 ### Ingredient
+- IHasDestructible
 - IHasIcons
 - IHaveVirtualMachineAdapter
 - IKeyworded
@@ -507,6 +536,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IKeyworded
 - INamed
 ### Key
+- IHasDestructible
 - IHasIcons
 - IHaveVirtualMachineAdapter
 - IKeyworded
@@ -524,6 +554,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IModeled
 - IObjectBounded
 ### Light
+- IHasDestructible
 - IHasIcons
 - IHaveVirtualMachineAdapter
 - IKeyworded
@@ -547,6 +578,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Message
 - INamed
 ### MiscItem
+- IHasDestructible
 - IHasIcons
 - IHaveVirtualMachineAdapter
 - IKeyworded
@@ -559,6 +591,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### MorphPreset
 - INamed
 ### MovableStatic
+- IHasDestructible
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - IModeled
@@ -568,6 +601,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### MovementType
 - INamed
 ### Npc
+- IHasDestructible
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - INamed
@@ -653,6 +687,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IPositionRotation
 - IScripted
 ### Projectile
+- IHasDestructible
 - IModeled
 - INamed
 - IObjectBounded
@@ -750,6 +785,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### StaticPlacement
 - IPositionRotation
 ### TalkingActivator
+- IHasDestructible
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - IModeled
@@ -784,6 +820,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Water
 - INamed
 ### Weapon
+- IHasDestructible
 - IHasIcons
 - IHaveVirtualMachineAdapter
 - IKeyworded

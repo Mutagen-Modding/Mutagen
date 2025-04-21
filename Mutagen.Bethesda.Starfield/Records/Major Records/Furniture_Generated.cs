@@ -230,6 +230,9 @@ namespace Mutagen.Bethesda.Starfield
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Destructible? _Destructible;
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         public Destructible? Destructible
         {
             get => _Destructible;
@@ -237,6 +240,10 @@ namespace Mutagen.Bethesda.Starfield
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDestructibleGetter? IFurnitureGetter.Destructible => this.Destructible;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
+        #endregion
         #endregion
         #region Description
         public TranslatedString? Description { get; set; }
@@ -2316,6 +2323,7 @@ namespace Mutagen.Bethesda.Starfield
         IConstructibleObjectTarget,
         IFormLinkContainer,
         IFurnitureGetter,
+        IHasDestructible,
         IHaveVirtualMachineAdapter,
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IFurnitureInternal>,
@@ -2353,6 +2361,9 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         new Destructible? Destructible { get; set; }
         new TranslatedString? Description { get; set; }
         /// <summary>
@@ -2398,6 +2409,7 @@ namespace Mutagen.Bethesda.Starfield
         IBinaryItem,
         IConstructibleObjectTargetGetter,
         IFormLinkContainerGetter,
+        IHasDestructibleGetter,
         IHaveVirtualMachineAdapterGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IFurnitureGetter>,
@@ -2444,7 +2456,12 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
+        #region Destructible
+        /// <summary>
+        /// Aspects: IHasDestructibleGetter
+        /// </summary>
         IDestructibleGetter? Destructible { get; }
+        #endregion
         ITranslatedStringGetter? Description { get; }
         #region Keywords
         /// <summary>

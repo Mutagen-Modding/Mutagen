@@ -10,6 +10,7 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -56,9 +57,22 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Destructible
-        public Destructible Destructible { get; set; } = new Destructible();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IDestructibleGetter IDestructibleObjectComponentGetter.Destructible => Destructible;
+        private Destructible? _Destructible;
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
+        public Destructible? Destructible
+        {
+            get => _Destructible;
+            set => _Destructible = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IDestructibleObjectComponentGetter.Destructible => this.Destructible;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
+        #endregion
         #endregion
 
         #region To String
@@ -414,9 +428,13 @@ namespace Mutagen.Bethesda.Starfield
         IAssetLinkContainer,
         IDestructibleObjectComponentGetter,
         IFormLinkContainer,
+        IHasDestructible,
         ILoquiObjectSetter<IDestructibleObjectComponent>
     {
-        new Destructible Destructible { get; set; }
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
+        new Destructible? Destructible { get; set; }
     }
 
     public partial interface IDestructibleObjectComponentGetter :
@@ -424,10 +442,16 @@ namespace Mutagen.Bethesda.Starfield
         IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHasDestructibleGetter,
         ILoquiObject<IDestructibleObjectComponentGetter>
     {
         static new ILoquiRegistration StaticRegistration => DestructibleObjectComponent_Registration.Instance;
-        IDestructibleGetter Destructible { get; }
+        #region Destructible
+        /// <summary>
+        /// Aspects: IHasDestructibleGetter
+        /// </summary>
+        IDestructibleGetter? Destructible { get; }
+        #endregion
 
     }
 
@@ -666,7 +690,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IDestructibleObjectComponent item)
         {
             ClearPartial();
-            item.Destructible.Clear();
+            item.Destructible = null;
             base.Clear(item);
         }
         
@@ -679,7 +703,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IDestructibleObjectComponent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Destructible.RemapLinks(mapping);
+            obj.Destructible?.RemapLinks(mapping);
         }
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IDestructibleObjectComponent obj)
@@ -688,8 +712,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            if (obj.Destructible is {} DestructibleItems)
             {
-                foreach (var item in obj.Destructible.EnumerateListedAssetLinks())
+                foreach (var item in DestructibleItems.EnumerateListedAssetLinks())
                 {
                     yield return item;
                 }
@@ -704,7 +729,7 @@ namespace Mutagen.Bethesda.Starfield
             AssetLinkQuery queryCategories)
         {
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
-            obj.Destructible.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Destructible?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -760,7 +785,11 @@ namespace Mutagen.Bethesda.Starfield
             DestructibleObjectComponent.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Destructible = MaskItemExt.Factory(item.Destructible.GetEqualsMask(rhs.Destructible, include), include);
+            ret.Destructible = EqualsMaskHelper.EqualsHelper(
+                item.Destructible,
+                rhs.Destructible,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -810,9 +839,10 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.Destructible?.Overall ?? true)
+            if ((printMask?.Destructible?.Overall ?? true)
+                && item.Destructible is {} DestructibleItem)
             {
-                item.Destructible?.Print(sb, "Destructible");
+                DestructibleItem?.Print(sb, "Destructible");
             }
         }
         
@@ -858,7 +888,10 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IDestructibleObjectComponentGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Destructible);
+            if (item.Destructible is {} Destructibleitem)
+            {
+                hash.Add(Destructibleitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -883,9 +916,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            foreach (var item in obj.Destructible.EnumerateFormLinks())
+            if (obj.Destructible is {} DestructibleItems)
             {
-                yield return item;
+                foreach (var item in DestructibleItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -896,9 +932,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            foreach (var item in obj.Destructible.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            if (obj.Destructible is {} DestructibleItems)
             {
-                yield return item;
+                foreach (var item in DestructibleItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -929,11 +968,15 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask?.PushIndex((int)DestructibleObjectComponent_FieldIndex.Destructible);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)DestructibleObjectComponent_FieldIndex.Destructible) ?? true))
+                    if(rhs.Destructible is {} rhsDestructible)
                     {
-                        item.Destructible = rhs.Destructible.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)DestructibleObjectComponent_FieldIndex.Destructible),
-                            errorMask: errorMask);
+                        item.Destructible = rhsDestructible.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)DestructibleObjectComponent_FieldIndex.Destructible));
+                    }
+                    else
+                    {
+                        item.Destructible = default;
                     }
                 }
                 catch (Exception ex)
@@ -1071,11 +1114,13 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            var DestructibleItem = item.Destructible;
-            ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
-                item: DestructibleItem,
-                writer: writer,
-                translationParams: translationParams);
+            if (item.Destructible is {} DestructibleItem)
+            {
+                ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
+                    item: DestructibleItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
         }
 
         public void Write(
@@ -1198,10 +1243,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        #region Destructible
-        private IDestructibleGetter? _Destructible;
-        public IDestructibleGetter Destructible => _Destructible ?? new Destructible();
-        #endregion
+        public IDestructibleGetter? Destructible { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1270,7 +1312,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DSDL:
                 case RecordTypeInts.DSTD:
                 {
-                    this._Destructible = DestructibleBinaryOverlay.DestructibleFactory(
+                    this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
                         stream: stream,
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());

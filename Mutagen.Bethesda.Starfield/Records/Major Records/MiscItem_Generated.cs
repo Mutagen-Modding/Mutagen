@@ -199,6 +199,9 @@ namespace Mutagen.Bethesda.Starfield
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Destructible? _Destructible;
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         public Destructible? Destructible
         {
             get => _Destructible;
@@ -206,6 +209,10 @@ namespace Mutagen.Bethesda.Starfield
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDestructibleGetter? IMiscItemGetter.Destructible => this.Destructible;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
+        #endregion
         #endregion
         #region CraftingSound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1509,6 +1516,7 @@ namespace Mutagen.Bethesda.Starfield
         IConstructibleObjectTarget,
         IFormLinkContainer,
         IHarvestTarget,
+        IHasDestructible,
         IHaveVirtualMachineAdapter,
         IItem,
         IKeyworded<IKeywordGetter>,
@@ -1546,6 +1554,9 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         new Destructible? Destructible { get; set; }
         new SoundReference? CraftingSound { get; set; }
         new SoundReference? PickupSound { get; set; }
@@ -1581,6 +1592,7 @@ namespace Mutagen.Bethesda.Starfield
         IConstructibleObjectTargetGetter,
         IFormLinkContainerGetter,
         IHarvestTargetGetter,
+        IHasDestructibleGetter,
         IHaveVirtualMachineAdapterGetter,
         IItemGetter,
         IKeywordedGetter<IKeywordGetter>,
@@ -1626,7 +1638,12 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
+        #region Destructible
+        /// <summary>
+        /// Aspects: IHasDestructibleGetter
+        /// </summary>
         IDestructibleGetter? Destructible { get; }
+        #endregion
         ISoundReferenceGetter? CraftingSound { get; }
         ISoundReferenceGetter? PickupSound { get; }
         ISoundReferenceGetter? DropdownSound { get; }

@@ -20,6 +20,24 @@ namespace Mutagen.Bethesda.Starfield
         public StarfieldAspectInterfaceMapping()
         {
             var dict = new Dictionary<Type, InterfaceMappingResult>();
+            dict[typeof(IHasDestructible)] = new InterfaceMappingResult(
+                true,
+                new ILoquiRegistration[]
+                {
+                    Activator_Registration.Instance,
+                    Container_Registration.Instance,
+                    DestructibleObjectComponent_Registration.Instance,
+                    Flora_Registration.Instance,
+                    Furniture_Registration.Instance,
+                    Light_Registration.Instance,
+                    MiscItem_Registration.Instance,
+                    MoveableStatic_Registration.Instance,
+                    Projectile_Registration.Instance,
+                },
+                new InterfaceMappingTypes(
+                    Setter: typeof(IHasDestructible),
+                    Getter: typeof(IHasDestructibleGetter)));
+            dict[typeof(IHasDestructibleGetter)] = dict[typeof(IHasDestructible)] with { Setter = false };
             dict[typeof(IHaveVirtualMachineAdapter)] = new InterfaceMappingResult(
                 true,
                 new ILoquiRegistration[]

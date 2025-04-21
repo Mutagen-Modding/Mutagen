@@ -5,7 +5,6 @@
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
-      <Float name="ODRT" recordType="ODRT" unknown="true" />
       <RefDirect name="Transforms" refName="Transforms" />
       <RefList name="Components" refName="AComponent" />
       <String name="Name" recordType="FULL" translated="Normal" />

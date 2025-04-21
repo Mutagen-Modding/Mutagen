@@ -170,6 +170,9 @@ namespace Mutagen.Bethesda.Fallout4
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Destructible? _Destructible;
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         public Destructible? Destructible
         {
             get => _Destructible;
@@ -177,6 +180,10 @@ namespace Mutagen.Bethesda.Fallout4
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDestructibleGetter? IArmorGetter.Destructible => this.Destructible;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
+        #endregion
         #endregion
         #region PickUpSound
         private readonly IFormLinkNullable<ISoundDescriptorGetter> _PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>();
@@ -1996,6 +2003,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainer,
         IFurnitureAssociation,
         IHarvestTarget,
+        IHasDestructible,
         IHaveVirtualMachineAdapter,
         IItem,
         IKeyworded<IKeywordGetter>,
@@ -2027,6 +2035,9 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<IEffectRecordGetter> ObjectEffect { get; set; }
         new IGenderedItem<ArmorModel?>? WorldModel { get; set; }
         new BipedBodyTemplate? BipedBodyTemplate { get; set; }
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         new Destructible? Destructible { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; }
@@ -2077,6 +2088,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainerGetter,
         IFurnitureAssociationGetter,
         IHarvestTargetGetter,
+        IHasDestructibleGetter,
         IHaveVirtualMachineAdapterGetter,
         IItemGetter,
         IKeywordedGetter<IKeywordGetter>,
@@ -2116,7 +2128,12 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect { get; }
         IGenderedItemGetter<IArmorModelGetter?>? WorldModel { get; }
         IBipedBodyTemplateGetter? BipedBodyTemplate { get; }
+        #region Destructible
+        /// <summary>
+        /// Aspects: IHasDestructibleGetter
+        /// </summary>
         IDestructibleGetter? Destructible { get; }
+        #endregion
         IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound { get; }
         IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType { get; }

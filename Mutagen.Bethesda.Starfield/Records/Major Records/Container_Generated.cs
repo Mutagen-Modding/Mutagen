@@ -233,6 +233,9 @@ namespace Mutagen.Bethesda.Starfield
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Destructible? _Destructible;
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         public Destructible? Destructible
         {
             get => _Destructible;
@@ -240,6 +243,10 @@ namespace Mutagen.Bethesda.Starfield
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDestructibleGetter? IContainerGetter.Destructible => this.Destructible;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
+        #endregion
         #endregion
         #region Flags
         public Container.Flag Flags { get; set; } = default(Container.Flag);
@@ -1845,6 +1852,7 @@ namespace Mutagen.Bethesda.Starfield
         IConstructibleObjectTarget,
         IContainerGetter,
         IFormLinkContainer,
+        IHasDestructible,
         IHaveVirtualMachineAdapter,
         IItem,
         IKeyworded<IKeywordGetter>,
@@ -1883,6 +1891,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new Model? Model { get; set; }
         new ExtendedList<ContainerEntry>? Items { get; set; }
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         new Destructible? Destructible { get; set; }
         new Container.Flag Flags { get; set; }
         /// <summary>
@@ -1917,6 +1928,7 @@ namespace Mutagen.Bethesda.Starfield
         IBinaryItem,
         IConstructibleObjectTargetGetter,
         IFormLinkContainerGetter,
+        IHasDestructibleGetter,
         IHaveVirtualMachineAdapterGetter,
         IItemGetter,
         IKeywordedGetter<IKeywordGetter>,
@@ -1964,7 +1976,12 @@ namespace Mutagen.Bethesda.Starfield
         IModelGetter? Model { get; }
         #endregion
         IReadOnlyList<IContainerEntryGetter>? Items { get; }
+        #region Destructible
+        /// <summary>
+        /// Aspects: IHasDestructibleGetter
+        /// </summary>
         IDestructibleGetter? Destructible { get; }
+        #endregion
         Container.Flag Flags { get; }
         #region Keywords
         /// <summary>

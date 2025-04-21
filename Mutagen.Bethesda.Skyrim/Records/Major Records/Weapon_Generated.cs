@@ -188,6 +188,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Destructible? _Destructible;
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         public Destructible? Destructible
         {
             get => _Destructible;
@@ -195,6 +198,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDestructibleGetter? IWeaponGetter.Destructible => this.Destructible;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
+        #endregion
         #endregion
         #region EquipmentType
         private readonly IFormLinkNullable<IEquipTypeGetter> _EquipmentType = new FormLinkNullable<IEquipTypeGetter>();
@@ -1875,6 +1882,7 @@ namespace Mutagen.Bethesda.Skyrim
         IEnchantable,
         IExplodeSpawn,
         IFormLinkContainer,
+        IHasDestructible,
         IHasIcons,
         IHaveVirtualMachineAdapter,
         IItem,
@@ -1917,6 +1925,9 @@ namespace Mutagen.Bethesda.Skyrim
         new Icons? Icons { get; set; }
         new IFormLinkNullable<IEffectRecordGetter> ObjectEffect { get; set; }
         new UInt16? EnchantmentAmount { get; set; }
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         new Destructible? Destructible { get; set; }
         new IFormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; }
         new IFormLinkNullable<IImpactDataSetGetter> BlockBashImpact { get; set; }
@@ -1967,6 +1978,7 @@ namespace Mutagen.Bethesda.Skyrim
         IEnchantableGetter,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
+        IHasDestructibleGetter,
         IHasIconsGetter,
         IHaveVirtualMachineAdapterGetter,
         IItemGetter,
@@ -2019,7 +2031,12 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect { get; }
         UInt16? EnchantmentAmount { get; }
+        #region Destructible
+        /// <summary>
+        /// Aspects: IHasDestructibleGetter
+        /// </summary>
         IDestructibleGetter? Destructible { get; }
+        #endregion
         IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType { get; }
         IFormLinkNullableGetter<IImpactDataSetGetter> BlockBashImpact { get; }
         IFormLinkNullableGetter<IMaterialTypeGetter> AlternateBlockMaterial { get; }

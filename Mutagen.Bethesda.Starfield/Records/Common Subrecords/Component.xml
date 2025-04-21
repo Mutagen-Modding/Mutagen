@@ -344,7 +344,7 @@
   </Object>
   <Object name="DestructibleObjectComponent" objType="Subrecord" baseClass="AComponent">
     <Fields>
-      <RefDirect name="Destructible" refName="Destructible" nullable="false" />
+      <RefDirect name="Destructible" refName="Destructible" />
     </Fields>
   </Object>
   <Object name="ContainerComponent" objType="Subrecord" baseClass="AComponent">

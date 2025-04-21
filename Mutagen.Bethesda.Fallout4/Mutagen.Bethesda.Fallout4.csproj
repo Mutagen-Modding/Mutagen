@@ -46,6 +46,11 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Interfaces\Aspect\IHasDestructible.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Interfaces\Aspect\IHasIcons.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>

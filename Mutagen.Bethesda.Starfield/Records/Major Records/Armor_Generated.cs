@@ -101,11 +101,6 @@ namespace Mutagen.Bethesda.Starfield
         #region DirtinessScale
         public Percent DirtinessScale { get; set; } = default(Percent);
         #endregion
-        #region ODRT
-        public Single? ODRT { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IArmorGetter.ODRT => this.ODRT;
-        #endregion
         #region Transforms
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Transforms? _Transforms;
@@ -413,7 +408,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.DirtinessScale = initialValue;
-                this.ODRT = initialValue;
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Name = initialValue;
@@ -454,7 +448,6 @@ namespace Mutagen.Bethesda.Starfield
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem DirtinessScale,
-                TItem ODRT,
                 TItem Transforms,
                 TItem Components,
                 TItem Name,
@@ -494,7 +487,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.DirtinessScale = DirtinessScale;
-                this.ODRT = ODRT;
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Name = Name;
@@ -536,7 +528,6 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem DirtinessScale;
-            public TItem ODRT;
             public MaskItem<TItem, Transforms.Mask<TItem>?>? Transforms { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public TItem Name;
@@ -580,7 +571,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.DirtinessScale, rhs.DirtinessScale)) return false;
-                if (!object.Equals(this.ODRT, rhs.ODRT)) return false;
                 if (!object.Equals(this.Transforms, rhs.Transforms)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
@@ -616,7 +606,6 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.DirtinessScale);
-                hash.Add(this.ODRT);
                 hash.Add(this.Transforms);
                 hash.Add(this.Components);
                 hash.Add(this.Name);
@@ -665,7 +654,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (!eval(this.DirtinessScale)) return false;
-                if (!eval(this.ODRT)) return false;
                 if (Transforms != null)
                 {
                     if (!eval(this.Transforms.Overall)) return false;
@@ -809,7 +797,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
                 if (eval(this.DirtinessScale)) return true;
-                if (eval(this.ODRT)) return true;
                 if (Transforms != null)
                 {
                     if (eval(this.Transforms.Overall)) return true;
@@ -952,7 +939,6 @@ namespace Mutagen.Bethesda.Starfield
                 obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.DirtinessScale = eval(this.DirtinessScale);
-                obj.ODRT = eval(this.ODRT);
                 obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Transforms.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
                 if (Components != null)
                 {
@@ -1108,10 +1094,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.DirtinessScale ?? true)
                     {
                         sb.AppendItem(DirtinessScale, "DirtinessScale");
-                    }
-                    if (printMask?.ODRT ?? true)
-                    {
-                        sb.AppendItem(ODRT, "ODRT");
                     }
                     if (printMask?.Transforms?.Overall ?? true)
                     {
@@ -1345,7 +1327,6 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? DirtinessScale;
-            public Exception? ODRT;
             public MaskItem<Exception?, Transforms.ErrorMask?>? Transforms;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public Exception? Name;
@@ -1387,8 +1368,6 @@ namespace Mutagen.Bethesda.Starfield
                         return ObjectBounds;
                     case Armor_FieldIndex.DirtinessScale:
                         return DirtinessScale;
-                    case Armor_FieldIndex.ODRT:
-                        return ODRT;
                     case Armor_FieldIndex.Transforms:
                         return Transforms;
                     case Armor_FieldIndex.Components:
@@ -1461,9 +1440,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Armor_FieldIndex.DirtinessScale:
                         this.DirtinessScale = ex;
-                        break;
-                    case Armor_FieldIndex.ODRT:
-                        this.ODRT = ex;
                         break;
                     case Armor_FieldIndex.Transforms:
                         this.Transforms = new MaskItem<Exception?, Transforms.ErrorMask?>(ex, null);
@@ -1566,9 +1542,6 @@ namespace Mutagen.Bethesda.Starfield
                     case Armor_FieldIndex.DirtinessScale:
                         this.DirtinessScale = (Exception?)obj;
                         break;
-                    case Armor_FieldIndex.ODRT:
-                        this.ODRT = (Exception?)obj;
-                        break;
                     case Armor_FieldIndex.Transforms:
                         this.Transforms = (MaskItem<Exception?, Transforms.ErrorMask?>?)obj;
                         break;
@@ -1662,7 +1635,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (VirtualMachineAdapter != null) return true;
                 if (ObjectBounds != null) return true;
                 if (DirtinessScale != null) return true;
-                if (ODRT != null) return true;
                 if (Transforms != null) return true;
                 if (Components != null) return true;
                 if (Name != null) return true;
@@ -1720,9 +1692,6 @@ namespace Mutagen.Bethesda.Starfield
                 ObjectBounds?.Print(sb);
                 {
                     sb.AppendItem(DirtinessScale, "DirtinessScale");
-                }
-                {
-                    sb.AppendItem(ODRT, "ODRT");
                 }
                 Transforms?.Print(sb);
                 if (Components is {} ComponentsItem)
@@ -1916,7 +1885,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.DirtinessScale = this.DirtinessScale.Combine(rhs.DirtinessScale);
-                ret.ODRT = this.ODRT.Combine(rhs.ODRT);
                 ret.Transforms = this.Transforms.Combine(rhs.Transforms, (l, r) => l.Combine(r));
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Name = this.Name.Combine(rhs.Name);
@@ -1969,7 +1937,6 @@ namespace Mutagen.Bethesda.Starfield
             public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool DirtinessScale;
-            public bool ODRT;
             public Transforms.TranslationMask? Transforms;
             public AComponent.TranslationMask? Components;
             public bool Name;
@@ -2006,7 +1973,6 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.DirtinessScale = defaultOn;
-                this.ODRT = defaultOn;
                 this.Name = defaultOn;
                 this.ObjectEffect = defaultOn;
                 this.FirstPersonFlags = defaultOn;
@@ -2033,7 +1999,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((DirtinessScale, null));
-                ret.Add((ODRT, null));
                 ret.Add((Transforms != null ? Transforms.OnOverall : DefaultOn, Transforms?.GetCrystal()));
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((Name, null));
@@ -2241,7 +2206,6 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new Percent DirtinessScale { get; set; }
-        new Single? ODRT { get; set; }
         new Transforms? Transforms { get; set; }
         new ExtendedList<AComponent> Components { get; }
         /// <summary>
@@ -2326,7 +2290,6 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
         Percent DirtinessScale { get; }
-        Single? ODRT { get; }
         ITransformsGetter? Transforms { get; }
         IReadOnlyList<IAComponentGetter> Components { get; }
         #region Name
@@ -2547,34 +2510,33 @@ namespace Mutagen.Bethesda.Starfield
         VirtualMachineAdapter = 7,
         ObjectBounds = 8,
         DirtinessScale = 9,
-        ODRT = 10,
-        Transforms = 11,
-        Components = 12,
-        Name = 13,
-        ObjectEffect = 14,
-        WorldModel = 15,
-        UnknownModels = 16,
-        FirstPersonFlags = 17,
-        PickupSound = 18,
-        DropdownSound = 19,
-        AlternateBlockMaterial = 20,
-        Race = 21,
-        Keywords = 22,
-        Description = 23,
-        InstanceNaming = 24,
-        Armatures = 25,
-        Value = 26,
-        Weight = 27,
-        Health = 28,
-        ArmorRating = 29,
-        BaseAddonIndex = 30,
-        StaggerRating = 31,
-        Unused = 32,
-        Resistances = 33,
-        AttachParentSlots = 34,
-        ObjectTemplates = 35,
-        Voice = 36,
-        Footstep = 37,
+        Transforms = 10,
+        Components = 11,
+        Name = 12,
+        ObjectEffect = 13,
+        WorldModel = 14,
+        UnknownModels = 15,
+        FirstPersonFlags = 16,
+        PickupSound = 17,
+        DropdownSound = 18,
+        AlternateBlockMaterial = 19,
+        Race = 20,
+        Keywords = 21,
+        Description = 22,
+        InstanceNaming = 23,
+        Armatures = 24,
+        Value = 25,
+        Weight = 26,
+        Health = 27,
+        ArmorRating = 28,
+        BaseAddonIndex = 29,
+        StaggerRating = 30,
+        Unused = 31,
+        Resistances = 32,
+        AttachParentSlots = 33,
+        ObjectTemplates = 34,
+        Voice = 35,
+        Footstep = 36,
     }
     #endregion
 
@@ -2585,9 +2547,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 31;
+        public const ushort AdditionalFieldCount = 30;
 
-        public const ushort FieldCount = 38;
+        public const ushort FieldCount = 37;
 
         public static readonly Type MaskType = typeof(Armor.Mask<>);
 
@@ -2624,7 +2586,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XXXX,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
-                RecordTypes.ODRT,
                 RecordTypes.PTT2,
                 RecordTypes.BFCB,
                 RecordTypes.BFCE,
@@ -2746,7 +2707,6 @@ namespace Mutagen.Bethesda.Starfield
             item.VirtualMachineAdapter = null;
             item.ObjectBounds.Clear();
             item.DirtinessScale = default(Percent);
-            item.ODRT = default;
             item.Transforms = null;
             item.Components.Clear();
             item.Name = default;
@@ -2918,7 +2878,6 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.DirtinessScale = item.DirtinessScale.Equals(rhs.DirtinessScale);
-            ret.ODRT = item.ODRT.EqualsWithin(rhs.ODRT);
             ret.Transforms = EqualsMaskHelper.EqualsHelper(
                 item.Transforms,
                 rhs.Transforms,
@@ -3052,11 +3011,6 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.DirtinessScale ?? true)
             {
                 sb.AppendItem(item.DirtinessScale, "DirtinessScale");
-            }
-            if ((printMask?.ODRT ?? true)
-                && item.ODRT is {} ODRTItem)
-            {
-                sb.AppendItem(ODRTItem, "ODRT");
             }
             if ((printMask?.Transforms?.Overall ?? true)
                 && item.Transforms is {} TransformsItem)
@@ -3319,10 +3273,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.DirtinessScale.Equals(rhs.DirtinessScale)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.ODRT) ?? true))
-            {
-                if (!lhs.ODRT.EqualsWithin(rhs.ODRT)) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)Armor_FieldIndex.Transforms) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Transforms, rhs.Transforms, out var lhsTransforms, out var rhsTransforms, out var isTransformsEqual))
@@ -3485,10 +3435,6 @@ namespace Mutagen.Bethesda.Starfield
             }
             hash.Add(item.ObjectBounds);
             hash.Add(item.DirtinessScale);
-            if (item.ODRT is {} ODRTitem)
-            {
-                hash.Add(ODRTitem);
-            }
             if (item.Transforms is {} Transformsitem)
             {
                 hash.Add(Transformsitem);
@@ -3814,10 +3760,6 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.DirtinessScale) ?? true))
             {
                 item.DirtinessScale = rhs.DirtinessScale;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.ODRT) ?? true))
-            {
-                item.ODRT = rhs.ODRT;
             }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Transforms) ?? true))
             {
@@ -4395,10 +4337,6 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.DirtinessScale,
                 integerType: FloatIntegerType.UInt,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.ODRT,
-                header: translationParams.ConvertToCustom(RecordTypes.ODRT));
             if (item.Transforms is {} TransformsItem)
             {
                 ((TransformsBinaryWriteTranslation)((IBinaryItem)TransformsItem).BinaryWriteTranslator).Write(
@@ -4679,12 +4617,6 @@ namespace Mutagen.Bethesda.Starfield
                         reader: frame,
                         integerType: FloatIntegerType.UInt);
                     return (int)Armor_FieldIndex.DirtinessScale;
-                }
-                case RecordTypeInts.ODRT:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ODRT = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Armor_FieldIndex.ODRT;
                 }
                 case RecordTypeInts.PTT2:
                 {
@@ -5017,10 +4949,6 @@ namespace Mutagen.Bethesda.Starfield
         private int? _DirtinessScaleLocation;
         public Percent DirtinessScale => _DirtinessScaleLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DirtinessScaleLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region ODRT
-        private int? _ODRTLocation;
-        public Single? ODRT => _ODRTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODRTLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
-        #endregion
         #region Transforms
         private RangeInt32? _TransformsLocation;
         public ITransformsGetter? Transforms => _TransformsLocation.HasValue ? TransformsBinaryOverlay.TransformsFactory(_recordData.Slice(_TransformsLocation!.Value.Min), _package) : default;
@@ -5204,11 +5132,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _DirtinessScaleLocation = (stream.Position - offset);
                     return (int)Armor_FieldIndex.DirtinessScale;
-                }
-                case RecordTypeInts.ODRT:
-                {
-                    _ODRTLocation = (stream.Position - offset);
-                    return (int)Armor_FieldIndex.ODRT;
                 }
                 case RecordTypeInts.PTT2:
                 {

@@ -149,6 +149,9 @@ namespace Mutagen.Bethesda.Fallout4
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Destructible? _Destructible;
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         public Destructible? Destructible
         {
             get => _Destructible;
@@ -156,6 +159,10 @@ namespace Mutagen.Bethesda.Fallout4
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDestructibleGetter? ILightGetter.Destructible => this.Destructible;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
+        #endregion
         #endregion
         #region Properties
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1846,6 +1853,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         IHarvestTarget,
+        IHasDestructible,
         IHasIcons,
         IHaveVirtualMachineAdapter,
         IItem,
@@ -1881,6 +1889,9 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         new Destructible? Destructible { get; set; }
         new ExtendedList<ObjectProperty>? Properties { get; set; }
         /// <summary>
@@ -1936,6 +1947,7 @@ namespace Mutagen.Bethesda.Fallout4
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHarvestTargetGetter,
+        IHasDestructibleGetter,
         IHasIconsGetter,
         IHaveVirtualMachineAdapterGetter,
         IItemGetter,
@@ -1980,7 +1992,12 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         #endregion
+        #region Destructible
+        /// <summary>
+        /// Aspects: IHasDestructibleGetter
+        /// </summary>
         IDestructibleGetter? Destructible { get; }
+        #endregion
         IReadOnlyList<IObjectPropertyGetter>? Properties { get; }
         #region Name
         /// <summary>

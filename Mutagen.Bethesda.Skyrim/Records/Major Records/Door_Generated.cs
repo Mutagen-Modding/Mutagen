@@ -155,6 +155,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Destructible? _Destructible;
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         public Destructible? Destructible
         {
             get => _Destructible;
@@ -162,6 +165,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDestructibleGetter? IDoorGetter.Destructible => this.Destructible;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
+        #endregion
         #endregion
         #region OpenSound
         private readonly IFormLinkNullable<ISoundDescriptorGetter> _OpenSound = new FormLinkNullable<ISoundDescriptorGetter>();
@@ -885,6 +892,7 @@ namespace Mutagen.Bethesda.Skyrim
         IDoorGetter,
         IExplodeSpawn,
         IFormLinkContainer,
+        IHasDestructible,
         IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IDoorInternal>,
         IModeled,
@@ -915,6 +923,9 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         new Destructible? Destructible { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> OpenSound { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> CloseSound { get; set; }
@@ -940,6 +951,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
+        IHasDestructibleGetter,
         IHaveVirtualMachineAdapterGetter,
         ILoquiObject<IDoorGetter>,
         IMapsToGetter<IDoorGetter>,
@@ -979,7 +991,12 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
+        #region Destructible
+        /// <summary>
+        /// Aspects: IHasDestructibleGetter
+        /// </summary>
         IDestructibleGetter? Destructible { get; }
+        #endregion
         IFormLinkNullableGetter<ISoundDescriptorGetter> OpenSound { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> CloseSound { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> LoopSound { get; }

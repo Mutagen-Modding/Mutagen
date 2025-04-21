@@ -222,6 +222,9 @@ namespace Mutagen.Bethesda.Fallout4
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Destructible? _Destructible;
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         public Destructible? Destructible
         {
             get => _Destructible;
@@ -229,6 +232,10 @@ namespace Mutagen.Bethesda.Fallout4
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDestructibleGetter? IIngestibleGetter.Destructible => this.Destructible;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
+        #endregion
         #endregion
         #region Description
         public TranslatedString? Description { get; set; }
@@ -1435,6 +1442,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         IHarvestTarget,
+        IHasDestructible,
         IHasIcons,
         IIngestibleGetter,
         IItem,
@@ -1477,6 +1485,9 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; }
         new IFormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> CraftingSound { get; set; }
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         new Destructible? Destructible { get; set; }
         new TranslatedString? Description { get; set; }
         new Single Weight { get; set; }
@@ -1509,6 +1520,7 @@ namespace Mutagen.Bethesda.Fallout4
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHarvestTargetGetter,
+        IHasDestructibleGetter,
         IHasIconsGetter,
         IItemGetter,
         IKeywordedGetter<IKeywordGetter>,
@@ -1562,7 +1574,12 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound { get; }
         IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> CraftingSound { get; }
+        #region Destructible
+        /// <summary>
+        /// Aspects: IHasDestructibleGetter
+        /// </summary>
         IDestructibleGetter? Destructible { get; }
+        #endregion
         ITranslatedStringGetter? Description { get; }
         Single Weight { get; }
         UInt32 Value { get; }
