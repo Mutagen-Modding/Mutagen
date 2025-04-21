@@ -169,7 +169,6 @@ public partial class RecordTypeInts
     public const int BIMT = 0x544D4942;
     public const int BIOM = 0x4D4F4942;
     public const int BIPL = 0x4C504942;
-    public const int BLMS = 0x534D4C42;
     public const int BLUF = 0x46554C42;
     public const int BMC1 = 0x31434D42;
     public const int BMC2 = 0x32434D42;
@@ -285,7 +284,6 @@ public partial class RecordTypeInts
     public const int DLBR = 0x52424C44;
     public const int DLSH = 0x48534C44;
     public const int DMAX = 0x58414D44;
-    public const int DMDC = 0x43444D44;
     public const int DMDL = 0x4C444D44;
     public const int DMDS = 0x53444D44;
     public const int DMDT = 0x54444D44;

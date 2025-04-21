@@ -1112,8 +1112,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.DMDL,
                 RecordTypes.DMDT,
                 RecordTypes.MOLM,
-                RecordTypes.DMDC,
-                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
@@ -1806,8 +1804,6 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DMDL:
                 case RecordTypeInts.DMDT:
                 case RecordTypeInts.MOLM:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -2031,8 +2027,6 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DMDL:
                 case RecordTypeInts.DMDT:
                 case RecordTypeInts.MOLM:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:

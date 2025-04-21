@@ -171,7 +171,6 @@ public partial class RecordTypes
     public static readonly RecordType BIMT = new(0x544D4942);
     public static readonly RecordType BIOM = new(0x4D4F4942);
     public static readonly RecordType BIPL = new(0x4C504942);
-    public static readonly RecordType BLMS = new(0x534D4C42);
     public static readonly RecordType BLUF = new(0x46554C42);
     public static readonly RecordType BMC1 = new(0x31434D42);
     public static readonly RecordType BMC2 = new(0x32434D42);
@@ -287,7 +286,6 @@ public partial class RecordTypes
     public static readonly RecordType DLBR = new(0x52424C44);
     public static readonly RecordType DLSH = new(0x48534C44);
     public static readonly RecordType DMAX = new(0x58414D44);
-    public static readonly RecordType DMDC = new(0x43444D44);
     public static readonly RecordType DMDL = new(0x4C444D44);
     public static readonly RecordType DMDS = new(0x53444D44);
     public static readonly RecordType DMDT = new(0x54444D44);

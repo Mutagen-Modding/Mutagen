@@ -84,47 +84,25 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
-        #region DMDC
-        public Int16? DMDC { get; set; }
+        #region LightLayer
+        public UInt32? LightLayer { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int16? IModelGetter.DMDC => this.DMDC;
+        UInt32? IModelGetter.LightLayer => this.LightLayer;
         #endregion
-        #region BLMS
-        public Int16? BLMS { get; set; }
+        #region Flags
+        public Model.Flag? Flags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int16? IModelGetter.BLMS => this.BLMS;
-        #endregion
-        #region FLLD
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _FLLD;
-        public MemorySlice<Byte>? FLLD
-        {
-            get => this._FLLD;
-            set => this._FLLD = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IModelGetter.FLLD => this.FLLD;
-        #endregion
-        #region XFLG
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _XFLG;
-        public MemorySlice<Byte>? XFLG
-        {
-            get => this._XFLG;
-            set => this._XFLG = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IModelGetter.XFLG => this.XFLG;
+        Model.Flag? IModelGetter.Flags => this.Flags;
         #endregion
         #region ColorRemappingIndex
         public Single? ColorRemappingIndex { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IModelGetter.ColorRemappingIndex => this.ColorRemappingIndex;
         #endregion
-        #region Flags
-        public Model.Flag? Flags { get; set; }
+        #region FlagsVestigial
+        public Model.Flag? FlagsVestigial { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Model.Flag? IModelGetter.Flags => this.Flags;
+        Model.Flag? IModelGetter.FlagsVestigial => this.FlagsVestigial;
         #endregion
 
         #region To String
@@ -168,34 +146,28 @@ namespace Mutagen.Bethesda.Starfield
                 this.File = initialValue;
                 this.TextureFileHashes = initialValue;
                 this.MaterialSwaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.DMDC = initialValue;
-                this.BLMS = initialValue;
-                this.FLLD = initialValue;
-                this.XFLG = initialValue;
-                this.ColorRemappingIndex = initialValue;
+                this.LightLayer = initialValue;
                 this.Flags = initialValue;
+                this.ColorRemappingIndex = initialValue;
+                this.FlagsVestigial = initialValue;
             }
 
             public Mask(
                 TItem File,
                 TItem TextureFileHashes,
                 TItem MaterialSwaps,
-                TItem DMDC,
-                TItem BLMS,
-                TItem FLLD,
-                TItem XFLG,
+                TItem LightLayer,
+                TItem Flags,
                 TItem ColorRemappingIndex,
-                TItem Flags)
+                TItem FlagsVestigial)
             {
                 this.File = File;
                 this.TextureFileHashes = TextureFileHashes;
                 this.MaterialSwaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MaterialSwaps, Enumerable.Empty<(int Index, TItem Value)>());
-                this.DMDC = DMDC;
-                this.BLMS = BLMS;
-                this.FLLD = FLLD;
-                this.XFLG = XFLG;
-                this.ColorRemappingIndex = ColorRemappingIndex;
+                this.LightLayer = LightLayer;
                 this.Flags = Flags;
+                this.ColorRemappingIndex = ColorRemappingIndex;
+                this.FlagsVestigial = FlagsVestigial;
             }
 
             #pragma warning disable CS8618
@@ -210,12 +182,10 @@ namespace Mutagen.Bethesda.Starfield
             public TItem File;
             public TItem TextureFileHashes;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? MaterialSwaps;
-            public TItem DMDC;
-            public TItem BLMS;
-            public TItem FLLD;
-            public TItem XFLG;
-            public TItem ColorRemappingIndex;
+            public TItem LightLayer;
             public TItem Flags;
+            public TItem ColorRemappingIndex;
+            public TItem FlagsVestigial;
             #endregion
 
             #region Equals
@@ -231,12 +201,10 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.File, rhs.File)) return false;
                 if (!object.Equals(this.TextureFileHashes, rhs.TextureFileHashes)) return false;
                 if (!object.Equals(this.MaterialSwaps, rhs.MaterialSwaps)) return false;
-                if (!object.Equals(this.DMDC, rhs.DMDC)) return false;
-                if (!object.Equals(this.BLMS, rhs.BLMS)) return false;
-                if (!object.Equals(this.FLLD, rhs.FLLD)) return false;
-                if (!object.Equals(this.XFLG, rhs.XFLG)) return false;
-                if (!object.Equals(this.ColorRemappingIndex, rhs.ColorRemappingIndex)) return false;
+                if (!object.Equals(this.LightLayer, rhs.LightLayer)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.ColorRemappingIndex, rhs.ColorRemappingIndex)) return false;
+                if (!object.Equals(this.FlagsVestigial, rhs.FlagsVestigial)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -245,12 +213,10 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.File);
                 hash.Add(this.TextureFileHashes);
                 hash.Add(this.MaterialSwaps);
-                hash.Add(this.DMDC);
-                hash.Add(this.BLMS);
-                hash.Add(this.FLLD);
-                hash.Add(this.XFLG);
-                hash.Add(this.ColorRemappingIndex);
+                hash.Add(this.LightLayer);
                 hash.Add(this.Flags);
+                hash.Add(this.ColorRemappingIndex);
+                hash.Add(this.FlagsVestigial);
                 return hash.ToHashCode();
             }
 
@@ -272,12 +238,10 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (!eval(this.DMDC)) return false;
-                if (!eval(this.BLMS)) return false;
-                if (!eval(this.FLLD)) return false;
-                if (!eval(this.XFLG)) return false;
-                if (!eval(this.ColorRemappingIndex)) return false;
+                if (!eval(this.LightLayer)) return false;
                 if (!eval(this.Flags)) return false;
+                if (!eval(this.ColorRemappingIndex)) return false;
+                if (!eval(this.FlagsVestigial)) return false;
                 return true;
             }
             #endregion
@@ -298,12 +262,10 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (eval(this.DMDC)) return true;
-                if (eval(this.BLMS)) return true;
-                if (eval(this.FLLD)) return true;
-                if (eval(this.XFLG)) return true;
-                if (eval(this.ColorRemappingIndex)) return true;
+                if (eval(this.LightLayer)) return true;
                 if (eval(this.Flags)) return true;
+                if (eval(this.ColorRemappingIndex)) return true;
+                if (eval(this.FlagsVestigial)) return true;
                 return false;
             }
             #endregion
@@ -334,12 +296,10 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                obj.DMDC = eval(this.DMDC);
-                obj.BLMS = eval(this.BLMS);
-                obj.FLLD = eval(this.FLLD);
-                obj.XFLG = eval(this.XFLG);
-                obj.ColorRemappingIndex = eval(this.ColorRemappingIndex);
+                obj.LightLayer = eval(this.LightLayer);
                 obj.Flags = eval(this.Flags);
+                obj.ColorRemappingIndex = eval(this.ColorRemappingIndex);
+                obj.FlagsVestigial = eval(this.FlagsVestigial);
             }
             #endregion
 
@@ -387,29 +347,21 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.DMDC ?? true)
+                    if (printMask?.LightLayer ?? true)
                     {
-                        sb.AppendItem(DMDC, "DMDC");
+                        sb.AppendItem(LightLayer, "LightLayer");
                     }
-                    if (printMask?.BLMS ?? true)
+                    if (printMask?.Flags ?? true)
                     {
-                        sb.AppendItem(BLMS, "BLMS");
-                    }
-                    if (printMask?.FLLD ?? true)
-                    {
-                        sb.AppendItem(FLLD, "FLLD");
-                    }
-                    if (printMask?.XFLG ?? true)
-                    {
-                        sb.AppendItem(XFLG, "XFLG");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.ColorRemappingIndex ?? true)
                     {
                         sb.AppendItem(ColorRemappingIndex, "ColorRemappingIndex");
                     }
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.FlagsVestigial ?? true)
                     {
-                        sb.AppendItem(Flags, "Flags");
+                        sb.AppendItem(FlagsVestigial, "FlagsVestigial");
                     }
                 }
             }
@@ -438,12 +390,10 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? File;
             public Exception? TextureFileHashes;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? MaterialSwaps;
-            public Exception? DMDC;
-            public Exception? BLMS;
-            public Exception? FLLD;
-            public Exception? XFLG;
-            public Exception? ColorRemappingIndex;
+            public Exception? LightLayer;
             public Exception? Flags;
+            public Exception? ColorRemappingIndex;
+            public Exception? FlagsVestigial;
             #endregion
 
             #region IErrorMask
@@ -458,18 +408,14 @@ namespace Mutagen.Bethesda.Starfield
                         return TextureFileHashes;
                     case Model_FieldIndex.MaterialSwaps:
                         return MaterialSwaps;
-                    case Model_FieldIndex.DMDC:
-                        return DMDC;
-                    case Model_FieldIndex.BLMS:
-                        return BLMS;
-                    case Model_FieldIndex.FLLD:
-                        return FLLD;
-                    case Model_FieldIndex.XFLG:
-                        return XFLG;
-                    case Model_FieldIndex.ColorRemappingIndex:
-                        return ColorRemappingIndex;
+                    case Model_FieldIndex.LightLayer:
+                        return LightLayer;
                     case Model_FieldIndex.Flags:
                         return Flags;
+                    case Model_FieldIndex.ColorRemappingIndex:
+                        return ColorRemappingIndex;
+                    case Model_FieldIndex.FlagsVestigial:
+                        return FlagsVestigial;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -489,23 +435,17 @@ namespace Mutagen.Bethesda.Starfield
                     case Model_FieldIndex.MaterialSwaps:
                         this.MaterialSwaps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case Model_FieldIndex.DMDC:
-                        this.DMDC = ex;
+                    case Model_FieldIndex.LightLayer:
+                        this.LightLayer = ex;
                         break;
-                    case Model_FieldIndex.BLMS:
-                        this.BLMS = ex;
-                        break;
-                    case Model_FieldIndex.FLLD:
-                        this.FLLD = ex;
-                        break;
-                    case Model_FieldIndex.XFLG:
-                        this.XFLG = ex;
+                    case Model_FieldIndex.Flags:
+                        this.Flags = ex;
                         break;
                     case Model_FieldIndex.ColorRemappingIndex:
                         this.ColorRemappingIndex = ex;
                         break;
-                    case Model_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case Model_FieldIndex.FlagsVestigial:
+                        this.FlagsVestigial = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -526,23 +466,17 @@ namespace Mutagen.Bethesda.Starfield
                     case Model_FieldIndex.MaterialSwaps:
                         this.MaterialSwaps = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case Model_FieldIndex.DMDC:
-                        this.DMDC = (Exception?)obj;
+                    case Model_FieldIndex.LightLayer:
+                        this.LightLayer = (Exception?)obj;
                         break;
-                    case Model_FieldIndex.BLMS:
-                        this.BLMS = (Exception?)obj;
-                        break;
-                    case Model_FieldIndex.FLLD:
-                        this.FLLD = (Exception?)obj;
-                        break;
-                    case Model_FieldIndex.XFLG:
-                        this.XFLG = (Exception?)obj;
+                    case Model_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
                         break;
                     case Model_FieldIndex.ColorRemappingIndex:
                         this.ColorRemappingIndex = (Exception?)obj;
                         break;
-                    case Model_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case Model_FieldIndex.FlagsVestigial:
+                        this.FlagsVestigial = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -555,12 +489,10 @@ namespace Mutagen.Bethesda.Starfield
                 if (File != null) return true;
                 if (TextureFileHashes != null) return true;
                 if (MaterialSwaps != null) return true;
-                if (DMDC != null) return true;
-                if (BLMS != null) return true;
-                if (FLLD != null) return true;
-                if (XFLG != null) return true;
-                if (ColorRemappingIndex != null) return true;
+                if (LightLayer != null) return true;
                 if (Flags != null) return true;
+                if (ColorRemappingIndex != null) return true;
+                if (FlagsVestigial != null) return true;
                 return false;
             }
             #endregion
@@ -613,22 +545,16 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 {
-                    sb.AppendItem(DMDC, "DMDC");
+                    sb.AppendItem(LightLayer, "LightLayer");
                 }
                 {
-                    sb.AppendItem(BLMS, "BLMS");
-                }
-                {
-                    sb.AppendItem(FLLD, "FLLD");
-                }
-                {
-                    sb.AppendItem(XFLG, "XFLG");
+                    sb.AppendItem(Flags, "Flags");
                 }
                 {
                     sb.AppendItem(ColorRemappingIndex, "ColorRemappingIndex");
                 }
                 {
-                    sb.AppendItem(Flags, "Flags");
+                    sb.AppendItem(FlagsVestigial, "FlagsVestigial");
                 }
             }
             #endregion
@@ -641,12 +567,10 @@ namespace Mutagen.Bethesda.Starfield
                 ret.File = this.File.Combine(rhs.File);
                 ret.TextureFileHashes = this.TextureFileHashes.Combine(rhs.TextureFileHashes);
                 ret.MaterialSwaps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.MaterialSwaps?.Overall, rhs.MaterialSwaps?.Overall), Noggog.ExceptionExt.Combine(this.MaterialSwaps?.Specific, rhs.MaterialSwaps?.Specific));
-                ret.DMDC = this.DMDC.Combine(rhs.DMDC);
-                ret.BLMS = this.BLMS.Combine(rhs.BLMS);
-                ret.FLLD = this.FLLD.Combine(rhs.FLLD);
-                ret.XFLG = this.XFLG.Combine(rhs.XFLG);
-                ret.ColorRemappingIndex = this.ColorRemappingIndex.Combine(rhs.ColorRemappingIndex);
+                ret.LightLayer = this.LightLayer.Combine(rhs.LightLayer);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.ColorRemappingIndex = this.ColorRemappingIndex.Combine(rhs.ColorRemappingIndex);
+                ret.FlagsVestigial = this.FlagsVestigial.Combine(rhs.FlagsVestigial);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -673,12 +597,10 @@ namespace Mutagen.Bethesda.Starfield
             public bool File;
             public bool TextureFileHashes;
             public bool MaterialSwaps;
-            public bool DMDC;
-            public bool BLMS;
-            public bool FLLD;
-            public bool XFLG;
-            public bool ColorRemappingIndex;
+            public bool LightLayer;
             public bool Flags;
+            public bool ColorRemappingIndex;
+            public bool FlagsVestigial;
             #endregion
 
             #region Ctors
@@ -691,12 +613,10 @@ namespace Mutagen.Bethesda.Starfield
                 this.File = defaultOn;
                 this.TextureFileHashes = defaultOn;
                 this.MaterialSwaps = defaultOn;
-                this.DMDC = defaultOn;
-                this.BLMS = defaultOn;
-                this.FLLD = defaultOn;
-                this.XFLG = defaultOn;
-                this.ColorRemappingIndex = defaultOn;
+                this.LightLayer = defaultOn;
                 this.Flags = defaultOn;
+                this.ColorRemappingIndex = defaultOn;
+                this.FlagsVestigial = defaultOn;
             }
 
             #endregion
@@ -715,12 +635,10 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((File, null));
                 ret.Add((TextureFileHashes, null));
                 ret.Add((MaterialSwaps, null));
-                ret.Add((DMDC, null));
-                ret.Add((BLMS, null));
-                ret.Add((FLLD, null));
-                ret.Add((XFLG, null));
-                ret.Add((ColorRemappingIndex, null));
+                ret.Add((LightLayer, null));
                 ret.Add((Flags, null));
+                ret.Add((ColorRemappingIndex, null));
+                ret.Add((FlagsVestigial, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -807,12 +725,10 @@ namespace Mutagen.Bethesda.Starfield
         new AssetLink<StarfieldModelAssetType>? File { get; set; }
         new MemorySlice<Byte>? TextureFileHashes { get; set; }
         new ExtendedList<IFormLinkGetter<ILayeredMaterialSwapGetter>>? MaterialSwaps { get; set; }
-        new Int16? DMDC { get; set; }
-        new Int16? BLMS { get; set; }
-        new MemorySlice<Byte>? FLLD { get; set; }
-        new MemorySlice<Byte>? XFLG { get; set; }
-        new Single? ColorRemappingIndex { get; set; }
+        new UInt32? LightLayer { get; set; }
         new Model.Flag? Flags { get; set; }
+        new Single? ColorRemappingIndex { get; set; }
+        new Model.Flag? FlagsVestigial { get; set; }
     }
 
     public partial interface IModelGetter :
@@ -832,12 +748,10 @@ namespace Mutagen.Bethesda.Starfield
         AssetLinkGetter<StarfieldModelAssetType>? File { get; }
         ReadOnlyMemorySlice<Byte>? TextureFileHashes { get; }
         IReadOnlyList<IFormLinkGetter<ILayeredMaterialSwapGetter>>? MaterialSwaps { get; }
-        Int16? DMDC { get; }
-        Int16? BLMS { get; }
-        ReadOnlyMemorySlice<Byte>? FLLD { get; }
-        ReadOnlyMemorySlice<Byte>? XFLG { get; }
-        Single? ColorRemappingIndex { get; }
+        UInt32? LightLayer { get; }
         Model.Flag? Flags { get; }
+        Single? ColorRemappingIndex { get; }
+        Model.Flag? FlagsVestigial { get; }
 
     }
 
@@ -1010,12 +924,10 @@ namespace Mutagen.Bethesda.Starfield
         File = 0,
         TextureFileHashes = 1,
         MaterialSwaps = 2,
-        DMDC = 3,
-        BLMS = 4,
-        FLLD = 5,
-        XFLG = 6,
-        ColorRemappingIndex = 7,
-        Flags = 8,
+        LightLayer = 3,
+        Flags = 4,
+        ColorRemappingIndex = 5,
+        FlagsVestigial = 6,
     }
     #endregion
 
@@ -1026,9 +938,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 9;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(Model.Mask<>);
 
@@ -1061,8 +973,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MODL,
                 RecordTypes.MODT,
                 RecordTypes.MOLM,
-                RecordTypes.DMDC,
-                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
@@ -1112,12 +1022,10 @@ namespace Mutagen.Bethesda.Starfield
             item.File = default;
             item.TextureFileHashes = default;
             item.MaterialSwaps = null;
-            item.DMDC = default;
-            item.BLMS = default;
-            item.FLLD = default;
-            item.XFLG = default;
-            item.ColorRemappingIndex = default;
+            item.LightLayer = default;
             item.Flags = default;
+            item.ColorRemappingIndex = default;
+            item.FlagsVestigial = default;
         }
         
         #region Mutagen
@@ -1195,12 +1103,10 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.MaterialSwaps,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.DMDC = item.DMDC == rhs.DMDC;
-            ret.BLMS = item.BLMS == rhs.BLMS;
-            ret.FLLD = MemorySliceExt.SequenceEqual(item.FLLD, rhs.FLLD);
-            ret.XFLG = MemorySliceExt.SequenceEqual(item.XFLG, rhs.XFLG);
-            ret.ColorRemappingIndex = item.ColorRemappingIndex.EqualsWithin(rhs.ColorRemappingIndex);
+            ret.LightLayer = item.LightLayer == rhs.LightLayer;
             ret.Flags = item.Flags == rhs.Flags;
+            ret.ColorRemappingIndex = item.ColorRemappingIndex.EqualsWithin(rhs.ColorRemappingIndex);
+            ret.FlagsVestigial = item.FlagsVestigial == rhs.FlagsVestigial;
         }
         
         public string Print(
@@ -1270,35 +1176,25 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.DMDC ?? true)
-                && item.DMDC is {} DMDCItem)
+            if ((printMask?.LightLayer ?? true)
+                && item.LightLayer is {} LightLayerItem)
             {
-                sb.AppendItem(DMDCItem, "DMDC");
+                sb.AppendItem(LightLayerItem, "LightLayer");
             }
-            if ((printMask?.BLMS ?? true)
-                && item.BLMS is {} BLMSItem)
+            if ((printMask?.Flags ?? true)
+                && item.Flags is {} FlagsItem)
             {
-                sb.AppendItem(BLMSItem, "BLMS");
-            }
-            if ((printMask?.FLLD ?? true)
-                && item.FLLD is {} FLLDItem)
-            {
-                sb.AppendLine($"FLLD => {SpanExt.ToHexString(FLLDItem)}");
-            }
-            if ((printMask?.XFLG ?? true)
-                && item.XFLG is {} XFLGItem)
-            {
-                sb.AppendLine($"XFLG => {SpanExt.ToHexString(XFLGItem)}");
+                sb.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.ColorRemappingIndex ?? true)
                 && item.ColorRemappingIndex is {} ColorRemappingIndexItem)
             {
                 sb.AppendItem(ColorRemappingIndexItem, "ColorRemappingIndex");
             }
-            if ((printMask?.Flags ?? true)
-                && item.Flags is {} FlagsItem)
+            if ((printMask?.FlagsVestigial ?? true)
+                && item.FlagsVestigial is {} FlagsVestigialItem)
             {
-                sb.AppendItem(FlagsItem, "Flags");
+                sb.AppendItem(FlagsVestigialItem, "FlagsVestigial");
             }
         }
         
@@ -1321,29 +1217,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.MaterialSwaps.SequenceEqualNullable(rhs.MaterialSwaps)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Model_FieldIndex.DMDC) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Model_FieldIndex.LightLayer) ?? true))
             {
-                if (lhs.DMDC != rhs.DMDC) return false;
+                if (lhs.LightLayer != rhs.LightLayer) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Model_FieldIndex.BLMS) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Model_FieldIndex.Flags) ?? true))
             {
-                if (lhs.BLMS != rhs.BLMS) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Model_FieldIndex.FLLD) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.FLLD, rhs.FLLD)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Model_FieldIndex.XFLG) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.XFLG, rhs.XFLG)) return false;
+                if (lhs.Flags != rhs.Flags) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Model_FieldIndex.ColorRemappingIndex) ?? true))
             {
                 if (!lhs.ColorRemappingIndex.EqualsWithin(rhs.ColorRemappingIndex)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Model_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Model_FieldIndex.FlagsVestigial) ?? true))
             {
-                if (lhs.Flags != rhs.Flags) return false;
+                if (lhs.FlagsVestigial != rhs.FlagsVestigial) return false;
             }
             return true;
         }
@@ -1360,29 +1248,21 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(TextureFileHashesItem);
             }
             hash.Add(item.MaterialSwaps);
-            if (item.DMDC is {} DMDCitem)
+            if (item.LightLayer is {} LightLayeritem)
             {
-                hash.Add(DMDCitem);
+                hash.Add(LightLayeritem);
             }
-            if (item.BLMS is {} BLMSitem)
+            if (item.Flags is {} Flagsitem)
             {
-                hash.Add(BLMSitem);
-            }
-            if (item.FLLD is {} FLLDItem)
-            {
-                hash.Add(FLLDItem);
-            }
-            if (item.XFLG is {} XFLGItem)
-            {
-                hash.Add(XFLGItem);
+                hash.Add(Flagsitem);
             }
             if (item.ColorRemappingIndex is {} ColorRemappingIndexitem)
             {
                 hash.Add(ColorRemappingIndexitem);
             }
-            if (item.Flags is {} Flagsitem)
+            if (item.FlagsVestigial is {} FlagsVestigialitem)
             {
-                hash.Add(Flagsitem);
+                hash.Add(FlagsVestigialitem);
             }
             return hash.ToHashCode();
         }
@@ -1474,43 +1354,21 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Model_FieldIndex.DMDC) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Model_FieldIndex.LightLayer) ?? true))
             {
-                item.DMDC = rhs.DMDC;
+                item.LightLayer = rhs.LightLayer;
             }
-            if ((copyMask?.GetShouldTranslate((int)Model_FieldIndex.BLMS) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Model_FieldIndex.Flags) ?? true))
             {
-                item.BLMS = rhs.BLMS;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Model_FieldIndex.FLLD) ?? true))
-            {
-                if(rhs.FLLD is {} FLLDrhs)
-                {
-                    item.FLLD = FLLDrhs.ToArray();
-                }
-                else
-                {
-                    item.FLLD = default;
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Model_FieldIndex.XFLG) ?? true))
-            {
-                if(rhs.XFLG is {} XFLGrhs)
-                {
-                    item.XFLG = XFLGrhs.ToArray();
-                }
-                else
-                {
-                    item.XFLG = default;
-                }
+                item.Flags = rhs.Flags;
             }
             if ((copyMask?.GetShouldTranslate((int)Model_FieldIndex.ColorRemappingIndex) ?? true))
             {
                 item.ColorRemappingIndex = rhs.ColorRemappingIndex;
             }
-            if ((copyMask?.GetShouldTranslate((int)Model_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Model_FieldIndex.FlagsVestigial) ?? true))
             {
-                item.Flags = rhs.Flags;
+                item.FlagsVestigial = rhs.FlagsVestigial;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1641,21 +1499,14 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         item: subItem);
                 });
-            Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.DMDC,
-                header: translationParams.ConvertToCustom(RecordTypes.DMDC));
-            Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.BLMS,
-                header: translationParams.ConvertToCustom(RecordTypes.BLMS));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.FLLD,
+                item: item.LightLayer,
                 header: translationParams.ConvertToCustom(RecordTypes.FLLD));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.XFLG,
+            EnumBinaryTranslation<Model.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Flags,
+                length: 1,
                 header: translationParams.ConvertToCustom(RecordTypes.XFLG));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
@@ -1663,7 +1514,7 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.MODC));
             EnumBinaryTranslation<Model.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
-                item.Flags,
+                item.FlagsVestigial,
                 length: 1,
                 header: translationParams.ConvertToCustom(RecordTypes.MODF));
         }
@@ -1734,33 +1585,21 @@ namespace Mutagen.Bethesda.Starfield
                         .CastExtendedList<IFormLinkGetter<ILayeredMaterialSwapGetter>>();
                     return (int)Model_FieldIndex.MaterialSwaps;
                 }
-                case RecordTypeInts.DMDC:
-                {
-                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.DMDC, translationParams)) return ParseResult.Stop;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DMDC = frame.ReadInt16();
-                    return (int)Model_FieldIndex.DMDC;
-                }
-                case RecordTypeInts.BLMS:
-                {
-                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.BLMS, translationParams)) return ParseResult.Stop;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BLMS = frame.ReadInt16();
-                    return (int)Model_FieldIndex.BLMS;
-                }
                 case RecordTypeInts.FLLD:
                 {
-                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.FLLD, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.LightLayer, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FLLD = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Model_FieldIndex.FLLD;
+                    item.LightLayer = frame.ReadUInt32();
+                    return (int)Model_FieldIndex.LightLayer;
                 }
                 case RecordTypeInts.XFLG:
                 {
-                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.XFLG, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XFLG = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Model_FieldIndex.XFLG;
+                    item.Flags = EnumBinaryTranslation<Model.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)Model_FieldIndex.Flags;
                 }
                 case RecordTypeInts.MODC:
                 {
@@ -1771,12 +1610,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.MODF:
                 {
-                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.FlagsVestigial, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<Model.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.FlagsVestigial = EnumBinaryTranslation<Model.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
                         length: contentLength);
-                    return (int)Model_FieldIndex.Flags;
+                    return (int)Model_FieldIndex.FlagsVestigial;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1857,29 +1696,21 @@ namespace Mutagen.Bethesda.Starfield
         public ReadOnlyMemorySlice<Byte>? TextureFileHashes => _TextureFileHashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextureFileHashesLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ILayeredMaterialSwapGetter>>? MaterialSwaps { get; private set; }
-        #region DMDC
-        private int? _DMDCLocation;
-        public Int16? DMDC => _DMDCLocation.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DMDCLocation.Value, _package.MetaData.Constants)) : default(Int16?);
+        #region LightLayer
+        private int? _LightLayerLocation;
+        public UInt32? LightLayer => _LightLayerLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LightLayerLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
         #endregion
-        #region BLMS
-        private int? _BLMSLocation;
-        public Int16? BLMS => _BLMSLocation.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BLMSLocation.Value, _package.MetaData.Constants)) : default(Int16?);
-        #endregion
-        #region FLLD
-        private int? _FLLDLocation;
-        public ReadOnlyMemorySlice<Byte>? FLLD => _FLLDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLLDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region XFLG
-        private int? _XFLGLocation;
-        public ReadOnlyMemorySlice<Byte>? XFLG => _XFLGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XFLGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region Flags
+        private int? _FlagsLocation;
+        public Model.Flag? Flags => _FlagsLocation.HasValue ? (Model.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Model.Flag?);
         #endregion
         #region ColorRemappingIndex
         private int? _ColorRemappingIndexLocation;
         public Single? ColorRemappingIndex => _ColorRemappingIndexLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorRemappingIndexLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        #region Flags
-        private int? _FlagsLocation;
-        public Model.Flag? Flags => _FlagsLocation.HasValue ? (Model.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Model.Flag?);
+        #region FlagsVestigial
+        private int? _FlagsVestigialLocation;
+        public Model.Flag? FlagsVestigial => _FlagsVestigialLocation.HasValue ? (Model.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsVestigialLocation!.Value, _package.MetaData.Constants)[0] : default(Model.Flag?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1969,29 +1800,17 @@ namespace Mutagen.Bethesda.Starfield
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ILayeredMaterialSwapGetter>(p, s));
                     return (int)Model_FieldIndex.MaterialSwaps;
                 }
-                case RecordTypeInts.DMDC:
-                {
-                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.DMDC, translationParams)) return ParseResult.Stop;
-                    _DMDCLocation = (stream.Position - offset);
-                    return (int)Model_FieldIndex.DMDC;
-                }
-                case RecordTypeInts.BLMS:
-                {
-                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.BLMS, translationParams)) return ParseResult.Stop;
-                    _BLMSLocation = (stream.Position - offset);
-                    return (int)Model_FieldIndex.BLMS;
-                }
                 case RecordTypeInts.FLLD:
                 {
-                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.FLLD, translationParams)) return ParseResult.Stop;
-                    _FLLDLocation = (stream.Position - offset);
-                    return (int)Model_FieldIndex.FLLD;
+                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.LightLayer, translationParams)) return ParseResult.Stop;
+                    _LightLayerLocation = (stream.Position - offset);
+                    return (int)Model_FieldIndex.LightLayer;
                 }
                 case RecordTypeInts.XFLG:
                 {
-                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.XFLG, translationParams)) return ParseResult.Stop;
-                    _XFLGLocation = (stream.Position - offset);
-                    return (int)Model_FieldIndex.XFLG;
+                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)Model_FieldIndex.Flags;
                 }
                 case RecordTypeInts.MODC:
                 {
@@ -2001,9 +1820,9 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.MODF:
                 {
-                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
-                    _FlagsLocation = (stream.Position - offset);
-                    return (int)Model_FieldIndex.Flags;
+                    if (lastParsed.ShortCircuit((int)Model_FieldIndex.FlagsVestigial, translationParams)) return ParseResult.Stop;
+                    _FlagsVestigialLocation = (stream.Position - offset);
+                    return (int)Model_FieldIndex.FlagsVestigial;
                 }
                 default:
                     return ParseResult.Stop;
