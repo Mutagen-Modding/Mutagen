@@ -1,4 +1,5 @@
-﻿using Mutagen.Bethesda.Starfield.Internals;
+﻿using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Starfield.Internals;
 
 namespace Mutagen.Bethesda.Starfield;
 
@@ -156,4 +157,6 @@ public partial class Weapon
         FOVMult = RecordTypeInts.ZFOV,
         Template = RecordTypeInts.ZDTA,
     }
+    
+    IFormLinkNullableGetter<IObjectEffectGetter> IEnchantableGetter.ObjectEffect => this.ObjectEffect;
 }

@@ -5,9 +5,7 @@
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
-      <FormLink name="ObjectEffect" recordType="EITM">
-        <Interface>IEffectRecord</Interface>
-      </FormLink>
+      <FormLink name="ObjectEffect" recordType="EITM" refName="ObjectEffect" />
       <UInt16 name="EnchantmentAmount" recordType="EAMT" />
       <Gendered name="WorldModel">
         <MaleTypeOverrides>
@@ -51,7 +49,6 @@
       <Float name="ArmorRating" recordType="DNAM" integerType="UInt" divisor="100" nullable="False" />
       <FormLink name="TemplateArmor" recordType="TNAM" refName="Armor" />
     </Fields>
-    <Interface>IEnchantable</Interface>
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IItemOrList</LinkInterface>
     <LinkInterface>IOutfitTarget</LinkInterface>

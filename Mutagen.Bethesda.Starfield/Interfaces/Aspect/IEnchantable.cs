@@ -1,14 +1,14 @@
 ﻿using Mutagen.Bethesda.Plugins;
 
-namespace Mutagen.Bethesda.Skyrim;
+namespace Mutagen.Bethesda.Starfield;
 
-public interface IEnchantable : ISkyrimMajorRecordInternal, IEnchantableGetter
+public interface IEnchantable : IStarfieldMajorRecordInternal, IEnchantableGetter
 {
     new IFormLinkNullable<IObjectEffectGetter> ObjectEffect { get; }
     new ushort? EnchantmentAmount { get; set; }
 }
 
-public interface IEnchantableGetter : ISkyrimMajorRecordGetter
+public interface IEnchantableGetter : IStarfieldMajorRecordGetter
 {
     IFormLinkNullableGetter<IObjectEffectGetter> ObjectEffect { get; }
     ushort? EnchantmentAmount { get; }

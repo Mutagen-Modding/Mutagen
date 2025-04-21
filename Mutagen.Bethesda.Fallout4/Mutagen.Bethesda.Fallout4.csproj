@@ -41,6 +41,7 @@
     <Compile Include="Extensions\GameSettingsGroupMixin.cs" />
     <Compile Include="Extensions\GlobalGroupMixin.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
+    <Compile Include="Interfaces\Aspect\IEnchantable.cs" />
     <Compile Include="Interfaces\Aspect\IHarvestable.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>

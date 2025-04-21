@@ -3,6 +3,9 @@ Aspect Interfaces expose common aspects of records.  For example, `INamed` are i
 
 Functions can then be written that take in `INamed`, allowing any record that has a name to be passed in.
 ## Interfaces to Concrete Classes
+### IEnchantable
+- Armor
+- Weapon
 ### IHasDestructible
 - Activator
 - AlchemicalApparatus
@@ -349,6 +352,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IHaveVirtualMachineAdapter
 - IScripted
 ### Armor
+- IEnchantable
 - IHasDestructible
 - IHaveVirtualMachineAdapter
 - IKeyworded
@@ -708,6 +712,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Water
 - INamed
 ### Weapon
+- IEnchantable
 - IHasDestructible
 - IHasIcons
 - IHaveVirtualMachineAdapter

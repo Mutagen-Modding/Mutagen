@@ -12,9 +12,7 @@
       <RefList name="Components" refName="AComponent" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
-      <FormLink name="ObjectEffect" recordType="EITM">
-        <Interface>IEffectRecord</Interface>
-      </FormLink>
+      <FormLink name="ObjectEffect" recordType="EITM" refName="ObjectEffect" />
       <UInt16 name="EnchantmentAmount" recordType="EAMT" />
       <FormLink name="EquipmentType" recordType="ETYP" refName="EquipType" />
       <FormLink name="BlockBashImpactDataSet" recordType="BIDS" refName="ImpactDataSet" />

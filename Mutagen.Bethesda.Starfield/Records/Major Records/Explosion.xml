@@ -11,9 +11,7 @@
       <RefList name="Components" refName="AComponent" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
-      <FormLink name="ObjectEffect" recordType="EITM">
-        <Interface>IEffectRecord</Interface>
-      </FormLink>
+      <FormLink name="ObjectEffect" recordType="EITM" refName="ObjectEffect" />
       <FormLink name="ImageSpaceModifier" refName="ImageSpaceAdapter" recordType="MNAM" />
       <Data recordType="ENAM">
         <Fields>

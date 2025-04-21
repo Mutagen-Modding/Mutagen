@@ -20,6 +20,16 @@ namespace Mutagen.Bethesda.Fallout4
         public Fallout4AspectInterfaceMapping()
         {
             var dict = new Dictionary<Type, InterfaceMappingResult>();
+            dict[typeof(IEnchantable)] = new InterfaceMappingResult(
+                true,
+                new ILoquiRegistration[]
+                {
+                    Weapon_Registration.Instance,
+                },
+                new InterfaceMappingTypes(
+                    Setter: typeof(IEnchantable),
+                    Getter: typeof(IEnchantableGetter)));
+            dict[typeof(IEnchantableGetter)] = dict[typeof(IEnchantable)] with { Setter = false };
             dict[typeof(IHarvestable)] = new InterfaceMappingResult(
                 true,
                 new ILoquiRegistration[]

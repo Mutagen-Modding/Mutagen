@@ -1,14 +1,14 @@
 ﻿using Mutagen.Bethesda.Plugins;
 
-namespace Mutagen.Bethesda.Skyrim;
+namespace Mutagen.Bethesda.Fallout4;
 
-public interface IEnchantable : ISkyrimMajorRecordInternal, IEnchantableGetter
+public interface IEnchantable : IFallout4MajorRecordInternal, IEnchantableGetter
 {
     new IFormLinkNullable<IObjectEffectGetter> ObjectEffect { get; }
     new ushort? EnchantmentAmount { get; set; }
 }
 
-public interface IEnchantableGetter : ISkyrimMajorRecordGetter
+public interface IEnchantableGetter : IFallout4MajorRecordGetter
 {
     IFormLinkNullableGetter<IObjectEffectGetter> ObjectEffect { get; }
     ushort? EnchantmentAmount { get; }

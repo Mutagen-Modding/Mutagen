@@ -8,9 +8,7 @@
       <RefDirect name="Transforms" refName="Transforms" />
       <RefList name="Components" refName="AComponent" />
       <String name="Name" recordType="FULL" translated="Normal" />
-      <FormLink name="ObjectEffect" recordType="EITM">
-        <Interface>IEffectRecord</Interface>
-      </FormLink>
+      <FormLink name="ObjectEffect" recordType="EITM" refName="ObjectEffect" />
       <Gendered name="WorldModel" parseNonConvertedItems="true">
         <MaleTypeOverrides>
           <Mapping From="MODL" To="MOD2" />

@@ -25,6 +25,9 @@ public class AspectInterfaceModule : GenerationModule
         Definitions.Add(new RefAspect("IModeled", "Model", "Model"));
         Definitions.Add(new RefAspect("IHasIcons", "Icons", "Icons"));
         Definitions.Add(new RefAspect("IHasDestructible", "Destructible", "Destructible"));
+        Definitions.Add(new FieldsAspect("IEnchantable",
+            ("ObjectEffect", "IFormLinkNullableGetter<IObjectEffectGetter>"),
+            ("EnchantmentAmount", "UInt16")));
         Definitions.Add(new FieldsAspect("IWeightValue",
             ("Value", "UInt32"),
             ("Weight", "Single")));

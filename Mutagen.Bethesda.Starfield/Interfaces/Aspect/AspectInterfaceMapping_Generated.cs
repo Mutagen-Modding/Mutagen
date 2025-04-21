@@ -20,6 +20,16 @@ namespace Mutagen.Bethesda.Starfield
         public StarfieldAspectInterfaceMapping()
         {
             var dict = new Dictionary<Type, InterfaceMappingResult>();
+            dict[typeof(IEnchantable)] = new InterfaceMappingResult(
+                true,
+                new ILoquiRegistration[]
+                {
+                    Weapon_Registration.Instance,
+                },
+                new InterfaceMappingTypes(
+                    Setter: typeof(IEnchantable),
+                    Getter: typeof(IEnchantableGetter)));
+            dict[typeof(IEnchantableGetter)] = dict[typeof(IEnchantable)] with { Setter = false };
             dict[typeof(IHasDestructible)] = new InterfaceMappingResult(
                 true,
                 new ILoquiRegistration[]
