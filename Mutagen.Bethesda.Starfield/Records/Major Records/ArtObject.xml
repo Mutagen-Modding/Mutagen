@@ -15,7 +15,7 @@
       <Data recordType="DNAM" >
         <Fields>
           <Enum name="Type" enumName="ArtObject.TypeEnum" byteLength="4" />
-          <UInt32 name="DNAMUnknown" unknown="true" />
+          <Enum name="Flags" enumName="ArtObject.Flag" byteLength="4" />
         </Fields>
       </Data>
       <FormLink name="EffectShader" refName="EffectShader" recordType="ENAM" />

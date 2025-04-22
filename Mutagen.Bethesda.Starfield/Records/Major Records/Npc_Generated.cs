@@ -101,21 +101,16 @@ namespace Mutagen.Bethesda.Starfield
         #region DirtinessScale
         public Percent DirtinessScale { get; set; } = default(Percent);
         #endregion
-        #region ODRT
-        public Single? ODRT { get; set; }
+        #region ObjectPaletteDefaults
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? INpcGetter.ODRT => this.ODRT;
-        #endregion
-        #region ObjectPlacementDefaults
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectPaletteDefaults? _ObjectPlacementDefaults;
-        public ObjectPaletteDefaults? ObjectPlacementDefaults
+        private ObjectPaletteDefaults? _ObjectPaletteDefaults;
+        public ObjectPaletteDefaults? ObjectPaletteDefaults
         {
-            get => _ObjectPlacementDefaults;
-            set => _ObjectPlacementDefaults = value;
+            get => _ObjectPaletteDefaults;
+            set => _ObjectPaletteDefaults = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectPaletteDefaultsGetter? INpcGetter.ObjectPlacementDefaults => this.ObjectPlacementDefaults;
+        IObjectPaletteDefaultsGetter? INpcGetter.ObjectPaletteDefaults => this.ObjectPaletteDefaults;
         #endregion
         #region XALG
         public UInt64? XALG { get; set; }
@@ -872,8 +867,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.DirtinessScale = initialValue;
-                this.ODRT = initialValue;
-                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(initialValue, new ObjectPaletteDefaults.Mask<TItem>(initialValue));
+                this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(initialValue, new ObjectPaletteDefaults.Mask<TItem>(initialValue));
                 this.XALG = initialValue;
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
                 this.SnapTemplate = initialValue;
@@ -971,8 +965,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem DirtinessScale,
-                TItem ODRT,
-                TItem ObjectPlacementDefaults,
+                TItem ObjectPaletteDefaults,
                 TItem XALG,
                 TItem Transforms,
                 TItem SnapTemplate,
@@ -1069,8 +1062,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.DirtinessScale = DirtinessScale;
-                this.ODRT = ODRT;
-                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(ObjectPlacementDefaults, new ObjectPaletteDefaults.Mask<TItem>(ObjectPlacementDefaults));
+                this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(ObjectPaletteDefaults, new ObjectPaletteDefaults.Mask<TItem>(ObjectPaletteDefaults));
                 this.XALG = XALG;
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
                 this.SnapTemplate = SnapTemplate;
@@ -1169,8 +1161,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem DirtinessScale;
-            public TItem ODRT;
-            public MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>? ObjectPlacementDefaults { get; set; }
+            public MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>? ObjectPaletteDefaults { get; set; }
             public TItem XALG;
             public MaskItem<TItem, Transforms.Mask<TItem>?>? Transforms { get; set; }
             public TItem SnapTemplate;
@@ -1271,8 +1262,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.DirtinessScale, rhs.DirtinessScale)) return false;
-                if (!object.Equals(this.ODRT, rhs.ODRT)) return false;
-                if (!object.Equals(this.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults)) return false;
+                if (!object.Equals(this.ObjectPaletteDefaults, rhs.ObjectPaletteDefaults)) return false;
                 if (!object.Equals(this.XALG, rhs.XALG)) return false;
                 if (!object.Equals(this.Transforms, rhs.Transforms)) return false;
                 if (!object.Equals(this.SnapTemplate, rhs.SnapTemplate)) return false;
@@ -1365,8 +1355,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.DirtinessScale);
-                hash.Add(this.ODRT);
-                hash.Add(this.ObjectPlacementDefaults);
+                hash.Add(this.ObjectPaletteDefaults);
                 hash.Add(this.XALG);
                 hash.Add(this.Transforms);
                 hash.Add(this.SnapTemplate);
@@ -1472,11 +1461,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (!eval(this.DirtinessScale)) return false;
-                if (!eval(this.ODRT)) return false;
-                if (ObjectPlacementDefaults != null)
+                if (ObjectPaletteDefaults != null)
                 {
-                    if (!eval(this.ObjectPlacementDefaults.Overall)) return false;
-                    if (this.ObjectPlacementDefaults.Specific != null && !this.ObjectPlacementDefaults.Specific.All(eval)) return false;
+                    if (!eval(this.ObjectPaletteDefaults.Overall)) return false;
+                    if (this.ObjectPaletteDefaults.Specific != null && !this.ObjectPaletteDefaults.Specific.All(eval)) return false;
                 }
                 if (!eval(this.XALG)) return false;
                 if (Transforms != null)
@@ -1797,11 +1785,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
                 if (eval(this.DirtinessScale)) return true;
-                if (eval(this.ODRT)) return true;
-                if (ObjectPlacementDefaults != null)
+                if (ObjectPaletteDefaults != null)
                 {
-                    if (eval(this.ObjectPlacementDefaults.Overall)) return true;
-                    if (this.ObjectPlacementDefaults.Specific != null && this.ObjectPlacementDefaults.Specific.Any(eval)) return true;
+                    if (eval(this.ObjectPaletteDefaults.Overall)) return true;
+                    if (this.ObjectPaletteDefaults.Specific != null && this.ObjectPaletteDefaults.Specific.Any(eval)) return true;
                 }
                 if (eval(this.XALG)) return true;
                 if (Transforms != null)
@@ -2121,8 +2108,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.DirtinessScale = eval(this.DirtinessScale);
-                obj.ODRT = eval(this.ODRT);
-                obj.ObjectPlacementDefaults = this.ObjectPlacementDefaults == null ? null : new MaskItem<R, ObjectPaletteDefaults.Mask<R>?>(eval(this.ObjectPlacementDefaults.Overall), this.ObjectPlacementDefaults.Specific?.Translate(eval));
+                obj.ObjectPaletteDefaults = this.ObjectPaletteDefaults == null ? null : new MaskItem<R, ObjectPaletteDefaults.Mask<R>?>(eval(this.ObjectPaletteDefaults.Overall), this.ObjectPaletteDefaults.Specific?.Translate(eval));
                 obj.XALG = eval(this.XALG);
                 obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Transforms.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
                 obj.SnapTemplate = eval(this.SnapTemplate);
@@ -2483,13 +2469,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(DirtinessScale, "DirtinessScale");
                     }
-                    if (printMask?.ODRT ?? true)
+                    if (printMask?.ObjectPaletteDefaults?.Overall ?? true)
                     {
-                        sb.AppendItem(ODRT, "ODRT");
-                    }
-                    if (printMask?.ObjectPlacementDefaults?.Overall ?? true)
-                    {
-                        ObjectPlacementDefaults?.Print(sb);
+                        ObjectPaletteDefaults?.Print(sb);
                     }
                     if (printMask?.XALG ?? true)
                     {
@@ -3123,8 +3105,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? DirtinessScale;
-            public Exception? ODRT;
-            public MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>? ObjectPlacementDefaults;
+            public MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>? ObjectPaletteDefaults;
             public Exception? XALG;
             public MaskItem<Exception?, Transforms.ErrorMask?>? Transforms;
             public Exception? SnapTemplate;
@@ -3223,10 +3204,8 @@ namespace Mutagen.Bethesda.Starfield
                         return ObjectBounds;
                     case Npc_FieldIndex.DirtinessScale:
                         return DirtinessScale;
-                    case Npc_FieldIndex.ODRT:
-                        return ODRT;
-                    case Npc_FieldIndex.ObjectPlacementDefaults:
-                        return ObjectPlacementDefaults;
+                    case Npc_FieldIndex.ObjectPaletteDefaults:
+                        return ObjectPaletteDefaults;
                     case Npc_FieldIndex.XALG:
                         return XALG;
                     case Npc_FieldIndex.Transforms:
@@ -3414,11 +3393,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Npc_FieldIndex.DirtinessScale:
                         this.DirtinessScale = ex;
                         break;
-                    case Npc_FieldIndex.ODRT:
-                        this.ODRT = ex;
-                        break;
-                    case Npc_FieldIndex.ObjectPlacementDefaults:
-                        this.ObjectPlacementDefaults = new MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>(ex, null);
+                    case Npc_FieldIndex.ObjectPaletteDefaults:
+                        this.ObjectPaletteDefaults = new MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>(ex, null);
                         break;
                     case Npc_FieldIndex.XALG:
                         this.XALG = ex;
@@ -3692,11 +3668,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Npc_FieldIndex.DirtinessScale:
                         this.DirtinessScale = (Exception?)obj;
                         break;
-                    case Npc_FieldIndex.ODRT:
-                        this.ODRT = (Exception?)obj;
-                        break;
-                    case Npc_FieldIndex.ObjectPlacementDefaults:
-                        this.ObjectPlacementDefaults = (MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>?)obj;
+                    case Npc_FieldIndex.ObjectPaletteDefaults:
+                        this.ObjectPaletteDefaults = (MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>?)obj;
                         break;
                     case Npc_FieldIndex.XALG:
                         this.XALG = (Exception?)obj;
@@ -3962,8 +3935,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (VirtualMachineAdapter != null) return true;
                 if (ObjectBounds != null) return true;
                 if (DirtinessScale != null) return true;
-                if (ODRT != null) return true;
-                if (ObjectPlacementDefaults != null) return true;
+                if (ObjectPaletteDefaults != null) return true;
                 if (XALG != null) return true;
                 if (Transforms != null) return true;
                 if (SnapTemplate != null) return true;
@@ -4079,10 +4051,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(DirtinessScale, "DirtinessScale");
                 }
-                {
-                    sb.AppendItem(ODRT, "ODRT");
-                }
-                ObjectPlacementDefaults?.Print(sb);
+                ObjectPaletteDefaults?.Print(sb);
                 {
                     sb.AppendItem(XALG, "XALG");
                 }
@@ -4616,8 +4585,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.DirtinessScale = this.DirtinessScale.Combine(rhs.DirtinessScale);
-                ret.ODRT = this.ODRT.Combine(rhs.ODRT);
-                ret.ObjectPlacementDefaults = this.ObjectPlacementDefaults.Combine(rhs.ObjectPlacementDefaults, (l, r) => l.Combine(r));
+                ret.ObjectPaletteDefaults = this.ObjectPaletteDefaults.Combine(rhs.ObjectPaletteDefaults, (l, r) => l.Combine(r));
                 ret.XALG = this.XALG.Combine(rhs.XALG);
                 ret.Transforms = this.Transforms.Combine(rhs.Transforms, (l, r) => l.Combine(r));
                 ret.SnapTemplate = this.SnapTemplate.Combine(rhs.SnapTemplate);
@@ -4727,8 +4695,7 @@ namespace Mutagen.Bethesda.Starfield
             public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool DirtinessScale;
-            public bool ODRT;
-            public ObjectPaletteDefaults.TranslationMask? ObjectPlacementDefaults;
+            public ObjectPaletteDefaults.TranslationMask? ObjectPaletteDefaults;
             public bool XALG;
             public Transforms.TranslationMask? Transforms;
             public bool SnapTemplate;
@@ -4822,7 +4789,6 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.DirtinessScale = defaultOn;
-                this.ODRT = defaultOn;
                 this.XALG = defaultOn;
                 this.SnapTemplate = defaultOn;
                 this.Flags = defaultOn;
@@ -4899,8 +4865,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((DirtinessScale, null));
-                ret.Add((ODRT, null));
-                ret.Add((ObjectPlacementDefaults != null ? ObjectPlacementDefaults.OnOverall : DefaultOn, ObjectPlacementDefaults?.GetCrystal()));
+                ret.Add((ObjectPaletteDefaults != null ? ObjectPaletteDefaults.OnOverall : DefaultOn, ObjectPaletteDefaults?.GetCrystal()));
                 ret.Add((XALG, null));
                 ret.Add((Transforms != null ? Transforms.OnOverall : DefaultOn, Transforms?.GetCrystal()));
                 ret.Add((SnapTemplate, null));
@@ -5164,8 +5129,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new Percent DirtinessScale { get; set; }
-        new Single? ODRT { get; set; }
-        new ObjectPaletteDefaults? ObjectPlacementDefaults { get; set; }
+        new ObjectPaletteDefaults? ObjectPaletteDefaults { get; set; }
         new UInt64? XALG { get; set; }
         new Transforms? Transforms { get; set; }
         new IFormLinkNullable<ISnapTemplateGetter> SnapTemplate { get; set; }
@@ -5305,8 +5269,7 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
         Percent DirtinessScale { get; }
-        Single? ODRT { get; }
-        IObjectPaletteDefaultsGetter? ObjectPlacementDefaults { get; }
+        IObjectPaletteDefaultsGetter? ObjectPaletteDefaults { get; }
         UInt64? XALG { get; }
         ITransformsGetter? Transforms { get; }
         IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate { get; }
@@ -5584,92 +5547,91 @@ namespace Mutagen.Bethesda.Starfield
         VirtualMachineAdapter = 7,
         ObjectBounds = 8,
         DirtinessScale = 9,
-        ODRT = 10,
-        ObjectPlacementDefaults = 11,
-        XALG = 12,
-        Transforms = 13,
-        SnapTemplate = 14,
-        Components = 15,
-        Flags = 16,
-        XpValueOffset = 17,
-        Level = 18,
-        CalcMinLevel = 19,
-        CalcMaxLevel = 20,
-        DispositionBase = 21,
-        UseTemplateActors = 22,
-        Factions = 23,
-        DeathItem = 24,
-        Voice = 25,
-        DefaultTemplate = 26,
-        LegendaryTemplate = 27,
-        LegendaryChance = 28,
-        TemplateActors = 29,
-        Race = 30,
-        ActorEffect = 31,
-        Skin = 32,
-        AttackRace = 33,
-        SpectatorOverridePackageList = 34,
-        CombatOverridePackageList = 35,
-        Perks = 36,
-        Properties = 37,
-        ForcedLocations = 38,
-        NativeTerminal = 39,
-        Items = 40,
-        Aggression = 41,
-        Confidence = 42,
-        EnergyLevel = 43,
-        Responsibility = 44,
-        Mood = 45,
-        Assistance = 46,
-        UnknownAIDT = 47,
-        Packages = 48,
-        FLEE = 49,
-        RDSAs = 50,
-        Keywords = 51,
-        AttachParentSlots = 52,
-        ObjectTemplates = 53,
-        Class = 54,
-        Name = 55,
-        ShortName = 56,
-        LongName = 57,
-        CalculatedHealth = 58,
-        CalculatedActionPoints = 59,
-        FarAwayModelDistance = 60,
-        GearedUpWeapons = 61,
-        Unused = 62,
-        HCLR = 63,
-        BCLR = 64,
-        HeadParts = 65,
-        CombatStyle = 66,
-        NAM5 = 67,
-        HeightMin = 68,
-        HeightMax = 69,
-        Weight = 70,
-        Sounds = 71,
-        InheritsSoundsFrom = 72,
-        CompanionInfoQuest = 73,
-        CompanionInfoDialogue = 74,
-        DefaultOutfit = 75,
-        SpaceOutfit = 76,
-        DefaultPackageList = 77,
-        CrimeFaction = 78,
-        FormationFaction = 79,
-        Tints = 80,
-        BodyMorphRegionValues = 81,
-        FaceDialPositions = 82,
-        FaceMorphs = 83,
-        MorphBlends = 84,
-        ActivateTextOverride = 85,
-        SkinToneIndex = 86,
-        EYEC = 87,
-        HairColor = 88,
-        FacialHairColor = 89,
-        EyebrowColor = 90,
-        EyeColor = 91,
-        JewelryColor = 92,
-        TeethColor = 93,
-        Pronoun = 94,
-        ONA2 = 95,
+        ObjectPaletteDefaults = 10,
+        XALG = 11,
+        Transforms = 12,
+        SnapTemplate = 13,
+        Components = 14,
+        Flags = 15,
+        XpValueOffset = 16,
+        Level = 17,
+        CalcMinLevel = 18,
+        CalcMaxLevel = 19,
+        DispositionBase = 20,
+        UseTemplateActors = 21,
+        Factions = 22,
+        DeathItem = 23,
+        Voice = 24,
+        DefaultTemplate = 25,
+        LegendaryTemplate = 26,
+        LegendaryChance = 27,
+        TemplateActors = 28,
+        Race = 29,
+        ActorEffect = 30,
+        Skin = 31,
+        AttackRace = 32,
+        SpectatorOverridePackageList = 33,
+        CombatOverridePackageList = 34,
+        Perks = 35,
+        Properties = 36,
+        ForcedLocations = 37,
+        NativeTerminal = 38,
+        Items = 39,
+        Aggression = 40,
+        Confidence = 41,
+        EnergyLevel = 42,
+        Responsibility = 43,
+        Mood = 44,
+        Assistance = 45,
+        UnknownAIDT = 46,
+        Packages = 47,
+        FLEE = 48,
+        RDSAs = 49,
+        Keywords = 50,
+        AttachParentSlots = 51,
+        ObjectTemplates = 52,
+        Class = 53,
+        Name = 54,
+        ShortName = 55,
+        LongName = 56,
+        CalculatedHealth = 57,
+        CalculatedActionPoints = 58,
+        FarAwayModelDistance = 59,
+        GearedUpWeapons = 60,
+        Unused = 61,
+        HCLR = 62,
+        BCLR = 63,
+        HeadParts = 64,
+        CombatStyle = 65,
+        NAM5 = 66,
+        HeightMin = 67,
+        HeightMax = 68,
+        Weight = 69,
+        Sounds = 70,
+        InheritsSoundsFrom = 71,
+        CompanionInfoQuest = 72,
+        CompanionInfoDialogue = 73,
+        DefaultOutfit = 74,
+        SpaceOutfit = 75,
+        DefaultPackageList = 76,
+        CrimeFaction = 77,
+        FormationFaction = 78,
+        Tints = 79,
+        BodyMorphRegionValues = 80,
+        FaceDialPositions = 81,
+        FaceMorphs = 82,
+        MorphBlends = 83,
+        ActivateTextOverride = 84,
+        SkinToneIndex = 85,
+        EYEC = 86,
+        HairColor = 87,
+        FacialHairColor = 88,
+        EyebrowColor = 89,
+        EyeColor = 90,
+        JewelryColor = 91,
+        TeethColor = 92,
+        Pronoun = 93,
+        ONA2 = 94,
     }
     #endregion
 
@@ -5680,9 +5642,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 89;
+        public const ushort AdditionalFieldCount = 88;
 
-        public const ushort FieldCount = 96;
+        public const ushort FieldCount = 95;
 
         public static readonly Type MaskType = typeof(Npc.Mask<>);
 
@@ -5719,7 +5681,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XXXX,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
-                RecordTypes.ODRT,
                 RecordTypes.OPDS,
                 RecordTypes.XALG,
                 RecordTypes.PTT2,
@@ -5857,8 +5818,7 @@ namespace Mutagen.Bethesda.Starfield
             item.VirtualMachineAdapter = null;
             item.ObjectBounds.Clear();
             item.DirtinessScale = default(Percent);
-            item.ODRT = default;
-            item.ObjectPlacementDefaults = null;
+            item.ObjectPaletteDefaults = null;
             item.XALG = default;
             item.Transforms = null;
             item.SnapTemplate.Clear();
@@ -6098,10 +6058,9 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.DirtinessScale = item.DirtinessScale.Equals(rhs.DirtinessScale);
-            ret.ODRT = item.ODRT.EqualsWithin(rhs.ODRT);
-            ret.ObjectPlacementDefaults = EqualsMaskHelper.EqualsHelper(
-                item.ObjectPlacementDefaults,
-                rhs.ObjectPlacementDefaults,
+            ret.ObjectPaletteDefaults = EqualsMaskHelper.EqualsHelper(
+                item.ObjectPaletteDefaults,
+                rhs.ObjectPaletteDefaults,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.XALG = item.XALG == rhs.XALG;
@@ -6324,15 +6283,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.DirtinessScale, "DirtinessScale");
             }
-            if ((printMask?.ODRT ?? true)
-                && item.ODRT is {} ODRTItem)
+            if ((printMask?.ObjectPaletteDefaults?.Overall ?? true)
+                && item.ObjectPaletteDefaults is {} ObjectPaletteDefaultsItem)
             {
-                sb.AppendItem(ODRTItem, "ODRT");
-            }
-            if ((printMask?.ObjectPlacementDefaults?.Overall ?? true)
-                && item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
-            {
-                ObjectPlacementDefaultsItem?.Print(sb, "ObjectPlacementDefaults");
+                ObjectPaletteDefaultsItem?.Print(sb, "ObjectPaletteDefaults");
             }
             if ((printMask?.XALG ?? true)
                 && item.XALG is {} XALGItem)
@@ -6953,17 +6907,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.DirtinessScale.Equals(rhs.DirtinessScale)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.ODRT) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.ObjectPaletteDefaults) ?? true))
             {
-                if (!lhs.ODRT.EqualsWithin(rhs.ODRT)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.ObjectPlacementDefaults) ?? true))
-            {
-                if (EqualsMaskHelper.RefEquality(lhs.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults, out var lhsObjectPlacementDefaults, out var rhsObjectPlacementDefaults, out var isObjectPlacementDefaultsEqual))
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectPaletteDefaults, rhs.ObjectPaletteDefaults, out var lhsObjectPaletteDefaults, out var rhsObjectPaletteDefaults, out var isObjectPaletteDefaultsEqual))
                 {
-                    if (!((ObjectPaletteDefaultsCommon)((IObjectPaletteDefaultsGetter)lhsObjectPlacementDefaults).CommonInstance()!).Equals(lhsObjectPlacementDefaults, rhsObjectPlacementDefaults, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.ObjectPlacementDefaults))) return false;
+                    if (!((ObjectPaletteDefaultsCommon)((IObjectPaletteDefaultsGetter)lhsObjectPaletteDefaults).CommonInstance()!).Equals(lhsObjectPaletteDefaults, rhsObjectPaletteDefaults, equalsMask?.GetSubCrystal((int)Npc_FieldIndex.ObjectPaletteDefaults))) return false;
                 }
-                else if (!isObjectPlacementDefaultsEqual) return false;
+                else if (!isObjectPaletteDefaultsEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.XALG) ?? true))
             {
@@ -7359,13 +7309,9 @@ namespace Mutagen.Bethesda.Starfield
             }
             hash.Add(item.ObjectBounds);
             hash.Add(item.DirtinessScale);
-            if (item.ODRT is {} ODRTitem)
+            if (item.ObjectPaletteDefaults is {} ObjectPaletteDefaultsitem)
             {
-                hash.Add(ODRTitem);
-            }
-            if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsitem)
-            {
-                hash.Add(ObjectPlacementDefaultsitem);
+                hash.Add(ObjectPaletteDefaultsitem);
             }
             if (item.XALG is {} XALGitem)
             {
@@ -7887,24 +7833,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.DirtinessScale = rhs.DirtinessScale;
             }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.ODRT) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.ObjectPaletteDefaults) ?? true))
             {
-                item.ODRT = rhs.ODRT;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.ObjectPlacementDefaults) ?? true))
-            {
-                errorMask?.PushIndex((int)Npc_FieldIndex.ObjectPlacementDefaults);
+                errorMask?.PushIndex((int)Npc_FieldIndex.ObjectPaletteDefaults);
                 try
                 {
-                    if(rhs.ObjectPlacementDefaults is {} rhsObjectPlacementDefaults)
+                    if(rhs.ObjectPaletteDefaults is {} rhsObjectPaletteDefaults)
                     {
-                        item.ObjectPlacementDefaults = rhsObjectPlacementDefaults.DeepCopy(
+                        item.ObjectPaletteDefaults = rhsObjectPaletteDefaults.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Npc_FieldIndex.ObjectPlacementDefaults));
+                            copyMask?.GetSubCrystal((int)Npc_FieldIndex.ObjectPaletteDefaults));
                     }
                     else
                     {
-                        item.ObjectPlacementDefaults = default;
+                        item.ObjectPaletteDefaults = default;
                     }
                 }
                 catch (Exception ex)
@@ -8991,14 +8933,10 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.DirtinessScale,
                 integerType: FloatIntegerType.UInt,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.ODRT,
-                header: translationParams.ConvertToCustom(RecordTypes.ODRT));
-            if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
+            if (item.ObjectPaletteDefaults is {} ObjectPaletteDefaultsItem)
             {
-                ((ObjectPaletteDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPlacementDefaultsItem).BinaryWriteTranslator).Write(
-                    item: ObjectPlacementDefaultsItem,
+                ((ObjectPaletteDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPaletteDefaultsItem).BinaryWriteTranslator).Write(
+                    item: ObjectPaletteDefaultsItem,
                     writer: writer,
                     translationParams: translationParams);
             }
@@ -9596,16 +9534,10 @@ namespace Mutagen.Bethesda.Starfield
                         integerType: FloatIntegerType.UInt);
                     return (int)Npc_FieldIndex.DirtinessScale;
                 }
-                case RecordTypeInts.ODRT:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ODRT = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Npc_FieldIndex.ODRT;
-                }
                 case RecordTypeInts.OPDS:
                 {
-                    item.ObjectPlacementDefaults = Mutagen.Bethesda.Starfield.ObjectPaletteDefaults.CreateFromBinary(frame: frame);
-                    return (int)Npc_FieldIndex.ObjectPlacementDefaults;
+                    item.ObjectPaletteDefaults = Mutagen.Bethesda.Starfield.ObjectPaletteDefaults.CreateFromBinary(frame: frame);
+                    return (int)Npc_FieldIndex.ObjectPaletteDefaults;
                 }
                 case RecordTypeInts.XALG:
                 {
@@ -10296,13 +10228,9 @@ namespace Mutagen.Bethesda.Starfield
         private int? _DirtinessScaleLocation;
         public Percent DirtinessScale => _DirtinessScaleLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DirtinessScaleLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region ODRT
-        private int? _ODRTLocation;
-        public Single? ODRT => _ODRTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODRTLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
-        #endregion
-        #region ObjectPlacementDefaults
-        private RangeInt32? _ObjectPlacementDefaultsLocation;
-        public IObjectPaletteDefaultsGetter? ObjectPlacementDefaults => _ObjectPlacementDefaultsLocation.HasValue ? ObjectPaletteDefaultsBinaryOverlay.ObjectPaletteDefaultsFactory(_recordData.Slice(_ObjectPlacementDefaultsLocation!.Value.Min), _package) : default;
+        #region ObjectPaletteDefaults
+        private RangeInt32? _ObjectPaletteDefaultsLocation;
+        public IObjectPaletteDefaultsGetter? ObjectPaletteDefaults => _ObjectPaletteDefaultsLocation.HasValue ? ObjectPaletteDefaultsBinaryOverlay.ObjectPaletteDefaultsFactory(_recordData.Slice(_ObjectPaletteDefaultsLocation!.Value.Min), _package) : default;
         #endregion
         #region XALG
         private int? _XALGLocation;
@@ -10700,15 +10628,10 @@ namespace Mutagen.Bethesda.Starfield
                     _DirtinessScaleLocation = (stream.Position - offset);
                     return (int)Npc_FieldIndex.DirtinessScale;
                 }
-                case RecordTypeInts.ODRT:
-                {
-                    _ODRTLocation = (stream.Position - offset);
-                    return (int)Npc_FieldIndex.ODRT;
-                }
                 case RecordTypeInts.OPDS:
                 {
-                    _ObjectPlacementDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                    return (int)Npc_FieldIndex.ObjectPlacementDefaults;
+                    _ObjectPaletteDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Npc_FieldIndex.ObjectPaletteDefaults;
                 }
                 case RecordTypeInts.XALG:
                 {

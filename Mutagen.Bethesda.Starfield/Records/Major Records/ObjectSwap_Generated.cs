@@ -39,14 +39,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class BiomeSwap :
+    public partial class ObjectSwap :
         StarfieldMajorRecord,
-        IBiomeSwapInternal,
-        IEquatable<IBiomeSwapGetter>,
-        ILoquiObjectSetter<BiomeSwap>
+        IEquatable<IObjectSwapGetter>,
+        ILoquiObjectSetter<ObjectSwap>,
+        IObjectSwapInternal
     {
         #region Ctor
-        protected BiomeSwap()
+        protected ObjectSwap()
         {
             CustomCtor();
         }
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            BiomeSwapMixIn.Print(
+            ObjectSwapMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new BiomeSwap.Mask<R>();
+                var ret = new ObjectSwap.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -162,16 +162,16 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(BiomeSwap.Mask<bool>? printMask = null)
+            public string Print(ObjectSwap.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, BiomeSwap.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ObjectSwap.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(BiomeSwap.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(ObjectSwap.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                 }
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Starfield
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                BiomeSwap_FieldIndex enu = (BiomeSwap_FieldIndex)index;
+                ObjectSwap_FieldIndex enu = (ObjectSwap_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthException(int index, Exception ex)
             {
-                BiomeSwap_FieldIndex enu = (BiomeSwap_FieldIndex)index;
+                ObjectSwap_FieldIndex enu = (ObjectSwap_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthMask(int index, object obj)
             {
-                BiomeSwap_FieldIndex enu = (BiomeSwap_FieldIndex)index;
+                ObjectSwap_FieldIndex enu = (ObjectSwap_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -294,8 +294,8 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = BiomeSwap_Registration.TriggeringRecordType;
-        public BiomeSwap(
+        public static readonly RecordType GrupRecordType = ObjectSwap_Registration.TriggeringRecordType;
+        public ObjectSwap(
             FormKey formKey,
             StarfieldRelease gameRelease)
         {
@@ -304,7 +304,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        private BiomeSwap(
+        private ObjectSwap(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -313,7 +313,7 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        internal BiomeSwap(
+        internal ObjectSwap(
             FormKey formKey,
             ushort formVersion)
         {
@@ -322,14 +322,14 @@ namespace Mutagen.Bethesda.Starfield
             CustomCtor();
         }
 
-        public BiomeSwap(IStarfieldMod mod)
+        public ObjectSwap(IStarfieldMod mod)
             : this(
                 mod.GetNextFormKey(),
                 mod.StarfieldRelease)
         {
         }
 
-        public BiomeSwap(IStarfieldMod mod, string editorID)
+        public ObjectSwap(IStarfieldMod mod, string editorID)
             : this(
                 mod.GetNextFormKey(editorID),
                 mod.StarfieldRelease)
@@ -339,10 +339,10 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<BiomeSwap>.ToString(this);
+            return MajorRecordPrinter<ObjectSwap>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(IBiomeSwap);
+        protected override Type LinkType => typeof(IObjectSwap);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -351,16 +351,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IBiomeSwapGetter rhs) return false;
-            return ((BiomeSwapCommon)((IBiomeSwapGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IObjectSwapGetter rhs) return false;
+            return ((ObjectSwapCommon)((IObjectSwapGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IBiomeSwapGetter? obj)
+        public bool Equals(IObjectSwapGetter? obj)
         {
-            return ((BiomeSwapCommon)((IBiomeSwapGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ObjectSwapCommon)((IObjectSwapGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((BiomeSwapCommon)((IBiomeSwapGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ObjectSwapCommon)((IObjectSwapGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -368,23 +368,23 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => BiomeSwapBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ObjectSwapBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((BiomeSwapBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ObjectSwapBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static BiomeSwap CreateFromBinary(
+        public new static ObjectSwap CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new BiomeSwap();
-            ((BiomeSwapSetterCommon)((IBiomeSwapGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new ObjectSwap();
+            ((ObjectSwapSetterCommon)((IObjectSwapGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -395,7 +395,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out BiomeSwap item,
+            out ObjectSwap item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -410,82 +410,82 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((BiomeSwapSetterCommon)((IBiomeSwapGetter)this).CommonSetterInstance()!).Clear(this);
+            ((ObjectSwapSetterCommon)((IObjectSwapGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new BiomeSwap GetNew()
+        internal static new ObjectSwap GetNew()
         {
-            return new BiomeSwap();
+            return new ObjectSwap();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IBiomeSwap :
-        IBiomeSwapGetter,
-        ILoquiObjectSetter<IBiomeSwapInternal>,
+    public partial interface IObjectSwap :
+        ILoquiObjectSetter<IObjectSwapInternal>,
+        IObjectSwapGetter,
         IStarfieldMajorRecordInternal
     {
     }
 
-    public partial interface IBiomeSwapInternal :
+    public partial interface IObjectSwapInternal :
         IStarfieldMajorRecordInternal,
-        IBiomeSwap,
-        IBiomeSwapGetter
+        IObjectSwap,
+        IObjectSwapGetter
     {
     }
 
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.OSWP)]
-    public partial interface IBiomeSwapGetter :
+    public partial interface IObjectSwapGetter :
         IStarfieldMajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IBiomeSwapGetter>,
-        IMapsToGetter<IBiomeSwapGetter>
+        ILoquiObject<IObjectSwapGetter>,
+        IMapsToGetter<IObjectSwapGetter>
     {
-        static new ILoquiRegistration StaticRegistration => BiomeSwap_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => ObjectSwap_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class BiomeSwapMixIn
+    public static partial class ObjectSwapMixIn
     {
-        public static void Clear(this IBiomeSwapInternal item)
+        public static void Clear(this IObjectSwapInternal item)
         {
-            ((BiomeSwapSetterCommon)((IBiomeSwapGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((ObjectSwapSetterCommon)((IObjectSwapGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static BiomeSwap.Mask<bool> GetEqualsMask(
-            this IBiomeSwapGetter item,
-            IBiomeSwapGetter rhs,
+        public static ObjectSwap.Mask<bool> GetEqualsMask(
+            this IObjectSwapGetter item,
+            IObjectSwapGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((BiomeSwapCommon)((IBiomeSwapGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((ObjectSwapCommon)((IObjectSwapGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IBiomeSwapGetter item,
+            this IObjectSwapGetter item,
             string? name = null,
-            BiomeSwap.Mask<bool>? printMask = null)
+            ObjectSwap.Mask<bool>? printMask = null)
         {
-            return ((BiomeSwapCommon)((IBiomeSwapGetter)item).CommonInstance()!).Print(
+            return ((ObjectSwapCommon)((IObjectSwapGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IBiomeSwapGetter item,
+            this IObjectSwapGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            BiomeSwap.Mask<bool>? printMask = null)
+            ObjectSwap.Mask<bool>? printMask = null)
         {
-            ((BiomeSwapCommon)((IBiomeSwapGetter)item).CommonInstance()!).Print(
+            ((ObjectSwapCommon)((IObjectSwapGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -493,39 +493,39 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IBiomeSwapGetter item,
-            IBiomeSwapGetter rhs,
-            BiomeSwap.TranslationMask? equalsMask = null)
+            this IObjectSwapGetter item,
+            IObjectSwapGetter rhs,
+            ObjectSwap.TranslationMask? equalsMask = null)
         {
-            return ((BiomeSwapCommon)((IBiomeSwapGetter)item).CommonInstance()!).Equals(
+            return ((ObjectSwapCommon)((IObjectSwapGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IBiomeSwapInternal lhs,
-            IBiomeSwapGetter rhs,
-            out BiomeSwap.ErrorMask errorMask,
-            BiomeSwap.TranslationMask? copyMask = null)
+            this IObjectSwapInternal lhs,
+            IObjectSwapGetter rhs,
+            out ObjectSwap.ErrorMask errorMask,
+            ObjectSwap.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((BiomeSwapSetterTranslationCommon)((IBiomeSwapGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ObjectSwapSetterTranslationCommon)((IObjectSwapGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = BiomeSwap.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ObjectSwap.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IBiomeSwapInternal lhs,
-            IBiomeSwapGetter rhs,
+            this IObjectSwapInternal lhs,
+            IObjectSwapGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((BiomeSwapSetterTranslationCommon)((IBiomeSwapGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ObjectSwapSetterTranslationCommon)((IObjectSwapGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -533,55 +533,55 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static BiomeSwap DeepCopy(
-            this IBiomeSwapGetter item,
-            BiomeSwap.TranslationMask? copyMask = null)
+        public static ObjectSwap DeepCopy(
+            this IObjectSwapGetter item,
+            ObjectSwap.TranslationMask? copyMask = null)
         {
-            return ((BiomeSwapSetterTranslationCommon)((IBiomeSwapGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ObjectSwapSetterTranslationCommon)((IObjectSwapGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static BiomeSwap DeepCopy(
-            this IBiomeSwapGetter item,
-            out BiomeSwap.ErrorMask errorMask,
-            BiomeSwap.TranslationMask? copyMask = null)
+        public static ObjectSwap DeepCopy(
+            this IObjectSwapGetter item,
+            out ObjectSwap.ErrorMask errorMask,
+            ObjectSwap.TranslationMask? copyMask = null)
         {
-            return ((BiomeSwapSetterTranslationCommon)((IBiomeSwapGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ObjectSwapSetterTranslationCommon)((IObjectSwapGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static BiomeSwap DeepCopy(
-            this IBiomeSwapGetter item,
+        public static ObjectSwap DeepCopy(
+            this IObjectSwapGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((BiomeSwapSetterTranslationCommon)((IBiomeSwapGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ObjectSwapSetterTranslationCommon)((IObjectSwapGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static BiomeSwap Duplicate(
-            this IBiomeSwapGetter item,
+        public static ObjectSwap Duplicate(
+            this IObjectSwapGetter item,
             FormKey formKey,
-            BiomeSwap.TranslationMask? copyMask = null)
+            ObjectSwap.TranslationMask? copyMask = null)
         {
-            return ((BiomeSwapCommon)((IBiomeSwapGetter)item).CommonInstance()!).Duplicate(
+            return ((ObjectSwapCommon)((IObjectSwapGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static BiomeSwap Duplicate(
-            this IBiomeSwapGetter item,
+        public static ObjectSwap Duplicate(
+            this IObjectSwapGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((BiomeSwapCommon)((IBiomeSwapGetter)item).CommonInstance()!).Duplicate(
+            return ((ObjectSwapCommon)((IObjectSwapGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -591,11 +591,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IBiomeSwapInternal item,
+            this IObjectSwapInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((BiomeSwapSetterCommon)((IBiomeSwapGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ObjectSwapSetterCommon)((IObjectSwapGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -611,7 +611,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum BiomeSwap_FieldIndex
+    internal enum ObjectSwap_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -624,9 +624,9 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Registration
-    internal partial class BiomeSwap_Registration : ILoquiRegistration
+    internal partial class ObjectSwap_Registration : ILoquiRegistration
     {
-        public static readonly BiomeSwap_Registration Instance = new BiomeSwap_Registration();
+        public static readonly ObjectSwap_Registration Instance = new ObjectSwap_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -634,23 +634,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(BiomeSwap.Mask<>);
+        public static readonly Type MaskType = typeof(ObjectSwap.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(BiomeSwap.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ObjectSwap.ErrorMask);
 
-        public static readonly Type ClassType = typeof(BiomeSwap);
+        public static readonly Type ClassType = typeof(ObjectSwap);
 
-        public static readonly Type GetterType = typeof(IBiomeSwapGetter);
+        public static readonly Type GetterType = typeof(IObjectSwapGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IBiomeSwap);
+        public static readonly Type SetterType = typeof(IObjectSwap);
 
-        public static readonly Type? InternalSetterType = typeof(IBiomeSwapInternal);
+        public static readonly Type? InternalSetterType = typeof(IObjectSwapInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.BiomeSwap";
+        public const string FullName = "Mutagen.Bethesda.Starfield.ObjectSwap";
 
-        public const string Name = "BiomeSwap";
+        public const string Name = "ObjectSwap";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda.Starfield
             var all = RecordCollection.Factory(RecordTypes.OSWP);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(BiomeSwapBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(ObjectSwapBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -696,13 +696,13 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class BiomeSwapSetterCommon : StarfieldMajorRecordSetterCommon
+    internal partial class ObjectSwapSetterCommon : StarfieldMajorRecordSetterCommon
     {
-        public new static readonly BiomeSwapSetterCommon Instance = new BiomeSwapSetterCommon();
+        public new static readonly ObjectSwapSetterCommon Instance = new ObjectSwapSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IBiomeSwapInternal item)
+        public void Clear(IObjectSwapInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -710,16 +710,16 @@ namespace Mutagen.Bethesda.Starfield
         
         public override void Clear(IStarfieldMajorRecordInternal item)
         {
-            Clear(item: (IBiomeSwapInternal)item);
+            Clear(item: (IObjectSwapInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IBiomeSwapInternal)item);
+            Clear(item: (IObjectSwapInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IBiomeSwap obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IObjectSwap obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -728,16 +728,16 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IBiomeSwapInternal item,
+            IObjectSwapInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IBiomeSwapInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IObjectSwapInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: BiomeSwapBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: BiomeSwapBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: ObjectSwapBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: ObjectSwapBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -746,7 +746,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (BiomeSwap)item,
+                item: (ObjectSwap)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -757,7 +757,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (BiomeSwap)item,
+                item: (ObjectSwap)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -765,17 +765,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class BiomeSwapCommon : StarfieldMajorRecordCommon
+    internal partial class ObjectSwapCommon : StarfieldMajorRecordCommon
     {
-        public new static readonly BiomeSwapCommon Instance = new BiomeSwapCommon();
+        public new static readonly ObjectSwapCommon Instance = new ObjectSwapCommon();
 
-        public BiomeSwap.Mask<bool> GetEqualsMask(
-            IBiomeSwapGetter item,
-            IBiomeSwapGetter rhs,
+        public ObjectSwap.Mask<bool> GetEqualsMask(
+            IObjectSwapGetter item,
+            IObjectSwapGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new BiomeSwap.Mask<bool>(false);
-            ((BiomeSwapCommon)((IBiomeSwapGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new ObjectSwap.Mask<bool>(false);
+            ((ObjectSwapCommon)((IObjectSwapGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -784,18 +784,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IBiomeSwapGetter item,
-            IBiomeSwapGetter rhs,
-            BiomeSwap.Mask<bool> ret,
+            IObjectSwapGetter item,
+            IObjectSwapGetter rhs,
+            ObjectSwap.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IBiomeSwapGetter item,
+            IObjectSwapGetter item,
             string? name = null,
-            BiomeSwap.Mask<bool>? printMask = null)
+            ObjectSwap.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -807,18 +807,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IBiomeSwapGetter item,
+            IObjectSwapGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            BiomeSwap.Mask<bool>? printMask = null)
+            ObjectSwap.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"BiomeSwap =>");
+                sb.AppendLine($"ObjectSwap =>");
             }
             else
             {
-                sb.AppendLine($"{name} (BiomeSwap) =>");
+                sb.AppendLine($"{name} (ObjectSwap) =>");
             }
             using (sb.Brace())
             {
@@ -830,9 +830,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IBiomeSwapGetter item,
+            IObjectSwapGetter item,
             StructuredStringBuilder sb,
-            BiomeSwap.Mask<bool>? printMask = null)
+            ObjectSwap.Mask<bool>? printMask = null)
         {
             StarfieldMajorRecordCommon.ToStringFields(
                 item: item,
@@ -840,41 +840,41 @@ namespace Mutagen.Bethesda.Starfield
                 printMask: printMask);
         }
         
-        public static BiomeSwap_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
+        public static ObjectSwap_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case StarfieldMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (BiomeSwap_FieldIndex)((int)index);
+                    return (ObjectSwap_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormKey:
-                    return (BiomeSwap_FieldIndex)((int)index);
+                    return (ObjectSwap_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.VersionControl:
-                    return (BiomeSwap_FieldIndex)((int)index);
+                    return (ObjectSwap_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.EditorID:
-                    return (BiomeSwap_FieldIndex)((int)index);
+                    return (ObjectSwap_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.FormVersion:
-                    return (BiomeSwap_FieldIndex)((int)index);
+                    return (ObjectSwap_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.Version2:
-                    return (BiomeSwap_FieldIndex)((int)index);
+                    return (ObjectSwap_FieldIndex)((int)index);
                 case StarfieldMajorRecord_FieldIndex.StarfieldMajorRecordFlags:
-                    return (BiomeSwap_FieldIndex)((int)index);
+                    return (ObjectSwap_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new BiomeSwap_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new ObjectSwap_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (BiomeSwap_FieldIndex)((int)index);
+                    return (ObjectSwap_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (BiomeSwap_FieldIndex)((int)index);
+                    return (ObjectSwap_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (BiomeSwap_FieldIndex)((int)index);
+                    return (ObjectSwap_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (BiomeSwap_FieldIndex)((int)index);
+                    return (ObjectSwap_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -882,8 +882,8 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IBiomeSwapGetter? lhs,
-            IBiomeSwapGetter? rhs,
+            IObjectSwapGetter? lhs,
+            IObjectSwapGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
@@ -897,8 +897,8 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IBiomeSwapGetter?)lhs,
-                rhs: rhs as IBiomeSwapGetter,
+                lhs: (IObjectSwapGetter?)lhs,
+                rhs: rhs as IObjectSwapGetter,
                 equalsMask: equalsMask);
         }
         
@@ -908,12 +908,12 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IBiomeSwapGetter?)lhs,
-                rhs: rhs as IBiomeSwapGetter,
+                lhs: (IObjectSwapGetter?)lhs,
+                rhs: rhs as IObjectSwapGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IBiomeSwapGetter item)
+        public virtual int GetHashCode(IObjectSwapGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -922,12 +922,12 @@ namespace Mutagen.Bethesda.Starfield
         
         public override int GetHashCode(IStarfieldMajorRecordGetter item)
         {
-            return GetHashCode(item: (IBiomeSwapGetter)item);
+            return GetHashCode(item: (IObjectSwapGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IBiomeSwapGetter)item);
+            return GetHashCode(item: (IObjectSwapGetter)item);
         }
         
         #endregion
@@ -935,11 +935,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public override object GetNew()
         {
-            return BiomeSwap.GetNew();
+            return ObjectSwap.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBiomeSwapGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IObjectSwapGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
@@ -949,12 +949,12 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Duplicate
-        public BiomeSwap Duplicate(
-            IBiomeSwapGetter item,
+        public ObjectSwap Duplicate(
+            IObjectSwapGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new BiomeSwap(formKey, item.FormVersion);
+            var newRec = new ObjectSwap(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -965,7 +965,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IBiomeSwapGetter)item,
+                item: (IObjectSwapGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -976,7 +976,7 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IBiomeSwapGetter)item,
+                item: (IObjectSwapGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -986,14 +986,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class BiomeSwapSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
+    internal partial class ObjectSwapSetterTranslationCommon : StarfieldMajorRecordSetterTranslationCommon
     {
-        public new static readonly BiomeSwapSetterTranslationCommon Instance = new BiomeSwapSetterTranslationCommon();
+        public new static readonly ObjectSwapSetterTranslationCommon Instance = new ObjectSwapSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IBiomeSwapInternal item,
-            IBiomeSwapGetter rhs,
+            IObjectSwapInternal item,
+            IObjectSwapGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1007,8 +1007,8 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void DeepCopyIn(
-            IBiomeSwap item,
-            IBiomeSwapGetter rhs,
+            IObjectSwap item,
+            IObjectSwapGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1028,8 +1028,8 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         partial void DeepCopyInCustom(
-            IBiomeSwap item,
-            IBiomeSwapGetter rhs,
+            IObjectSwap item,
+            IObjectSwapGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
@@ -1041,8 +1041,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IBiomeSwapInternal)item,
-                rhs: (IBiomeSwapGetter)rhs,
+                item: (IObjectSwapInternal)item,
+                rhs: (IObjectSwapGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1056,8 +1056,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IBiomeSwap)item,
-                rhs: (IBiomeSwapGetter)rhs,
+                item: (IObjectSwap)item,
+                rhs: (IObjectSwapGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1071,8 +1071,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IBiomeSwapInternal)item,
-                rhs: (IBiomeSwapGetter)rhs,
+                item: (IObjectSwapInternal)item,
+                rhs: (IObjectSwapGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1086,8 +1086,8 @@ namespace Mutagen.Bethesda.Starfield
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IBiomeSwap)item,
-                rhs: (IBiomeSwapGetter)rhs,
+                item: (IObjectSwap)item,
+                rhs: (IObjectSwapGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1095,12 +1095,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public BiomeSwap DeepCopy(
-            IBiomeSwapGetter item,
-            BiomeSwap.TranslationMask? copyMask = null)
+        public ObjectSwap DeepCopy(
+            IObjectSwapGetter item,
+            ObjectSwap.TranslationMask? copyMask = null)
         {
-            BiomeSwap ret = (BiomeSwap)((BiomeSwapCommon)((IBiomeSwapGetter)item).CommonInstance()!).GetNew();
-            ((BiomeSwapSetterTranslationCommon)((IBiomeSwapGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ObjectSwap ret = (ObjectSwap)((ObjectSwapCommon)((IObjectSwapGetter)item).CommonInstance()!).GetNew();
+            ((ObjectSwapSetterTranslationCommon)((IObjectSwapGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1109,30 +1109,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public BiomeSwap DeepCopy(
-            IBiomeSwapGetter item,
-            out BiomeSwap.ErrorMask errorMask,
-            BiomeSwap.TranslationMask? copyMask = null)
+        public ObjectSwap DeepCopy(
+            IObjectSwapGetter item,
+            out ObjectSwap.ErrorMask errorMask,
+            ObjectSwap.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            BiomeSwap ret = (BiomeSwap)((BiomeSwapCommon)((IBiomeSwapGetter)item).CommonInstance()!).GetNew();
-            ((BiomeSwapSetterTranslationCommon)((IBiomeSwapGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ObjectSwap ret = (ObjectSwap)((ObjectSwapCommon)((IObjectSwapGetter)item).CommonInstance()!).GetNew();
+            ((ObjectSwapSetterTranslationCommon)((IObjectSwapGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = BiomeSwap.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ObjectSwap.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public BiomeSwap DeepCopy(
-            IBiomeSwapGetter item,
+        public ObjectSwap DeepCopy(
+            IObjectSwapGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            BiomeSwap ret = (BiomeSwap)((BiomeSwapCommon)((IBiomeSwapGetter)item).CommonInstance()!).GetNew();
-            ((BiomeSwapSetterTranslationCommon)((IBiomeSwapGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ObjectSwap ret = (ObjectSwap)((ObjectSwapCommon)((IObjectSwapGetter)item).CommonInstance()!).GetNew();
+            ((ObjectSwapSetterTranslationCommon)((IObjectSwapGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1148,21 +1148,21 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class BiomeSwap
+    public partial class ObjectSwap
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BiomeSwap_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => BiomeSwap_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ObjectSwap_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ObjectSwap_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => BiomeSwapCommon.Instance;
+        protected override object CommonInstance() => ObjectSwapCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return BiomeSwapSetterCommon.Instance;
+            return ObjectSwapSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => BiomeSwapSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => ObjectSwapSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1173,15 +1173,15 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class BiomeSwapBinaryWriteTranslation :
+    public partial class ObjectSwapBinaryWriteTranslation :
         StarfieldMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly BiomeSwapBinaryWriteTranslation Instance = new();
+        public new static readonly ObjectSwapBinaryWriteTranslation Instance = new();
 
         public void Write(
             MutagenWriter writer,
-            IBiomeSwapGetter item,
+            IObjectSwapGetter item,
             TypedWriteParams translationParams)
         {
             PluginUtilityTranslation.WriteMajorRecord(
@@ -1199,7 +1199,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IBiomeSwapGetter)item,
+                item: (IObjectSwapGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1210,7 +1210,7 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IBiomeSwapGetter)item,
+                item: (IObjectSwapGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1221,16 +1221,16 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IBiomeSwapGetter)item,
+                item: (IObjectSwapGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class BiomeSwapBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
+    internal partial class ObjectSwapBinaryCreateTranslation : StarfieldMajorRecordBinaryCreateTranslation
     {
-        public new static readonly BiomeSwapBinaryCreateTranslation Instance = new BiomeSwapBinaryCreateTranslation();
+        public new static readonly ObjectSwapBinaryCreateTranslation Instance = new ObjectSwapBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.OSWP;
     }
@@ -1239,7 +1239,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class BiomeSwapBinaryTranslationMixIn
+    public static class ObjectSwapBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1248,35 +1248,35 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class BiomeSwapBinaryOverlay :
+    internal partial class ObjectSwapBinaryOverlay :
         StarfieldMajorRecordBinaryOverlay,
-        IBiomeSwapGetter
+        IObjectSwapGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BiomeSwap_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => BiomeSwap_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ObjectSwap_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => ObjectSwap_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => BiomeSwapCommon.Instance;
+        protected override object CommonInstance() => ObjectSwapCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => BiomeSwapSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => ObjectSwapSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => BiomeSwapBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => ObjectSwapBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((BiomeSwapBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ObjectSwapBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(IBiomeSwap);
+        protected override Type LinkType => typeof(IObjectSwap);
 
 
         partial void CustomFactoryEnd(
@@ -1285,7 +1285,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected BiomeSwapBinaryOverlay(
+        protected ObjectSwapBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1295,7 +1295,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IBiomeSwapGetter BiomeSwapFactory(
+        public static IObjectSwapGetter ObjectSwapFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1307,7 +1307,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new BiomeSwapBinaryOverlay(
+            var ret = new ObjectSwapBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret._package.FormVersion = ret;
@@ -1325,12 +1325,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IBiomeSwapGetter BiomeSwapFactory(
+        public static IObjectSwapGetter ObjectSwapFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return BiomeSwapFactory(
+            return ObjectSwapFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1342,7 +1342,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            BiomeSwapMixIn.Print(
+            ObjectSwapMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1352,7 +1352,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public override string ToString()
         {
-            return MajorRecordPrinter<BiomeSwap>.ToString(this);
+            return MajorRecordPrinter<ObjectSwap>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1362,16 +1362,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IBiomeSwapGetter rhs) return false;
-            return ((BiomeSwapCommon)((IBiomeSwapGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IObjectSwapGetter rhs) return false;
+            return ((ObjectSwapCommon)((IObjectSwapGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IBiomeSwapGetter? obj)
+        public bool Equals(IObjectSwapGetter? obj)
         {
-            return ((BiomeSwapCommon)((IBiomeSwapGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ObjectSwapCommon)((IObjectSwapGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((BiomeSwapCommon)((IBiomeSwapGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ObjectSwapCommon)((IObjectSwapGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -85,11 +85,6 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte>? ITextureSetGetter.ODTY => this.ODTY;
         #endregion
-        #region ODRT
-        public Single? ODRT { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? ITextureSetGetter.ODRT => this.ODRT;
-        #endregion
         #region TX00
         public String? TX00 { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -171,7 +166,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.ODTY = initialValue;
-                this.ODRT = initialValue;
                 this.TX00 = initialValue;
                 this.TX01 = initialValue;
                 this.TX08 = initialValue;
@@ -194,7 +188,6 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem ObjectBounds,
                 TItem ODTY,
-                TItem ODRT,
                 TItem TX00,
                 TItem TX01,
                 TItem TX08,
@@ -216,7 +209,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.ODTY = ODTY;
-                this.ODRT = ODRT;
                 this.TX00 = TX00;
                 this.TX01 = TX01;
                 this.TX08 = TX08;
@@ -240,7 +232,6 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem ODTY;
-            public TItem ODRT;
             public TItem TX00;
             public TItem TX01;
             public TItem TX08;
@@ -266,7 +257,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
-                if (!object.Equals(this.ODRT, rhs.ODRT)) return false;
                 if (!object.Equals(this.TX00, rhs.TX00)) return false;
                 if (!object.Equals(this.TX01, rhs.TX01)) return false;
                 if (!object.Equals(this.TX08, rhs.TX08)) return false;
@@ -284,7 +274,6 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.ODTY);
-                hash.Add(this.ODRT);
                 hash.Add(this.TX00);
                 hash.Add(this.TX01);
                 hash.Add(this.TX08);
@@ -311,7 +300,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (!eval(this.ODTY)) return false;
-                if (!eval(this.ODRT)) return false;
                 if (!eval(this.TX00)) return false;
                 if (!eval(this.TX01)) return false;
                 if (!eval(this.TX08)) return false;
@@ -336,7 +324,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
                 if (eval(this.ODTY)) return true;
-                if (eval(this.ODRT)) return true;
                 if (eval(this.TX00)) return true;
                 if (eval(this.TX01)) return true;
                 if (eval(this.TX08)) return true;
@@ -364,7 +351,6 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.ODTY = eval(this.ODTY);
-                obj.ODRT = eval(this.ODRT);
                 obj.TX00 = eval(this.TX00);
                 obj.TX01 = eval(this.TX01);
                 obj.TX08 = eval(this.TX08);
@@ -400,10 +386,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.ODTY ?? true)
                     {
                         sb.AppendItem(ODTY, "ODTY");
-                    }
-                    if (printMask?.ODRT ?? true)
-                    {
-                        sb.AppendItem(ODRT, "ODRT");
                     }
                     if (printMask?.TX00 ?? true)
                     {
@@ -458,7 +440,6 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? ODTY;
-            public Exception? ODRT;
             public Exception? TX00;
             public Exception? TX01;
             public Exception? TX08;
@@ -481,8 +462,6 @@ namespace Mutagen.Bethesda.Starfield
                         return ObjectBounds;
                     case TextureSet_FieldIndex.ODTY:
                         return ODTY;
-                    case TextureSet_FieldIndex.ODRT:
-                        return ODRT;
                     case TextureSet_FieldIndex.TX00:
                         return TX00;
                     case TextureSet_FieldIndex.TX01:
@@ -518,9 +497,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case TextureSet_FieldIndex.ODTY:
                         this.ODTY = ex;
-                        break;
-                    case TextureSet_FieldIndex.ODRT:
-                        this.ODRT = ex;
                         break;
                     case TextureSet_FieldIndex.TX00:
                         this.TX00 = ex;
@@ -569,9 +545,6 @@ namespace Mutagen.Bethesda.Starfield
                     case TextureSet_FieldIndex.ODTY:
                         this.ODTY = (Exception?)obj;
                         break;
-                    case TextureSet_FieldIndex.ODRT:
-                        this.ODRT = (Exception?)obj;
-                        break;
                     case TextureSet_FieldIndex.TX00:
                         this.TX00 = (Exception?)obj;
                         break;
@@ -613,7 +586,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (ObjectBounds != null) return true;
                 if (ODTY != null) return true;
-                if (ODRT != null) return true;
                 if (TX00 != null) return true;
                 if (TX01 != null) return true;
                 if (TX08 != null) return true;
@@ -655,9 +627,6 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(ODTY, "ODTY");
                 }
                 {
-                    sb.AppendItem(ODRT, "ODRT");
-                }
-                {
                     sb.AppendItem(TX00, "TX00");
                 }
                 {
@@ -697,7 +666,6 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.ODTY = this.ODTY.Combine(rhs.ODTY);
-                ret.ODRT = this.ODRT.Combine(rhs.ODRT);
                 ret.TX00 = this.TX00.Combine(rhs.TX00);
                 ret.TX01 = this.TX01.Combine(rhs.TX01);
                 ret.TX08 = this.TX08.Combine(rhs.TX08);
@@ -732,7 +700,6 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool ODTY;
-            public bool ODRT;
             public bool TX00;
             public bool TX01;
             public bool TX08;
@@ -752,7 +719,6 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.ODTY = defaultOn;
-                this.ODRT = defaultOn;
                 this.TX00 = defaultOn;
                 this.TX01 = defaultOn;
                 this.TX08 = defaultOn;
@@ -772,7 +738,6 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((ODTY, null));
-                ret.Add((ODRT, null));
                 ret.Add((TX00, null));
                 ret.Add((TX01, null));
                 ret.Add((TX08, null));
@@ -938,7 +903,6 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new MemorySlice<Byte>? ODTY { get; set; }
-        new Single? ODRT { get; set; }
         new String? TX00 { get; set; }
         new String? TX01 { get; set; }
         new String? TX08 { get; set; }
@@ -979,7 +943,6 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
         ReadOnlyMemorySlice<Byte>? ODTY { get; }
-        Single? ODRT { get; }
         String? TX00 { get; }
         String? TX01 { get; }
         String? TX08 { get; }
@@ -1168,17 +1131,16 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         ObjectBounds = 7,
         ODTY = 8,
-        ODRT = 9,
-        TX00 = 10,
-        TX01 = 11,
-        TX08 = 12,
-        TX09 = 13,
-        TX15 = 14,
-        TX17 = 15,
-        TX19 = 16,
-        DODT = 17,
-        Flags = 18,
-        Material = 19,
+        TX00 = 9,
+        TX01 = 10,
+        TX08 = 11,
+        TX09 = 12,
+        TX15 = 13,
+        TX17 = 14,
+        TX19 = 15,
+        DODT = 16,
+        Flags = 17,
+        Material = 18,
     }
     #endregion
 
@@ -1189,9 +1151,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 13;
+        public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(TextureSet.Mask<>);
 
@@ -1226,7 +1188,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.TXST,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
-                RecordTypes.ODRT,
                 RecordTypes.TX00,
                 RecordTypes.TX01,
                 RecordTypes.TX08,
@@ -1283,7 +1244,6 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.ObjectBounds.Clear();
             item.ODTY = default;
-            item.ODRT = default;
             item.TX00 = default;
             item.TX01 = default;
             item.TX08 = default;
@@ -1380,7 +1340,6 @@ namespace Mutagen.Bethesda.Starfield
         {
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.ODTY = MemorySliceExt.SequenceEqual(item.ODTY, rhs.ODTY);
-            ret.ODRT = item.ODRT.EqualsWithin(rhs.ODRT);
             ret.TX00 = string.Equals(item.TX00, rhs.TX00);
             ret.TX01 = string.Equals(item.TX01, rhs.TX01);
             ret.TX08 = string.Equals(item.TX08, rhs.TX08);
@@ -1448,11 +1407,6 @@ namespace Mutagen.Bethesda.Starfield
                 && item.ODTY is {} ODTYItem)
             {
                 sb.AppendLine($"ODTY => {SpanExt.ToHexString(ODTYItem)}");
-            }
-            if ((printMask?.ODRT ?? true)
-                && item.ODRT is {} ODRTItem)
-            {
-                sb.AppendItem(ODRTItem, "ODRT");
             }
             if ((printMask?.TX00 ?? true)
                 && item.TX00 is {} TX00Item)
@@ -1565,10 +1519,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.ODTY, rhs.ODTY)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)TextureSet_FieldIndex.ODRT) ?? true))
-            {
-                if (!lhs.ODRT.EqualsWithin(rhs.ODRT)) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)TextureSet_FieldIndex.TX00) ?? true))
             {
                 if (!string.Equals(lhs.TX00, rhs.TX00)) return false;
@@ -1641,10 +1591,6 @@ namespace Mutagen.Bethesda.Starfield
             if (item.ODTY is {} ODTYItem)
             {
                 hash.Add(ODTYItem);
-            }
-            if (item.ODRT is {} ODRTitem)
-            {
-                hash.Add(ODRTitem);
             }
             if (item.TX00 is {} TX00item)
             {
@@ -1818,10 +1764,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.ODTY = default;
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.ODRT) ?? true))
-            {
-                item.ODRT = rhs.ODRT;
             }
             if ((copyMask?.GetShouldTranslate((int)TextureSet_FieldIndex.TX00) ?? true))
             {
@@ -2048,10 +1990,6 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.ODTY,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.ODRT,
-                header: translationParams.ConvertToCustom(RecordTypes.ODRT));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.TX00,
@@ -2179,12 +2117,6 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ODTY = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)TextureSet_FieldIndex.ODTY;
-                }
-                case RecordTypeInts.ODRT:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ODRT = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)TextureSet_FieldIndex.ODRT;
                 }
                 case RecordTypeInts.TX00:
                 {
@@ -2339,10 +2271,6 @@ namespace Mutagen.Bethesda.Starfield
         private int? _ODTYLocation;
         public ReadOnlyMemorySlice<Byte>? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        #region ODRT
-        private int? _ODRTLocation;
-        public Single? ODRT => _ODRTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODRTLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
-        #endregion
         #region TX00
         private int? _TX00Location;
         public String? TX00 => _TX00Location.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TX00Location.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -2461,11 +2389,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _ODTYLocation = (stream.Position - offset);
                     return (int)TextureSet_FieldIndex.ODTY;
-                }
-                case RecordTypeInts.ODRT:
-                {
-                    _ODRTLocation = (stream.Position - offset);
-                    return (int)TextureSet_FieldIndex.ODRT;
                 }
                 case RecordTypeInts.TX00:
                 {

@@ -5,7 +5,6 @@
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
-      <Float name="ODRT" recordType="ODRT" unknown="true" />
       <RefDirect name="ObjectPaletteDefaults" refName="ObjectPaletteDefaults" />
       <RefList name="Components" refName="AComponent" />
       <RefDirect name="Model" refName="Model" />
@@ -15,7 +14,7 @@
       <RefList name="Conditions" refName="Condition" />
       <FormLink name="MarkerType" refName="Keyword" recordType="KNAM" nullable="false" />
       <FormLink name="FloraList" refName="LeveledItem" recordType="LNAM" nullable="false" />
-      <FormLink name="LNA2" refName="StarfieldMajorRecord" recordType="LNA2" nullable="false" />
+      <FormLink name="NavmeshObject" refName="StarfieldMajorRecord" recordType="LNA2" nullable="false" />
     </Fields>
     <LinkInterface>INpcTemplateTarget</LinkInterface>
     <LinkInterface>IBaseObject</LinkInterface>

@@ -2110,6 +2110,9 @@
     <Compile Include="Records\Major Records\AStoryManagerNode.cs">
       <DependentUpon>StoryManagerNodes.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Biome.cs">
+      <DependentUpon>Biome.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\BipedObjectData.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
@@ -4922,9 +4925,6 @@
     <Compile Include="Records\Major Records\BiomeMarker_Generated.cs">
       <DependentUpon>BiomeMarker.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\BiomeSwap_Generated.cs">
-      <DependentUpon>BiomeSwap.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\BodyPartData_Generated.cs">
       <DependentUpon>BodyPartData.xml</DependentUpon>
     </Compile>
@@ -6453,22 +6453,10 @@
     <Compile Include="Records\Major Records\AnimationSoundTag_Generated.cs">
       <DependentUpon>AnimationSoundTagSet.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\BiomeFNAMItem_Generated.cs">
-      <DependentUpon>Biome.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\BiomeFNAMPackIn_Generated.cs">
-      <DependentUpon>Biome.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\BiomeWaterData_Generated.cs">
       <DependentUpon>Biome.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\BiomeMarkerType_Generated.cs">
-      <DependentUpon>Biome.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\BiomeLNAMItem_Generated.cs">
-      <DependentUpon>Biome.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\BiomeLandItem_Generated.cs">
       <DependentUpon>Biome.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\NavigationMeshObstacleManagerSubObject_Generated.cs">
@@ -6800,6 +6788,34 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\ObjectPaletteDefaults_Generated.cs">
       <DependentUpon>ObjectPaletteDefaults.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BiomeObject_Generated.cs">
+      <DependentUpon>Biome.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BiomeTerrain_Generated.cs">
+      <DependentUpon>Biome.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BiomeTerrainData_Generated.cs">
+      <DependentUpon>Biome.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BiomeFootprints_Generated.cs">
+      <DependentUpon>Biome.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BiomeBTPS_Generated.cs">
+      <DependentUpon>Biome.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BiomeBTPSItem_Generated.cs">
+      <DependentUpon>Biome.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BiomeDistantView_Generated.cs">
+      <DependentUpon>Biome.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ObjectSwap_Generated.cs">
+      <DependentUpon>ObjectSwap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IBiomeObjectPackInTarget_Generated.cs" />
+    <Compile Include="Records\Major Records\BiomeProceduralObjectGeneration_Generated.cs">
+      <DependentUpon>Biome.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

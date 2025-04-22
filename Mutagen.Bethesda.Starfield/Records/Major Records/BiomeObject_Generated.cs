@@ -38,13 +38,13 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class BiomeFNAMPackIn :
-        IBiomeFNAMPackIn,
-        IEquatable<IBiomeFNAMPackInGetter>,
-        ILoquiObjectSetter<BiomeFNAMPackIn>
+    public partial class BiomeObject :
+        IBiomeObject,
+        IEquatable<IBiomeObjectGetter>,
+        ILoquiObjectSetter<BiomeObject>
     {
         #region Ctor
-        public BiomeFNAMPackIn()
+        public BiomeObject()
         {
             CustomCtor();
         }
@@ -52,14 +52,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region PackIn
-        private readonly IFormLink<ILeveledPackInTargetGetter> _PackIn = new FormLink<ILeveledPackInTargetGetter>();
-        public IFormLink<ILeveledPackInTargetGetter> PackIn
+        private readonly IFormLink<IBiomeObjectPackInTargetGetter> _PackIn = new FormLink<IBiomeObjectPackInTargetGetter>();
+        public IFormLink<IBiomeObjectPackInTargetGetter> PackIn
         {
             get => _PackIn;
             set => _PackIn.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ILeveledPackInTargetGetter> IBiomeFNAMPackInGetter.PackIn => this.PackIn;
+        IFormLinkGetter<IBiomeObjectPackInTargetGetter> IBiomeObjectGetter.PackIn => this.PackIn;
         #endregion
         #region Unknown
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Starfield
             set => this._Unknown = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IBiomeFNAMPackInGetter.Unknown => this.Unknown;
+        ReadOnlyMemorySlice<Byte> IBiomeObjectGetter.Unknown => this.Unknown;
         #endregion
 
         #region To String
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            BiomeFNAMPackInMixIn.Print(
+            BiomeObjectMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -90,16 +90,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IBiomeFNAMPackInGetter rhs) return false;
-            return ((BiomeFNAMPackInCommon)((IBiomeFNAMPackInGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IBiomeObjectGetter rhs) return false;
+            return ((BiomeObjectCommon)((IBiomeObjectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IBiomeFNAMPackInGetter? obj)
+        public bool Equals(IBiomeObjectGetter? obj)
         {
-            return ((BiomeFNAMPackInCommon)((IBiomeFNAMPackInGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((BiomeObjectCommon)((IBiomeObjectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((BiomeFNAMPackInCommon)((IBiomeFNAMPackInGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((BiomeObjectCommon)((IBiomeObjectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new BiomeFNAMPackIn.Mask<R>();
+                var ret = new BiomeObject.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -196,16 +196,16 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(BiomeFNAMPackIn.Mask<bool>? printMask = null)
+            public string Print(BiomeObject.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, BiomeFNAMPackIn.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, BiomeObject.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(BiomeFNAMPackIn.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(BiomeObject.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                     if (printMask?.PackIn ?? true)
@@ -247,12 +247,12 @@ namespace Mutagen.Bethesda.Starfield
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                BiomeFNAMPackIn_FieldIndex enu = (BiomeFNAMPackIn_FieldIndex)index;
+                BiomeObject_FieldIndex enu = (BiomeObject_FieldIndex)index;
                 switch (enu)
                 {
-                    case BiomeFNAMPackIn_FieldIndex.PackIn:
+                    case BiomeObject_FieldIndex.PackIn:
                         return PackIn;
-                    case BiomeFNAMPackIn_FieldIndex.Unknown:
+                    case BiomeObject_FieldIndex.Unknown:
                         return Unknown;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -261,13 +261,13 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                BiomeFNAMPackIn_FieldIndex enu = (BiomeFNAMPackIn_FieldIndex)index;
+                BiomeObject_FieldIndex enu = (BiomeObject_FieldIndex)index;
                 switch (enu)
                 {
-                    case BiomeFNAMPackIn_FieldIndex.PackIn:
+                    case BiomeObject_FieldIndex.PackIn:
                         this.PackIn = ex;
                         break;
-                    case BiomeFNAMPackIn_FieldIndex.Unknown:
+                    case BiomeObject_FieldIndex.Unknown:
                         this.Unknown = ex;
                         break;
                     default:
@@ -277,13 +277,13 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                BiomeFNAMPackIn_FieldIndex enu = (BiomeFNAMPackIn_FieldIndex)index;
+                BiomeObject_FieldIndex enu = (BiomeObject_FieldIndex)index;
                 switch (enu)
                 {
-                    case BiomeFNAMPackIn_FieldIndex.PackIn:
+                    case BiomeObject_FieldIndex.PackIn:
                         this.PackIn = (Exception?)obj;
                         break;
-                    case BiomeFNAMPackIn_FieldIndex.Unknown:
+                    case BiomeObject_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
                         break;
                     default:
@@ -401,31 +401,31 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BiomeFNAMPackInCommon.Instance.EnumerateFormLinks(this);
-        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BiomeFNAMPackInSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BiomeObjectCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BiomeObjectSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => BiomeFNAMPackInBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => BiomeObjectBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((BiomeFNAMPackInBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((BiomeObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static BiomeFNAMPackIn CreateFromBinary(
+        public static BiomeObject CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new BiomeFNAMPackIn();
-            ((BiomeFNAMPackInSetterCommon)((IBiomeFNAMPackInGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new BiomeObject();
+            ((BiomeObjectSetterCommon)((IBiomeObjectGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -436,7 +436,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out BiomeFNAMPackIn item,
+            out BiomeObject item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -451,32 +451,32 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((BiomeFNAMPackInSetterCommon)((IBiomeFNAMPackInGetter)this).CommonSetterInstance()!).Clear(this);
+            ((BiomeObjectSetterCommon)((IBiomeObjectGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static BiomeFNAMPackIn GetNew()
+        internal static BiomeObject GetNew()
         {
-            return new BiomeFNAMPackIn();
+            return new BiomeObject();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IBiomeFNAMPackIn :
-        IBiomeFNAMPackInGetter,
+    public partial interface IBiomeObject :
+        IBiomeObjectGetter,
         IFormLinkContainer,
-        ILoquiObjectSetter<IBiomeFNAMPackIn>
+        ILoquiObjectSetter<IBiomeObject>
     {
-        new IFormLink<ILeveledPackInTargetGetter> PackIn { get; set; }
+        new IFormLink<IBiomeObjectPackInTargetGetter> PackIn { get; set; }
         new MemorySlice<Byte> Unknown { get; set; }
     }
 
-    public partial interface IBiomeFNAMPackInGetter :
+    public partial interface IBiomeObjectGetter :
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IBiomeFNAMPackInGetter>
+        ILoquiObject<IBiomeObjectGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -484,8 +484,8 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => BiomeFNAMPackIn_Registration.Instance;
-        IFormLinkGetter<ILeveledPackInTargetGetter> PackIn { get; }
+        static ILoquiRegistration StaticRegistration => BiomeObject_Registration.Instance;
+        IFormLinkGetter<IBiomeObjectPackInTargetGetter> PackIn { get; }
         ReadOnlyMemorySlice<Byte> Unknown { get; }
 
     }
@@ -493,42 +493,42 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common MixIn
-    public static partial class BiomeFNAMPackInMixIn
+    public static partial class BiomeObjectMixIn
     {
-        public static void Clear(this IBiomeFNAMPackIn item)
+        public static void Clear(this IBiomeObject item)
         {
-            ((BiomeFNAMPackInSetterCommon)((IBiomeFNAMPackInGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((BiomeObjectSetterCommon)((IBiomeObjectGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static BiomeFNAMPackIn.Mask<bool> GetEqualsMask(
-            this IBiomeFNAMPackInGetter item,
-            IBiomeFNAMPackInGetter rhs,
+        public static BiomeObject.Mask<bool> GetEqualsMask(
+            this IBiomeObjectGetter item,
+            IBiomeObjectGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((BiomeFNAMPackInCommon)((IBiomeFNAMPackInGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((BiomeObjectCommon)((IBiomeObjectGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IBiomeFNAMPackInGetter item,
+            this IBiomeObjectGetter item,
             string? name = null,
-            BiomeFNAMPackIn.Mask<bool>? printMask = null)
+            BiomeObject.Mask<bool>? printMask = null)
         {
-            return ((BiomeFNAMPackInCommon)((IBiomeFNAMPackInGetter)item).CommonInstance()!).Print(
+            return ((BiomeObjectCommon)((IBiomeObjectGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IBiomeFNAMPackInGetter item,
+            this IBiomeObjectGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            BiomeFNAMPackIn.Mask<bool>? printMask = null)
+            BiomeObject.Mask<bool>? printMask = null)
         {
-            ((BiomeFNAMPackInCommon)((IBiomeFNAMPackInGetter)item).CommonInstance()!).Print(
+            ((BiomeObjectCommon)((IBiomeObjectGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -536,21 +536,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IBiomeFNAMPackInGetter item,
-            IBiomeFNAMPackInGetter rhs,
-            BiomeFNAMPackIn.TranslationMask? equalsMask = null)
+            this IBiomeObjectGetter item,
+            IBiomeObjectGetter rhs,
+            BiomeObject.TranslationMask? equalsMask = null)
         {
-            return ((BiomeFNAMPackInCommon)((IBiomeFNAMPackInGetter)item).CommonInstance()!).Equals(
+            return ((BiomeObjectCommon)((IBiomeObjectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IBiomeFNAMPackIn lhs,
-            IBiomeFNAMPackInGetter rhs)
+            this IBiomeObject lhs,
+            IBiomeObjectGetter rhs)
         {
-            ((BiomeFNAMPackInSetterTranslationCommon)((IBiomeFNAMPackInGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((BiomeObjectSetterTranslationCommon)((IBiomeObjectGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -559,11 +559,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IBiomeFNAMPackIn lhs,
-            IBiomeFNAMPackInGetter rhs,
-            BiomeFNAMPackIn.TranslationMask? copyMask = null)
+            this IBiomeObject lhs,
+            IBiomeObjectGetter rhs,
+            BiomeObject.TranslationMask? copyMask = null)
         {
-            ((BiomeFNAMPackInSetterTranslationCommon)((IBiomeFNAMPackInGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((BiomeObjectSetterTranslationCommon)((IBiomeObjectGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -572,28 +572,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IBiomeFNAMPackIn lhs,
-            IBiomeFNAMPackInGetter rhs,
-            out BiomeFNAMPackIn.ErrorMask errorMask,
-            BiomeFNAMPackIn.TranslationMask? copyMask = null)
+            this IBiomeObject lhs,
+            IBiomeObjectGetter rhs,
+            out BiomeObject.ErrorMask errorMask,
+            BiomeObject.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((BiomeFNAMPackInSetterTranslationCommon)((IBiomeFNAMPackInGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((BiomeObjectSetterTranslationCommon)((IBiomeObjectGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = BiomeFNAMPackIn.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = BiomeObject.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IBiomeFNAMPackIn lhs,
-            IBiomeFNAMPackInGetter rhs,
+            this IBiomeObject lhs,
+            IBiomeObjectGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((BiomeFNAMPackInSetterTranslationCommon)((IBiomeFNAMPackInGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((BiomeObjectSetterTranslationCommon)((IBiomeObjectGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -601,32 +601,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static BiomeFNAMPackIn DeepCopy(
-            this IBiomeFNAMPackInGetter item,
-            BiomeFNAMPackIn.TranslationMask? copyMask = null)
+        public static BiomeObject DeepCopy(
+            this IBiomeObjectGetter item,
+            BiomeObject.TranslationMask? copyMask = null)
         {
-            return ((BiomeFNAMPackInSetterTranslationCommon)((IBiomeFNAMPackInGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((BiomeObjectSetterTranslationCommon)((IBiomeObjectGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static BiomeFNAMPackIn DeepCopy(
-            this IBiomeFNAMPackInGetter item,
-            out BiomeFNAMPackIn.ErrorMask errorMask,
-            BiomeFNAMPackIn.TranslationMask? copyMask = null)
+        public static BiomeObject DeepCopy(
+            this IBiomeObjectGetter item,
+            out BiomeObject.ErrorMask errorMask,
+            BiomeObject.TranslationMask? copyMask = null)
         {
-            return ((BiomeFNAMPackInSetterTranslationCommon)((IBiomeFNAMPackInGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((BiomeObjectSetterTranslationCommon)((IBiomeObjectGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static BiomeFNAMPackIn DeepCopy(
-            this IBiomeFNAMPackInGetter item,
+        public static BiomeObject DeepCopy(
+            this IBiomeObjectGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((BiomeFNAMPackInSetterTranslationCommon)((IBiomeFNAMPackInGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((BiomeObjectSetterTranslationCommon)((IBiomeObjectGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -634,11 +634,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IBiomeFNAMPackIn item,
+            this IBiomeObject item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((BiomeFNAMPackInSetterCommon)((IBiomeFNAMPackInGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((BiomeObjectSetterCommon)((IBiomeObjectGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum BiomeFNAMPackIn_FieldIndex
+    internal enum BiomeObject_FieldIndex
     {
         PackIn = 0,
         Unknown = 1,
@@ -662,9 +662,9 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Registration
-    internal partial class BiomeFNAMPackIn_Registration : ILoquiRegistration
+    internal partial class BiomeObject_Registration : ILoquiRegistration
     {
-        public static readonly BiomeFNAMPackIn_Registration Instance = new BiomeFNAMPackIn_Registration();
+        public static readonly BiomeObject_Registration Instance = new BiomeObject_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -672,23 +672,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(BiomeFNAMPackIn.Mask<>);
+        public static readonly Type MaskType = typeof(BiomeObject.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(BiomeFNAMPackIn.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(BiomeObject.ErrorMask);
 
-        public static readonly Type ClassType = typeof(BiomeFNAMPackIn);
+        public static readonly Type ClassType = typeof(BiomeObject);
 
-        public static readonly Type GetterType = typeof(IBiomeFNAMPackInGetter);
+        public static readonly Type GetterType = typeof(IBiomeObjectGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IBiomeFNAMPackIn);
+        public static readonly Type SetterType = typeof(IBiomeObject);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.BiomeFNAMPackIn";
+        public const string FullName = "Mutagen.Bethesda.Starfield.BiomeObject";
 
-        public const string Name = "BiomeFNAMPackIn";
+        public const string Name = "BiomeObject";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -703,7 +703,7 @@ namespace Mutagen.Bethesda.Starfield
             var all = RecordCollection.Factory(RecordTypes.GNAM);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(BiomeFNAMPackInBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(BiomeObjectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -734,13 +734,13 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class BiomeFNAMPackInSetterCommon
+    internal partial class BiomeObjectSetterCommon
     {
-        public static readonly BiomeFNAMPackInSetterCommon Instance = new BiomeFNAMPackInSetterCommon();
+        public static readonly BiomeObjectSetterCommon Instance = new BiomeObjectSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IBiomeFNAMPackIn item)
+        public void Clear(IBiomeObject item)
         {
             ClearPartial();
             item.PackIn.Clear();
@@ -748,7 +748,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         #region Mutagen
-        public void RemapLinks(IBiomeFNAMPackIn obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IBiomeObject obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.PackIn.Relink(mapping);
         }
@@ -757,7 +757,7 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IBiomeFNAMPackIn item,
+            IBiomeObject item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -769,23 +769,23 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: BiomeFNAMPackInBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: BiomeObjectBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class BiomeFNAMPackInCommon
+    internal partial class BiomeObjectCommon
     {
-        public static readonly BiomeFNAMPackInCommon Instance = new BiomeFNAMPackInCommon();
+        public static readonly BiomeObjectCommon Instance = new BiomeObjectCommon();
 
-        public BiomeFNAMPackIn.Mask<bool> GetEqualsMask(
-            IBiomeFNAMPackInGetter item,
-            IBiomeFNAMPackInGetter rhs,
+        public BiomeObject.Mask<bool> GetEqualsMask(
+            IBiomeObjectGetter item,
+            IBiomeObjectGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new BiomeFNAMPackIn.Mask<bool>(false);
-            ((BiomeFNAMPackInCommon)((IBiomeFNAMPackInGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new BiomeObject.Mask<bool>(false);
+            ((BiomeObjectCommon)((IBiomeObjectGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -794,9 +794,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IBiomeFNAMPackInGetter item,
-            IBiomeFNAMPackInGetter rhs,
-            BiomeFNAMPackIn.Mask<bool> ret,
+            IBiomeObjectGetter item,
+            IBiomeObjectGetter rhs,
+            BiomeObject.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.PackIn = item.PackIn.Equals(rhs.PackIn);
@@ -804,9 +804,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public string Print(
-            IBiomeFNAMPackInGetter item,
+            IBiomeObjectGetter item,
             string? name = null,
-            BiomeFNAMPackIn.Mask<bool>? printMask = null)
+            BiomeObject.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -818,18 +818,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IBiomeFNAMPackInGetter item,
+            IBiomeObjectGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            BiomeFNAMPackIn.Mask<bool>? printMask = null)
+            BiomeObject.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"BiomeFNAMPackIn =>");
+                sb.AppendLine($"BiomeObject =>");
             }
             else
             {
-                sb.AppendLine($"{name} (BiomeFNAMPackIn) =>");
+                sb.AppendLine($"{name} (BiomeObject) =>");
             }
             using (sb.Brace())
             {
@@ -841,9 +841,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IBiomeFNAMPackInGetter item,
+            IBiomeObjectGetter item,
             StructuredStringBuilder sb,
-            BiomeFNAMPackIn.Mask<bool>? printMask = null)
+            BiomeObject.Mask<bool>? printMask = null)
         {
             if (printMask?.PackIn ?? true)
             {
@@ -857,23 +857,23 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IBiomeFNAMPackInGetter? lhs,
-            IBiomeFNAMPackInGetter? rhs,
+            IBiomeObjectGetter? lhs,
+            IBiomeObjectGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)BiomeFNAMPackIn_FieldIndex.PackIn) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BiomeObject_FieldIndex.PackIn) ?? true))
             {
                 if (!lhs.PackIn.Equals(rhs.PackIn)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)BiomeFNAMPackIn_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BiomeObject_FieldIndex.Unknown) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IBiomeFNAMPackInGetter item)
+        public virtual int GetHashCode(IBiomeObjectGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.PackIn);
@@ -886,11 +886,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return BiomeFNAMPackIn.GetNew();
+            return BiomeObject.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBiomeFNAMPackInGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBiomeObjectGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.PackIn);
             yield break;
@@ -899,23 +899,23 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class BiomeFNAMPackInSetterTranslationCommon
+    internal partial class BiomeObjectSetterTranslationCommon
     {
-        public static readonly BiomeFNAMPackInSetterTranslationCommon Instance = new BiomeFNAMPackInSetterTranslationCommon();
+        public static readonly BiomeObjectSetterTranslationCommon Instance = new BiomeObjectSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IBiomeFNAMPackIn item,
-            IBiomeFNAMPackInGetter rhs,
+            IBiomeObject item,
+            IBiomeObjectGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)BiomeFNAMPackIn_FieldIndex.PackIn) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)BiomeObject_FieldIndex.PackIn) ?? true))
             {
                 item.PackIn.SetTo(rhs.PackIn.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)BiomeFNAMPackIn_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)BiomeObject_FieldIndex.Unknown) ?? true))
             {
                 item.Unknown = rhs.Unknown.ToArray();
             }
@@ -928,19 +928,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         partial void DeepCopyInCustom(
-            IBiomeFNAMPackIn item,
-            IBiomeFNAMPackInGetter rhs,
+            IBiomeObject item,
+            IBiomeObjectGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
         #endregion
         
-        public BiomeFNAMPackIn DeepCopy(
-            IBiomeFNAMPackInGetter item,
-            BiomeFNAMPackIn.TranslationMask? copyMask = null)
+        public BiomeObject DeepCopy(
+            IBiomeObjectGetter item,
+            BiomeObject.TranslationMask? copyMask = null)
         {
-            BiomeFNAMPackIn ret = (BiomeFNAMPackIn)((BiomeFNAMPackInCommon)((IBiomeFNAMPackInGetter)item).CommonInstance()!).GetNew();
-            ((BiomeFNAMPackInSetterTranslationCommon)((IBiomeFNAMPackInGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            BiomeObject ret = (BiomeObject)((BiomeObjectCommon)((IBiomeObjectGetter)item).CommonInstance()!).GetNew();
+            ((BiomeObjectSetterTranslationCommon)((IBiomeObjectGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -949,30 +949,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public BiomeFNAMPackIn DeepCopy(
-            IBiomeFNAMPackInGetter item,
-            out BiomeFNAMPackIn.ErrorMask errorMask,
-            BiomeFNAMPackIn.TranslationMask? copyMask = null)
+        public BiomeObject DeepCopy(
+            IBiomeObjectGetter item,
+            out BiomeObject.ErrorMask errorMask,
+            BiomeObject.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            BiomeFNAMPackIn ret = (BiomeFNAMPackIn)((BiomeFNAMPackInCommon)((IBiomeFNAMPackInGetter)item).CommonInstance()!).GetNew();
-            ((BiomeFNAMPackInSetterTranslationCommon)((IBiomeFNAMPackInGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            BiomeObject ret = (BiomeObject)((BiomeObjectCommon)((IBiomeObjectGetter)item).CommonInstance()!).GetNew();
+            ((BiomeObjectSetterTranslationCommon)((IBiomeObjectGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = BiomeFNAMPackIn.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = BiomeObject.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public BiomeFNAMPackIn DeepCopy(
-            IBiomeFNAMPackInGetter item,
+        public BiomeObject DeepCopy(
+            IBiomeObjectGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            BiomeFNAMPackIn ret = (BiomeFNAMPackIn)((BiomeFNAMPackInCommon)((IBiomeFNAMPackInGetter)item).CommonInstance()!).GetNew();
-            ((BiomeFNAMPackInSetterTranslationCommon)((IBiomeFNAMPackInGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            BiomeObject ret = (BiomeObject)((BiomeObjectCommon)((IBiomeObjectGetter)item).CommonInstance()!).GetNew();
+            ((BiomeObjectSetterTranslationCommon)((IBiomeObjectGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -988,27 +988,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class BiomeFNAMPackIn
+    public partial class BiomeObject
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BiomeFNAMPackIn_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => BiomeFNAMPackIn_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => BiomeObject_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => BiomeObject_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => BiomeFNAMPackInCommon.Instance;
+        protected object CommonInstance() => BiomeObjectCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return BiomeFNAMPackInSetterCommon.Instance;
+            return BiomeObjectSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => BiomeFNAMPackInSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => BiomeObjectSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IBiomeFNAMPackInGetter.CommonInstance() => this.CommonInstance();
+        object IBiomeObjectGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IBiomeFNAMPackInGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IBiomeObjectGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IBiomeFNAMPackInGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IBiomeObjectGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1019,12 +1019,12 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class BiomeFNAMPackInBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class BiomeObjectBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly BiomeFNAMPackInBinaryWriteTranslation Instance = new();
+        public static readonly BiomeObjectBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            IBiomeFNAMPackInGetter item,
+            IBiomeObjectGetter item,
             MutagenWriter writer)
         {
             FormLinkBinaryTranslation.Instance.Write(
@@ -1037,7 +1037,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public void Write(
             MutagenWriter writer,
-            IBiomeFNAMPackInGetter item,
+            IBiomeObjectGetter item,
             TypedWriteParams translationParams)
         {
             using (HeaderExport.Subrecord(
@@ -1058,19 +1058,19 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IBiomeFNAMPackInGetter)item,
+                item: (IBiomeObjectGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class BiomeFNAMPackInBinaryCreateTranslation
+    internal partial class BiomeObjectBinaryCreateTranslation
     {
-        public static readonly BiomeFNAMPackInBinaryCreateTranslation Instance = new BiomeFNAMPackInBinaryCreateTranslation();
+        public static readonly BiomeObjectBinaryCreateTranslation Instance = new BiomeObjectBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IBiomeFNAMPackIn item,
+            IBiomeObject item,
             MutagenFrame frame)
         {
             item.PackIn.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
@@ -1083,14 +1083,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class BiomeFNAMPackInBinaryTranslationMixIn
+    public static class BiomeObjectBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IBiomeFNAMPackInGetter item,
+            this IBiomeObjectGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((BiomeFNAMPackInBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((BiomeObjectBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1103,45 +1103,45 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class BiomeFNAMPackInBinaryOverlay :
+    internal partial class BiomeObjectBinaryOverlay :
         PluginBinaryOverlay,
-        IBiomeFNAMPackInGetter
+        IBiomeObjectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BiomeFNAMPackIn_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => BiomeFNAMPackIn_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => BiomeObject_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => BiomeObject_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => BiomeFNAMPackInCommon.Instance;
+        protected object CommonInstance() => BiomeObjectCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => BiomeFNAMPackInSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => BiomeObjectSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IBiomeFNAMPackInGetter.CommonInstance() => this.CommonInstance();
+        object IBiomeObjectGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IBiomeFNAMPackInGetter.CommonSetterInstance() => null;
+        object? IBiomeObjectGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IBiomeFNAMPackInGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IBiomeObjectGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BiomeFNAMPackInCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BiomeObjectCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => BiomeFNAMPackInBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => BiomeObjectBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((BiomeFNAMPackInBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((BiomeObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ILeveledPackInTargetGetter> PackIn => FormLinkBinaryTranslation.Instance.OverlayFactory<ILeveledPackInTargetGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<IBiomeObjectPackInTargetGetter> PackIn => FormLinkBinaryTranslation.Instance.OverlayFactory<IBiomeObjectPackInTargetGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         #region Unknown
         public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Slice(0x4).ToArray();
         protected int UnknownEndingPos;
@@ -1152,7 +1152,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected BiomeFNAMPackInBinaryOverlay(
+        protected BiomeObjectBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1162,7 +1162,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IBiomeFNAMPackInGetter BiomeFNAMPackInFactory(
+        public static IBiomeObjectGetter BiomeObjectFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1174,7 +1174,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new BiomeFNAMPackInBinaryOverlay(
+            var ret = new BiomeObjectBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret.CustomFactoryEnd(
@@ -1184,12 +1184,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IBiomeFNAMPackInGetter BiomeFNAMPackInFactory(
+        public static IBiomeObjectGetter BiomeObjectFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return BiomeFNAMPackInFactory(
+            return BiomeObjectFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1201,7 +1201,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            BiomeFNAMPackInMixIn.Print(
+            BiomeObjectMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1212,16 +1212,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IBiomeFNAMPackInGetter rhs) return false;
-            return ((BiomeFNAMPackInCommon)((IBiomeFNAMPackInGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IBiomeObjectGetter rhs) return false;
+            return ((BiomeObjectCommon)((IBiomeObjectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IBiomeFNAMPackInGetter? obj)
+        public bool Equals(IBiomeObjectGetter? obj)
         {
-            return ((BiomeFNAMPackInCommon)((IBiomeFNAMPackInGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((BiomeObjectCommon)((IBiomeObjectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((BiomeFNAMPackInCommon)((IBiomeFNAMPackInGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((BiomeObjectCommon)((IBiomeObjectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

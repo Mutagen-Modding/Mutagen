@@ -52,15 +52,15 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region Keyword
-        private readonly IFormLinkNullable<IKeywordGetter> _Keyword = new FormLinkNullable<IKeywordGetter>();
-        public IFormLinkNullable<IKeywordGetter> Keyword
+        #region MarkerType
+        private readonly IFormLinkNullable<IKeywordGetter> _MarkerType = new FormLinkNullable<IKeywordGetter>();
+        public IFormLinkNullable<IKeywordGetter> MarkerType
         {
-            get => _Keyword;
-            set => _Keyword.SetTo(value);
+            get => _MarkerType;
+            set => _MarkerType.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IKeywordGetter> IBiomeMarkerTypeGetter.Keyword => this.Keyword;
+        IFormLinkNullableGetter<IKeywordGetter> IBiomeMarkerTypeGetter.MarkerType => this.MarkerType;
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -122,15 +122,15 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Keyword = initialValue;
+                this.MarkerType = initialValue;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             public Mask(
-                TItem Keyword,
+                TItem MarkerType,
                 TItem Keywords)
             {
-                this.Keyword = Keyword;
+                this.MarkerType = MarkerType;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Keyword;
+            public TItem MarkerType;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
             #endregion
 
@@ -157,14 +157,14 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Keyword, rhs.Keyword)) return false;
+                if (!object.Equals(this.MarkerType, rhs.MarkerType)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Keyword);
+                hash.Add(this.MarkerType);
                 hash.Add(this.Keywords);
                 return hash.ToHashCode();
             }
@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Keyword)) return false;
+                if (!eval(this.MarkerType)) return false;
                 if (this.Keywords != null)
                 {
                     if (!eval(this.Keywords.Overall)) return false;
@@ -193,7 +193,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Keyword)) return true;
+                if (eval(this.MarkerType)) return true;
                 if (this.Keywords != null)
                 {
                     if (eval(this.Keywords.Overall)) return true;
@@ -219,7 +219,7 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Keyword = eval(this.Keyword);
+                obj.MarkerType = eval(this.MarkerType);
                 if (Keywords != null)
                 {
                     obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
@@ -252,9 +252,9 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(BiomeMarkerType.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Keyword ?? true)
+                    if (printMask?.MarkerType ?? true)
                     {
-                        sb.AppendItem(Keyword, "Keyword");
+                        sb.AppendItem(MarkerType, "MarkerType");
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
                         && Keywords is {} KeywordsItem)
@@ -301,7 +301,7 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? Keyword;
+            public Exception? MarkerType;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
             #endregion
 
@@ -311,8 +311,8 @@ namespace Mutagen.Bethesda.Starfield
                 BiomeMarkerType_FieldIndex enu = (BiomeMarkerType_FieldIndex)index;
                 switch (enu)
                 {
-                    case BiomeMarkerType_FieldIndex.Keyword:
-                        return Keyword;
+                    case BiomeMarkerType_FieldIndex.MarkerType:
+                        return MarkerType;
                     case BiomeMarkerType_FieldIndex.Keywords:
                         return Keywords;
                     default:
@@ -325,8 +325,8 @@ namespace Mutagen.Bethesda.Starfield
                 BiomeMarkerType_FieldIndex enu = (BiomeMarkerType_FieldIndex)index;
                 switch (enu)
                 {
-                    case BiomeMarkerType_FieldIndex.Keyword:
-                        this.Keyword = ex;
+                    case BiomeMarkerType_FieldIndex.MarkerType:
+                        this.MarkerType = ex;
                         break;
                     case BiomeMarkerType_FieldIndex.Keywords:
                         this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
@@ -341,8 +341,8 @@ namespace Mutagen.Bethesda.Starfield
                 BiomeMarkerType_FieldIndex enu = (BiomeMarkerType_FieldIndex)index;
                 switch (enu)
                 {
-                    case BiomeMarkerType_FieldIndex.Keyword:
-                        this.Keyword = (Exception?)obj;
+                    case BiomeMarkerType_FieldIndex.MarkerType:
+                        this.MarkerType = (Exception?)obj;
                         break;
                     case BiomeMarkerType_FieldIndex.Keywords:
                         this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
@@ -355,7 +355,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Keyword != null) return true;
+                if (MarkerType != null) return true;
                 if (Keywords != null) return true;
                 return false;
             }
@@ -383,7 +383,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Keyword, "Keyword");
+                    sb.AppendItem(MarkerType, "MarkerType");
                 }
                 if (Keywords is {} KeywordsItem)
                 {
@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Keyword = this.Keyword.Combine(rhs.Keyword);
+                ret.MarkerType = this.MarkerType.Combine(rhs.MarkerType);
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 return ret;
             }
@@ -438,7 +438,7 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Keyword;
+            public bool MarkerType;
             public bool Keywords;
             #endregion
 
@@ -449,7 +449,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Keyword = defaultOn;
+                this.MarkerType = defaultOn;
                 this.Keywords = defaultOn;
             }
 
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Keyword, null));
+                ret.Add((MarkerType, null));
                 ret.Add((Keywords, null));
             }
 
@@ -547,7 +547,7 @@ namespace Mutagen.Bethesda.Starfield
         IKeyworded<IKeywordGetter>,
         ILoquiObjectSetter<IBiomeMarkerType>
     {
-        new IFormLinkNullable<IKeywordGetter> Keyword { get; set; }
+        new IFormLinkNullable<IKeywordGetter> MarkerType { get; set; }
         /// <summary>
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
@@ -568,7 +568,7 @@ namespace Mutagen.Bethesda.Starfield
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => BiomeMarkerType_Registration.Instance;
-        IFormLinkNullableGetter<IKeywordGetter> Keyword { get; }
+        IFormLinkNullableGetter<IKeywordGetter> MarkerType { get; }
         #region Keywords
         /// <summary>
         /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
@@ -744,7 +744,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum BiomeMarkerType_FieldIndex
     {
-        Keyword = 0,
+        MarkerType = 0,
         Keywords = 1,
     }
     #endregion
@@ -833,14 +833,14 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IBiomeMarkerType item)
         {
             ClearPartial();
-            item.Keyword.Clear();
+            item.MarkerType.Clear();
             item.Keywords = null;
         }
         
         #region Mutagen
         public void RemapLinks(IBiomeMarkerType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Keyword.Relink(mapping);
+            obj.MarkerType.Relink(mapping);
             obj.Keywords?.RemapLinks(mapping);
         }
         
@@ -886,7 +886,7 @@ namespace Mutagen.Bethesda.Starfield
             BiomeMarkerType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Keyword = item.Keyword.Equals(rhs.Keyword);
+            ret.MarkerType = item.MarkerType.Equals(rhs.MarkerType);
             ret.Keywords = item.Keywords.CollectionEqualsHelper(
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
@@ -935,9 +935,9 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             BiomeMarkerType.Mask<bool>? printMask = null)
         {
-            if (printMask?.Keyword ?? true)
+            if (printMask?.MarkerType ?? true)
             {
-                sb.AppendItem(item.Keyword.FormKeyNullable, "Keyword");
+                sb.AppendItem(item.MarkerType.FormKeyNullable, "MarkerType");
             }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords is {} KeywordsItem)
@@ -963,9 +963,9 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)BiomeMarkerType_FieldIndex.Keyword) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BiomeMarkerType_FieldIndex.MarkerType) ?? true))
             {
-                if (!lhs.Keyword.Equals(rhs.Keyword)) return false;
+                if (!lhs.MarkerType.Equals(rhs.MarkerType)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)BiomeMarkerType_FieldIndex.Keywords) ?? true))
             {
@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IBiomeMarkerTypeGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Keyword);
+            hash.Add(item.MarkerType);
             hash.Add(item.Keywords);
             return hash.ToHashCode();
         }
@@ -993,9 +993,9 @@ namespace Mutagen.Bethesda.Starfield
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBiomeMarkerTypeGetter obj)
         {
-            if (FormLinkInformation.TryFactory(obj.Keyword, out var KeywordInfo))
+            if (FormLinkInformation.TryFactory(obj.MarkerType, out var MarkerTypeInfo))
             {
-                yield return KeywordInfo;
+                yield return MarkerTypeInfo;
             }
             if (obj.Keywords is {} KeywordsItem)
             {
@@ -1022,9 +1022,9 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)BiomeMarkerType_FieldIndex.Keyword) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)BiomeMarkerType_FieldIndex.MarkerType) ?? true))
             {
-                item.Keyword.SetTo(rhs.Keyword.FormKeyNullable);
+                item.MarkerType.SetTo(rhs.MarkerType.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)BiomeMarkerType_FieldIndex.Keywords) ?? true))
             {
@@ -1164,7 +1164,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Keyword,
+                item: item.MarkerType,
                 header: translationParams.ConvertToCustom(RecordTypes.KNAM));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
@@ -1222,10 +1222,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.KNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)BiomeMarkerType_FieldIndex.Keyword, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)BiomeMarkerType_FieldIndex.MarkerType, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Keyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)BiomeMarkerType_FieldIndex.Keyword;
+                    item.MarkerType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)BiomeMarkerType_FieldIndex.MarkerType;
                 }
                 case RecordTypeInts.KSIZ:
                 case RecordTypeInts.KWDA:
@@ -1310,9 +1310,9 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        #region Keyword
-        private int? _KeywordLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> Keyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _KeywordLocation);
+        #region MarkerType
+        private int? _MarkerTypeLocation;
+        public IFormLinkNullableGetter<IKeywordGetter> MarkerType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _MarkerTypeLocation);
         #endregion
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
@@ -1383,9 +1383,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.KNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)BiomeMarkerType_FieldIndex.Keyword, translationParams)) return ParseResult.Stop;
-                    _KeywordLocation = (stream.Position - offset);
-                    return (int)BiomeMarkerType_FieldIndex.Keyword;
+                    if (lastParsed.ShortCircuit((int)BiomeMarkerType_FieldIndex.MarkerType, translationParams)) return ParseResult.Stop;
+                    _MarkerTypeLocation = (stream.Position - offset);
+                    return (int)BiomeMarkerType_FieldIndex.MarkerType;
                 }
                 case RecordTypeInts.KSIZ:
                 case RecordTypeInts.KWDA:

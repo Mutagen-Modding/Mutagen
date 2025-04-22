@@ -4,9 +4,8 @@
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
-      <Float name="ODRT" recordType="ODRT" unknown="true" />
-      <Float name="OBSV" recordType="OBSV" unknown="true" />
-      <Float name="OCCV" recordType="OCCV" unknown="true" />
+      <Float name="Obstruction" recordType="OBSV" />
+      <Float name="Occlusion" recordType="OCCV" />
     </Fields>
     <LinkInterface>IBaseObject</LinkInterface>
   </Object>

@@ -4666,6 +4666,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IPlacedObject :
         IAssetLinkContainer,
+        IBiomeObjectPackInTarget,
         ICellOrObject,
         IFormLinkContainer,
         IHaveVirtualMachineAdapter,
@@ -4782,6 +4783,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
+        IBiomeObjectPackInTargetGetter,
         ICellOrObjectGetter,
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,

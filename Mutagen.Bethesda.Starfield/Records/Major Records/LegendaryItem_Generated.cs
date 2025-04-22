@@ -78,11 +78,6 @@ namespace Mutagen.Bethesda.Starfield
         #region DirtinessScale
         public Percent DirtinessScale { get; set; } = default(Percent);
         #endregion
-        #region ODRT
-        public Single? ODRT { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? ILegendaryItemGetter.ODRT => this.ODRT;
-        #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
@@ -201,7 +196,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.DirtinessScale = initialValue;
-                this.ODRT = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.DATA = initialValue;
                 this.ApplicableItemList = initialValue;
@@ -221,7 +215,6 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem ObjectBounds,
                 TItem DirtinessScale,
-                TItem ODRT,
                 TItem Model,
                 TItem DATA,
                 TItem ApplicableItemList,
@@ -240,7 +233,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.DirtinessScale = DirtinessScale;
-                this.ODRT = ODRT;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.DATA = DATA;
                 this.ApplicableItemList = ApplicableItemList;
@@ -261,7 +253,6 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem DirtinessScale;
-            public TItem ODRT;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public TItem DATA;
             public TItem ApplicableItemList;
@@ -284,7 +275,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.DirtinessScale, rhs.DirtinessScale)) return false;
-                if (!object.Equals(this.ODRT, rhs.ODRT)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.DATA, rhs.DATA)) return false;
                 if (!object.Equals(this.ApplicableItemList, rhs.ApplicableItemList)) return false;
@@ -299,7 +289,6 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.DirtinessScale);
-                hash.Add(this.ODRT);
                 hash.Add(this.Model);
                 hash.Add(this.DATA);
                 hash.Add(this.ApplicableItemList);
@@ -323,7 +312,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (!eval(this.DirtinessScale)) return false;
-                if (!eval(this.ODRT)) return false;
                 if (Model != null)
                 {
                     if (!eval(this.Model.Overall)) return false;
@@ -382,7 +370,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
                 if (eval(this.DirtinessScale)) return true;
-                if (eval(this.ODRT)) return true;
                 if (Model != null)
                 {
                     if (eval(this.Model.Overall)) return true;
@@ -444,7 +431,6 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.DirtinessScale = eval(this.DirtinessScale);
-                obj.ODRT = eval(this.ODRT);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 obj.DATA = eval(this.DATA);
                 obj.ApplicableItemList = eval(this.ApplicableItemList);
@@ -519,10 +505,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.DirtinessScale ?? true)
                     {
                         sb.AppendItem(DirtinessScale, "DirtinessScale");
-                    }
-                    if (printMask?.ODRT ?? true)
-                    {
-                        sb.AppendItem(ODRT, "ODRT");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
@@ -610,7 +592,6 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? DirtinessScale;
-            public Exception? ODRT;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public Exception? DATA;
             public Exception? ApplicableItemList;
@@ -630,8 +611,6 @@ namespace Mutagen.Bethesda.Starfield
                         return ObjectBounds;
                     case LegendaryItem_FieldIndex.DirtinessScale:
                         return DirtinessScale;
-                    case LegendaryItem_FieldIndex.ODRT:
-                        return ODRT;
                     case LegendaryItem_FieldIndex.Model:
                         return Model;
                     case LegendaryItem_FieldIndex.DATA:
@@ -661,9 +640,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case LegendaryItem_FieldIndex.DirtinessScale:
                         this.DirtinessScale = ex;
-                        break;
-                    case LegendaryItem_FieldIndex.ODRT:
-                        this.ODRT = ex;
                         break;
                     case LegendaryItem_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
@@ -703,9 +679,6 @@ namespace Mutagen.Bethesda.Starfield
                     case LegendaryItem_FieldIndex.DirtinessScale:
                         this.DirtinessScale = (Exception?)obj;
                         break;
-                    case LegendaryItem_FieldIndex.ODRT:
-                        this.ODRT = (Exception?)obj;
-                        break;
                     case LegendaryItem_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
@@ -738,7 +711,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (ObjectBounds != null) return true;
                 if (DirtinessScale != null) return true;
-                if (ODRT != null) return true;
                 if (Model != null) return true;
                 if (DATA != null) return true;
                 if (ApplicableItemList != null) return true;
@@ -775,9 +747,6 @@ namespace Mutagen.Bethesda.Starfield
                 ObjectBounds?.Print(sb);
                 {
                     sb.AppendItem(DirtinessScale, "DirtinessScale");
-                }
-                {
-                    sb.AppendItem(ODRT, "ODRT");
                 }
                 Model?.Print(sb);
                 {
@@ -853,7 +822,6 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.DirtinessScale = this.DirtinessScale.Combine(rhs.DirtinessScale);
-                ret.ODRT = this.ODRT.Combine(rhs.ODRT);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.DATA = this.DATA.Combine(rhs.DATA);
                 ret.ApplicableItemList = this.ApplicableItemList.Combine(rhs.ApplicableItemList);
@@ -885,7 +853,6 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool DirtinessScale;
-            public bool ODRT;
             public Model.TranslationMask? Model;
             public bool DATA;
             public bool ApplicableItemList;
@@ -902,7 +869,6 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.DirtinessScale = defaultOn;
-                this.ODRT = defaultOn;
                 this.DATA = defaultOn;
                 this.ApplicableItemList = defaultOn;
                 this.LegendaryTemplateList = defaultOn;
@@ -915,7 +881,6 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((DirtinessScale, null));
-                ret.Add((ODRT, null));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
                 ret.Add((DATA, null));
                 ret.Add((ApplicableItemList, null));
@@ -1084,7 +1049,6 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ObjectBounds? ObjectBounds { get; set; }
         new Percent DirtinessScale { get; set; }
-        new Single? ODRT { get; set; }
         /// <summary>
         /// Aspects: IModeled
         /// </summary>
@@ -1125,7 +1089,6 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter? ObjectBounds { get; }
         #endregion
         Percent DirtinessScale { get; }
-        Single? ODRT { get; }
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter
@@ -1316,14 +1279,13 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         ObjectBounds = 7,
         DirtinessScale = 8,
-        ODRT = 9,
-        Model = 10,
-        DATA = 11,
-        ApplicableItemList = 12,
-        LegendaryTemplateList = 13,
-        LegendaryMods = 14,
-        IncludeFilters = 15,
-        ExcludeFilters = 16,
+        Model = 9,
+        DATA = 10,
+        ApplicableItemList = 11,
+        LegendaryTemplateList = 12,
+        LegendaryMods = 13,
+        IncludeFilters = 14,
+        ExcludeFilters = 15,
     }
     #endregion
 
@@ -1334,9 +1296,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 10;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 17;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(LegendaryItem.Mask<>);
 
@@ -1371,7 +1333,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.LGDI,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
-                RecordTypes.ODRT,
                 RecordTypes.MODL,
                 RecordTypes.MODT,
                 RecordTypes.MOLM,
@@ -1431,7 +1392,6 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.ObjectBounds = null;
             item.DirtinessScale = default(Percent);
-            item.ODRT = default;
             item.Model = null;
             item.DATA = default;
             item.ApplicableItemList.Clear();
@@ -1561,7 +1521,6 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.DirtinessScale = item.DirtinessScale.Equals(rhs.DirtinessScale);
-            ret.ODRT = item.ODRT.EqualsWithin(rhs.ODRT);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
@@ -1639,11 +1598,6 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.DirtinessScale ?? true)
             {
                 sb.AppendItem(item.DirtinessScale, "DirtinessScale");
-            }
-            if ((printMask?.ODRT ?? true)
-                && item.ODRT is {} ODRTItem)
-            {
-                sb.AppendItem(ODRTItem, "ODRT");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
@@ -1770,10 +1724,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.DirtinessScale.Equals(rhs.DirtinessScale)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.ODRT) ?? true))
-            {
-                if (!lhs.ODRT.EqualsWithin(rhs.ODRT)) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
@@ -1839,10 +1789,6 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(ObjectBoundsitem);
             }
             hash.Add(item.DirtinessScale);
-            if (item.ODRT is {} ODRTitem)
-            {
-                hash.Add(ODRTitem);
-            }
             if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
@@ -2040,10 +1986,6 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.DirtinessScale) ?? true))
             {
                 item.DirtinessScale = rhs.DirtinessScale;
-            }
-            if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.ODRT) ?? true))
-            {
-                item.ODRT = rhs.ODRT;
             }
             if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.Model) ?? true))
             {
@@ -2367,10 +2309,6 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.DirtinessScale,
                 integerType: FloatIntegerType.UInt,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.ODRT,
-                header: translationParams.ConvertToCustom(RecordTypes.ODRT));
             if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
@@ -2507,12 +2445,6 @@ namespace Mutagen.Bethesda.Starfield
                         integerType: FloatIntegerType.UInt);
                     return (int)LegendaryItem_FieldIndex.DirtinessScale;
                 }
-                case RecordTypeInts.ODRT:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ODRT = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)LegendaryItem_FieldIndex.ODRT;
-                }
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
@@ -2642,10 +2574,6 @@ namespace Mutagen.Bethesda.Starfield
         private int? _DirtinessScaleLocation;
         public Percent DirtinessScale => _DirtinessScaleLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DirtinessScaleLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region ODRT
-        private int? _ODRTLocation;
-        public Single? ODRT => _ODRTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODRTLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
-        #endregion
         public IModelGetter? Model { get; private set; }
         #region DATA
         private int? _DATALocation;
@@ -2740,11 +2668,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _DirtinessScaleLocation = (stream.Position - offset);
                     return (int)LegendaryItem_FieldIndex.DirtinessScale;
-                }
-                case RecordTypeInts.ODRT:
-                {
-                    _ODRTLocation = (stream.Position - offset);
-                    return (int)LegendaryItem_FieldIndex.ODRT;
                 }
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:

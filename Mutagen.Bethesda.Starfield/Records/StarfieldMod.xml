@@ -139,7 +139,7 @@
       <Group name="MorphableObjects" refName="MorphableObject" />
       <Group name="Traversals" refName="Traversal" />
       <Group name="ResourceGenerationData" refName="ResourceGenerationData" />
-      <Group name="BiomeSwaps" refName="BiomeSwap" />
+      <Group name="ObjectSwaps" refName="ObjectSwap" />
       <Group name="Atmospheres" refName="Atmosphere" />
       <Group name="LeveledSpaceCells" refName="LeveledSpaceCell" />
       <Group name="SpeechChallenges" refName="SpeechChallenge" />

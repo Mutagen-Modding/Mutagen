@@ -38,21 +38,21 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class BiomeLandItem :
-        IBiomeLandItem,
-        IEquatable<IBiomeLandItemGetter>,
-        ILoquiObjectSetter<BiomeLandItem>
+    public partial class BiomeTerrainData :
+        IBiomeTerrainData,
+        IEquatable<IBiomeTerrainDataGetter>,
+        ILoquiObjectSetter<BiomeTerrainData>
     {
         #region Ctor
-        public BiomeLandItem()
+        public BiomeTerrainData()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Index
-        public UInt32 Index { get; set; } = default(UInt32);
+        #region TerrainMask
+        public Biome.TerrainMask TerrainMask { get; set; } = default(Biome.TerrainMask);
         #endregion
         #region LandTexture
         private readonly IFormLink<ILandscapeTextureGetter> _LandTexture = new FormLink<ILandscapeTextureGetter>();
@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Starfield
             set => _LandTexture.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ILandscapeTextureGetter> IBiomeLandItemGetter.LandTexture => this.LandTexture;
+        IFormLinkGetter<ILandscapeTextureGetter> IBiomeTerrainDataGetter.LandTexture => this.LandTexture;
         #endregion
         #region GroundCover
         private readonly IFormLink<IGroundCoverGetter> _GroundCover = new FormLink<IGroundCoverGetter>();
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Starfield
             set => _GroundCover.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IGroundCoverGetter> IBiomeLandItemGetter.GroundCover => this.GroundCover;
+        IFormLinkGetter<IGroundCoverGetter> IBiomeTerrainDataGetter.GroundCover => this.GroundCover;
         #endregion
 
         #region To String
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            BiomeLandItemMixIn.Print(
+            BiomeTerrainDataMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -92,16 +92,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IBiomeLandItemGetter rhs) return false;
-            return ((BiomeLandItemCommon)((IBiomeLandItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IBiomeTerrainDataGetter rhs) return false;
+            return ((BiomeTerrainDataCommon)((IBiomeTerrainDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IBiomeLandItemGetter? obj)
+        public bool Equals(IBiomeTerrainDataGetter? obj)
         {
-            return ((BiomeLandItemCommon)((IBiomeLandItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((BiomeTerrainDataCommon)((IBiomeTerrainDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((BiomeLandItemCommon)((IBiomeLandItemGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((BiomeTerrainDataCommon)((IBiomeTerrainDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -113,17 +113,17 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Index = initialValue;
+                this.TerrainMask = initialValue;
                 this.LandTexture = initialValue;
                 this.GroundCover = initialValue;
             }
 
             public Mask(
-                TItem Index,
+                TItem TerrainMask,
                 TItem LandTexture,
                 TItem GroundCover)
             {
-                this.Index = Index;
+                this.TerrainMask = TerrainMask;
                 this.LandTexture = LandTexture;
                 this.GroundCover = GroundCover;
             }
@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Index;
+            public TItem TerrainMask;
             public TItem LandTexture;
             public TItem GroundCover;
             #endregion
@@ -152,7 +152,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Index, rhs.Index)) return false;
+                if (!object.Equals(this.TerrainMask, rhs.TerrainMask)) return false;
                 if (!object.Equals(this.LandTexture, rhs.LandTexture)) return false;
                 if (!object.Equals(this.GroundCover, rhs.GroundCover)) return false;
                 return true;
@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Index);
+                hash.Add(this.TerrainMask);
                 hash.Add(this.LandTexture);
                 hash.Add(this.GroundCover);
                 return hash.ToHashCode();
@@ -171,7 +171,7 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Index)) return false;
+                if (!eval(this.TerrainMask)) return false;
                 if (!eval(this.LandTexture)) return false;
                 if (!eval(this.GroundCover)) return false;
                 return true;
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Index)) return true;
+                if (eval(this.TerrainMask)) return true;
                 if (eval(this.LandTexture)) return true;
                 if (eval(this.GroundCover)) return true;
                 return false;
@@ -191,14 +191,14 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new BiomeLandItem.Mask<R>();
+                var ret = new BiomeTerrainData.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Index = eval(this.Index);
+                obj.TerrainMask = eval(this.TerrainMask);
                 obj.LandTexture = eval(this.LandTexture);
                 obj.GroundCover = eval(this.GroundCover);
             }
@@ -207,21 +207,21 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(BiomeLandItem.Mask<bool>? printMask = null)
+            public string Print(BiomeTerrainData.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, BiomeLandItem.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, BiomeTerrainData.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(BiomeLandItem.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(BiomeTerrainData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Index ?? true)
+                    if (printMask?.TerrainMask ?? true)
                     {
-                        sb.AppendItem(Index, "Index");
+                        sb.AppendItem(TerrainMask, "TerrainMask");
                     }
                     if (printMask?.LandTexture ?? true)
                     {
@@ -255,7 +255,7 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? Index;
+            public Exception? TerrainMask;
             public Exception? LandTexture;
             public Exception? GroundCover;
             #endregion
@@ -263,14 +263,14 @@ namespace Mutagen.Bethesda.Starfield
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                BiomeLandItem_FieldIndex enu = (BiomeLandItem_FieldIndex)index;
+                BiomeTerrainData_FieldIndex enu = (BiomeTerrainData_FieldIndex)index;
                 switch (enu)
                 {
-                    case BiomeLandItem_FieldIndex.Index:
-                        return Index;
-                    case BiomeLandItem_FieldIndex.LandTexture:
+                    case BiomeTerrainData_FieldIndex.TerrainMask:
+                        return TerrainMask;
+                    case BiomeTerrainData_FieldIndex.LandTexture:
                         return LandTexture;
-                    case BiomeLandItem_FieldIndex.GroundCover:
+                    case BiomeTerrainData_FieldIndex.GroundCover:
                         return GroundCover;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -279,16 +279,16 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                BiomeLandItem_FieldIndex enu = (BiomeLandItem_FieldIndex)index;
+                BiomeTerrainData_FieldIndex enu = (BiomeTerrainData_FieldIndex)index;
                 switch (enu)
                 {
-                    case BiomeLandItem_FieldIndex.Index:
-                        this.Index = ex;
+                    case BiomeTerrainData_FieldIndex.TerrainMask:
+                        this.TerrainMask = ex;
                         break;
-                    case BiomeLandItem_FieldIndex.LandTexture:
+                    case BiomeTerrainData_FieldIndex.LandTexture:
                         this.LandTexture = ex;
                         break;
-                    case BiomeLandItem_FieldIndex.GroundCover:
+                    case BiomeTerrainData_FieldIndex.GroundCover:
                         this.GroundCover = ex;
                         break;
                     default:
@@ -298,16 +298,16 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                BiomeLandItem_FieldIndex enu = (BiomeLandItem_FieldIndex)index;
+                BiomeTerrainData_FieldIndex enu = (BiomeTerrainData_FieldIndex)index;
                 switch (enu)
                 {
-                    case BiomeLandItem_FieldIndex.Index:
-                        this.Index = (Exception?)obj;
+                    case BiomeTerrainData_FieldIndex.TerrainMask:
+                        this.TerrainMask = (Exception?)obj;
                         break;
-                    case BiomeLandItem_FieldIndex.LandTexture:
+                    case BiomeTerrainData_FieldIndex.LandTexture:
                         this.LandTexture = (Exception?)obj;
                         break;
-                    case BiomeLandItem_FieldIndex.GroundCover:
+                    case BiomeTerrainData_FieldIndex.GroundCover:
                         this.GroundCover = (Exception?)obj;
                         break;
                     default:
@@ -318,7 +318,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Index != null) return true;
+                if (TerrainMask != null) return true;
                 if (LandTexture != null) return true;
                 if (GroundCover != null) return true;
                 return false;
@@ -347,7 +347,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Index, "Index");
+                    sb.AppendItem(TerrainMask, "TerrainMask");
                 }
                 {
                     sb.AppendItem(LandTexture, "LandTexture");
@@ -363,7 +363,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Index = this.Index.Combine(rhs.Index);
+                ret.TerrainMask = this.TerrainMask.Combine(rhs.TerrainMask);
                 ret.LandTexture = this.LandTexture.Combine(rhs.LandTexture);
                 ret.GroundCover = this.GroundCover.Combine(rhs.GroundCover);
                 return ret;
@@ -389,7 +389,7 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Index;
+            public bool TerrainMask;
             public bool LandTexture;
             public bool GroundCover;
             #endregion
@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Index = defaultOn;
+                this.TerrainMask = defaultOn;
                 this.LandTexture = defaultOn;
                 this.GroundCover = defaultOn;
             }
@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Index, null));
+                ret.Add((TerrainMask, null));
                 ret.Add((LandTexture, null));
                 ret.Add((GroundCover, null));
             }
@@ -433,31 +433,31 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BiomeLandItemCommon.Instance.EnumerateFormLinks(this);
-        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BiomeLandItemSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BiomeTerrainDataCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => BiomeTerrainDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => BiomeLandItemBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => BiomeTerrainDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((BiomeLandItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((BiomeTerrainDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static BiomeLandItem CreateFromBinary(
+        public static BiomeTerrainData CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new BiomeLandItem();
-            ((BiomeLandItemSetterCommon)((IBiomeLandItemGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new BiomeTerrainData();
+            ((BiomeTerrainDataSetterCommon)((IBiomeTerrainDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out BiomeLandItem item,
+            out BiomeTerrainData item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -483,33 +483,33 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((BiomeLandItemSetterCommon)((IBiomeLandItemGetter)this).CommonSetterInstance()!).Clear(this);
+            ((BiomeTerrainDataSetterCommon)((IBiomeTerrainDataGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static BiomeLandItem GetNew()
+        internal static BiomeTerrainData GetNew()
         {
-            return new BiomeLandItem();
+            return new BiomeTerrainData();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IBiomeLandItem :
-        IBiomeLandItemGetter,
+    public partial interface IBiomeTerrainData :
+        IBiomeTerrainDataGetter,
         IFormLinkContainer,
-        ILoquiObjectSetter<IBiomeLandItem>
+        ILoquiObjectSetter<IBiomeTerrainData>
     {
-        new UInt32 Index { get; set; }
+        new Biome.TerrainMask TerrainMask { get; set; }
         new IFormLink<ILandscapeTextureGetter> LandTexture { get; set; }
         new IFormLink<IGroundCoverGetter> GroundCover { get; set; }
     }
 
-    public partial interface IBiomeLandItemGetter :
+    public partial interface IBiomeTerrainDataGetter :
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IBiomeLandItemGetter>
+        ILoquiObject<IBiomeTerrainDataGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -517,8 +517,8 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => BiomeLandItem_Registration.Instance;
-        UInt32 Index { get; }
+        static ILoquiRegistration StaticRegistration => BiomeTerrainData_Registration.Instance;
+        Biome.TerrainMask TerrainMask { get; }
         IFormLinkGetter<ILandscapeTextureGetter> LandTexture { get; }
         IFormLinkGetter<IGroundCoverGetter> GroundCover { get; }
 
@@ -527,42 +527,42 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common MixIn
-    public static partial class BiomeLandItemMixIn
+    public static partial class BiomeTerrainDataMixIn
     {
-        public static void Clear(this IBiomeLandItem item)
+        public static void Clear(this IBiomeTerrainData item)
         {
-            ((BiomeLandItemSetterCommon)((IBiomeLandItemGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((BiomeTerrainDataSetterCommon)((IBiomeTerrainDataGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static BiomeLandItem.Mask<bool> GetEqualsMask(
-            this IBiomeLandItemGetter item,
-            IBiomeLandItemGetter rhs,
+        public static BiomeTerrainData.Mask<bool> GetEqualsMask(
+            this IBiomeTerrainDataGetter item,
+            IBiomeTerrainDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((BiomeLandItemCommon)((IBiomeLandItemGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((BiomeTerrainDataCommon)((IBiomeTerrainDataGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IBiomeLandItemGetter item,
+            this IBiomeTerrainDataGetter item,
             string? name = null,
-            BiomeLandItem.Mask<bool>? printMask = null)
+            BiomeTerrainData.Mask<bool>? printMask = null)
         {
-            return ((BiomeLandItemCommon)((IBiomeLandItemGetter)item).CommonInstance()!).Print(
+            return ((BiomeTerrainDataCommon)((IBiomeTerrainDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IBiomeLandItemGetter item,
+            this IBiomeTerrainDataGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            BiomeLandItem.Mask<bool>? printMask = null)
+            BiomeTerrainData.Mask<bool>? printMask = null)
         {
-            ((BiomeLandItemCommon)((IBiomeLandItemGetter)item).CommonInstance()!).Print(
+            ((BiomeTerrainDataCommon)((IBiomeTerrainDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -570,21 +570,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IBiomeLandItemGetter item,
-            IBiomeLandItemGetter rhs,
-            BiomeLandItem.TranslationMask? equalsMask = null)
+            this IBiomeTerrainDataGetter item,
+            IBiomeTerrainDataGetter rhs,
+            BiomeTerrainData.TranslationMask? equalsMask = null)
         {
-            return ((BiomeLandItemCommon)((IBiomeLandItemGetter)item).CommonInstance()!).Equals(
+            return ((BiomeTerrainDataCommon)((IBiomeTerrainDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IBiomeLandItem lhs,
-            IBiomeLandItemGetter rhs)
+            this IBiomeTerrainData lhs,
+            IBiomeTerrainDataGetter rhs)
         {
-            ((BiomeLandItemSetterTranslationCommon)((IBiomeLandItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((BiomeTerrainDataSetterTranslationCommon)((IBiomeTerrainDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -593,11 +593,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IBiomeLandItem lhs,
-            IBiomeLandItemGetter rhs,
-            BiomeLandItem.TranslationMask? copyMask = null)
+            this IBiomeTerrainData lhs,
+            IBiomeTerrainDataGetter rhs,
+            BiomeTerrainData.TranslationMask? copyMask = null)
         {
-            ((BiomeLandItemSetterTranslationCommon)((IBiomeLandItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((BiomeTerrainDataSetterTranslationCommon)((IBiomeTerrainDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -606,28 +606,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IBiomeLandItem lhs,
-            IBiomeLandItemGetter rhs,
-            out BiomeLandItem.ErrorMask errorMask,
-            BiomeLandItem.TranslationMask? copyMask = null)
+            this IBiomeTerrainData lhs,
+            IBiomeTerrainDataGetter rhs,
+            out BiomeTerrainData.ErrorMask errorMask,
+            BiomeTerrainData.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((BiomeLandItemSetterTranslationCommon)((IBiomeLandItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((BiomeTerrainDataSetterTranslationCommon)((IBiomeTerrainDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = BiomeLandItem.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = BiomeTerrainData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IBiomeLandItem lhs,
-            IBiomeLandItemGetter rhs,
+            this IBiomeTerrainData lhs,
+            IBiomeTerrainDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((BiomeLandItemSetterTranslationCommon)((IBiomeLandItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((BiomeTerrainDataSetterTranslationCommon)((IBiomeTerrainDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -635,32 +635,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static BiomeLandItem DeepCopy(
-            this IBiomeLandItemGetter item,
-            BiomeLandItem.TranslationMask? copyMask = null)
+        public static BiomeTerrainData DeepCopy(
+            this IBiomeTerrainDataGetter item,
+            BiomeTerrainData.TranslationMask? copyMask = null)
         {
-            return ((BiomeLandItemSetterTranslationCommon)((IBiomeLandItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((BiomeTerrainDataSetterTranslationCommon)((IBiomeTerrainDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static BiomeLandItem DeepCopy(
-            this IBiomeLandItemGetter item,
-            out BiomeLandItem.ErrorMask errorMask,
-            BiomeLandItem.TranslationMask? copyMask = null)
+        public static BiomeTerrainData DeepCopy(
+            this IBiomeTerrainDataGetter item,
+            out BiomeTerrainData.ErrorMask errorMask,
+            BiomeTerrainData.TranslationMask? copyMask = null)
         {
-            return ((BiomeLandItemSetterTranslationCommon)((IBiomeLandItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((BiomeTerrainDataSetterTranslationCommon)((IBiomeTerrainDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static BiomeLandItem DeepCopy(
-            this IBiomeLandItemGetter item,
+        public static BiomeTerrainData DeepCopy(
+            this IBiomeTerrainDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((BiomeLandItemSetterTranslationCommon)((IBiomeLandItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((BiomeTerrainDataSetterTranslationCommon)((IBiomeTerrainDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -668,11 +668,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IBiomeLandItem item,
+            this IBiomeTerrainData item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((BiomeLandItemSetterCommon)((IBiomeLandItemGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((BiomeTerrainDataSetterCommon)((IBiomeTerrainDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -688,18 +688,18 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum BiomeLandItem_FieldIndex
+    internal enum BiomeTerrainData_FieldIndex
     {
-        Index = 0,
+        TerrainMask = 0,
         LandTexture = 1,
         GroundCover = 2,
     }
     #endregion
 
     #region Registration
-    internal partial class BiomeLandItem_Registration : ILoquiRegistration
+    internal partial class BiomeTerrainData_Registration : ILoquiRegistration
     {
-        public static readonly BiomeLandItem_Registration Instance = new BiomeLandItem_Registration();
+        public static readonly BiomeTerrainData_Registration Instance = new BiomeTerrainData_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -707,23 +707,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(BiomeLandItem.Mask<>);
+        public static readonly Type MaskType = typeof(BiomeTerrainData.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(BiomeLandItem.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(BiomeTerrainData.ErrorMask);
 
-        public static readonly Type ClassType = typeof(BiomeLandItem);
+        public static readonly Type ClassType = typeof(BiomeTerrainData);
 
-        public static readonly Type GetterType = typeof(IBiomeLandItemGetter);
+        public static readonly Type GetterType = typeof(IBiomeTerrainDataGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IBiomeLandItem);
+        public static readonly Type SetterType = typeof(IBiomeTerrainData);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.BiomeLandItem";
+        public const string FullName = "Mutagen.Bethesda.Starfield.BiomeTerrainData";
 
-        public const string Name = "BiomeLandItem";
+        public const string Name = "BiomeTerrainData";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -731,7 +731,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(BiomeLandItemBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(BiomeTerrainDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -762,22 +762,22 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class BiomeLandItemSetterCommon
+    internal partial class BiomeTerrainDataSetterCommon
     {
-        public static readonly BiomeLandItemSetterCommon Instance = new BiomeLandItemSetterCommon();
+        public static readonly BiomeTerrainDataSetterCommon Instance = new BiomeTerrainDataSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IBiomeLandItem item)
+        public void Clear(IBiomeTerrainData item)
         {
             ClearPartial();
-            item.Index = default(UInt32);
+            item.TerrainMask = default(Biome.TerrainMask);
             item.LandTexture.Clear();
             item.GroundCover.Clear();
         }
         
         #region Mutagen
-        public void RemapLinks(IBiomeLandItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IBiomeTerrainData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.LandTexture.Relink(mapping);
             obj.GroundCover.Relink(mapping);
@@ -787,7 +787,7 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IBiomeLandItem item,
+            IBiomeTerrainData item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -795,23 +795,23 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: BiomeLandItemBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: BiomeTerrainDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class BiomeLandItemCommon
+    internal partial class BiomeTerrainDataCommon
     {
-        public static readonly BiomeLandItemCommon Instance = new BiomeLandItemCommon();
+        public static readonly BiomeTerrainDataCommon Instance = new BiomeTerrainDataCommon();
 
-        public BiomeLandItem.Mask<bool> GetEqualsMask(
-            IBiomeLandItemGetter item,
-            IBiomeLandItemGetter rhs,
+        public BiomeTerrainData.Mask<bool> GetEqualsMask(
+            IBiomeTerrainDataGetter item,
+            IBiomeTerrainDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new BiomeLandItem.Mask<bool>(false);
-            ((BiomeLandItemCommon)((IBiomeLandItemGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new BiomeTerrainData.Mask<bool>(false);
+            ((BiomeTerrainDataCommon)((IBiomeTerrainDataGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -820,20 +820,20 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IBiomeLandItemGetter item,
-            IBiomeLandItemGetter rhs,
-            BiomeLandItem.Mask<bool> ret,
+            IBiomeTerrainDataGetter item,
+            IBiomeTerrainDataGetter rhs,
+            BiomeTerrainData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Index = item.Index == rhs.Index;
+            ret.TerrainMask = item.TerrainMask == rhs.TerrainMask;
             ret.LandTexture = item.LandTexture.Equals(rhs.LandTexture);
             ret.GroundCover = item.GroundCover.Equals(rhs.GroundCover);
         }
         
         public string Print(
-            IBiomeLandItemGetter item,
+            IBiomeTerrainDataGetter item,
             string? name = null,
-            BiomeLandItem.Mask<bool>? printMask = null)
+            BiomeTerrainData.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -845,18 +845,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IBiomeLandItemGetter item,
+            IBiomeTerrainDataGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            BiomeLandItem.Mask<bool>? printMask = null)
+            BiomeTerrainData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"BiomeLandItem =>");
+                sb.AppendLine($"BiomeTerrainData =>");
             }
             else
             {
-                sb.AppendLine($"{name} (BiomeLandItem) =>");
+                sb.AppendLine($"{name} (BiomeTerrainData) =>");
             }
             using (sb.Brace())
             {
@@ -868,13 +868,13 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IBiomeLandItemGetter item,
+            IBiomeTerrainDataGetter item,
             StructuredStringBuilder sb,
-            BiomeLandItem.Mask<bool>? printMask = null)
+            BiomeTerrainData.Mask<bool>? printMask = null)
         {
-            if (printMask?.Index ?? true)
+            if (printMask?.TerrainMask ?? true)
             {
-                sb.AppendItem(item.Index, "Index");
+                sb.AppendItem(item.TerrainMask, "TerrainMask");
             }
             if (printMask?.LandTexture ?? true)
             {
@@ -888,30 +888,30 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IBiomeLandItemGetter? lhs,
-            IBiomeLandItemGetter? rhs,
+            IBiomeTerrainDataGetter? lhs,
+            IBiomeTerrainDataGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)BiomeLandItem_FieldIndex.Index) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BiomeTerrainData_FieldIndex.TerrainMask) ?? true))
             {
-                if (lhs.Index != rhs.Index) return false;
+                if (lhs.TerrainMask != rhs.TerrainMask) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)BiomeLandItem_FieldIndex.LandTexture) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BiomeTerrainData_FieldIndex.LandTexture) ?? true))
             {
                 if (!lhs.LandTexture.Equals(rhs.LandTexture)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)BiomeLandItem_FieldIndex.GroundCover) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BiomeTerrainData_FieldIndex.GroundCover) ?? true))
             {
                 if (!lhs.GroundCover.Equals(rhs.GroundCover)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IBiomeLandItemGetter item)
+        public virtual int GetHashCode(IBiomeTerrainDataGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Index);
+            hash.Add(item.TerrainMask);
             hash.Add(item.LandTexture);
             hash.Add(item.GroundCover);
             return hash.ToHashCode();
@@ -922,11 +922,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return BiomeLandItem.GetNew();
+            return BiomeTerrainData.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBiomeLandItemGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBiomeTerrainDataGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.LandTexture);
             yield return FormLinkInformation.Factory(obj.GroundCover);
@@ -936,27 +936,27 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class BiomeLandItemSetterTranslationCommon
+    internal partial class BiomeTerrainDataSetterTranslationCommon
     {
-        public static readonly BiomeLandItemSetterTranslationCommon Instance = new BiomeLandItemSetterTranslationCommon();
+        public static readonly BiomeTerrainDataSetterTranslationCommon Instance = new BiomeTerrainDataSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IBiomeLandItem item,
-            IBiomeLandItemGetter rhs,
+            IBiomeTerrainData item,
+            IBiomeTerrainDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)BiomeLandItem_FieldIndex.Index) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)BiomeTerrainData_FieldIndex.TerrainMask) ?? true))
             {
-                item.Index = rhs.Index;
+                item.TerrainMask = rhs.TerrainMask;
             }
-            if ((copyMask?.GetShouldTranslate((int)BiomeLandItem_FieldIndex.LandTexture) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)BiomeTerrainData_FieldIndex.LandTexture) ?? true))
             {
                 item.LandTexture.SetTo(rhs.LandTexture.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)BiomeLandItem_FieldIndex.GroundCover) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)BiomeTerrainData_FieldIndex.GroundCover) ?? true))
             {
                 item.GroundCover.SetTo(rhs.GroundCover.FormKey);
             }
@@ -969,19 +969,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         partial void DeepCopyInCustom(
-            IBiomeLandItem item,
-            IBiomeLandItemGetter rhs,
+            IBiomeTerrainData item,
+            IBiomeTerrainDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
         #endregion
         
-        public BiomeLandItem DeepCopy(
-            IBiomeLandItemGetter item,
-            BiomeLandItem.TranslationMask? copyMask = null)
+        public BiomeTerrainData DeepCopy(
+            IBiomeTerrainDataGetter item,
+            BiomeTerrainData.TranslationMask? copyMask = null)
         {
-            BiomeLandItem ret = (BiomeLandItem)((BiomeLandItemCommon)((IBiomeLandItemGetter)item).CommonInstance()!).GetNew();
-            ((BiomeLandItemSetterTranslationCommon)((IBiomeLandItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            BiomeTerrainData ret = (BiomeTerrainData)((BiomeTerrainDataCommon)((IBiomeTerrainDataGetter)item).CommonInstance()!).GetNew();
+            ((BiomeTerrainDataSetterTranslationCommon)((IBiomeTerrainDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -990,30 +990,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public BiomeLandItem DeepCopy(
-            IBiomeLandItemGetter item,
-            out BiomeLandItem.ErrorMask errorMask,
-            BiomeLandItem.TranslationMask? copyMask = null)
+        public BiomeTerrainData DeepCopy(
+            IBiomeTerrainDataGetter item,
+            out BiomeTerrainData.ErrorMask errorMask,
+            BiomeTerrainData.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            BiomeLandItem ret = (BiomeLandItem)((BiomeLandItemCommon)((IBiomeLandItemGetter)item).CommonInstance()!).GetNew();
-            ((BiomeLandItemSetterTranslationCommon)((IBiomeLandItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            BiomeTerrainData ret = (BiomeTerrainData)((BiomeTerrainDataCommon)((IBiomeTerrainDataGetter)item).CommonInstance()!).GetNew();
+            ((BiomeTerrainDataSetterTranslationCommon)((IBiomeTerrainDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = BiomeLandItem.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = BiomeTerrainData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public BiomeLandItem DeepCopy(
-            IBiomeLandItemGetter item,
+        public BiomeTerrainData DeepCopy(
+            IBiomeTerrainDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            BiomeLandItem ret = (BiomeLandItem)((BiomeLandItemCommon)((IBiomeLandItemGetter)item).CommonInstance()!).GetNew();
-            ((BiomeLandItemSetterTranslationCommon)((IBiomeLandItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            BiomeTerrainData ret = (BiomeTerrainData)((BiomeTerrainDataCommon)((IBiomeTerrainDataGetter)item).CommonInstance()!).GetNew();
+            ((BiomeTerrainDataSetterTranslationCommon)((IBiomeTerrainDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1029,27 +1029,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class BiomeLandItem
+    public partial class BiomeTerrainData
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BiomeLandItem_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => BiomeLandItem_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => BiomeTerrainData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => BiomeTerrainData_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => BiomeLandItemCommon.Instance;
+        protected object CommonInstance() => BiomeTerrainDataCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return BiomeLandItemSetterCommon.Instance;
+            return BiomeTerrainDataSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => BiomeLandItemSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => BiomeTerrainDataSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IBiomeLandItemGetter.CommonInstance() => this.CommonInstance();
+        object IBiomeTerrainDataGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IBiomeLandItemGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IBiomeTerrainDataGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IBiomeLandItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IBiomeTerrainDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1060,15 +1060,18 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class BiomeLandItemBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class BiomeTerrainDataBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly BiomeLandItemBinaryWriteTranslation Instance = new();
+        public static readonly BiomeTerrainDataBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            IBiomeLandItemGetter item,
+            IBiomeTerrainDataGetter item,
             MutagenWriter writer)
         {
-            writer.Write(item.Index);
+            EnumBinaryTranslation<Biome.TerrainMask, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.TerrainMask,
+                length: 4);
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.LandTexture);
@@ -1079,7 +1082,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public void Write(
             MutagenWriter writer,
-            IBiomeLandItemGetter item,
+            IBiomeTerrainDataGetter item,
             TypedWriteParams translationParams)
         {
             WriteEmbedded(
@@ -1093,22 +1096,24 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IBiomeLandItemGetter)item,
+                item: (IBiomeTerrainDataGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class BiomeLandItemBinaryCreateTranslation
+    internal partial class BiomeTerrainDataBinaryCreateTranslation
     {
-        public static readonly BiomeLandItemBinaryCreateTranslation Instance = new BiomeLandItemBinaryCreateTranslation();
+        public static readonly BiomeTerrainDataBinaryCreateTranslation Instance = new BiomeTerrainDataBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IBiomeLandItem item,
+            IBiomeTerrainData item,
             MutagenFrame frame)
         {
-            item.Index = frame.ReadUInt32();
+            item.TerrainMask = EnumBinaryTranslation<Biome.TerrainMask, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.LandTexture.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.GroundCover.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
@@ -1119,14 +1124,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class BiomeLandItemBinaryTranslationMixIn
+    public static class BiomeTerrainDataBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IBiomeLandItemGetter item,
+            this IBiomeTerrainDataGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((BiomeLandItemBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((BiomeTerrainDataBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1139,45 +1144,45 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class BiomeLandItemBinaryOverlay :
+    internal partial class BiomeTerrainDataBinaryOverlay :
         PluginBinaryOverlay,
-        IBiomeLandItemGetter
+        IBiomeTerrainDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BiomeLandItem_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => BiomeLandItem_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => BiomeTerrainData_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => BiomeTerrainData_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => BiomeLandItemCommon.Instance;
+        protected object CommonInstance() => BiomeTerrainDataCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => BiomeLandItemSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => BiomeTerrainDataSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IBiomeLandItemGetter.CommonInstance() => this.CommonInstance();
+        object IBiomeTerrainDataGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IBiomeLandItemGetter.CommonSetterInstance() => null;
+        object? IBiomeTerrainDataGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IBiomeLandItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IBiomeTerrainDataGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BiomeLandItemCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => BiomeTerrainDataCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => BiomeLandItemBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => BiomeTerrainDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((BiomeLandItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((BiomeTerrainDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public UInt32 Index => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x0, 0x4));
+        public Biome.TerrainMask TerrainMask => (Biome.TerrainMask)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
         public IFormLinkGetter<ILandscapeTextureGetter> LandTexture => FormLinkBinaryTranslation.Instance.OverlayFactory<ILandscapeTextureGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         public IFormLinkGetter<IGroundCoverGetter> GroundCover => FormLinkBinaryTranslation.Instance.OverlayFactory<IGroundCoverGetter>(_package, _structData.Span.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
@@ -1186,7 +1191,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected BiomeLandItemBinaryOverlay(
+        protected BiomeTerrainDataBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1196,7 +1201,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IBiomeLandItemGetter BiomeLandItemFactory(
+        public static IBiomeTerrainDataGetter BiomeTerrainDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1208,7 +1213,7 @@ namespace Mutagen.Bethesda.Starfield
                 length: 0xC,
                 memoryPair: out var memoryPair,
                 offset: out var offset);
-            var ret = new BiomeLandItemBinaryOverlay(
+            var ret = new BiomeTerrainDataBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             stream.Position += 0xC;
@@ -1219,12 +1224,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IBiomeLandItemGetter BiomeLandItemFactory(
+        public static IBiomeTerrainDataGetter BiomeTerrainDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return BiomeLandItemFactory(
+            return BiomeTerrainDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1236,7 +1241,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            BiomeLandItemMixIn.Print(
+            BiomeTerrainDataMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1247,16 +1252,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IBiomeLandItemGetter rhs) return false;
-            return ((BiomeLandItemCommon)((IBiomeLandItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IBiomeTerrainDataGetter rhs) return false;
+            return ((BiomeTerrainDataCommon)((IBiomeTerrainDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IBiomeLandItemGetter? obj)
+        public bool Equals(IBiomeTerrainDataGetter? obj)
         {
-            return ((BiomeLandItemCommon)((IBiomeLandItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((BiomeTerrainDataCommon)((IBiomeTerrainDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((BiomeLandItemCommon)((IBiomeLandItemGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((BiomeTerrainDataCommon)((IBiomeTerrainDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

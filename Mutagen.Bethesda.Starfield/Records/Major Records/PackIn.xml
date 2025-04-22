@@ -33,5 +33,6 @@
     <LinkInterface>ILeveledPackInTarget</LinkInterface>
     <LinkInterface>IBaseObject</LinkInterface>
     <LinkInterface>IPlanetContentTarget</LinkInterface>
+    <LinkInterface>IBiomeObjectPackInTarget</LinkInterface>
   </Object>
 </Loqui>

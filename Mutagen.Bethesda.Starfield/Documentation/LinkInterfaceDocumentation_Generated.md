@@ -57,6 +57,10 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### IBindableEquipment
 - Armor
 - Weapon
+### IBiomeObjectPackInTarget
+- LeveledPackIn
+- PackIn
+- PlacedObject
 ### ICellOrObject
 - Cell
 - PlacedObject
@@ -344,6 +348,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - INpcTemplateTarget
 ### LeveledPackIn
 - IBaseObject
+- IBiomeObjectPackInTarget
 - ILeveledPackInTarget
 - IPlanetContentTarget
 ### LeveledSpaceCell
@@ -377,6 +382,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IEffectRecord
 ### PackIn
 - IBaseObject
+- IBiomeObjectPackInTarget
 - IConstructibleObjectTarget
 - ILeveledPackInTarget
 - IPlanetContentTarget
@@ -387,6 +393,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IPlaced
 - IPlacedSimple
 ### PlacedObject
+- IBiomeObjectPackInTarget
 - ICellOrObject
 - IKeywordLinkedReference
 - ILinkedReference

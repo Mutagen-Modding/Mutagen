@@ -653,7 +653,6 @@ public partial class RecordTypes
     public static readonly RecordType OBTS = new(0x5354424F);
     public static readonly RecordType OCCV = new(0x5643434F);
     public static readonly RecordType OCOR = new(0x524F434F);
-    public static readonly RecordType ODRT = new(0x5452444F);
     public static readonly RecordType ODTY = new(0x5954444F);
     public static readonly RecordType OFST = new(0x5453464F);
     public static readonly RecordType OMOD = new(0x444F4D4F);

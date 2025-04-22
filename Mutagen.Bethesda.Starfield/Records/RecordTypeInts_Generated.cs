@@ -651,7 +651,6 @@ public partial class RecordTypeInts
     public const int OBTS = 0x5354424F;
     public const int OCCV = 0x5643434F;
     public const int OCOR = 0x524F434F;
-    public const int ODRT = 0x5452444F;
     public const int ODTY = 0x5954444F;
     public const int OFST = 0x5453464F;
     public const int OMOD = 0x444F4D4F;

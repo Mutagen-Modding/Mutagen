@@ -114,58 +114,66 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         #endregion
-        #region BiomeType
-        public String? BiomeType { get; set; }
+        #region FilterString
+        public String? FilterString { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IBiomeGetter.BiomeType => this.BiomeType;
+        String? IBiomeGetter.FilterString => this.FilterString;
         #endregion
-        #region Plants
+        #region Flora
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<IFloraGetter>>? _Plants;
-        public ExtendedList<IFormLinkGetter<IFloraGetter>>? Plants
+        private ExtendedList<IFormLinkGetter<IFloraGetter>>? _Flora;
+        public ExtendedList<IFormLinkGetter<IFloraGetter>>? Flora
         {
-            get => this._Plants;
-            set => this._Plants = value;
+            get => this._Flora;
+            set => this._Flora = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IFloraGetter>>? IBiomeGetter.Plants => _Plants;
+        IReadOnlyList<IFormLinkGetter<IFloraGetter>>? IBiomeGetter.Flora => _Flora;
         #endregion
 
         #endregion
-        #region ResourceGenerationData
-        private readonly IFormLinkNullable<IResourceGenerationDataGetter> _ResourceGenerationData = new FormLinkNullable<IResourceGenerationDataGetter>();
-        public IFormLinkNullable<IResourceGenerationDataGetter> ResourceGenerationData
-        {
-            get => _ResourceGenerationData;
-            set => _ResourceGenerationData.SetTo(value);
-        }
+        #region ResourceGeneration
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IResourceGenerationDataGetter> IBiomeGetter.ResourceGenerationData => this.ResourceGenerationData;
-        #endregion
-        #region FNAMs
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<BiomeFNAMItem> _FNAMs = new ExtendedList<BiomeFNAMItem>();
-        public ExtendedList<BiomeFNAMItem> FNAMs
+        private ExtendedList<IFormLinkGetter<IResourceGenerationDataGetter>> _ResourceGeneration = new ExtendedList<IFormLinkGetter<IResourceGenerationDataGetter>>();
+        public ExtendedList<IFormLinkGetter<IResourceGenerationDataGetter>> ResourceGeneration
         {
-            get => this._FNAMs;
-            init => this._FNAMs = value;
+            get => this._ResourceGeneration;
+            init => this._ResourceGeneration = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IBiomeFNAMItemGetter> IBiomeGetter.FNAMs => _FNAMs;
+        IReadOnlyList<IFormLinkGetter<IResourceGenerationDataGetter>> IBiomeGetter.ResourceGeneration => _ResourceGeneration;
         #endregion
 
         #endregion
-        #region BiomeSwap
-        private readonly IFormLinkNullable<IBiomeSwapGetter> _BiomeSwap = new FormLinkNullable<IBiomeSwapGetter>();
-        public IFormLinkNullable<IBiomeSwapGetter> BiomeSwap
-        {
-            get => _BiomeSwap;
-            set => _BiomeSwap.SetTo(value);
-        }
+        #region ProceduralObjectGeneration
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IBiomeSwapGetter> IBiomeGetter.BiomeSwap => this.BiomeSwap;
+        private ExtendedList<BiomeProceduralObjectGeneration> _ProceduralObjectGeneration = new ExtendedList<BiomeProceduralObjectGeneration>();
+        public ExtendedList<BiomeProceduralObjectGeneration> ProceduralObjectGeneration
+        {
+            get => this._ProceduralObjectGeneration;
+            init => this._ProceduralObjectGeneration = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IBiomeProceduralObjectGenerationGetter> IBiomeGetter.ProceduralObjectGeneration => _ProceduralObjectGeneration;
+        #endregion
+
+        #endregion
+        #region ObjectSwaps
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IObjectSwapGetter>> _ObjectSwaps = new ExtendedList<IFormLinkGetter<IObjectSwapGetter>>();
+        public ExtendedList<IFormLinkGetter<IObjectSwapGetter>> ObjectSwaps
+        {
+            get => this._ObjectSwaps;
+            init => this._ObjectSwaps = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLinkGetter<IObjectSwapGetter>> IBiomeGetter.ObjectSwaps => _ObjectSwaps;
+        #endregion
+
         #endregion
         #region MaterialSwaps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -191,64 +199,65 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IClimateGetter> IBiomeGetter.Climate => this.Climate;
         #endregion
-        #region WaterDatas
+        #region Water
+        public BiomeWaterData Water { get; set; } = new BiomeWaterData();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<BiomeWaterData> _WaterDatas = new ExtendedList<BiomeWaterData>();
-        public ExtendedList<BiomeWaterData> WaterDatas
+        IBiomeWaterDataGetter IBiomeGetter.Water => Water;
+        #endregion
+        #region BlockDensityMult
+        public Single? BlockDensityMult { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IBiomeGetter.BlockDensityMult => this.BlockDensityMult;
+        #endregion
+        #region CellDensityMult
+        public Single? CellDensityMult { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IBiomeGetter.CellDensityMult => this.CellDensityMult;
+        #endregion
+        #region ScanWorldspaceMult
+        public Single? ScanWorldspaceMult { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IBiomeGetter.ScanWorldspaceMult => this.ScanWorldspaceMult;
+        #endregion
+        #region Child
+        private readonly IFormLinkNullable<IBiomeGetter> _Child = new FormLinkNullable<IBiomeGetter>();
+        public IFormLinkNullable<IBiomeGetter> Child
         {
-            get => this._WaterDatas;
-            init => this._WaterDatas = value;
-        }
-        #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IBiomeWaterDataGetter> IBiomeGetter.WaterDatas => _WaterDatas;
-        #endregion
-
-        #endregion
-        #region WNAM
-        public Single? WNAM { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IBiomeGetter.WNAM => this.WNAM;
-        #endregion
-        #region YNAM
-        public Single? YNAM { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IBiomeGetter.YNAM => this.YNAM;
-        #endregion
-        #region UNAM
-        public Single? UNAM { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IBiomeGetter.UNAM => this.UNAM;
-        #endregion
-        #region AmbientSet
-        private readonly IFormLinkNullable<IAmbienceSetGetter> _AmbientSet = new FormLinkNullable<IAmbienceSetGetter>();
-        public IFormLinkNullable<IAmbienceSetGetter> AmbientSet
-        {
-            get => _AmbientSet;
-            set => _AmbientSet.SetTo(value);
+            get => _Child;
+            set => _Child.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IAmbienceSetGetter> IBiomeGetter.AmbientSet => this.AmbientSet;
+        IFormLinkNullableGetter<IBiomeGetter> IBiomeGetter.Child => this.Child;
         #endregion
-        #region Music
-        private readonly IFormLinkNullable<IMusicTypeGetter> _Music = new FormLinkNullable<IMusicTypeGetter>();
-        public IFormLinkNullable<IMusicTypeGetter> Music
+        #region AmbienceSet
+        private readonly IFormLinkNullable<IAmbienceSetGetter> _AmbienceSet = new FormLinkNullable<IAmbienceSetGetter>();
+        public IFormLinkNullable<IAmbienceSetGetter> AmbienceSet
         {
-            get => _Music;
-            set => _Music.SetTo(value);
+            get => _AmbienceSet;
+            set => _AmbienceSet.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IMusicTypeGetter> IBiomeGetter.Music => this.Music;
+        IFormLinkNullableGetter<IAmbienceSetGetter> IBiomeGetter.AmbienceSet => this.AmbienceSet;
         #endregion
-        #region NAM0
-        private readonly IFormLinkNullable<ITimeOfDayRecordGetter> _NAM0 = new FormLinkNullable<ITimeOfDayRecordGetter>();
-        public IFormLinkNullable<ITimeOfDayRecordGetter> NAM0
+        #region MusicType
+        private readonly IFormLinkNullable<IMusicTypeGetter> _MusicType = new FormLinkNullable<IMusicTypeGetter>();
+        public IFormLinkNullable<IMusicTypeGetter> MusicType
         {
-            get => _NAM0;
-            set => _NAM0.SetTo(value);
+            get => _MusicType;
+            set => _MusicType.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ITimeOfDayRecordGetter> IBiomeGetter.NAM0 => this.NAM0;
+        IFormLinkNullableGetter<IMusicTypeGetter> IBiomeGetter.MusicType => this.MusicType;
+        #endregion
+        #region TimeOfDay
+        private readonly IFormLinkNullable<ITimeOfDayRecordGetter> _TimeOfDay = new FormLinkNullable<ITimeOfDayRecordGetter>();
+        public IFormLinkNullable<ITimeOfDayRecordGetter> TimeOfDay
+        {
+            get => _TimeOfDay;
+            set => _TimeOfDay.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ITimeOfDayRecordGetter> IBiomeGetter.TimeOfDay => this.TimeOfDay;
         #endregion
         #region PatternStyle
         private readonly IFormLinkNullable<ISurfacePatternStyleGetter> _PatternStyle = new FormLinkNullable<ISurfacePatternStyleGetter>();
@@ -260,56 +269,46 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISurfacePatternStyleGetter> IBiomeGetter.PatternStyle => this.PatternStyle;
         #endregion
-        #region CNAM
-        public Color? CNAM { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Color? IBiomeGetter.CNAM => this.CNAM;
+        #region Color
+        public Color Color { get; set; } = default(Color);
         #endregion
-        #region BiomeColor1
-        public Color? BiomeColor1 { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Color? IBiomeGetter.BiomeColor1 => this.BiomeColor1;
+        #region SurfaceColor1
+        public Color SurfaceColor1 { get; set; } = default(Color);
         #endregion
-        #region BiomeColor2
-        public Color? BiomeColor2 { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Color? IBiomeGetter.BiomeColor2 => this.BiomeColor2;
+        #region SurfaceColor2
+        public Color SurfaceColor2 { get; set; } = default(Color);
         #endregion
-        #region BiomeColor3
-        public Color? BiomeColor3 { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Color? IBiomeGetter.BiomeColor3 => this.BiomeColor3;
+        #region RockTint
+        public Color RockTint { get; set; } = default(Color);
         #endregion
-        #region TNAM
-        public UInt32? TNAM { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt32? IBiomeGetter.TNAM => this.TNAM;
+        #region Type
+        public Biome.TypeEnum Type { get; set; } = default(Biome.TypeEnum);
         #endregion
-        #region MarkerTypes
+        #region MarkerObjectKeywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<BiomeMarkerType> _MarkerTypes = new ExtendedList<BiomeMarkerType>();
-        public ExtendedList<BiomeMarkerType> MarkerTypes
+        private ExtendedList<BiomeMarkerType> _MarkerObjectKeywords = new ExtendedList<BiomeMarkerType>();
+        public ExtendedList<BiomeMarkerType> MarkerObjectKeywords
         {
-            get => this._MarkerTypes;
-            init => this._MarkerTypes = value;
+            get => this._MarkerObjectKeywords;
+            init => this._MarkerObjectKeywords = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IBiomeMarkerTypeGetter> IBiomeGetter.MarkerTypes => _MarkerTypes;
+        IReadOnlyList<IBiomeMarkerTypeGetter> IBiomeGetter.MarkerObjectKeywords => _MarkerObjectKeywords;
         #endregion
 
         #endregion
-        #region LNAMs
+        #region Terrain
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<BiomeLNAMItem> _LNAMs = new ExtendedList<BiomeLNAMItem>();
-        public ExtendedList<BiomeLNAMItem> LNAMs
+        private ExtendedList<BiomeTerrain> _Terrain = new ExtendedList<BiomeTerrain>();
+        public ExtendedList<BiomeTerrain> Terrain
         {
-            get => this._LNAMs;
-            init => this._LNAMs = value;
+            get => this._Terrain;
+            init => this._Terrain = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IBiomeLNAMItemGetter> IBiomeGetter.LNAMs => _LNAMs;
+        IReadOnlyList<IBiomeTerrainGetter> IBiomeGetter.Terrain => _Terrain;
         #endregion
 
         #endregion
@@ -329,51 +328,51 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte>? IBiomeGetter.BTPS => this.BTPS;
         #endregion
-        #region BDFS
+        #region DistantView
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _BDFS;
-        public MemorySlice<Byte>? BDFS
+        private MemorySlice<Byte> _DistantView = new byte[0];
+        public MemorySlice<Byte> DistantView
         {
-            get => this._BDFS;
-            set => this._BDFS = value;
+            get => _DistantView;
+            set => this._DistantView = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IBiomeGetter.BDFS => this.BDFS;
+        ReadOnlyMemorySlice<Byte> IBiomeGetter.DistantView => this.DistantView;
         #endregion
-        #region GroundLayerMaterial
-        public String? GroundLayerMaterial { get; set; }
+        #region GlobalLayerMaterial
+        public String? GlobalLayerMaterial { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IBiomeGetter.GroundLayerMaterial => this.GroundLayerMaterial;
+        String? IBiomeGetter.GlobalLayerMaterial => this.GlobalLayerMaterial;
         #endregion
-        #region NAM2
-        private readonly IFormLinkNullable<IGlobalGetter> _NAM2 = new FormLinkNullable<IGlobalGetter>();
-        public IFormLinkNullable<IGlobalGetter> NAM2
+        #region BlockDensityMultGlobal
+        private readonly IFormLinkNullable<IGlobalGetter> _BlockDensityMultGlobal = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> BlockDensityMultGlobal
         {
-            get => _NAM2;
-            set => _NAM2.SetTo(value);
+            get => _BlockDensityMultGlobal;
+            set => _BlockDensityMultGlobal.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IGlobalGetter> IBiomeGetter.NAM2 => this.NAM2;
+        IFormLinkNullableGetter<IGlobalGetter> IBiomeGetter.BlockDensityMultGlobal => this.BlockDensityMultGlobal;
         #endregion
-        #region NAM3
-        private readonly IFormLinkNullable<IGlobalGetter> _NAM3 = new FormLinkNullable<IGlobalGetter>();
-        public IFormLinkNullable<IGlobalGetter> NAM3
+        #region CellDensityMultGlobal
+        private readonly IFormLinkNullable<IGlobalGetter> _CellDensityMultGlobal = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> CellDensityMultGlobal
         {
-            get => _NAM3;
-            set => _NAM3.SetTo(value);
+            get => _CellDensityMultGlobal;
+            set => _CellDensityMultGlobal.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IGlobalGetter> IBiomeGetter.NAM3 => this.NAM3;
+        IFormLinkNullableGetter<IGlobalGetter> IBiomeGetter.CellDensityMultGlobal => this.CellDensityMultGlobal;
         #endregion
-        #region NAM4
-        private readonly IFormLinkNullable<IGlobalGetter> _NAM4 = new FormLinkNullable<IGlobalGetter>();
-        public IFormLinkNullable<IGlobalGetter> NAM4
+        #region ScanWorldspaceMultGlobal
+        private readonly IFormLinkNullable<IGlobalGetter> _ScanWorldspaceMultGlobal = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> ScanWorldspaceMultGlobal
         {
-            get => _NAM4;
-            set => _NAM4.SetTo(value);
+            get => _ScanWorldspaceMultGlobal;
+            set => _ScanWorldspaceMultGlobal.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IGlobalGetter> IBiomeGetter.NAM4 => this.NAM4;
+        IFormLinkNullableGetter<IGlobalGetter> IBiomeGetter.ScanWorldspaceMultGlobal => this.ScanWorldspaceMultGlobal;
         #endregion
 
         #region To String
@@ -402,35 +401,36 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Name = initialValue;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.BiomeType = initialValue;
-                this.Plants = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ResourceGenerationData = initialValue;
-                this.FNAMs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeFNAMItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, BiomeFNAMItem.Mask<TItem>?>>());
-                this.BiomeSwap = initialValue;
+                this.FilterString = initialValue;
+                this.Flora = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ResourceGeneration = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ProceduralObjectGeneration = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeProceduralObjectGeneration.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, BiomeProceduralObjectGeneration.Mask<TItem>?>>());
+                this.ObjectSwaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.MaterialSwaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Climate = initialValue;
-                this.WaterDatas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeWaterData.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, BiomeWaterData.Mask<TItem>?>>());
-                this.WNAM = initialValue;
-                this.YNAM = initialValue;
-                this.UNAM = initialValue;
-                this.AmbientSet = initialValue;
-                this.Music = initialValue;
-                this.NAM0 = initialValue;
+                this.Water = new MaskItem<TItem, BiomeWaterData.Mask<TItem>?>(initialValue, new BiomeWaterData.Mask<TItem>(initialValue));
+                this.BlockDensityMult = initialValue;
+                this.CellDensityMult = initialValue;
+                this.ScanWorldspaceMult = initialValue;
+                this.Child = initialValue;
+                this.AmbienceSet = initialValue;
+                this.MusicType = initialValue;
+                this.TimeOfDay = initialValue;
                 this.PatternStyle = initialValue;
-                this.CNAM = initialValue;
-                this.BiomeColor1 = initialValue;
-                this.BiomeColor2 = initialValue;
-                this.BiomeColor3 = initialValue;
-                this.TNAM = initialValue;
-                this.MarkerTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeMarkerType.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, BiomeMarkerType.Mask<TItem>?>>());
-                this.LNAMs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeLNAMItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, BiomeLNAMItem.Mask<TItem>?>>());
+                this.Color = initialValue;
+                this.SurfaceColor1 = initialValue;
+                this.SurfaceColor2 = initialValue;
+                this.RockTint = initialValue;
+                this.Type = initialValue;
+                this.MarkerObjectKeywords = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeMarkerType.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, BiomeMarkerType.Mask<TItem>?>>());
+                this.Terrain = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeTerrain.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, BiomeTerrain.Mask<TItem>?>>());
                 this.GroundLayerNormal = initialValue;
                 this.BTPS = initialValue;
-                this.BDFS = initialValue;
-                this.GroundLayerMaterial = initialValue;
-                this.NAM2 = initialValue;
-                this.NAM3 = initialValue;
-                this.NAM4 = initialValue;
+                this.DistantView = initialValue;
+                this.GlobalLayerMaterial = initialValue;
+                this.BlockDensityMultGlobal = initialValue;
+                this.CellDensityMultGlobal = initialValue;
+                this.ScanWorldspaceMultGlobal = initialValue;
             }
 
             public Mask(
@@ -443,35 +443,36 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem Name,
                 TItem Keywords,
-                TItem BiomeType,
-                TItem Plants,
-                TItem ResourceGenerationData,
-                TItem FNAMs,
-                TItem BiomeSwap,
+                TItem FilterString,
+                TItem Flora,
+                TItem ResourceGeneration,
+                TItem ProceduralObjectGeneration,
+                TItem ObjectSwaps,
                 TItem MaterialSwaps,
                 TItem Climate,
-                TItem WaterDatas,
-                TItem WNAM,
-                TItem YNAM,
-                TItem UNAM,
-                TItem AmbientSet,
-                TItem Music,
-                TItem NAM0,
+                TItem Water,
+                TItem BlockDensityMult,
+                TItem CellDensityMult,
+                TItem ScanWorldspaceMult,
+                TItem Child,
+                TItem AmbienceSet,
+                TItem MusicType,
+                TItem TimeOfDay,
                 TItem PatternStyle,
-                TItem CNAM,
-                TItem BiomeColor1,
-                TItem BiomeColor2,
-                TItem BiomeColor3,
-                TItem TNAM,
-                TItem MarkerTypes,
-                TItem LNAMs,
+                TItem Color,
+                TItem SurfaceColor1,
+                TItem SurfaceColor2,
+                TItem RockTint,
+                TItem Type,
+                TItem MarkerObjectKeywords,
+                TItem Terrain,
                 TItem GroundLayerNormal,
                 TItem BTPS,
-                TItem BDFS,
-                TItem GroundLayerMaterial,
-                TItem NAM2,
-                TItem NAM3,
-                TItem NAM4)
+                TItem DistantView,
+                TItem GlobalLayerMaterial,
+                TItem BlockDensityMultGlobal,
+                TItem CellDensityMultGlobal,
+                TItem ScanWorldspaceMultGlobal)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -483,35 +484,36 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Name = Name;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
-                this.BiomeType = BiomeType;
-                this.Plants = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Plants, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ResourceGenerationData = ResourceGenerationData;
-                this.FNAMs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeFNAMItem.Mask<TItem>?>>?>(FNAMs, Enumerable.Empty<MaskItemIndexed<TItem, BiomeFNAMItem.Mask<TItem>?>>());
-                this.BiomeSwap = BiomeSwap;
+                this.FilterString = FilterString;
+                this.Flora = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Flora, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ResourceGeneration = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ResourceGeneration, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ProceduralObjectGeneration = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeProceduralObjectGeneration.Mask<TItem>?>>?>(ProceduralObjectGeneration, Enumerable.Empty<MaskItemIndexed<TItem, BiomeProceduralObjectGeneration.Mask<TItem>?>>());
+                this.ObjectSwaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ObjectSwaps, Enumerable.Empty<(int Index, TItem Value)>());
                 this.MaterialSwaps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(MaterialSwaps, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Climate = Climate;
-                this.WaterDatas = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeWaterData.Mask<TItem>?>>?>(WaterDatas, Enumerable.Empty<MaskItemIndexed<TItem, BiomeWaterData.Mask<TItem>?>>());
-                this.WNAM = WNAM;
-                this.YNAM = YNAM;
-                this.UNAM = UNAM;
-                this.AmbientSet = AmbientSet;
-                this.Music = Music;
-                this.NAM0 = NAM0;
+                this.Water = new MaskItem<TItem, BiomeWaterData.Mask<TItem>?>(Water, new BiomeWaterData.Mask<TItem>(Water));
+                this.BlockDensityMult = BlockDensityMult;
+                this.CellDensityMult = CellDensityMult;
+                this.ScanWorldspaceMult = ScanWorldspaceMult;
+                this.Child = Child;
+                this.AmbienceSet = AmbienceSet;
+                this.MusicType = MusicType;
+                this.TimeOfDay = TimeOfDay;
                 this.PatternStyle = PatternStyle;
-                this.CNAM = CNAM;
-                this.BiomeColor1 = BiomeColor1;
-                this.BiomeColor2 = BiomeColor2;
-                this.BiomeColor3 = BiomeColor3;
-                this.TNAM = TNAM;
-                this.MarkerTypes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeMarkerType.Mask<TItem>?>>?>(MarkerTypes, Enumerable.Empty<MaskItemIndexed<TItem, BiomeMarkerType.Mask<TItem>?>>());
-                this.LNAMs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeLNAMItem.Mask<TItem>?>>?>(LNAMs, Enumerable.Empty<MaskItemIndexed<TItem, BiomeLNAMItem.Mask<TItem>?>>());
+                this.Color = Color;
+                this.SurfaceColor1 = SurfaceColor1;
+                this.SurfaceColor2 = SurfaceColor2;
+                this.RockTint = RockTint;
+                this.Type = Type;
+                this.MarkerObjectKeywords = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeMarkerType.Mask<TItem>?>>?>(MarkerObjectKeywords, Enumerable.Empty<MaskItemIndexed<TItem, BiomeMarkerType.Mask<TItem>?>>());
+                this.Terrain = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeTerrain.Mask<TItem>?>>?>(Terrain, Enumerable.Empty<MaskItemIndexed<TItem, BiomeTerrain.Mask<TItem>?>>());
                 this.GroundLayerNormal = GroundLayerNormal;
                 this.BTPS = BTPS;
-                this.BDFS = BDFS;
-                this.GroundLayerMaterial = GroundLayerMaterial;
-                this.NAM2 = NAM2;
-                this.NAM3 = NAM3;
-                this.NAM4 = NAM4;
+                this.DistantView = DistantView;
+                this.GlobalLayerMaterial = GlobalLayerMaterial;
+                this.BlockDensityMultGlobal = BlockDensityMultGlobal;
+                this.CellDensityMultGlobal = CellDensityMultGlobal;
+                this.ScanWorldspaceMultGlobal = ScanWorldspaceMultGlobal;
             }
 
             #pragma warning disable CS8618
@@ -525,35 +527,36 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public TItem Name;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
-            public TItem BiomeType;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Plants;
-            public TItem ResourceGenerationData;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeFNAMItem.Mask<TItem>?>>?>? FNAMs;
-            public TItem BiomeSwap;
+            public TItem FilterString;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Flora;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ResourceGeneration;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeProceduralObjectGeneration.Mask<TItem>?>>?>? ProceduralObjectGeneration;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ObjectSwaps;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? MaterialSwaps;
             public TItem Climate;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeWaterData.Mask<TItem>?>>?>? WaterDatas;
-            public TItem WNAM;
-            public TItem YNAM;
-            public TItem UNAM;
-            public TItem AmbientSet;
-            public TItem Music;
-            public TItem NAM0;
+            public MaskItem<TItem, BiomeWaterData.Mask<TItem>?>? Water { get; set; }
+            public TItem BlockDensityMult;
+            public TItem CellDensityMult;
+            public TItem ScanWorldspaceMult;
+            public TItem Child;
+            public TItem AmbienceSet;
+            public TItem MusicType;
+            public TItem TimeOfDay;
             public TItem PatternStyle;
-            public TItem CNAM;
-            public TItem BiomeColor1;
-            public TItem BiomeColor2;
-            public TItem BiomeColor3;
-            public TItem TNAM;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeMarkerType.Mask<TItem>?>>?>? MarkerTypes;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeLNAMItem.Mask<TItem>?>>?>? LNAMs;
+            public TItem Color;
+            public TItem SurfaceColor1;
+            public TItem SurfaceColor2;
+            public TItem RockTint;
+            public TItem Type;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeMarkerType.Mask<TItem>?>>?>? MarkerObjectKeywords;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, BiomeTerrain.Mask<TItem>?>>?>? Terrain;
             public TItem GroundLayerNormal;
             public TItem BTPS;
-            public TItem BDFS;
-            public TItem GroundLayerMaterial;
-            public TItem NAM2;
-            public TItem NAM3;
-            public TItem NAM4;
+            public TItem DistantView;
+            public TItem GlobalLayerMaterial;
+            public TItem BlockDensityMultGlobal;
+            public TItem CellDensityMultGlobal;
+            public TItem ScanWorldspaceMultGlobal;
             #endregion
 
             #region Equals
@@ -569,35 +572,36 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
-                if (!object.Equals(this.BiomeType, rhs.BiomeType)) return false;
-                if (!object.Equals(this.Plants, rhs.Plants)) return false;
-                if (!object.Equals(this.ResourceGenerationData, rhs.ResourceGenerationData)) return false;
-                if (!object.Equals(this.FNAMs, rhs.FNAMs)) return false;
-                if (!object.Equals(this.BiomeSwap, rhs.BiomeSwap)) return false;
+                if (!object.Equals(this.FilterString, rhs.FilterString)) return false;
+                if (!object.Equals(this.Flora, rhs.Flora)) return false;
+                if (!object.Equals(this.ResourceGeneration, rhs.ResourceGeneration)) return false;
+                if (!object.Equals(this.ProceduralObjectGeneration, rhs.ProceduralObjectGeneration)) return false;
+                if (!object.Equals(this.ObjectSwaps, rhs.ObjectSwaps)) return false;
                 if (!object.Equals(this.MaterialSwaps, rhs.MaterialSwaps)) return false;
                 if (!object.Equals(this.Climate, rhs.Climate)) return false;
-                if (!object.Equals(this.WaterDatas, rhs.WaterDatas)) return false;
-                if (!object.Equals(this.WNAM, rhs.WNAM)) return false;
-                if (!object.Equals(this.YNAM, rhs.YNAM)) return false;
-                if (!object.Equals(this.UNAM, rhs.UNAM)) return false;
-                if (!object.Equals(this.AmbientSet, rhs.AmbientSet)) return false;
-                if (!object.Equals(this.Music, rhs.Music)) return false;
-                if (!object.Equals(this.NAM0, rhs.NAM0)) return false;
+                if (!object.Equals(this.Water, rhs.Water)) return false;
+                if (!object.Equals(this.BlockDensityMult, rhs.BlockDensityMult)) return false;
+                if (!object.Equals(this.CellDensityMult, rhs.CellDensityMult)) return false;
+                if (!object.Equals(this.ScanWorldspaceMult, rhs.ScanWorldspaceMult)) return false;
+                if (!object.Equals(this.Child, rhs.Child)) return false;
+                if (!object.Equals(this.AmbienceSet, rhs.AmbienceSet)) return false;
+                if (!object.Equals(this.MusicType, rhs.MusicType)) return false;
+                if (!object.Equals(this.TimeOfDay, rhs.TimeOfDay)) return false;
                 if (!object.Equals(this.PatternStyle, rhs.PatternStyle)) return false;
-                if (!object.Equals(this.CNAM, rhs.CNAM)) return false;
-                if (!object.Equals(this.BiomeColor1, rhs.BiomeColor1)) return false;
-                if (!object.Equals(this.BiomeColor2, rhs.BiomeColor2)) return false;
-                if (!object.Equals(this.BiomeColor3, rhs.BiomeColor3)) return false;
-                if (!object.Equals(this.TNAM, rhs.TNAM)) return false;
-                if (!object.Equals(this.MarkerTypes, rhs.MarkerTypes)) return false;
-                if (!object.Equals(this.LNAMs, rhs.LNAMs)) return false;
+                if (!object.Equals(this.Color, rhs.Color)) return false;
+                if (!object.Equals(this.SurfaceColor1, rhs.SurfaceColor1)) return false;
+                if (!object.Equals(this.SurfaceColor2, rhs.SurfaceColor2)) return false;
+                if (!object.Equals(this.RockTint, rhs.RockTint)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.MarkerObjectKeywords, rhs.MarkerObjectKeywords)) return false;
+                if (!object.Equals(this.Terrain, rhs.Terrain)) return false;
                 if (!object.Equals(this.GroundLayerNormal, rhs.GroundLayerNormal)) return false;
                 if (!object.Equals(this.BTPS, rhs.BTPS)) return false;
-                if (!object.Equals(this.BDFS, rhs.BDFS)) return false;
-                if (!object.Equals(this.GroundLayerMaterial, rhs.GroundLayerMaterial)) return false;
-                if (!object.Equals(this.NAM2, rhs.NAM2)) return false;
-                if (!object.Equals(this.NAM3, rhs.NAM3)) return false;
-                if (!object.Equals(this.NAM4, rhs.NAM4)) return false;
+                if (!object.Equals(this.DistantView, rhs.DistantView)) return false;
+                if (!object.Equals(this.GlobalLayerMaterial, rhs.GlobalLayerMaterial)) return false;
+                if (!object.Equals(this.BlockDensityMultGlobal, rhs.BlockDensityMultGlobal)) return false;
+                if (!object.Equals(this.CellDensityMultGlobal, rhs.CellDensityMultGlobal)) return false;
+                if (!object.Equals(this.ScanWorldspaceMultGlobal, rhs.ScanWorldspaceMultGlobal)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -605,35 +609,36 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.Name);
                 hash.Add(this.Keywords);
-                hash.Add(this.BiomeType);
-                hash.Add(this.Plants);
-                hash.Add(this.ResourceGenerationData);
-                hash.Add(this.FNAMs);
-                hash.Add(this.BiomeSwap);
+                hash.Add(this.FilterString);
+                hash.Add(this.Flora);
+                hash.Add(this.ResourceGeneration);
+                hash.Add(this.ProceduralObjectGeneration);
+                hash.Add(this.ObjectSwaps);
                 hash.Add(this.MaterialSwaps);
                 hash.Add(this.Climate);
-                hash.Add(this.WaterDatas);
-                hash.Add(this.WNAM);
-                hash.Add(this.YNAM);
-                hash.Add(this.UNAM);
-                hash.Add(this.AmbientSet);
-                hash.Add(this.Music);
-                hash.Add(this.NAM0);
+                hash.Add(this.Water);
+                hash.Add(this.BlockDensityMult);
+                hash.Add(this.CellDensityMult);
+                hash.Add(this.ScanWorldspaceMult);
+                hash.Add(this.Child);
+                hash.Add(this.AmbienceSet);
+                hash.Add(this.MusicType);
+                hash.Add(this.TimeOfDay);
                 hash.Add(this.PatternStyle);
-                hash.Add(this.CNAM);
-                hash.Add(this.BiomeColor1);
-                hash.Add(this.BiomeColor2);
-                hash.Add(this.BiomeColor3);
-                hash.Add(this.TNAM);
-                hash.Add(this.MarkerTypes);
-                hash.Add(this.LNAMs);
+                hash.Add(this.Color);
+                hash.Add(this.SurfaceColor1);
+                hash.Add(this.SurfaceColor2);
+                hash.Add(this.RockTint);
+                hash.Add(this.Type);
+                hash.Add(this.MarkerObjectKeywords);
+                hash.Add(this.Terrain);
                 hash.Add(this.GroundLayerNormal);
                 hash.Add(this.BTPS);
-                hash.Add(this.BDFS);
-                hash.Add(this.GroundLayerMaterial);
-                hash.Add(this.NAM2);
-                hash.Add(this.NAM3);
-                hash.Add(this.NAM4);
+                hash.Add(this.DistantView);
+                hash.Add(this.GlobalLayerMaterial);
+                hash.Add(this.BlockDensityMultGlobal);
+                hash.Add(this.CellDensityMultGlobal);
+                hash.Add(this.ScanWorldspaceMultGlobal);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -656,32 +661,52 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (!eval(this.BiomeType)) return false;
-                if (this.Plants != null)
+                if (!eval(this.FilterString)) return false;
+                if (this.Flora != null)
                 {
-                    if (!eval(this.Plants.Overall)) return false;
-                    if (this.Plants.Specific != null)
+                    if (!eval(this.Flora.Overall)) return false;
+                    if (this.Flora.Specific != null)
                     {
-                        foreach (var item in this.Plants.Specific)
+                        foreach (var item in this.Flora.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
-                if (!eval(this.ResourceGenerationData)) return false;
-                if (this.FNAMs != null)
+                if (this.ResourceGeneration != null)
                 {
-                    if (!eval(this.FNAMs.Overall)) return false;
-                    if (this.FNAMs.Specific != null)
+                    if (!eval(this.ResourceGeneration.Overall)) return false;
+                    if (this.ResourceGeneration.Specific != null)
                     {
-                        foreach (var item in this.FNAMs.Specific)
+                        foreach (var item in this.ResourceGeneration.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.ProceduralObjectGeneration != null)
+                {
+                    if (!eval(this.ProceduralObjectGeneration.Overall)) return false;
+                    if (this.ProceduralObjectGeneration.Specific != null)
+                    {
+                        foreach (var item in this.ProceduralObjectGeneration.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (!eval(this.BiomeSwap)) return false;
+                if (this.ObjectSwaps != null)
+                {
+                    if (!eval(this.ObjectSwaps.Overall)) return false;
+                    if (this.ObjectSwaps.Specific != null)
+                    {
+                        foreach (var item in this.ObjectSwaps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (this.MaterialSwaps != null)
                 {
                     if (!eval(this.MaterialSwaps.Overall)) return false;
@@ -694,48 +719,42 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (!eval(this.Climate)) return false;
-                if (this.WaterDatas != null)
+                if (Water != null)
                 {
-                    if (!eval(this.WaterDatas.Overall)) return false;
-                    if (this.WaterDatas.Specific != null)
-                    {
-                        foreach (var item in this.WaterDatas.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
+                    if (!eval(this.Water.Overall)) return false;
+                    if (this.Water.Specific != null && !this.Water.Specific.All(eval)) return false;
                 }
-                if (!eval(this.WNAM)) return false;
-                if (!eval(this.YNAM)) return false;
-                if (!eval(this.UNAM)) return false;
-                if (!eval(this.AmbientSet)) return false;
-                if (!eval(this.Music)) return false;
-                if (!eval(this.NAM0)) return false;
+                if (!eval(this.BlockDensityMult)) return false;
+                if (!eval(this.CellDensityMult)) return false;
+                if (!eval(this.ScanWorldspaceMult)) return false;
+                if (!eval(this.Child)) return false;
+                if (!eval(this.AmbienceSet)) return false;
+                if (!eval(this.MusicType)) return false;
+                if (!eval(this.TimeOfDay)) return false;
                 if (!eval(this.PatternStyle)) return false;
-                if (!eval(this.CNAM)) return false;
-                if (!eval(this.BiomeColor1)) return false;
-                if (!eval(this.BiomeColor2)) return false;
-                if (!eval(this.BiomeColor3)) return false;
-                if (!eval(this.TNAM)) return false;
-                if (this.MarkerTypes != null)
+                if (!eval(this.Color)) return false;
+                if (!eval(this.SurfaceColor1)) return false;
+                if (!eval(this.SurfaceColor2)) return false;
+                if (!eval(this.RockTint)) return false;
+                if (!eval(this.Type)) return false;
+                if (this.MarkerObjectKeywords != null)
                 {
-                    if (!eval(this.MarkerTypes.Overall)) return false;
-                    if (this.MarkerTypes.Specific != null)
+                    if (!eval(this.MarkerObjectKeywords.Overall)) return false;
+                    if (this.MarkerObjectKeywords.Specific != null)
                     {
-                        foreach (var item in this.MarkerTypes.Specific)
+                        foreach (var item in this.MarkerObjectKeywords.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.LNAMs != null)
+                if (this.Terrain != null)
                 {
-                    if (!eval(this.LNAMs.Overall)) return false;
-                    if (this.LNAMs.Specific != null)
+                    if (!eval(this.Terrain.Overall)) return false;
+                    if (this.Terrain.Specific != null)
                     {
-                        foreach (var item in this.LNAMs.Specific)
+                        foreach (var item in this.Terrain.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -744,11 +763,11 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (!eval(this.GroundLayerNormal)) return false;
                 if (!eval(this.BTPS)) return false;
-                if (!eval(this.BDFS)) return false;
-                if (!eval(this.GroundLayerMaterial)) return false;
-                if (!eval(this.NAM2)) return false;
-                if (!eval(this.NAM3)) return false;
-                if (!eval(this.NAM4)) return false;
+                if (!eval(this.DistantView)) return false;
+                if (!eval(this.GlobalLayerMaterial)) return false;
+                if (!eval(this.BlockDensityMultGlobal)) return false;
+                if (!eval(this.CellDensityMultGlobal)) return false;
+                if (!eval(this.ScanWorldspaceMultGlobal)) return false;
                 return true;
             }
             #endregion
@@ -769,32 +788,52 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (eval(this.BiomeType)) return true;
-                if (this.Plants != null)
+                if (eval(this.FilterString)) return true;
+                if (this.Flora != null)
                 {
-                    if (eval(this.Plants.Overall)) return true;
-                    if (this.Plants.Specific != null)
+                    if (eval(this.Flora.Overall)) return true;
+                    if (this.Flora.Specific != null)
                     {
-                        foreach (var item in this.Plants.Specific)
+                        foreach (var item in this.Flora.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
-                if (eval(this.ResourceGenerationData)) return true;
-                if (this.FNAMs != null)
+                if (this.ResourceGeneration != null)
                 {
-                    if (eval(this.FNAMs.Overall)) return true;
-                    if (this.FNAMs.Specific != null)
+                    if (eval(this.ResourceGeneration.Overall)) return true;
+                    if (this.ResourceGeneration.Specific != null)
                     {
-                        foreach (var item in this.FNAMs.Specific)
+                        foreach (var item in this.ResourceGeneration.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.ProceduralObjectGeneration != null)
+                {
+                    if (eval(this.ProceduralObjectGeneration.Overall)) return true;
+                    if (this.ProceduralObjectGeneration.Specific != null)
+                    {
+                        foreach (var item in this.ProceduralObjectGeneration.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (eval(this.BiomeSwap)) return true;
+                if (this.ObjectSwaps != null)
+                {
+                    if (eval(this.ObjectSwaps.Overall)) return true;
+                    if (this.ObjectSwaps.Specific != null)
+                    {
+                        foreach (var item in this.ObjectSwaps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (this.MaterialSwaps != null)
                 {
                     if (eval(this.MaterialSwaps.Overall)) return true;
@@ -807,48 +846,42 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (eval(this.Climate)) return true;
-                if (this.WaterDatas != null)
+                if (Water != null)
                 {
-                    if (eval(this.WaterDatas.Overall)) return true;
-                    if (this.WaterDatas.Specific != null)
-                    {
-                        foreach (var item in this.WaterDatas.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
+                    if (eval(this.Water.Overall)) return true;
+                    if (this.Water.Specific != null && this.Water.Specific.Any(eval)) return true;
                 }
-                if (eval(this.WNAM)) return true;
-                if (eval(this.YNAM)) return true;
-                if (eval(this.UNAM)) return true;
-                if (eval(this.AmbientSet)) return true;
-                if (eval(this.Music)) return true;
-                if (eval(this.NAM0)) return true;
+                if (eval(this.BlockDensityMult)) return true;
+                if (eval(this.CellDensityMult)) return true;
+                if (eval(this.ScanWorldspaceMult)) return true;
+                if (eval(this.Child)) return true;
+                if (eval(this.AmbienceSet)) return true;
+                if (eval(this.MusicType)) return true;
+                if (eval(this.TimeOfDay)) return true;
                 if (eval(this.PatternStyle)) return true;
-                if (eval(this.CNAM)) return true;
-                if (eval(this.BiomeColor1)) return true;
-                if (eval(this.BiomeColor2)) return true;
-                if (eval(this.BiomeColor3)) return true;
-                if (eval(this.TNAM)) return true;
-                if (this.MarkerTypes != null)
+                if (eval(this.Color)) return true;
+                if (eval(this.SurfaceColor1)) return true;
+                if (eval(this.SurfaceColor2)) return true;
+                if (eval(this.RockTint)) return true;
+                if (eval(this.Type)) return true;
+                if (this.MarkerObjectKeywords != null)
                 {
-                    if (eval(this.MarkerTypes.Overall)) return true;
-                    if (this.MarkerTypes.Specific != null)
+                    if (eval(this.MarkerObjectKeywords.Overall)) return true;
+                    if (this.MarkerObjectKeywords.Specific != null)
                     {
-                        foreach (var item in this.MarkerTypes.Specific)
+                        foreach (var item in this.MarkerObjectKeywords.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.LNAMs != null)
+                if (this.Terrain != null)
                 {
-                    if (eval(this.LNAMs.Overall)) return true;
-                    if (this.LNAMs.Specific != null)
+                    if (eval(this.Terrain.Overall)) return true;
+                    if (this.Terrain.Specific != null)
                     {
-                        foreach (var item in this.LNAMs.Specific)
+                        foreach (var item in this.Terrain.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -857,11 +890,11 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (eval(this.GroundLayerNormal)) return true;
                 if (eval(this.BTPS)) return true;
-                if (eval(this.BDFS)) return true;
-                if (eval(this.GroundLayerMaterial)) return true;
-                if (eval(this.NAM2)) return true;
-                if (eval(this.NAM3)) return true;
-                if (eval(this.NAM4)) return true;
+                if (eval(this.DistantView)) return true;
+                if (eval(this.GlobalLayerMaterial)) return true;
+                if (eval(this.BlockDensityMultGlobal)) return true;
+                if (eval(this.CellDensityMultGlobal)) return true;
+                if (eval(this.ScanWorldspaceMultGlobal)) return true;
                 return false;
             }
             #endregion
@@ -892,38 +925,64 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                obj.BiomeType = eval(this.BiomeType);
-                if (Plants != null)
+                obj.FilterString = eval(this.FilterString);
+                if (Flora != null)
                 {
-                    obj.Plants = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Plants.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (Plants.Specific != null)
+                    obj.Flora = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Flora.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Flora.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
-                        obj.Plants.Specific = l;
-                        foreach (var item in Plants.Specific)
+                        obj.Flora.Specific = l;
+                        foreach (var item in Flora.Specific)
                         {
                             R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
                 }
-                obj.ResourceGenerationData = eval(this.ResourceGenerationData);
-                if (FNAMs != null)
+                if (ResourceGeneration != null)
                 {
-                    obj.FNAMs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BiomeFNAMItem.Mask<R>?>>?>(eval(this.FNAMs.Overall), Enumerable.Empty<MaskItemIndexed<R, BiomeFNAMItem.Mask<R>?>>());
-                    if (FNAMs.Specific != null)
+                    obj.ResourceGeneration = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ResourceGeneration.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (ResourceGeneration.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, BiomeFNAMItem.Mask<R>?>>();
-                        obj.FNAMs.Specific = l;
-                        foreach (var item in FNAMs.Specific)
+                        var l = new List<(int Index, R Item)>();
+                        obj.ResourceGeneration.Specific = l;
+                        foreach (var item in ResourceGeneration.Specific)
                         {
-                            MaskItemIndexed<R, BiomeFNAMItem.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, BiomeFNAMItem.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (ProceduralObjectGeneration != null)
+                {
+                    obj.ProceduralObjectGeneration = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BiomeProceduralObjectGeneration.Mask<R>?>>?>(eval(this.ProceduralObjectGeneration.Overall), Enumerable.Empty<MaskItemIndexed<R, BiomeProceduralObjectGeneration.Mask<R>?>>());
+                    if (ProceduralObjectGeneration.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, BiomeProceduralObjectGeneration.Mask<R>?>>();
+                        obj.ProceduralObjectGeneration.Specific = l;
+                        foreach (var item in ProceduralObjectGeneration.Specific)
+                        {
+                            MaskItemIndexed<R, BiomeProceduralObjectGeneration.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, BiomeProceduralObjectGeneration.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
                     }
                 }
-                obj.BiomeSwap = eval(this.BiomeSwap);
+                if (ObjectSwaps != null)
+                {
+                    obj.ObjectSwaps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ObjectSwaps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (ObjectSwaps.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.ObjectSwaps.Specific = l;
+                        foreach (var item in ObjectSwaps.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
                 if (MaterialSwaps != null)
                 {
                     obj.MaterialSwaps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.MaterialSwaps.Overall), Enumerable.Empty<(int Index, R Value)>());
@@ -939,41 +998,28 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 obj.Climate = eval(this.Climate);
-                if (WaterDatas != null)
-                {
-                    obj.WaterDatas = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BiomeWaterData.Mask<R>?>>?>(eval(this.WaterDatas.Overall), Enumerable.Empty<MaskItemIndexed<R, BiomeWaterData.Mask<R>?>>());
-                    if (WaterDatas.Specific != null)
-                    {
-                        var l = new List<MaskItemIndexed<R, BiomeWaterData.Mask<R>?>>();
-                        obj.WaterDatas.Specific = l;
-                        foreach (var item in WaterDatas.Specific)
-                        {
-                            MaskItemIndexed<R, BiomeWaterData.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, BiomeWaterData.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
-                        }
-                    }
-                }
-                obj.WNAM = eval(this.WNAM);
-                obj.YNAM = eval(this.YNAM);
-                obj.UNAM = eval(this.UNAM);
-                obj.AmbientSet = eval(this.AmbientSet);
-                obj.Music = eval(this.Music);
-                obj.NAM0 = eval(this.NAM0);
+                obj.Water = this.Water == null ? null : new MaskItem<R, BiomeWaterData.Mask<R>?>(eval(this.Water.Overall), this.Water.Specific?.Translate(eval));
+                obj.BlockDensityMult = eval(this.BlockDensityMult);
+                obj.CellDensityMult = eval(this.CellDensityMult);
+                obj.ScanWorldspaceMult = eval(this.ScanWorldspaceMult);
+                obj.Child = eval(this.Child);
+                obj.AmbienceSet = eval(this.AmbienceSet);
+                obj.MusicType = eval(this.MusicType);
+                obj.TimeOfDay = eval(this.TimeOfDay);
                 obj.PatternStyle = eval(this.PatternStyle);
-                obj.CNAM = eval(this.CNAM);
-                obj.BiomeColor1 = eval(this.BiomeColor1);
-                obj.BiomeColor2 = eval(this.BiomeColor2);
-                obj.BiomeColor3 = eval(this.BiomeColor3);
-                obj.TNAM = eval(this.TNAM);
-                if (MarkerTypes != null)
+                obj.Color = eval(this.Color);
+                obj.SurfaceColor1 = eval(this.SurfaceColor1);
+                obj.SurfaceColor2 = eval(this.SurfaceColor2);
+                obj.RockTint = eval(this.RockTint);
+                obj.Type = eval(this.Type);
+                if (MarkerObjectKeywords != null)
                 {
-                    obj.MarkerTypes = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BiomeMarkerType.Mask<R>?>>?>(eval(this.MarkerTypes.Overall), Enumerable.Empty<MaskItemIndexed<R, BiomeMarkerType.Mask<R>?>>());
-                    if (MarkerTypes.Specific != null)
+                    obj.MarkerObjectKeywords = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BiomeMarkerType.Mask<R>?>>?>(eval(this.MarkerObjectKeywords.Overall), Enumerable.Empty<MaskItemIndexed<R, BiomeMarkerType.Mask<R>?>>());
+                    if (MarkerObjectKeywords.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, BiomeMarkerType.Mask<R>?>>();
-                        obj.MarkerTypes.Specific = l;
-                        foreach (var item in MarkerTypes.Specific)
+                        obj.MarkerObjectKeywords.Specific = l;
+                        foreach (var item in MarkerObjectKeywords.Specific)
                         {
                             MaskItemIndexed<R, BiomeMarkerType.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, BiomeMarkerType.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
@@ -981,16 +1027,16 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (LNAMs != null)
+                if (Terrain != null)
                 {
-                    obj.LNAMs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BiomeLNAMItem.Mask<R>?>>?>(eval(this.LNAMs.Overall), Enumerable.Empty<MaskItemIndexed<R, BiomeLNAMItem.Mask<R>?>>());
-                    if (LNAMs.Specific != null)
+                    obj.Terrain = new MaskItem<R, IEnumerable<MaskItemIndexed<R, BiomeTerrain.Mask<R>?>>?>(eval(this.Terrain.Overall), Enumerable.Empty<MaskItemIndexed<R, BiomeTerrain.Mask<R>?>>());
+                    if (Terrain.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, BiomeLNAMItem.Mask<R>?>>();
-                        obj.LNAMs.Specific = l;
-                        foreach (var item in LNAMs.Specific)
+                        var l = new List<MaskItemIndexed<R, BiomeTerrain.Mask<R>?>>();
+                        obj.Terrain.Specific = l;
+                        foreach (var item in Terrain.Specific)
                         {
-                            MaskItemIndexed<R, BiomeLNAMItem.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, BiomeLNAMItem.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, BiomeTerrain.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, BiomeTerrain.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -998,11 +1044,11 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 obj.GroundLayerNormal = eval(this.GroundLayerNormal);
                 obj.BTPS = eval(this.BTPS);
-                obj.BDFS = eval(this.BDFS);
-                obj.GroundLayerMaterial = eval(this.GroundLayerMaterial);
-                obj.NAM2 = eval(this.NAM2);
-                obj.NAM3 = eval(this.NAM3);
-                obj.NAM4 = eval(this.NAM4);
+                obj.DistantView = eval(this.DistantView);
+                obj.GlobalLayerMaterial = eval(this.GlobalLayerMaterial);
+                obj.BlockDensityMultGlobal = eval(this.BlockDensityMultGlobal);
+                obj.CellDensityMultGlobal = eval(this.CellDensityMultGlobal);
+                obj.ScanWorldspaceMultGlobal = eval(this.ScanWorldspaceMultGlobal);
             }
             #endregion
 
@@ -1046,20 +1092,20 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.BiomeType ?? true)
+                    if (printMask?.FilterString ?? true)
                     {
-                        sb.AppendItem(BiomeType, "BiomeType");
+                        sb.AppendItem(FilterString, "FilterString");
                     }
-                    if ((printMask?.Plants?.Overall ?? true)
-                        && Plants is {} PlantsItem)
+                    if ((printMask?.Flora?.Overall ?? true)
+                        && Flora is {} FloraItem)
                     {
-                        sb.AppendLine("Plants =>");
+                        sb.AppendLine("Flora =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(PlantsItem.Overall);
-                            if (PlantsItem.Specific != null)
+                            sb.AppendItem(FloraItem.Overall);
+                            if (FloraItem.Specific != null)
                             {
-                                foreach (var subItem in PlantsItem.Specific)
+                                foreach (var subItem in FloraItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1071,20 +1117,37 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.ResourceGenerationData ?? true)
+                    if ((printMask?.ResourceGeneration?.Overall ?? true)
+                        && ResourceGeneration is {} ResourceGenerationItem)
                     {
-                        sb.AppendItem(ResourceGenerationData, "ResourceGenerationData");
-                    }
-                    if ((printMask?.FNAMs?.Overall ?? true)
-                        && FNAMs is {} FNAMsItem)
-                    {
-                        sb.AppendLine("FNAMs =>");
+                        sb.AppendLine("ResourceGeneration =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(FNAMsItem.Overall);
-                            if (FNAMsItem.Specific != null)
+                            sb.AppendItem(ResourceGenerationItem.Overall);
+                            if (ResourceGenerationItem.Specific != null)
                             {
-                                foreach (var subItem in FNAMsItem.Specific)
+                                foreach (var subItem in ResourceGenerationItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.ProceduralObjectGeneration?.Overall ?? true)
+                        && ProceduralObjectGeneration is {} ProceduralObjectGenerationItem)
+                    {
+                        sb.AppendLine("ProceduralObjectGeneration =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ProceduralObjectGenerationItem.Overall);
+                            if (ProceduralObjectGenerationItem.Specific != null)
+                            {
+                                foreach (var subItem in ProceduralObjectGenerationItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1094,9 +1157,26 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.BiomeSwap ?? true)
+                    if ((printMask?.ObjectSwaps?.Overall ?? true)
+                        && ObjectSwaps is {} ObjectSwapsItem)
                     {
-                        sb.AppendItem(BiomeSwap, "BiomeSwap");
+                        sb.AppendLine("ObjectSwaps =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ObjectSwapsItem.Overall);
+                            if (ObjectSwapsItem.Specific != null)
+                            {
+                                foreach (var subItem in ObjectSwapsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                     if ((printMask?.MaterialSwaps?.Overall ?? true)
                         && MaterialSwaps is {} MaterialSwapsItem)
@@ -1123,83 +1203,72 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Climate, "Climate");
                     }
-                    if ((printMask?.WaterDatas?.Overall ?? true)
-                        && WaterDatas is {} WaterDatasItem)
+                    if (printMask?.Water?.Overall ?? true)
                     {
-                        sb.AppendLine("WaterDatas =>");
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(WaterDatasItem.Overall);
-                            if (WaterDatasItem.Specific != null)
-                            {
-                                foreach (var subItem in WaterDatasItem.Specific)
-                                {
-                                    using (sb.Brace())
-                                    {
-                                        subItem?.Print(sb);
-                                    }
-                                }
-                            }
-                        }
+                        Water?.Print(sb);
                     }
-                    if (printMask?.WNAM ?? true)
+                    if (printMask?.BlockDensityMult ?? true)
                     {
-                        sb.AppendItem(WNAM, "WNAM");
+                        sb.AppendItem(BlockDensityMult, "BlockDensityMult");
                     }
-                    if (printMask?.YNAM ?? true)
+                    if (printMask?.CellDensityMult ?? true)
                     {
-                        sb.AppendItem(YNAM, "YNAM");
+                        sb.AppendItem(CellDensityMult, "CellDensityMult");
                     }
-                    if (printMask?.UNAM ?? true)
+                    if (printMask?.ScanWorldspaceMult ?? true)
                     {
-                        sb.AppendItem(UNAM, "UNAM");
+                        sb.AppendItem(ScanWorldspaceMult, "ScanWorldspaceMult");
                     }
-                    if (printMask?.AmbientSet ?? true)
+                    if (printMask?.Child ?? true)
                     {
-                        sb.AppendItem(AmbientSet, "AmbientSet");
+                        sb.AppendItem(Child, "Child");
                     }
-                    if (printMask?.Music ?? true)
+                    if (printMask?.AmbienceSet ?? true)
                     {
-                        sb.AppendItem(Music, "Music");
+                        sb.AppendItem(AmbienceSet, "AmbienceSet");
                     }
-                    if (printMask?.NAM0 ?? true)
+                    if (printMask?.MusicType ?? true)
                     {
-                        sb.AppendItem(NAM0, "NAM0");
+                        sb.AppendItem(MusicType, "MusicType");
+                    }
+                    if (printMask?.TimeOfDay ?? true)
+                    {
+                        sb.AppendItem(TimeOfDay, "TimeOfDay");
                     }
                     if (printMask?.PatternStyle ?? true)
                     {
                         sb.AppendItem(PatternStyle, "PatternStyle");
                     }
-                    if (printMask?.CNAM ?? true)
+                    if (printMask?.Color ?? true)
                     {
-                        sb.AppendItem(CNAM, "CNAM");
+                        sb.AppendItem(Color, "Color");
                     }
-                    if (printMask?.BiomeColor1 ?? true)
+                    if (printMask?.SurfaceColor1 ?? true)
                     {
-                        sb.AppendItem(BiomeColor1, "BiomeColor1");
+                        sb.AppendItem(SurfaceColor1, "SurfaceColor1");
                     }
-                    if (printMask?.BiomeColor2 ?? true)
+                    if (printMask?.SurfaceColor2 ?? true)
                     {
-                        sb.AppendItem(BiomeColor2, "BiomeColor2");
+                        sb.AppendItem(SurfaceColor2, "SurfaceColor2");
                     }
-                    if (printMask?.BiomeColor3 ?? true)
+                    if (printMask?.RockTint ?? true)
                     {
-                        sb.AppendItem(BiomeColor3, "BiomeColor3");
+                        sb.AppendItem(RockTint, "RockTint");
                     }
-                    if (printMask?.TNAM ?? true)
+                    if (printMask?.Type ?? true)
                     {
-                        sb.AppendItem(TNAM, "TNAM");
+                        sb.AppendItem(Type, "Type");
                     }
-                    if ((printMask?.MarkerTypes?.Overall ?? true)
-                        && MarkerTypes is {} MarkerTypesItem)
+                    if ((printMask?.MarkerObjectKeywords?.Overall ?? true)
+                        && MarkerObjectKeywords is {} MarkerObjectKeywordsItem)
                     {
-                        sb.AppendLine("MarkerTypes =>");
+                        sb.AppendLine("MarkerObjectKeywords =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(MarkerTypesItem.Overall);
-                            if (MarkerTypesItem.Specific != null)
+                            sb.AppendItem(MarkerObjectKeywordsItem.Overall);
+                            if (MarkerObjectKeywordsItem.Specific != null)
                             {
-                                foreach (var subItem in MarkerTypesItem.Specific)
+                                foreach (var subItem in MarkerObjectKeywordsItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1209,16 +1278,16 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if ((printMask?.LNAMs?.Overall ?? true)
-                        && LNAMs is {} LNAMsItem)
+                    if ((printMask?.Terrain?.Overall ?? true)
+                        && Terrain is {} TerrainItem)
                     {
-                        sb.AppendLine("LNAMs =>");
+                        sb.AppendLine("Terrain =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(LNAMsItem.Overall);
-                            if (LNAMsItem.Specific != null)
+                            sb.AppendItem(TerrainItem.Overall);
+                            if (TerrainItem.Specific != null)
                             {
-                                foreach (var subItem in LNAMsItem.Specific)
+                                foreach (var subItem in TerrainItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1236,25 +1305,25 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(BTPS, "BTPS");
                     }
-                    if (printMask?.BDFS ?? true)
+                    if (printMask?.DistantView ?? true)
                     {
-                        sb.AppendItem(BDFS, "BDFS");
+                        sb.AppendItem(DistantView, "DistantView");
                     }
-                    if (printMask?.GroundLayerMaterial ?? true)
+                    if (printMask?.GlobalLayerMaterial ?? true)
                     {
-                        sb.AppendItem(GroundLayerMaterial, "GroundLayerMaterial");
+                        sb.AppendItem(GlobalLayerMaterial, "GlobalLayerMaterial");
                     }
-                    if (printMask?.NAM2 ?? true)
+                    if (printMask?.BlockDensityMultGlobal ?? true)
                     {
-                        sb.AppendItem(NAM2, "NAM2");
+                        sb.AppendItem(BlockDensityMultGlobal, "BlockDensityMultGlobal");
                     }
-                    if (printMask?.NAM3 ?? true)
+                    if (printMask?.CellDensityMultGlobal ?? true)
                     {
-                        sb.AppendItem(NAM3, "NAM3");
+                        sb.AppendItem(CellDensityMultGlobal, "CellDensityMultGlobal");
                     }
-                    if (printMask?.NAM4 ?? true)
+                    if (printMask?.ScanWorldspaceMultGlobal ?? true)
                     {
-                        sb.AppendItem(NAM4, "NAM4");
+                        sb.AppendItem(ScanWorldspaceMultGlobal, "ScanWorldspaceMultGlobal");
                     }
                 }
             }
@@ -1269,35 +1338,36 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public Exception? Name;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
-            public Exception? BiomeType;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Plants;
-            public Exception? ResourceGenerationData;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeFNAMItem.ErrorMask?>>?>? FNAMs;
-            public Exception? BiomeSwap;
+            public Exception? FilterString;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Flora;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ResourceGeneration;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeProceduralObjectGeneration.ErrorMask?>>?>? ProceduralObjectGeneration;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ObjectSwaps;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? MaterialSwaps;
             public Exception? Climate;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeWaterData.ErrorMask?>>?>? WaterDatas;
-            public Exception? WNAM;
-            public Exception? YNAM;
-            public Exception? UNAM;
-            public Exception? AmbientSet;
-            public Exception? Music;
-            public Exception? NAM0;
+            public MaskItem<Exception?, BiomeWaterData.ErrorMask?>? Water;
+            public Exception? BlockDensityMult;
+            public Exception? CellDensityMult;
+            public Exception? ScanWorldspaceMult;
+            public Exception? Child;
+            public Exception? AmbienceSet;
+            public Exception? MusicType;
+            public Exception? TimeOfDay;
             public Exception? PatternStyle;
-            public Exception? CNAM;
-            public Exception? BiomeColor1;
-            public Exception? BiomeColor2;
-            public Exception? BiomeColor3;
-            public Exception? TNAM;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeMarkerType.ErrorMask?>>?>? MarkerTypes;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeLNAMItem.ErrorMask?>>?>? LNAMs;
+            public Exception? Color;
+            public Exception? SurfaceColor1;
+            public Exception? SurfaceColor2;
+            public Exception? RockTint;
+            public Exception? Type;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeMarkerType.ErrorMask?>>?>? MarkerObjectKeywords;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeTerrain.ErrorMask?>>?>? Terrain;
             public Exception? GroundLayerNormal;
             public Exception? BTPS;
-            public Exception? BDFS;
-            public Exception? GroundLayerMaterial;
-            public Exception? NAM2;
-            public Exception? NAM3;
-            public Exception? NAM4;
+            public Exception? DistantView;
+            public Exception? GlobalLayerMaterial;
+            public Exception? BlockDensityMultGlobal;
+            public Exception? CellDensityMultGlobal;
+            public Exception? ScanWorldspaceMultGlobal;
             #endregion
 
             #region IErrorMask
@@ -1310,64 +1380,66 @@ namespace Mutagen.Bethesda.Starfield
                         return Name;
                     case Biome_FieldIndex.Keywords:
                         return Keywords;
-                    case Biome_FieldIndex.BiomeType:
-                        return BiomeType;
-                    case Biome_FieldIndex.Plants:
-                        return Plants;
-                    case Biome_FieldIndex.ResourceGenerationData:
-                        return ResourceGenerationData;
-                    case Biome_FieldIndex.FNAMs:
-                        return FNAMs;
-                    case Biome_FieldIndex.BiomeSwap:
-                        return BiomeSwap;
+                    case Biome_FieldIndex.FilterString:
+                        return FilterString;
+                    case Biome_FieldIndex.Flora:
+                        return Flora;
+                    case Biome_FieldIndex.ResourceGeneration:
+                        return ResourceGeneration;
+                    case Biome_FieldIndex.ProceduralObjectGeneration:
+                        return ProceduralObjectGeneration;
+                    case Biome_FieldIndex.ObjectSwaps:
+                        return ObjectSwaps;
                     case Biome_FieldIndex.MaterialSwaps:
                         return MaterialSwaps;
                     case Biome_FieldIndex.Climate:
                         return Climate;
-                    case Biome_FieldIndex.WaterDatas:
-                        return WaterDatas;
-                    case Biome_FieldIndex.WNAM:
-                        return WNAM;
-                    case Biome_FieldIndex.YNAM:
-                        return YNAM;
-                    case Biome_FieldIndex.UNAM:
-                        return UNAM;
-                    case Biome_FieldIndex.AmbientSet:
-                        return AmbientSet;
-                    case Biome_FieldIndex.Music:
-                        return Music;
-                    case Biome_FieldIndex.NAM0:
-                        return NAM0;
+                    case Biome_FieldIndex.Water:
+                        return Water;
+                    case Biome_FieldIndex.BlockDensityMult:
+                        return BlockDensityMult;
+                    case Biome_FieldIndex.CellDensityMult:
+                        return CellDensityMult;
+                    case Biome_FieldIndex.ScanWorldspaceMult:
+                        return ScanWorldspaceMult;
+                    case Biome_FieldIndex.Child:
+                        return Child;
+                    case Biome_FieldIndex.AmbienceSet:
+                        return AmbienceSet;
+                    case Biome_FieldIndex.MusicType:
+                        return MusicType;
+                    case Biome_FieldIndex.TimeOfDay:
+                        return TimeOfDay;
                     case Biome_FieldIndex.PatternStyle:
                         return PatternStyle;
-                    case Biome_FieldIndex.CNAM:
-                        return CNAM;
-                    case Biome_FieldIndex.BiomeColor1:
-                        return BiomeColor1;
-                    case Biome_FieldIndex.BiomeColor2:
-                        return BiomeColor2;
-                    case Biome_FieldIndex.BiomeColor3:
-                        return BiomeColor3;
-                    case Biome_FieldIndex.TNAM:
-                        return TNAM;
-                    case Biome_FieldIndex.MarkerTypes:
-                        return MarkerTypes;
-                    case Biome_FieldIndex.LNAMs:
-                        return LNAMs;
+                    case Biome_FieldIndex.Color:
+                        return Color;
+                    case Biome_FieldIndex.SurfaceColor1:
+                        return SurfaceColor1;
+                    case Biome_FieldIndex.SurfaceColor2:
+                        return SurfaceColor2;
+                    case Biome_FieldIndex.RockTint:
+                        return RockTint;
+                    case Biome_FieldIndex.Type:
+                        return Type;
+                    case Biome_FieldIndex.MarkerObjectKeywords:
+                        return MarkerObjectKeywords;
+                    case Biome_FieldIndex.Terrain:
+                        return Terrain;
                     case Biome_FieldIndex.GroundLayerNormal:
                         return GroundLayerNormal;
                     case Biome_FieldIndex.BTPS:
                         return BTPS;
-                    case Biome_FieldIndex.BDFS:
-                        return BDFS;
-                    case Biome_FieldIndex.GroundLayerMaterial:
-                        return GroundLayerMaterial;
-                    case Biome_FieldIndex.NAM2:
-                        return NAM2;
-                    case Biome_FieldIndex.NAM3:
-                        return NAM3;
-                    case Biome_FieldIndex.NAM4:
-                        return NAM4;
+                    case Biome_FieldIndex.DistantView:
+                        return DistantView;
+                    case Biome_FieldIndex.GlobalLayerMaterial:
+                        return GlobalLayerMaterial;
+                    case Biome_FieldIndex.BlockDensityMultGlobal:
+                        return BlockDensityMultGlobal;
+                    case Biome_FieldIndex.CellDensityMultGlobal:
+                        return CellDensityMultGlobal;
+                    case Biome_FieldIndex.ScanWorldspaceMultGlobal:
+                        return ScanWorldspaceMultGlobal;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1384,20 +1456,20 @@ namespace Mutagen.Bethesda.Starfield
                     case Biome_FieldIndex.Keywords:
                         this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case Biome_FieldIndex.BiomeType:
-                        this.BiomeType = ex;
+                    case Biome_FieldIndex.FilterString:
+                        this.FilterString = ex;
                         break;
-                    case Biome_FieldIndex.Plants:
-                        this.Plants = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case Biome_FieldIndex.Flora:
+                        this.Flora = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case Biome_FieldIndex.ResourceGenerationData:
-                        this.ResourceGenerationData = ex;
+                    case Biome_FieldIndex.ResourceGeneration:
+                        this.ResourceGeneration = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case Biome_FieldIndex.FNAMs:
-                        this.FNAMs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeFNAMItem.ErrorMask?>>?>(ex, null);
+                    case Biome_FieldIndex.ProceduralObjectGeneration:
+                        this.ProceduralObjectGeneration = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeProceduralObjectGeneration.ErrorMask?>>?>(ex, null);
                         break;
-                    case Biome_FieldIndex.BiomeSwap:
-                        this.BiomeSwap = ex;
+                    case Biome_FieldIndex.ObjectSwaps:
+                        this.ObjectSwaps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case Biome_FieldIndex.MaterialSwaps:
                         this.MaterialSwaps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
@@ -1405,50 +1477,53 @@ namespace Mutagen.Bethesda.Starfield
                     case Biome_FieldIndex.Climate:
                         this.Climate = ex;
                         break;
-                    case Biome_FieldIndex.WaterDatas:
-                        this.WaterDatas = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeWaterData.ErrorMask?>>?>(ex, null);
+                    case Biome_FieldIndex.Water:
+                        this.Water = new MaskItem<Exception?, BiomeWaterData.ErrorMask?>(ex, null);
                         break;
-                    case Biome_FieldIndex.WNAM:
-                        this.WNAM = ex;
+                    case Biome_FieldIndex.BlockDensityMult:
+                        this.BlockDensityMult = ex;
                         break;
-                    case Biome_FieldIndex.YNAM:
-                        this.YNAM = ex;
+                    case Biome_FieldIndex.CellDensityMult:
+                        this.CellDensityMult = ex;
                         break;
-                    case Biome_FieldIndex.UNAM:
-                        this.UNAM = ex;
+                    case Biome_FieldIndex.ScanWorldspaceMult:
+                        this.ScanWorldspaceMult = ex;
                         break;
-                    case Biome_FieldIndex.AmbientSet:
-                        this.AmbientSet = ex;
+                    case Biome_FieldIndex.Child:
+                        this.Child = ex;
                         break;
-                    case Biome_FieldIndex.Music:
-                        this.Music = ex;
+                    case Biome_FieldIndex.AmbienceSet:
+                        this.AmbienceSet = ex;
                         break;
-                    case Biome_FieldIndex.NAM0:
-                        this.NAM0 = ex;
+                    case Biome_FieldIndex.MusicType:
+                        this.MusicType = ex;
+                        break;
+                    case Biome_FieldIndex.TimeOfDay:
+                        this.TimeOfDay = ex;
                         break;
                     case Biome_FieldIndex.PatternStyle:
                         this.PatternStyle = ex;
                         break;
-                    case Biome_FieldIndex.CNAM:
-                        this.CNAM = ex;
+                    case Biome_FieldIndex.Color:
+                        this.Color = ex;
                         break;
-                    case Biome_FieldIndex.BiomeColor1:
-                        this.BiomeColor1 = ex;
+                    case Biome_FieldIndex.SurfaceColor1:
+                        this.SurfaceColor1 = ex;
                         break;
-                    case Biome_FieldIndex.BiomeColor2:
-                        this.BiomeColor2 = ex;
+                    case Biome_FieldIndex.SurfaceColor2:
+                        this.SurfaceColor2 = ex;
                         break;
-                    case Biome_FieldIndex.BiomeColor3:
-                        this.BiomeColor3 = ex;
+                    case Biome_FieldIndex.RockTint:
+                        this.RockTint = ex;
                         break;
-                    case Biome_FieldIndex.TNAM:
-                        this.TNAM = ex;
+                    case Biome_FieldIndex.Type:
+                        this.Type = ex;
                         break;
-                    case Biome_FieldIndex.MarkerTypes:
-                        this.MarkerTypes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeMarkerType.ErrorMask?>>?>(ex, null);
+                    case Biome_FieldIndex.MarkerObjectKeywords:
+                        this.MarkerObjectKeywords = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeMarkerType.ErrorMask?>>?>(ex, null);
                         break;
-                    case Biome_FieldIndex.LNAMs:
-                        this.LNAMs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeLNAMItem.ErrorMask?>>?>(ex, null);
+                    case Biome_FieldIndex.Terrain:
+                        this.Terrain = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeTerrain.ErrorMask?>>?>(ex, null);
                         break;
                     case Biome_FieldIndex.GroundLayerNormal:
                         this.GroundLayerNormal = ex;
@@ -1456,20 +1531,20 @@ namespace Mutagen.Bethesda.Starfield
                     case Biome_FieldIndex.BTPS:
                         this.BTPS = ex;
                         break;
-                    case Biome_FieldIndex.BDFS:
-                        this.BDFS = ex;
+                    case Biome_FieldIndex.DistantView:
+                        this.DistantView = ex;
                         break;
-                    case Biome_FieldIndex.GroundLayerMaterial:
-                        this.GroundLayerMaterial = ex;
+                    case Biome_FieldIndex.GlobalLayerMaterial:
+                        this.GlobalLayerMaterial = ex;
                         break;
-                    case Biome_FieldIndex.NAM2:
-                        this.NAM2 = ex;
+                    case Biome_FieldIndex.BlockDensityMultGlobal:
+                        this.BlockDensityMultGlobal = ex;
                         break;
-                    case Biome_FieldIndex.NAM3:
-                        this.NAM3 = ex;
+                    case Biome_FieldIndex.CellDensityMultGlobal:
+                        this.CellDensityMultGlobal = ex;
                         break;
-                    case Biome_FieldIndex.NAM4:
-                        this.NAM4 = ex;
+                    case Biome_FieldIndex.ScanWorldspaceMultGlobal:
+                        this.ScanWorldspaceMultGlobal = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1488,20 +1563,20 @@ namespace Mutagen.Bethesda.Starfield
                     case Biome_FieldIndex.Keywords:
                         this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case Biome_FieldIndex.BiomeType:
-                        this.BiomeType = (Exception?)obj;
+                    case Biome_FieldIndex.FilterString:
+                        this.FilterString = (Exception?)obj;
                         break;
-                    case Biome_FieldIndex.Plants:
-                        this.Plants = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case Biome_FieldIndex.Flora:
+                        this.Flora = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case Biome_FieldIndex.ResourceGenerationData:
-                        this.ResourceGenerationData = (Exception?)obj;
+                    case Biome_FieldIndex.ResourceGeneration:
+                        this.ResourceGeneration = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case Biome_FieldIndex.FNAMs:
-                        this.FNAMs = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeFNAMItem.ErrorMask?>>?>)obj;
+                    case Biome_FieldIndex.ProceduralObjectGeneration:
+                        this.ProceduralObjectGeneration = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeProceduralObjectGeneration.ErrorMask?>>?>)obj;
                         break;
-                    case Biome_FieldIndex.BiomeSwap:
-                        this.BiomeSwap = (Exception?)obj;
+                    case Biome_FieldIndex.ObjectSwaps:
+                        this.ObjectSwaps = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case Biome_FieldIndex.MaterialSwaps:
                         this.MaterialSwaps = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
@@ -1509,50 +1584,53 @@ namespace Mutagen.Bethesda.Starfield
                     case Biome_FieldIndex.Climate:
                         this.Climate = (Exception?)obj;
                         break;
-                    case Biome_FieldIndex.WaterDatas:
-                        this.WaterDatas = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeWaterData.ErrorMask?>>?>)obj;
+                    case Biome_FieldIndex.Water:
+                        this.Water = (MaskItem<Exception?, BiomeWaterData.ErrorMask?>?)obj;
                         break;
-                    case Biome_FieldIndex.WNAM:
-                        this.WNAM = (Exception?)obj;
+                    case Biome_FieldIndex.BlockDensityMult:
+                        this.BlockDensityMult = (Exception?)obj;
                         break;
-                    case Biome_FieldIndex.YNAM:
-                        this.YNAM = (Exception?)obj;
+                    case Biome_FieldIndex.CellDensityMult:
+                        this.CellDensityMult = (Exception?)obj;
                         break;
-                    case Biome_FieldIndex.UNAM:
-                        this.UNAM = (Exception?)obj;
+                    case Biome_FieldIndex.ScanWorldspaceMult:
+                        this.ScanWorldspaceMult = (Exception?)obj;
                         break;
-                    case Biome_FieldIndex.AmbientSet:
-                        this.AmbientSet = (Exception?)obj;
+                    case Biome_FieldIndex.Child:
+                        this.Child = (Exception?)obj;
                         break;
-                    case Biome_FieldIndex.Music:
-                        this.Music = (Exception?)obj;
+                    case Biome_FieldIndex.AmbienceSet:
+                        this.AmbienceSet = (Exception?)obj;
                         break;
-                    case Biome_FieldIndex.NAM0:
-                        this.NAM0 = (Exception?)obj;
+                    case Biome_FieldIndex.MusicType:
+                        this.MusicType = (Exception?)obj;
+                        break;
+                    case Biome_FieldIndex.TimeOfDay:
+                        this.TimeOfDay = (Exception?)obj;
                         break;
                     case Biome_FieldIndex.PatternStyle:
                         this.PatternStyle = (Exception?)obj;
                         break;
-                    case Biome_FieldIndex.CNAM:
-                        this.CNAM = (Exception?)obj;
+                    case Biome_FieldIndex.Color:
+                        this.Color = (Exception?)obj;
                         break;
-                    case Biome_FieldIndex.BiomeColor1:
-                        this.BiomeColor1 = (Exception?)obj;
+                    case Biome_FieldIndex.SurfaceColor1:
+                        this.SurfaceColor1 = (Exception?)obj;
                         break;
-                    case Biome_FieldIndex.BiomeColor2:
-                        this.BiomeColor2 = (Exception?)obj;
+                    case Biome_FieldIndex.SurfaceColor2:
+                        this.SurfaceColor2 = (Exception?)obj;
                         break;
-                    case Biome_FieldIndex.BiomeColor3:
-                        this.BiomeColor3 = (Exception?)obj;
+                    case Biome_FieldIndex.RockTint:
+                        this.RockTint = (Exception?)obj;
                         break;
-                    case Biome_FieldIndex.TNAM:
-                        this.TNAM = (Exception?)obj;
+                    case Biome_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
                         break;
-                    case Biome_FieldIndex.MarkerTypes:
-                        this.MarkerTypes = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeMarkerType.ErrorMask?>>?>)obj;
+                    case Biome_FieldIndex.MarkerObjectKeywords:
+                        this.MarkerObjectKeywords = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeMarkerType.ErrorMask?>>?>)obj;
                         break;
-                    case Biome_FieldIndex.LNAMs:
-                        this.LNAMs = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeLNAMItem.ErrorMask?>>?>)obj;
+                    case Biome_FieldIndex.Terrain:
+                        this.Terrain = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeTerrain.ErrorMask?>>?>)obj;
                         break;
                     case Biome_FieldIndex.GroundLayerNormal:
                         this.GroundLayerNormal = (Exception?)obj;
@@ -1560,20 +1638,20 @@ namespace Mutagen.Bethesda.Starfield
                     case Biome_FieldIndex.BTPS:
                         this.BTPS = (Exception?)obj;
                         break;
-                    case Biome_FieldIndex.BDFS:
-                        this.BDFS = (Exception?)obj;
+                    case Biome_FieldIndex.DistantView:
+                        this.DistantView = (Exception?)obj;
                         break;
-                    case Biome_FieldIndex.GroundLayerMaterial:
-                        this.GroundLayerMaterial = (Exception?)obj;
+                    case Biome_FieldIndex.GlobalLayerMaterial:
+                        this.GlobalLayerMaterial = (Exception?)obj;
                         break;
-                    case Biome_FieldIndex.NAM2:
-                        this.NAM2 = (Exception?)obj;
+                    case Biome_FieldIndex.BlockDensityMultGlobal:
+                        this.BlockDensityMultGlobal = (Exception?)obj;
                         break;
-                    case Biome_FieldIndex.NAM3:
-                        this.NAM3 = (Exception?)obj;
+                    case Biome_FieldIndex.CellDensityMultGlobal:
+                        this.CellDensityMultGlobal = (Exception?)obj;
                         break;
-                    case Biome_FieldIndex.NAM4:
-                        this.NAM4 = (Exception?)obj;
+                    case Biome_FieldIndex.ScanWorldspaceMultGlobal:
+                        this.ScanWorldspaceMultGlobal = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -1586,35 +1664,36 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (Name != null) return true;
                 if (Keywords != null) return true;
-                if (BiomeType != null) return true;
-                if (Plants != null) return true;
-                if (ResourceGenerationData != null) return true;
-                if (FNAMs != null) return true;
-                if (BiomeSwap != null) return true;
+                if (FilterString != null) return true;
+                if (Flora != null) return true;
+                if (ResourceGeneration != null) return true;
+                if (ProceduralObjectGeneration != null) return true;
+                if (ObjectSwaps != null) return true;
                 if (MaterialSwaps != null) return true;
                 if (Climate != null) return true;
-                if (WaterDatas != null) return true;
-                if (WNAM != null) return true;
-                if (YNAM != null) return true;
-                if (UNAM != null) return true;
-                if (AmbientSet != null) return true;
-                if (Music != null) return true;
-                if (NAM0 != null) return true;
+                if (Water != null) return true;
+                if (BlockDensityMult != null) return true;
+                if (CellDensityMult != null) return true;
+                if (ScanWorldspaceMult != null) return true;
+                if (Child != null) return true;
+                if (AmbienceSet != null) return true;
+                if (MusicType != null) return true;
+                if (TimeOfDay != null) return true;
                 if (PatternStyle != null) return true;
-                if (CNAM != null) return true;
-                if (BiomeColor1 != null) return true;
-                if (BiomeColor2 != null) return true;
-                if (BiomeColor3 != null) return true;
-                if (TNAM != null) return true;
-                if (MarkerTypes != null) return true;
-                if (LNAMs != null) return true;
+                if (Color != null) return true;
+                if (SurfaceColor1 != null) return true;
+                if (SurfaceColor2 != null) return true;
+                if (RockTint != null) return true;
+                if (Type != null) return true;
+                if (MarkerObjectKeywords != null) return true;
+                if (Terrain != null) return true;
                 if (GroundLayerNormal != null) return true;
                 if (BTPS != null) return true;
-                if (BDFS != null) return true;
-                if (GroundLayerMaterial != null) return true;
-                if (NAM2 != null) return true;
-                if (NAM3 != null) return true;
-                if (NAM4 != null) return true;
+                if (DistantView != null) return true;
+                if (GlobalLayerMaterial != null) return true;
+                if (BlockDensityMultGlobal != null) return true;
+                if (CellDensityMultGlobal != null) return true;
+                if (ScanWorldspaceMultGlobal != null) return true;
                 return false;
             }
             #endregion
@@ -1665,17 +1744,17 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 {
-                    sb.AppendItem(BiomeType, "BiomeType");
+                    sb.AppendItem(FilterString, "FilterString");
                 }
-                if (Plants is {} PlantsItem)
+                if (Flora is {} FloraItem)
                 {
-                    sb.AppendLine("Plants =>");
+                    sb.AppendLine("Flora =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(PlantsItem.Overall);
-                        if (PlantsItem.Specific != null)
+                        sb.AppendItem(FloraItem.Overall);
+                        if (FloraItem.Specific != null)
                         {
-                            foreach (var subItem in PlantsItem.Specific)
+                            foreach (var subItem in FloraItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -1687,18 +1766,35 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (ResourceGeneration is {} ResourceGenerationItem)
                 {
-                    sb.AppendItem(ResourceGenerationData, "ResourceGenerationData");
-                }
-                if (FNAMs is {} FNAMsItem)
-                {
-                    sb.AppendLine("FNAMs =>");
+                    sb.AppendLine("ResourceGeneration =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(FNAMsItem.Overall);
-                        if (FNAMsItem.Specific != null)
+                        sb.AppendItem(ResourceGenerationItem.Overall);
+                        if (ResourceGenerationItem.Specific != null)
                         {
-                            foreach (var subItem in FNAMsItem.Specific)
+                            foreach (var subItem in ResourceGenerationItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (ProceduralObjectGeneration is {} ProceduralObjectGenerationItem)
+                {
+                    sb.AppendLine("ProceduralObjectGeneration =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ProceduralObjectGenerationItem.Overall);
+                        if (ProceduralObjectGenerationItem.Specific != null)
+                        {
+                            foreach (var subItem in ProceduralObjectGenerationItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -1708,8 +1804,25 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (ObjectSwaps is {} ObjectSwapsItem)
                 {
-                    sb.AppendItem(BiomeSwap, "BiomeSwap");
+                    sb.AppendLine("ObjectSwaps =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ObjectSwapsItem.Overall);
+                        if (ObjectSwapsItem.Specific != null)
+                        {
+                            foreach (var subItem in ObjectSwapsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 if (MaterialSwaps is {} MaterialSwapsItem)
                 {
@@ -1734,69 +1847,55 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(Climate, "Climate");
                 }
-                if (WaterDatas is {} WaterDatasItem)
+                Water?.Print(sb);
                 {
-                    sb.AppendLine("WaterDatas =>");
-                    using (sb.Brace())
-                    {
-                        sb.AppendItem(WaterDatasItem.Overall);
-                        if (WaterDatasItem.Specific != null)
-                        {
-                            foreach (var subItem in WaterDatasItem.Specific)
-                            {
-                                using (sb.Brace())
-                                {
-                                    subItem?.Print(sb);
-                                }
-                            }
-                        }
-                    }
+                    sb.AppendItem(BlockDensityMult, "BlockDensityMult");
                 }
                 {
-                    sb.AppendItem(WNAM, "WNAM");
+                    sb.AppendItem(CellDensityMult, "CellDensityMult");
                 }
                 {
-                    sb.AppendItem(YNAM, "YNAM");
+                    sb.AppendItem(ScanWorldspaceMult, "ScanWorldspaceMult");
                 }
                 {
-                    sb.AppendItem(UNAM, "UNAM");
+                    sb.AppendItem(Child, "Child");
                 }
                 {
-                    sb.AppendItem(AmbientSet, "AmbientSet");
+                    sb.AppendItem(AmbienceSet, "AmbienceSet");
                 }
                 {
-                    sb.AppendItem(Music, "Music");
+                    sb.AppendItem(MusicType, "MusicType");
                 }
                 {
-                    sb.AppendItem(NAM0, "NAM0");
+                    sb.AppendItem(TimeOfDay, "TimeOfDay");
                 }
                 {
                     sb.AppendItem(PatternStyle, "PatternStyle");
                 }
                 {
-                    sb.AppendItem(CNAM, "CNAM");
+                    sb.AppendItem(Color, "Color");
                 }
                 {
-                    sb.AppendItem(BiomeColor1, "BiomeColor1");
+                    sb.AppendItem(SurfaceColor1, "SurfaceColor1");
                 }
                 {
-                    sb.AppendItem(BiomeColor2, "BiomeColor2");
+                    sb.AppendItem(SurfaceColor2, "SurfaceColor2");
                 }
                 {
-                    sb.AppendItem(BiomeColor3, "BiomeColor3");
+                    sb.AppendItem(RockTint, "RockTint");
                 }
                 {
-                    sb.AppendItem(TNAM, "TNAM");
+                    sb.AppendItem(Type, "Type");
                 }
-                if (MarkerTypes is {} MarkerTypesItem)
+                if (MarkerObjectKeywords is {} MarkerObjectKeywordsItem)
                 {
-                    sb.AppendLine("MarkerTypes =>");
+                    sb.AppendLine("MarkerObjectKeywords =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(MarkerTypesItem.Overall);
-                        if (MarkerTypesItem.Specific != null)
+                        sb.AppendItem(MarkerObjectKeywordsItem.Overall);
+                        if (MarkerObjectKeywordsItem.Specific != null)
                         {
-                            foreach (var subItem in MarkerTypesItem.Specific)
+                            foreach (var subItem in MarkerObjectKeywordsItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -1806,15 +1905,15 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (LNAMs is {} LNAMsItem)
+                if (Terrain is {} TerrainItem)
                 {
-                    sb.AppendLine("LNAMs =>");
+                    sb.AppendLine("Terrain =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(LNAMsItem.Overall);
-                        if (LNAMsItem.Specific != null)
+                        sb.AppendItem(TerrainItem.Overall);
+                        if (TerrainItem.Specific != null)
                         {
-                            foreach (var subItem in LNAMsItem.Specific)
+                            foreach (var subItem in TerrainItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -1831,19 +1930,19 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(BTPS, "BTPS");
                 }
                 {
-                    sb.AppendItem(BDFS, "BDFS");
+                    sb.AppendItem(DistantView, "DistantView");
                 }
                 {
-                    sb.AppendItem(GroundLayerMaterial, "GroundLayerMaterial");
+                    sb.AppendItem(GlobalLayerMaterial, "GlobalLayerMaterial");
                 }
                 {
-                    sb.AppendItem(NAM2, "NAM2");
+                    sb.AppendItem(BlockDensityMultGlobal, "BlockDensityMultGlobal");
                 }
                 {
-                    sb.AppendItem(NAM3, "NAM3");
+                    sb.AppendItem(CellDensityMultGlobal, "CellDensityMultGlobal");
                 }
                 {
-                    sb.AppendItem(NAM4, "NAM4");
+                    sb.AppendItem(ScanWorldspaceMultGlobal, "ScanWorldspaceMultGlobal");
                 }
             }
             #endregion
@@ -1855,35 +1954,36 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
-                ret.BiomeType = this.BiomeType.Combine(rhs.BiomeType);
-                ret.Plants = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Plants?.Overall, rhs.Plants?.Overall), Noggog.ExceptionExt.Combine(this.Plants?.Specific, rhs.Plants?.Specific));
-                ret.ResourceGenerationData = this.ResourceGenerationData.Combine(rhs.ResourceGenerationData);
-                ret.FNAMs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeFNAMItem.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.FNAMs?.Overall, rhs.FNAMs?.Overall), Noggog.ExceptionExt.Combine(this.FNAMs?.Specific, rhs.FNAMs?.Specific));
-                ret.BiomeSwap = this.BiomeSwap.Combine(rhs.BiomeSwap);
+                ret.FilterString = this.FilterString.Combine(rhs.FilterString);
+                ret.Flora = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Flora?.Overall, rhs.Flora?.Overall), Noggog.ExceptionExt.Combine(this.Flora?.Specific, rhs.Flora?.Specific));
+                ret.ResourceGeneration = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ResourceGeneration?.Overall, rhs.ResourceGeneration?.Overall), Noggog.ExceptionExt.Combine(this.ResourceGeneration?.Specific, rhs.ResourceGeneration?.Specific));
+                ret.ProceduralObjectGeneration = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeProceduralObjectGeneration.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ProceduralObjectGeneration?.Overall, rhs.ProceduralObjectGeneration?.Overall), Noggog.ExceptionExt.Combine(this.ProceduralObjectGeneration?.Specific, rhs.ProceduralObjectGeneration?.Specific));
+                ret.ObjectSwaps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ObjectSwaps?.Overall, rhs.ObjectSwaps?.Overall), Noggog.ExceptionExt.Combine(this.ObjectSwaps?.Specific, rhs.ObjectSwaps?.Specific));
                 ret.MaterialSwaps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.MaterialSwaps?.Overall, rhs.MaterialSwaps?.Overall), Noggog.ExceptionExt.Combine(this.MaterialSwaps?.Specific, rhs.MaterialSwaps?.Specific));
                 ret.Climate = this.Climate.Combine(rhs.Climate);
-                ret.WaterDatas = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeWaterData.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.WaterDatas?.Overall, rhs.WaterDatas?.Overall), Noggog.ExceptionExt.Combine(this.WaterDatas?.Specific, rhs.WaterDatas?.Specific));
-                ret.WNAM = this.WNAM.Combine(rhs.WNAM);
-                ret.YNAM = this.YNAM.Combine(rhs.YNAM);
-                ret.UNAM = this.UNAM.Combine(rhs.UNAM);
-                ret.AmbientSet = this.AmbientSet.Combine(rhs.AmbientSet);
-                ret.Music = this.Music.Combine(rhs.Music);
-                ret.NAM0 = this.NAM0.Combine(rhs.NAM0);
+                ret.Water = this.Water.Combine(rhs.Water, (l, r) => l.Combine(r));
+                ret.BlockDensityMult = this.BlockDensityMult.Combine(rhs.BlockDensityMult);
+                ret.CellDensityMult = this.CellDensityMult.Combine(rhs.CellDensityMult);
+                ret.ScanWorldspaceMult = this.ScanWorldspaceMult.Combine(rhs.ScanWorldspaceMult);
+                ret.Child = this.Child.Combine(rhs.Child);
+                ret.AmbienceSet = this.AmbienceSet.Combine(rhs.AmbienceSet);
+                ret.MusicType = this.MusicType.Combine(rhs.MusicType);
+                ret.TimeOfDay = this.TimeOfDay.Combine(rhs.TimeOfDay);
                 ret.PatternStyle = this.PatternStyle.Combine(rhs.PatternStyle);
-                ret.CNAM = this.CNAM.Combine(rhs.CNAM);
-                ret.BiomeColor1 = this.BiomeColor1.Combine(rhs.BiomeColor1);
-                ret.BiomeColor2 = this.BiomeColor2.Combine(rhs.BiomeColor2);
-                ret.BiomeColor3 = this.BiomeColor3.Combine(rhs.BiomeColor3);
-                ret.TNAM = this.TNAM.Combine(rhs.TNAM);
-                ret.MarkerTypes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeMarkerType.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MarkerTypes?.Overall, rhs.MarkerTypes?.Overall), Noggog.ExceptionExt.Combine(this.MarkerTypes?.Specific, rhs.MarkerTypes?.Specific));
-                ret.LNAMs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeLNAMItem.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LNAMs?.Overall, rhs.LNAMs?.Overall), Noggog.ExceptionExt.Combine(this.LNAMs?.Specific, rhs.LNAMs?.Specific));
+                ret.Color = this.Color.Combine(rhs.Color);
+                ret.SurfaceColor1 = this.SurfaceColor1.Combine(rhs.SurfaceColor1);
+                ret.SurfaceColor2 = this.SurfaceColor2.Combine(rhs.SurfaceColor2);
+                ret.RockTint = this.RockTint.Combine(rhs.RockTint);
+                ret.Type = this.Type.Combine(rhs.Type);
+                ret.MarkerObjectKeywords = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeMarkerType.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MarkerObjectKeywords?.Overall, rhs.MarkerObjectKeywords?.Overall), Noggog.ExceptionExt.Combine(this.MarkerObjectKeywords?.Specific, rhs.MarkerObjectKeywords?.Specific));
+                ret.Terrain = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, BiomeTerrain.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Terrain?.Overall, rhs.Terrain?.Overall), Noggog.ExceptionExt.Combine(this.Terrain?.Specific, rhs.Terrain?.Specific));
                 ret.GroundLayerNormal = this.GroundLayerNormal.Combine(rhs.GroundLayerNormal);
                 ret.BTPS = this.BTPS.Combine(rhs.BTPS);
-                ret.BDFS = this.BDFS.Combine(rhs.BDFS);
-                ret.GroundLayerMaterial = this.GroundLayerMaterial.Combine(rhs.GroundLayerMaterial);
-                ret.NAM2 = this.NAM2.Combine(rhs.NAM2);
-                ret.NAM3 = this.NAM3.Combine(rhs.NAM3);
-                ret.NAM4 = this.NAM4.Combine(rhs.NAM4);
+                ret.DistantView = this.DistantView.Combine(rhs.DistantView);
+                ret.GlobalLayerMaterial = this.GlobalLayerMaterial.Combine(rhs.GlobalLayerMaterial);
+                ret.BlockDensityMultGlobal = this.BlockDensityMultGlobal.Combine(rhs.BlockDensityMultGlobal);
+                ret.CellDensityMultGlobal = this.CellDensityMultGlobal.Combine(rhs.CellDensityMultGlobal);
+                ret.ScanWorldspaceMultGlobal = this.ScanWorldspaceMultGlobal.Combine(rhs.ScanWorldspaceMultGlobal);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1908,35 +2008,36 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public bool Name;
             public bool Keywords;
-            public bool BiomeType;
-            public bool Plants;
-            public bool ResourceGenerationData;
-            public BiomeFNAMItem.TranslationMask? FNAMs;
-            public bool BiomeSwap;
+            public bool FilterString;
+            public bool Flora;
+            public bool ResourceGeneration;
+            public BiomeProceduralObjectGeneration.TranslationMask? ProceduralObjectGeneration;
+            public bool ObjectSwaps;
             public bool MaterialSwaps;
             public bool Climate;
-            public BiomeWaterData.TranslationMask? WaterDatas;
-            public bool WNAM;
-            public bool YNAM;
-            public bool UNAM;
-            public bool AmbientSet;
-            public bool Music;
-            public bool NAM0;
+            public BiomeWaterData.TranslationMask? Water;
+            public bool BlockDensityMult;
+            public bool CellDensityMult;
+            public bool ScanWorldspaceMult;
+            public bool Child;
+            public bool AmbienceSet;
+            public bool MusicType;
+            public bool TimeOfDay;
             public bool PatternStyle;
-            public bool CNAM;
-            public bool BiomeColor1;
-            public bool BiomeColor2;
-            public bool BiomeColor3;
-            public bool TNAM;
-            public BiomeMarkerType.TranslationMask? MarkerTypes;
-            public BiomeLNAMItem.TranslationMask? LNAMs;
+            public bool Color;
+            public bool SurfaceColor1;
+            public bool SurfaceColor2;
+            public bool RockTint;
+            public bool Type;
+            public BiomeMarkerType.TranslationMask? MarkerObjectKeywords;
+            public BiomeTerrain.TranslationMask? Terrain;
             public bool GroundLayerNormal;
             public bool BTPS;
-            public bool BDFS;
-            public bool GroundLayerMaterial;
-            public bool NAM2;
-            public bool NAM3;
-            public bool NAM4;
+            public bool DistantView;
+            public bool GlobalLayerMaterial;
+            public bool BlockDensityMultGlobal;
+            public bool CellDensityMultGlobal;
+            public bool ScanWorldspaceMultGlobal;
             #endregion
 
             #region Ctors
@@ -1947,31 +2048,32 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Name = defaultOn;
                 this.Keywords = defaultOn;
-                this.BiomeType = defaultOn;
-                this.Plants = defaultOn;
-                this.ResourceGenerationData = defaultOn;
-                this.BiomeSwap = defaultOn;
+                this.FilterString = defaultOn;
+                this.Flora = defaultOn;
+                this.ResourceGeneration = defaultOn;
+                this.ObjectSwaps = defaultOn;
                 this.MaterialSwaps = defaultOn;
                 this.Climate = defaultOn;
-                this.WNAM = defaultOn;
-                this.YNAM = defaultOn;
-                this.UNAM = defaultOn;
-                this.AmbientSet = defaultOn;
-                this.Music = defaultOn;
-                this.NAM0 = defaultOn;
+                this.BlockDensityMult = defaultOn;
+                this.CellDensityMult = defaultOn;
+                this.ScanWorldspaceMult = defaultOn;
+                this.Child = defaultOn;
+                this.AmbienceSet = defaultOn;
+                this.MusicType = defaultOn;
+                this.TimeOfDay = defaultOn;
                 this.PatternStyle = defaultOn;
-                this.CNAM = defaultOn;
-                this.BiomeColor1 = defaultOn;
-                this.BiomeColor2 = defaultOn;
-                this.BiomeColor3 = defaultOn;
-                this.TNAM = defaultOn;
+                this.Color = defaultOn;
+                this.SurfaceColor1 = defaultOn;
+                this.SurfaceColor2 = defaultOn;
+                this.RockTint = defaultOn;
+                this.Type = defaultOn;
                 this.GroundLayerNormal = defaultOn;
                 this.BTPS = defaultOn;
-                this.BDFS = defaultOn;
-                this.GroundLayerMaterial = defaultOn;
-                this.NAM2 = defaultOn;
-                this.NAM3 = defaultOn;
-                this.NAM4 = defaultOn;
+                this.DistantView = defaultOn;
+                this.GlobalLayerMaterial = defaultOn;
+                this.BlockDensityMultGlobal = defaultOn;
+                this.CellDensityMultGlobal = defaultOn;
+                this.ScanWorldspaceMultGlobal = defaultOn;
             }
 
             #endregion
@@ -1981,35 +2083,36 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((Name, null));
                 ret.Add((Keywords, null));
-                ret.Add((BiomeType, null));
-                ret.Add((Plants, null));
-                ret.Add((ResourceGenerationData, null));
-                ret.Add((FNAMs == null ? DefaultOn : !FNAMs.GetCrystal().CopyNothing, FNAMs?.GetCrystal()));
-                ret.Add((BiomeSwap, null));
+                ret.Add((FilterString, null));
+                ret.Add((Flora, null));
+                ret.Add((ResourceGeneration, null));
+                ret.Add((ProceduralObjectGeneration == null ? DefaultOn : !ProceduralObjectGeneration.GetCrystal().CopyNothing, ProceduralObjectGeneration?.GetCrystal()));
+                ret.Add((ObjectSwaps, null));
                 ret.Add((MaterialSwaps, null));
                 ret.Add((Climate, null));
-                ret.Add((WaterDatas == null ? DefaultOn : !WaterDatas.GetCrystal().CopyNothing, WaterDatas?.GetCrystal()));
-                ret.Add((WNAM, null));
-                ret.Add((YNAM, null));
-                ret.Add((UNAM, null));
-                ret.Add((AmbientSet, null));
-                ret.Add((Music, null));
-                ret.Add((NAM0, null));
+                ret.Add((Water != null ? Water.OnOverall : DefaultOn, Water?.GetCrystal()));
+                ret.Add((BlockDensityMult, null));
+                ret.Add((CellDensityMult, null));
+                ret.Add((ScanWorldspaceMult, null));
+                ret.Add((Child, null));
+                ret.Add((AmbienceSet, null));
+                ret.Add((MusicType, null));
+                ret.Add((TimeOfDay, null));
                 ret.Add((PatternStyle, null));
-                ret.Add((CNAM, null));
-                ret.Add((BiomeColor1, null));
-                ret.Add((BiomeColor2, null));
-                ret.Add((BiomeColor3, null));
-                ret.Add((TNAM, null));
-                ret.Add((MarkerTypes == null ? DefaultOn : !MarkerTypes.GetCrystal().CopyNothing, MarkerTypes?.GetCrystal()));
-                ret.Add((LNAMs == null ? DefaultOn : !LNAMs.GetCrystal().CopyNothing, LNAMs?.GetCrystal()));
+                ret.Add((Color, null));
+                ret.Add((SurfaceColor1, null));
+                ret.Add((SurfaceColor2, null));
+                ret.Add((RockTint, null));
+                ret.Add((Type, null));
+                ret.Add((MarkerObjectKeywords == null ? DefaultOn : !MarkerObjectKeywords.GetCrystal().CopyNothing, MarkerObjectKeywords?.GetCrystal()));
+                ret.Add((Terrain == null ? DefaultOn : !Terrain.GetCrystal().CopyNothing, Terrain?.GetCrystal()));
                 ret.Add((GroundLayerNormal, null));
                 ret.Add((BTPS, null));
-                ret.Add((BDFS, null));
-                ret.Add((GroundLayerMaterial, null));
-                ret.Add((NAM2, null));
-                ret.Add((NAM3, null));
-                ret.Add((NAM4, null));
+                ret.Add((DistantView, null));
+                ret.Add((GlobalLayerMaterial, null));
+                ret.Add((BlockDensityMultGlobal, null));
+                ret.Add((CellDensityMultGlobal, null));
+                ret.Add((ScanWorldspaceMultGlobal, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2170,35 +2273,36 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
-        new String? BiomeType { get; set; }
-        new ExtendedList<IFormLinkGetter<IFloraGetter>>? Plants { get; set; }
-        new IFormLinkNullable<IResourceGenerationDataGetter> ResourceGenerationData { get; set; }
-        new ExtendedList<BiomeFNAMItem> FNAMs { get; }
-        new IFormLinkNullable<IBiomeSwapGetter> BiomeSwap { get; set; }
+        new String? FilterString { get; set; }
+        new ExtendedList<IFormLinkGetter<IFloraGetter>>? Flora { get; set; }
+        new ExtendedList<IFormLinkGetter<IResourceGenerationDataGetter>> ResourceGeneration { get; }
+        new ExtendedList<BiomeProceduralObjectGeneration> ProceduralObjectGeneration { get; }
+        new ExtendedList<IFormLinkGetter<IObjectSwapGetter>> ObjectSwaps { get; }
         new ExtendedList<IFormLinkGetter<ILayeredMaterialSwapGetter>> MaterialSwaps { get; }
         new IFormLinkNullable<IClimateGetter> Climate { get; set; }
-        new ExtendedList<BiomeWaterData> WaterDatas { get; }
-        new Single? WNAM { get; set; }
-        new Single? YNAM { get; set; }
-        new Single? UNAM { get; set; }
-        new IFormLinkNullable<IAmbienceSetGetter> AmbientSet { get; set; }
-        new IFormLinkNullable<IMusicTypeGetter> Music { get; set; }
-        new IFormLinkNullable<ITimeOfDayRecordGetter> NAM0 { get; set; }
+        new BiomeWaterData Water { get; set; }
+        new Single? BlockDensityMult { get; set; }
+        new Single? CellDensityMult { get; set; }
+        new Single? ScanWorldspaceMult { get; set; }
+        new IFormLinkNullable<IBiomeGetter> Child { get; set; }
+        new IFormLinkNullable<IAmbienceSetGetter> AmbienceSet { get; set; }
+        new IFormLinkNullable<IMusicTypeGetter> MusicType { get; set; }
+        new IFormLinkNullable<ITimeOfDayRecordGetter> TimeOfDay { get; set; }
         new IFormLinkNullable<ISurfacePatternStyleGetter> PatternStyle { get; set; }
-        new Color? CNAM { get; set; }
-        new Color? BiomeColor1 { get; set; }
-        new Color? BiomeColor2 { get; set; }
-        new Color? BiomeColor3 { get; set; }
-        new UInt32? TNAM { get; set; }
-        new ExtendedList<BiomeMarkerType> MarkerTypes { get; }
-        new ExtendedList<BiomeLNAMItem> LNAMs { get; }
+        new Color Color { get; set; }
+        new Color SurfaceColor1 { get; set; }
+        new Color SurfaceColor2 { get; set; }
+        new Color RockTint { get; set; }
+        new Biome.TypeEnum Type { get; set; }
+        new ExtendedList<BiomeMarkerType> MarkerObjectKeywords { get; }
+        new ExtendedList<BiomeTerrain> Terrain { get; }
         new String? GroundLayerNormal { get; set; }
         new MemorySlice<Byte>? BTPS { get; set; }
-        new MemorySlice<Byte>? BDFS { get; set; }
-        new String? GroundLayerMaterial { get; set; }
-        new IFormLinkNullable<IGlobalGetter> NAM2 { get; set; }
-        new IFormLinkNullable<IGlobalGetter> NAM3 { get; set; }
-        new IFormLinkNullable<IGlobalGetter> NAM4 { get; set; }
+        new MemorySlice<Byte> DistantView { get; set; }
+        new String? GlobalLayerMaterial { get; set; }
+        new IFormLinkNullable<IGlobalGetter> BlockDensityMultGlobal { get; set; }
+        new IFormLinkNullable<IGlobalGetter> CellDensityMultGlobal { get; set; }
+        new IFormLinkNullable<IGlobalGetter> ScanWorldspaceMultGlobal { get; set; }
     }
 
     public partial interface IBiomeInternal :
@@ -2234,35 +2338,36 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         #endregion
-        String? BiomeType { get; }
-        IReadOnlyList<IFormLinkGetter<IFloraGetter>>? Plants { get; }
-        IFormLinkNullableGetter<IResourceGenerationDataGetter> ResourceGenerationData { get; }
-        IReadOnlyList<IBiomeFNAMItemGetter> FNAMs { get; }
-        IFormLinkNullableGetter<IBiomeSwapGetter> BiomeSwap { get; }
+        String? FilterString { get; }
+        IReadOnlyList<IFormLinkGetter<IFloraGetter>>? Flora { get; }
+        IReadOnlyList<IFormLinkGetter<IResourceGenerationDataGetter>> ResourceGeneration { get; }
+        IReadOnlyList<IBiomeProceduralObjectGenerationGetter> ProceduralObjectGeneration { get; }
+        IReadOnlyList<IFormLinkGetter<IObjectSwapGetter>> ObjectSwaps { get; }
         IReadOnlyList<IFormLinkGetter<ILayeredMaterialSwapGetter>> MaterialSwaps { get; }
         IFormLinkNullableGetter<IClimateGetter> Climate { get; }
-        IReadOnlyList<IBiomeWaterDataGetter> WaterDatas { get; }
-        Single? WNAM { get; }
-        Single? YNAM { get; }
-        Single? UNAM { get; }
-        IFormLinkNullableGetter<IAmbienceSetGetter> AmbientSet { get; }
-        IFormLinkNullableGetter<IMusicTypeGetter> Music { get; }
-        IFormLinkNullableGetter<ITimeOfDayRecordGetter> NAM0 { get; }
+        IBiomeWaterDataGetter Water { get; }
+        Single? BlockDensityMult { get; }
+        Single? CellDensityMult { get; }
+        Single? ScanWorldspaceMult { get; }
+        IFormLinkNullableGetter<IBiomeGetter> Child { get; }
+        IFormLinkNullableGetter<IAmbienceSetGetter> AmbienceSet { get; }
+        IFormLinkNullableGetter<IMusicTypeGetter> MusicType { get; }
+        IFormLinkNullableGetter<ITimeOfDayRecordGetter> TimeOfDay { get; }
         IFormLinkNullableGetter<ISurfacePatternStyleGetter> PatternStyle { get; }
-        Color? CNAM { get; }
-        Color? BiomeColor1 { get; }
-        Color? BiomeColor2 { get; }
-        Color? BiomeColor3 { get; }
-        UInt32? TNAM { get; }
-        IReadOnlyList<IBiomeMarkerTypeGetter> MarkerTypes { get; }
-        IReadOnlyList<IBiomeLNAMItemGetter> LNAMs { get; }
+        Color Color { get; }
+        Color SurfaceColor1 { get; }
+        Color SurfaceColor2 { get; }
+        Color RockTint { get; }
+        Biome.TypeEnum Type { get; }
+        IReadOnlyList<IBiomeMarkerTypeGetter> MarkerObjectKeywords { get; }
+        IReadOnlyList<IBiomeTerrainGetter> Terrain { get; }
         String? GroundLayerNormal { get; }
         ReadOnlyMemorySlice<Byte>? BTPS { get; }
-        ReadOnlyMemorySlice<Byte>? BDFS { get; }
-        String? GroundLayerMaterial { get; }
-        IFormLinkNullableGetter<IGlobalGetter> NAM2 { get; }
-        IFormLinkNullableGetter<IGlobalGetter> NAM3 { get; }
-        IFormLinkNullableGetter<IGlobalGetter> NAM4 { get; }
+        ReadOnlyMemorySlice<Byte> DistantView { get; }
+        String? GlobalLayerMaterial { get; }
+        IFormLinkNullableGetter<IGlobalGetter> BlockDensityMultGlobal { get; }
+        IFormLinkNullableGetter<IGlobalGetter> CellDensityMultGlobal { get; }
+        IFormLinkNullableGetter<IGlobalGetter> ScanWorldspaceMultGlobal { get; }
 
     }
 
@@ -2441,35 +2546,36 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         Name = 7,
         Keywords = 8,
-        BiomeType = 9,
-        Plants = 10,
-        ResourceGenerationData = 11,
-        FNAMs = 12,
-        BiomeSwap = 13,
+        FilterString = 9,
+        Flora = 10,
+        ResourceGeneration = 11,
+        ProceduralObjectGeneration = 12,
+        ObjectSwaps = 13,
         MaterialSwaps = 14,
         Climate = 15,
-        WaterDatas = 16,
-        WNAM = 17,
-        YNAM = 18,
-        UNAM = 19,
-        AmbientSet = 20,
-        Music = 21,
-        NAM0 = 22,
-        PatternStyle = 23,
-        CNAM = 24,
-        BiomeColor1 = 25,
-        BiomeColor2 = 26,
-        BiomeColor3 = 27,
-        TNAM = 28,
-        MarkerTypes = 29,
-        LNAMs = 30,
-        GroundLayerNormal = 31,
-        BTPS = 32,
-        BDFS = 33,
-        GroundLayerMaterial = 34,
-        NAM2 = 35,
-        NAM3 = 36,
-        NAM4 = 37,
+        Water = 16,
+        BlockDensityMult = 17,
+        CellDensityMult = 18,
+        ScanWorldspaceMult = 19,
+        Child = 20,
+        AmbienceSet = 21,
+        MusicType = 22,
+        TimeOfDay = 23,
+        PatternStyle = 24,
+        Color = 25,
+        SurfaceColor1 = 26,
+        SurfaceColor2 = 27,
+        RockTint = 28,
+        Type = 29,
+        MarkerObjectKeywords = 30,
+        Terrain = 31,
+        GroundLayerNormal = 32,
+        BTPS = 33,
+        DistantView = 34,
+        GlobalLayerMaterial = 35,
+        BlockDensityMultGlobal = 36,
+        CellDensityMultGlobal = 37,
+        ScanWorldspaceMultGlobal = 38,
     }
     #endregion
 
@@ -2480,9 +2586,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 31;
+        public const ushort AdditionalFieldCount = 32;
 
-        public const ushort FieldCount = 38;
+        public const ushort FieldCount = 39;
 
         public static readonly Type MaskType = typeof(Biome.Mask<>);
 
@@ -2534,6 +2640,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.WNAM,
                 RecordTypes.YNAM,
                 RecordTypes.UNAM,
+                RecordTypes.ZNAM,
                 RecordTypes.BIAS,
                 RecordTypes.BIMT,
                 RecordTypes.NAM0,
@@ -2605,35 +2712,36 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.Name = default;
             item.Keywords = null;
-            item.BiomeType = default;
-            item.Plants = null;
-            item.ResourceGenerationData.Clear();
-            item.FNAMs.Clear();
-            item.BiomeSwap.Clear();
+            item.FilterString = default;
+            item.Flora = null;
+            item.ResourceGeneration.Clear();
+            item.ProceduralObjectGeneration.Clear();
+            item.ObjectSwaps.Clear();
             item.MaterialSwaps.Clear();
             item.Climate.Clear();
-            item.WaterDatas.Clear();
-            item.WNAM = default;
-            item.YNAM = default;
-            item.UNAM = default;
-            item.AmbientSet.Clear();
-            item.Music.Clear();
-            item.NAM0.Clear();
+            item.Water.Clear();
+            item.BlockDensityMult = default;
+            item.CellDensityMult = default;
+            item.ScanWorldspaceMult = default;
+            item.Child.Clear();
+            item.AmbienceSet.Clear();
+            item.MusicType.Clear();
+            item.TimeOfDay.Clear();
             item.PatternStyle.Clear();
-            item.CNAM = default;
-            item.BiomeColor1 = default;
-            item.BiomeColor2 = default;
-            item.BiomeColor3 = default;
-            item.TNAM = default;
-            item.MarkerTypes.Clear();
-            item.LNAMs.Clear();
+            item.Color = default(Color);
+            item.SurfaceColor1 = default(Color);
+            item.SurfaceColor2 = default(Color);
+            item.RockTint = default(Color);
+            item.Type = default(Biome.TypeEnum);
+            item.MarkerObjectKeywords.Clear();
+            item.Terrain.Clear();
             item.GroundLayerNormal = default;
             item.BTPS = default;
-            item.BDFS = default;
-            item.GroundLayerMaterial = default;
-            item.NAM2.Clear();
-            item.NAM3.Clear();
-            item.NAM4.Clear();
+            item.DistantView = Array.Empty<byte>();
+            item.GlobalLayerMaterial = default;
+            item.BlockDensityMultGlobal.Clear();
+            item.CellDensityMultGlobal.Clear();
+            item.ScanWorldspaceMultGlobal.Clear();
             base.Clear(item);
         }
         
@@ -2652,22 +2760,23 @@ namespace Mutagen.Bethesda.Starfield
         {
             base.RemapLinks(obj, mapping);
             obj.Keywords?.RemapLinks(mapping);
-            obj.Plants?.RemapLinks(mapping);
-            obj.ResourceGenerationData.Relink(mapping);
-            obj.FNAMs.RemapLinks(mapping);
-            obj.BiomeSwap.Relink(mapping);
+            obj.Flora?.RemapLinks(mapping);
+            obj.ResourceGeneration.RemapLinks(mapping);
+            obj.ProceduralObjectGeneration.RemapLinks(mapping);
+            obj.ObjectSwaps.RemapLinks(mapping);
             obj.MaterialSwaps.RemapLinks(mapping);
             obj.Climate.Relink(mapping);
-            obj.WaterDatas.RemapLinks(mapping);
-            obj.AmbientSet.Relink(mapping);
-            obj.Music.Relink(mapping);
-            obj.NAM0.Relink(mapping);
+            obj.Water.RemapLinks(mapping);
+            obj.Child.Relink(mapping);
+            obj.AmbienceSet.Relink(mapping);
+            obj.MusicType.Relink(mapping);
+            obj.TimeOfDay.Relink(mapping);
             obj.PatternStyle.Relink(mapping);
-            obj.MarkerTypes.RemapLinks(mapping);
-            obj.LNAMs.RemapLinks(mapping);
-            obj.NAM2.Relink(mapping);
-            obj.NAM3.Relink(mapping);
-            obj.NAM4.Relink(mapping);
+            obj.MarkerObjectKeywords.RemapLinks(mapping);
+            obj.Terrain.RemapLinks(mapping);
+            obj.BlockDensityMultGlobal.Relink(mapping);
+            obj.CellDensityMultGlobal.Relink(mapping);
+            obj.ScanWorldspaceMultGlobal.Relink(mapping);
         }
         
         #endregion
@@ -2740,53 +2849,57 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.BiomeType = string.Equals(item.BiomeType, rhs.BiomeType);
-            ret.Plants = item.Plants.CollectionEqualsHelper(
-                rhs.Plants,
+            ret.FilterString = string.Equals(item.FilterString, rhs.FilterString);
+            ret.Flora = item.Flora.CollectionEqualsHelper(
+                rhs.Flora,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.ResourceGenerationData = item.ResourceGenerationData.Equals(rhs.ResourceGenerationData);
-            ret.FNAMs = item.FNAMs.CollectionEqualsHelper(
-                rhs.FNAMs,
+            ret.ResourceGeneration = item.ResourceGeneration.CollectionEqualsHelper(
+                rhs.ResourceGeneration,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.ProceduralObjectGeneration = item.ProceduralObjectGeneration.CollectionEqualsHelper(
+                rhs.ProceduralObjectGeneration,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.BiomeSwap = item.BiomeSwap.Equals(rhs.BiomeSwap);
+            ret.ObjectSwaps = item.ObjectSwaps.CollectionEqualsHelper(
+                rhs.ObjectSwaps,
+                (l, r) => object.Equals(l, r),
+                include);
             ret.MaterialSwaps = item.MaterialSwaps.CollectionEqualsHelper(
                 rhs.MaterialSwaps,
                 (l, r) => object.Equals(l, r),
                 include);
             ret.Climate = item.Climate.Equals(rhs.Climate);
-            ret.WaterDatas = item.WaterDatas.CollectionEqualsHelper(
-                rhs.WaterDatas,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
-            ret.WNAM = item.WNAM.EqualsWithin(rhs.WNAM);
-            ret.YNAM = item.YNAM.EqualsWithin(rhs.YNAM);
-            ret.UNAM = item.UNAM.EqualsWithin(rhs.UNAM);
-            ret.AmbientSet = item.AmbientSet.Equals(rhs.AmbientSet);
-            ret.Music = item.Music.Equals(rhs.Music);
-            ret.NAM0 = item.NAM0.Equals(rhs.NAM0);
+            ret.Water = MaskItemExt.Factory(item.Water.GetEqualsMask(rhs.Water, include), include);
+            ret.BlockDensityMult = item.BlockDensityMult.EqualsWithin(rhs.BlockDensityMult);
+            ret.CellDensityMult = item.CellDensityMult.EqualsWithin(rhs.CellDensityMult);
+            ret.ScanWorldspaceMult = item.ScanWorldspaceMult.EqualsWithin(rhs.ScanWorldspaceMult);
+            ret.Child = item.Child.Equals(rhs.Child);
+            ret.AmbienceSet = item.AmbienceSet.Equals(rhs.AmbienceSet);
+            ret.MusicType = item.MusicType.Equals(rhs.MusicType);
+            ret.TimeOfDay = item.TimeOfDay.Equals(rhs.TimeOfDay);
             ret.PatternStyle = item.PatternStyle.Equals(rhs.PatternStyle);
-            ret.CNAM = item.CNAM.ColorOnlyEquals(rhs.CNAM);
-            ret.BiomeColor1 = item.BiomeColor1.ColorOnlyEquals(rhs.BiomeColor1);
-            ret.BiomeColor2 = item.BiomeColor2.ColorOnlyEquals(rhs.BiomeColor2);
-            ret.BiomeColor3 = item.BiomeColor3.ColorOnlyEquals(rhs.BiomeColor3);
-            ret.TNAM = item.TNAM == rhs.TNAM;
-            ret.MarkerTypes = item.MarkerTypes.CollectionEqualsHelper(
-                rhs.MarkerTypes,
+            ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
+            ret.SurfaceColor1 = item.SurfaceColor1.ColorOnlyEquals(rhs.SurfaceColor1);
+            ret.SurfaceColor2 = item.SurfaceColor2.ColorOnlyEquals(rhs.SurfaceColor2);
+            ret.RockTint = item.RockTint.ColorOnlyEquals(rhs.RockTint);
+            ret.Type = item.Type == rhs.Type;
+            ret.MarkerObjectKeywords = item.MarkerObjectKeywords.CollectionEqualsHelper(
+                rhs.MarkerObjectKeywords,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.LNAMs = item.LNAMs.CollectionEqualsHelper(
-                rhs.LNAMs,
+            ret.Terrain = item.Terrain.CollectionEqualsHelper(
+                rhs.Terrain,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.GroundLayerNormal = string.Equals(item.GroundLayerNormal, rhs.GroundLayerNormal);
             ret.BTPS = MemorySliceExt.SequenceEqual(item.BTPS, rhs.BTPS);
-            ret.BDFS = MemorySliceExt.SequenceEqual(item.BDFS, rhs.BDFS);
-            ret.GroundLayerMaterial = string.Equals(item.GroundLayerMaterial, rhs.GroundLayerMaterial);
-            ret.NAM2 = item.NAM2.Equals(rhs.NAM2);
-            ret.NAM3 = item.NAM3.Equals(rhs.NAM3);
-            ret.NAM4 = item.NAM4.Equals(rhs.NAM4);
+            ret.DistantView = MemoryExtensions.SequenceEqual(item.DistantView.Span, rhs.DistantView.Span);
+            ret.GlobalLayerMaterial = string.Equals(item.GlobalLayerMaterial, rhs.GlobalLayerMaterial);
+            ret.BlockDensityMultGlobal = item.BlockDensityMultGlobal.Equals(rhs.BlockDensityMultGlobal);
+            ret.CellDensityMultGlobal = item.CellDensityMultGlobal.Equals(rhs.CellDensityMultGlobal);
+            ret.ScanWorldspaceMultGlobal = item.ScanWorldspaceMultGlobal.Equals(rhs.ScanWorldspaceMultGlobal);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2856,18 +2969,18 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.BiomeType ?? true)
-                && item.BiomeType is {} BiomeTypeItem)
+            if ((printMask?.FilterString ?? true)
+                && item.FilterString is {} FilterStringItem)
             {
-                sb.AppendItem(BiomeTypeItem, "BiomeType");
+                sb.AppendItem(FilterStringItem, "FilterString");
             }
-            if ((printMask?.Plants?.Overall ?? true)
-                && item.Plants is {} PlantsItem)
+            if ((printMask?.Flora?.Overall ?? true)
+                && item.Flora is {} FloraItem)
             {
-                sb.AppendLine("Plants =>");
+                sb.AppendLine("Flora =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in PlantsItem)
+                    foreach (var subItem in FloraItem)
                     {
                         using (sb.Brace())
                         {
@@ -2876,16 +2989,26 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if (printMask?.ResourceGenerationData ?? true)
+            if (printMask?.ResourceGeneration?.Overall ?? true)
             {
-                sb.AppendItem(item.ResourceGenerationData.FormKeyNullable, "ResourceGenerationData");
-            }
-            if (printMask?.FNAMs?.Overall ?? true)
-            {
-                sb.AppendLine("FNAMs =>");
+                sb.AppendLine("ResourceGeneration =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.FNAMs)
+                    foreach (var subItem in item.ResourceGeneration)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if (printMask?.ProceduralObjectGeneration?.Overall ?? true)
+            {
+                sb.AppendLine("ProceduralObjectGeneration =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.ProceduralObjectGeneration)
                     {
                         using (sb.Brace())
                         {
@@ -2894,9 +3017,19 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if (printMask?.BiomeSwap ?? true)
+            if (printMask?.ObjectSwaps?.Overall ?? true)
             {
-                sb.AppendItem(item.BiomeSwap.FormKeyNullable, "BiomeSwap");
+                sb.AppendLine("ObjectSwaps =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.ObjectSwaps)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
             }
             if (printMask?.MaterialSwaps?.Overall ?? true)
             {
@@ -2916,82 +3049,71 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Climate.FormKeyNullable, "Climate");
             }
-            if (printMask?.WaterDatas?.Overall ?? true)
+            if (printMask?.Water?.Overall ?? true)
             {
-                sb.AppendLine("WaterDatas =>");
-                using (sb.Brace())
-                {
-                    foreach (var subItem in item.WaterDatas)
-                    {
-                        using (sb.Brace())
-                        {
-                            subItem?.Print(sb, "Item");
-                        }
-                    }
-                }
+                item.Water?.Print(sb, "Water");
             }
-            if ((printMask?.WNAM ?? true)
-                && item.WNAM is {} WNAMItem)
+            if ((printMask?.BlockDensityMult ?? true)
+                && item.BlockDensityMult is {} BlockDensityMultItem)
             {
-                sb.AppendItem(WNAMItem, "WNAM");
+                sb.AppendItem(BlockDensityMultItem, "BlockDensityMult");
             }
-            if ((printMask?.YNAM ?? true)
-                && item.YNAM is {} YNAMItem)
+            if ((printMask?.CellDensityMult ?? true)
+                && item.CellDensityMult is {} CellDensityMultItem)
             {
-                sb.AppendItem(YNAMItem, "YNAM");
+                sb.AppendItem(CellDensityMultItem, "CellDensityMult");
             }
-            if ((printMask?.UNAM ?? true)
-                && item.UNAM is {} UNAMItem)
+            if ((printMask?.ScanWorldspaceMult ?? true)
+                && item.ScanWorldspaceMult is {} ScanWorldspaceMultItem)
             {
-                sb.AppendItem(UNAMItem, "UNAM");
+                sb.AppendItem(ScanWorldspaceMultItem, "ScanWorldspaceMult");
             }
-            if (printMask?.AmbientSet ?? true)
+            if (printMask?.Child ?? true)
             {
-                sb.AppendItem(item.AmbientSet.FormKeyNullable, "AmbientSet");
+                sb.AppendItem(item.Child.FormKeyNullable, "Child");
             }
-            if (printMask?.Music ?? true)
+            if (printMask?.AmbienceSet ?? true)
             {
-                sb.AppendItem(item.Music.FormKeyNullable, "Music");
+                sb.AppendItem(item.AmbienceSet.FormKeyNullable, "AmbienceSet");
             }
-            if (printMask?.NAM0 ?? true)
+            if (printMask?.MusicType ?? true)
             {
-                sb.AppendItem(item.NAM0.FormKeyNullable, "NAM0");
+                sb.AppendItem(item.MusicType.FormKeyNullable, "MusicType");
+            }
+            if (printMask?.TimeOfDay ?? true)
+            {
+                sb.AppendItem(item.TimeOfDay.FormKeyNullable, "TimeOfDay");
             }
             if (printMask?.PatternStyle ?? true)
             {
                 sb.AppendItem(item.PatternStyle.FormKeyNullable, "PatternStyle");
             }
-            if ((printMask?.CNAM ?? true)
-                && item.CNAM is {} CNAMItem)
+            if (printMask?.Color ?? true)
             {
-                sb.AppendItem(CNAMItem, "CNAM");
+                sb.AppendItem(item.Color, "Color");
             }
-            if ((printMask?.BiomeColor1 ?? true)
-                && item.BiomeColor1 is {} BiomeColor1Item)
+            if (printMask?.SurfaceColor1 ?? true)
             {
-                sb.AppendItem(BiomeColor1Item, "BiomeColor1");
+                sb.AppendItem(item.SurfaceColor1, "SurfaceColor1");
             }
-            if ((printMask?.BiomeColor2 ?? true)
-                && item.BiomeColor2 is {} BiomeColor2Item)
+            if (printMask?.SurfaceColor2 ?? true)
             {
-                sb.AppendItem(BiomeColor2Item, "BiomeColor2");
+                sb.AppendItem(item.SurfaceColor2, "SurfaceColor2");
             }
-            if ((printMask?.BiomeColor3 ?? true)
-                && item.BiomeColor3 is {} BiomeColor3Item)
+            if (printMask?.RockTint ?? true)
             {
-                sb.AppendItem(BiomeColor3Item, "BiomeColor3");
+                sb.AppendItem(item.RockTint, "RockTint");
             }
-            if ((printMask?.TNAM ?? true)
-                && item.TNAM is {} TNAMItem)
+            if (printMask?.Type ?? true)
             {
-                sb.AppendItem(TNAMItem, "TNAM");
+                sb.AppendItem(item.Type, "Type");
             }
-            if (printMask?.MarkerTypes?.Overall ?? true)
+            if (printMask?.MarkerObjectKeywords?.Overall ?? true)
             {
-                sb.AppendLine("MarkerTypes =>");
+                sb.AppendLine("MarkerObjectKeywords =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.MarkerTypes)
+                    foreach (var subItem in item.MarkerObjectKeywords)
                     {
                         using (sb.Brace())
                         {
@@ -3000,12 +3122,12 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if (printMask?.LNAMs?.Overall ?? true)
+            if (printMask?.Terrain?.Overall ?? true)
             {
-                sb.AppendLine("LNAMs =>");
+                sb.AppendLine("Terrain =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.LNAMs)
+                    foreach (var subItem in item.Terrain)
                     {
                         using (sb.Brace())
                         {
@@ -3024,27 +3146,26 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendLine($"BTPS => {SpanExt.ToHexString(BTPSItem)}");
             }
-            if ((printMask?.BDFS ?? true)
-                && item.BDFS is {} BDFSItem)
+            if (printMask?.DistantView ?? true)
             {
-                sb.AppendLine($"BDFS => {SpanExt.ToHexString(BDFSItem)}");
+                sb.AppendLine($"DistantView => {SpanExt.ToHexString(item.DistantView)}");
             }
-            if ((printMask?.GroundLayerMaterial ?? true)
-                && item.GroundLayerMaterial is {} GroundLayerMaterialItem)
+            if ((printMask?.GlobalLayerMaterial ?? true)
+                && item.GlobalLayerMaterial is {} GlobalLayerMaterialItem)
             {
-                sb.AppendItem(GroundLayerMaterialItem, "GroundLayerMaterial");
+                sb.AppendItem(GlobalLayerMaterialItem, "GlobalLayerMaterial");
             }
-            if (printMask?.NAM2 ?? true)
+            if (printMask?.BlockDensityMultGlobal ?? true)
             {
-                sb.AppendItem(item.NAM2.FormKeyNullable, "NAM2");
+                sb.AppendItem(item.BlockDensityMultGlobal.FormKeyNullable, "BlockDensityMultGlobal");
             }
-            if (printMask?.NAM3 ?? true)
+            if (printMask?.CellDensityMultGlobal ?? true)
             {
-                sb.AppendItem(item.NAM3.FormKeyNullable, "NAM3");
+                sb.AppendItem(item.CellDensityMultGlobal.FormKeyNullable, "CellDensityMultGlobal");
             }
-            if (printMask?.NAM4 ?? true)
+            if (printMask?.ScanWorldspaceMultGlobal ?? true)
             {
-                sb.AppendItem(item.NAM4.FormKeyNullable, "NAM4");
+                sb.AppendItem(item.ScanWorldspaceMultGlobal.FormKeyNullable, "ScanWorldspaceMultGlobal");
             }
         }
         
@@ -3104,25 +3225,25 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.BiomeType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.FilterString) ?? true))
             {
-                if (!string.Equals(lhs.BiomeType, rhs.BiomeType)) return false;
+                if (!string.Equals(lhs.FilterString, rhs.FilterString)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.Plants) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.Flora) ?? true))
             {
-                if (!lhs.Plants.SequenceEqualNullable(rhs.Plants)) return false;
+                if (!lhs.Flora.SequenceEqualNullable(rhs.Flora)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.ResourceGenerationData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.ResourceGeneration) ?? true))
             {
-                if (!lhs.ResourceGenerationData.Equals(rhs.ResourceGenerationData)) return false;
+                if (!lhs.ResourceGeneration.SequenceEqualNullable(rhs.ResourceGeneration)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.FNAMs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.ProceduralObjectGeneration) ?? true))
             {
-                if (!lhs.FNAMs.SequenceEqual(rhs.FNAMs, (l, r) => ((BiomeFNAMItemCommon)((IBiomeFNAMItemGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Biome_FieldIndex.FNAMs)))) return false;
+                if (!lhs.ProceduralObjectGeneration.SequenceEqual(rhs.ProceduralObjectGeneration, (l, r) => ((BiomeProceduralObjectGenerationCommon)((IBiomeProceduralObjectGenerationGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Biome_FieldIndex.ProceduralObjectGeneration)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.BiomeSwap) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.ObjectSwaps) ?? true))
             {
-                if (!lhs.BiomeSwap.Equals(rhs.BiomeSwap)) return false;
+                if (!lhs.ObjectSwaps.SequenceEqualNullable(rhs.ObjectSwaps)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.MaterialSwaps) ?? true))
             {
@@ -3132,65 +3253,73 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Climate.Equals(rhs.Climate)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.WaterDatas) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.Water) ?? true))
             {
-                if (!lhs.WaterDatas.SequenceEqual(rhs.WaterDatas, (l, r) => ((BiomeWaterDataCommon)((IBiomeWaterDataGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Biome_FieldIndex.WaterDatas)))) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Water, rhs.Water, out var lhsWater, out var rhsWater, out var isWaterEqual))
+                {
+                    if (!((BiomeWaterDataCommon)((IBiomeWaterDataGetter)lhsWater).CommonInstance()!).Equals(lhsWater, rhsWater, equalsMask?.GetSubCrystal((int)Biome_FieldIndex.Water))) return false;
+                }
+                else if (!isWaterEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.WNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.BlockDensityMult) ?? true))
             {
-                if (!lhs.WNAM.EqualsWithin(rhs.WNAM)) return false;
+                if (!lhs.BlockDensityMult.EqualsWithin(rhs.BlockDensityMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.YNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.CellDensityMult) ?? true))
             {
-                if (!lhs.YNAM.EqualsWithin(rhs.YNAM)) return false;
+                if (!lhs.CellDensityMult.EqualsWithin(rhs.CellDensityMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.UNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.ScanWorldspaceMult) ?? true))
             {
-                if (!lhs.UNAM.EqualsWithin(rhs.UNAM)) return false;
+                if (!lhs.ScanWorldspaceMult.EqualsWithin(rhs.ScanWorldspaceMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.AmbientSet) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.Child) ?? true))
             {
-                if (!lhs.AmbientSet.Equals(rhs.AmbientSet)) return false;
+                if (!lhs.Child.Equals(rhs.Child)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.Music) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.AmbienceSet) ?? true))
             {
-                if (!lhs.Music.Equals(rhs.Music)) return false;
+                if (!lhs.AmbienceSet.Equals(rhs.AmbienceSet)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.NAM0) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.MusicType) ?? true))
             {
-                if (!lhs.NAM0.Equals(rhs.NAM0)) return false;
+                if (!lhs.MusicType.Equals(rhs.MusicType)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.TimeOfDay) ?? true))
+            {
+                if (!lhs.TimeOfDay.Equals(rhs.TimeOfDay)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.PatternStyle) ?? true))
             {
                 if (!lhs.PatternStyle.Equals(rhs.PatternStyle)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.CNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.Color) ?? true))
             {
-                if (!lhs.CNAM.ColorOnlyEquals(rhs.CNAM)) return false;
+                if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.BiomeColor1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.SurfaceColor1) ?? true))
             {
-                if (!lhs.BiomeColor1.ColorOnlyEquals(rhs.BiomeColor1)) return false;
+                if (!lhs.SurfaceColor1.ColorOnlyEquals(rhs.SurfaceColor1)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.BiomeColor2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.SurfaceColor2) ?? true))
             {
-                if (!lhs.BiomeColor2.ColorOnlyEquals(rhs.BiomeColor2)) return false;
+                if (!lhs.SurfaceColor2.ColorOnlyEquals(rhs.SurfaceColor2)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.BiomeColor3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.RockTint) ?? true))
             {
-                if (!lhs.BiomeColor3.ColorOnlyEquals(rhs.BiomeColor3)) return false;
+                if (!lhs.RockTint.ColorOnlyEquals(rhs.RockTint)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.TNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.Type) ?? true))
             {
-                if (lhs.TNAM != rhs.TNAM) return false;
+                if (lhs.Type != rhs.Type) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.MarkerTypes) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.MarkerObjectKeywords) ?? true))
             {
-                if (!lhs.MarkerTypes.SequenceEqual(rhs.MarkerTypes, (l, r) => ((BiomeMarkerTypeCommon)((IBiomeMarkerTypeGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Biome_FieldIndex.MarkerTypes)))) return false;
+                if (!lhs.MarkerObjectKeywords.SequenceEqual(rhs.MarkerObjectKeywords, (l, r) => ((BiomeMarkerTypeCommon)((IBiomeMarkerTypeGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Biome_FieldIndex.MarkerObjectKeywords)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.LNAMs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.Terrain) ?? true))
             {
-                if (!lhs.LNAMs.SequenceEqual(rhs.LNAMs, (l, r) => ((BiomeLNAMItemCommon)((IBiomeLNAMItemGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Biome_FieldIndex.LNAMs)))) return false;
+                if (!lhs.Terrain.SequenceEqual(rhs.Terrain, (l, r) => ((BiomeTerrainCommon)((IBiomeTerrainGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Biome_FieldIndex.Terrain)))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.GroundLayerNormal) ?? true))
             {
@@ -3200,25 +3329,25 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.BTPS, rhs.BTPS)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.BDFS) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.DistantView) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.BDFS, rhs.BDFS)) return false;
+                if (!MemoryExtensions.SequenceEqual(lhs.DistantView.Span, rhs.DistantView.Span)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.GroundLayerMaterial) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.GlobalLayerMaterial) ?? true))
             {
-                if (!string.Equals(lhs.GroundLayerMaterial, rhs.GroundLayerMaterial)) return false;
+                if (!string.Equals(lhs.GlobalLayerMaterial, rhs.GlobalLayerMaterial)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.NAM2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.BlockDensityMultGlobal) ?? true))
             {
-                if (!lhs.NAM2.Equals(rhs.NAM2)) return false;
+                if (!lhs.BlockDensityMultGlobal.Equals(rhs.BlockDensityMultGlobal)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.NAM3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.CellDensityMultGlobal) ?? true))
             {
-                if (!lhs.NAM3.Equals(rhs.NAM3)) return false;
+                if (!lhs.CellDensityMultGlobal.Equals(rhs.CellDensityMultGlobal)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.NAM4) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Biome_FieldIndex.ScanWorldspaceMultGlobal) ?? true))
             {
-                if (!lhs.NAM4.Equals(rhs.NAM4)) return false;
+                if (!lhs.ScanWorldspaceMultGlobal.Equals(rhs.ScanWorldspaceMultGlobal)) return false;
             }
             return true;
         }
@@ -3253,55 +3382,41 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(Nameitem);
             }
             hash.Add(item.Keywords);
-            if (item.BiomeType is {} BiomeTypeitem)
+            if (item.FilterString is {} FilterStringitem)
             {
-                hash.Add(BiomeTypeitem);
+                hash.Add(FilterStringitem);
             }
-            hash.Add(item.Plants);
-            hash.Add(item.ResourceGenerationData);
-            hash.Add(item.FNAMs);
-            hash.Add(item.BiomeSwap);
+            hash.Add(item.Flora);
+            hash.Add(item.ResourceGeneration);
+            hash.Add(item.ProceduralObjectGeneration);
+            hash.Add(item.ObjectSwaps);
             hash.Add(item.MaterialSwaps);
             hash.Add(item.Climate);
-            hash.Add(item.WaterDatas);
-            if (item.WNAM is {} WNAMitem)
+            hash.Add(item.Water);
+            if (item.BlockDensityMult is {} BlockDensityMultitem)
             {
-                hash.Add(WNAMitem);
+                hash.Add(BlockDensityMultitem);
             }
-            if (item.YNAM is {} YNAMitem)
+            if (item.CellDensityMult is {} CellDensityMultitem)
             {
-                hash.Add(YNAMitem);
+                hash.Add(CellDensityMultitem);
             }
-            if (item.UNAM is {} UNAMitem)
+            if (item.ScanWorldspaceMult is {} ScanWorldspaceMultitem)
             {
-                hash.Add(UNAMitem);
+                hash.Add(ScanWorldspaceMultitem);
             }
-            hash.Add(item.AmbientSet);
-            hash.Add(item.Music);
-            hash.Add(item.NAM0);
+            hash.Add(item.Child);
+            hash.Add(item.AmbienceSet);
+            hash.Add(item.MusicType);
+            hash.Add(item.TimeOfDay);
             hash.Add(item.PatternStyle);
-            if (item.CNAM is {} CNAMitem)
-            {
-                hash.Add(CNAMitem);
-            }
-            if (item.BiomeColor1 is {} BiomeColor1item)
-            {
-                hash.Add(BiomeColor1item);
-            }
-            if (item.BiomeColor2 is {} BiomeColor2item)
-            {
-                hash.Add(BiomeColor2item);
-            }
-            if (item.BiomeColor3 is {} BiomeColor3item)
-            {
-                hash.Add(BiomeColor3item);
-            }
-            if (item.TNAM is {} TNAMitem)
-            {
-                hash.Add(TNAMitem);
-            }
-            hash.Add(item.MarkerTypes);
-            hash.Add(item.LNAMs);
+            hash.Add(item.Color);
+            hash.Add(item.SurfaceColor1);
+            hash.Add(item.SurfaceColor2);
+            hash.Add(item.RockTint);
+            hash.Add(item.Type);
+            hash.Add(item.MarkerObjectKeywords);
+            hash.Add(item.Terrain);
             if (item.GroundLayerNormal is {} GroundLayerNormalitem)
             {
                 hash.Add(GroundLayerNormalitem);
@@ -3310,17 +3425,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(BTPSItem);
             }
-            if (item.BDFS is {} BDFSItem)
+            hash.Add(item.DistantView);
+            if (item.GlobalLayerMaterial is {} GlobalLayerMaterialitem)
             {
-                hash.Add(BDFSItem);
+                hash.Add(GlobalLayerMaterialitem);
             }
-            if (item.GroundLayerMaterial is {} GroundLayerMaterialitem)
-            {
-                hash.Add(GroundLayerMaterialitem);
-            }
-            hash.Add(item.NAM2);
-            hash.Add(item.NAM3);
-            hash.Add(item.NAM4);
+            hash.Add(item.BlockDensityMultGlobal);
+            hash.Add(item.CellDensityMultGlobal);
+            hash.Add(item.ScanWorldspaceMultGlobal);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -3357,24 +3469,24 @@ namespace Mutagen.Bethesda.Starfield
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Plants is {} PlantsItem)
+            if (obj.Flora is {} FloraItem)
             {
-                foreach (var item in PlantsItem)
+                foreach (var item in FloraItem)
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (FormLinkInformation.TryFactory(obj.ResourceGenerationData, out var ResourceGenerationDataInfo))
-            {
-                yield return ResourceGenerationDataInfo;
-            }
-            foreach (var item in obj.FNAMs.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.ResourceGeneration)
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (FormLinkInformation.TryFactory(obj.BiomeSwap, out var BiomeSwapInfo))
+            foreach (var item in obj.ProceduralObjectGeneration.SelectMany(f => f.EnumerateFormLinks()))
             {
-                yield return BiomeSwapInfo;
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.ObjectSwaps)
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             foreach (var item in obj.MaterialSwaps)
             {
@@ -3384,45 +3496,49 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return ClimateInfo;
             }
-            foreach (var item in obj.WaterDatas.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.Water.EnumerateFormLinks())
             {
-                yield return FormLinkInformation.Factory(item);
+                yield return item;
             }
-            if (FormLinkInformation.TryFactory(obj.AmbientSet, out var AmbientSetInfo))
+            if (FormLinkInformation.TryFactory(obj.Child, out var ChildInfo))
             {
-                yield return AmbientSetInfo;
+                yield return ChildInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.Music, out var MusicInfo))
+            if (FormLinkInformation.TryFactory(obj.AmbienceSet, out var AmbienceSetInfo))
             {
-                yield return MusicInfo;
+                yield return AmbienceSetInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.NAM0, out var NAM0Info))
+            if (FormLinkInformation.TryFactory(obj.MusicType, out var MusicTypeInfo))
             {
-                yield return NAM0Info;
+                yield return MusicTypeInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.TimeOfDay, out var TimeOfDayInfo))
+            {
+                yield return TimeOfDayInfo;
             }
             if (FormLinkInformation.TryFactory(obj.PatternStyle, out var PatternStyleInfo))
             {
                 yield return PatternStyleInfo;
             }
-            foreach (var item in obj.MarkerTypes.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.MarkerObjectKeywords.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.LNAMs.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.Terrain.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (FormLinkInformation.TryFactory(obj.NAM2, out var NAM2Info))
+            if (FormLinkInformation.TryFactory(obj.BlockDensityMultGlobal, out var BlockDensityMultGlobalInfo))
             {
-                yield return NAM2Info;
+                yield return BlockDensityMultGlobalInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.NAM3, out var NAM3Info))
+            if (FormLinkInformation.TryFactory(obj.CellDensityMultGlobal, out var CellDensityMultGlobalInfo))
             {
-                yield return NAM3Info;
+                yield return CellDensityMultGlobalInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.NAM4, out var NAM4Info))
+            if (FormLinkInformation.TryFactory(obj.ScanWorldspaceMultGlobal, out var ScanWorldspaceMultGlobalInfo))
             {
-                yield return NAM4Info;
+                yield return ScanWorldspaceMultGlobalInfo;
             }
             yield break;
         }
@@ -3529,25 +3645,25 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.BiomeType) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.FilterString) ?? true))
             {
-                item.BiomeType = rhs.BiomeType;
+                item.FilterString = rhs.FilterString;
             }
-            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.Plants) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.Flora) ?? true))
             {
-                errorMask?.PushIndex((int)Biome_FieldIndex.Plants);
+                errorMask?.PushIndex((int)Biome_FieldIndex.Flora);
                 try
                 {
-                    if ((rhs.Plants != null))
+                    if ((rhs.Flora != null))
                     {
-                        item.Plants = 
-                            rhs.Plants
+                        item.Flora = 
+                            rhs.Flora
                                 .Select(b => (IFormLinkGetter<IFloraGetter>)new FormLink<IFloraGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IFloraGetter>>();
                     }
                     else
                     {
-                        item.Plants = null;
+                        item.Flora = null;
                     }
                 }
                 catch (Exception ex)
@@ -3560,17 +3676,32 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.ResourceGenerationData) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.ResourceGeneration) ?? true))
             {
-                item.ResourceGenerationData.SetTo(rhs.ResourceGenerationData.FormKeyNullable);
-            }
-            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.FNAMs) ?? true))
-            {
-                errorMask?.PushIndex((int)Biome_FieldIndex.FNAMs);
+                errorMask?.PushIndex((int)Biome_FieldIndex.ResourceGeneration);
                 try
                 {
-                    item.FNAMs.SetTo(
-                        rhs.FNAMs
+                    item.ResourceGeneration.SetTo(
+                        rhs.ResourceGeneration
+                            .Select(b => (IFormLinkGetter<IResourceGenerationDataGetter>)new FormLink<IResourceGenerationDataGetter>(b.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.ProceduralObjectGeneration) ?? true))
+            {
+                errorMask?.PushIndex((int)Biome_FieldIndex.ProceduralObjectGeneration);
+                try
+                {
+                    item.ProceduralObjectGeneration.SetTo(
+                        rhs.ProceduralObjectGeneration
                         .Select(r =>
                         {
                             return r.DeepCopy(
@@ -3588,9 +3719,24 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.BiomeSwap) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.ObjectSwaps) ?? true))
             {
-                item.BiomeSwap.SetTo(rhs.BiomeSwap.FormKeyNullable);
+                errorMask?.PushIndex((int)Biome_FieldIndex.ObjectSwaps);
+                try
+                {
+                    item.ObjectSwaps.SetTo(
+                        rhs.ObjectSwaps
+                            .Select(b => (IFormLinkGetter<IObjectSwapGetter>)new FormLink<IObjectSwapGetter>(b.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.MaterialSwaps) ?? true))
             {
@@ -3615,19 +3761,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Climate.SetTo(rhs.Climate.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.WaterDatas) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.Water) ?? true))
             {
-                errorMask?.PushIndex((int)Biome_FieldIndex.WaterDatas);
+                errorMask?.PushIndex((int)Biome_FieldIndex.Water);
                 try
                 {
-                    item.WaterDatas.SetTo(
-                        rhs.WaterDatas
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
+                    if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.Water) ?? true))
+                    {
+                        item.Water = rhs.Water.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Biome_FieldIndex.Water),
+                            errorMask: errorMask);
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3639,61 +3783,65 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.WNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.BlockDensityMult) ?? true))
             {
-                item.WNAM = rhs.WNAM;
+                item.BlockDensityMult = rhs.BlockDensityMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.YNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.CellDensityMult) ?? true))
             {
-                item.YNAM = rhs.YNAM;
+                item.CellDensityMult = rhs.CellDensityMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.UNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.ScanWorldspaceMult) ?? true))
             {
-                item.UNAM = rhs.UNAM;
+                item.ScanWorldspaceMult = rhs.ScanWorldspaceMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.AmbientSet) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.Child) ?? true))
             {
-                item.AmbientSet.SetTo(rhs.AmbientSet.FormKeyNullable);
+                item.Child.SetTo(rhs.Child.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.Music) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.AmbienceSet) ?? true))
             {
-                item.Music.SetTo(rhs.Music.FormKeyNullable);
+                item.AmbienceSet.SetTo(rhs.AmbienceSet.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.NAM0) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.MusicType) ?? true))
             {
-                item.NAM0.SetTo(rhs.NAM0.FormKeyNullable);
+                item.MusicType.SetTo(rhs.MusicType.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.TimeOfDay) ?? true))
+            {
+                item.TimeOfDay.SetTo(rhs.TimeOfDay.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.PatternStyle) ?? true))
             {
                 item.PatternStyle.SetTo(rhs.PatternStyle.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.CNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.Color) ?? true))
             {
-                item.CNAM = rhs.CNAM;
+                item.Color = rhs.Color;
             }
-            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.BiomeColor1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.SurfaceColor1) ?? true))
             {
-                item.BiomeColor1 = rhs.BiomeColor1;
+                item.SurfaceColor1 = rhs.SurfaceColor1;
             }
-            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.BiomeColor2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.SurfaceColor2) ?? true))
             {
-                item.BiomeColor2 = rhs.BiomeColor2;
+                item.SurfaceColor2 = rhs.SurfaceColor2;
             }
-            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.BiomeColor3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.RockTint) ?? true))
             {
-                item.BiomeColor3 = rhs.BiomeColor3;
+                item.RockTint = rhs.RockTint;
             }
-            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.TNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.Type) ?? true))
             {
-                item.TNAM = rhs.TNAM;
+                item.Type = rhs.Type;
             }
-            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.MarkerTypes) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.MarkerObjectKeywords) ?? true))
             {
-                errorMask?.PushIndex((int)Biome_FieldIndex.MarkerTypes);
+                errorMask?.PushIndex((int)Biome_FieldIndex.MarkerObjectKeywords);
                 try
                 {
-                    item.MarkerTypes.SetTo(
-                        rhs.MarkerTypes
+                    item.MarkerObjectKeywords.SetTo(
+                        rhs.MarkerObjectKeywords
                         .Select(r =>
                         {
                             return r.DeepCopy(
@@ -3711,13 +3859,13 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.LNAMs) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.Terrain) ?? true))
             {
-                errorMask?.PushIndex((int)Biome_FieldIndex.LNAMs);
+                errorMask?.PushIndex((int)Biome_FieldIndex.Terrain);
                 try
                 {
-                    item.LNAMs.SetTo(
-                        rhs.LNAMs
+                    item.Terrain.SetTo(
+                        rhs.Terrain
                         .Select(r =>
                         {
                             return r.DeepCopy(
@@ -3750,32 +3898,25 @@ namespace Mutagen.Bethesda.Starfield
                     item.BTPS = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.BDFS) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.DistantView) ?? true))
             {
-                if(rhs.BDFS is {} BDFSrhs)
-                {
-                    item.BDFS = BDFSrhs.ToArray();
-                }
-                else
-                {
-                    item.BDFS = default;
-                }
+                item.DistantView = rhs.DistantView.ToArray();
             }
-            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.GroundLayerMaterial) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.GlobalLayerMaterial) ?? true))
             {
-                item.GroundLayerMaterial = rhs.GroundLayerMaterial;
+                item.GlobalLayerMaterial = rhs.GlobalLayerMaterial;
             }
-            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.NAM2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.BlockDensityMultGlobal) ?? true))
             {
-                item.NAM2.SetTo(rhs.NAM2.FormKeyNullable);
+                item.BlockDensityMultGlobal.SetTo(rhs.BlockDensityMultGlobal.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.NAM3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.CellDensityMultGlobal) ?? true))
             {
-                item.NAM3.SetTo(rhs.NAM3.FormKeyNullable);
+                item.CellDensityMultGlobal.SetTo(rhs.CellDensityMultGlobal.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.NAM4) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Biome_FieldIndex.ScanWorldspaceMultGlobal) ?? true))
             {
-                item.NAM4.SetTo(rhs.NAM4.FormKeyNullable);
+                item.ScanWorldspaceMultGlobal.SetTo(rhs.ScanWorldspaceMultGlobal.FormKeyNullable);
             }
             DeepCopyInCustom(
                 item: item,
@@ -3966,12 +4107,12 @@ namespace Mutagen.Bethesda.Starfield
                 });
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.BiomeType,
+                item: item.FilterString,
                 header: translationParams.ConvertToCustom(RecordTypes.SNAM),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IFloraGetter>>.Instance.Write(
                 writer: writer,
-                items: item.Plants,
+                items: item.Flora,
                 recordType: translationParams.ConvertToCustom(RecordTypes.PNAM),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IFloraGetter> subItem, TypedWriteParams conv) =>
                 {
@@ -3979,25 +4120,37 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         item: subItem);
                 });
-            FormLinkBinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IResourceGenerationDataGetter>>.Instance.Write(
                 writer: writer,
-                item: item.ResourceGenerationData,
-                header: translationParams.ConvertToCustom(RecordTypes.RNAM));
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IBiomeFNAMItemGetter>.Instance.Write(
+                items: item.ResourceGeneration,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IResourceGenerationDataGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.RNAM));
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IBiomeProceduralObjectGenerationGetter>.Instance.Write(
                 writer: writer,
-                items: item.FNAMs,
-                transl: (MutagenWriter subWriter, IBiomeFNAMItemGetter subItem, TypedWriteParams conv) =>
+                items: item.ProceduralObjectGeneration,
+                transl: (MutagenWriter subWriter, IBiomeProceduralObjectGenerationGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
-                    ((BiomeFNAMItemBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((BiomeProceduralObjectGenerationBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
                 });
-            FormLinkBinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IObjectSwapGetter>>.Instance.Write(
                 writer: writer,
-                item: item.BiomeSwap,
-                header: translationParams.ConvertToCustom(RecordTypes.ONAM));
+                items: item.ObjectSwaps,
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IObjectSwapGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        header: translationParams.ConvertToCustom(RecordTypes.ONAM));
+                });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILayeredMaterialSwapGetter>>.Instance.Write(
                 writer: writer,
                 items: item.MaterialSwaps,
@@ -4012,68 +4165,67 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.Climate,
                 header: translationParams.ConvertToCustom(RecordTypes.ENAM));
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IBiomeWaterDataGetter>.Instance.Write(
+            var WaterItem = item.Water;
+            ((BiomeWaterDataBinaryWriteTranslation)((IBinaryItem)WaterItem).BinaryWriteTranslator).Write(
+                item: WaterItem,
                 writer: writer,
-                items: item.WaterDatas,
-                transl: (MutagenWriter subWriter, IBiomeWaterDataGetter subItem, TypedWriteParams conv) =>
-                {
-                    var Item = subItem;
-                    ((BiomeWaterDataBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
-                        writer: subWriter,
-                        translationParams: conv);
-                });
+                translationParams: translationParams);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.WNAM,
+                item: item.BlockDensityMult,
                 header: translationParams.ConvertToCustom(RecordTypes.WNAM));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.YNAM,
+                item: item.CellDensityMult,
                 header: translationParams.ConvertToCustom(RecordTypes.YNAM));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.UNAM,
+                item: item.ScanWorldspaceMult,
                 header: translationParams.ConvertToCustom(RecordTypes.UNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.AmbientSet,
+                item: item.Child,
+                header: translationParams.ConvertToCustom(RecordTypes.ZNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.AmbienceSet,
                 header: translationParams.ConvertToCustom(RecordTypes.BIAS));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Music,
+                item: item.MusicType,
                 header: translationParams.ConvertToCustom(RecordTypes.BIMT));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.NAM0,
+                item: item.TimeOfDay,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM0));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PatternStyle,
                 header: translationParams.ConvertToCustom(RecordTypes.NNAM));
-            ColorBinaryTranslation.Instance.WriteNullable(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.CNAM,
+                item: item.Color,
                 header: translationParams.ConvertToCustom(RecordTypes.CNAM));
-            ColorBinaryTranslation.Instance.WriteNullable(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.BiomeColor1,
+                item: item.SurfaceColor1,
                 header: translationParams.ConvertToCustom(RecordTypes.BMC1));
-            ColorBinaryTranslation.Instance.WriteNullable(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.BiomeColor2,
+                item: item.SurfaceColor2,
                 header: translationParams.ConvertToCustom(RecordTypes.BMC2));
-            ColorBinaryTranslation.Instance.WriteNullable(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.BiomeColor3,
+                item: item.RockTint,
                 header: translationParams.ConvertToCustom(RecordTypes.BMC3));
-            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.TNAM,
+            EnumBinaryTranslation<Biome.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Type,
+                length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.TNAM));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IBiomeMarkerTypeGetter>.Instance.Write(
                 writer: writer,
-                items: item.MarkerTypes,
+                items: item.MarkerObjectKeywords,
                 transl: (MutagenWriter subWriter, IBiomeMarkerTypeGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
@@ -4082,13 +4234,13 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IBiomeLNAMItemGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IBiomeTerrainGetter>.Instance.Write(
                 writer: writer,
-                items: item.LNAMs,
-                transl: (MutagenWriter subWriter, IBiomeLNAMItemGetter subItem, TypedWriteParams conv) =>
+                items: item.Terrain,
+                transl: (MutagenWriter subWriter, IBiomeTerrainGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
-                    ((BiomeLNAMItemBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((BiomeTerrainBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
@@ -4104,24 +4256,24 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.BTPS));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.BDFS,
+                item: item.DistantView,
                 header: translationParams.ConvertToCustom(RecordTypes.BDFS));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.GroundLayerMaterial,
+                item: item.GlobalLayerMaterial,
                 header: translationParams.ConvertToCustom(RecordTypes.EFSD),
                 binaryType: StringBinaryType.NullTerminate);
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.NAM2,
+                item: item.BlockDensityMultGlobal,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM2));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.NAM3,
+                item: item.CellDensityMultGlobal,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM3));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.NAM4,
+                item: item.ScanWorldspaceMultGlobal,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM4));
         }
 
@@ -4218,15 +4370,15 @@ namespace Mutagen.Bethesda.Starfield
                             .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
                         return new ParseResult((int)Biome_FieldIndex.Keywords, nextRecordType);
                     }
-                    else if (lastParsed.ParsedIndex.Value <= (int)Biome_FieldIndex.TNAM)
+                    else if (lastParsed.ParsedIndex.Value <= (int)Biome_FieldIndex.Type)
                     {
-                        item.MarkerTypes.SetTo(
+                        item.MarkerObjectKeywords.SetTo(
                             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<BiomeMarkerType>.Instance.Parse(
                                 reader: frame,
                                 triggeringRecord: BiomeMarkerType_Registration.TriggerSpecs,
                                 translationParams: translationParams,
                                 transl: BiomeMarkerType.TryCreateFromBinary));
-                        return new ParseResult((int)Biome_FieldIndex.MarkerTypes, nextRecordType);
+                        return new ParseResult((int)Biome_FieldIndex.MarkerObjectKeywords, nextRecordType);
                     }
                     else
                     {
@@ -4243,13 +4395,13 @@ namespace Mutagen.Bethesda.Starfield
                                     .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
                                 return new ParseResult((int)Biome_FieldIndex.Keywords, nextRecordType);
                             case 1:
-                                item.MarkerTypes.SetTo(
+                                item.MarkerObjectKeywords.SetTo(
                                     Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<BiomeMarkerType>.Instance.Parse(
                                         reader: frame,
                                         triggeringRecord: BiomeMarkerType_Registration.TriggerSpecs,
                                         translationParams: translationParams,
                                         transl: BiomeMarkerType.TryCreateFromBinary));
-                                return new ParseResult((int)Biome_FieldIndex.MarkerTypes, nextRecordType);
+                                return new ParseResult((int)Biome_FieldIndex.MarkerObjectKeywords, nextRecordType);
                             default:
                                 throw new NotImplementedException();
                         }
@@ -4258,46 +4410,52 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BiomeType = StringBinaryTranslation.Instance.Parse(
+                    item.FilterString = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)Biome_FieldIndex.BiomeType;
+                    return (int)Biome_FieldIndex.FilterString;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Plants = 
+                    item.Flora = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IFloraGetter>>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<IFloraGetter>>();
-                    return (int)Biome_FieldIndex.Plants;
+                    return (int)Biome_FieldIndex.Flora;
                 }
                 case RecordTypeInts.RNAM:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ResourceGenerationData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)Biome_FieldIndex.ResourceGenerationData;
+                    item.ResourceGeneration.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IResourceGenerationDataGetter>>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.RNAM),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return (int)Biome_FieldIndex.ResourceGeneration;
                 }
                 case RecordTypeInts.FNAM:
                 case RecordTypeInts.BNAM:
                 case RecordTypeInts.GNAM:
                 case RecordTypeInts.DNAM:
                 {
-                    item.FNAMs.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<BiomeFNAMItem>.Instance.Parse(
+                    item.ProceduralObjectGeneration.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<BiomeProceduralObjectGeneration>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: BiomeFNAMItem_Registration.TriggerSpecs,
+                            triggeringRecord: BiomeProceduralObjectGeneration_Registration.TriggerSpecs,
                             translationParams: translationParams,
-                            transl: BiomeFNAMItem.TryCreateFromBinary));
-                    return (int)Biome_FieldIndex.FNAMs;
+                            transl: BiomeProceduralObjectGeneration.TryCreateFromBinary));
+                    return (int)Biome_FieldIndex.ProceduralObjectGeneration;
                 }
                 case RecordTypeInts.ONAM:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BiomeSwap.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)Biome_FieldIndex.BiomeSwap;
+                    item.ObjectSwaps.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IObjectSwapGetter>>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: translationParams.ConvertToCustom(RecordTypes.ONAM),
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return (int)Biome_FieldIndex.ObjectSwaps;
                 }
                 case RecordTypeInts.NAM1:
                 {
@@ -4318,49 +4476,52 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.INAM:
                 case RecordTypeInts.JNAM:
                 {
-                    item.WaterDatas.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<BiomeWaterData>.Instance.Parse(
-                            reader: frame,
-                            triggeringRecord: BiomeWaterData_Registration.TriggerSpecs,
-                            translationParams: translationParams,
-                            transl: BiomeWaterData.TryCreateFromBinary));
-                    return (int)Biome_FieldIndex.WaterDatas;
+                    item.Water = Mutagen.Bethesda.Starfield.BiomeWaterData.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Biome_FieldIndex.Water;
                 }
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WNAM = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Biome_FieldIndex.WNAM;
+                    item.BlockDensityMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Biome_FieldIndex.BlockDensityMult;
                 }
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.YNAM = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Biome_FieldIndex.YNAM;
+                    item.CellDensityMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Biome_FieldIndex.CellDensityMult;
                 }
                 case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UNAM = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Biome_FieldIndex.UNAM;
+                    item.ScanWorldspaceMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Biome_FieldIndex.ScanWorldspaceMult;
+                }
+                case RecordTypeInts.ZNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Child.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Biome_FieldIndex.Child;
                 }
                 case RecordTypeInts.BIAS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AmbientSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)Biome_FieldIndex.AmbientSet;
+                    item.AmbienceSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Biome_FieldIndex.AmbienceSet;
                 }
                 case RecordTypeInts.BIMT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Music.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)Biome_FieldIndex.Music;
+                    item.MusicType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Biome_FieldIndex.MusicType;
                 }
                 case RecordTypeInts.NAM0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM0.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)Biome_FieldIndex.NAM0;
+                    item.TimeOfDay.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Biome_FieldIndex.TimeOfDay;
                 }
                 case RecordTypeInts.NNAM:
                 {
@@ -4371,42 +4532,44 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CNAM = frame.ReadColor(ColorBinaryType.Alpha);
-                    return (int)Biome_FieldIndex.CNAM;
+                    item.Color = frame.ReadColor(ColorBinaryType.Alpha);
+                    return (int)Biome_FieldIndex.Color;
                 }
                 case RecordTypeInts.BMC1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BiomeColor1 = frame.ReadColor(ColorBinaryType.Alpha);
-                    return (int)Biome_FieldIndex.BiomeColor1;
+                    item.SurfaceColor1 = frame.ReadColor(ColorBinaryType.Alpha);
+                    return (int)Biome_FieldIndex.SurfaceColor1;
                 }
                 case RecordTypeInts.BMC2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BiomeColor2 = frame.ReadColor(ColorBinaryType.Alpha);
-                    return (int)Biome_FieldIndex.BiomeColor2;
+                    item.SurfaceColor2 = frame.ReadColor(ColorBinaryType.Alpha);
+                    return (int)Biome_FieldIndex.SurfaceColor2;
                 }
                 case RecordTypeInts.BMC3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BiomeColor3 = frame.ReadColor(ColorBinaryType.Alpha);
-                    return (int)Biome_FieldIndex.BiomeColor3;
+                    item.RockTint = frame.ReadColor(ColorBinaryType.Alpha);
+                    return (int)Biome_FieldIndex.RockTint;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TNAM = frame.ReadUInt32();
-                    return (int)Biome_FieldIndex.TNAM;
+                    item.Type = EnumBinaryTranslation<Biome.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)Biome_FieldIndex.Type;
                 }
                 case RecordTypeInts.KNAM:
                 {
-                    item.MarkerTypes.SetTo(
+                    item.MarkerObjectKeywords.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<BiomeMarkerType>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: BiomeMarkerType_Registration.TriggerSpecs,
                             translationParams: translationParams,
                             transl: BiomeMarkerType.TryCreateFromBinary));
-                    return (int)Biome_FieldIndex.MarkerTypes;
+                    return (int)Biome_FieldIndex.MarkerObjectKeywords;
                 }
                 case RecordTypeInts.LNAM:
                 case RecordTypeInts.ANAM:
@@ -4417,13 +4580,13 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XX00:
                 case RecordTypeInts.YX00:
                 {
-                    item.LNAMs.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<BiomeLNAMItem>.Instance.Parse(
+                    item.Terrain.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<BiomeTerrain>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: BiomeLNAMItem_Registration.TriggerSpecs,
+                            triggeringRecord: BiomeTerrain_Registration.TriggerSpecs,
                             translationParams: translationParams,
-                            transl: BiomeLNAMItem.TryCreateFromBinary));
-                    return (int)Biome_FieldIndex.LNAMs;
+                            transl: BiomeTerrain.TryCreateFromBinary));
+                    return (int)Biome_FieldIndex.Terrain;
                 }
                 case RecordTypeInts.TX16:
                 {
@@ -4443,35 +4606,35 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.BDFS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BDFS = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Biome_FieldIndex.BDFS;
+                    item.DistantView = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Biome_FieldIndex.DistantView;
                 }
                 case RecordTypeInts.EFSD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.GroundLayerMaterial = StringBinaryTranslation.Instance.Parse(
+                    item.GlobalLayerMaterial = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)Biome_FieldIndex.GroundLayerMaterial;
+                    return (int)Biome_FieldIndex.GlobalLayerMaterial;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM2.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)Biome_FieldIndex.NAM2;
+                    item.BlockDensityMultGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Biome_FieldIndex.BlockDensityMultGlobal;
                 }
                 case RecordTypeInts.NAM3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM3.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)Biome_FieldIndex.NAM3;
+                    item.CellDensityMultGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Biome_FieldIndex.CellDensityMultGlobal;
                 }
                 case RecordTypeInts.NAM4:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM4.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)Biome_FieldIndex.NAM4;
+                    item.ScanWorldspaceMultGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Biome_FieldIndex.ScanWorldspaceMultGlobal;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -4548,76 +4711,77 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
-        #region BiomeType
-        private int? _BiomeTypeLocation;
-        public String? BiomeType => _BiomeTypeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BiomeTypeLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region FilterString
+        private int? _FilterStringLocation;
+        public String? FilterString => _FilterStringLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FilterStringLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IFloraGetter>>? Plants { get; private set; }
-        #region ResourceGenerationData
-        private int? _ResourceGenerationDataLocation;
-        public IFormLinkNullableGetter<IResourceGenerationDataGetter> ResourceGenerationData => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IResourceGenerationDataGetter>(_package, _recordData, _ResourceGenerationDataLocation);
-        #endregion
-        public IReadOnlyList<IBiomeFNAMItemGetter> FNAMs { get; private set; } = Array.Empty<IBiomeFNAMItemGetter>();
-        #region BiomeSwap
-        private int? _BiomeSwapLocation;
-        public IFormLinkNullableGetter<IBiomeSwapGetter> BiomeSwap => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IBiomeSwapGetter>(_package, _recordData, _BiomeSwapLocation);
-        #endregion
+        public IReadOnlyList<IFormLinkGetter<IFloraGetter>>? Flora { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IResourceGenerationDataGetter>> ResourceGeneration { get; private set; } = Array.Empty<IFormLinkGetter<IResourceGenerationDataGetter>>();
+        public IReadOnlyList<IBiomeProceduralObjectGenerationGetter> ProceduralObjectGeneration { get; private set; } = Array.Empty<IBiomeProceduralObjectGenerationGetter>();
+        public IReadOnlyList<IFormLinkGetter<IObjectSwapGetter>> ObjectSwaps { get; private set; } = Array.Empty<IFormLinkGetter<IObjectSwapGetter>>();
         public IReadOnlyList<IFormLinkGetter<ILayeredMaterialSwapGetter>> MaterialSwaps { get; private set; } = Array.Empty<IFormLinkGetter<ILayeredMaterialSwapGetter>>();
         #region Climate
         private int? _ClimateLocation;
         public IFormLinkNullableGetter<IClimateGetter> Climate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IClimateGetter>(_package, _recordData, _ClimateLocation);
         #endregion
-        public IReadOnlyList<IBiomeWaterDataGetter> WaterDatas { get; private set; } = Array.Empty<IBiomeWaterDataGetter>();
-        #region WNAM
-        private int? _WNAMLocation;
-        public Single? WNAM => _WNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _WNAMLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region Water
+        private IBiomeWaterDataGetter? _Water;
+        public IBiomeWaterDataGetter Water => _Water ?? new BiomeWaterData();
         #endregion
-        #region YNAM
-        private int? _YNAMLocation;
-        public Single? YNAM => _YNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _YNAMLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region BlockDensityMult
+        private int? _BlockDensityMultLocation;
+        public Single? BlockDensityMult => _BlockDensityMultLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _BlockDensityMultLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        #region UNAM
-        private int? _UNAMLocation;
-        public Single? UNAM => _UNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _UNAMLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region CellDensityMult
+        private int? _CellDensityMultLocation;
+        public Single? CellDensityMult => _CellDensityMultLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CellDensityMultLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        #region AmbientSet
-        private int? _AmbientSetLocation;
-        public IFormLinkNullableGetter<IAmbienceSetGetter> AmbientSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAmbienceSetGetter>(_package, _recordData, _AmbientSetLocation);
+        #region ScanWorldspaceMult
+        private int? _ScanWorldspaceMultLocation;
+        public Single? ScanWorldspaceMult => _ScanWorldspaceMultLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScanWorldspaceMultLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        #region Music
-        private int? _MusicLocation;
-        public IFormLinkNullableGetter<IMusicTypeGetter> Music => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMusicTypeGetter>(_package, _recordData, _MusicLocation);
+        #region Child
+        private int? _ChildLocation;
+        public IFormLinkNullableGetter<IBiomeGetter> Child => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IBiomeGetter>(_package, _recordData, _ChildLocation);
         #endregion
-        #region NAM0
-        private int? _NAM0Location;
-        public IFormLinkNullableGetter<ITimeOfDayRecordGetter> NAM0 => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITimeOfDayRecordGetter>(_package, _recordData, _NAM0Location);
+        #region AmbienceSet
+        private int? _AmbienceSetLocation;
+        public IFormLinkNullableGetter<IAmbienceSetGetter> AmbienceSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAmbienceSetGetter>(_package, _recordData, _AmbienceSetLocation);
+        #endregion
+        #region MusicType
+        private int? _MusicTypeLocation;
+        public IFormLinkNullableGetter<IMusicTypeGetter> MusicType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMusicTypeGetter>(_package, _recordData, _MusicTypeLocation);
+        #endregion
+        #region TimeOfDay
+        private int? _TimeOfDayLocation;
+        public IFormLinkNullableGetter<ITimeOfDayRecordGetter> TimeOfDay => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITimeOfDayRecordGetter>(_package, _recordData, _TimeOfDayLocation);
         #endregion
         #region PatternStyle
         private int? _PatternStyleLocation;
         public IFormLinkNullableGetter<ISurfacePatternStyleGetter> PatternStyle => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISurfacePatternStyleGetter>(_package, _recordData, _PatternStyleLocation);
         #endregion
-        #region CNAM
-        private int? _CNAMLocation;
-        public Color? CNAM => _CNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CNAMLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
+        #region Color
+        private int? _ColorLocation;
+        public Color Color => _ColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
-        #region BiomeColor1
-        private int? _BiomeColor1Location;
-        public Color? BiomeColor1 => _BiomeColor1Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _BiomeColor1Location.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
+        #region SurfaceColor1
+        private int? _SurfaceColor1Location;
+        public Color SurfaceColor1 => _SurfaceColor1Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SurfaceColor1Location.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
-        #region BiomeColor2
-        private int? _BiomeColor2Location;
-        public Color? BiomeColor2 => _BiomeColor2Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _BiomeColor2Location.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
+        #region SurfaceColor2
+        private int? _SurfaceColor2Location;
+        public Color SurfaceColor2 => _SurfaceColor2Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SurfaceColor2Location.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
-        #region BiomeColor3
-        private int? _BiomeColor3Location;
-        public Color? BiomeColor3 => _BiomeColor3Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _BiomeColor3Location.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
+        #region RockTint
+        private int? _RockTintLocation;
+        public Color RockTint => _RockTintLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _RockTintLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
-        #region TNAM
-        private int? _TNAMLocation;
-        public UInt32? TNAM => _TNAMLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TNAMLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        #region Type
+        private int? _TypeLocation;
+        public Biome.TypeEnum Type => _TypeLocation.HasValue ? (Biome.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(Biome.TypeEnum);
         #endregion
-        public IReadOnlyList<IBiomeMarkerTypeGetter> MarkerTypes { get; private set; } = Array.Empty<IBiomeMarkerTypeGetter>();
-        public IReadOnlyList<IBiomeLNAMItemGetter> LNAMs { get; private set; } = Array.Empty<IBiomeLNAMItemGetter>();
+        public IReadOnlyList<IBiomeMarkerTypeGetter> MarkerObjectKeywords { get; private set; } = Array.Empty<IBiomeMarkerTypeGetter>();
+        public IReadOnlyList<IBiomeTerrainGetter> Terrain { get; private set; } = Array.Empty<IBiomeTerrainGetter>();
         #region GroundLayerNormal
         private int? _GroundLayerNormalLocation;
         public String? GroundLayerNormal => _GroundLayerNormalLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GroundLayerNormalLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
@@ -4626,25 +4790,25 @@ namespace Mutagen.Bethesda.Starfield
         private int? _BTPSLocation;
         public ReadOnlyMemorySlice<Byte>? BTPS => _BTPSLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _BTPSLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        #region BDFS
-        private int? _BDFSLocation;
-        public ReadOnlyMemorySlice<Byte>? BDFS => _BDFSLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _BDFSLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region DistantView
+        private int? _DistantViewLocation;
+        public ReadOnlyMemorySlice<Byte> DistantView => _DistantViewLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DistantViewLocation.Value, _package.MetaData.Constants) : ReadOnlyMemorySlice<byte>.Empty;
         #endregion
-        #region GroundLayerMaterial
-        private int? _GroundLayerMaterialLocation;
-        public String? GroundLayerMaterial => _GroundLayerMaterialLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GroundLayerMaterialLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region GlobalLayerMaterial
+        private int? _GlobalLayerMaterialLocation;
+        public String? GlobalLayerMaterial => _GlobalLayerMaterialLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _GlobalLayerMaterialLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        #region NAM2
-        private int? _NAM2Location;
-        public IFormLinkNullableGetter<IGlobalGetter> NAM2 => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _NAM2Location);
+        #region BlockDensityMultGlobal
+        private int? _BlockDensityMultGlobalLocation;
+        public IFormLinkNullableGetter<IGlobalGetter> BlockDensityMultGlobal => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _BlockDensityMultGlobalLocation);
         #endregion
-        #region NAM3
-        private int? _NAM3Location;
-        public IFormLinkNullableGetter<IGlobalGetter> NAM3 => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _NAM3Location);
+        #region CellDensityMultGlobal
+        private int? _CellDensityMultGlobalLocation;
+        public IFormLinkNullableGetter<IGlobalGetter> CellDensityMultGlobal => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _CellDensityMultGlobalLocation);
         #endregion
-        #region NAM4
-        private int? _NAM4Location;
-        public IFormLinkNullableGetter<IGlobalGetter> NAM4 => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _NAM4Location);
+        #region ScanWorldspaceMultGlobal
+        private int? _ScanWorldspaceMultGlobalLocation;
+        public IFormLinkNullableGetter<IGlobalGetter> ScanWorldspaceMultGlobal => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _ScanWorldspaceMultGlobalLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -4736,14 +4900,14 @@ namespace Mutagen.Bethesda.Starfield
                             getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                         return new ParseResult((int)Biome_FieldIndex.Keywords, type);
                     }
-                    else if (lastParsed.ParsedIndex.Value <= (int)Biome_FieldIndex.TNAM)
+                    else if (lastParsed.ParsedIndex.Value <= (int)Biome_FieldIndex.Type)
                     {
-                        this.MarkerTypes = this.ParseRepeatedTypelessSubrecord<IBiomeMarkerTypeGetter>(
+                        this.MarkerObjectKeywords = this.ParseRepeatedTypelessSubrecord<IBiomeMarkerTypeGetter>(
                             stream: stream,
                             translationParams: translationParams,
                             trigger: BiomeMarkerType_Registration.TriggerSpecs,
                             factory: BiomeMarkerTypeBinaryOverlay.BiomeMarkerTypeFactory);
-                        return new ParseResult((int)Biome_FieldIndex.MarkerTypes, type);
+                        return new ParseResult((int)Biome_FieldIndex.MarkerObjectKeywords, type);
                     }
                     else
                     {
@@ -4763,12 +4927,12 @@ namespace Mutagen.Bethesda.Starfield
                             }
                             case 1:
                             {
-                                this.MarkerTypes = this.ParseRepeatedTypelessSubrecord<IBiomeMarkerTypeGetter>(
+                                this.MarkerObjectKeywords = this.ParseRepeatedTypelessSubrecord<IBiomeMarkerTypeGetter>(
                                     stream: stream,
                                     translationParams: translationParams,
                                     trigger: BiomeMarkerType_Registration.TriggerSpecs,
                                     factory: BiomeMarkerTypeBinaryOverlay.BiomeMarkerTypeFactory);
-                                return new ParseResult((int)Biome_FieldIndex.MarkerTypes, type);
+                                return new ParseResult((int)Biome_FieldIndex.MarkerObjectKeywords, type);
                             }
                             default:
                                 throw new NotImplementedException();
@@ -4777,40 +4941,58 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _BiomeTypeLocation = (stream.Position - offset);
-                    return (int)Biome_FieldIndex.BiomeType;
+                    _FilterStringLocation = (stream.Position - offset);
+                    return (int)Biome_FieldIndex.FilterString;
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    this.Plants = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IFloraGetter>>(
+                    this.Flora = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IFloraGetter>>(
                         stream: stream,
                         package: _package,
                         finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IFloraGetter>(p, s));
-                    return (int)Biome_FieldIndex.Plants;
+                    return (int)Biome_FieldIndex.Flora;
                 }
                 case RecordTypeInts.RNAM:
                 {
-                    _ResourceGenerationDataLocation = (stream.Position - offset);
-                    return (int)Biome_FieldIndex.ResourceGenerationData;
+                    this.ResourceGeneration = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IResourceGenerationDataGetter>>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IResourceGenerationDataGetter>(p, s),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: RecordTypes.RNAM,
+                            skipHeader: true,
+                            translationParams: translationParams));
+                    return (int)Biome_FieldIndex.ResourceGeneration;
                 }
                 case RecordTypeInts.FNAM:
                 case RecordTypeInts.BNAM:
                 case RecordTypeInts.GNAM:
                 case RecordTypeInts.DNAM:
                 {
-                    this.FNAMs = this.ParseRepeatedTypelessSubrecord<IBiomeFNAMItemGetter>(
+                    this.ProceduralObjectGeneration = this.ParseRepeatedTypelessSubrecord<IBiomeProceduralObjectGenerationGetter>(
                         stream: stream,
                         translationParams: translationParams,
-                        trigger: BiomeFNAMItem_Registration.TriggerSpecs,
-                        factory: BiomeFNAMItemBinaryOverlay.BiomeFNAMItemFactory);
-                    return (int)Biome_FieldIndex.FNAMs;
+                        trigger: BiomeProceduralObjectGeneration_Registration.TriggerSpecs,
+                        factory: BiomeProceduralObjectGenerationBinaryOverlay.BiomeProceduralObjectGenerationFactory);
+                    return (int)Biome_FieldIndex.ProceduralObjectGeneration;
                 }
                 case RecordTypeInts.ONAM:
                 {
-                    _BiomeSwapLocation = (stream.Position - offset);
-                    return (int)Biome_FieldIndex.BiomeSwap;
+                    this.ObjectSwaps = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IObjectSwapGetter>>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IObjectSwapGetter>(p, s),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: RecordTypes.ONAM,
+                            skipHeader: true,
+                            translationParams: translationParams));
+                    return (int)Biome_FieldIndex.ObjectSwaps;
                 }
                 case RecordTypeInts.NAM1:
                 {
@@ -4835,42 +5017,46 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.INAM:
                 case RecordTypeInts.JNAM:
                 {
-                    this.WaterDatas = this.ParseRepeatedTypelessSubrecord<IBiomeWaterDataGetter>(
+                    this._Water = BiomeWaterDataBinaryOverlay.BiomeWaterDataFactory(
                         stream: stream,
-                        translationParams: translationParams,
-                        trigger: BiomeWaterData_Registration.TriggerSpecs,
-                        factory: BiomeWaterDataBinaryOverlay.BiomeWaterDataFactory);
-                    return (int)Biome_FieldIndex.WaterDatas;
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Biome_FieldIndex.Water;
                 }
                 case RecordTypeInts.WNAM:
                 {
-                    _WNAMLocation = (stream.Position - offset);
-                    return (int)Biome_FieldIndex.WNAM;
+                    _BlockDensityMultLocation = (stream.Position - offset);
+                    return (int)Biome_FieldIndex.BlockDensityMult;
                 }
                 case RecordTypeInts.YNAM:
                 {
-                    _YNAMLocation = (stream.Position - offset);
-                    return (int)Biome_FieldIndex.YNAM;
+                    _CellDensityMultLocation = (stream.Position - offset);
+                    return (int)Biome_FieldIndex.CellDensityMult;
                 }
                 case RecordTypeInts.UNAM:
                 {
-                    _UNAMLocation = (stream.Position - offset);
-                    return (int)Biome_FieldIndex.UNAM;
+                    _ScanWorldspaceMultLocation = (stream.Position - offset);
+                    return (int)Biome_FieldIndex.ScanWorldspaceMult;
+                }
+                case RecordTypeInts.ZNAM:
+                {
+                    _ChildLocation = (stream.Position - offset);
+                    return (int)Biome_FieldIndex.Child;
                 }
                 case RecordTypeInts.BIAS:
                 {
-                    _AmbientSetLocation = (stream.Position - offset);
-                    return (int)Biome_FieldIndex.AmbientSet;
+                    _AmbienceSetLocation = (stream.Position - offset);
+                    return (int)Biome_FieldIndex.AmbienceSet;
                 }
                 case RecordTypeInts.BIMT:
                 {
-                    _MusicLocation = (stream.Position - offset);
-                    return (int)Biome_FieldIndex.Music;
+                    _MusicTypeLocation = (stream.Position - offset);
+                    return (int)Biome_FieldIndex.MusicType;
                 }
                 case RecordTypeInts.NAM0:
                 {
-                    _NAM0Location = (stream.Position - offset);
-                    return (int)Biome_FieldIndex.NAM0;
+                    _TimeOfDayLocation = (stream.Position - offset);
+                    return (int)Biome_FieldIndex.TimeOfDay;
                 }
                 case RecordTypeInts.NNAM:
                 {
@@ -4879,37 +5065,37 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _CNAMLocation = (stream.Position - offset);
-                    return (int)Biome_FieldIndex.CNAM;
+                    _ColorLocation = (stream.Position - offset);
+                    return (int)Biome_FieldIndex.Color;
                 }
                 case RecordTypeInts.BMC1:
                 {
-                    _BiomeColor1Location = (stream.Position - offset);
-                    return (int)Biome_FieldIndex.BiomeColor1;
+                    _SurfaceColor1Location = (stream.Position - offset);
+                    return (int)Biome_FieldIndex.SurfaceColor1;
                 }
                 case RecordTypeInts.BMC2:
                 {
-                    _BiomeColor2Location = (stream.Position - offset);
-                    return (int)Biome_FieldIndex.BiomeColor2;
+                    _SurfaceColor2Location = (stream.Position - offset);
+                    return (int)Biome_FieldIndex.SurfaceColor2;
                 }
                 case RecordTypeInts.BMC3:
                 {
-                    _BiomeColor3Location = (stream.Position - offset);
-                    return (int)Biome_FieldIndex.BiomeColor3;
+                    _RockTintLocation = (stream.Position - offset);
+                    return (int)Biome_FieldIndex.RockTint;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _TNAMLocation = (stream.Position - offset);
-                    return (int)Biome_FieldIndex.TNAM;
+                    _TypeLocation = (stream.Position - offset);
+                    return (int)Biome_FieldIndex.Type;
                 }
                 case RecordTypeInts.KNAM:
                 {
-                    this.MarkerTypes = this.ParseRepeatedTypelessSubrecord<IBiomeMarkerTypeGetter>(
+                    this.MarkerObjectKeywords = this.ParseRepeatedTypelessSubrecord<IBiomeMarkerTypeGetter>(
                         stream: stream,
                         translationParams: translationParams,
                         trigger: BiomeMarkerType_Registration.TriggerSpecs,
                         factory: BiomeMarkerTypeBinaryOverlay.BiomeMarkerTypeFactory);
-                    return (int)Biome_FieldIndex.MarkerTypes;
+                    return (int)Biome_FieldIndex.MarkerObjectKeywords;
                 }
                 case RecordTypeInts.LNAM:
                 case RecordTypeInts.ANAM:
@@ -4920,12 +5106,12 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XX00:
                 case RecordTypeInts.YX00:
                 {
-                    this.LNAMs = this.ParseRepeatedTypelessSubrecord<IBiomeLNAMItemGetter>(
+                    this.Terrain = this.ParseRepeatedTypelessSubrecord<IBiomeTerrainGetter>(
                         stream: stream,
                         translationParams: translationParams,
-                        trigger: BiomeLNAMItem_Registration.TriggerSpecs,
-                        factory: BiomeLNAMItemBinaryOverlay.BiomeLNAMItemFactory);
-                    return (int)Biome_FieldIndex.LNAMs;
+                        trigger: BiomeTerrain_Registration.TriggerSpecs,
+                        factory: BiomeTerrainBinaryOverlay.BiomeTerrainFactory);
+                    return (int)Biome_FieldIndex.Terrain;
                 }
                 case RecordTypeInts.TX16:
                 {
@@ -4939,28 +5125,28 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.BDFS:
                 {
-                    _BDFSLocation = (stream.Position - offset);
-                    return (int)Biome_FieldIndex.BDFS;
+                    _DistantViewLocation = (stream.Position - offset);
+                    return (int)Biome_FieldIndex.DistantView;
                 }
                 case RecordTypeInts.EFSD:
                 {
-                    _GroundLayerMaterialLocation = (stream.Position - offset);
-                    return (int)Biome_FieldIndex.GroundLayerMaterial;
+                    _GlobalLayerMaterialLocation = (stream.Position - offset);
+                    return (int)Biome_FieldIndex.GlobalLayerMaterial;
                 }
                 case RecordTypeInts.NAM2:
                 {
-                    _NAM2Location = (stream.Position - offset);
-                    return (int)Biome_FieldIndex.NAM2;
+                    _BlockDensityMultGlobalLocation = (stream.Position - offset);
+                    return (int)Biome_FieldIndex.BlockDensityMultGlobal;
                 }
                 case RecordTypeInts.NAM3:
                 {
-                    _NAM3Location = (stream.Position - offset);
-                    return (int)Biome_FieldIndex.NAM3;
+                    _CellDensityMultGlobalLocation = (stream.Position - offset);
+                    return (int)Biome_FieldIndex.CellDensityMultGlobal;
                 }
                 case RecordTypeInts.NAM4:
                 {
-                    _NAM4Location = (stream.Position - offset);
-                    return (int)Biome_FieldIndex.NAM4;
+                    _ScanWorldspaceMultGlobalLocation = (stream.Position - offset);
+                    return (int)Biome_FieldIndex.ScanWorldspaceMultGlobal;
                 }
                 default:
                     return base.FillRecordType(

@@ -112,6 +112,7 @@
     <LinkInterface>IKeywordLinkedReference</LinkInterface>
     <LinkInterface>ICellOrObject</LinkInterface>
     <LinkInterface>ITraversalTarget</LinkInterface>
+    <LinkInterface>IBiomeObjectPackInTarget</LinkInterface>
   </Object>
   <Object name="PlacedPrimitive" objType="Subrecord" recordType="XPRM">
     <Fields>
