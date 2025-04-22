@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     Activator_Registration.Instance,
                     Armor_Registration.Instance,
+                    Book_Registration.Instance,
                     Container_Registration.Instance,
                     DestructibleObjectComponent_Registration.Instance,
                     Flora_Registration.Instance,

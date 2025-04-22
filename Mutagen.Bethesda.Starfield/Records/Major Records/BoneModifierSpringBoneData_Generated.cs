@@ -52,59 +52,32 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region Unknown1
-        public Single Unknown1 { get; set; } = default(Single);
+        #region Strength
+        public P3Float Strength { get; set; } = default(P3Float);
+        #endregion
+        #region Unknown
+        public Single Unknown { get; set; } = default(Single);
+        #endregion
+        #region Damp
+        public P3Float Damp { get; set; } = default(P3Float);
         #endregion
         #region Unknown2
         public Single Unknown2 { get; set; } = default(Single);
         #endregion
+        #region Scale
+        public P3Float Scale { get; set; } = default(P3Float);
+        #endregion
         #region Unknown3
         public Single Unknown3 { get; set; } = default(Single);
+        #endregion
+        #region MaxDist
+        public P3Float MaxDist { get; set; } = default(P3Float);
         #endregion
         #region Unknown4
         public Single Unknown4 { get; set; } = default(Single);
         #endregion
-        #region Unknown5
-        public Single Unknown5 { get; set; } = default(Single);
-        #endregion
-        #region Unknown6
-        public Single Unknown6 { get; set; } = default(Single);
-        #endregion
-        #region Unknown7
-        public Single Unknown7 { get; set; } = default(Single);
-        #endregion
-        #region Unknown8
-        public Single Unknown8 { get; set; } = default(Single);
-        #endregion
-        #region Unknown9
-        public Single Unknown9 { get; set; } = default(Single);
-        #endregion
-        #region Unknown10
-        public Single Unknown10 { get; set; } = default(Single);
-        #endregion
-        #region Unknown11
-        public Single Unknown11 { get; set; } = default(Single);
-        #endregion
-        #region Unknown12
-        public Single Unknown12 { get; set; } = default(Single);
-        #endregion
-        #region Unknown13
-        public Single Unknown13 { get; set; } = default(Single);
-        #endregion
-        #region Unknown14
-        public Single Unknown14 { get; set; } = default(Single);
-        #endregion
-        #region Unknown15
-        public Single Unknown15 { get; set; } = default(Single);
-        #endregion
-        #region Unknown16
-        public Single Unknown16 { get; set; } = default(Single);
-        #endregion
-        #region Unknown17
-        public Single Unknown17 { get; set; } = default(Single);
-        #endregion
-        #region Unknown18
-        public Byte Unknown18 { get; set; } = default(Byte);
+        #region LookAtParent
+        public Boolean LookAtParent { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -147,69 +120,44 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Unknown1 = initialValue;
+                this.Strength = initialValue;
+                this.Unknown = initialValue;
+                this.Damp = initialValue;
                 this.Unknown2 = initialValue;
+                this.Scale = initialValue;
                 this.Unknown3 = initialValue;
+                this.MaxDist = initialValue;
                 this.Unknown4 = initialValue;
-                this.Unknown5 = initialValue;
-                this.Unknown6 = initialValue;
-                this.Unknown7 = initialValue;
-                this.Unknown8 = initialValue;
-                this.Unknown9 = initialValue;
-                this.Unknown10 = initialValue;
-                this.Unknown11 = initialValue;
-                this.Unknown12 = initialValue;
-                this.Unknown13 = initialValue;
-                this.Unknown14 = initialValue;
-                this.Unknown15 = initialValue;
-                this.Unknown16 = initialValue;
-                this.Unknown17 = initialValue;
-                this.Unknown18 = initialValue;
+                this.LookAtParent = initialValue;
             }
 
             public Mask(
-                TItem UnknownString1,
-                TItem UnknownString2,
-                TItem Unknown1,
+                TItem Driver,
+                TItem Target,
+                TItem MaxAnimationDistance,
+                TItem Strength,
+                TItem Unknown,
+                TItem Damp,
                 TItem Unknown2,
+                TItem Scale,
                 TItem Unknown3,
+                TItem MaxDist,
                 TItem Unknown4,
-                TItem Unknown5,
-                TItem Unknown6,
-                TItem Unknown7,
-                TItem Unknown8,
-                TItem Unknown9,
-                TItem Unknown10,
-                TItem Unknown11,
-                TItem Unknown12,
-                TItem Unknown13,
-                TItem Unknown14,
-                TItem Unknown15,
-                TItem Unknown16,
-                TItem Unknown17,
-                TItem Unknown18)
+                TItem LookAtParent)
             : base(
-                UnknownString1: UnknownString1,
-                UnknownString2: UnknownString2)
+                Driver: Driver,
+                Target: Target,
+                MaxAnimationDistance: MaxAnimationDistance)
             {
-                this.Unknown1 = Unknown1;
+                this.Strength = Strength;
+                this.Unknown = Unknown;
+                this.Damp = Damp;
                 this.Unknown2 = Unknown2;
+                this.Scale = Scale;
                 this.Unknown3 = Unknown3;
+                this.MaxDist = MaxDist;
                 this.Unknown4 = Unknown4;
-                this.Unknown5 = Unknown5;
-                this.Unknown6 = Unknown6;
-                this.Unknown7 = Unknown7;
-                this.Unknown8 = Unknown8;
-                this.Unknown9 = Unknown9;
-                this.Unknown10 = Unknown10;
-                this.Unknown11 = Unknown11;
-                this.Unknown12 = Unknown12;
-                this.Unknown13 = Unknown13;
-                this.Unknown14 = Unknown14;
-                this.Unknown15 = Unknown15;
-                this.Unknown16 = Unknown16;
-                this.Unknown17 = Unknown17;
-                this.Unknown18 = Unknown18;
+                this.LookAtParent = LookAtParent;
             }
 
             #pragma warning disable CS8618
@@ -221,24 +169,15 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Unknown1;
+            public TItem Strength;
+            public TItem Unknown;
+            public TItem Damp;
             public TItem Unknown2;
+            public TItem Scale;
             public TItem Unknown3;
+            public TItem MaxDist;
             public TItem Unknown4;
-            public TItem Unknown5;
-            public TItem Unknown6;
-            public TItem Unknown7;
-            public TItem Unknown8;
-            public TItem Unknown9;
-            public TItem Unknown10;
-            public TItem Unknown11;
-            public TItem Unknown12;
-            public TItem Unknown13;
-            public TItem Unknown14;
-            public TItem Unknown15;
-            public TItem Unknown16;
-            public TItem Unknown17;
-            public TItem Unknown18;
+            public TItem LookAtParent;
             #endregion
 
             #region Equals
@@ -252,47 +191,29 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
+                if (!object.Equals(this.Strength, rhs.Strength)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.Damp, rhs.Damp)) return false;
                 if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.Scale, rhs.Scale)) return false;
                 if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
+                if (!object.Equals(this.MaxDist, rhs.MaxDist)) return false;
                 if (!object.Equals(this.Unknown4, rhs.Unknown4)) return false;
-                if (!object.Equals(this.Unknown5, rhs.Unknown5)) return false;
-                if (!object.Equals(this.Unknown6, rhs.Unknown6)) return false;
-                if (!object.Equals(this.Unknown7, rhs.Unknown7)) return false;
-                if (!object.Equals(this.Unknown8, rhs.Unknown8)) return false;
-                if (!object.Equals(this.Unknown9, rhs.Unknown9)) return false;
-                if (!object.Equals(this.Unknown10, rhs.Unknown10)) return false;
-                if (!object.Equals(this.Unknown11, rhs.Unknown11)) return false;
-                if (!object.Equals(this.Unknown12, rhs.Unknown12)) return false;
-                if (!object.Equals(this.Unknown13, rhs.Unknown13)) return false;
-                if (!object.Equals(this.Unknown14, rhs.Unknown14)) return false;
-                if (!object.Equals(this.Unknown15, rhs.Unknown15)) return false;
-                if (!object.Equals(this.Unknown16, rhs.Unknown16)) return false;
-                if (!object.Equals(this.Unknown17, rhs.Unknown17)) return false;
-                if (!object.Equals(this.Unknown18, rhs.Unknown18)) return false;
+                if (!object.Equals(this.LookAtParent, rhs.LookAtParent)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Unknown1);
+                hash.Add(this.Strength);
+                hash.Add(this.Unknown);
+                hash.Add(this.Damp);
                 hash.Add(this.Unknown2);
+                hash.Add(this.Scale);
                 hash.Add(this.Unknown3);
+                hash.Add(this.MaxDist);
                 hash.Add(this.Unknown4);
-                hash.Add(this.Unknown5);
-                hash.Add(this.Unknown6);
-                hash.Add(this.Unknown7);
-                hash.Add(this.Unknown8);
-                hash.Add(this.Unknown9);
-                hash.Add(this.Unknown10);
-                hash.Add(this.Unknown11);
-                hash.Add(this.Unknown12);
-                hash.Add(this.Unknown13);
-                hash.Add(this.Unknown14);
-                hash.Add(this.Unknown15);
-                hash.Add(this.Unknown16);
-                hash.Add(this.Unknown17);
-                hash.Add(this.Unknown18);
+                hash.Add(this.LookAtParent);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -303,24 +224,15 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.Unknown1)) return false;
+                if (!eval(this.Strength)) return false;
+                if (!eval(this.Unknown)) return false;
+                if (!eval(this.Damp)) return false;
                 if (!eval(this.Unknown2)) return false;
+                if (!eval(this.Scale)) return false;
                 if (!eval(this.Unknown3)) return false;
+                if (!eval(this.MaxDist)) return false;
                 if (!eval(this.Unknown4)) return false;
-                if (!eval(this.Unknown5)) return false;
-                if (!eval(this.Unknown6)) return false;
-                if (!eval(this.Unknown7)) return false;
-                if (!eval(this.Unknown8)) return false;
-                if (!eval(this.Unknown9)) return false;
-                if (!eval(this.Unknown10)) return false;
-                if (!eval(this.Unknown11)) return false;
-                if (!eval(this.Unknown12)) return false;
-                if (!eval(this.Unknown13)) return false;
-                if (!eval(this.Unknown14)) return false;
-                if (!eval(this.Unknown15)) return false;
-                if (!eval(this.Unknown16)) return false;
-                if (!eval(this.Unknown17)) return false;
-                if (!eval(this.Unknown18)) return false;
+                if (!eval(this.LookAtParent)) return false;
                 return true;
             }
             #endregion
@@ -329,24 +241,15 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.Unknown1)) return true;
+                if (eval(this.Strength)) return true;
+                if (eval(this.Unknown)) return true;
+                if (eval(this.Damp)) return true;
                 if (eval(this.Unknown2)) return true;
+                if (eval(this.Scale)) return true;
                 if (eval(this.Unknown3)) return true;
+                if (eval(this.MaxDist)) return true;
                 if (eval(this.Unknown4)) return true;
-                if (eval(this.Unknown5)) return true;
-                if (eval(this.Unknown6)) return true;
-                if (eval(this.Unknown7)) return true;
-                if (eval(this.Unknown8)) return true;
-                if (eval(this.Unknown9)) return true;
-                if (eval(this.Unknown10)) return true;
-                if (eval(this.Unknown11)) return true;
-                if (eval(this.Unknown12)) return true;
-                if (eval(this.Unknown13)) return true;
-                if (eval(this.Unknown14)) return true;
-                if (eval(this.Unknown15)) return true;
-                if (eval(this.Unknown16)) return true;
-                if (eval(this.Unknown17)) return true;
-                if (eval(this.Unknown18)) return true;
+                if (eval(this.LookAtParent)) return true;
                 return false;
             }
             #endregion
@@ -362,24 +265,15 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Unknown1 = eval(this.Unknown1);
+                obj.Strength = eval(this.Strength);
+                obj.Unknown = eval(this.Unknown);
+                obj.Damp = eval(this.Damp);
                 obj.Unknown2 = eval(this.Unknown2);
+                obj.Scale = eval(this.Scale);
                 obj.Unknown3 = eval(this.Unknown3);
+                obj.MaxDist = eval(this.MaxDist);
                 obj.Unknown4 = eval(this.Unknown4);
-                obj.Unknown5 = eval(this.Unknown5);
-                obj.Unknown6 = eval(this.Unknown6);
-                obj.Unknown7 = eval(this.Unknown7);
-                obj.Unknown8 = eval(this.Unknown8);
-                obj.Unknown9 = eval(this.Unknown9);
-                obj.Unknown10 = eval(this.Unknown10);
-                obj.Unknown11 = eval(this.Unknown11);
-                obj.Unknown12 = eval(this.Unknown12);
-                obj.Unknown13 = eval(this.Unknown13);
-                obj.Unknown14 = eval(this.Unknown14);
-                obj.Unknown15 = eval(this.Unknown15);
-                obj.Unknown16 = eval(this.Unknown16);
-                obj.Unknown17 = eval(this.Unknown17);
-                obj.Unknown18 = eval(this.Unknown18);
+                obj.LookAtParent = eval(this.LookAtParent);
             }
             #endregion
 
@@ -398,77 +292,41 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(BoneModifierSpringBoneData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Unknown1 ?? true)
+                    if (printMask?.Strength ?? true)
                     {
-                        sb.AppendItem(Unknown1, "Unknown1");
+                        sb.AppendItem(Strength, "Strength");
+                    }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        sb.AppendItem(Unknown, "Unknown");
+                    }
+                    if (printMask?.Damp ?? true)
+                    {
+                        sb.AppendItem(Damp, "Damp");
                     }
                     if (printMask?.Unknown2 ?? true)
                     {
                         sb.AppendItem(Unknown2, "Unknown2");
                     }
+                    if (printMask?.Scale ?? true)
+                    {
+                        sb.AppendItem(Scale, "Scale");
+                    }
                     if (printMask?.Unknown3 ?? true)
                     {
                         sb.AppendItem(Unknown3, "Unknown3");
+                    }
+                    if (printMask?.MaxDist ?? true)
+                    {
+                        sb.AppendItem(MaxDist, "MaxDist");
                     }
                     if (printMask?.Unknown4 ?? true)
                     {
                         sb.AppendItem(Unknown4, "Unknown4");
                     }
-                    if (printMask?.Unknown5 ?? true)
+                    if (printMask?.LookAtParent ?? true)
                     {
-                        sb.AppendItem(Unknown5, "Unknown5");
-                    }
-                    if (printMask?.Unknown6 ?? true)
-                    {
-                        sb.AppendItem(Unknown6, "Unknown6");
-                    }
-                    if (printMask?.Unknown7 ?? true)
-                    {
-                        sb.AppendItem(Unknown7, "Unknown7");
-                    }
-                    if (printMask?.Unknown8 ?? true)
-                    {
-                        sb.AppendItem(Unknown8, "Unknown8");
-                    }
-                    if (printMask?.Unknown9 ?? true)
-                    {
-                        sb.AppendItem(Unknown9, "Unknown9");
-                    }
-                    if (printMask?.Unknown10 ?? true)
-                    {
-                        sb.AppendItem(Unknown10, "Unknown10");
-                    }
-                    if (printMask?.Unknown11 ?? true)
-                    {
-                        sb.AppendItem(Unknown11, "Unknown11");
-                    }
-                    if (printMask?.Unknown12 ?? true)
-                    {
-                        sb.AppendItem(Unknown12, "Unknown12");
-                    }
-                    if (printMask?.Unknown13 ?? true)
-                    {
-                        sb.AppendItem(Unknown13, "Unknown13");
-                    }
-                    if (printMask?.Unknown14 ?? true)
-                    {
-                        sb.AppendItem(Unknown14, "Unknown14");
-                    }
-                    if (printMask?.Unknown15 ?? true)
-                    {
-                        sb.AppendItem(Unknown15, "Unknown15");
-                    }
-                    if (printMask?.Unknown16 ?? true)
-                    {
-                        sb.AppendItem(Unknown16, "Unknown16");
-                    }
-                    if (printMask?.Unknown17 ?? true)
-                    {
-                        sb.AppendItem(Unknown17, "Unknown17");
-                    }
-                    if (printMask?.Unknown18 ?? true)
-                    {
-                        sb.AppendItem(Unknown18, "Unknown18");
+                        sb.AppendItem(LookAtParent, "LookAtParent");
                     }
                 }
             }
@@ -481,24 +339,15 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? Unknown1;
+            public Exception? Strength;
+            public Exception? Unknown;
+            public Exception? Damp;
             public Exception? Unknown2;
+            public Exception? Scale;
             public Exception? Unknown3;
+            public Exception? MaxDist;
             public Exception? Unknown4;
-            public Exception? Unknown5;
-            public Exception? Unknown6;
-            public Exception? Unknown7;
-            public Exception? Unknown8;
-            public Exception? Unknown9;
-            public Exception? Unknown10;
-            public Exception? Unknown11;
-            public Exception? Unknown12;
-            public Exception? Unknown13;
-            public Exception? Unknown14;
-            public Exception? Unknown15;
-            public Exception? Unknown16;
-            public Exception? Unknown17;
-            public Exception? Unknown18;
+            public Exception? LookAtParent;
             #endregion
 
             #region IErrorMask
@@ -507,42 +356,24 @@ namespace Mutagen.Bethesda.Starfield
                 BoneModifierSpringBoneData_FieldIndex enu = (BoneModifierSpringBoneData_FieldIndex)index;
                 switch (enu)
                 {
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown1:
-                        return Unknown1;
+                    case BoneModifierSpringBoneData_FieldIndex.Strength:
+                        return Strength;
+                    case BoneModifierSpringBoneData_FieldIndex.Unknown:
+                        return Unknown;
+                    case BoneModifierSpringBoneData_FieldIndex.Damp:
+                        return Damp;
                     case BoneModifierSpringBoneData_FieldIndex.Unknown2:
                         return Unknown2;
+                    case BoneModifierSpringBoneData_FieldIndex.Scale:
+                        return Scale;
                     case BoneModifierSpringBoneData_FieldIndex.Unknown3:
                         return Unknown3;
+                    case BoneModifierSpringBoneData_FieldIndex.MaxDist:
+                        return MaxDist;
                     case BoneModifierSpringBoneData_FieldIndex.Unknown4:
                         return Unknown4;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown5:
-                        return Unknown5;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown6:
-                        return Unknown6;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown7:
-                        return Unknown7;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown8:
-                        return Unknown8;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown9:
-                        return Unknown9;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown10:
-                        return Unknown10;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown11:
-                        return Unknown11;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown12:
-                        return Unknown12;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown13:
-                        return Unknown13;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown14:
-                        return Unknown14;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown15:
-                        return Unknown15;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown16:
-                        return Unknown16;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown17:
-                        return Unknown17;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown18:
-                        return Unknown18;
+                    case BoneModifierSpringBoneData_FieldIndex.LookAtParent:
+                        return LookAtParent;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -553,59 +384,32 @@ namespace Mutagen.Bethesda.Starfield
                 BoneModifierSpringBoneData_FieldIndex enu = (BoneModifierSpringBoneData_FieldIndex)index;
                 switch (enu)
                 {
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown1:
-                        this.Unknown1 = ex;
+                    case BoneModifierSpringBoneData_FieldIndex.Strength:
+                        this.Strength = ex;
+                        break;
+                    case BoneModifierSpringBoneData_FieldIndex.Unknown:
+                        this.Unknown = ex;
+                        break;
+                    case BoneModifierSpringBoneData_FieldIndex.Damp:
+                        this.Damp = ex;
                         break;
                     case BoneModifierSpringBoneData_FieldIndex.Unknown2:
                         this.Unknown2 = ex;
                         break;
+                    case BoneModifierSpringBoneData_FieldIndex.Scale:
+                        this.Scale = ex;
+                        break;
                     case BoneModifierSpringBoneData_FieldIndex.Unknown3:
                         this.Unknown3 = ex;
+                        break;
+                    case BoneModifierSpringBoneData_FieldIndex.MaxDist:
+                        this.MaxDist = ex;
                         break;
                     case BoneModifierSpringBoneData_FieldIndex.Unknown4:
                         this.Unknown4 = ex;
                         break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown5:
-                        this.Unknown5 = ex;
-                        break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown6:
-                        this.Unknown6 = ex;
-                        break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown7:
-                        this.Unknown7 = ex;
-                        break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown8:
-                        this.Unknown8 = ex;
-                        break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown9:
-                        this.Unknown9 = ex;
-                        break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown10:
-                        this.Unknown10 = ex;
-                        break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown11:
-                        this.Unknown11 = ex;
-                        break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown12:
-                        this.Unknown12 = ex;
-                        break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown13:
-                        this.Unknown13 = ex;
-                        break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown14:
-                        this.Unknown14 = ex;
-                        break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown15:
-                        this.Unknown15 = ex;
-                        break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown16:
-                        this.Unknown16 = ex;
-                        break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown17:
-                        this.Unknown17 = ex;
-                        break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown18:
-                        this.Unknown18 = ex;
+                    case BoneModifierSpringBoneData_FieldIndex.LookAtParent:
+                        this.LookAtParent = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -618,59 +422,32 @@ namespace Mutagen.Bethesda.Starfield
                 BoneModifierSpringBoneData_FieldIndex enu = (BoneModifierSpringBoneData_FieldIndex)index;
                 switch (enu)
                 {
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown1:
-                        this.Unknown1 = (Exception?)obj;
+                    case BoneModifierSpringBoneData_FieldIndex.Strength:
+                        this.Strength = (Exception?)obj;
+                        break;
+                    case BoneModifierSpringBoneData_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
+                        break;
+                    case BoneModifierSpringBoneData_FieldIndex.Damp:
+                        this.Damp = (Exception?)obj;
                         break;
                     case BoneModifierSpringBoneData_FieldIndex.Unknown2:
                         this.Unknown2 = (Exception?)obj;
                         break;
+                    case BoneModifierSpringBoneData_FieldIndex.Scale:
+                        this.Scale = (Exception?)obj;
+                        break;
                     case BoneModifierSpringBoneData_FieldIndex.Unknown3:
                         this.Unknown3 = (Exception?)obj;
+                        break;
+                    case BoneModifierSpringBoneData_FieldIndex.MaxDist:
+                        this.MaxDist = (Exception?)obj;
                         break;
                     case BoneModifierSpringBoneData_FieldIndex.Unknown4:
                         this.Unknown4 = (Exception?)obj;
                         break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown5:
-                        this.Unknown5 = (Exception?)obj;
-                        break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown6:
-                        this.Unknown6 = (Exception?)obj;
-                        break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown7:
-                        this.Unknown7 = (Exception?)obj;
-                        break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown8:
-                        this.Unknown8 = (Exception?)obj;
-                        break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown9:
-                        this.Unknown9 = (Exception?)obj;
-                        break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown10:
-                        this.Unknown10 = (Exception?)obj;
-                        break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown11:
-                        this.Unknown11 = (Exception?)obj;
-                        break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown12:
-                        this.Unknown12 = (Exception?)obj;
-                        break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown13:
-                        this.Unknown13 = (Exception?)obj;
-                        break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown14:
-                        this.Unknown14 = (Exception?)obj;
-                        break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown15:
-                        this.Unknown15 = (Exception?)obj;
-                        break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown16:
-                        this.Unknown16 = (Exception?)obj;
-                        break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown17:
-                        this.Unknown17 = (Exception?)obj;
-                        break;
-                    case BoneModifierSpringBoneData_FieldIndex.Unknown18:
-                        this.Unknown18 = (Exception?)obj;
+                    case BoneModifierSpringBoneData_FieldIndex.LookAtParent:
+                        this.LookAtParent = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -681,24 +458,15 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Unknown1 != null) return true;
+                if (Strength != null) return true;
+                if (Unknown != null) return true;
+                if (Damp != null) return true;
                 if (Unknown2 != null) return true;
+                if (Scale != null) return true;
                 if (Unknown3 != null) return true;
+                if (MaxDist != null) return true;
                 if (Unknown4 != null) return true;
-                if (Unknown5 != null) return true;
-                if (Unknown6 != null) return true;
-                if (Unknown7 != null) return true;
-                if (Unknown8 != null) return true;
-                if (Unknown9 != null) return true;
-                if (Unknown10 != null) return true;
-                if (Unknown11 != null) return true;
-                if (Unknown12 != null) return true;
-                if (Unknown13 != null) return true;
-                if (Unknown14 != null) return true;
-                if (Unknown15 != null) return true;
-                if (Unknown16 != null) return true;
-                if (Unknown17 != null) return true;
-                if (Unknown18 != null) return true;
+                if (LookAtParent != null) return true;
                 return false;
             }
             #endregion
@@ -726,58 +494,31 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(Unknown1, "Unknown1");
+                    sb.AppendItem(Strength, "Strength");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(Damp, "Damp");
                 }
                 {
                     sb.AppendItem(Unknown2, "Unknown2");
                 }
                 {
+                    sb.AppendItem(Scale, "Scale");
+                }
+                {
                     sb.AppendItem(Unknown3, "Unknown3");
+                }
+                {
+                    sb.AppendItem(MaxDist, "MaxDist");
                 }
                 {
                     sb.AppendItem(Unknown4, "Unknown4");
                 }
                 {
-                    sb.AppendItem(Unknown5, "Unknown5");
-                }
-                {
-                    sb.AppendItem(Unknown6, "Unknown6");
-                }
-                {
-                    sb.AppendItem(Unknown7, "Unknown7");
-                }
-                {
-                    sb.AppendItem(Unknown8, "Unknown8");
-                }
-                {
-                    sb.AppendItem(Unknown9, "Unknown9");
-                }
-                {
-                    sb.AppendItem(Unknown10, "Unknown10");
-                }
-                {
-                    sb.AppendItem(Unknown11, "Unknown11");
-                }
-                {
-                    sb.AppendItem(Unknown12, "Unknown12");
-                }
-                {
-                    sb.AppendItem(Unknown13, "Unknown13");
-                }
-                {
-                    sb.AppendItem(Unknown14, "Unknown14");
-                }
-                {
-                    sb.AppendItem(Unknown15, "Unknown15");
-                }
-                {
-                    sb.AppendItem(Unknown16, "Unknown16");
-                }
-                {
-                    sb.AppendItem(Unknown17, "Unknown17");
-                }
-                {
-                    sb.AppendItem(Unknown18, "Unknown18");
+                    sb.AppendItem(LookAtParent, "LookAtParent");
                 }
             }
             #endregion
@@ -787,24 +528,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
+                ret.Strength = this.Strength.Combine(rhs.Strength);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.Damp = this.Damp.Combine(rhs.Damp);
                 ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.Scale = this.Scale.Combine(rhs.Scale);
                 ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
+                ret.MaxDist = this.MaxDist.Combine(rhs.MaxDist);
                 ret.Unknown4 = this.Unknown4.Combine(rhs.Unknown4);
-                ret.Unknown5 = this.Unknown5.Combine(rhs.Unknown5);
-                ret.Unknown6 = this.Unknown6.Combine(rhs.Unknown6);
-                ret.Unknown7 = this.Unknown7.Combine(rhs.Unknown7);
-                ret.Unknown8 = this.Unknown8.Combine(rhs.Unknown8);
-                ret.Unknown9 = this.Unknown9.Combine(rhs.Unknown9);
-                ret.Unknown10 = this.Unknown10.Combine(rhs.Unknown10);
-                ret.Unknown11 = this.Unknown11.Combine(rhs.Unknown11);
-                ret.Unknown12 = this.Unknown12.Combine(rhs.Unknown12);
-                ret.Unknown13 = this.Unknown13.Combine(rhs.Unknown13);
-                ret.Unknown14 = this.Unknown14.Combine(rhs.Unknown14);
-                ret.Unknown15 = this.Unknown15.Combine(rhs.Unknown15);
-                ret.Unknown16 = this.Unknown16.Combine(rhs.Unknown16);
-                ret.Unknown17 = this.Unknown17.Combine(rhs.Unknown17);
-                ret.Unknown18 = this.Unknown18.Combine(rhs.Unknown18);
+                ret.LookAtParent = this.LookAtParent.Combine(rhs.LookAtParent);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -827,24 +559,15 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
-            public bool Unknown1;
+            public bool Strength;
+            public bool Unknown;
+            public bool Damp;
             public bool Unknown2;
+            public bool Scale;
             public bool Unknown3;
+            public bool MaxDist;
             public bool Unknown4;
-            public bool Unknown5;
-            public bool Unknown6;
-            public bool Unknown7;
-            public bool Unknown8;
-            public bool Unknown9;
-            public bool Unknown10;
-            public bool Unknown11;
-            public bool Unknown12;
-            public bool Unknown13;
-            public bool Unknown14;
-            public bool Unknown15;
-            public bool Unknown16;
-            public bool Unknown17;
-            public bool Unknown18;
+            public bool LookAtParent;
             #endregion
 
             #region Ctors
@@ -853,24 +576,15 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.Unknown1 = defaultOn;
+                this.Strength = defaultOn;
+                this.Unknown = defaultOn;
+                this.Damp = defaultOn;
                 this.Unknown2 = defaultOn;
+                this.Scale = defaultOn;
                 this.Unknown3 = defaultOn;
+                this.MaxDist = defaultOn;
                 this.Unknown4 = defaultOn;
-                this.Unknown5 = defaultOn;
-                this.Unknown6 = defaultOn;
-                this.Unknown7 = defaultOn;
-                this.Unknown8 = defaultOn;
-                this.Unknown9 = defaultOn;
-                this.Unknown10 = defaultOn;
-                this.Unknown11 = defaultOn;
-                this.Unknown12 = defaultOn;
-                this.Unknown13 = defaultOn;
-                this.Unknown14 = defaultOn;
-                this.Unknown15 = defaultOn;
-                this.Unknown16 = defaultOn;
-                this.Unknown17 = defaultOn;
-                this.Unknown18 = defaultOn;
+                this.LookAtParent = defaultOn;
             }
 
             #endregion
@@ -878,24 +592,15 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Unknown1, null));
+                ret.Add((Strength, null));
+                ret.Add((Unknown, null));
+                ret.Add((Damp, null));
                 ret.Add((Unknown2, null));
+                ret.Add((Scale, null));
                 ret.Add((Unknown3, null));
+                ret.Add((MaxDist, null));
                 ret.Add((Unknown4, null));
-                ret.Add((Unknown5, null));
-                ret.Add((Unknown6, null));
-                ret.Add((Unknown7, null));
-                ret.Add((Unknown8, null));
-                ret.Add((Unknown9, null));
-                ret.Add((Unknown10, null));
-                ret.Add((Unknown11, null));
-                ret.Add((Unknown12, null));
-                ret.Add((Unknown13, null));
-                ret.Add((Unknown14, null));
-                ret.Add((Unknown15, null));
-                ret.Add((Unknown16, null));
-                ret.Add((Unknown17, null));
-                ret.Add((Unknown18, null));
+                ret.Add((LookAtParent, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -967,24 +672,15 @@ namespace Mutagen.Bethesda.Starfield
         IBoneModifierSpringBoneDataGetter,
         ILoquiObjectSetter<IBoneModifierSpringBoneData>
     {
-        new Single Unknown1 { get; set; }
+        new P3Float Strength { get; set; }
+        new Single Unknown { get; set; }
+        new P3Float Damp { get; set; }
         new Single Unknown2 { get; set; }
+        new P3Float Scale { get; set; }
         new Single Unknown3 { get; set; }
+        new P3Float MaxDist { get; set; }
         new Single Unknown4 { get; set; }
-        new Single Unknown5 { get; set; }
-        new Single Unknown6 { get; set; }
-        new Single Unknown7 { get; set; }
-        new Single Unknown8 { get; set; }
-        new Single Unknown9 { get; set; }
-        new Single Unknown10 { get; set; }
-        new Single Unknown11 { get; set; }
-        new Single Unknown12 { get; set; }
-        new Single Unknown13 { get; set; }
-        new Single Unknown14 { get; set; }
-        new Single Unknown15 { get; set; }
-        new Single Unknown16 { get; set; }
-        new Single Unknown17 { get; set; }
-        new Byte Unknown18 { get; set; }
+        new Boolean LookAtParent { get; set; }
     }
 
     public partial interface IBoneModifierSpringBoneDataGetter :
@@ -993,24 +689,15 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObject<IBoneModifierSpringBoneDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => BoneModifierSpringBoneData_Registration.Instance;
-        Single Unknown1 { get; }
+        P3Float Strength { get; }
+        Single Unknown { get; }
+        P3Float Damp { get; }
         Single Unknown2 { get; }
+        P3Float Scale { get; }
         Single Unknown3 { get; }
+        P3Float MaxDist { get; }
         Single Unknown4 { get; }
-        Single Unknown5 { get; }
-        Single Unknown6 { get; }
-        Single Unknown7 { get; }
-        Single Unknown8 { get; }
-        Single Unknown9 { get; }
-        Single Unknown10 { get; }
-        Single Unknown11 { get; }
-        Single Unknown12 { get; }
-        Single Unknown13 { get; }
-        Single Unknown14 { get; }
-        Single Unknown15 { get; }
-        Single Unknown16 { get; }
-        Single Unknown17 { get; }
-        Byte Unknown18 { get; }
+        Boolean LookAtParent { get; }
 
     }
 
@@ -1155,26 +842,18 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum BoneModifierSpringBoneData_FieldIndex
     {
-        UnknownString1 = 0,
-        UnknownString2 = 1,
-        Unknown1 = 2,
-        Unknown2 = 3,
-        Unknown3 = 4,
-        Unknown4 = 5,
-        Unknown5 = 6,
-        Unknown6 = 7,
-        Unknown7 = 8,
-        Unknown8 = 9,
-        Unknown9 = 10,
-        Unknown10 = 11,
-        Unknown11 = 12,
-        Unknown12 = 13,
-        Unknown13 = 14,
-        Unknown14 = 15,
-        Unknown15 = 16,
-        Unknown16 = 17,
-        Unknown17 = 18,
-        Unknown18 = 19,
+        Driver = 0,
+        Target = 1,
+        MaxAnimationDistance = 2,
+        Strength = 3,
+        Unknown = 4,
+        Damp = 5,
+        Unknown2 = 6,
+        Scale = 7,
+        Unknown3 = 8,
+        MaxDist = 9,
+        Unknown4 = 10,
+        LookAtParent = 11,
     }
     #endregion
 
@@ -1185,9 +864,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 18;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(BoneModifierSpringBoneData.Mask<>);
 
@@ -1253,24 +932,15 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IBoneModifierSpringBoneData item)
         {
             ClearPartial();
-            item.Unknown1 = default(Single);
+            item.Strength = default(P3Float);
+            item.Unknown = default(Single);
+            item.Damp = default(P3Float);
             item.Unknown2 = default(Single);
+            item.Scale = default(P3Float);
             item.Unknown3 = default(Single);
+            item.MaxDist = default(P3Float);
             item.Unknown4 = default(Single);
-            item.Unknown5 = default(Single);
-            item.Unknown6 = default(Single);
-            item.Unknown7 = default(Single);
-            item.Unknown8 = default(Single);
-            item.Unknown9 = default(Single);
-            item.Unknown10 = default(Single);
-            item.Unknown11 = default(Single);
-            item.Unknown12 = default(Single);
-            item.Unknown13 = default(Single);
-            item.Unknown14 = default(Single);
-            item.Unknown15 = default(Single);
-            item.Unknown16 = default(Single);
-            item.Unknown17 = default(Single);
-            item.Unknown18 = default(Byte);
+            item.LookAtParent = default(Boolean);
             base.Clear(item);
         }
         
@@ -1337,24 +1007,15 @@ namespace Mutagen.Bethesda.Starfield
             BoneModifierSpringBoneData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Unknown1 = item.Unknown1.EqualsWithin(rhs.Unknown1);
+            ret.Strength = item.Strength.Equals(rhs.Strength);
+            ret.Unknown = item.Unknown.EqualsWithin(rhs.Unknown);
+            ret.Damp = item.Damp.Equals(rhs.Damp);
             ret.Unknown2 = item.Unknown2.EqualsWithin(rhs.Unknown2);
+            ret.Scale = item.Scale.Equals(rhs.Scale);
             ret.Unknown3 = item.Unknown3.EqualsWithin(rhs.Unknown3);
+            ret.MaxDist = item.MaxDist.Equals(rhs.MaxDist);
             ret.Unknown4 = item.Unknown4.EqualsWithin(rhs.Unknown4);
-            ret.Unknown5 = item.Unknown5.EqualsWithin(rhs.Unknown5);
-            ret.Unknown6 = item.Unknown6.EqualsWithin(rhs.Unknown6);
-            ret.Unknown7 = item.Unknown7.EqualsWithin(rhs.Unknown7);
-            ret.Unknown8 = item.Unknown8.EqualsWithin(rhs.Unknown8);
-            ret.Unknown9 = item.Unknown9.EqualsWithin(rhs.Unknown9);
-            ret.Unknown10 = item.Unknown10.EqualsWithin(rhs.Unknown10);
-            ret.Unknown11 = item.Unknown11.EqualsWithin(rhs.Unknown11);
-            ret.Unknown12 = item.Unknown12.EqualsWithin(rhs.Unknown12);
-            ret.Unknown13 = item.Unknown13.EqualsWithin(rhs.Unknown13);
-            ret.Unknown14 = item.Unknown14.EqualsWithin(rhs.Unknown14);
-            ret.Unknown15 = item.Unknown15.EqualsWithin(rhs.Unknown15);
-            ret.Unknown16 = item.Unknown16.EqualsWithin(rhs.Unknown16);
-            ret.Unknown17 = item.Unknown17.EqualsWithin(rhs.Unknown17);
-            ret.Unknown18 = item.Unknown18 == rhs.Unknown18;
+            ret.LookAtParent = item.LookAtParent == rhs.LookAtParent;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1404,77 +1065,41 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.Unknown1 ?? true)
+            if (printMask?.Strength ?? true)
             {
-                sb.AppendItem(item.Unknown1, "Unknown1");
+                sb.AppendItem(item.Strength, "Strength");
+            }
+            if (printMask?.Unknown ?? true)
+            {
+                sb.AppendItem(item.Unknown, "Unknown");
+            }
+            if (printMask?.Damp ?? true)
+            {
+                sb.AppendItem(item.Damp, "Damp");
             }
             if (printMask?.Unknown2 ?? true)
             {
                 sb.AppendItem(item.Unknown2, "Unknown2");
             }
+            if (printMask?.Scale ?? true)
+            {
+                sb.AppendItem(item.Scale, "Scale");
+            }
             if (printMask?.Unknown3 ?? true)
             {
                 sb.AppendItem(item.Unknown3, "Unknown3");
+            }
+            if (printMask?.MaxDist ?? true)
+            {
+                sb.AppendItem(item.MaxDist, "MaxDist");
             }
             if (printMask?.Unknown4 ?? true)
             {
                 sb.AppendItem(item.Unknown4, "Unknown4");
             }
-            if (printMask?.Unknown5 ?? true)
+            if (printMask?.LookAtParent ?? true)
             {
-                sb.AppendItem(item.Unknown5, "Unknown5");
-            }
-            if (printMask?.Unknown6 ?? true)
-            {
-                sb.AppendItem(item.Unknown6, "Unknown6");
-            }
-            if (printMask?.Unknown7 ?? true)
-            {
-                sb.AppendItem(item.Unknown7, "Unknown7");
-            }
-            if (printMask?.Unknown8 ?? true)
-            {
-                sb.AppendItem(item.Unknown8, "Unknown8");
-            }
-            if (printMask?.Unknown9 ?? true)
-            {
-                sb.AppendItem(item.Unknown9, "Unknown9");
-            }
-            if (printMask?.Unknown10 ?? true)
-            {
-                sb.AppendItem(item.Unknown10, "Unknown10");
-            }
-            if (printMask?.Unknown11 ?? true)
-            {
-                sb.AppendItem(item.Unknown11, "Unknown11");
-            }
-            if (printMask?.Unknown12 ?? true)
-            {
-                sb.AppendItem(item.Unknown12, "Unknown12");
-            }
-            if (printMask?.Unknown13 ?? true)
-            {
-                sb.AppendItem(item.Unknown13, "Unknown13");
-            }
-            if (printMask?.Unknown14 ?? true)
-            {
-                sb.AppendItem(item.Unknown14, "Unknown14");
-            }
-            if (printMask?.Unknown15 ?? true)
-            {
-                sb.AppendItem(item.Unknown15, "Unknown15");
-            }
-            if (printMask?.Unknown16 ?? true)
-            {
-                sb.AppendItem(item.Unknown16, "Unknown16");
-            }
-            if (printMask?.Unknown17 ?? true)
-            {
-                sb.AppendItem(item.Unknown17, "Unknown17");
-            }
-            if (printMask?.Unknown18 ?? true)
-            {
-                sb.AppendItem(item.Unknown18, "Unknown18");
+                sb.AppendItem(item.LookAtParent, "LookAtParent");
             }
         }
         
@@ -1482,9 +1107,11 @@ namespace Mutagen.Bethesda.Starfield
         {
             switch (index)
             {
-                case ABoneModifierData_FieldIndex.UnknownString1:
+                case ABoneModifierData_FieldIndex.Driver:
                     return (BoneModifierSpringBoneData_FieldIndex)((int)index);
-                case ABoneModifierData_FieldIndex.UnknownString2:
+                case ABoneModifierData_FieldIndex.Target:
+                    return (BoneModifierSpringBoneData_FieldIndex)((int)index);
+                case ABoneModifierData_FieldIndex.MaxAnimationDistance:
                     return (BoneModifierSpringBoneData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1499,77 +1126,41 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IABoneModifierDataGetter)lhs, (IABoneModifierDataGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Strength) ?? true))
             {
-                if (!lhs.Unknown1.EqualsWithin(rhs.Unknown1)) return false;
+                if (!lhs.Strength.Equals(rhs.Strength)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown) ?? true))
+            {
+                if (!lhs.Unknown.EqualsWithin(rhs.Unknown)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Damp) ?? true))
+            {
+                if (!lhs.Damp.Equals(rhs.Damp)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown2) ?? true))
             {
                 if (!lhs.Unknown2.EqualsWithin(rhs.Unknown2)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Scale) ?? true))
+            {
+                if (!lhs.Scale.Equals(rhs.Scale)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown3) ?? true))
             {
                 if (!lhs.Unknown3.EqualsWithin(rhs.Unknown3)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.MaxDist) ?? true))
+            {
+                if (!lhs.MaxDist.Equals(rhs.MaxDist)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown4) ?? true))
             {
                 if (!lhs.Unknown4.EqualsWithin(rhs.Unknown4)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown5) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.LookAtParent) ?? true))
             {
-                if (!lhs.Unknown5.EqualsWithin(rhs.Unknown5)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown6) ?? true))
-            {
-                if (!lhs.Unknown6.EqualsWithin(rhs.Unknown6)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown7) ?? true))
-            {
-                if (!lhs.Unknown7.EqualsWithin(rhs.Unknown7)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown8) ?? true))
-            {
-                if (!lhs.Unknown8.EqualsWithin(rhs.Unknown8)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown9) ?? true))
-            {
-                if (!lhs.Unknown9.EqualsWithin(rhs.Unknown9)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown10) ?? true))
-            {
-                if (!lhs.Unknown10.EqualsWithin(rhs.Unknown10)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown11) ?? true))
-            {
-                if (!lhs.Unknown11.EqualsWithin(rhs.Unknown11)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown12) ?? true))
-            {
-                if (!lhs.Unknown12.EqualsWithin(rhs.Unknown12)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown13) ?? true))
-            {
-                if (!lhs.Unknown13.EqualsWithin(rhs.Unknown13)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown14) ?? true))
-            {
-                if (!lhs.Unknown14.EqualsWithin(rhs.Unknown14)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown15) ?? true))
-            {
-                if (!lhs.Unknown15.EqualsWithin(rhs.Unknown15)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown16) ?? true))
-            {
-                if (!lhs.Unknown16.EqualsWithin(rhs.Unknown16)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown17) ?? true))
-            {
-                if (!lhs.Unknown17.EqualsWithin(rhs.Unknown17)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown18) ?? true))
-            {
-                if (lhs.Unknown18 != rhs.Unknown18) return false;
+                if (lhs.LookAtParent != rhs.LookAtParent) return false;
             }
             return true;
         }
@@ -1588,24 +1179,15 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IBoneModifierSpringBoneDataGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Unknown1);
+            hash.Add(item.Strength);
+            hash.Add(item.Unknown);
+            hash.Add(item.Damp);
             hash.Add(item.Unknown2);
+            hash.Add(item.Scale);
             hash.Add(item.Unknown3);
+            hash.Add(item.MaxDist);
             hash.Add(item.Unknown4);
-            hash.Add(item.Unknown5);
-            hash.Add(item.Unknown6);
-            hash.Add(item.Unknown7);
-            hash.Add(item.Unknown8);
-            hash.Add(item.Unknown9);
-            hash.Add(item.Unknown10);
-            hash.Add(item.Unknown11);
-            hash.Add(item.Unknown12);
-            hash.Add(item.Unknown13);
-            hash.Add(item.Unknown14);
-            hash.Add(item.Unknown15);
-            hash.Add(item.Unknown16);
-            hash.Add(item.Unknown17);
-            hash.Add(item.Unknown18);
+            hash.Add(item.LookAtParent);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1650,77 +1232,41 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Strength) ?? true))
             {
-                item.Unknown1 = rhs.Unknown1;
+                item.Strength = rhs.Strength;
+            }
+            if ((copyMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown) ?? true))
+            {
+                item.Unknown = rhs.Unknown;
+            }
+            if ((copyMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Damp) ?? true))
+            {
+                item.Damp = rhs.Damp;
             }
             if ((copyMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown2) ?? true))
             {
                 item.Unknown2 = rhs.Unknown2;
             }
+            if ((copyMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Scale) ?? true))
+            {
+                item.Scale = rhs.Scale;
+            }
             if ((copyMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown3) ?? true))
             {
                 item.Unknown3 = rhs.Unknown3;
+            }
+            if ((copyMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.MaxDist) ?? true))
+            {
+                item.MaxDist = rhs.MaxDist;
             }
             if ((copyMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown4) ?? true))
             {
                 item.Unknown4 = rhs.Unknown4;
             }
-            if ((copyMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown5) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.LookAtParent) ?? true))
             {
-                item.Unknown5 = rhs.Unknown5;
-            }
-            if ((copyMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown6) ?? true))
-            {
-                item.Unknown6 = rhs.Unknown6;
-            }
-            if ((copyMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown7) ?? true))
-            {
-                item.Unknown7 = rhs.Unknown7;
-            }
-            if ((copyMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown8) ?? true))
-            {
-                item.Unknown8 = rhs.Unknown8;
-            }
-            if ((copyMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown9) ?? true))
-            {
-                item.Unknown9 = rhs.Unknown9;
-            }
-            if ((copyMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown10) ?? true))
-            {
-                item.Unknown10 = rhs.Unknown10;
-            }
-            if ((copyMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown11) ?? true))
-            {
-                item.Unknown11 = rhs.Unknown11;
-            }
-            if ((copyMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown12) ?? true))
-            {
-                item.Unknown12 = rhs.Unknown12;
-            }
-            if ((copyMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown13) ?? true))
-            {
-                item.Unknown13 = rhs.Unknown13;
-            }
-            if ((copyMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown14) ?? true))
-            {
-                item.Unknown14 = rhs.Unknown14;
-            }
-            if ((copyMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown15) ?? true))
-            {
-                item.Unknown15 = rhs.Unknown15;
-            }
-            if ((copyMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown16) ?? true))
-            {
-                item.Unknown16 = rhs.Unknown16;
-            }
-            if ((copyMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown17) ?? true))
-            {
-                item.Unknown17 = rhs.Unknown17;
-            }
-            if ((copyMask?.GetShouldTranslate((int)BoneModifierSpringBoneData_FieldIndex.Unknown18) ?? true))
-            {
-                item.Unknown18 = rhs.Unknown18;
+                item.LookAtParent = rhs.LookAtParent;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1845,58 +1391,31 @@ namespace Mutagen.Bethesda.Starfield
             ABoneModifierDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Strength);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.Unknown1);
+                item: item.Unknown);
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Damp);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Unknown2);
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Scale);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Unknown3);
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.MaxDist);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Unknown4);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unknown5);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unknown6);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unknown7);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unknown8);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unknown9);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unknown10);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unknown11);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unknown12);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unknown13);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unknown14);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unknown15);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unknown16);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unknown17);
-            writer.Write(item.Unknown18);
+            writer.Write(item.LookAtParent);
         }
 
         public void Write(
@@ -1944,24 +1463,15 @@ namespace Mutagen.Bethesda.Starfield
             ABoneModifierDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.Unknown1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Strength = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Unknown = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Damp = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Unknown2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Scale = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Unknown3 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.MaxDist = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Unknown4 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Unknown5 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Unknown6 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Unknown7 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Unknown8 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Unknown9 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Unknown10 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Unknown11 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Unknown12 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Unknown13 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Unknown14 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Unknown15 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Unknown16 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Unknown17 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Unknown18 = frame.ReadUInt8();
+            item.LookAtParent = frame.ReadBoolean();
         }
 
     }
@@ -2008,24 +1518,15 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public Single Unknown1 => _structData.Slice(UnknownString2EndingPos, 0x4).Float();
-        public Single Unknown2 => _structData.Slice(UnknownString2EndingPos + 0x4, 0x4).Float();
-        public Single Unknown3 => _structData.Slice(UnknownString2EndingPos + 0x8, 0x4).Float();
-        public Single Unknown4 => _structData.Slice(UnknownString2EndingPos + 0xC, 0x4).Float();
-        public Single Unknown5 => _structData.Slice(UnknownString2EndingPos + 0x10, 0x4).Float();
-        public Single Unknown6 => _structData.Slice(UnknownString2EndingPos + 0x14, 0x4).Float();
-        public Single Unknown7 => _structData.Slice(UnknownString2EndingPos + 0x18, 0x4).Float();
-        public Single Unknown8 => _structData.Slice(UnknownString2EndingPos + 0x1C, 0x4).Float();
-        public Single Unknown9 => _structData.Slice(UnknownString2EndingPos + 0x20, 0x4).Float();
-        public Single Unknown10 => _structData.Slice(UnknownString2EndingPos + 0x24, 0x4).Float();
-        public Single Unknown11 => _structData.Slice(UnknownString2EndingPos + 0x28, 0x4).Float();
-        public Single Unknown12 => _structData.Slice(UnknownString2EndingPos + 0x2C, 0x4).Float();
-        public Single Unknown13 => _structData.Slice(UnknownString2EndingPos + 0x30, 0x4).Float();
-        public Single Unknown14 => _structData.Slice(UnknownString2EndingPos + 0x34, 0x4).Float();
-        public Single Unknown15 => _structData.Slice(UnknownString2EndingPos + 0x38, 0x4).Float();
-        public Single Unknown16 => _structData.Slice(UnknownString2EndingPos + 0x3C, 0x4).Float();
-        public Single Unknown17 => _structData.Slice(UnknownString2EndingPos + 0x40, 0x4).Float();
-        public Byte Unknown18 => _structData.Span[UnknownString2EndingPos + 0x44];
+        public P3Float Strength => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(TargetEndingPos + 0x4, 0xC));
+        public Single Unknown => _structData.Slice(TargetEndingPos + 0x10, 0x4).Float();
+        public P3Float Damp => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(TargetEndingPos + 0x14, 0xC));
+        public Single Unknown2 => _structData.Slice(TargetEndingPos + 0x20, 0x4).Float();
+        public P3Float Scale => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(TargetEndingPos + 0x24, 0xC));
+        public Single Unknown3 => _structData.Slice(TargetEndingPos + 0x30, 0x4).Float();
+        public P3Float MaxDist => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(TargetEndingPos + 0x34, 0xC));
+        public Single Unknown4 => _structData.Slice(TargetEndingPos + 0x40, 0x4).Float();
+        public Boolean LookAtParent => _structData.Slice(TargetEndingPos + 0x44, 0x1)[0] >= 1;
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2067,7 +1568,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: memoryPair,
                 package: package);
             BoneModifierSpringBoneDataParseEndingPositions(ret, package);
-            stream.Position += ret.UnknownString2EndingPos + 0x45;
+            stream.Position += ret.TargetEndingPos + 0x45;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

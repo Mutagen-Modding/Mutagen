@@ -8,6 +8,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IHasDestructible
 - Activator
 - Armor
+- Book
 - Container
 - DestructibleObjectComponent
 - Flora
@@ -469,6 +470,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### BodyPartData
 - IModeled
 ### Book
+- IHasDestructible
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - IModeled

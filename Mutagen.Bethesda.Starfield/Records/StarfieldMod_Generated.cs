@@ -13149,8 +13149,9 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.BodyParts is IAssetLinkContainer BodyPartslinkCont)
             {
-                foreach (var item in obj.BodyParts.EnumerateListedAssetLinks())
+                foreach (var item in BodyPartslinkCont.EnumerateListedAssetLinks())
                 {
                     yield return item;
                 }
@@ -17650,9 +17651,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            foreach (var item in obj.BodyParts.EnumerateFormLinks())
+            if (obj.BodyParts is IFormLinkContainerGetter BodyPartslinkCont)
             {
-                yield return item;
+                foreach (var item in BodyPartslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             foreach (var item in obj.AddonNodes.EnumerateFormLinks())
             {
@@ -25076,9 +25080,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            foreach (var item in obj.BodyParts.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            if (obj.BodyParts is IAssetLinkContainerGetter BodyPartslinkCont)
             {
-                yield return item;
+                foreach (var item in BodyPartslinkCont.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
             }
             if (obj.AddonNodes is IAssetLinkContainerGetter AddonNodeslinkCont)
             {

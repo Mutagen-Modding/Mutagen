@@ -52,11 +52,8 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region Unknown1
-        public Single Unknown1 { get; set; } = default(Single);
-        #endregion
-        #region UnknownString3
-        public String UnknownString3 { get; set; } = string.Empty;
+        #region ChainEnd
+        public String ChainEnd { get; set; } = string.Empty;
         #endregion
 
         #region To String
@@ -99,21 +96,20 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Unknown1 = initialValue;
-                this.UnknownString3 = initialValue;
+                this.ChainEnd = initialValue;
             }
 
             public Mask(
-                TItem UnknownString1,
-                TItem UnknownString2,
-                TItem Unknown1,
-                TItem UnknownString3)
+                TItem Driver,
+                TItem Target,
+                TItem MaxAnimationDistance,
+                TItem ChainEnd)
             : base(
-                UnknownString1: UnknownString1,
-                UnknownString2: UnknownString2)
+                Driver: Driver,
+                Target: Target,
+                MaxAnimationDistance: MaxAnimationDistance)
             {
-                this.Unknown1 = Unknown1;
-                this.UnknownString3 = UnknownString3;
+                this.ChainEnd = ChainEnd;
             }
 
             #pragma warning disable CS8618
@@ -125,8 +121,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Unknown1;
-            public TItem UnknownString3;
+            public TItem ChainEnd;
             #endregion
 
             #region Equals
@@ -140,15 +135,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
-                if (!object.Equals(this.UnknownString3, rhs.UnknownString3)) return false;
+                if (!object.Equals(this.ChainEnd, rhs.ChainEnd)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Unknown1);
-                hash.Add(this.UnknownString3);
+                hash.Add(this.ChainEnd);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -159,8 +152,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.Unknown1)) return false;
-                if (!eval(this.UnknownString3)) return false;
+                if (!eval(this.ChainEnd)) return false;
                 return true;
             }
             #endregion
@@ -169,8 +161,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.Unknown1)) return true;
-                if (eval(this.UnknownString3)) return true;
+                if (eval(this.ChainEnd)) return true;
                 return false;
             }
             #endregion
@@ -186,8 +177,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Unknown1 = eval(this.Unknown1);
-                obj.UnknownString3 = eval(this.UnknownString3);
+                obj.ChainEnd = eval(this.ChainEnd);
             }
             #endregion
 
@@ -206,13 +196,9 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(BoneModifierLookAtChainData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Unknown1 ?? true)
+                    if (printMask?.ChainEnd ?? true)
                     {
-                        sb.AppendItem(Unknown1, "Unknown1");
-                    }
-                    if (printMask?.UnknownString3 ?? true)
-                    {
-                        sb.AppendItem(UnknownString3, "UnknownString3");
+                        sb.AppendItem(ChainEnd, "ChainEnd");
                     }
                 }
             }
@@ -225,8 +211,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? Unknown1;
-            public Exception? UnknownString3;
+            public Exception? ChainEnd;
             #endregion
 
             #region IErrorMask
@@ -235,10 +220,8 @@ namespace Mutagen.Bethesda.Starfield
                 BoneModifierLookAtChainData_FieldIndex enu = (BoneModifierLookAtChainData_FieldIndex)index;
                 switch (enu)
                 {
-                    case BoneModifierLookAtChainData_FieldIndex.Unknown1:
-                        return Unknown1;
-                    case BoneModifierLookAtChainData_FieldIndex.UnknownString3:
-                        return UnknownString3;
+                    case BoneModifierLookAtChainData_FieldIndex.ChainEnd:
+                        return ChainEnd;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -249,11 +232,8 @@ namespace Mutagen.Bethesda.Starfield
                 BoneModifierLookAtChainData_FieldIndex enu = (BoneModifierLookAtChainData_FieldIndex)index;
                 switch (enu)
                 {
-                    case BoneModifierLookAtChainData_FieldIndex.Unknown1:
-                        this.Unknown1 = ex;
-                        break;
-                    case BoneModifierLookAtChainData_FieldIndex.UnknownString3:
-                        this.UnknownString3 = ex;
+                    case BoneModifierLookAtChainData_FieldIndex.ChainEnd:
+                        this.ChainEnd = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -266,11 +246,8 @@ namespace Mutagen.Bethesda.Starfield
                 BoneModifierLookAtChainData_FieldIndex enu = (BoneModifierLookAtChainData_FieldIndex)index;
                 switch (enu)
                 {
-                    case BoneModifierLookAtChainData_FieldIndex.Unknown1:
-                        this.Unknown1 = (Exception?)obj;
-                        break;
-                    case BoneModifierLookAtChainData_FieldIndex.UnknownString3:
-                        this.UnknownString3 = (Exception?)obj;
+                    case BoneModifierLookAtChainData_FieldIndex.ChainEnd:
+                        this.ChainEnd = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -281,8 +258,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Unknown1 != null) return true;
-                if (UnknownString3 != null) return true;
+                if (ChainEnd != null) return true;
                 return false;
             }
             #endregion
@@ -310,10 +286,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(Unknown1, "Unknown1");
-                }
-                {
-                    sb.AppendItem(UnknownString3, "UnknownString3");
+                    sb.AppendItem(ChainEnd, "ChainEnd");
                 }
             }
             #endregion
@@ -323,8 +296,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
-                ret.UnknownString3 = this.UnknownString3.Combine(rhs.UnknownString3);
+                ret.ChainEnd = this.ChainEnd.Combine(rhs.ChainEnd);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -347,8 +319,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
-            public bool Unknown1;
-            public bool UnknownString3;
+            public bool ChainEnd;
             #endregion
 
             #region Ctors
@@ -357,8 +328,7 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.Unknown1 = defaultOn;
-                this.UnknownString3 = defaultOn;
+                this.ChainEnd = defaultOn;
             }
 
             #endregion
@@ -366,8 +336,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Unknown1, null));
-                ret.Add((UnknownString3, null));
+                ret.Add((ChainEnd, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -439,8 +408,7 @@ namespace Mutagen.Bethesda.Starfield
         IBoneModifierLookAtChainDataGetter,
         ILoquiObjectSetter<IBoneModifierLookAtChainData>
     {
-        new Single Unknown1 { get; set; }
-        new String UnknownString3 { get; set; }
+        new String ChainEnd { get; set; }
     }
 
     public partial interface IBoneModifierLookAtChainDataGetter :
@@ -449,8 +417,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObject<IBoneModifierLookAtChainDataGetter>
     {
         static new ILoquiRegistration StaticRegistration => BoneModifierLookAtChainData_Registration.Instance;
-        Single Unknown1 { get; }
-        String UnknownString3 { get; }
+        String ChainEnd { get; }
 
     }
 
@@ -595,10 +562,10 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum BoneModifierLookAtChainData_FieldIndex
     {
-        UnknownString1 = 0,
-        UnknownString2 = 1,
-        Unknown1 = 2,
-        UnknownString3 = 3,
+        Driver = 0,
+        Target = 1,
+        MaxAnimationDistance = 2,
+        ChainEnd = 3,
     }
     #endregion
 
@@ -609,7 +576,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 1;
 
         public const ushort FieldCount = 4;
 
@@ -677,8 +644,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IBoneModifierLookAtChainData item)
         {
             ClearPartial();
-            item.Unknown1 = default(Single);
-            item.UnknownString3 = string.Empty;
+            item.ChainEnd = string.Empty;
             base.Clear(item);
         }
         
@@ -745,8 +711,7 @@ namespace Mutagen.Bethesda.Starfield
             BoneModifierLookAtChainData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Unknown1 = item.Unknown1.EqualsWithin(rhs.Unknown1);
-            ret.UnknownString3 = string.Equals(item.UnknownString3, rhs.UnknownString3);
+            ret.ChainEnd = string.Equals(item.ChainEnd, rhs.ChainEnd);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -796,13 +761,9 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.Unknown1 ?? true)
+            if (printMask?.ChainEnd ?? true)
             {
-                sb.AppendItem(item.Unknown1, "Unknown1");
-            }
-            if (printMask?.UnknownString3 ?? true)
-            {
-                sb.AppendItem(item.UnknownString3, "UnknownString3");
+                sb.AppendItem(item.ChainEnd, "ChainEnd");
             }
         }
         
@@ -810,9 +771,11 @@ namespace Mutagen.Bethesda.Starfield
         {
             switch (index)
             {
-                case ABoneModifierData_FieldIndex.UnknownString1:
+                case ABoneModifierData_FieldIndex.Driver:
                     return (BoneModifierLookAtChainData_FieldIndex)((int)index);
-                case ABoneModifierData_FieldIndex.UnknownString2:
+                case ABoneModifierData_FieldIndex.Target:
+                    return (BoneModifierLookAtChainData_FieldIndex)((int)index);
+                case ABoneModifierData_FieldIndex.MaxAnimationDistance:
                     return (BoneModifierLookAtChainData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -827,13 +790,9 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IABoneModifierDataGetter)lhs, (IABoneModifierDataGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)BoneModifierLookAtChainData_FieldIndex.Unknown1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BoneModifierLookAtChainData_FieldIndex.ChainEnd) ?? true))
             {
-                if (!lhs.Unknown1.EqualsWithin(rhs.Unknown1)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)BoneModifierLookAtChainData_FieldIndex.UnknownString3) ?? true))
-            {
-                if (!string.Equals(lhs.UnknownString3, rhs.UnknownString3)) return false;
+                if (!string.Equals(lhs.ChainEnd, rhs.ChainEnd)) return false;
             }
             return true;
         }
@@ -852,8 +811,7 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IBoneModifierLookAtChainDataGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Unknown1);
-            hash.Add(item.UnknownString3);
+            hash.Add(item.ChainEnd);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -898,13 +856,9 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)BoneModifierLookAtChainData_FieldIndex.Unknown1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)BoneModifierLookAtChainData_FieldIndex.ChainEnd) ?? true))
             {
-                item.Unknown1 = rhs.Unknown1;
-            }
-            if ((copyMask?.GetShouldTranslate((int)BoneModifierLookAtChainData_FieldIndex.UnknownString3) ?? true))
-            {
-                item.UnknownString3 = rhs.UnknownString3;
+                item.ChainEnd = rhs.ChainEnd;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1029,12 +983,9 @@ namespace Mutagen.Bethesda.Starfield
             ABoneModifierDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unknown1);
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.UnknownString3,
+                item: item.ChainEnd,
                 binaryType: StringBinaryType.PrependLengthWithNullIfContent);
         }
 
@@ -1083,8 +1034,7 @@ namespace Mutagen.Bethesda.Starfield
             ABoneModifierDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.Unknown1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.UnknownString3 = StringBinaryTranslation.Instance.Parse(
+            item.ChainEnd = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
                 stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
                 parseWhole: true);
@@ -1134,10 +1084,9 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public Single Unknown1 => _structData.Slice(UnknownString2EndingPos, 0x4).Float();
-        #region UnknownString3
-        public String UnknownString3 => BinaryStringUtility.ParsePrependedString(_structData.Slice(UnknownString2EndingPos + 0x4), lengthLength: 4, encoding: _package.MetaData.Encodings.NonTranslated);
-        protected int UnknownString3EndingPos;
+        #region ChainEnd
+        public String ChainEnd => BinaryStringUtility.ParsePrependedString(_structData.Slice(TargetEndingPos + 0x4), lengthLength: 4, encoding: _package.MetaData.Encodings.NonTranslated);
+        protected int ChainEndEndingPos;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1162,7 +1111,7 @@ namespace Mutagen.Bethesda.Starfield
             ABoneModifierDataParseEndingPositions(
                 ret: ret,
                 package: package);
-            ret.UnknownString3EndingPos = ret.UnknownString2EndingPos + 0x4 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.UnknownString2EndingPos + 0x4)) + 4;
+            ret.ChainEndEndingPos = ret.TargetEndingPos + 0x4 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.TargetEndingPos + 0x4)) + 4;
         }
 
         public static IBoneModifierLookAtChainDataGetter BoneModifierLookAtChainDataFactory(
@@ -1181,7 +1130,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: memoryPair,
                 package: package);
             BoneModifierLookAtChainDataParseEndingPositions(ret, package);
-            stream.Position += ret.UnknownString3EndingPos;
+            stream.Position += ret.ChainEndEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
