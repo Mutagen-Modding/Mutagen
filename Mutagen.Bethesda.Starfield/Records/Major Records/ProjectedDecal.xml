@@ -5,7 +5,7 @@
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
       <Float name="ODRT" recordType="ODRT" unknown="true" />
-      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <RefDirect name="ObjectPaletteDefaults" refName="ObjectPaletteDefaults" />
       <RefList name="Components" refName="AComponent" />
       <RefDirect name="Transforms" refName="Transforms" />
       <RefDirect name="PTTA" refName="PTTA" unknown="true" />

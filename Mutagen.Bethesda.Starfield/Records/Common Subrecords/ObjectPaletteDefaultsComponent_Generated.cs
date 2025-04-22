@@ -54,14 +54,14 @@ namespace Mutagen.Bethesda.Starfield
 
         #region ObjectPlacementDefaults
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectPlacementDefaults? _ObjectPlacementDefaults;
-        public ObjectPlacementDefaults? ObjectPlacementDefaults
+        private ObjectPaletteDefaults? _ObjectPlacementDefaults;
+        public ObjectPaletteDefaults? ObjectPlacementDefaults
         {
             get => _ObjectPlacementDefaults;
             set => _ObjectPlacementDefaults = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectPlacementDefaultsGetter? IObjectPaletteDefaultsComponentGetter.ObjectPlacementDefaults => this.ObjectPlacementDefaults;
+        IObjectPaletteDefaultsGetter? IObjectPaletteDefaultsComponentGetter.ObjectPlacementDefaults => this.ObjectPlacementDefaults;
         #endregion
 
         #region To String
@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem ObjectPlacementDefaults)
             : base()
             {
-                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(ObjectPlacementDefaults, new ObjectPlacementDefaults.Mask<TItem>(ObjectPlacementDefaults));
+                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(ObjectPlacementDefaults, new ObjectPaletteDefaults.Mask<TItem>(ObjectPlacementDefaults));
             }
 
             #pragma warning disable CS8618
@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>? ObjectPlacementDefaults { get; set; }
+            public MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>? ObjectPlacementDefaults { get; set; }
             #endregion
 
             #region Equals
@@ -180,7 +180,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.ObjectPlacementDefaults = this.ObjectPlacementDefaults == null ? null : new MaskItem<R, ObjectPlacementDefaults.Mask<R>?>(eval(this.ObjectPlacementDefaults.Overall), this.ObjectPlacementDefaults.Specific?.Translate(eval));
+                obj.ObjectPlacementDefaults = this.ObjectPlacementDefaults == null ? null : new MaskItem<R, ObjectPaletteDefaults.Mask<R>?>(eval(this.ObjectPlacementDefaults.Overall), this.ObjectPlacementDefaults.Specific?.Translate(eval));
             }
             #endregion
 
@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
-            public MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>? ObjectPlacementDefaults;
+            public MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>? ObjectPlacementDefaults;
             #endregion
 
             #region IErrorMask
@@ -236,7 +236,7 @@ namespace Mutagen.Bethesda.Starfield
                 switch (enu)
                 {
                     case ObjectPaletteDefaultsComponent_FieldIndex.ObjectPlacementDefaults:
-                        this.ObjectPlacementDefaults = new MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>(ex, null);
+                        this.ObjectPlacementDefaults = new MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -250,7 +250,7 @@ namespace Mutagen.Bethesda.Starfield
                 switch (enu)
                 {
                     case ObjectPaletteDefaultsComponent_FieldIndex.ObjectPlacementDefaults:
-                        this.ObjectPlacementDefaults = (MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>?)obj;
+                        this.ObjectPlacementDefaults = (MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -320,7 +320,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
-            public ObjectPlacementDefaults.TranslationMask? ObjectPlacementDefaults;
+            public ObjectPaletteDefaults.TranslationMask? ObjectPlacementDefaults;
             #endregion
 
             #region Ctors
@@ -408,7 +408,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IObjectPaletteDefaultsComponent>,
         IObjectPaletteDefaultsComponentGetter
     {
-        new ObjectPlacementDefaults? ObjectPlacementDefaults { get; set; }
+        new ObjectPaletteDefaults? ObjectPlacementDefaults { get; set; }
     }
 
     public partial interface IObjectPaletteDefaultsComponentGetter :
@@ -417,7 +417,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObject<IObjectPaletteDefaultsComponentGetter>
     {
         static new ILoquiRegistration StaticRegistration => ObjectPaletteDefaultsComponent_Registration.Instance;
-        IObjectPlacementDefaultsGetter? ObjectPlacementDefaults { get; }
+        IObjectPaletteDefaultsGetter? ObjectPlacementDefaults { get; }
 
     }
 
@@ -803,7 +803,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults, out var lhsObjectPlacementDefaults, out var rhsObjectPlacementDefaults, out var isObjectPlacementDefaultsEqual))
                 {
-                    if (!((ObjectPlacementDefaultsCommon)((IObjectPlacementDefaultsGetter)lhsObjectPlacementDefaults).CommonInstance()!).Equals(lhsObjectPlacementDefaults, rhsObjectPlacementDefaults, equalsMask?.GetSubCrystal((int)ObjectPaletteDefaultsComponent_FieldIndex.ObjectPlacementDefaults))) return false;
+                    if (!((ObjectPaletteDefaultsCommon)((IObjectPaletteDefaultsGetter)lhsObjectPlacementDefaults).CommonInstance()!).Equals(lhsObjectPlacementDefaults, rhsObjectPlacementDefaults, equalsMask?.GetSubCrystal((int)ObjectPaletteDefaultsComponent_FieldIndex.ObjectPlacementDefaults))) return false;
                 }
                 else if (!isObjectPlacementDefaultsEqual) return false;
             }
@@ -1029,7 +1029,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
             if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
             {
-                ((ObjectPlacementDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPlacementDefaultsItem).BinaryWriteTranslator).Write(
+                ((ObjectPaletteDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPlacementDefaultsItem).BinaryWriteTranslator).Write(
                     item: ObjectPlacementDefaultsItem,
                     writer: writer,
                     translationParams: translationParams);
@@ -1090,7 +1090,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.OPDS:
                 {
-                    item.ObjectPlacementDefaults = Mutagen.Bethesda.Starfield.ObjectPlacementDefaults.CreateFromBinary(frame: frame);
+                    item.ObjectPlacementDefaults = Mutagen.Bethesda.Starfield.ObjectPaletteDefaults.CreateFromBinary(frame: frame);
                     return (int)ObjectPaletteDefaultsComponent_FieldIndex.ObjectPlacementDefaults;
                 }
                 default:
@@ -1151,7 +1151,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region ObjectPlacementDefaults
         private RangeInt32? _ObjectPlacementDefaultsLocation;
-        public IObjectPlacementDefaultsGetter? ObjectPlacementDefaults => _ObjectPlacementDefaultsLocation.HasValue ? ObjectPlacementDefaultsBinaryOverlay.ObjectPlacementDefaultsFactory(_recordData.Slice(_ObjectPlacementDefaultsLocation!.Value.Min), _package) : default;
+        public IObjectPaletteDefaultsGetter? ObjectPlacementDefaults => _ObjectPlacementDefaultsLocation.HasValue ? ObjectPaletteDefaultsBinaryOverlay.ObjectPaletteDefaultsFactory(_recordData.Slice(_ObjectPlacementDefaultsLocation!.Value.Min), _package) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -5,14 +5,14 @@
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
-      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <RefDirect name="ObjectPaletteDefaults" refName="ObjectPaletteDefaults" />
       <RefDirect name="Transforms" refName="Transforms" />
       <FormLink name="SnapTemplate" refName="SnapTemplate" recordType="SNTP" />
       <FormLink name="SnapBehavior" refName="SnapTemplate" recordType="SNBH" />
       <UInt64 name="XALG" recordType="XALG" unknown="true" />
       <RefList name="Components" refName="AComponent" />
       <String name="Filter" recordType="FLTR" />
-      <RefDirect name="ObjectPlacementDefaults2" refName="ObjectPlacementDefaults" />
+      <RefDirect name="ObjectPlacementDefaults2" refName="ObjectPaletteDefaults" />
       <FormLink name="Cell" refName="Cell" recordType="CNAM" />
       <UInt32 name="Version" recordType="VNAM" />
       <ByteArray name="FNAM" recordType="FNAM" unknown="true" />

@@ -1996,6 +1996,9 @@
     <Compile Include="Records\Common Subrecords\ObjectModStringProperty_Generated.cs">
       <DependentUpon>ObjectTemplate.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectPaletteDefaults.cs">
+      <DependentUpon>ObjectPaletteDefaults.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\ObjectTemplate.cs">
       <DependentUpon>ObjectTemplate.xml</DependentUpon>
     </Compile>
@@ -4670,9 +4673,6 @@
     <Compile Include="Records\Common Subrecords\ObjectBounds_Generated.cs">
       <DependentUpon>ObjectBounds.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\ObjectPlacementDefaults_Generated.cs">
-      <DependentUpon>ObjectPlacementDefaults.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\ObjectProperty_Generated.cs">
       <DependentUpon>ObjectProperty.xml</DependentUpon>
     </Compile>
@@ -6797,6 +6797,9 @@
     </Compile>
     <Compile Include="Records\Major Records\ArmorAddonSkinTexture_Generated.cs">
       <DependentUpon>ArmorAddon.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectPaletteDefaults_Generated.cs">
+      <DependentUpon>ObjectPaletteDefaults.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

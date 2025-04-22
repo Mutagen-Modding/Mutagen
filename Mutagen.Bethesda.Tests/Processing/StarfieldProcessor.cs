@@ -106,17 +106,20 @@ public class StarfieldProcessor : Processor
         }
     }
 
-    private void ProcessObjectPlacementDefaults(
+    private void ProcessObjectPaletteDefaults(
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
         foreach (var frame in majorFrame.FindEnumerateSubrecords(RecordTypes.OPDS))
         {
-            int offset = 0;
-            for (int i = 0; i < 20; i++)
-            {
-                ProcessZeroFloat(frame, fileOffset, ref offset);
-            }
+            int offset = 4;
+            ProcessZeroFloats(frame, fileOffset, ref offset, 3);
+            offset += 4;
+            ProcessZeroFloats(frame, fileOffset, ref offset, 2);
+            ProcessRotationFloats(frame, fileOffset, ref offset, 6);
+            ProcessZeroFloats(frame, fileOffset, ref offset, 4);
+            ProcessRotationFloat(frame, fileOffset, ref offset);
+            ProcessZeroFloats(frame, fileOffset, ref offset, 2);
         }
     }
 
@@ -280,7 +283,7 @@ public class StarfieldProcessor : Processor
         long fileOffset)
     {
         ProcessComponents(majorFrame, fileOffset);
-        ProcessObjectPlacementDefaults(majorFrame, fileOffset);
+        ProcessObjectPaletteDefaults(majorFrame, fileOffset);
         ProcessFEIndices(majorFrame, fileOffset);
     }
 

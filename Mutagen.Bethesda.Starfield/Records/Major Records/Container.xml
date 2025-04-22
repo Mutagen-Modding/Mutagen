@@ -5,7 +5,7 @@
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
-      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <RefDirect name="ObjectPaletteDefaults" refName="ObjectPaletteDefaults" />
       <UInt64 name="XALG" recordType="XALG" unknown="true" />
       <RefDirect name="Transforms" refName="Transforms" />
       <FormLink name="SnapTemplate" refName="SnapTemplate" recordType="SNTP" />

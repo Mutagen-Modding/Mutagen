@@ -99,14 +99,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ObjectPlacementDefaults
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectPlacementDefaults? _ObjectPlacementDefaults;
-        public ObjectPlacementDefaults? ObjectPlacementDefaults
+        private ObjectPaletteDefaults? _ObjectPlacementDefaults;
+        public ObjectPaletteDefaults? ObjectPlacementDefaults
         {
             get => _ObjectPlacementDefaults;
             set => _ObjectPlacementDefaults = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectPlacementDefaultsGetter? IStaticGetter.ObjectPlacementDefaults => this.ObjectPlacementDefaults;
+        IObjectPaletteDefaultsGetter? IStaticGetter.ObjectPlacementDefaults => this.ObjectPlacementDefaults;
         #endregion
         #region Transforms
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -337,7 +337,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.DirtinessScale = initialValue;
                 this.ODRT = initialValue;
                 this.PTTA = new MaskItem<TItem, PTTA.Mask<TItem>?>(initialValue, new PTTA.Mask<TItem>(initialValue));
-                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(initialValue, new ObjectPlacementDefaults.Mask<TItem>(initialValue));
+                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(initialValue, new ObjectPaletteDefaults.Mask<TItem>(initialValue));
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
                 this.SnapTemplate = initialValue;
                 this.SnapBehavior = initialValue;
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.DirtinessScale = DirtinessScale;
                 this.ODRT = ODRT;
                 this.PTTA = new MaskItem<TItem, PTTA.Mask<TItem>?>(PTTA, new PTTA.Mask<TItem>(PTTA));
-                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(ObjectPlacementDefaults, new ObjectPlacementDefaults.Mask<TItem>(ObjectPlacementDefaults));
+                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(ObjectPlacementDefaults, new ObjectPaletteDefaults.Mask<TItem>(ObjectPlacementDefaults));
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
                 this.SnapTemplate = SnapTemplate;
                 this.SnapBehavior = SnapBehavior;
@@ -433,7 +433,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem DirtinessScale;
             public TItem ODRT;
             public MaskItem<TItem, PTTA.Mask<TItem>?>? PTTA { get; set; }
-            public MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>? ObjectPlacementDefaults { get; set; }
+            public MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>? ObjectPlacementDefaults { get; set; }
             public MaskItem<TItem, Transforms.Mask<TItem>?>? Transforms { get; set; }
             public TItem SnapTemplate;
             public TItem SnapBehavior;
@@ -714,7 +714,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.DirtinessScale = eval(this.DirtinessScale);
                 obj.ODRT = eval(this.ODRT);
                 obj.PTTA = this.PTTA == null ? null : new MaskItem<R, PTTA.Mask<R>?>(eval(this.PTTA.Overall), this.PTTA.Specific?.Translate(eval));
-                obj.ObjectPlacementDefaults = this.ObjectPlacementDefaults == null ? null : new MaskItem<R, ObjectPlacementDefaults.Mask<R>?>(eval(this.ObjectPlacementDefaults.Overall), this.ObjectPlacementDefaults.Specific?.Translate(eval));
+                obj.ObjectPlacementDefaults = this.ObjectPlacementDefaults == null ? null : new MaskItem<R, ObjectPaletteDefaults.Mask<R>?>(eval(this.ObjectPlacementDefaults.Overall), this.ObjectPlacementDefaults.Specific?.Translate(eval));
                 obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Transforms.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
                 obj.SnapTemplate = eval(this.SnapTemplate);
                 obj.SnapBehavior = eval(this.SnapBehavior);
@@ -941,7 +941,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? DirtinessScale;
             public Exception? ODRT;
             public MaskItem<Exception?, PTTA.ErrorMask?>? PTTA;
-            public MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>? ObjectPlacementDefaults;
+            public MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>? ObjectPlacementDefaults;
             public MaskItem<Exception?, Transforms.ErrorMask?>? Transforms;
             public Exception? SnapTemplate;
             public Exception? SnapBehavior;
@@ -1034,7 +1034,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.PTTA = new MaskItem<Exception?, PTTA.ErrorMask?>(ex, null);
                         break;
                     case Static_FieldIndex.ObjectPlacementDefaults:
-                        this.ObjectPlacementDefaults = new MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>(ex, null);
+                        this.ObjectPlacementDefaults = new MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>(ex, null);
                         break;
                     case Static_FieldIndex.Transforms:
                         this.Transforms = new MaskItem<Exception?, Transforms.ErrorMask?>(ex, null);
@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.PTTA = (MaskItem<Exception?, PTTA.ErrorMask?>?)obj;
                         break;
                     case Static_FieldIndex.ObjectPlacementDefaults:
-                        this.ObjectPlacementDefaults = (MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>?)obj;
+                        this.ObjectPlacementDefaults = (MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>?)obj;
                         break;
                     case Static_FieldIndex.Transforms:
                         this.Transforms = (MaskItem<Exception?, Transforms.ErrorMask?>?)obj;
@@ -1376,7 +1376,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool DirtinessScale;
             public bool ODRT;
             public PTTA.TranslationMask? PTTA;
-            public ObjectPlacementDefaults.TranslationMask? ObjectPlacementDefaults;
+            public ObjectPaletteDefaults.TranslationMask? ObjectPlacementDefaults;
             public Transforms.TranslationMask? Transforms;
             public bool SnapTemplate;
             public bool SnapBehavior;
@@ -1618,7 +1618,7 @@ namespace Mutagen.Bethesda.Starfield
         new Percent DirtinessScale { get; set; }
         new Single? ODRT { get; set; }
         new PTTA? PTTA { get; set; }
-        new ObjectPlacementDefaults? ObjectPlacementDefaults { get; set; }
+        new ObjectPaletteDefaults? ObjectPlacementDefaults { get; set; }
         new Transforms? Transforms { get; set; }
         new IFormLinkNullable<ISnapTemplateGetter> SnapTemplate { get; set; }
         new IFormLinkNullable<ISnapTemplateGetter> SnapBehavior { get; set; }
@@ -1680,7 +1680,7 @@ namespace Mutagen.Bethesda.Starfield
         Percent DirtinessScale { get; }
         Single? ODRT { get; }
         IPTTAGetter? PTTA { get; }
-        IObjectPlacementDefaultsGetter? ObjectPlacementDefaults { get; }
+        IObjectPaletteDefaultsGetter? ObjectPlacementDefaults { get; }
         ITransformsGetter? Transforms { get; }
         IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate { get; }
         IFormLinkNullableGetter<ISnapTemplateGetter> SnapBehavior { get; }
@@ -2481,7 +2481,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults, out var lhsObjectPlacementDefaults, out var rhsObjectPlacementDefaults, out var isObjectPlacementDefaultsEqual))
                 {
-                    if (!((ObjectPlacementDefaultsCommon)((IObjectPlacementDefaultsGetter)lhsObjectPlacementDefaults).CommonInstance()!).Equals(lhsObjectPlacementDefaults, rhsObjectPlacementDefaults, equalsMask?.GetSubCrystal((int)Static_FieldIndex.ObjectPlacementDefaults))) return false;
+                    if (!((ObjectPaletteDefaultsCommon)((IObjectPaletteDefaultsGetter)lhsObjectPlacementDefaults).CommonInstance()!).Equals(lhsObjectPlacementDefaults, rhsObjectPlacementDefaults, equalsMask?.GetSubCrystal((int)Static_FieldIndex.ObjectPlacementDefaults))) return false;
                 }
                 else if (!isObjectPlacementDefaultsEqual) return false;
             }
@@ -3346,7 +3346,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
             {
-                ((ObjectPlacementDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPlacementDefaultsItem).BinaryWriteTranslator).Write(
+                ((ObjectPaletteDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPlacementDefaultsItem).BinaryWriteTranslator).Write(
                     item: ObjectPlacementDefaultsItem,
                     writer: writer,
                     translationParams: translationParams);
@@ -3558,7 +3558,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.OPDS:
                 {
-                    item.ObjectPlacementDefaults = Mutagen.Bethesda.Starfield.ObjectPlacementDefaults.CreateFromBinary(frame: frame);
+                    item.ObjectPlacementDefaults = Mutagen.Bethesda.Starfield.ObjectPaletteDefaults.CreateFromBinary(frame: frame);
                     return (int)Static_FieldIndex.ObjectPlacementDefaults;
                 }
                 case RecordTypeInts.PTT2:
@@ -3760,7 +3760,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ObjectPlacementDefaults
         private RangeInt32? _ObjectPlacementDefaultsLocation;
-        public IObjectPlacementDefaultsGetter? ObjectPlacementDefaults => _ObjectPlacementDefaultsLocation.HasValue ? ObjectPlacementDefaultsBinaryOverlay.ObjectPlacementDefaultsFactory(_recordData.Slice(_ObjectPlacementDefaultsLocation!.Value.Min), _package) : default;
+        public IObjectPaletteDefaultsGetter? ObjectPlacementDefaults => _ObjectPlacementDefaultsLocation.HasValue ? ObjectPaletteDefaultsBinaryOverlay.ObjectPaletteDefaultsFactory(_recordData.Slice(_ObjectPlacementDefaultsLocation!.Value.Min), _package) : default;
         #endregion
         #region Transforms
         private RangeInt32? _TransformsLocation;

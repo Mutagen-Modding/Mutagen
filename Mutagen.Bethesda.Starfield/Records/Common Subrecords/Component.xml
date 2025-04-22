@@ -151,7 +151,7 @@
   </Object>
   <Object name="ObjectPaletteDefaultsComponent" objType="Subrecord" baseClass="AComponent">
     <Fields>
-      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <RefDirect name="ObjectPaletteDefaults" refName="ObjectPaletteDefaults" />
     </Fields>
   </Object>
   <Object name="VolumesComponent" objType="Subrecord" baseClass="AComponent" >

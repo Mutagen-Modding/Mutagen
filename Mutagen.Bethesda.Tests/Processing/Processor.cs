@@ -607,6 +607,16 @@ public abstract class Processor
         }
     }
 
+    public bool ProcessRotationFloats(SubrecordPinFrame pin, long offsetLoc, ref int loc, int amount, float multiplier = 57.2958f)
+    {
+        for (int i = 0; i < amount; i++)
+        {
+            if (!ProcessRotationFloat(pin, offsetLoc, ref loc, multiplier: multiplier)) return false;
+        }
+
+        return true;
+    }
+
     public bool ProcessRotationFloat(SubrecordPinFrame pin, long offsetLoc, ref int loc, float multiplier = 57.2958f)
     {
         if (loc >= pin.ContentLength) return false;

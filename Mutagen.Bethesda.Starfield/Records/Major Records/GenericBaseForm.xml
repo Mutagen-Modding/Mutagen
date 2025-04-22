@@ -7,7 +7,7 @@
       <String name="Name" recordType="FULL" translated="Normal" />
       <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
       <Float name="ODRT" recordType="ODRT" unknown="true" />
-      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <RefDirect name="ObjectPaletteDefaults" refName="ObjectPaletteDefaults" />
       <RefList name="Components" refName="AComponent" />
       <String name="Filter" recordType="FLTR" />
       <FormLink name="Template" recordType="ANAM" refName="GenericBaseFormTemplate" />

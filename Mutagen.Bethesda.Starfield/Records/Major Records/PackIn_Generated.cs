@@ -103,14 +103,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ObjectPlacementDefaults
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectPlacementDefaults? _ObjectPlacementDefaults;
-        public ObjectPlacementDefaults? ObjectPlacementDefaults
+        private ObjectPaletteDefaults? _ObjectPlacementDefaults;
+        public ObjectPaletteDefaults? ObjectPlacementDefaults
         {
             get => _ObjectPlacementDefaults;
             set => _ObjectPlacementDefaults = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectPlacementDefaultsGetter? IPackInGetter.ObjectPlacementDefaults => this.ObjectPlacementDefaults;
+        IObjectPaletteDefaultsGetter? IPackInGetter.ObjectPlacementDefaults => this.ObjectPlacementDefaults;
         #endregion
         #region Transforms
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -169,14 +169,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ObjectPlacementDefaults2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectPlacementDefaults? _ObjectPlacementDefaults2;
-        public ObjectPlacementDefaults? ObjectPlacementDefaults2
+        private ObjectPaletteDefaults? _ObjectPlacementDefaults2;
+        public ObjectPaletteDefaults? ObjectPlacementDefaults2
         {
             get => _ObjectPlacementDefaults2;
             set => _ObjectPlacementDefaults2 = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectPlacementDefaultsGetter? IPackInGetter.ObjectPlacementDefaults2 => this.ObjectPlacementDefaults2;
+        IObjectPaletteDefaultsGetter? IPackInGetter.ObjectPlacementDefaults2 => this.ObjectPlacementDefaults2;
         #endregion
         #region Cell
         private readonly IFormLinkNullable<ICellGetter> _Cell = new FormLinkNullable<ICellGetter>();
@@ -341,14 +341,14 @@ namespace Mutagen.Bethesda.Starfield
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.DirtinessScale = initialValue;
-                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(initialValue, new ObjectPlacementDefaults.Mask<TItem>(initialValue));
+                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(initialValue, new ObjectPaletteDefaults.Mask<TItem>(initialValue));
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
                 this.SnapTemplate = initialValue;
                 this.SnapBehavior = initialValue;
                 this.XALG = initialValue;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Filter = initialValue;
-                this.ObjectPlacementDefaults2 = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(initialValue, new ObjectPlacementDefaults.Mask<TItem>(initialValue));
+                this.ObjectPlacementDefaults2 = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(initialValue, new ObjectPaletteDefaults.Mask<TItem>(initialValue));
                 this.Cell = initialValue;
                 this.Version = initialValue;
                 this.FNAM = initialValue;
@@ -400,14 +400,14 @@ namespace Mutagen.Bethesda.Starfield
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.DirtinessScale = DirtinessScale;
-                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(ObjectPlacementDefaults, new ObjectPlacementDefaults.Mask<TItem>(ObjectPlacementDefaults));
+                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(ObjectPlacementDefaults, new ObjectPaletteDefaults.Mask<TItem>(ObjectPlacementDefaults));
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
                 this.SnapTemplate = SnapTemplate;
                 this.SnapBehavior = SnapBehavior;
                 this.XALG = XALG;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Filter = Filter;
-                this.ObjectPlacementDefaults2 = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(ObjectPlacementDefaults2, new ObjectPlacementDefaults.Mask<TItem>(ObjectPlacementDefaults2));
+                this.ObjectPlacementDefaults2 = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(ObjectPlacementDefaults2, new ObjectPaletteDefaults.Mask<TItem>(ObjectPlacementDefaults2));
                 this.Cell = Cell;
                 this.Version = Version;
                 this.FNAM = FNAM;
@@ -431,14 +431,14 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem DirtinessScale;
-            public MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>? ObjectPlacementDefaults { get; set; }
+            public MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>? ObjectPlacementDefaults { get; set; }
             public MaskItem<TItem, Transforms.Mask<TItem>?>? Transforms { get; set; }
             public TItem SnapTemplate;
             public TItem SnapBehavior;
             public TItem XALG;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public TItem Filter;
-            public MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>? ObjectPlacementDefaults2 { get; set; }
+            public MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>? ObjectPlacementDefaults2 { get; set; }
             public TItem Cell;
             public TItem Version;
             public TItem FNAM;
@@ -726,7 +726,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.DirtinessScale = eval(this.DirtinessScale);
-                obj.ObjectPlacementDefaults = this.ObjectPlacementDefaults == null ? null : new MaskItem<R, ObjectPlacementDefaults.Mask<R>?>(eval(this.ObjectPlacementDefaults.Overall), this.ObjectPlacementDefaults.Specific?.Translate(eval));
+                obj.ObjectPlacementDefaults = this.ObjectPlacementDefaults == null ? null : new MaskItem<R, ObjectPaletteDefaults.Mask<R>?>(eval(this.ObjectPlacementDefaults.Overall), this.ObjectPlacementDefaults.Specific?.Translate(eval));
                 obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Transforms.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
                 obj.SnapTemplate = eval(this.SnapTemplate);
                 obj.SnapBehavior = eval(this.SnapBehavior);
@@ -747,7 +747,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 obj.Filter = eval(this.Filter);
-                obj.ObjectPlacementDefaults2 = this.ObjectPlacementDefaults2 == null ? null : new MaskItem<R, ObjectPlacementDefaults.Mask<R>?>(eval(this.ObjectPlacementDefaults2.Overall), this.ObjectPlacementDefaults2.Specific?.Translate(eval));
+                obj.ObjectPlacementDefaults2 = this.ObjectPlacementDefaults2 == null ? null : new MaskItem<R, ObjectPaletteDefaults.Mask<R>?>(eval(this.ObjectPlacementDefaults2.Overall), this.ObjectPlacementDefaults2.Specific?.Translate(eval));
                 obj.Cell = eval(this.Cell);
                 obj.Version = eval(this.Version);
                 obj.FNAM = eval(this.FNAM);
@@ -1003,14 +1003,14 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? DirtinessScale;
-            public MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>? ObjectPlacementDefaults;
+            public MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>? ObjectPlacementDefaults;
             public MaskItem<Exception?, Transforms.ErrorMask?>? Transforms;
             public Exception? SnapTemplate;
             public Exception? SnapBehavior;
             public Exception? XALG;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public Exception? Filter;
-            public MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>? ObjectPlacementDefaults2;
+            public MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>? ObjectPlacementDefaults2;
             public Exception? Cell;
             public Exception? Version;
             public Exception? FNAM;
@@ -1088,7 +1088,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.DirtinessScale = ex;
                         break;
                     case PackIn_FieldIndex.ObjectPlacementDefaults:
-                        this.ObjectPlacementDefaults = new MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>(ex, null);
+                        this.ObjectPlacementDefaults = new MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>(ex, null);
                         break;
                     case PackIn_FieldIndex.Transforms:
                         this.Transforms = new MaskItem<Exception?, Transforms.ErrorMask?>(ex, null);
@@ -1109,7 +1109,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.Filter = ex;
                         break;
                     case PackIn_FieldIndex.ObjectPlacementDefaults2:
-                        this.ObjectPlacementDefaults2 = new MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>(ex, null);
+                        this.ObjectPlacementDefaults2 = new MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>(ex, null);
                         break;
                     case PackIn_FieldIndex.Cell:
                         this.Cell = ex;
@@ -1159,7 +1159,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.DirtinessScale = (Exception?)obj;
                         break;
                     case PackIn_FieldIndex.ObjectPlacementDefaults:
-                        this.ObjectPlacementDefaults = (MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>?)obj;
+                        this.ObjectPlacementDefaults = (MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>?)obj;
                         break;
                     case PackIn_FieldIndex.Transforms:
                         this.Transforms = (MaskItem<Exception?, Transforms.ErrorMask?>?)obj;
@@ -1180,7 +1180,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.Filter = (Exception?)obj;
                         break;
                     case PackIn_FieldIndex.ObjectPlacementDefaults2:
-                        this.ObjectPlacementDefaults2 = (MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>?)obj;
+                        this.ObjectPlacementDefaults2 = (MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>?)obj;
                         break;
                     case PackIn_FieldIndex.Cell:
                         this.Cell = (Exception?)obj;
@@ -1448,14 +1448,14 @@ namespace Mutagen.Bethesda.Starfield
             public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool DirtinessScale;
-            public ObjectPlacementDefaults.TranslationMask? ObjectPlacementDefaults;
+            public ObjectPaletteDefaults.TranslationMask? ObjectPlacementDefaults;
             public Transforms.TranslationMask? Transforms;
             public bool SnapTemplate;
             public bool SnapBehavior;
             public bool XALG;
             public AComponent.TranslationMask? Components;
             public bool Filter;
-            public ObjectPlacementDefaults.TranslationMask? ObjectPlacementDefaults2;
+            public ObjectPaletteDefaults.TranslationMask? ObjectPlacementDefaults2;
             public bool Cell;
             public bool Version;
             public bool FNAM;
@@ -1691,14 +1691,14 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new Percent DirtinessScale { get; set; }
-        new ObjectPlacementDefaults? ObjectPlacementDefaults { get; set; }
+        new ObjectPaletteDefaults? ObjectPlacementDefaults { get; set; }
         new Transforms? Transforms { get; set; }
         new IFormLinkNullable<ISnapTemplateGetter> SnapTemplate { get; set; }
         new IFormLinkNullable<ISnapTemplateGetter> SnapBehavior { get; set; }
         new UInt64? XALG { get; set; }
         new ExtendedList<AComponent> Components { get; }
         new String? Filter { get; set; }
-        new ObjectPlacementDefaults? ObjectPlacementDefaults2 { get; set; }
+        new ObjectPaletteDefaults? ObjectPlacementDefaults2 { get; set; }
         new IFormLinkNullable<ICellGetter> Cell { get; set; }
         new UInt32? Version { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
@@ -1762,14 +1762,14 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
         Percent DirtinessScale { get; }
-        IObjectPlacementDefaultsGetter? ObjectPlacementDefaults { get; }
+        IObjectPaletteDefaultsGetter? ObjectPlacementDefaults { get; }
         ITransformsGetter? Transforms { get; }
         IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate { get; }
         IFormLinkNullableGetter<ISnapTemplateGetter> SnapBehavior { get; }
         UInt64? XALG { get; }
         IReadOnlyList<IAComponentGetter> Components { get; }
         String? Filter { get; }
-        IObjectPlacementDefaultsGetter? ObjectPlacementDefaults2 { get; }
+        IObjectPaletteDefaultsGetter? ObjectPlacementDefaults2 { get; }
         IFormLinkNullableGetter<ICellGetter> Cell { get; }
         UInt32? Version { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
@@ -2556,7 +2556,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults, out var lhsObjectPlacementDefaults, out var rhsObjectPlacementDefaults, out var isObjectPlacementDefaultsEqual))
                 {
-                    if (!((ObjectPlacementDefaultsCommon)((IObjectPlacementDefaultsGetter)lhsObjectPlacementDefaults).CommonInstance()!).Equals(lhsObjectPlacementDefaults, rhsObjectPlacementDefaults, equalsMask?.GetSubCrystal((int)PackIn_FieldIndex.ObjectPlacementDefaults))) return false;
+                    if (!((ObjectPaletteDefaultsCommon)((IObjectPaletteDefaultsGetter)lhsObjectPlacementDefaults).CommonInstance()!).Equals(lhsObjectPlacementDefaults, rhsObjectPlacementDefaults, equalsMask?.GetSubCrystal((int)PackIn_FieldIndex.ObjectPlacementDefaults))) return false;
                 }
                 else if (!isObjectPlacementDefaultsEqual) return false;
             }
@@ -2592,7 +2592,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectPlacementDefaults2, rhs.ObjectPlacementDefaults2, out var lhsObjectPlacementDefaults2, out var rhsObjectPlacementDefaults2, out var isObjectPlacementDefaults2Equal))
                 {
-                    if (!((ObjectPlacementDefaultsCommon)((IObjectPlacementDefaultsGetter)lhsObjectPlacementDefaults2).CommonInstance()!).Equals(lhsObjectPlacementDefaults2, rhsObjectPlacementDefaults2, equalsMask?.GetSubCrystal((int)PackIn_FieldIndex.ObjectPlacementDefaults2))) return false;
+                    if (!((ObjectPaletteDefaultsCommon)((IObjectPaletteDefaultsGetter)lhsObjectPlacementDefaults2).CommonInstance()!).Equals(lhsObjectPlacementDefaults2, rhsObjectPlacementDefaults2, equalsMask?.GetSubCrystal((int)PackIn_FieldIndex.ObjectPlacementDefaults2))) return false;
                 }
                 else if (!isObjectPlacementDefaults2Equal) return false;
             }
@@ -3385,7 +3385,7 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
             if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
             {
-                ((ObjectPlacementDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPlacementDefaultsItem).BinaryWriteTranslator).Write(
+                ((ObjectPaletteDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPlacementDefaultsItem).BinaryWriteTranslator).Write(
                     item: ObjectPlacementDefaultsItem,
                     writer: writer,
                     translationParams: translationParams);
@@ -3427,7 +3427,7 @@ namespace Mutagen.Bethesda.Starfield
                 binaryType: StringBinaryType.NullTerminate);
             if (item.ObjectPlacementDefaults2 is {} ObjectPlacementDefaults2Item)
             {
-                ((ObjectPlacementDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPlacementDefaults2Item).BinaryWriteTranslator).Write(
+                ((ObjectPaletteDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPlacementDefaults2Item).BinaryWriteTranslator).Write(
                     item: ObjectPlacementDefaults2Item,
                     writer: writer,
                     translationParams: translationParams);
@@ -3592,12 +3592,12 @@ namespace Mutagen.Bethesda.Starfield
                     if (!lastParsed.ParsedIndex.HasValue
                         || lastParsed.ParsedIndex.Value <= (int)PackIn_FieldIndex.DirtinessScale)
                     {
-                        item.ObjectPlacementDefaults = Mutagen.Bethesda.Starfield.ObjectPlacementDefaults.CreateFromBinary(frame: frame);
+                        item.ObjectPlacementDefaults = Mutagen.Bethesda.Starfield.ObjectPaletteDefaults.CreateFromBinary(frame: frame);
                         return new ParseResult((int)PackIn_FieldIndex.ObjectPlacementDefaults, nextRecordType);
                     }
                     else if (lastParsed.ParsedIndex.Value <= (int)PackIn_FieldIndex.Filter)
                     {
-                        item.ObjectPlacementDefaults2 = Mutagen.Bethesda.Starfield.ObjectPlacementDefaults.CreateFromBinary(frame: frame);
+                        item.ObjectPlacementDefaults2 = Mutagen.Bethesda.Starfield.ObjectPaletteDefaults.CreateFromBinary(frame: frame);
                         return new ParseResult((int)PackIn_FieldIndex.ObjectPlacementDefaults2, nextRecordType);
                     }
                     else
@@ -3605,10 +3605,10 @@ namespace Mutagen.Bethesda.Starfield
                         switch (recordParseCount?.GetOrAdd(nextRecordType) ?? 0)
                         {
                             case 0:
-                                item.ObjectPlacementDefaults = Mutagen.Bethesda.Starfield.ObjectPlacementDefaults.CreateFromBinary(frame: frame);
+                                item.ObjectPlacementDefaults = Mutagen.Bethesda.Starfield.ObjectPaletteDefaults.CreateFromBinary(frame: frame);
                                 return new ParseResult((int)PackIn_FieldIndex.ObjectPlacementDefaults, nextRecordType);
                             case 1:
-                                item.ObjectPlacementDefaults2 = Mutagen.Bethesda.Starfield.ObjectPlacementDefaults.CreateFromBinary(frame: frame);
+                                item.ObjectPlacementDefaults2 = Mutagen.Bethesda.Starfield.ObjectPaletteDefaults.CreateFromBinary(frame: frame);
                                 return new ParseResult((int)PackIn_FieldIndex.ObjectPlacementDefaults2, nextRecordType);
                             default:
                                 throw new NotImplementedException();
@@ -3819,7 +3819,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ObjectPlacementDefaults
         private RangeInt32? _ObjectPlacementDefaultsLocation;
-        public IObjectPlacementDefaultsGetter? ObjectPlacementDefaults => _ObjectPlacementDefaultsLocation.HasValue ? ObjectPlacementDefaultsBinaryOverlay.ObjectPlacementDefaultsFactory(_recordData.Slice(_ObjectPlacementDefaultsLocation!.Value.Min), _package) : default;
+        public IObjectPaletteDefaultsGetter? ObjectPlacementDefaults => _ObjectPlacementDefaultsLocation.HasValue ? ObjectPaletteDefaultsBinaryOverlay.ObjectPaletteDefaultsFactory(_recordData.Slice(_ObjectPlacementDefaultsLocation!.Value.Min), _package) : default;
         #endregion
         #region Transforms
         private RangeInt32? _TransformsLocation;
@@ -3844,7 +3844,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ObjectPlacementDefaults2
         private RangeInt32? _ObjectPlacementDefaults2Location;
-        public IObjectPlacementDefaultsGetter? ObjectPlacementDefaults2 => _ObjectPlacementDefaults2Location.HasValue ? ObjectPlacementDefaultsBinaryOverlay.ObjectPlacementDefaultsFactory(_recordData.Slice(_ObjectPlacementDefaults2Location!.Value.Min), _package) : default;
+        public IObjectPaletteDefaultsGetter? ObjectPlacementDefaults2 => _ObjectPlacementDefaults2Location.HasValue ? ObjectPaletteDefaultsBinaryOverlay.ObjectPaletteDefaultsFactory(_recordData.Slice(_ObjectPlacementDefaults2Location!.Value.Min), _package) : default;
         #endregion
         #region Cell
         private int? _CellLocation;

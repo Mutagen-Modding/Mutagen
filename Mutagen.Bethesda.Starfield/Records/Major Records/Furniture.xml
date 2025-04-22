@@ -6,7 +6,7 @@
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
       <RefDirect name="PTTA" refName="PTTA" unknown="true" />
-      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <RefDirect name="ObjectPaletteDefaults" refName="ObjectPaletteDefaults" />
       <RefDirect name="Transforms" refName="Transforms" />
       <FormLink name="SnapTemplate" refName="SnapTemplate" recordType="SNTP" />
       <FormLink name="SnapBehavior" refName="SnapTemplate" recordType="SNBH" />

@@ -103,14 +103,14 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ObjectPlacementDefaults
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectPlacementDefaults? _ObjectPlacementDefaults;
-        public ObjectPlacementDefaults? ObjectPlacementDefaults
+        private ObjectPaletteDefaults? _ObjectPlacementDefaults;
+        public ObjectPaletteDefaults? ObjectPlacementDefaults
         {
             get => _ObjectPlacementDefaults;
             set => _ObjectPlacementDefaults = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectPlacementDefaultsGetter? IDoorGetter.ObjectPlacementDefaults => this.ObjectPlacementDefaults;
+        IObjectPaletteDefaultsGetter? IDoorGetter.ObjectPlacementDefaults => this.ObjectPlacementDefaults;
         #endregion
         #region XALG
         public UInt64? XALG { get; set; }
@@ -351,7 +351,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.DirtinessScale = initialValue;
-                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(initialValue, new ObjectPlacementDefaults.Mask<TItem>(initialValue));
+                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(initialValue, new ObjectPaletteDefaults.Mask<TItem>(initialValue));
                 this.XALG = initialValue;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Name = initialValue;
@@ -412,7 +412,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.DirtinessScale = DirtinessScale;
-                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(ObjectPlacementDefaults, new ObjectPlacementDefaults.Mask<TItem>(ObjectPlacementDefaults));
+                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(ObjectPlacementDefaults, new ObjectPaletteDefaults.Mask<TItem>(ObjectPlacementDefaults));
                 this.XALG = XALG;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Name = Name;
@@ -444,7 +444,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem DirtinessScale;
-            public MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>? ObjectPlacementDefaults { get; set; }
+            public MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>? ObjectPlacementDefaults { get; set; }
             public TItem XALG;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public TItem Name;
@@ -748,7 +748,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.DirtinessScale = eval(this.DirtinessScale);
-                obj.ObjectPlacementDefaults = this.ObjectPlacementDefaults == null ? null : new MaskItem<R, ObjectPlacementDefaults.Mask<R>?>(eval(this.ObjectPlacementDefaults.Overall), this.ObjectPlacementDefaults.Specific?.Translate(eval));
+                obj.ObjectPlacementDefaults = this.ObjectPlacementDefaults == null ? null : new MaskItem<R, ObjectPaletteDefaults.Mask<R>?>(eval(this.ObjectPlacementDefaults.Overall), this.ObjectPlacementDefaults.Specific?.Translate(eval));
                 obj.XALG = eval(this.XALG);
                 if (Components != null)
                 {
@@ -1000,7 +1000,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? DirtinessScale;
-            public MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>? ObjectPlacementDefaults;
+            public MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>? ObjectPlacementDefaults;
             public Exception? XALG;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public Exception? Name;
@@ -1088,7 +1088,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.DirtinessScale = ex;
                         break;
                     case Door_FieldIndex.ObjectPlacementDefaults:
-                        this.ObjectPlacementDefaults = new MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>(ex, null);
+                        this.ObjectPlacementDefaults = new MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>(ex, null);
                         break;
                     case Door_FieldIndex.XALG:
                         this.XALG = ex;
@@ -1162,7 +1162,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.DirtinessScale = (Exception?)obj;
                         break;
                     case Door_FieldIndex.ObjectPlacementDefaults:
-                        this.ObjectPlacementDefaults = (MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>?)obj;
+                        this.ObjectPlacementDefaults = (MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>?)obj;
                         break;
                     case Door_FieldIndex.XALG:
                         this.XALG = (Exception?)obj;
@@ -1436,7 +1436,7 @@ namespace Mutagen.Bethesda.Starfield
             public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool DirtinessScale;
-            public ObjectPlacementDefaults.TranslationMask? ObjectPlacementDefaults;
+            public ObjectPaletteDefaults.TranslationMask? ObjectPlacementDefaults;
             public bool XALG;
             public AComponent.TranslationMask? Components;
             public bool Name;
@@ -1678,7 +1678,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new Percent DirtinessScale { get; set; }
-        new ObjectPlacementDefaults? ObjectPlacementDefaults { get; set; }
+        new ObjectPaletteDefaults? ObjectPlacementDefaults { get; set; }
         new UInt64? XALG { get; set; }
         new ExtendedList<AComponent> Components { get; }
         /// <summary>
@@ -1752,7 +1752,7 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
         Percent DirtinessScale { get; }
-        IObjectPlacementDefaultsGetter? ObjectPlacementDefaults { get; }
+        IObjectPaletteDefaultsGetter? ObjectPlacementDefaults { get; }
         UInt64? XALG { get; }
         IReadOnlyList<IAComponentGetter> Components { get; }
         #region Name
@@ -2577,7 +2577,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults, out var lhsObjectPlacementDefaults, out var rhsObjectPlacementDefaults, out var isObjectPlacementDefaultsEqual))
                 {
-                    if (!((ObjectPlacementDefaultsCommon)((IObjectPlacementDefaultsGetter)lhsObjectPlacementDefaults).CommonInstance()!).Equals(lhsObjectPlacementDefaults, rhsObjectPlacementDefaults, equalsMask?.GetSubCrystal((int)Door_FieldIndex.ObjectPlacementDefaults))) return false;
+                    if (!((ObjectPaletteDefaultsCommon)((IObjectPaletteDefaultsGetter)lhsObjectPlacementDefaults).CommonInstance()!).Equals(lhsObjectPlacementDefaults, rhsObjectPlacementDefaults, equalsMask?.GetSubCrystal((int)Door_FieldIndex.ObjectPlacementDefaults))) return false;
                 }
                 else if (!isObjectPlacementDefaultsEqual) return false;
             }
@@ -3505,7 +3505,7 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
             if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
             {
-                ((ObjectPlacementDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPlacementDefaultsItem).BinaryWriteTranslator).Write(
+                ((ObjectPaletteDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPlacementDefaultsItem).BinaryWriteTranslator).Write(
                     item: ObjectPlacementDefaultsItem,
                     writer: writer,
                     translationParams: translationParams);
@@ -3728,7 +3728,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.OPDS:
                 {
-                    item.ObjectPlacementDefaults = Mutagen.Bethesda.Starfield.ObjectPlacementDefaults.CreateFromBinary(frame: frame);
+                    item.ObjectPlacementDefaults = Mutagen.Bethesda.Starfield.ObjectPaletteDefaults.CreateFromBinary(frame: frame);
                     return (int)Door_FieldIndex.ObjectPlacementDefaults;
                 }
                 case RecordTypeInts.XALG:
@@ -3960,7 +3960,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region ObjectPlacementDefaults
         private RangeInt32? _ObjectPlacementDefaultsLocation;
-        public IObjectPlacementDefaultsGetter? ObjectPlacementDefaults => _ObjectPlacementDefaultsLocation.HasValue ? ObjectPlacementDefaultsBinaryOverlay.ObjectPlacementDefaultsFactory(_recordData.Slice(_ObjectPlacementDefaultsLocation!.Value.Min), _package) : default;
+        public IObjectPaletteDefaultsGetter? ObjectPlacementDefaults => _ObjectPlacementDefaultsLocation.HasValue ? ObjectPaletteDefaultsBinaryOverlay.ObjectPaletteDefaultsFactory(_recordData.Slice(_ObjectPlacementDefaultsLocation!.Value.Min), _package) : default;
         #endregion
         #region XALG
         private int? _XALGLocation;
