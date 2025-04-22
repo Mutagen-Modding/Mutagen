@@ -3,9 +3,12 @@
   <Object name="CameraPath" recordType="CPTH" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
       <RefList name="Conditions" refName="Condition" />
-      <List name="RelatedPaths" recordType="ANAM" nullable="False">
-        <FormLink refName="CameraPath" />
-      </List>
+      <Data recordType="ANAM" >
+        <Fields>
+          <FormLink name="Parent" refName="CameraPath" />
+          <FormLink name="Previous" refName="CameraPath" />
+        </Fields>
+      </Data>
       <Enum name="Zoom" enumName="CameraPath.Flags" byteLength="1" nullable="False" recordType="DATA" />
       <List name="Shots">
         <FormLink recordType="SNAM" refName="CameraShot" />

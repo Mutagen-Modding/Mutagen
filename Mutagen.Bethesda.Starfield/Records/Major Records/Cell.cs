@@ -18,6 +18,7 @@ public partial class Cell
     [Flags]
     public enum MajorFlag
     {
+        IsUnique = 0x0000_0004,
         NoPreVis = 0x0000_0080,
         Persistent = 0x0000_0400,
         PartialForm = 0x0000_4000,
@@ -40,6 +41,15 @@ public partial class Cell
         SunlightShadows = 0x0800,
         DistantLodOnly = 0x1000,
         PlayerFollowersCannotTravelHere = 0x2000,
+    }
+
+    public enum InteriorType
+    {
+        Interior,
+        ShipCell,
+        SpaceCell,
+        PackIn,
+        InstancableInterior,
     }
 }
 

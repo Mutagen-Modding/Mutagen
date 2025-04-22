@@ -1095,7 +1095,6 @@ public partial class RecordTypes
     public static readonly RecordType XCLD = new(0x444C4358);
     public static readonly RecordType XCLL = new(0x4C4C4358);
     public static readonly RecordType XCLP = new(0x504C4358);
-    public static readonly RecordType XCLR = new(0x524C4358);
     public static readonly RecordType XCLW = new(0x574C4358);
     public static readonly RecordType XCMO = new(0x4F4D4358);
     public static readonly RecordType XCNT = new(0x544E4358);
@@ -1117,6 +1116,7 @@ public partial class RecordTypes
     public static readonly RecordType XGOM = new(0x4D4F4758);
     public static readonly RecordType XHLT = new(0x544C4858);
     public static readonly RecordType XHTW = new(0x57544858);
+    public static readonly RecordType XILL = new(0x4C4C4958);
     public static readonly RecordType XILS = new(0x534C4958);
     public static readonly RecordType XIS2 = new(0x32534958);
     public static readonly RecordType XLBD = new(0x44424C58);

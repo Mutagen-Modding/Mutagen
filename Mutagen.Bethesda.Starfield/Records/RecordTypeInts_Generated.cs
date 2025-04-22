@@ -1093,7 +1093,6 @@ public partial class RecordTypeInts
     public const int XCLD = 0x444C4358;
     public const int XCLL = 0x4C4C4358;
     public const int XCLP = 0x504C4358;
-    public const int XCLR = 0x524C4358;
     public const int XCLW = 0x574C4358;
     public const int XCMO = 0x4F4D4358;
     public const int XCNT = 0x544E4358;
@@ -1115,6 +1114,7 @@ public partial class RecordTypeInts
     public const int XGOM = 0x4D4F4758;
     public const int XHLT = 0x544C4858;
     public const int XHTW = 0x57544858;
+    public const int XILL = 0x4C4C4958;
     public const int XILS = 0x534C4958;
     public const int XIS2 = 0x32534958;
     public const int XLBD = 0x44424C58;

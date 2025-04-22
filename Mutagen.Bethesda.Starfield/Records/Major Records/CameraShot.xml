@@ -3,7 +3,6 @@
   <Object name="CameraShot" recordType="CAMS" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
       <RefDirect name="Model" refName="Model" />
-      <String name="Description" recordType="DESC" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>

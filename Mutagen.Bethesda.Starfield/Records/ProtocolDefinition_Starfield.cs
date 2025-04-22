@@ -143,6 +143,7 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             CellBlock_Registration.Instance,
             CellGrid_Registration.Instance,
             CellLighting_Registration.Instance,
+            CellMaxHeightData_Registration.Instance,
             CellNavmeshParent_Registration.Instance,
             CellShipBlueprintSnapLink_Registration.Instance,
             CellSubBlock_Registration.Instance,

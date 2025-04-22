@@ -129,8 +129,8 @@ namespace Mutagen.Bethesda.Starfield
         #region FarHeightRange
         public Single FarHeightRange { get; set; } = default(Single);
         #endregion
-        #region Unknown2
-        public Int32 Unknown2 { get; set; } = default(Int32);
+        #region InteriorType
+        public Cell.InteriorType InteriorType { get; set; } = default(Cell.InteriorType);
         #endregion
 
         #region To String
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.FogHighFarScale = initialValue;
                 this.FarHeightMid = initialValue;
                 this.FarHeightRange = initialValue;
-                this.Unknown2 = initialValue;
+                this.InteriorType = initialValue;
             }
 
             public Mask(
@@ -227,7 +227,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FogHighFarScale,
                 TItem FarHeightMid,
                 TItem FarHeightRange,
-                TItem Unknown2)
+                TItem InteriorType)
             {
                 this.AmbientColor = AmbientColor;
                 this.DirectionalColor = DirectionalColor;
@@ -255,7 +255,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.FogHighFarScale = FogHighFarScale;
                 this.FarHeightMid = FarHeightMid;
                 this.FarHeightRange = FarHeightRange;
-                this.Unknown2 = Unknown2;
+                this.InteriorType = InteriorType;
             }
 
             #pragma warning disable CS8618
@@ -293,7 +293,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem FogHighFarScale;
             public TItem FarHeightMid;
             public TItem FarHeightRange;
-            public TItem Unknown2;
+            public TItem InteriorType;
             #endregion
 
             #region Equals
@@ -332,7 +332,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.FogHighFarScale, rhs.FogHighFarScale)) return false;
                 if (!object.Equals(this.FarHeightMid, rhs.FarHeightMid)) return false;
                 if (!object.Equals(this.FarHeightRange, rhs.FarHeightRange)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.InteriorType, rhs.InteriorType)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.FogHighFarScale);
                 hash.Add(this.FarHeightMid);
                 hash.Add(this.FarHeightRange);
-                hash.Add(this.Unknown2);
+                hash.Add(this.InteriorType);
                 return hash.ToHashCode();
             }
 
@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.FogHighFarScale)) return false;
                 if (!eval(this.FarHeightMid)) return false;
                 if (!eval(this.FarHeightRange)) return false;
-                if (!eval(this.Unknown2)) return false;
+                if (!eval(this.InteriorType)) return false;
                 return true;
             }
             #endregion
@@ -433,7 +433,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.FogHighFarScale)) return true;
                 if (eval(this.FarHeightMid)) return true;
                 if (eval(this.FarHeightRange)) return true;
-                if (eval(this.Unknown2)) return true;
+                if (eval(this.InteriorType)) return true;
                 return false;
             }
             #endregion
@@ -474,7 +474,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.FogHighFarScale = eval(this.FogHighFarScale);
                 obj.FarHeightMid = eval(this.FarHeightMid);
                 obj.FarHeightRange = eval(this.FarHeightRange);
-                obj.Unknown2 = eval(this.Unknown2);
+                obj.InteriorType = eval(this.InteriorType);
             }
             #endregion
 
@@ -597,9 +597,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(FarHeightRange, "FarHeightRange");
                     }
-                    if (printMask?.Unknown2 ?? true)
+                    if (printMask?.InteriorType ?? true)
                     {
-                        sb.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(InteriorType, "InteriorType");
                     }
                 }
             }
@@ -651,7 +651,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? FogHighFarScale;
             public Exception? FarHeightMid;
             public Exception? FarHeightRange;
-            public Exception? Unknown2;
+            public Exception? InteriorType;
             #endregion
 
             #region IErrorMask
@@ -712,8 +712,8 @@ namespace Mutagen.Bethesda.Starfield
                         return FarHeightMid;
                     case CellLighting_FieldIndex.FarHeightRange:
                         return FarHeightRange;
-                    case CellLighting_FieldIndex.Unknown2:
-                        return Unknown2;
+                    case CellLighting_FieldIndex.InteriorType:
+                        return InteriorType;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -802,8 +802,8 @@ namespace Mutagen.Bethesda.Starfield
                     case CellLighting_FieldIndex.FarHeightRange:
                         this.FarHeightRange = ex;
                         break;
-                    case CellLighting_FieldIndex.Unknown2:
-                        this.Unknown2 = ex;
+                    case CellLighting_FieldIndex.InteriorType:
+                        this.InteriorType = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -893,8 +893,8 @@ namespace Mutagen.Bethesda.Starfield
                     case CellLighting_FieldIndex.FarHeightRange:
                         this.FarHeightRange = (Exception?)obj;
                         break;
-                    case CellLighting_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception?)obj;
+                    case CellLighting_FieldIndex.InteriorType:
+                        this.InteriorType = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -930,7 +930,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (FogHighFarScale != null) return true;
                 if (FarHeightMid != null) return true;
                 if (FarHeightRange != null) return true;
-                if (Unknown2 != null) return true;
+                if (InteriorType != null) return true;
                 return false;
             }
             #endregion
@@ -1035,7 +1035,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(FarHeightRange, "FarHeightRange");
                 }
                 {
-                    sb.AppendItem(Unknown2, "Unknown2");
+                    sb.AppendItem(InteriorType, "InteriorType");
                 }
             }
             #endregion
@@ -1071,7 +1071,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.FogHighFarScale = this.FogHighFarScale.Combine(rhs.FogHighFarScale);
                 ret.FarHeightMid = this.FarHeightMid.Combine(rhs.FarHeightMid);
                 ret.FarHeightRange = this.FarHeightRange.Combine(rhs.FarHeightRange);
-                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.InteriorType = this.InteriorType.Combine(rhs.InteriorType);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1121,7 +1121,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool FogHighFarScale;
             public bool FarHeightMid;
             public bool FarHeightRange;
-            public bool Unknown2;
+            public bool InteriorType;
             #endregion
 
             #region Ctors
@@ -1157,7 +1157,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.FogHighFarScale = defaultOn;
                 this.FarHeightMid = defaultOn;
                 this.FarHeightRange = defaultOn;
-                this.Unknown2 = defaultOn;
+                this.InteriorType = defaultOn;
             }
 
             #endregion
@@ -1199,7 +1199,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((FogHighFarScale, null));
                 ret.Add((FarHeightMid, null));
                 ret.Add((FarHeightRange, null));
-                ret.Add((Unknown2, null));
+                ret.Add((InteriorType, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1298,7 +1298,7 @@ namespace Mutagen.Bethesda.Starfield
         new Single FogHighFarScale { get; set; }
         new Single FarHeightMid { get; set; }
         new Single FarHeightRange { get; set; }
-        new Int32 Unknown2 { get; set; }
+        new Cell.InteriorType InteriorType { get; set; }
     }
 
     public partial interface ICellLightingGetter :
@@ -1339,7 +1339,7 @@ namespace Mutagen.Bethesda.Starfield
         Single FogHighFarScale { get; }
         Single FarHeightMid { get; }
         Single FarHeightRange { get; }
-        Int32 Unknown2 { get; }
+        Cell.InteriorType InteriorType { get; }
 
     }
 
@@ -1535,7 +1535,7 @@ namespace Mutagen.Bethesda.Starfield
         FogHighFarScale = 23,
         FarHeightMid = 24,
         FarHeightRange = 25,
-        Unknown2 = 26,
+        InteriorType = 26,
     }
     #endregion
 
@@ -1647,7 +1647,7 @@ namespace Mutagen.Bethesda.Starfield
             item.FogHighFarScale = default(Single);
             item.FarHeightMid = default(Single);
             item.FarHeightRange = default(Single);
-            item.Unknown2 = default(Int32);
+            item.InteriorType = default(Cell.InteriorType);
         }
         
         #region Mutagen
@@ -1727,7 +1727,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.FogHighFarScale = item.FogHighFarScale.EqualsWithin(rhs.FogHighFarScale);
             ret.FarHeightMid = item.FarHeightMid.EqualsWithin(rhs.FarHeightMid);
             ret.FarHeightRange = item.FarHeightRange.EqualsWithin(rhs.FarHeightRange);
-            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
+            ret.InteriorType = item.InteriorType == rhs.InteriorType;
         }
         
         public string Print(
@@ -1876,9 +1876,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.FarHeightRange, "FarHeightRange");
             }
-            if (printMask?.Unknown2 ?? true)
+            if (printMask?.InteriorType ?? true)
             {
-                sb.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendItem(item.InteriorType, "InteriorType");
             }
         }
         
@@ -1993,9 +1993,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.FarHeightRange.EqualsWithin(rhs.FarHeightRange)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CellLighting_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CellLighting_FieldIndex.InteriorType) ?? true))
             {
-                if (lhs.Unknown2 != rhs.Unknown2) return false;
+                if (lhs.InteriorType != rhs.InteriorType) return false;
             }
             return true;
         }
@@ -2029,7 +2029,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.FogHighFarScale);
             hash.Add(item.FarHeightMid);
             hash.Add(item.FarHeightRange);
-            hash.Add(item.Unknown2);
+            hash.Add(item.InteriorType);
             return hash.ToHashCode();
         }
         
@@ -2166,9 +2166,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.FarHeightRange = rhs.FarHeightRange;
             }
-            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.Unknown2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CellLighting_FieldIndex.InteriorType) ?? true))
             {
-                item.Unknown2 = rhs.Unknown2;
+                item.InteriorType = rhs.InteriorType;
             }
             DeepCopyInCustom(
                 item: item,
@@ -2350,7 +2350,10 @@ namespace Mutagen.Bethesda.Starfield
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.FarHeightRange);
-            writer.Write(item.Unknown2);
+            EnumBinaryTranslation<Cell.InteriorType, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.InteriorType,
+                length: 4);
         }
 
         public void Write(
@@ -2417,7 +2420,9 @@ namespace Mutagen.Bethesda.Starfield
             item.FogHighFarScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.FarHeightMid = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.FarHeightRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Unknown2 = frame.ReadInt32();
+            item.InteriorType = EnumBinaryTranslation<Cell.InteriorType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }
@@ -2509,7 +2514,7 @@ namespace Mutagen.Bethesda.Starfield
         public Single FogHighFarScale => _structData.Slice(0x5C, 0x4).Float();
         public Single FarHeightMid => _structData.Slice(0x60, 0x4).Float();
         public Single FarHeightRange => _structData.Slice(0x64, 0x4).Float();
-        public Int32 Unknown2 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x68, 0x4));
+        public Cell.InteriorType InteriorType => (Cell.InteriorType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x68, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
