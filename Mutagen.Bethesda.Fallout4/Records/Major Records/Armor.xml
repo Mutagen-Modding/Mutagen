@@ -87,7 +87,7 @@
   <Object name="ArmorAddonModel" objType="Subrecord">
     <Fields>
       <UInt16 name="AddonIndex" recordType="INDX" />
-      <FormLink name="AddonModel" recordType="MODL" refName="ArmorAddon" />
+      <FormLink name="ArmorAddon" recordType="MODL" refName="ArmorAddon" />
     </Fields>
   </Object>
   <Object name="ArmorResistance" objType="Subrecord">
