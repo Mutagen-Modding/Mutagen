@@ -23,6 +23,12 @@ public partial class PassthroughGroupView : PassthroughGroupViewBase
             this.WhenAnyFallback(x => x.ViewModel!.AddPassthroughCommand)
                 .BindTo(this, x => x.AddButton.Command)
                 .DisposeWith(disposable);
+            this.WhenAnyFallback(x => x.ViewModel!.CheckAllCommand)
+                .BindTo(this, x => x.CheckButton.Command)
+                .DisposeWith(disposable);
+            this.WhenAnyFallback(x => x.ViewModel!.UncheckAllCommand)
+                .BindTo(this, x => x.UncheckButton.Command)
+                .DisposeWith(disposable);
             this.WhenAnyFallback(x => x.ViewModel!.Passthroughs)
                 .BindTo(this, x => x.PassthroughsControl.ItemsSource)
                 .DisposeWith(disposable);
