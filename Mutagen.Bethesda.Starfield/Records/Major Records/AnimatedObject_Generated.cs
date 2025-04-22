@@ -57,10 +57,10 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region Flags
-        public AnimatedObject.Flag? Flags { get; set; }
+        #region XALG
+        public UInt64? XALG { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        AnimatedObject.Flag? IAnimatedObjectGetter.Flags => this.Flags;
+        UInt64? IAnimatedObjectGetter.XALG => this.XALG;
         #endregion
         #region Components
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Flags = initialValue;
+                this.XALG = initialValue;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
             }
@@ -132,7 +132,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
-                TItem Flags,
+                TItem XALG,
                 TItem Components,
                 TItem Model)
             : base(
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Flags = Flags;
+                this.XALG = XALG;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
             }
@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Flags;
+            public TItem XALG;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             #endregion
@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.XALG, rhs.XALG)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 return true;
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Starfield
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Flags);
+                hash.Add(this.XALG);
                 hash.Add(this.Components);
                 hash.Add(this.Model);
                 hash.Add(base.GetHashCode());
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.Flags)) return false;
+                if (!eval(this.XALG)) return false;
                 if (this.Components != null)
                 {
                     if (!eval(this.Components.Overall)) return false;
@@ -221,7 +221,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.Flags)) return true;
+                if (eval(this.XALG)) return true;
                 if (this.Components != null)
                 {
                     if (eval(this.Components.Overall)) return true;
@@ -254,7 +254,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Flags = eval(this.Flags);
+                obj.XALG = eval(this.XALG);
                 if (Components != null)
                 {
                     obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
@@ -289,9 +289,9 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(AnimatedObject.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.XALG ?? true)
                     {
-                        sb.AppendItem(Flags, "Flags");
+                        sb.AppendItem(XALG, "XALG");
                     }
                     if ((printMask?.Components?.Overall ?? true)
                         && Components is {} ComponentsItem)
@@ -327,7 +327,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? Flags;
+            public Exception? XALG;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             #endregion
@@ -338,8 +338,8 @@ namespace Mutagen.Bethesda.Starfield
                 AnimatedObject_FieldIndex enu = (AnimatedObject_FieldIndex)index;
                 switch (enu)
                 {
-                    case AnimatedObject_FieldIndex.Flags:
-                        return Flags;
+                    case AnimatedObject_FieldIndex.XALG:
+                        return XALG;
                     case AnimatedObject_FieldIndex.Components:
                         return Components;
                     case AnimatedObject_FieldIndex.Model:
@@ -354,8 +354,8 @@ namespace Mutagen.Bethesda.Starfield
                 AnimatedObject_FieldIndex enu = (AnimatedObject_FieldIndex)index;
                 switch (enu)
                 {
-                    case AnimatedObject_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case AnimatedObject_FieldIndex.XALG:
+                        this.XALG = ex;
                         break;
                     case AnimatedObject_FieldIndex.Components:
                         this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
@@ -374,8 +374,8 @@ namespace Mutagen.Bethesda.Starfield
                 AnimatedObject_FieldIndex enu = (AnimatedObject_FieldIndex)index;
                 switch (enu)
                 {
-                    case AnimatedObject_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case AnimatedObject_FieldIndex.XALG:
+                        this.XALG = (Exception?)obj;
                         break;
                     case AnimatedObject_FieldIndex.Components:
                         this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
@@ -392,7 +392,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Flags != null) return true;
+                if (XALG != null) return true;
                 if (Components != null) return true;
                 if (Model != null) return true;
                 return false;
@@ -422,7 +422,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(Flags, "Flags");
+                    sb.AppendItem(XALG, "XALG");
                 }
                 if (Components is {} ComponentsItem)
                 {
@@ -451,7 +451,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.XALG = this.XALG.Combine(rhs.XALG);
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 return ret;
@@ -476,7 +476,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
-            public bool Flags;
+            public bool XALG;
             public AComponent.TranslationMask? Components;
             public Model.TranslationMask? Model;
             #endregion
@@ -487,7 +487,7 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.Flags = defaultOn;
+                this.XALG = defaultOn;
             }
 
             #endregion
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Flags, null));
+                ret.Add((XALG, null));
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
             }
@@ -651,7 +651,7 @@ namespace Mutagen.Bethesda.Starfield
         IModeled,
         IStarfieldMajorRecordInternal
     {
-        new AnimatedObject.Flag? Flags { get; set; }
+        new UInt64? XALG { get; set; }
         new ExtendedList<AComponent> Components { get; }
         /// <summary>
         /// Aspects: IModeled
@@ -677,7 +677,7 @@ namespace Mutagen.Bethesda.Starfield
         IModeledGetter
     {
         static new ILoquiRegistration StaticRegistration => AnimatedObject_Registration.Instance;
-        AnimatedObject.Flag? Flags { get; }
+        UInt64? XALG { get; }
         IReadOnlyList<IAComponentGetter> Components { get; }
         #region Model
         /// <summary>
@@ -861,7 +861,7 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        Flags = 7,
+        XALG = 7,
         Components = 8,
         Model = 9,
     }
@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IAnimatedObjectInternal item)
         {
             ClearPartial();
-            item.Flags = default;
+            item.XALG = default;
             item.Components.Clear();
             item.Model = null;
             base.Clear(item);
@@ -1084,7 +1084,7 @@ namespace Mutagen.Bethesda.Starfield
             AnimatedObject.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.XALG = item.XALG == rhs.XALG;
             ret.Components = item.Components.CollectionEqualsHelper(
                 rhs.Components,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1143,10 +1143,10 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.Flags ?? true)
-                && item.Flags is {} FlagsItem)
+            if ((printMask?.XALG ?? true)
+                && item.XALG is {} XALGItem)
             {
-                sb.AppendItem(FlagsItem, "Flags");
+                sb.AppendItem(XALGItem, "XALG");
             }
             if (printMask?.Components?.Overall ?? true)
             {
@@ -1217,9 +1217,9 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)AnimatedObject_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AnimatedObject_FieldIndex.XALG) ?? true))
             {
-                if (lhs.Flags != rhs.Flags) return false;
+                if (lhs.XALG != rhs.XALG) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)AnimatedObject_FieldIndex.Components) ?? true))
             {
@@ -1261,9 +1261,9 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IAnimatedObjectGetter item)
         {
             var hash = new HashCode();
-            if (item.Flags is {} Flagsitem)
+            if (item.XALG is {} XALGitem)
             {
-                hash.Add(Flagsitem);
+                hash.Add(XALGitem);
             }
             hash.Add(item.Components);
             if (item.Model is {} Modelitem)
@@ -1406,9 +1406,9 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)AnimatedObject_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AnimatedObject_FieldIndex.XALG) ?? true))
             {
-                item.Flags = rhs.Flags;
+                item.XALG = rhs.XALG;
             }
             if ((copyMask?.GetShouldTranslate((int)AnimatedObject_FieldIndex.Components) ?? true))
             {
@@ -1629,10 +1629,9 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            EnumBinaryTranslation<AnimatedObject.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer,
-                item.Flags,
-                length: 8,
+            UInt64BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.XALG,
                 header: translationParams.ConvertToCustom(RecordTypes.XALG));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
                 writer: writer,
@@ -1723,10 +1722,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XALG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<AnimatedObject.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: frame,
-                        length: contentLength);
-                    return (int)AnimatedObject_FieldIndex.Flags;
+                    item.XALG = frame.ReadUInt64();
+                    return (int)AnimatedObject_FieldIndex.XALG;
                 }
                 case RecordTypeInts.BFCB:
                 {
@@ -1811,9 +1808,9 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IAnimatedObject);
 
 
-        #region Flags
-        private int? _FlagsLocation;
-        public AnimatedObject.Flag? Flags => _FlagsLocation.HasValue ? (AnimatedObject.Flag)BinaryPrimitives.ReadInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(AnimatedObject.Flag?);
+        #region XALG
+        private int? _XALGLocation;
+        public UInt64? XALG => _XALGLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants)) : default(UInt64?);
         #endregion
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         public IModelGetter? Model { get; private set; }
@@ -1888,8 +1885,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.XALG:
                 {
-                    _FlagsLocation = (stream.Position - offset);
-                    return (int)AnimatedObject_FieldIndex.Flags;
+                    _XALGLocation = (stream.Position - offset);
+                    return (int)AnimatedObject_FieldIndex.XALG;
                 }
                 case RecordTypeInts.BFCB:
                 {

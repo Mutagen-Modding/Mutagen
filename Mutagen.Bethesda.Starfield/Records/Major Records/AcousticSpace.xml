@@ -8,14 +8,14 @@
       <RefDirect name="InteriorSound" recordType="WED0" refName="SoundReference" />
       <RefDirect name="ExteriorSound" recordType="WED1" refName="SoundReference" />
       <FormLink name="AmbientSet" refName="AmbienceSet" recordType="AAMB" />
-      <FormLink name="Music" refName="MusicType" recordType="AMUS" />
+      <FormLink name="MusicType" refName="MusicType" recordType="AMUS" />
       <FormLink name="EnvironmentType" refName="ReverbParameters" recordType="BNAM" />
       <Float name="ExteriorWeatherAttenuation" recordType="AEAR" nullable="false" />
       <Float name="InteriorExteriorRatio" recordType="FLTV" />
       <Bool name="IsInterior" recordType="XTRI" byteLength="1" nullable="false" />
       <Bool name="AllowExterior" recordType="BOLV" byteLength="1" nullable="false" />
-      <ByteArray name="DEVT" recordType="DEVT" />
-      <ByteArray name="ASDF" recordType="ASDF" />
+      <Enum name="SoundDetectionLevel" recordType="DEVT" enumName="SoundLevel" byteLength="4" />
+      <Enum name="DisableFlags" recordType="ASDF" enumName="SoundLevel" byteLength="8" />
     </Fields>
     <LinkInterface>IBaseObject</LinkInterface>
   </Object>

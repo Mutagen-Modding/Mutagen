@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="AnimatedObject" recordType="ANIO" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
-      <Enum name="Flags" enumName="AnimatedObject.Flag" byteLength="8" recordType="XALG" />
+      <UInt64 name="XALG" recordType="XALG" unknown="true" />
       <RefList name="Components" refName="AComponent" />
       <RefDirect name="Model" refName="Model" />
     </Fields>

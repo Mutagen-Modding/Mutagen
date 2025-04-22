@@ -2041,6 +2041,9 @@
     <Compile Include="Records\GameplayOptions.cs">
       <DependentUpon>GameplayOptions.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AcousticSpace.cs">
+      <DependentUpon>AcousticSpace.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\ActionRecord.cs">
       <DependentUpon>ActionRecord.xml</DependentUpon>
     </Compile>
@@ -2157,9 +2160,6 @@
     </Compile>
     <Compile Include="Records\Major Records\CreateReferenceToObject.cs">
       <DependentUpon>Quest.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\DefaultObject.cs">
-      <DependentUpon>DefaultObject.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\DialogBranch.cs">
       <DependentUpon>DialogBranch.xml</DependentUpon>
@@ -4415,9 +4415,6 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\LocationTargetRadius.cs">
       <DependentUpon>LocationTargetRadius.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\AnimatedObject.cs">
-      <DependentUpon>AnimatedObject.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Global.cs">
       <DependentUpon>Global.xml</DependentUpon>
