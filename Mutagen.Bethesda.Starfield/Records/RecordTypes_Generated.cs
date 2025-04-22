@@ -547,8 +547,6 @@ public partial class RecordTypes
     public static readonly RecordType MLM2 = new(0x324D4C4D);
     public static readonly RecordType MLM3 = new(0x334D4C4D);
     public static readonly RecordType MLM4 = new(0x344D4C4D);
-    public static readonly RecordType MLM6 = new(0x364D4C4D);
-    public static readonly RecordType MLM7 = new(0x374D4C4D);
     public static readonly RecordType MNAM = new(0x4D414E4D);
     public static readonly RecordType MO2C = new(0x43324F4D);
     public static readonly RecordType MO2F = new(0x46324F4D);
@@ -563,12 +561,6 @@ public partial class RecordTypes
     public static readonly RecordType MO5C = new(0x43354F4D);
     public static readonly RecordType MO5F = new(0x46354F4D);
     public static readonly RecordType MO5T = new(0x54354F4D);
-    public static readonly RecordType MO6C = new(0x43364F4D);
-    public static readonly RecordType MO6F = new(0x46364F4D);
-    public static readonly RecordType MO6T = new(0x54364F4D);
-    public static readonly RecordType MO7C = new(0x43374F4D);
-    public static readonly RecordType MO7F = new(0x46374F4D);
-    public static readonly RecordType MO7T = new(0x54374F4D);
     public static readonly RecordType MOBC = new(0x43424F4D);
     public static readonly RecordType MOD2 = new(0x32444F4D);
     public static readonly RecordType MOD3 = new(0x33444F4D);

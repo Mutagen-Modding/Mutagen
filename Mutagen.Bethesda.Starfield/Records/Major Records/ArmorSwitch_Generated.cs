@@ -37,13 +37,13 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class ArmorCategoryValue :
-        IArmorCategoryValue,
-        IEquatable<IArmorCategoryValueGetter>,
-        ILoquiObjectSetter<ArmorCategoryValue>
+    public partial class ArmorSwitch :
+        IArmorSwitch,
+        IEquatable<IArmorSwitchGetter>,
+        ILoquiObjectSetter<ArmorSwitch>
     {
         #region Ctor
-        public ArmorCategoryValue()
+        public ArmorSwitch()
         {
             CustomCtor();
         }
@@ -53,8 +53,8 @@ namespace Mutagen.Bethesda.Starfield
         #region Category
         public Guid Category { get; set; } = default(Guid);
         #endregion
-        #region Value
-        public Guid Value { get; set; } = default(Guid);
+        #region Variant
+        public Guid Variant { get; set; } = default(Guid);
         #endregion
 
         #region To String
@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ArmorCategoryValueMixIn.Print(
+            ArmorSwitchMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -74,16 +74,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IArmorCategoryValueGetter rhs) return false;
-            return ((ArmorCategoryValueCommon)((IArmorCategoryValueGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IArmorSwitchGetter rhs) return false;
+            return ((ArmorSwitchCommon)((IArmorSwitchGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IArmorCategoryValueGetter? obj)
+        public bool Equals(IArmorSwitchGetter? obj)
         {
-            return ((ArmorCategoryValueCommon)((IArmorCategoryValueGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ArmorSwitchCommon)((IArmorSwitchGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((ArmorCategoryValueCommon)((IArmorCategoryValueGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ArmorSwitchCommon)((IArmorSwitchGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -96,15 +96,15 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.Category = initialValue;
-                this.Value = initialValue;
+                this.Variant = initialValue;
             }
 
             public Mask(
                 TItem Category,
-                TItem Value)
+                TItem Variant)
             {
                 this.Category = Category;
-                this.Value = Value;
+                this.Variant = Variant;
             }
 
             #pragma warning disable CS8618
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public TItem Category;
-            public TItem Value;
+            public TItem Variant;
             #endregion
 
             #region Equals
@@ -131,14 +131,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Category, rhs.Category)) return false;
-                if (!object.Equals(this.Value, rhs.Value)) return false;
+                if (!object.Equals(this.Variant, rhs.Variant)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Category);
-                hash.Add(this.Value);
+                hash.Add(this.Variant);
                 return hash.ToHashCode();
             }
 
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Category)) return false;
-                if (!eval(this.Value)) return false;
+                if (!eval(this.Variant)) return false;
                 return true;
             }
             #endregion
@@ -157,7 +157,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Category)) return true;
-                if (eval(this.Value)) return true;
+                if (eval(this.Variant)) return true;
                 return false;
             }
             #endregion
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new ArmorCategoryValue.Mask<R>();
+                var ret = new ArmorSwitch.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -173,32 +173,32 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Category = eval(this.Category);
-                obj.Value = eval(this.Value);
+                obj.Variant = eval(this.Variant);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(ArmorCategoryValue.Mask<bool>? printMask = null)
+            public string Print(ArmorSwitch.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, ArmorCategoryValue.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ArmorSwitch.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(ArmorCategoryValue.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(ArmorSwitch.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                     if (printMask?.Category ?? true)
                     {
                         sb.AppendItem(Category, "Category");
                     }
-                    if (printMask?.Value ?? true)
+                    if (printMask?.Variant ?? true)
                     {
-                        sb.AppendItem(Value, "Value");
+                        sb.AppendItem(Variant, "Variant");
                     }
                 }
             }
@@ -225,19 +225,19 @@ namespace Mutagen.Bethesda.Starfield
                 }
             }
             public Exception? Category;
-            public Exception? Value;
+            public Exception? Variant;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                ArmorCategoryValue_FieldIndex enu = (ArmorCategoryValue_FieldIndex)index;
+                ArmorSwitch_FieldIndex enu = (ArmorSwitch_FieldIndex)index;
                 switch (enu)
                 {
-                    case ArmorCategoryValue_FieldIndex.Category:
+                    case ArmorSwitch_FieldIndex.Category:
                         return Category;
-                    case ArmorCategoryValue_FieldIndex.Value:
-                        return Value;
+                    case ArmorSwitch_FieldIndex.Variant:
+                        return Variant;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -245,14 +245,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                ArmorCategoryValue_FieldIndex enu = (ArmorCategoryValue_FieldIndex)index;
+                ArmorSwitch_FieldIndex enu = (ArmorSwitch_FieldIndex)index;
                 switch (enu)
                 {
-                    case ArmorCategoryValue_FieldIndex.Category:
+                    case ArmorSwitch_FieldIndex.Category:
                         this.Category = ex;
                         break;
-                    case ArmorCategoryValue_FieldIndex.Value:
-                        this.Value = ex;
+                    case ArmorSwitch_FieldIndex.Variant:
+                        this.Variant = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -261,14 +261,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                ArmorCategoryValue_FieldIndex enu = (ArmorCategoryValue_FieldIndex)index;
+                ArmorSwitch_FieldIndex enu = (ArmorSwitch_FieldIndex)index;
                 switch (enu)
                 {
-                    case ArmorCategoryValue_FieldIndex.Category:
+                    case ArmorSwitch_FieldIndex.Category:
                         this.Category = (Exception?)obj;
                         break;
-                    case ArmorCategoryValue_FieldIndex.Value:
-                        this.Value = (Exception?)obj;
+                    case ArmorSwitch_FieldIndex.Variant:
+                        this.Variant = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -279,7 +279,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (Category != null) return true;
-                if (Value != null) return true;
+                if (Variant != null) return true;
                 return false;
             }
             #endregion
@@ -309,7 +309,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Category, "Category");
                 }
                 {
-                    sb.AppendItem(Value, "Value");
+                    sb.AppendItem(Variant, "Variant");
                 }
             }
             #endregion
@@ -320,7 +320,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Category = this.Category.Combine(rhs.Category);
-                ret.Value = this.Value.Combine(rhs.Value);
+                ret.Variant = this.Variant.Combine(rhs.Variant);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -345,7 +345,7 @@ namespace Mutagen.Bethesda.Starfield
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Category;
-            public bool Value;
+            public bool Variant;
             #endregion
 
             #region Ctors
@@ -356,7 +356,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Category = defaultOn;
-                this.Value = defaultOn;
+                this.Variant = defaultOn;
             }
 
             #endregion
@@ -373,7 +373,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Category, null));
-                ret.Add((Value, null));
+                ret.Add((Variant, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -386,25 +386,25 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ArmorCategoryValueBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ArmorSwitchBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ArmorCategoryValueBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ArmorSwitchBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static ArmorCategoryValue CreateFromBinary(
+        public static ArmorSwitch CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new ArmorCategoryValue();
-            ((ArmorCategoryValueSetterCommon)((IArmorCategoryValueGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new ArmorSwitch();
+            ((ArmorSwitchSetterCommon)((IArmorSwitchGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out ArmorCategoryValue item,
+            out ArmorSwitch item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -430,30 +430,30 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((ArmorCategoryValueSetterCommon)((IArmorCategoryValueGetter)this).CommonSetterInstance()!).Clear(this);
+            ((ArmorSwitchSetterCommon)((IArmorSwitchGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static ArmorCategoryValue GetNew()
+        internal static ArmorSwitch GetNew()
         {
-            return new ArmorCategoryValue();
+            return new ArmorSwitch();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IArmorCategoryValue :
-        IArmorCategoryValueGetter,
-        ILoquiObjectSetter<IArmorCategoryValue>
+    public partial interface IArmorSwitch :
+        IArmorSwitchGetter,
+        ILoquiObjectSetter<IArmorSwitch>
     {
         new Guid Category { get; set; }
-        new Guid Value { get; set; }
+        new Guid Variant { get; set; }
     }
 
-    public partial interface IArmorCategoryValueGetter :
+    public partial interface IArmorSwitchGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IArmorCategoryValueGetter>
+        ILoquiObject<IArmorSwitchGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -461,51 +461,51 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => ArmorCategoryValue_Registration.Instance;
+        static ILoquiRegistration StaticRegistration => ArmorSwitch_Registration.Instance;
         Guid Category { get; }
-        Guid Value { get; }
+        Guid Variant { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class ArmorCategoryValueMixIn
+    public static partial class ArmorSwitchMixIn
     {
-        public static void Clear(this IArmorCategoryValue item)
+        public static void Clear(this IArmorSwitch item)
         {
-            ((ArmorCategoryValueSetterCommon)((IArmorCategoryValueGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((ArmorSwitchSetterCommon)((IArmorSwitchGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ArmorCategoryValue.Mask<bool> GetEqualsMask(
-            this IArmorCategoryValueGetter item,
-            IArmorCategoryValueGetter rhs,
+        public static ArmorSwitch.Mask<bool> GetEqualsMask(
+            this IArmorSwitchGetter item,
+            IArmorSwitchGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ArmorCategoryValueCommon)((IArmorCategoryValueGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((ArmorSwitchCommon)((IArmorSwitchGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IArmorCategoryValueGetter item,
+            this IArmorSwitchGetter item,
             string? name = null,
-            ArmorCategoryValue.Mask<bool>? printMask = null)
+            ArmorSwitch.Mask<bool>? printMask = null)
         {
-            return ((ArmorCategoryValueCommon)((IArmorCategoryValueGetter)item).CommonInstance()!).Print(
+            return ((ArmorSwitchCommon)((IArmorSwitchGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IArmorCategoryValueGetter item,
+            this IArmorSwitchGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ArmorCategoryValue.Mask<bool>? printMask = null)
+            ArmorSwitch.Mask<bool>? printMask = null)
         {
-            ((ArmorCategoryValueCommon)((IArmorCategoryValueGetter)item).CommonInstance()!).Print(
+            ((ArmorSwitchCommon)((IArmorSwitchGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -513,21 +513,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IArmorCategoryValueGetter item,
-            IArmorCategoryValueGetter rhs,
-            ArmorCategoryValue.TranslationMask? equalsMask = null)
+            this IArmorSwitchGetter item,
+            IArmorSwitchGetter rhs,
+            ArmorSwitch.TranslationMask? equalsMask = null)
         {
-            return ((ArmorCategoryValueCommon)((IArmorCategoryValueGetter)item).CommonInstance()!).Equals(
+            return ((ArmorSwitchCommon)((IArmorSwitchGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IArmorCategoryValue lhs,
-            IArmorCategoryValueGetter rhs)
+            this IArmorSwitch lhs,
+            IArmorSwitchGetter rhs)
         {
-            ((ArmorCategoryValueSetterTranslationCommon)((IArmorCategoryValueGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ArmorSwitchSetterTranslationCommon)((IArmorSwitchGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -536,11 +536,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IArmorCategoryValue lhs,
-            IArmorCategoryValueGetter rhs,
-            ArmorCategoryValue.TranslationMask? copyMask = null)
+            this IArmorSwitch lhs,
+            IArmorSwitchGetter rhs,
+            ArmorSwitch.TranslationMask? copyMask = null)
         {
-            ((ArmorCategoryValueSetterTranslationCommon)((IArmorCategoryValueGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ArmorSwitchSetterTranslationCommon)((IArmorSwitchGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -549,28 +549,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IArmorCategoryValue lhs,
-            IArmorCategoryValueGetter rhs,
-            out ArmorCategoryValue.ErrorMask errorMask,
-            ArmorCategoryValue.TranslationMask? copyMask = null)
+            this IArmorSwitch lhs,
+            IArmorSwitchGetter rhs,
+            out ArmorSwitch.ErrorMask errorMask,
+            ArmorSwitch.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ArmorCategoryValueSetterTranslationCommon)((IArmorCategoryValueGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ArmorSwitchSetterTranslationCommon)((IArmorSwitchGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = ArmorCategoryValue.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ArmorSwitch.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IArmorCategoryValue lhs,
-            IArmorCategoryValueGetter rhs,
+            this IArmorSwitch lhs,
+            IArmorSwitchGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ArmorCategoryValueSetterTranslationCommon)((IArmorCategoryValueGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ArmorSwitchSetterTranslationCommon)((IArmorSwitchGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -578,32 +578,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static ArmorCategoryValue DeepCopy(
-            this IArmorCategoryValueGetter item,
-            ArmorCategoryValue.TranslationMask? copyMask = null)
+        public static ArmorSwitch DeepCopy(
+            this IArmorSwitchGetter item,
+            ArmorSwitch.TranslationMask? copyMask = null)
         {
-            return ((ArmorCategoryValueSetterTranslationCommon)((IArmorCategoryValueGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ArmorSwitchSetterTranslationCommon)((IArmorSwitchGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static ArmorCategoryValue DeepCopy(
-            this IArmorCategoryValueGetter item,
-            out ArmorCategoryValue.ErrorMask errorMask,
-            ArmorCategoryValue.TranslationMask? copyMask = null)
+        public static ArmorSwitch DeepCopy(
+            this IArmorSwitchGetter item,
+            out ArmorSwitch.ErrorMask errorMask,
+            ArmorSwitch.TranslationMask? copyMask = null)
         {
-            return ((ArmorCategoryValueSetterTranslationCommon)((IArmorCategoryValueGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ArmorSwitchSetterTranslationCommon)((IArmorSwitchGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static ArmorCategoryValue DeepCopy(
-            this IArmorCategoryValueGetter item,
+        public static ArmorSwitch DeepCopy(
+            this IArmorSwitchGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ArmorCategoryValueSetterTranslationCommon)((IArmorCategoryValueGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ArmorSwitchSetterTranslationCommon)((IArmorSwitchGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -611,11 +611,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IArmorCategoryValue item,
+            this IArmorSwitch item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((ArmorCategoryValueSetterCommon)((IArmorCategoryValueGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ArmorSwitchSetterCommon)((IArmorSwitchGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -631,17 +631,17 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum ArmorCategoryValue_FieldIndex
+    internal enum ArmorSwitch_FieldIndex
     {
         Category = 0,
-        Value = 1,
+        Variant = 1,
     }
     #endregion
 
     #region Registration
-    internal partial class ArmorCategoryValue_Registration : ILoquiRegistration
+    internal partial class ArmorSwitch_Registration : ILoquiRegistration
     {
-        public static readonly ArmorCategoryValue_Registration Instance = new ArmorCategoryValue_Registration();
+        public static readonly ArmorSwitch_Registration Instance = new ArmorSwitch_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -649,23 +649,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(ArmorCategoryValue.Mask<>);
+        public static readonly Type MaskType = typeof(ArmorSwitch.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ArmorCategoryValue.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ArmorSwitch.ErrorMask);
 
-        public static readonly Type ClassType = typeof(ArmorCategoryValue);
+        public static readonly Type ClassType = typeof(ArmorSwitch);
 
-        public static readonly Type GetterType = typeof(IArmorCategoryValueGetter);
+        public static readonly Type GetterType = typeof(IArmorSwitchGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IArmorCategoryValue);
+        public static readonly Type SetterType = typeof(IArmorSwitch);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.ArmorCategoryValue";
+        public const string FullName = "Mutagen.Bethesda.Starfield.ArmorSwitch";
 
-        public const string Name = "ArmorCategoryValue";
+        public const string Name = "ArmorSwitch";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -673,7 +673,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(ArmorCategoryValueBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(ArmorSwitchBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -704,21 +704,21 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class ArmorCategoryValueSetterCommon
+    internal partial class ArmorSwitchSetterCommon
     {
-        public static readonly ArmorCategoryValueSetterCommon Instance = new ArmorCategoryValueSetterCommon();
+        public static readonly ArmorSwitchSetterCommon Instance = new ArmorSwitchSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IArmorCategoryValue item)
+        public void Clear(IArmorSwitch item)
         {
             ClearPartial();
             item.Category = default(Guid);
-            item.Value = default(Guid);
+            item.Variant = default(Guid);
         }
         
         #region Mutagen
-        public void RemapLinks(IArmorCategoryValue obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IArmorSwitch obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
         }
         
@@ -726,7 +726,7 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IArmorCategoryValue item,
+            IArmorSwitch item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -734,23 +734,23 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: ArmorCategoryValueBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: ArmorSwitchBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class ArmorCategoryValueCommon
+    internal partial class ArmorSwitchCommon
     {
-        public static readonly ArmorCategoryValueCommon Instance = new ArmorCategoryValueCommon();
+        public static readonly ArmorSwitchCommon Instance = new ArmorSwitchCommon();
 
-        public ArmorCategoryValue.Mask<bool> GetEqualsMask(
-            IArmorCategoryValueGetter item,
-            IArmorCategoryValueGetter rhs,
+        public ArmorSwitch.Mask<bool> GetEqualsMask(
+            IArmorSwitchGetter item,
+            IArmorSwitchGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ArmorCategoryValue.Mask<bool>(false);
-            ((ArmorCategoryValueCommon)((IArmorCategoryValueGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new ArmorSwitch.Mask<bool>(false);
+            ((ArmorSwitchCommon)((IArmorSwitchGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -759,19 +759,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IArmorCategoryValueGetter item,
-            IArmorCategoryValueGetter rhs,
-            ArmorCategoryValue.Mask<bool> ret,
+            IArmorSwitchGetter item,
+            IArmorSwitchGetter rhs,
+            ArmorSwitch.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Category = item.Category == rhs.Category;
-            ret.Value = item.Value == rhs.Value;
+            ret.Variant = item.Variant == rhs.Variant;
         }
         
         public string Print(
-            IArmorCategoryValueGetter item,
+            IArmorSwitchGetter item,
             string? name = null,
-            ArmorCategoryValue.Mask<bool>? printMask = null)
+            ArmorSwitch.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -783,18 +783,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IArmorCategoryValueGetter item,
+            IArmorSwitchGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ArmorCategoryValue.Mask<bool>? printMask = null)
+            ArmorSwitch.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"ArmorCategoryValue =>");
+                sb.AppendLine($"ArmorSwitch =>");
             }
             else
             {
-                sb.AppendLine($"{name} (ArmorCategoryValue) =>");
+                sb.AppendLine($"{name} (ArmorSwitch) =>");
             }
             using (sb.Brace())
             {
@@ -806,43 +806,43 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IArmorCategoryValueGetter item,
+            IArmorSwitchGetter item,
             StructuredStringBuilder sb,
-            ArmorCategoryValue.Mask<bool>? printMask = null)
+            ArmorSwitch.Mask<bool>? printMask = null)
         {
             if (printMask?.Category ?? true)
             {
                 sb.AppendItem(item.Category, "Category");
             }
-            if (printMask?.Value ?? true)
+            if (printMask?.Variant ?? true)
             {
-                sb.AppendItem(item.Value, "Value");
+                sb.AppendItem(item.Variant, "Variant");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IArmorCategoryValueGetter? lhs,
-            IArmorCategoryValueGetter? rhs,
+            IArmorSwitchGetter? lhs,
+            IArmorSwitchGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)ArmorCategoryValue_FieldIndex.Category) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorSwitch_FieldIndex.Category) ?? true))
             {
                 if (lhs.Category != rhs.Category) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ArmorCategoryValue_FieldIndex.Value) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorSwitch_FieldIndex.Variant) ?? true))
             {
-                if (lhs.Value != rhs.Value) return false;
+                if (lhs.Variant != rhs.Variant) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IArmorCategoryValueGetter item)
+        public virtual int GetHashCode(IArmorSwitchGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.Category);
-            hash.Add(item.Value);
+            hash.Add(item.Variant);
             return hash.ToHashCode();
         }
         
@@ -851,11 +851,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return ArmorCategoryValue.GetNew();
+            return ArmorSwitch.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IArmorCategoryValueGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IArmorSwitchGetter obj)
         {
             yield break;
         }
@@ -863,25 +863,25 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class ArmorCategoryValueSetterTranslationCommon
+    internal partial class ArmorSwitchSetterTranslationCommon
     {
-        public static readonly ArmorCategoryValueSetterTranslationCommon Instance = new ArmorCategoryValueSetterTranslationCommon();
+        public static readonly ArmorSwitchSetterTranslationCommon Instance = new ArmorSwitchSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IArmorCategoryValue item,
-            IArmorCategoryValueGetter rhs,
+            IArmorSwitch item,
+            IArmorSwitchGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)ArmorCategoryValue_FieldIndex.Category) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ArmorSwitch_FieldIndex.Category) ?? true))
             {
                 item.Category = rhs.Category;
             }
-            if ((copyMask?.GetShouldTranslate((int)ArmorCategoryValue_FieldIndex.Value) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ArmorSwitch_FieldIndex.Variant) ?? true))
             {
-                item.Value = rhs.Value;
+                item.Variant = rhs.Variant;
             }
             DeepCopyInCustom(
                 item: item,
@@ -892,19 +892,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         partial void DeepCopyInCustom(
-            IArmorCategoryValue item,
-            IArmorCategoryValueGetter rhs,
+            IArmorSwitch item,
+            IArmorSwitchGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
         #endregion
         
-        public ArmorCategoryValue DeepCopy(
-            IArmorCategoryValueGetter item,
-            ArmorCategoryValue.TranslationMask? copyMask = null)
+        public ArmorSwitch DeepCopy(
+            IArmorSwitchGetter item,
+            ArmorSwitch.TranslationMask? copyMask = null)
         {
-            ArmorCategoryValue ret = (ArmorCategoryValue)((ArmorCategoryValueCommon)((IArmorCategoryValueGetter)item).CommonInstance()!).GetNew();
-            ((ArmorCategoryValueSetterTranslationCommon)((IArmorCategoryValueGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ArmorSwitch ret = (ArmorSwitch)((ArmorSwitchCommon)((IArmorSwitchGetter)item).CommonInstance()!).GetNew();
+            ((ArmorSwitchSetterTranslationCommon)((IArmorSwitchGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -913,30 +913,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public ArmorCategoryValue DeepCopy(
-            IArmorCategoryValueGetter item,
-            out ArmorCategoryValue.ErrorMask errorMask,
-            ArmorCategoryValue.TranslationMask? copyMask = null)
+        public ArmorSwitch DeepCopy(
+            IArmorSwitchGetter item,
+            out ArmorSwitch.ErrorMask errorMask,
+            ArmorSwitch.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ArmorCategoryValue ret = (ArmorCategoryValue)((ArmorCategoryValueCommon)((IArmorCategoryValueGetter)item).CommonInstance()!).GetNew();
-            ((ArmorCategoryValueSetterTranslationCommon)((IArmorCategoryValueGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ArmorSwitch ret = (ArmorSwitch)((ArmorSwitchCommon)((IArmorSwitchGetter)item).CommonInstance()!).GetNew();
+            ((ArmorSwitchSetterTranslationCommon)((IArmorSwitchGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = ArmorCategoryValue.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ArmorSwitch.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public ArmorCategoryValue DeepCopy(
-            IArmorCategoryValueGetter item,
+        public ArmorSwitch DeepCopy(
+            IArmorSwitchGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            ArmorCategoryValue ret = (ArmorCategoryValue)((ArmorCategoryValueCommon)((IArmorCategoryValueGetter)item).CommonInstance()!).GetNew();
-            ((ArmorCategoryValueSetterTranslationCommon)((IArmorCategoryValueGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ArmorSwitch ret = (ArmorSwitch)((ArmorSwitchCommon)((IArmorSwitchGetter)item).CommonInstance()!).GetNew();
+            ((ArmorSwitchSetterTranslationCommon)((IArmorSwitchGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -952,27 +952,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class ArmorCategoryValue
+    public partial class ArmorSwitch
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ArmorCategoryValue_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => ArmorCategoryValue_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ArmorSwitch_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ArmorSwitch_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ArmorCategoryValueCommon.Instance;
+        protected object CommonInstance() => ArmorSwitchCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return ArmorCategoryValueSetterCommon.Instance;
+            return ArmorSwitchSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ArmorCategoryValueSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ArmorSwitchSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IArmorCategoryValueGetter.CommonInstance() => this.CommonInstance();
+        object IArmorSwitchGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IArmorCategoryValueGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IArmorSwitchGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IArmorCategoryValueGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IArmorSwitchGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -983,12 +983,12 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class ArmorCategoryValueBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class ArmorSwitchBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ArmorCategoryValueBinaryWriteTranslation Instance = new();
+        public static readonly ArmorSwitchBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            IArmorCategoryValueGetter item,
+            IArmorSwitchGetter item,
             MutagenWriter writer)
         {
             GuidBinaryTranslation.Instance.Write(
@@ -996,12 +996,12 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.Category);
             GuidBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Value);
+                item: item.Variant);
         }
 
         public void Write(
             MutagenWriter writer,
-            IArmorCategoryValueGetter item,
+            IArmorSwitchGetter item,
             TypedWriteParams translationParams)
         {
             WriteEmbedded(
@@ -1015,23 +1015,23 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IArmorCategoryValueGetter)item,
+                item: (IArmorSwitchGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class ArmorCategoryValueBinaryCreateTranslation
+    internal partial class ArmorSwitchBinaryCreateTranslation
     {
-        public static readonly ArmorCategoryValueBinaryCreateTranslation Instance = new ArmorCategoryValueBinaryCreateTranslation();
+        public static readonly ArmorSwitchBinaryCreateTranslation Instance = new ArmorSwitchBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IArmorCategoryValue item,
+            IArmorSwitch item,
             MutagenFrame frame)
         {
             item.Category = GuidBinaryTranslation.Instance.Parse(reader: frame);
-            item.Value = GuidBinaryTranslation.Instance.Parse(reader: frame);
+            item.Variant = GuidBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }
@@ -1040,14 +1040,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class ArmorCategoryValueBinaryTranslationMixIn
+    public static class ArmorSwitchBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IArmorCategoryValueGetter item,
+            this IArmorSwitchGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ArmorCategoryValueBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((ArmorSwitchBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1060,52 +1060,52 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class ArmorCategoryValueBinaryOverlay :
+    internal partial class ArmorSwitchBinaryOverlay :
         PluginBinaryOverlay,
-        IArmorCategoryValueGetter
+        IArmorSwitchGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ArmorCategoryValue_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => ArmorCategoryValue_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ArmorSwitch_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ArmorSwitch_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ArmorCategoryValueCommon.Instance;
+        protected object CommonInstance() => ArmorSwitchCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ArmorCategoryValueSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ArmorSwitchSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IArmorCategoryValueGetter.CommonInstance() => this.CommonInstance();
+        object IArmorSwitchGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IArmorCategoryValueGetter.CommonSetterInstance() => null;
+        object? IArmorSwitchGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IArmorCategoryValueGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IArmorSwitchGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ArmorCategoryValueBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ArmorSwitchBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ArmorCategoryValueBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ArmorSwitchBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
         public Guid Category => new Guid(_structData.Slice(0x0, 0x10).Slice(0, 16));
-        public Guid Value => new Guid(_structData.Slice(0x10, 0x10).Slice(0, 16));
+        public Guid Variant => new Guid(_structData.Slice(0x10, 0x10).Slice(0, 16));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected ArmorCategoryValueBinaryOverlay(
+        protected ArmorSwitchBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1115,7 +1115,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IArmorCategoryValueGetter ArmorCategoryValueFactory(
+        public static IArmorSwitchGetter ArmorSwitchFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1127,7 +1127,7 @@ namespace Mutagen.Bethesda.Starfield
                 length: 0x20,
                 memoryPair: out var memoryPair,
                 offset: out var offset);
-            var ret = new ArmorCategoryValueBinaryOverlay(
+            var ret = new ArmorSwitchBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             stream.Position += 0x20;
@@ -1138,12 +1138,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IArmorCategoryValueGetter ArmorCategoryValueFactory(
+        public static IArmorSwitchGetter ArmorSwitchFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return ArmorCategoryValueFactory(
+            return ArmorSwitchFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1155,7 +1155,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ArmorCategoryValueMixIn.Print(
+            ArmorSwitchMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1166,16 +1166,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IArmorCategoryValueGetter rhs) return false;
-            return ((ArmorCategoryValueCommon)((IArmorCategoryValueGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IArmorSwitchGetter rhs) return false;
+            return ((ArmorSwitchCommon)((IArmorSwitchGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IArmorCategoryValueGetter? obj)
+        public bool Equals(IArmorSwitchGetter? obj)
         {
-            return ((ArmorCategoryValueCommon)((IArmorCategoryValueGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ArmorSwitchCommon)((IArmorSwitchGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((ArmorCategoryValueCommon)((IArmorCategoryValueGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ArmorSwitchCommon)((IArmorSwitchGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

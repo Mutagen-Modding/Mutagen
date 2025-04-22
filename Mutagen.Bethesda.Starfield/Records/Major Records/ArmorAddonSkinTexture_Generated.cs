@@ -38,31 +38,38 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class ArmorAddonModel :
-        IArmorAddonModel,
-        IEquatable<IArmorAddonModelGetter>,
-        ILoquiObjectSetter<ArmorAddonModel>
+    public partial class ArmorAddonSkinTexture :
+        IArmorAddonSkinTexture,
+        IEquatable<IArmorAddonSkinTextureGetter>,
+        ILoquiObjectSetter<ArmorAddonSkinTexture>
     {
         #region Ctor
-        public ArmorAddonModel()
+        public ArmorAddonSkinTexture()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region AddonIndex
-        public UInt16 AddonIndex { get; set; } = default(UInt16);
-        #endregion
-        #region ArmorAddon
-        private readonly IFormLinkNullable<IArmorAddonGetter> _ArmorAddon = new FormLinkNullable<IArmorAddonGetter>();
-        public IFormLinkNullable<IArmorAddonGetter> ArmorAddon
+        #region Texture
+        private readonly IFormLinkNullable<IMorphableObjectGetter> _Texture = new FormLinkNullable<IMorphableObjectGetter>();
+        public IFormLinkNullable<IMorphableObjectGetter> Texture
         {
-            get => _ArmorAddon;
-            set => _ArmorAddon.SetTo(value);
+            get => _Texture;
+            set => _Texture.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IArmorAddonGetter> IArmorAddonModelGetter.ArmorAddon => this.ArmorAddon;
+        IFormLinkNullableGetter<IMorphableObjectGetter> IArmorAddonSkinTextureGetter.Texture => this.Texture;
+        #endregion
+        #region SwapList
+        private readonly IFormLinkNullable<IFormListGetter> _SwapList = new FormLinkNullable<IFormListGetter>();
+        public IFormLinkNullable<IFormListGetter> SwapList
+        {
+            get => _SwapList;
+            set => _SwapList.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IFormListGetter> IArmorAddonSkinTextureGetter.SwapList => this.SwapList;
         #endregion
 
         #region To String
@@ -71,7 +78,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ArmorAddonModelMixIn.Print(
+            ArmorAddonSkinTextureMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -82,16 +89,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IArmorAddonModelGetter rhs) return false;
-            return ((ArmorAddonModelCommon)((IArmorAddonModelGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IArmorAddonSkinTextureGetter rhs) return false;
+            return ((ArmorAddonSkinTextureCommon)((IArmorAddonSkinTextureGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IArmorAddonModelGetter? obj)
+        public bool Equals(IArmorAddonSkinTextureGetter? obj)
         {
-            return ((ArmorAddonModelCommon)((IArmorAddonModelGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ArmorAddonSkinTextureCommon)((IArmorAddonSkinTextureGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((ArmorAddonModelCommon)((IArmorAddonModelGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ArmorAddonSkinTextureCommon)((IArmorAddonSkinTextureGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -103,16 +110,16 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.AddonIndex = initialValue;
-                this.ArmorAddon = initialValue;
+                this.Texture = initialValue;
+                this.SwapList = initialValue;
             }
 
             public Mask(
-                TItem AddonIndex,
-                TItem ArmorAddon)
+                TItem Texture,
+                TItem SwapList)
             {
-                this.AddonIndex = AddonIndex;
-                this.ArmorAddon = ArmorAddon;
+                this.Texture = Texture;
+                this.SwapList = SwapList;
             }
 
             #pragma warning disable CS8618
@@ -124,8 +131,8 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem AddonIndex;
-            public TItem ArmorAddon;
+            public TItem Texture;
+            public TItem SwapList;
             #endregion
 
             #region Equals
@@ -138,15 +145,15 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.AddonIndex, rhs.AddonIndex)) return false;
-                if (!object.Equals(this.ArmorAddon, rhs.ArmorAddon)) return false;
+                if (!object.Equals(this.Texture, rhs.Texture)) return false;
+                if (!object.Equals(this.SwapList, rhs.SwapList)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.AddonIndex);
-                hash.Add(this.ArmorAddon);
+                hash.Add(this.Texture);
+                hash.Add(this.SwapList);
                 return hash.ToHashCode();
             }
 
@@ -155,8 +162,8 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.AddonIndex)) return false;
-                if (!eval(this.ArmorAddon)) return false;
+                if (!eval(this.Texture)) return false;
+                if (!eval(this.SwapList)) return false;
                 return true;
             }
             #endregion
@@ -164,8 +171,8 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.AddonIndex)) return true;
-                if (eval(this.ArmorAddon)) return true;
+                if (eval(this.Texture)) return true;
+                if (eval(this.SwapList)) return true;
                 return false;
             }
             #endregion
@@ -173,40 +180,40 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new ArmorAddonModel.Mask<R>();
+                var ret = new ArmorAddonSkinTexture.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.AddonIndex = eval(this.AddonIndex);
-                obj.ArmorAddon = eval(this.ArmorAddon);
+                obj.Texture = eval(this.Texture);
+                obj.SwapList = eval(this.SwapList);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(ArmorAddonModel.Mask<bool>? printMask = null)
+            public string Print(ArmorAddonSkinTexture.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, ArmorAddonModel.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, ArmorAddonSkinTexture.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(ArmorAddonModel.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(ArmorAddonSkinTexture.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.AddonIndex ?? true)
+                    if (printMask?.Texture ?? true)
                     {
-                        sb.AppendItem(AddonIndex, "AddonIndex");
+                        sb.AppendItem(Texture, "Texture");
                     }
-                    if (printMask?.ArmorAddon ?? true)
+                    if (printMask?.SwapList ?? true)
                     {
-                        sb.AppendItem(ArmorAddon, "ArmorAddon");
+                        sb.AppendItem(SwapList, "SwapList");
                     }
                 }
             }
@@ -232,20 +239,20 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? AddonIndex;
-            public Exception? ArmorAddon;
+            public Exception? Texture;
+            public Exception? SwapList;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                ArmorAddonModel_FieldIndex enu = (ArmorAddonModel_FieldIndex)index;
+                ArmorAddonSkinTexture_FieldIndex enu = (ArmorAddonSkinTexture_FieldIndex)index;
                 switch (enu)
                 {
-                    case ArmorAddonModel_FieldIndex.AddonIndex:
-                        return AddonIndex;
-                    case ArmorAddonModel_FieldIndex.ArmorAddon:
-                        return ArmorAddon;
+                    case ArmorAddonSkinTexture_FieldIndex.Texture:
+                        return Texture;
+                    case ArmorAddonSkinTexture_FieldIndex.SwapList:
+                        return SwapList;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -253,14 +260,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                ArmorAddonModel_FieldIndex enu = (ArmorAddonModel_FieldIndex)index;
+                ArmorAddonSkinTexture_FieldIndex enu = (ArmorAddonSkinTexture_FieldIndex)index;
                 switch (enu)
                 {
-                    case ArmorAddonModel_FieldIndex.AddonIndex:
-                        this.AddonIndex = ex;
+                    case ArmorAddonSkinTexture_FieldIndex.Texture:
+                        this.Texture = ex;
                         break;
-                    case ArmorAddonModel_FieldIndex.ArmorAddon:
-                        this.ArmorAddon = ex;
+                    case ArmorAddonSkinTexture_FieldIndex.SwapList:
+                        this.SwapList = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -269,14 +276,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                ArmorAddonModel_FieldIndex enu = (ArmorAddonModel_FieldIndex)index;
+                ArmorAddonSkinTexture_FieldIndex enu = (ArmorAddonSkinTexture_FieldIndex)index;
                 switch (enu)
                 {
-                    case ArmorAddonModel_FieldIndex.AddonIndex:
-                        this.AddonIndex = (Exception?)obj;
+                    case ArmorAddonSkinTexture_FieldIndex.Texture:
+                        this.Texture = (Exception?)obj;
                         break;
-                    case ArmorAddonModel_FieldIndex.ArmorAddon:
-                        this.ArmorAddon = (Exception?)obj;
+                    case ArmorAddonSkinTexture_FieldIndex.SwapList:
+                        this.SwapList = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -286,8 +293,8 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (AddonIndex != null) return true;
-                if (ArmorAddon != null) return true;
+                if (Texture != null) return true;
+                if (SwapList != null) return true;
                 return false;
             }
             #endregion
@@ -314,10 +321,10 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(AddonIndex, "AddonIndex");
+                    sb.AppendItem(Texture, "Texture");
                 }
                 {
-                    sb.AppendItem(ArmorAddon, "ArmorAddon");
+                    sb.AppendItem(SwapList, "SwapList");
                 }
             }
             #endregion
@@ -327,8 +334,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.AddonIndex = this.AddonIndex.Combine(rhs.AddonIndex);
-                ret.ArmorAddon = this.ArmorAddon.Combine(rhs.ArmorAddon);
+                ret.Texture = this.Texture.Combine(rhs.Texture);
+                ret.SwapList = this.SwapList.Combine(rhs.SwapList);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -352,8 +359,8 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool AddonIndex;
-            public bool ArmorAddon;
+            public bool Texture;
+            public bool SwapList;
             #endregion
 
             #region Ctors
@@ -363,8 +370,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.AddonIndex = defaultOn;
-                this.ArmorAddon = defaultOn;
+                this.Texture = defaultOn;
+                this.SwapList = defaultOn;
             }
 
             #endregion
@@ -380,8 +387,8 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((AddonIndex, null));
-                ret.Add((ArmorAddon, null));
+                ret.Add((Texture, null));
+                ret.Add((SwapList, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -393,31 +400,31 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorAddonModelCommon.Instance.EnumerateFormLinks(this);
-        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonModelSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorAddonSkinTextureCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonSkinTextureSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ArmorAddonModelBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ArmorAddonSkinTextureBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ArmorAddonModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ArmorAddonSkinTextureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static ArmorAddonModel CreateFromBinary(
+        public static ArmorAddonSkinTexture CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new ArmorAddonModel();
-            ((ArmorAddonModelSetterCommon)((IArmorAddonModelGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new ArmorAddonSkinTexture();
+            ((ArmorAddonSkinTextureSetterCommon)((IArmorAddonSkinTextureGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -428,7 +435,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out ArmorAddonModel item,
+            out ArmorAddonSkinTexture item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -443,32 +450,32 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((ArmorAddonModelSetterCommon)((IArmorAddonModelGetter)this).CommonSetterInstance()!).Clear(this);
+            ((ArmorAddonSkinTextureSetterCommon)((IArmorAddonSkinTextureGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static ArmorAddonModel GetNew()
+        internal static ArmorAddonSkinTexture GetNew()
         {
-            return new ArmorAddonModel();
+            return new ArmorAddonSkinTexture();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IArmorAddonModel :
-        IArmorAddonModelGetter,
+    public partial interface IArmorAddonSkinTexture :
+        IArmorAddonSkinTextureGetter,
         IFormLinkContainer,
-        ILoquiObjectSetter<IArmorAddonModel>
+        ILoquiObjectSetter<IArmorAddonSkinTexture>
     {
-        new UInt16 AddonIndex { get; set; }
-        new IFormLinkNullable<IArmorAddonGetter> ArmorAddon { get; set; }
+        new IFormLinkNullable<IMorphableObjectGetter> Texture { get; set; }
+        new IFormLinkNullable<IFormListGetter> SwapList { get; set; }
     }
 
-    public partial interface IArmorAddonModelGetter :
+    public partial interface IArmorAddonSkinTextureGetter :
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IArmorAddonModelGetter>
+        ILoquiObject<IArmorAddonSkinTextureGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -476,51 +483,51 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => ArmorAddonModel_Registration.Instance;
-        UInt16 AddonIndex { get; }
-        IFormLinkNullableGetter<IArmorAddonGetter> ArmorAddon { get; }
+        static ILoquiRegistration StaticRegistration => ArmorAddonSkinTexture_Registration.Instance;
+        IFormLinkNullableGetter<IMorphableObjectGetter> Texture { get; }
+        IFormLinkNullableGetter<IFormListGetter> SwapList { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class ArmorAddonModelMixIn
+    public static partial class ArmorAddonSkinTextureMixIn
     {
-        public static void Clear(this IArmorAddonModel item)
+        public static void Clear(this IArmorAddonSkinTexture item)
         {
-            ((ArmorAddonModelSetterCommon)((IArmorAddonModelGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((ArmorAddonSkinTextureSetterCommon)((IArmorAddonSkinTextureGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ArmorAddonModel.Mask<bool> GetEqualsMask(
-            this IArmorAddonModelGetter item,
-            IArmorAddonModelGetter rhs,
+        public static ArmorAddonSkinTexture.Mask<bool> GetEqualsMask(
+            this IArmorAddonSkinTextureGetter item,
+            IArmorAddonSkinTextureGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ArmorAddonModelCommon)((IArmorAddonModelGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((ArmorAddonSkinTextureCommon)((IArmorAddonSkinTextureGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IArmorAddonModelGetter item,
+            this IArmorAddonSkinTextureGetter item,
             string? name = null,
-            ArmorAddonModel.Mask<bool>? printMask = null)
+            ArmorAddonSkinTexture.Mask<bool>? printMask = null)
         {
-            return ((ArmorAddonModelCommon)((IArmorAddonModelGetter)item).CommonInstance()!).Print(
+            return ((ArmorAddonSkinTextureCommon)((IArmorAddonSkinTextureGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IArmorAddonModelGetter item,
+            this IArmorAddonSkinTextureGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ArmorAddonModel.Mask<bool>? printMask = null)
+            ArmorAddonSkinTexture.Mask<bool>? printMask = null)
         {
-            ((ArmorAddonModelCommon)((IArmorAddonModelGetter)item).CommonInstance()!).Print(
+            ((ArmorAddonSkinTextureCommon)((IArmorAddonSkinTextureGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -528,21 +535,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IArmorAddonModelGetter item,
-            IArmorAddonModelGetter rhs,
-            ArmorAddonModel.TranslationMask? equalsMask = null)
+            this IArmorAddonSkinTextureGetter item,
+            IArmorAddonSkinTextureGetter rhs,
+            ArmorAddonSkinTexture.TranslationMask? equalsMask = null)
         {
-            return ((ArmorAddonModelCommon)((IArmorAddonModelGetter)item).CommonInstance()!).Equals(
+            return ((ArmorAddonSkinTextureCommon)((IArmorAddonSkinTextureGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IArmorAddonModel lhs,
-            IArmorAddonModelGetter rhs)
+            this IArmorAddonSkinTexture lhs,
+            IArmorAddonSkinTextureGetter rhs)
         {
-            ((ArmorAddonModelSetterTranslationCommon)((IArmorAddonModelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ArmorAddonSkinTextureSetterTranslationCommon)((IArmorAddonSkinTextureGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -551,11 +558,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IArmorAddonModel lhs,
-            IArmorAddonModelGetter rhs,
-            ArmorAddonModel.TranslationMask? copyMask = null)
+            this IArmorAddonSkinTexture lhs,
+            IArmorAddonSkinTextureGetter rhs,
+            ArmorAddonSkinTexture.TranslationMask? copyMask = null)
         {
-            ((ArmorAddonModelSetterTranslationCommon)((IArmorAddonModelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ArmorAddonSkinTextureSetterTranslationCommon)((IArmorAddonSkinTextureGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -564,28 +571,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IArmorAddonModel lhs,
-            IArmorAddonModelGetter rhs,
-            out ArmorAddonModel.ErrorMask errorMask,
-            ArmorAddonModel.TranslationMask? copyMask = null)
+            this IArmorAddonSkinTexture lhs,
+            IArmorAddonSkinTextureGetter rhs,
+            out ArmorAddonSkinTexture.ErrorMask errorMask,
+            ArmorAddonSkinTexture.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ArmorAddonModelSetterTranslationCommon)((IArmorAddonModelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ArmorAddonSkinTextureSetterTranslationCommon)((IArmorAddonSkinTextureGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = ArmorAddonModel.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ArmorAddonSkinTexture.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IArmorAddonModel lhs,
-            IArmorAddonModelGetter rhs,
+            this IArmorAddonSkinTexture lhs,
+            IArmorAddonSkinTextureGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ArmorAddonModelSetterTranslationCommon)((IArmorAddonModelGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ArmorAddonSkinTextureSetterTranslationCommon)((IArmorAddonSkinTextureGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -593,32 +600,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static ArmorAddonModel DeepCopy(
-            this IArmorAddonModelGetter item,
-            ArmorAddonModel.TranslationMask? copyMask = null)
+        public static ArmorAddonSkinTexture DeepCopy(
+            this IArmorAddonSkinTextureGetter item,
+            ArmorAddonSkinTexture.TranslationMask? copyMask = null)
         {
-            return ((ArmorAddonModelSetterTranslationCommon)((IArmorAddonModelGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ArmorAddonSkinTextureSetterTranslationCommon)((IArmorAddonSkinTextureGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static ArmorAddonModel DeepCopy(
-            this IArmorAddonModelGetter item,
-            out ArmorAddonModel.ErrorMask errorMask,
-            ArmorAddonModel.TranslationMask? copyMask = null)
+        public static ArmorAddonSkinTexture DeepCopy(
+            this IArmorAddonSkinTextureGetter item,
+            out ArmorAddonSkinTexture.ErrorMask errorMask,
+            ArmorAddonSkinTexture.TranslationMask? copyMask = null)
         {
-            return ((ArmorAddonModelSetterTranslationCommon)((IArmorAddonModelGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ArmorAddonSkinTextureSetterTranslationCommon)((IArmorAddonSkinTextureGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static ArmorAddonModel DeepCopy(
-            this IArmorAddonModelGetter item,
+        public static ArmorAddonSkinTexture DeepCopy(
+            this IArmorAddonSkinTextureGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ArmorAddonModelSetterTranslationCommon)((IArmorAddonModelGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ArmorAddonSkinTextureSetterTranslationCommon)((IArmorAddonSkinTextureGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -626,11 +633,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IArmorAddonModel item,
+            this IArmorAddonSkinTexture item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((ArmorAddonModelSetterCommon)((IArmorAddonModelGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ArmorAddonSkinTextureSetterCommon)((IArmorAddonSkinTextureGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -646,17 +653,17 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum ArmorAddonModel_FieldIndex
+    internal enum ArmorAddonSkinTexture_FieldIndex
     {
-        AddonIndex = 0,
-        ArmorAddon = 1,
+        Texture = 0,
+        SwapList = 1,
     }
     #endregion
 
     #region Registration
-    internal partial class ArmorAddonModel_Registration : ILoquiRegistration
+    internal partial class ArmorAddonSkinTexture_Registration : ILoquiRegistration
     {
-        public static readonly ArmorAddonModel_Registration Instance = new ArmorAddonModel_Registration();
+        public static readonly ArmorAddonSkinTexture_Registration Instance = new ArmorAddonSkinTexture_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -664,23 +671,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(ArmorAddonModel.Mask<>);
+        public static readonly Type MaskType = typeof(ArmorAddonSkinTexture.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ArmorAddonModel.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ArmorAddonSkinTexture.ErrorMask);
 
-        public static readonly Type ClassType = typeof(ArmorAddonModel);
+        public static readonly Type ClassType = typeof(ArmorAddonSkinTexture);
 
-        public static readonly Type GetterType = typeof(IArmorAddonModelGetter);
+        public static readonly Type GetterType = typeof(IArmorAddonSkinTextureGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IArmorAddonModel);
+        public static readonly Type SetterType = typeof(IArmorAddonSkinTexture);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.ArmorAddonModel";
+        public const string FullName = "Mutagen.Bethesda.Starfield.ArmorAddonSkinTexture";
 
-        public const string Name = "ArmorAddonModel";
+        public const string Name = "ArmorAddonSkinTexture";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -688,19 +695,15 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.INDX;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.INDX);
             var all = RecordCollection.Factory(
-                RecordTypes.INDX,
-                RecordTypes.MODL);
-            return new RecordTriggerSpecs(
-                allRecordTypes: all,
-                triggeringRecordTypes: triggers);
+                RecordTypes.NAM0,
+                RecordTypes.NAM2);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(ArmorAddonModelBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(ArmorAddonSkinTextureBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -731,30 +734,31 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class ArmorAddonModelSetterCommon
+    internal partial class ArmorAddonSkinTextureSetterCommon
     {
-        public static readonly ArmorAddonModelSetterCommon Instance = new ArmorAddonModelSetterCommon();
+        public static readonly ArmorAddonSkinTextureSetterCommon Instance = new ArmorAddonSkinTextureSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IArmorAddonModel item)
+        public void Clear(IArmorAddonSkinTexture item)
         {
             ClearPartial();
-            item.AddonIndex = default(UInt16);
-            item.ArmorAddon.Clear();
+            item.Texture.Clear();
+            item.SwapList.Clear();
         }
         
         #region Mutagen
-        public void RemapLinks(IArmorAddonModel obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IArmorAddonSkinTexture obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.ArmorAddon.Relink(mapping);
+            obj.Texture.Relink(mapping);
+            obj.SwapList.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IArmorAddonModel item,
+            IArmorAddonSkinTexture item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -762,23 +766,23 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillTyped: ArmorAddonModelBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillTyped: ArmorAddonSkinTextureBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    internal partial class ArmorAddonModelCommon
+    internal partial class ArmorAddonSkinTextureCommon
     {
-        public static readonly ArmorAddonModelCommon Instance = new ArmorAddonModelCommon();
+        public static readonly ArmorAddonSkinTextureCommon Instance = new ArmorAddonSkinTextureCommon();
 
-        public ArmorAddonModel.Mask<bool> GetEqualsMask(
-            IArmorAddonModelGetter item,
-            IArmorAddonModelGetter rhs,
+        public ArmorAddonSkinTexture.Mask<bool> GetEqualsMask(
+            IArmorAddonSkinTextureGetter item,
+            IArmorAddonSkinTextureGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ArmorAddonModel.Mask<bool>(false);
-            ((ArmorAddonModelCommon)((IArmorAddonModelGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new ArmorAddonSkinTexture.Mask<bool>(false);
+            ((ArmorAddonSkinTextureCommon)((IArmorAddonSkinTextureGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -787,19 +791,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IArmorAddonModelGetter item,
-            IArmorAddonModelGetter rhs,
-            ArmorAddonModel.Mask<bool> ret,
+            IArmorAddonSkinTextureGetter item,
+            IArmorAddonSkinTextureGetter rhs,
+            ArmorAddonSkinTexture.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.AddonIndex = item.AddonIndex == rhs.AddonIndex;
-            ret.ArmorAddon = item.ArmorAddon.Equals(rhs.ArmorAddon);
+            ret.Texture = item.Texture.Equals(rhs.Texture);
+            ret.SwapList = item.SwapList.Equals(rhs.SwapList);
         }
         
         public string Print(
-            IArmorAddonModelGetter item,
+            IArmorAddonSkinTextureGetter item,
             string? name = null,
-            ArmorAddonModel.Mask<bool>? printMask = null)
+            ArmorAddonSkinTexture.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -811,18 +815,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IArmorAddonModelGetter item,
+            IArmorAddonSkinTextureGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            ArmorAddonModel.Mask<bool>? printMask = null)
+            ArmorAddonSkinTexture.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"ArmorAddonModel =>");
+                sb.AppendLine($"ArmorAddonSkinTexture =>");
             }
             else
             {
-                sb.AppendLine($"{name} (ArmorAddonModel) =>");
+                sb.AppendLine($"{name} (ArmorAddonSkinTexture) =>");
             }
             using (sb.Brace())
             {
@@ -834,43 +838,43 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IArmorAddonModelGetter item,
+            IArmorAddonSkinTextureGetter item,
             StructuredStringBuilder sb,
-            ArmorAddonModel.Mask<bool>? printMask = null)
+            ArmorAddonSkinTexture.Mask<bool>? printMask = null)
         {
-            if (printMask?.AddonIndex ?? true)
+            if (printMask?.Texture ?? true)
             {
-                sb.AppendItem(item.AddonIndex, "AddonIndex");
+                sb.AppendItem(item.Texture.FormKeyNullable, "Texture");
             }
-            if (printMask?.ArmorAddon ?? true)
+            if (printMask?.SwapList ?? true)
             {
-                sb.AppendItem(item.ArmorAddon.FormKeyNullable, "ArmorAddon");
+                sb.AppendItem(item.SwapList.FormKeyNullable, "SwapList");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IArmorAddonModelGetter? lhs,
-            IArmorAddonModelGetter? rhs,
+            IArmorAddonSkinTextureGetter? lhs,
+            IArmorAddonSkinTextureGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)ArmorAddonModel_FieldIndex.AddonIndex) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddonSkinTexture_FieldIndex.Texture) ?? true))
             {
-                if (lhs.AddonIndex != rhs.AddonIndex) return false;
+                if (!lhs.Texture.Equals(rhs.Texture)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ArmorAddonModel_FieldIndex.ArmorAddon) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddonSkinTexture_FieldIndex.SwapList) ?? true))
             {
-                if (!lhs.ArmorAddon.Equals(rhs.ArmorAddon)) return false;
+                if (!lhs.SwapList.Equals(rhs.SwapList)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IArmorAddonModelGetter item)
+        public virtual int GetHashCode(IArmorAddonSkinTextureGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.AddonIndex);
-            hash.Add(item.ArmorAddon);
+            hash.Add(item.Texture);
+            hash.Add(item.SwapList);
             return hash.ToHashCode();
         }
         
@@ -879,15 +883,19 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return ArmorAddonModel.GetNew();
+            return ArmorAddonSkinTexture.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IArmorAddonModelGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IArmorAddonSkinTextureGetter obj)
         {
-            if (FormLinkInformation.TryFactory(obj.ArmorAddon, out var ArmorAddonInfo))
+            if (FormLinkInformation.TryFactory(obj.Texture, out var TextureInfo))
             {
-                yield return ArmorAddonInfo;
+                yield return TextureInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.SwapList, out var SwapListInfo))
+            {
+                yield return SwapListInfo;
             }
             yield break;
         }
@@ -895,25 +903,25 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class ArmorAddonModelSetterTranslationCommon
+    internal partial class ArmorAddonSkinTextureSetterTranslationCommon
     {
-        public static readonly ArmorAddonModelSetterTranslationCommon Instance = new ArmorAddonModelSetterTranslationCommon();
+        public static readonly ArmorAddonSkinTextureSetterTranslationCommon Instance = new ArmorAddonSkinTextureSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IArmorAddonModel item,
-            IArmorAddonModelGetter rhs,
+            IArmorAddonSkinTexture item,
+            IArmorAddonSkinTextureGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)ArmorAddonModel_FieldIndex.AddonIndex) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ArmorAddonSkinTexture_FieldIndex.Texture) ?? true))
             {
-                item.AddonIndex = rhs.AddonIndex;
+                item.Texture.SetTo(rhs.Texture.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)ArmorAddonModel_FieldIndex.ArmorAddon) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ArmorAddonSkinTexture_FieldIndex.SwapList) ?? true))
             {
-                item.ArmorAddon.SetTo(rhs.ArmorAddon.FormKeyNullable);
+                item.SwapList.SetTo(rhs.SwapList.FormKeyNullable);
             }
             DeepCopyInCustom(
                 item: item,
@@ -924,19 +932,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         partial void DeepCopyInCustom(
-            IArmorAddonModel item,
-            IArmorAddonModelGetter rhs,
+            IArmorAddonSkinTexture item,
+            IArmorAddonSkinTextureGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
         #endregion
         
-        public ArmorAddonModel DeepCopy(
-            IArmorAddonModelGetter item,
-            ArmorAddonModel.TranslationMask? copyMask = null)
+        public ArmorAddonSkinTexture DeepCopy(
+            IArmorAddonSkinTextureGetter item,
+            ArmorAddonSkinTexture.TranslationMask? copyMask = null)
         {
-            ArmorAddonModel ret = (ArmorAddonModel)((ArmorAddonModelCommon)((IArmorAddonModelGetter)item).CommonInstance()!).GetNew();
-            ((ArmorAddonModelSetterTranslationCommon)((IArmorAddonModelGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ArmorAddonSkinTexture ret = (ArmorAddonSkinTexture)((ArmorAddonSkinTextureCommon)((IArmorAddonSkinTextureGetter)item).CommonInstance()!).GetNew();
+            ((ArmorAddonSkinTextureSetterTranslationCommon)((IArmorAddonSkinTextureGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -945,30 +953,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public ArmorAddonModel DeepCopy(
-            IArmorAddonModelGetter item,
-            out ArmorAddonModel.ErrorMask errorMask,
-            ArmorAddonModel.TranslationMask? copyMask = null)
+        public ArmorAddonSkinTexture DeepCopy(
+            IArmorAddonSkinTextureGetter item,
+            out ArmorAddonSkinTexture.ErrorMask errorMask,
+            ArmorAddonSkinTexture.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ArmorAddonModel ret = (ArmorAddonModel)((ArmorAddonModelCommon)((IArmorAddonModelGetter)item).CommonInstance()!).GetNew();
-            ((ArmorAddonModelSetterTranslationCommon)((IArmorAddonModelGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ArmorAddonSkinTexture ret = (ArmorAddonSkinTexture)((ArmorAddonSkinTextureCommon)((IArmorAddonSkinTextureGetter)item).CommonInstance()!).GetNew();
+            ((ArmorAddonSkinTextureSetterTranslationCommon)((IArmorAddonSkinTextureGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = ArmorAddonModel.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ArmorAddonSkinTexture.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public ArmorAddonModel DeepCopy(
-            IArmorAddonModelGetter item,
+        public ArmorAddonSkinTexture DeepCopy(
+            IArmorAddonSkinTextureGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            ArmorAddonModel ret = (ArmorAddonModel)((ArmorAddonModelCommon)((IArmorAddonModelGetter)item).CommonInstance()!).GetNew();
-            ((ArmorAddonModelSetterTranslationCommon)((IArmorAddonModelGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ArmorAddonSkinTexture ret = (ArmorAddonSkinTexture)((ArmorAddonSkinTextureCommon)((IArmorAddonSkinTextureGetter)item).CommonInstance()!).GetNew();
+            ((ArmorAddonSkinTextureSetterTranslationCommon)((IArmorAddonSkinTextureGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -984,27 +992,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class ArmorAddonModel
+    public partial class ArmorAddonSkinTexture
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ArmorAddonModel_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => ArmorAddonModel_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ArmorAddonSkinTexture_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ArmorAddonSkinTexture_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ArmorAddonModelCommon.Instance;
+        protected object CommonInstance() => ArmorAddonSkinTextureCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return ArmorAddonModelSetterCommon.Instance;
+            return ArmorAddonSkinTextureSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ArmorAddonModelSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ArmorAddonSkinTextureSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IArmorAddonModelGetter.CommonInstance() => this.CommonInstance();
+        object IArmorAddonSkinTextureGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IArmorAddonModelGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IArmorAddonSkinTextureGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IArmorAddonModelGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IArmorAddonSkinTextureGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1015,28 +1023,28 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class ArmorAddonModelBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class ArmorAddonSkinTextureBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly ArmorAddonModelBinaryWriteTranslation Instance = new();
+        public static readonly ArmorAddonSkinTextureBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            IArmorAddonModelGetter item,
+            IArmorAddonSkinTextureGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.AddonIndex,
-                header: translationParams.ConvertToCustom(RecordTypes.INDX));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.ArmorAddon,
-                header: translationParams.ConvertToCustom(RecordTypes.MODL));
+                item: item.Texture,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM0));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SwapList,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM2));
         }
 
         public void Write(
             MutagenWriter writer,
-            IArmorAddonModelGetter item,
+            IArmorAddonSkinTextureGetter item,
             TypedWriteParams translationParams)
         {
             WriteRecordTypes(
@@ -1051,19 +1059,19 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IArmorAddonModelGetter)item,
+                item: (IArmorAddonSkinTextureGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class ArmorAddonModelBinaryCreateTranslation
+    internal partial class ArmorAddonSkinTextureBinaryCreateTranslation
     {
-        public static readonly ArmorAddonModelBinaryCreateTranslation Instance = new ArmorAddonModelBinaryCreateTranslation();
+        public static readonly ArmorAddonSkinTextureBinaryCreateTranslation Instance = new ArmorAddonSkinTextureBinaryCreateTranslation();
 
         public static ParseResult FillBinaryRecordTypes(
-            IArmorAddonModel item,
+            IArmorAddonSkinTexture item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1074,18 +1082,19 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.INDX:
+                case RecordTypeInts.NAM0:
                 {
-                    if (lastParsed.ShortCircuit((int)ArmorAddonModel_FieldIndex.AddonIndex, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)ArmorAddonSkinTexture_FieldIndex.Texture, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AddonIndex = frame.ReadUInt16();
-                    return (int)ArmorAddonModel_FieldIndex.AddonIndex;
+                    item.Texture.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ArmorAddonSkinTexture_FieldIndex.Texture;
                 }
-                case RecordTypeInts.MODL:
+                case RecordTypeInts.NAM2:
                 {
+                    if (lastParsed.ShortCircuit((int)ArmorAddonSkinTexture_FieldIndex.SwapList, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ArmorAddon.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)ArmorAddonModel_FieldIndex.ArmorAddon;
+                    item.SwapList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ArmorAddonSkinTexture_FieldIndex.SwapList;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1098,14 +1107,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class ArmorAddonModelBinaryTranslationMixIn
+    public static class ArmorAddonSkinTextureBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IArmorAddonModelGetter item,
+            this IArmorAddonSkinTextureGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ArmorAddonModelBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((ArmorAddonSkinTextureBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1118,51 +1127,51 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class ArmorAddonModelBinaryOverlay :
+    internal partial class ArmorAddonSkinTextureBinaryOverlay :
         PluginBinaryOverlay,
-        IArmorAddonModelGetter
+        IArmorAddonSkinTextureGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ArmorAddonModel_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => ArmorAddonModel_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ArmorAddonSkinTexture_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => ArmorAddonSkinTexture_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ArmorAddonModelCommon.Instance;
+        protected object CommonInstance() => ArmorAddonSkinTextureCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ArmorAddonModelSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ArmorAddonSkinTextureSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IArmorAddonModelGetter.CommonInstance() => this.CommonInstance();
+        object IArmorAddonSkinTextureGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IArmorAddonModelGetter.CommonSetterInstance() => null;
+        object? IArmorAddonSkinTextureGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IArmorAddonModelGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IArmorAddonSkinTextureGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorAddonModelCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorAddonSkinTextureCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ArmorAddonModelBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ArmorAddonSkinTextureBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((ArmorAddonModelBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ArmorAddonSkinTextureBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        #region AddonIndex
-        private int? _AddonIndexLocation;
-        public UInt16 AddonIndex => _AddonIndexLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AddonIndexLocation.Value, _package.MetaData.Constants)) : default(UInt16);
+        #region Texture
+        private int? _TextureLocation;
+        public IFormLinkNullableGetter<IMorphableObjectGetter> Texture => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMorphableObjectGetter>(_package, _recordData, _TextureLocation);
         #endregion
-        #region ArmorAddon
-        private int? _ArmorAddonLocation;
-        public IFormLinkNullableGetter<IArmorAddonGetter> ArmorAddon => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArmorAddonGetter>(_package, _recordData, _ArmorAddonLocation);
+        #region SwapList
+        private int? _SwapListLocation;
+        public IFormLinkNullableGetter<IFormListGetter> SwapList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _SwapListLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1170,7 +1179,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected ArmorAddonModelBinaryOverlay(
+        protected ArmorAddonSkinTextureBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1180,7 +1189,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IArmorAddonModelGetter ArmorAddonModelFactory(
+        public static IArmorAddonSkinTextureGetter ArmorAddonSkinTextureFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1192,7 +1201,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new ArmorAddonModelBinaryOverlay(
+            var ret = new ArmorAddonSkinTextureBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret.FillTypelessSubrecordTypes(
@@ -1204,12 +1213,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IArmorAddonModelGetter ArmorAddonModelFactory(
+        public static IArmorAddonSkinTextureGetter ArmorAddonSkinTextureFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return ArmorAddonModelFactory(
+            return ArmorAddonSkinTextureFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1227,16 +1236,17 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.INDX:
+                case RecordTypeInts.NAM0:
                 {
-                    if (lastParsed.ShortCircuit((int)ArmorAddonModel_FieldIndex.AddonIndex, translationParams)) return ParseResult.Stop;
-                    _AddonIndexLocation = (stream.Position - offset);
-                    return (int)ArmorAddonModel_FieldIndex.AddonIndex;
+                    if (lastParsed.ShortCircuit((int)ArmorAddonSkinTexture_FieldIndex.Texture, translationParams)) return ParseResult.Stop;
+                    _TextureLocation = (stream.Position - offset);
+                    return (int)ArmorAddonSkinTexture_FieldIndex.Texture;
                 }
-                case RecordTypeInts.MODL:
+                case RecordTypeInts.NAM2:
                 {
-                    _ArmorAddonLocation = (stream.Position - offset);
-                    return (int)ArmorAddonModel_FieldIndex.ArmorAddon;
+                    if (lastParsed.ShortCircuit((int)ArmorAddonSkinTexture_FieldIndex.SwapList, translationParams)) return ParseResult.Stop;
+                    _SwapListLocation = (stream.Position - offset);
+                    return (int)ArmorAddonSkinTexture_FieldIndex.SwapList;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1248,7 +1258,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            ArmorAddonModelMixIn.Print(
+            ArmorAddonSkinTextureMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1259,16 +1269,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IArmorAddonModelGetter rhs) return false;
-            return ((ArmorAddonModelCommon)((IArmorAddonModelGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IArmorAddonSkinTextureGetter rhs) return false;
+            return ((ArmorAddonSkinTextureCommon)((IArmorAddonSkinTextureGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IArmorAddonModelGetter? obj)
+        public bool Equals(IArmorAddonSkinTextureGetter? obj)
         {
-            return ((ArmorAddonModelCommon)((IArmorAddonModelGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((ArmorAddonSkinTextureCommon)((IArmorAddonSkinTextureGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((ArmorAddonModelCommon)((IArmorAddonModelGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ArmorAddonSkinTextureCommon)((IArmorAddonSkinTextureGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

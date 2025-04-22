@@ -545,8 +545,6 @@ public partial class RecordTypeInts
     public const int MLM2 = 0x324D4C4D;
     public const int MLM3 = 0x334D4C4D;
     public const int MLM4 = 0x344D4C4D;
-    public const int MLM6 = 0x364D4C4D;
-    public const int MLM7 = 0x374D4C4D;
     public const int MNAM = 0x4D414E4D;
     public const int MO2C = 0x43324F4D;
     public const int MO2F = 0x46324F4D;
@@ -561,12 +559,6 @@ public partial class RecordTypeInts
     public const int MO5C = 0x43354F4D;
     public const int MO5F = 0x46354F4D;
     public const int MO5T = 0x54354F4D;
-    public const int MO6C = 0x43364F4D;
-    public const int MO6F = 0x46364F4D;
-    public const int MO6T = 0x54364F4D;
-    public const int MO7C = 0x43374F4D;
-    public const int MO7F = 0x46374F4D;
-    public const int MO7T = 0x54374F4D;
     public const int MOBC = 0x43424F4D;
     public const int MOD2 = 0x32444F4D;
     public const int MOD3 = 0x33444F4D;

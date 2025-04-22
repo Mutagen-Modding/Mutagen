@@ -28,10 +28,12 @@
           <RefDirect refName="Model" />
         </Fields>
       </Gendered>
-      <RefList name="UnknownModels" refName="Model" />
       <Enum enumName="FirstPersonFlag" name="FirstPersonFlags" byteLength="8" recordType="BO64" />
+      <RefDirect name="Destructible" refName="Destructible" />
       <RefDirect name="PickupSound" refName="SoundReference" recordType="PUSH" />
       <RefDirect name="DropdownSound" refName="SoundReference" recordType="PDSH" />
+      <FormLink name="EquipmentType" refName="EquipType" recordType="ETYP" />
+      <FormLink name="BlockBashImpactDataSet" recordType="BIDS" refName="ImpactDataSet" />
       <FormLink name="AlternateBlockMaterial" recordType="BAMT" refName="MaterialType" />
       <FormLink name="Race" recordType="RNAM" refName="Race" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
@@ -67,8 +69,8 @@
         </Ref>
       </List>
       <Marker name="STOP" recordType="STOP" />
-      <RefDirect name="Voice" refName="ArmorCategoryValue" recordType="AVSG" />
-      <RefDirect name="Footstep" refName="ArmorCategoryValue" recordType="AFSG" />
+      <RefDirect name="Voice" refName="ArmorSwitch" recordType="AVSG" />
+      <RefDirect name="Foley" refName="ArmorSwitch" recordType="AFSG" />
     </Fields>
     <LinkInterface>IOutfitTarget</LinkInterface>
     <LinkInterface>IItem</LinkInterface>
@@ -86,13 +88,13 @@
   <Object name="ArmorAddonModel" objType="Subrecord">
     <Fields>
       <UInt16 name="AddonIndex" recordType="INDX" nullable="False" />
-      <FormLink name="AddonModel" recordType="MODL" refName="ArmorAddon" />
+      <FormLink name="ArmorAddon" recordType="MODL" refName="ArmorAddon" />
     </Fields>
   </Object>
-  <Object name="ArmorCategoryValue" objType="Subrecord">
+  <Object name="ArmorSwitch" objType="Subrecord">
     <Fields>
       <Guid name="Category" />
-      <Guid name="Value" />
+      <Guid name="Variant" />
     </Fields>
   </Object>
 </Loqui>

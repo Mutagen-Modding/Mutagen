@@ -5691,9 +5691,6 @@
     <Compile Include="Records\Major Records\BookTeachesNothing_Generated.cs">
       <DependentUpon>Book.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ArmorCategoryValue_Generated.cs">
-      <DependentUpon>Armor.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\DisplayCaseComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
@@ -6797,6 +6794,12 @@
     </Compile>
     <Compile Include="Records\Major Records\AmbientSoundPlanetCustomization_Generated.cs">
       <DependentUpon>AmbienceSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ArmorSwitch_Generated.cs">
+      <DependentUpon>Armor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ArmorAddonSkinTexture_Generated.cs">
+      <DependentUpon>ArmorAddon.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

@@ -7,6 +7,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - Weapon
 ### IHasDestructible
 - Activator
+- Armor
 - Container
 - DestructibleObjectComponent
 - Flora
@@ -425,6 +426,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IPositionRotation
 - IScripted
 ### Armor
+- IHasDestructible
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - INamed
