@@ -96,6 +96,11 @@ namespace Mutagen.Bethesda.Starfield
         public TranslatedString Description { get; set; } = string.Empty;
         ITranslatedStringGetter IClassGetter.Description => this.Description;
         #endregion
+        #region InventoryImage
+        public String? InventoryImage { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IClassGetter.InventoryImage => this.InventoryImage;
+        #endregion
         #region Properties
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<ObjectProperty>? _Properties;
@@ -112,22 +117,6 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Unknown
         public Int32 Unknown { get; set; } = default(Int32);
-        #endregion
-        #region BleedoutDefault
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Single _BleedoutDefault;
-        public Single BleedoutDefault
-        {
-            get => this._BleedoutDefault;
-            set
-            {
-                this.DATADataTypeState &= ~DATADataType.Break0;
-                this._BleedoutDefault = value;
-            }
-        }
-        #endregion
-        #region DATADataTypeState
-        public Class.DATADataType DATADataTypeState { get; set; } = default(Class.DATADataType);
         #endregion
 
         #region To String
@@ -156,10 +145,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Name = initialValue;
                 this.Description = initialValue;
+                this.InventoryImage = initialValue;
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
                 this.Unknown = initialValue;
-                this.BleedoutDefault = initialValue;
-                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -172,10 +160,9 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem Name,
                 TItem Description,
+                TItem InventoryImage,
                 TItem Properties,
-                TItem Unknown,
-                TItem BleedoutDefault,
-                TItem DATADataTypeState)
+                TItem Unknown)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -187,10 +174,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Name = Name;
                 this.Description = Description;
+                this.InventoryImage = InventoryImage;
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
                 this.Unknown = Unknown;
-                this.BleedoutDefault = BleedoutDefault;
-                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -204,10 +190,9 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public TItem Name;
             public TItem Description;
+            public TItem InventoryImage;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>? Properties;
             public TItem Unknown;
-            public TItem BleedoutDefault;
-            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -223,10 +208,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.InventoryImage, rhs.InventoryImage)) return false;
                 if (!object.Equals(this.Properties, rhs.Properties)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.BleedoutDefault, rhs.BleedoutDefault)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -234,10 +218,9 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.Name);
                 hash.Add(this.Description);
+                hash.Add(this.InventoryImage);
                 hash.Add(this.Properties);
                 hash.Add(this.Unknown);
-                hash.Add(this.BleedoutDefault);
-                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -250,6 +233,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
                 if (!eval(this.Description)) return false;
+                if (!eval(this.InventoryImage)) return false;
                 if (this.Properties != null)
                 {
                     if (!eval(this.Properties.Overall)) return false;
@@ -263,8 +247,6 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (!eval(this.Unknown)) return false;
-                if (!eval(this.BleedoutDefault)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -275,6 +257,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (base.Any(eval)) return true;
                 if (eval(this.Name)) return true;
                 if (eval(this.Description)) return true;
+                if (eval(this.InventoryImage)) return true;
                 if (this.Properties != null)
                 {
                     if (eval(this.Properties.Overall)) return true;
@@ -288,8 +271,6 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (eval(this.Unknown)) return true;
-                if (eval(this.BleedoutDefault)) return true;
-                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -307,6 +288,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 obj.Name = eval(this.Name);
                 obj.Description = eval(this.Description);
+                obj.InventoryImage = eval(this.InventoryImage);
                 if (Properties != null)
                 {
                     obj.Properties = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>?>(eval(this.Properties.Overall), Enumerable.Empty<MaskItemIndexed<R, ObjectProperty.Mask<R>?>>());
@@ -323,8 +305,6 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 obj.Unknown = eval(this.Unknown);
-                obj.BleedoutDefault = eval(this.BleedoutDefault);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -351,6 +331,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Description, "Description");
                     }
+                    if (printMask?.InventoryImage ?? true)
+                    {
+                        sb.AppendItem(InventoryImage, "InventoryImage");
+                    }
                     if ((printMask?.Properties?.Overall ?? true)
                         && Properties is {} PropertiesItem)
                     {
@@ -374,14 +358,6 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Unknown, "Unknown");
                     }
-                    if (printMask?.BleedoutDefault ?? true)
-                    {
-                        sb.AppendItem(BleedoutDefault, "BleedoutDefault");
-                    }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                    }
                 }
             }
             #endregion
@@ -395,10 +371,9 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public Exception? Name;
             public Exception? Description;
+            public Exception? InventoryImage;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>? Properties;
             public Exception? Unknown;
-            public Exception? BleedoutDefault;
-            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
@@ -411,14 +386,12 @@ namespace Mutagen.Bethesda.Starfield
                         return Name;
                     case Class_FieldIndex.Description:
                         return Description;
+                    case Class_FieldIndex.InventoryImage:
+                        return InventoryImage;
                     case Class_FieldIndex.Properties:
                         return Properties;
                     case Class_FieldIndex.Unknown:
                         return Unknown;
-                    case Class_FieldIndex.BleedoutDefault:
-                        return BleedoutDefault;
-                    case Class_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -435,17 +408,14 @@ namespace Mutagen.Bethesda.Starfield
                     case Class_FieldIndex.Description:
                         this.Description = ex;
                         break;
+                    case Class_FieldIndex.InventoryImage:
+                        this.InventoryImage = ex;
+                        break;
                     case Class_FieldIndex.Properties:
                         this.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ex, null);
                         break;
                     case Class_FieldIndex.Unknown:
                         this.Unknown = ex;
-                        break;
-                    case Class_FieldIndex.BleedoutDefault:
-                        this.BleedoutDefault = ex;
-                        break;
-                    case Class_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -464,17 +434,14 @@ namespace Mutagen.Bethesda.Starfield
                     case Class_FieldIndex.Description:
                         this.Description = (Exception?)obj;
                         break;
+                    case Class_FieldIndex.InventoryImage:
+                        this.InventoryImage = (Exception?)obj;
+                        break;
                     case Class_FieldIndex.Properties:
                         this.Properties = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>)obj;
                         break;
                     case Class_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
-                        break;
-                    case Class_FieldIndex.BleedoutDefault:
-                        this.BleedoutDefault = (Exception?)obj;
-                        break;
-                    case Class_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -487,10 +454,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (Name != null) return true;
                 if (Description != null) return true;
+                if (InventoryImage != null) return true;
                 if (Properties != null) return true;
                 if (Unknown != null) return true;
-                if (BleedoutDefault != null) return true;
-                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -523,6 +489,9 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(Description, "Description");
                 }
+                {
+                    sb.AppendItem(InventoryImage, "InventoryImage");
+                }
                 if (Properties is {} PropertiesItem)
                 {
                     sb.AppendLine("Properties =>");
@@ -544,12 +513,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(Unknown, "Unknown");
                 }
-                {
-                    sb.AppendItem(BleedoutDefault, "BleedoutDefault");
-                }
-                {
-                    sb.AppendItem(DATADataTypeState, "DATADataTypeState");
-                }
             }
             #endregion
 
@@ -560,10 +523,9 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Description = this.Description.Combine(rhs.Description);
+                ret.InventoryImage = this.InventoryImage.Combine(rhs.InventoryImage);
                 ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.BleedoutDefault = this.BleedoutDefault.Combine(rhs.BleedoutDefault);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -588,10 +550,9 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public bool Name;
             public bool Description;
+            public bool InventoryImage;
             public ObjectProperty.TranslationMask? Properties;
             public bool Unknown;
-            public bool BleedoutDefault;
-            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
@@ -602,9 +563,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Name = defaultOn;
                 this.Description = defaultOn;
+                this.InventoryImage = defaultOn;
                 this.Unknown = defaultOn;
-                this.BleedoutDefault = defaultOn;
-                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -614,10 +574,9 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((Name, null));
                 ret.Add((Description, null));
+                ret.Add((InventoryImage, null));
                 ret.Add((Properties == null ? DefaultOn : !Properties.GetCrystal().CopyNothing, Properties?.GetCrystal()));
                 ret.Add((Unknown, null));
-                ret.Add((BleedoutDefault, null));
-                ret.Add((DATADataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -681,11 +640,6 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IClass);
 
-        [Flags]
-        public enum DATADataType
-        {
-            Break0 = 1
-        }
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -779,10 +733,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new TranslatedString? Name { get; set; }
         new TranslatedString Description { get; set; }
+        new String? InventoryImage { get; set; }
         new ExtendedList<ObjectProperty>? Properties { get; set; }
         new Int32 Unknown { get; set; }
-        new Single BleedoutDefault { get; set; }
-        new Class.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IClassInternal :
@@ -812,10 +765,9 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedStringGetter? Name { get; }
         #endregion
         ITranslatedStringGetter Description { get; }
+        String? InventoryImage { get; }
         IReadOnlyList<IObjectPropertyGetter>? Properties { get; }
         Int32 Unknown { get; }
-        Single BleedoutDefault { get; }
-        Class.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -994,10 +946,9 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         Name = 7,
         Description = 8,
-        Properties = 9,
-        Unknown = 10,
-        BleedoutDefault = 11,
-        DATADataTypeState = 12,
+        InventoryImage = 9,
+        Properties = 10,
+        Unknown = 11,
     }
     #endregion
 
@@ -1008,9 +959,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 6;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 13;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(Class.Mask<>);
 
@@ -1045,6 +996,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.CLAS,
                 RecordTypes.FULL,
                 RecordTypes.DESC,
+                RecordTypes.ICON,
                 RecordTypes.PRPS,
                 RecordTypes.DATA);
             return new RecordTriggerSpecs(
@@ -1093,10 +1045,9 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.Name = default;
             item.Description.Clear();
+            item.InventoryImage = default;
             item.Properties = null;
             item.Unknown = default(Int32);
-            item.BleedoutDefault = default(Single);
-            item.DATADataTypeState = default(Class.DATADataType);
             base.Clear(item);
         }
         
@@ -1184,13 +1135,12 @@ namespace Mutagen.Bethesda.Starfield
         {
             ret.Name = object.Equals(item.Name, rhs.Name);
             ret.Description = object.Equals(item.Description, rhs.Description);
+            ret.InventoryImage = string.Equals(item.InventoryImage, rhs.InventoryImage);
             ret.Properties = item.Properties.CollectionEqualsHelper(
                 rhs.Properties,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.Unknown = item.Unknown == rhs.Unknown;
-            ret.BleedoutDefault = item.BleedoutDefault.EqualsWithin(rhs.BleedoutDefault);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1249,6 +1199,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Description, "Description");
             }
+            if ((printMask?.InventoryImage ?? true)
+                && item.InventoryImage is {} InventoryImageItem)
+            {
+                sb.AppendItem(InventoryImageItem, "InventoryImage");
+            }
             if ((printMask?.Properties?.Overall ?? true)
                 && item.Properties is {} PropertiesItem)
             {
@@ -1267,14 +1222,6 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.Unknown ?? true)
             {
                 sb.AppendItem(item.Unknown, "Unknown");
-            }
-            if (printMask?.BleedoutDefault ?? true)
-            {
-                sb.AppendItem(item.BleedoutDefault, "BleedoutDefault");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                sb.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
@@ -1334,6 +1281,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.InventoryImage) ?? true))
+            {
+                if (!string.Equals(lhs.InventoryImage, rhs.InventoryImage)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.Properties) ?? true))
             {
                 if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Class_FieldIndex.Properties)))) return false;
@@ -1341,14 +1292,6 @@ namespace Mutagen.Bethesda.Starfield
             if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.BleedoutDefault) ?? true))
-            {
-                if (!lhs.BleedoutDefault.EqualsWithin(rhs.BleedoutDefault)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.DATADataTypeState) ?? true))
-            {
-                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             }
             return true;
         }
@@ -1383,10 +1326,12 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(Nameitem);
             }
             hash.Add(item.Description);
+            if (item.InventoryImage is {} InventoryImageitem)
+            {
+                hash.Add(InventoryImageitem);
+            }
             hash.Add(item.Properties);
             hash.Add(item.Unknown);
-            hash.Add(item.BleedoutDefault);
-            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1505,6 +1450,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Description = rhs.Description.DeepCopy();
             }
+            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.InventoryImage) ?? true))
+            {
+                item.InventoryImage = rhs.InventoryImage;
+            }
             if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Properties) ?? true))
             {
                 errorMask?.PushIndex((int)Class_FieldIndex.Properties);
@@ -1540,14 +1489,6 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Unknown) ?? true))
             {
                 item.Unknown = rhs.Unknown;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.BleedoutDefault) ?? true))
-            {
-                item.BleedoutDefault = rhs.BleedoutDefault;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1709,15 +1650,6 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly ClassBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IClassGetter item,
-            MutagenWriter writer)
-        {
-            StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IClassGetter item,
             MutagenWriter writer,
@@ -1739,6 +1671,11 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.DESC),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.DL);
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.InventoryImage,
+                header: translationParams.ConvertToCustom(RecordTypes.ICON),
+                binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IObjectPropertyGetter>.Instance.Write(
                 writer: writer,
                 items: item.Properties,
@@ -1754,12 +1691,6 @@ namespace Mutagen.Bethesda.Starfield
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
             {
                 writer.Write(item.Unknown);
-                if (!item.DATADataTypeState.HasFlag(Class.DATADataType.Break0))
-                {
-                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                        writer: writer,
-                        item: item.BleedoutDefault);
-                }
             }
         }
 
@@ -1817,15 +1748,6 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly ClassBinaryCreateTranslation Instance = new ClassBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CLAS;
-        public static void FillBinaryStructs(
-            IClassInternal item,
-            MutagenFrame frame)
-        {
-            StarfieldMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IClassInternal item,
             MutagenFrame frame,
@@ -1860,6 +1782,15 @@ namespace Mutagen.Bethesda.Starfield
                         parseWhole: true);
                     return (int)Class_FieldIndex.Description;
                 }
+                case RecordTypeInts.ICON:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.InventoryImage = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
+                    return (int)Class_FieldIndex.InventoryImage;
+                }
                 case RecordTypeInts.PRPS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -1876,14 +1807,7 @@ namespace Mutagen.Bethesda.Starfield
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 4) return null;
                     item.Unknown = dataFrame.ReadInt32();
-                    if (dataFrame.Complete)
-                    {
-                        item.DATADataTypeState |= Class.DATADataType.Break0;
-                        return (int)Class_FieldIndex.Unknown;
-                    }
-                    if (dataFrame.Remaining < 4) return null;
-                    item.BleedoutDefault = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    return (int)Class_FieldIndex.BleedoutDefault;
+                    return (int)Class_FieldIndex.Unknown;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1960,18 +1884,16 @@ namespace Mutagen.Bethesda.Starfield
         private int? _DescriptionLocation;
         public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData, eager: false) : TranslatedString.Empty;
         #endregion
+        #region InventoryImage
+        private int? _InventoryImageLocation;
+        public String? InventoryImage => _InventoryImageLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _InventoryImageLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
         public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
         private RangeInt32? _DATALocation;
-        public Class.DATADataType DATADataTypeState { get; private set; }
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value.Min;
         private bool _Unknown_IsSet => _DATALocation.HasValue;
         public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_UnknownLocation, 4)) : default(Int32);
-        #endregion
-        #region BleedoutDefault
-        private int _BleedoutDefaultLocation => _DATALocation!.Value.Min + 0x4;
-        private bool _BleedoutDefault_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Class.DATADataType.Break0);
-        public Single BleedoutDefault => _BleedoutDefault_IsSet ? _recordData.Slice(_BleedoutDefaultLocation, 4).Float() : default(Single);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2052,6 +1974,11 @@ namespace Mutagen.Bethesda.Starfield
                     _DescriptionLocation = (stream.Position - offset);
                     return (int)Class_FieldIndex.Description;
                 }
+                case RecordTypeInts.ICON:
+                {
+                    _InventoryImageLocation = (stream.Position - offset);
+                    return (int)Class_FieldIndex.InventoryImage;
+                }
                 case RecordTypeInts.PRPS:
                 {
                     this.Properties = BinaryOverlayList.FactoryByStartIndexWithTrigger<IObjectPropertyGetter>(
@@ -2065,12 +1992,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
-                    if (subLen <= 0x4)
-                    {
-                        this.DATADataTypeState |= Class.DATADataType.Break0;
-                    }
-                    return (int)Class_FieldIndex.BleedoutDefault;
+                    return (int)Class_FieldIndex.Unknown;
                 }
                 default:
                     return base.FillRecordType(

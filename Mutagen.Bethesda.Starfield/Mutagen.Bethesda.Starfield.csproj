@@ -6820,5 +6820,14 @@
     <Compile Include="Records\Major Records\CellMaxHeightData_Generated.cs">
       <DependentUpon>Cell.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\CombatStylePowerWeighting_Generated.cs">
+      <DependentUpon>CombatStyle.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CombatStyleManeuverTiming_Generated.cs">
+      <DependentUpon>CombatStyle.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CombatStyleTemplates_Generated.cs">
+      <DependentUpon>CombatStyle.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
