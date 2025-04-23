@@ -7,22 +7,22 @@
       <Marker name="DATA" recordType="DATA" />
       <Data recordType="DNAM" >
         <Fields>
-          <Float name="DNAMFloat1" />
-          <Color name="DNAMColor" binaryType="Alpha" />
-          <Float name="DNAMFloat2" />
-          <Float name="DNAMFloat3" />
-          <Float name="DNAMFloat4" />
-          <Float name="DNAMFloat5" />
-          <Float name="DNAMFloat6" />
-          <Float name="DNAMFloat8" />
-          <Float name="DNAMFloat9" />
-          <Float name="DNAMFloat10" />
-          <Float name="DNAMFloat11" />
-          <Float name="DNAMFloat12" />
-          <Float name="DNAMFloat13" />
-          <RefDirect name="DNAMSound" refName="SoundReference" />
-          <Int32 name="DNAMInt1" />
-          <Int8 name="DNAMInt2" />
+          <Float name="EdgeEffectFallOff" />
+          <Color name="EdgeEffectColor" binaryType="Alpha" />
+          <Float name="EdgeEffectAlphaFadeInTime" />
+          <Float name="EdgeEffectFullAlphaTime" />
+          <Float name="EdgeEffectAlphaFadeOutTime" />
+          <Percent name="EdgeEffectPersistentAlphaRatio" />
+          <Float name="EdgeEffectAlphaPulseAmplitude" />
+          <Float name="EdgeEffectAlphaPulseFrequency" />
+          <Percent name="EdgeEffectFullAlphaRatio" />
+          <Float name="HolesAlphaTestAnimationStartTime" />
+          <Float name="HolesAlphaTestAnimationStopTime" />
+          <Float name="HolesAlphaTestAnimationStartValue" />
+          <Float name="HolesAlphaTestAnimationStopValue" />
+          <RefDirect name="Sounds" refName="SoundReference" />
+          <Int8 name="BoneDepth" />
+          <Enum name="Flags" enumName="EffectShader.Flag" byteLength="4" />
         </Fields>
       </Data>
       <RefDirect name="Model" refName="Model" />

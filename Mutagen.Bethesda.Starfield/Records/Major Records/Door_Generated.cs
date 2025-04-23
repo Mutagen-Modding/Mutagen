@@ -112,6 +112,27 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectPaletteDefaultsGetter? IDoorGetter.ObjectPaletteDefaults => this.ObjectPaletteDefaults;
         #endregion
+        #region Transforms
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Transforms? _Transforms;
+        public Transforms? Transforms
+        {
+            get => _Transforms;
+            set => _Transforms = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITransformsGetter? IDoorGetter.Transforms => this.Transforms;
+        #endregion
+        #region SnapTemplate
+        private readonly IFormLinkNullable<ISnapTemplateGetter> _SnapTemplate = new FormLinkNullable<ISnapTemplateGetter>();
+        public IFormLinkNullable<ISnapTemplateGetter> SnapTemplate
+        {
+            get => _SnapTemplate;
+            set => _SnapTemplate.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISnapTemplateGetter> IDoorGetter.SnapTemplate => this.SnapTemplate;
+        #endregion
         #region XALG
         public UInt64? XALG { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -266,16 +287,16 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISoundReferenceGetter? IDoorGetter.CloseSound => this.CloseSound;
         #endregion
-        #region LockSound
+        #region LoopSound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private SoundReference? _LockSound;
-        public SoundReference? LockSound
+        private SoundReference? _LoopSound;
+        public SoundReference? LoopSound
         {
-            get => _LockSound;
-            set => _LockSound = value;
+            get => _LoopSound;
+            set => _LoopSound = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISoundReferenceGetter? IDoorGetter.LockSound => this.LockSound;
+        ISoundReferenceGetter? IDoorGetter.LoopSound => this.LoopSound;
         #endregion
         #region Flags
         public Door.Flag Flags { get; set; } = default(Door.Flag);
@@ -290,27 +311,15 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? IDoorGetter.AlternateTextClose => this.AlternateTextClose;
         #endregion
-        #region DEVT
+        #region SoundLevel
+        public SoundLevel? SoundLevel { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _DEVT;
-        public MemorySlice<Byte>? DEVT
-        {
-            get => this._DEVT;
-            set => this._DEVT = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IDoorGetter.DEVT => this.DEVT;
+        SoundLevel? IDoorGetter.SoundLevel => this.SoundLevel;
         #endregion
-        #region ANAM
+        #region FacingAxisOverride
+        public Door.FacingAxisOverrideEnum? FacingAxisOverride { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _ANAM;
-        public MemorySlice<Byte>? ANAM
-        {
-            get => this._ANAM;
-            set => this._ANAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IDoorGetter.ANAM => this.ANAM;
+        Door.FacingAxisOverrideEnum? IDoorGetter.FacingAxisOverride => this.FacingAxisOverride;
         #endregion
         #region NavmeshGeometry
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -352,6 +361,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.DirtinessScale = initialValue;
                 this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(initialValue, new ObjectPaletteDefaults.Mask<TItem>(initialValue));
+                this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
+                this.SnapTemplate = initialValue;
                 this.XALG = initialValue;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Name = initialValue;
@@ -362,12 +373,12 @@ namespace Mutagen.Bethesda.Starfield
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
                 this.OpenSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.CloseSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
-                this.LockSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.LoopSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.Flags = initialValue;
                 this.AlternateTextOpen = initialValue;
                 this.AlternateTextClose = initialValue;
-                this.DEVT = initialValue;
-                this.ANAM = initialValue;
+                this.SoundLevel = initialValue;
+                this.FacingAxisOverride = initialValue;
                 this.NavmeshGeometry = new MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>(initialValue, new NavmeshGeometry.Mask<TItem>(initialValue));
             }
 
@@ -383,6 +394,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem ObjectBounds,
                 TItem DirtinessScale,
                 TItem ObjectPaletteDefaults,
+                TItem Transforms,
+                TItem SnapTemplate,
                 TItem XALG,
                 TItem Components,
                 TItem Name,
@@ -393,12 +406,12 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Properties,
                 TItem OpenSound,
                 TItem CloseSound,
-                TItem LockSound,
+                TItem LoopSound,
                 TItem Flags,
                 TItem AlternateTextOpen,
                 TItem AlternateTextClose,
-                TItem DEVT,
-                TItem ANAM,
+                TItem SoundLevel,
+                TItem FacingAxisOverride,
                 TItem NavmeshGeometry)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -413,6 +426,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.DirtinessScale = DirtinessScale;
                 this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(ObjectPaletteDefaults, new ObjectPaletteDefaults.Mask<TItem>(ObjectPaletteDefaults));
+                this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
+                this.SnapTemplate = SnapTemplate;
                 this.XALG = XALG;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Name = Name;
@@ -423,12 +438,12 @@ namespace Mutagen.Bethesda.Starfield
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
                 this.OpenSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(OpenSound, new SoundReference.Mask<TItem>(OpenSound));
                 this.CloseSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(CloseSound, new SoundReference.Mask<TItem>(CloseSound));
-                this.LockSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(LockSound, new SoundReference.Mask<TItem>(LockSound));
+                this.LoopSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(LoopSound, new SoundReference.Mask<TItem>(LoopSound));
                 this.Flags = Flags;
                 this.AlternateTextOpen = AlternateTextOpen;
                 this.AlternateTextClose = AlternateTextClose;
-                this.DEVT = DEVT;
-                this.ANAM = ANAM;
+                this.SoundLevel = SoundLevel;
+                this.FacingAxisOverride = FacingAxisOverride;
                 this.NavmeshGeometry = new MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>(NavmeshGeometry, new NavmeshGeometry.Mask<TItem>(NavmeshGeometry));
             }
 
@@ -445,6 +460,8 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem DirtinessScale;
             public MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>? ObjectPaletteDefaults { get; set; }
+            public MaskItem<TItem, Transforms.Mask<TItem>?>? Transforms { get; set; }
+            public TItem SnapTemplate;
             public TItem XALG;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public TItem Name;
@@ -455,12 +472,12 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>? Properties;
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? OpenSound { get; set; }
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? CloseSound { get; set; }
-            public MaskItem<TItem, SoundReference.Mask<TItem>?>? LockSound { get; set; }
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? LoopSound { get; set; }
             public TItem Flags;
             public TItem AlternateTextOpen;
             public TItem AlternateTextClose;
-            public TItem DEVT;
-            public TItem ANAM;
+            public TItem SoundLevel;
+            public TItem FacingAxisOverride;
             public MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>? NavmeshGeometry { get; set; }
             #endregion
 
@@ -479,6 +496,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.DirtinessScale, rhs.DirtinessScale)) return false;
                 if (!object.Equals(this.ObjectPaletteDefaults, rhs.ObjectPaletteDefaults)) return false;
+                if (!object.Equals(this.Transforms, rhs.Transforms)) return false;
+                if (!object.Equals(this.SnapTemplate, rhs.SnapTemplate)) return false;
                 if (!object.Equals(this.XALG, rhs.XALG)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
@@ -489,12 +508,12 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Properties, rhs.Properties)) return false;
                 if (!object.Equals(this.OpenSound, rhs.OpenSound)) return false;
                 if (!object.Equals(this.CloseSound, rhs.CloseSound)) return false;
-                if (!object.Equals(this.LockSound, rhs.LockSound)) return false;
+                if (!object.Equals(this.LoopSound, rhs.LoopSound)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.AlternateTextOpen, rhs.AlternateTextOpen)) return false;
                 if (!object.Equals(this.AlternateTextClose, rhs.AlternateTextClose)) return false;
-                if (!object.Equals(this.DEVT, rhs.DEVT)) return false;
-                if (!object.Equals(this.ANAM, rhs.ANAM)) return false;
+                if (!object.Equals(this.SoundLevel, rhs.SoundLevel)) return false;
+                if (!object.Equals(this.FacingAxisOverride, rhs.FacingAxisOverride)) return false;
                 if (!object.Equals(this.NavmeshGeometry, rhs.NavmeshGeometry)) return false;
                 return true;
             }
@@ -505,6 +524,8 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.DirtinessScale);
                 hash.Add(this.ObjectPaletteDefaults);
+                hash.Add(this.Transforms);
+                hash.Add(this.SnapTemplate);
                 hash.Add(this.XALG);
                 hash.Add(this.Components);
                 hash.Add(this.Name);
@@ -515,12 +536,12 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Properties);
                 hash.Add(this.OpenSound);
                 hash.Add(this.CloseSound);
-                hash.Add(this.LockSound);
+                hash.Add(this.LoopSound);
                 hash.Add(this.Flags);
                 hash.Add(this.AlternateTextOpen);
                 hash.Add(this.AlternateTextClose);
-                hash.Add(this.DEVT);
-                hash.Add(this.ANAM);
+                hash.Add(this.SoundLevel);
+                hash.Add(this.FacingAxisOverride);
                 hash.Add(this.NavmeshGeometry);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -548,6 +569,12 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.ObjectPaletteDefaults.Overall)) return false;
                     if (this.ObjectPaletteDefaults.Specific != null && !this.ObjectPaletteDefaults.Specific.All(eval)) return false;
                 }
+                if (Transforms != null)
+                {
+                    if (!eval(this.Transforms.Overall)) return false;
+                    if (this.Transforms.Specific != null && !this.Transforms.Specific.All(eval)) return false;
+                }
+                if (!eval(this.SnapTemplate)) return false;
                 if (!eval(this.XALG)) return false;
                 if (this.Components != null)
                 {
@@ -612,16 +639,16 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.CloseSound.Overall)) return false;
                     if (this.CloseSound.Specific != null && !this.CloseSound.Specific.All(eval)) return false;
                 }
-                if (LockSound != null)
+                if (LoopSound != null)
                 {
-                    if (!eval(this.LockSound.Overall)) return false;
-                    if (this.LockSound.Specific != null && !this.LockSound.Specific.All(eval)) return false;
+                    if (!eval(this.LoopSound.Overall)) return false;
+                    if (this.LoopSound.Specific != null && !this.LoopSound.Specific.All(eval)) return false;
                 }
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.AlternateTextOpen)) return false;
                 if (!eval(this.AlternateTextClose)) return false;
-                if (!eval(this.DEVT)) return false;
-                if (!eval(this.ANAM)) return false;
+                if (!eval(this.SoundLevel)) return false;
+                if (!eval(this.FacingAxisOverride)) return false;
                 if (NavmeshGeometry != null)
                 {
                     if (!eval(this.NavmeshGeometry.Overall)) return false;
@@ -651,6 +678,12 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.ObjectPaletteDefaults.Overall)) return true;
                     if (this.ObjectPaletteDefaults.Specific != null && this.ObjectPaletteDefaults.Specific.Any(eval)) return true;
                 }
+                if (Transforms != null)
+                {
+                    if (eval(this.Transforms.Overall)) return true;
+                    if (this.Transforms.Specific != null && this.Transforms.Specific.Any(eval)) return true;
+                }
+                if (eval(this.SnapTemplate)) return true;
                 if (eval(this.XALG)) return true;
                 if (this.Components != null)
                 {
@@ -715,16 +748,16 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.CloseSound.Overall)) return true;
                     if (this.CloseSound.Specific != null && this.CloseSound.Specific.Any(eval)) return true;
                 }
-                if (LockSound != null)
+                if (LoopSound != null)
                 {
-                    if (eval(this.LockSound.Overall)) return true;
-                    if (this.LockSound.Specific != null && this.LockSound.Specific.Any(eval)) return true;
+                    if (eval(this.LoopSound.Overall)) return true;
+                    if (this.LoopSound.Specific != null && this.LoopSound.Specific.Any(eval)) return true;
                 }
                 if (eval(this.Flags)) return true;
                 if (eval(this.AlternateTextOpen)) return true;
                 if (eval(this.AlternateTextClose)) return true;
-                if (eval(this.DEVT)) return true;
-                if (eval(this.ANAM)) return true;
+                if (eval(this.SoundLevel)) return true;
+                if (eval(this.FacingAxisOverride)) return true;
                 if (NavmeshGeometry != null)
                 {
                     if (eval(this.NavmeshGeometry.Overall)) return true;
@@ -749,6 +782,8 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.DirtinessScale = eval(this.DirtinessScale);
                 obj.ObjectPaletteDefaults = this.ObjectPaletteDefaults == null ? null : new MaskItem<R, ObjectPaletteDefaults.Mask<R>?>(eval(this.ObjectPaletteDefaults.Overall), this.ObjectPaletteDefaults.Specific?.Translate(eval));
+                obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Transforms.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
+                obj.SnapTemplate = eval(this.SnapTemplate);
                 obj.XALG = eval(this.XALG);
                 if (Components != null)
                 {
@@ -813,12 +848,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 obj.OpenSound = this.OpenSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.OpenSound.Overall), this.OpenSound.Specific?.Translate(eval));
                 obj.CloseSound = this.CloseSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.CloseSound.Overall), this.CloseSound.Specific?.Translate(eval));
-                obj.LockSound = this.LockSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.LockSound.Overall), this.LockSound.Specific?.Translate(eval));
+                obj.LoopSound = this.LoopSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.LoopSound.Overall), this.LoopSound.Specific?.Translate(eval));
                 obj.Flags = eval(this.Flags);
                 obj.AlternateTextOpen = eval(this.AlternateTextOpen);
                 obj.AlternateTextClose = eval(this.AlternateTextClose);
-                obj.DEVT = eval(this.DEVT);
-                obj.ANAM = eval(this.ANAM);
+                obj.SoundLevel = eval(this.SoundLevel);
+                obj.FacingAxisOverride = eval(this.FacingAxisOverride);
                 obj.NavmeshGeometry = this.NavmeshGeometry == null ? null : new MaskItem<R, NavmeshGeometry.Mask<R>?>(eval(this.NavmeshGeometry.Overall), this.NavmeshGeometry.Specific?.Translate(eval));
             }
             #endregion
@@ -853,6 +888,14 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.ObjectPaletteDefaults?.Overall ?? true)
                     {
                         ObjectPaletteDefaults?.Print(sb);
+                    }
+                    if (printMask?.Transforms?.Overall ?? true)
+                    {
+                        Transforms?.Print(sb);
+                    }
+                    if (printMask?.SnapTemplate ?? true)
+                    {
+                        sb.AppendItem(SnapTemplate, "SnapTemplate");
                     }
                     if (printMask?.XALG ?? true)
                     {
@@ -958,9 +1001,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         CloseSound?.Print(sb);
                     }
-                    if (printMask?.LockSound?.Overall ?? true)
+                    if (printMask?.LoopSound?.Overall ?? true)
                     {
-                        LockSound?.Print(sb);
+                        LoopSound?.Print(sb);
                     }
                     if (printMask?.Flags ?? true)
                     {
@@ -974,13 +1017,13 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(AlternateTextClose, "AlternateTextClose");
                     }
-                    if (printMask?.DEVT ?? true)
+                    if (printMask?.SoundLevel ?? true)
                     {
-                        sb.AppendItem(DEVT, "DEVT");
+                        sb.AppendItem(SoundLevel, "SoundLevel");
                     }
-                    if (printMask?.ANAM ?? true)
+                    if (printMask?.FacingAxisOverride ?? true)
                     {
-                        sb.AppendItem(ANAM, "ANAM");
+                        sb.AppendItem(FacingAxisOverride, "FacingAxisOverride");
                     }
                     if (printMask?.NavmeshGeometry?.Overall ?? true)
                     {
@@ -1001,6 +1044,8 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? DirtinessScale;
             public MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>? ObjectPaletteDefaults;
+            public MaskItem<Exception?, Transforms.ErrorMask?>? Transforms;
+            public Exception? SnapTemplate;
             public Exception? XALG;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public Exception? Name;
@@ -1011,12 +1056,12 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>? Properties;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? OpenSound;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? CloseSound;
-            public MaskItem<Exception?, SoundReference.ErrorMask?>? LockSound;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? LoopSound;
             public Exception? Flags;
             public Exception? AlternateTextOpen;
             public Exception? AlternateTextClose;
-            public Exception? DEVT;
-            public Exception? ANAM;
+            public Exception? SoundLevel;
+            public Exception? FacingAxisOverride;
             public MaskItem<Exception?, NavmeshGeometry.ErrorMask?>? NavmeshGeometry;
             #endregion
 
@@ -1034,6 +1079,10 @@ namespace Mutagen.Bethesda.Starfield
                         return DirtinessScale;
                     case Door_FieldIndex.ObjectPaletteDefaults:
                         return ObjectPaletteDefaults;
+                    case Door_FieldIndex.Transforms:
+                        return Transforms;
+                    case Door_FieldIndex.SnapTemplate:
+                        return SnapTemplate;
                     case Door_FieldIndex.XALG:
                         return XALG;
                     case Door_FieldIndex.Components:
@@ -1054,18 +1103,18 @@ namespace Mutagen.Bethesda.Starfield
                         return OpenSound;
                     case Door_FieldIndex.CloseSound:
                         return CloseSound;
-                    case Door_FieldIndex.LockSound:
-                        return LockSound;
+                    case Door_FieldIndex.LoopSound:
+                        return LoopSound;
                     case Door_FieldIndex.Flags:
                         return Flags;
                     case Door_FieldIndex.AlternateTextOpen:
                         return AlternateTextOpen;
                     case Door_FieldIndex.AlternateTextClose:
                         return AlternateTextClose;
-                    case Door_FieldIndex.DEVT:
-                        return DEVT;
-                    case Door_FieldIndex.ANAM:
-                        return ANAM;
+                    case Door_FieldIndex.SoundLevel:
+                        return SoundLevel;
+                    case Door_FieldIndex.FacingAxisOverride:
+                        return FacingAxisOverride;
                     case Door_FieldIndex.NavmeshGeometry:
                         return NavmeshGeometry;
                     default:
@@ -1089,6 +1138,12 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Door_FieldIndex.ObjectPaletteDefaults:
                         this.ObjectPaletteDefaults = new MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>(ex, null);
+                        break;
+                    case Door_FieldIndex.Transforms:
+                        this.Transforms = new MaskItem<Exception?, Transforms.ErrorMask?>(ex, null);
+                        break;
+                    case Door_FieldIndex.SnapTemplate:
+                        this.SnapTemplate = ex;
                         break;
                     case Door_FieldIndex.XALG:
                         this.XALG = ex;
@@ -1120,8 +1175,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Door_FieldIndex.CloseSound:
                         this.CloseSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
                         break;
-                    case Door_FieldIndex.LockSound:
-                        this.LockSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                    case Door_FieldIndex.LoopSound:
+                        this.LoopSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
                         break;
                     case Door_FieldIndex.Flags:
                         this.Flags = ex;
@@ -1132,11 +1187,11 @@ namespace Mutagen.Bethesda.Starfield
                     case Door_FieldIndex.AlternateTextClose:
                         this.AlternateTextClose = ex;
                         break;
-                    case Door_FieldIndex.DEVT:
-                        this.DEVT = ex;
+                    case Door_FieldIndex.SoundLevel:
+                        this.SoundLevel = ex;
                         break;
-                    case Door_FieldIndex.ANAM:
-                        this.ANAM = ex;
+                    case Door_FieldIndex.FacingAxisOverride:
+                        this.FacingAxisOverride = ex;
                         break;
                     case Door_FieldIndex.NavmeshGeometry:
                         this.NavmeshGeometry = new MaskItem<Exception?, NavmeshGeometry.ErrorMask?>(ex, null);
@@ -1163,6 +1218,12 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Door_FieldIndex.ObjectPaletteDefaults:
                         this.ObjectPaletteDefaults = (MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>?)obj;
+                        break;
+                    case Door_FieldIndex.Transforms:
+                        this.Transforms = (MaskItem<Exception?, Transforms.ErrorMask?>?)obj;
+                        break;
+                    case Door_FieldIndex.SnapTemplate:
+                        this.SnapTemplate = (Exception?)obj;
                         break;
                     case Door_FieldIndex.XALG:
                         this.XALG = (Exception?)obj;
@@ -1194,8 +1255,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Door_FieldIndex.CloseSound:
                         this.CloseSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
                         break;
-                    case Door_FieldIndex.LockSound:
-                        this.LockSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                    case Door_FieldIndex.LoopSound:
+                        this.LoopSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
                         break;
                     case Door_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
@@ -1206,11 +1267,11 @@ namespace Mutagen.Bethesda.Starfield
                     case Door_FieldIndex.AlternateTextClose:
                         this.AlternateTextClose = (Exception?)obj;
                         break;
-                    case Door_FieldIndex.DEVT:
-                        this.DEVT = (Exception?)obj;
+                    case Door_FieldIndex.SoundLevel:
+                        this.SoundLevel = (Exception?)obj;
                         break;
-                    case Door_FieldIndex.ANAM:
-                        this.ANAM = (Exception?)obj;
+                    case Door_FieldIndex.FacingAxisOverride:
+                        this.FacingAxisOverride = (Exception?)obj;
                         break;
                     case Door_FieldIndex.NavmeshGeometry:
                         this.NavmeshGeometry = (MaskItem<Exception?, NavmeshGeometry.ErrorMask?>?)obj;
@@ -1228,6 +1289,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (ObjectBounds != null) return true;
                 if (DirtinessScale != null) return true;
                 if (ObjectPaletteDefaults != null) return true;
+                if (Transforms != null) return true;
+                if (SnapTemplate != null) return true;
                 if (XALG != null) return true;
                 if (Components != null) return true;
                 if (Name != null) return true;
@@ -1238,12 +1301,12 @@ namespace Mutagen.Bethesda.Starfield
                 if (Properties != null) return true;
                 if (OpenSound != null) return true;
                 if (CloseSound != null) return true;
-                if (LockSound != null) return true;
+                if (LoopSound != null) return true;
                 if (Flags != null) return true;
                 if (AlternateTextOpen != null) return true;
                 if (AlternateTextClose != null) return true;
-                if (DEVT != null) return true;
-                if (ANAM != null) return true;
+                if (SoundLevel != null) return true;
+                if (FacingAxisOverride != null) return true;
                 if (NavmeshGeometry != null) return true;
                 return false;
             }
@@ -1277,6 +1340,10 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(DirtinessScale, "DirtinessScale");
                 }
                 ObjectPaletteDefaults?.Print(sb);
+                Transforms?.Print(sb);
+                {
+                    sb.AppendItem(SnapTemplate, "SnapTemplate");
+                }
                 {
                     sb.AppendItem(XALG, "XALG");
                 }
@@ -1365,7 +1432,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 OpenSound?.Print(sb);
                 CloseSound?.Print(sb);
-                LockSound?.Print(sb);
+                LoopSound?.Print(sb);
                 {
                     sb.AppendItem(Flags, "Flags");
                 }
@@ -1376,10 +1443,10 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(AlternateTextClose, "AlternateTextClose");
                 }
                 {
-                    sb.AppendItem(DEVT, "DEVT");
+                    sb.AppendItem(SoundLevel, "SoundLevel");
                 }
                 {
-                    sb.AppendItem(ANAM, "ANAM");
+                    sb.AppendItem(FacingAxisOverride, "FacingAxisOverride");
                 }
                 NavmeshGeometry?.Print(sb);
             }
@@ -1394,6 +1461,8 @@ namespace Mutagen.Bethesda.Starfield
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.DirtinessScale = this.DirtinessScale.Combine(rhs.DirtinessScale);
                 ret.ObjectPaletteDefaults = this.ObjectPaletteDefaults.Combine(rhs.ObjectPaletteDefaults, (l, r) => l.Combine(r));
+                ret.Transforms = this.Transforms.Combine(rhs.Transforms, (l, r) => l.Combine(r));
+                ret.SnapTemplate = this.SnapTemplate.Combine(rhs.SnapTemplate);
                 ret.XALG = this.XALG.Combine(rhs.XALG);
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Name = this.Name.Combine(rhs.Name);
@@ -1404,12 +1473,12 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 ret.OpenSound = this.OpenSound.Combine(rhs.OpenSound, (l, r) => l.Combine(r));
                 ret.CloseSound = this.CloseSound.Combine(rhs.CloseSound, (l, r) => l.Combine(r));
-                ret.LockSound = this.LockSound.Combine(rhs.LockSound, (l, r) => l.Combine(r));
+                ret.LoopSound = this.LoopSound.Combine(rhs.LoopSound, (l, r) => l.Combine(r));
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.AlternateTextOpen = this.AlternateTextOpen.Combine(rhs.AlternateTextOpen);
                 ret.AlternateTextClose = this.AlternateTextClose.Combine(rhs.AlternateTextClose);
-                ret.DEVT = this.DEVT.Combine(rhs.DEVT);
-                ret.ANAM = this.ANAM.Combine(rhs.ANAM);
+                ret.SoundLevel = this.SoundLevel.Combine(rhs.SoundLevel);
+                ret.FacingAxisOverride = this.FacingAxisOverride.Combine(rhs.FacingAxisOverride);
                 ret.NavmeshGeometry = this.NavmeshGeometry.Combine(rhs.NavmeshGeometry, (l, r) => l.Combine(r));
                 return ret;
             }
@@ -1437,6 +1506,8 @@ namespace Mutagen.Bethesda.Starfield
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool DirtinessScale;
             public ObjectPaletteDefaults.TranslationMask? ObjectPaletteDefaults;
+            public Transforms.TranslationMask? Transforms;
+            public bool SnapTemplate;
             public bool XALG;
             public AComponent.TranslationMask? Components;
             public bool Name;
@@ -1447,12 +1518,12 @@ namespace Mutagen.Bethesda.Starfield
             public ObjectProperty.TranslationMask? Properties;
             public SoundReference.TranslationMask? OpenSound;
             public SoundReference.TranslationMask? CloseSound;
-            public SoundReference.TranslationMask? LockSound;
+            public SoundReference.TranslationMask? LoopSound;
             public bool Flags;
             public bool AlternateTextOpen;
             public bool AlternateTextClose;
-            public bool DEVT;
-            public bool ANAM;
+            public bool SoundLevel;
+            public bool FacingAxisOverride;
             public NavmeshGeometry.TranslationMask? NavmeshGeometry;
             #endregion
 
@@ -1463,6 +1534,7 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.DirtinessScale = defaultOn;
+                this.SnapTemplate = defaultOn;
                 this.XALG = defaultOn;
                 this.Name = defaultOn;
                 this.Keywords = defaultOn;
@@ -1471,8 +1543,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.Flags = defaultOn;
                 this.AlternateTextOpen = defaultOn;
                 this.AlternateTextClose = defaultOn;
-                this.DEVT = defaultOn;
-                this.ANAM = defaultOn;
+                this.SoundLevel = defaultOn;
+                this.FacingAxisOverride = defaultOn;
             }
 
             #endregion
@@ -1484,6 +1556,8 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((DirtinessScale, null));
                 ret.Add((ObjectPaletteDefaults != null ? ObjectPaletteDefaults.OnOverall : DefaultOn, ObjectPaletteDefaults?.GetCrystal()));
+                ret.Add((Transforms != null ? Transforms.OnOverall : DefaultOn, Transforms?.GetCrystal()));
+                ret.Add((SnapTemplate, null));
                 ret.Add((XALG, null));
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((Name, null));
@@ -1494,12 +1568,12 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Properties == null ? DefaultOn : !Properties.GetCrystal().CopyNothing, Properties?.GetCrystal()));
                 ret.Add((OpenSound != null ? OpenSound.OnOverall : DefaultOn, OpenSound?.GetCrystal()));
                 ret.Add((CloseSound != null ? CloseSound.OnOverall : DefaultOn, CloseSound?.GetCrystal()));
-                ret.Add((LockSound != null ? LockSound.OnOverall : DefaultOn, LockSound?.GetCrystal()));
+                ret.Add((LoopSound != null ? LoopSound.OnOverall : DefaultOn, LoopSound?.GetCrystal()));
                 ret.Add((Flags, null));
                 ret.Add((AlternateTextOpen, null));
                 ret.Add((AlternateTextClose, null));
-                ret.Add((DEVT, null));
-                ret.Add((ANAM, null));
+                ret.Add((SoundLevel, null));
+                ret.Add((FacingAxisOverride, null));
                 ret.Add((NavmeshGeometry != null ? NavmeshGeometry.OnOverall : DefaultOn, NavmeshGeometry?.GetCrystal()));
             }
 
@@ -1679,6 +1753,8 @@ namespace Mutagen.Bethesda.Starfield
         new ObjectBounds ObjectBounds { get; set; }
         new Percent DirtinessScale { get; set; }
         new ObjectPaletteDefaults? ObjectPaletteDefaults { get; set; }
+        new Transforms? Transforms { get; set; }
+        new IFormLinkNullable<ISnapTemplateGetter> SnapTemplate { get; set; }
         new UInt64? XALG { get; set; }
         new ExtendedList<AComponent> Components { get; }
         /// <summary>
@@ -1698,12 +1774,12 @@ namespace Mutagen.Bethesda.Starfield
         new ExtendedList<ObjectProperty>? Properties { get; set; }
         new SoundReference? OpenSound { get; set; }
         new SoundReference? CloseSound { get; set; }
-        new SoundReference? LockSound { get; set; }
+        new SoundReference? LoopSound { get; set; }
         new Door.Flag Flags { get; set; }
         new TranslatedString? AlternateTextOpen { get; set; }
         new TranslatedString? AlternateTextClose { get; set; }
-        new MemorySlice<Byte>? DEVT { get; set; }
-        new MemorySlice<Byte>? ANAM { get; set; }
+        new SoundLevel? SoundLevel { get; set; }
+        new Door.FacingAxisOverrideEnum? FacingAxisOverride { get; set; }
         new NavmeshGeometry? NavmeshGeometry { get; set; }
         #region Mutagen
         new Door.MajorFlag MajorFlags { get; set; }
@@ -1753,6 +1829,8 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         Percent DirtinessScale { get; }
         IObjectPaletteDefaultsGetter? ObjectPaletteDefaults { get; }
+        ITransformsGetter? Transforms { get; }
+        IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate { get; }
         UInt64? XALG { get; }
         IReadOnlyList<IAComponentGetter> Components { get; }
         #region Name
@@ -1778,12 +1856,12 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IObjectPropertyGetter>? Properties { get; }
         ISoundReferenceGetter? OpenSound { get; }
         ISoundReferenceGetter? CloseSound { get; }
-        ISoundReferenceGetter? LockSound { get; }
+        ISoundReferenceGetter? LoopSound { get; }
         Door.Flag Flags { get; }
         ITranslatedStringGetter? AlternateTextOpen { get; }
         ITranslatedStringGetter? AlternateTextClose { get; }
-        ReadOnlyMemorySlice<Byte>? DEVT { get; }
-        ReadOnlyMemorySlice<Byte>? ANAM { get; }
+        SoundLevel? SoundLevel { get; }
+        Door.FacingAxisOverrideEnum? FacingAxisOverride { get; }
         INavmeshGeometryGetter? NavmeshGeometry { get; }
 
         #region Mutagen
@@ -1969,23 +2047,25 @@ namespace Mutagen.Bethesda.Starfield
         ObjectBounds = 8,
         DirtinessScale = 9,
         ObjectPaletteDefaults = 10,
-        XALG = 11,
-        Components = 12,
-        Name = 13,
-        Model = 14,
-        Keywords = 15,
-        NativeTerminal = 16,
-        ForcedLocations = 17,
-        Properties = 18,
-        OpenSound = 19,
-        CloseSound = 20,
-        LockSound = 21,
-        Flags = 22,
-        AlternateTextOpen = 23,
-        AlternateTextClose = 24,
-        DEVT = 25,
-        ANAM = 26,
-        NavmeshGeometry = 27,
+        Transforms = 11,
+        SnapTemplate = 12,
+        XALG = 13,
+        Components = 14,
+        Name = 15,
+        Model = 16,
+        Keywords = 17,
+        NativeTerminal = 18,
+        ForcedLocations = 19,
+        Properties = 20,
+        OpenSound = 21,
+        CloseSound = 22,
+        LoopSound = 23,
+        Flags = 24,
+        AlternateTextOpen = 25,
+        AlternateTextClose = 26,
+        SoundLevel = 27,
+        FacingAxisOverride = 28,
+        NavmeshGeometry = 29,
     }
     #endregion
 
@@ -1996,9 +2076,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 21;
+        public const ushort AdditionalFieldCount = 23;
 
-        public const ushort FieldCount = 28;
+        public const ushort FieldCount = 30;
 
         public static readonly Type MaskType = typeof(Door.Mask<>);
 
@@ -2036,6 +2116,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
                 RecordTypes.OPDS,
+                RecordTypes.PTT2,
+                RecordTypes.SNTP,
                 RecordTypes.XALG,
                 RecordTypes.BFCB,
                 RecordTypes.BFCE,
@@ -2109,6 +2191,8 @@ namespace Mutagen.Bethesda.Starfield
             item.ObjectBounds.Clear();
             item.DirtinessScale = default(Percent);
             item.ObjectPaletteDefaults = null;
+            item.Transforms = null;
+            item.SnapTemplate.Clear();
             item.XALG = default;
             item.Components.Clear();
             item.Name = default;
@@ -2119,12 +2203,12 @@ namespace Mutagen.Bethesda.Starfield
             item.Properties = null;
             item.OpenSound = null;
             item.CloseSound = null;
-            item.LockSound = null;
+            item.LoopSound = null;
             item.Flags = default(Door.Flag);
             item.AlternateTextOpen = default;
             item.AlternateTextClose = default;
-            item.DEVT = default;
-            item.ANAM = default;
+            item.SoundLevel = default;
+            item.FacingAxisOverride = default;
             item.NavmeshGeometry = null;
             base.Clear(item);
         }
@@ -2144,6 +2228,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             base.RemapLinks(obj, mapping);
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Transforms?.RemapLinks(mapping);
+            obj.SnapTemplate.Relink(mapping);
             obj.Components.RemapLinks(mapping);
             obj.Model?.RemapLinks(mapping);
             obj.Keywords?.RemapLinks(mapping);
@@ -2152,7 +2238,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Properties?.RemapLinks(mapping);
             obj.OpenSound?.RemapLinks(mapping);
             obj.CloseSound?.RemapLinks(mapping);
-            obj.LockSound?.RemapLinks(mapping);
+            obj.LoopSound?.RemapLinks(mapping);
             obj.NavmeshGeometry?.RemapLinks(mapping);
         }
         
@@ -2265,6 +2351,12 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.ObjectPaletteDefaults,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
+            ret.Transforms = EqualsMaskHelper.EqualsHelper(
+                item.Transforms,
+                rhs.Transforms,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.SnapTemplate = item.SnapTemplate.Equals(rhs.SnapTemplate);
             ret.XALG = item.XALG == rhs.XALG;
             ret.Components = item.Components.CollectionEqualsHelper(
                 rhs.Components,
@@ -2299,16 +2391,16 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.CloseSound,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.LockSound = EqualsMaskHelper.EqualsHelper(
-                item.LockSound,
-                rhs.LockSound,
+            ret.LoopSound = EqualsMaskHelper.EqualsHelper(
+                item.LoopSound,
+                rhs.LoopSound,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Flags = item.Flags == rhs.Flags;
             ret.AlternateTextOpen = object.Equals(item.AlternateTextOpen, rhs.AlternateTextOpen);
             ret.AlternateTextClose = object.Equals(item.AlternateTextClose, rhs.AlternateTextClose);
-            ret.DEVT = MemorySliceExt.SequenceEqual(item.DEVT, rhs.DEVT);
-            ret.ANAM = MemorySliceExt.SequenceEqual(item.ANAM, rhs.ANAM);
+            ret.SoundLevel = item.SoundLevel == rhs.SoundLevel;
+            ret.FacingAxisOverride = item.FacingAxisOverride == rhs.FacingAxisOverride;
             ret.NavmeshGeometry = EqualsMaskHelper.EqualsHelper(
                 item.NavmeshGeometry,
                 rhs.NavmeshGeometry,
@@ -2380,6 +2472,15 @@ namespace Mutagen.Bethesda.Starfield
                 && item.ObjectPaletteDefaults is {} ObjectPaletteDefaultsItem)
             {
                 ObjectPaletteDefaultsItem?.Print(sb, "ObjectPaletteDefaults");
+            }
+            if ((printMask?.Transforms?.Overall ?? true)
+                && item.Transforms is {} TransformsItem)
+            {
+                TransformsItem?.Print(sb, "Transforms");
+            }
+            if (printMask?.SnapTemplate ?? true)
+            {
+                sb.AppendItem(item.SnapTemplate.FormKeyNullable, "SnapTemplate");
             }
             if ((printMask?.XALG ?? true)
                 && item.XALG is {} XALGItem)
@@ -2469,10 +2570,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 CloseSoundItem?.Print(sb, "CloseSound");
             }
-            if ((printMask?.LockSound?.Overall ?? true)
-                && item.LockSound is {} LockSoundItem)
+            if ((printMask?.LoopSound?.Overall ?? true)
+                && item.LoopSound is {} LoopSoundItem)
             {
-                LockSoundItem?.Print(sb, "LockSound");
+                LoopSoundItem?.Print(sb, "LoopSound");
             }
             if (printMask?.Flags ?? true)
             {
@@ -2488,15 +2589,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(AlternateTextCloseItem, "AlternateTextClose");
             }
-            if ((printMask?.DEVT ?? true)
-                && item.DEVT is {} DEVTItem)
+            if ((printMask?.SoundLevel ?? true)
+                && item.SoundLevel is {} SoundLevelItem)
             {
-                sb.AppendLine($"DEVT => {SpanExt.ToHexString(DEVTItem)}");
+                sb.AppendItem(SoundLevelItem, "SoundLevel");
             }
-            if ((printMask?.ANAM ?? true)
-                && item.ANAM is {} ANAMItem)
+            if ((printMask?.FacingAxisOverride ?? true)
+                && item.FacingAxisOverride is {} FacingAxisOverrideItem)
             {
-                sb.AppendLine($"ANAM => {SpanExt.ToHexString(ANAMItem)}");
+                sb.AppendItem(FacingAxisOverrideItem, "FacingAxisOverride");
             }
             if ((printMask?.NavmeshGeometry?.Overall ?? true)
                 && item.NavmeshGeometry is {} NavmeshGeometryItem)
@@ -2581,6 +2682,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isObjectPaletteDefaultsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Door_FieldIndex.Transforms) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Transforms, rhs.Transforms, out var lhsTransforms, out var rhsTransforms, out var isTransformsEqual))
+                {
+                    if (!((TransformsCommon)((ITransformsGetter)lhsTransforms).CommonInstance()!).Equals(lhsTransforms, rhsTransforms, equalsMask?.GetSubCrystal((int)Door_FieldIndex.Transforms))) return false;
+                }
+                else if (!isTransformsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Door_FieldIndex.SnapTemplate) ?? true))
+            {
+                if (!lhs.SnapTemplate.Equals(rhs.SnapTemplate)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Door_FieldIndex.XALG) ?? true))
             {
                 if (lhs.XALG != rhs.XALG) return false;
@@ -2633,13 +2746,13 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isCloseSoundEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Door_FieldIndex.LockSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Door_FieldIndex.LoopSound) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.LockSound, rhs.LockSound, out var lhsLockSound, out var rhsLockSound, out var isLockSoundEqual))
+                if (EqualsMaskHelper.RefEquality(lhs.LoopSound, rhs.LoopSound, out var lhsLoopSound, out var rhsLoopSound, out var isLoopSoundEqual))
                 {
-                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsLockSound).CommonInstance()!).Equals(lhsLockSound, rhsLockSound, equalsMask?.GetSubCrystal((int)Door_FieldIndex.LockSound))) return false;
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsLoopSound).CommonInstance()!).Equals(lhsLoopSound, rhsLoopSound, equalsMask?.GetSubCrystal((int)Door_FieldIndex.LoopSound))) return false;
                 }
-                else if (!isLockSoundEqual) return false;
+                else if (!isLoopSoundEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Door_FieldIndex.Flags) ?? true))
             {
@@ -2653,13 +2766,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!object.Equals(lhs.AlternateTextClose, rhs.AlternateTextClose)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Door_FieldIndex.DEVT) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Door_FieldIndex.SoundLevel) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.DEVT, rhs.DEVT)) return false;
+                if (lhs.SoundLevel != rhs.SoundLevel) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Door_FieldIndex.ANAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Door_FieldIndex.FacingAxisOverride) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.ANAM, rhs.ANAM)) return false;
+                if (lhs.FacingAxisOverride != rhs.FacingAxisOverride) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Door_FieldIndex.NavmeshGeometry) ?? true))
             {
@@ -2707,6 +2820,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(ObjectPaletteDefaultsitem);
             }
+            if (item.Transforms is {} Transformsitem)
+            {
+                hash.Add(Transformsitem);
+            }
+            hash.Add(item.SnapTemplate);
             if (item.XALG is {} XALGitem)
             {
                 hash.Add(XALGitem);
@@ -2732,9 +2850,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(CloseSounditem);
             }
-            if (item.LockSound is {} LockSounditem)
+            if (item.LoopSound is {} LoopSounditem)
             {
-                hash.Add(LockSounditem);
+                hash.Add(LoopSounditem);
             }
             hash.Add(item.Flags);
             if (item.AlternateTextOpen is {} AlternateTextOpenitem)
@@ -2745,13 +2863,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(AlternateTextCloseitem);
             }
-            if (item.DEVT is {} DEVTItem)
+            if (item.SoundLevel is {} SoundLevelitem)
             {
-                hash.Add(DEVTItem);
+                hash.Add(SoundLevelitem);
             }
-            if (item.ANAM is {} ANAMItem)
+            if (item.FacingAxisOverride is {} FacingAxisOverrideitem)
             {
-                hash.Add(ANAMItem);
+                hash.Add(FacingAxisOverrideitem);
             }
             if (item.NavmeshGeometry is {} NavmeshGeometryitem)
             {
@@ -2792,6 +2910,17 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     yield return item;
                 }
+            }
+            if (obj.Transforms is {} TransformsItems)
+            {
+                foreach (var item in TransformsItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.SnapTemplate, out var SnapTemplateInfo))
+            {
+                yield return SnapTemplateInfo;
             }
             foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.EnumerateFormLinks()))
@@ -2844,9 +2973,9 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
-            if (obj.LockSound is {} LockSoundItems)
+            if (obj.LoopSound is {} LoopSoundItems)
             {
-                foreach (var item in LockSoundItems.EnumerateFormLinks())
+                foreach (var item in LoopSoundItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -3030,6 +3159,36 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.Transforms) ?? true))
+            {
+                errorMask?.PushIndex((int)Door_FieldIndex.Transforms);
+                try
+                {
+                    if(rhs.Transforms is {} rhsTransforms)
+                    {
+                        item.Transforms = rhsTransforms.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Door_FieldIndex.Transforms));
+                    }
+                    else
+                    {
+                        item.Transforms = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.SnapTemplate) ?? true))
+            {
+                item.SnapTemplate.SetTo(rhs.SnapTemplate.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.XALG) ?? true))
             {
@@ -3231,20 +3390,20 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.LockSound) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.LoopSound) ?? true))
             {
-                errorMask?.PushIndex((int)Door_FieldIndex.LockSound);
+                errorMask?.PushIndex((int)Door_FieldIndex.LoopSound);
                 try
                 {
-                    if(rhs.LockSound is {} rhsLockSound)
+                    if(rhs.LoopSound is {} rhsLoopSound)
                     {
-                        item.LockSound = rhsLockSound.DeepCopy(
+                        item.LoopSound = rhsLoopSound.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Door_FieldIndex.LockSound));
+                            copyMask?.GetSubCrystal((int)Door_FieldIndex.LoopSound));
                     }
                     else
                     {
-                        item.LockSound = default;
+                        item.LoopSound = default;
                     }
                 }
                 catch (Exception ex)
@@ -3269,27 +3428,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.AlternateTextClose = rhs.AlternateTextClose?.DeepCopy();
             }
-            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.DEVT) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.SoundLevel) ?? true))
             {
-                if(rhs.DEVT is {} DEVTrhs)
-                {
-                    item.DEVT = DEVTrhs.ToArray();
-                }
-                else
-                {
-                    item.DEVT = default;
-                }
+                item.SoundLevel = rhs.SoundLevel;
             }
-            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.ANAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.FacingAxisOverride) ?? true))
             {
-                if(rhs.ANAM is {} ANAMrhs)
-                {
-                    item.ANAM = ANAMrhs.ToArray();
-                }
-                else
-                {
-                    item.ANAM = default;
-                }
+                item.FacingAxisOverride = rhs.FacingAxisOverride;
             }
             if ((copyMask?.GetShouldTranslate((int)Door_FieldIndex.NavmeshGeometry) ?? true))
             {
@@ -3510,6 +3655,17 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     translationParams: translationParams);
             }
+            if (item.Transforms is {} TransformsItem)
+            {
+                ((TransformsBinaryWriteTranslation)((IBinaryItem)TransformsItem).BinaryWriteTranslator).Write(
+                    item: TransformsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.SnapTemplate,
+                header: translationParams.ConvertToCustom(RecordTypes.SNTP));
             UInt64BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.XALG,
@@ -3596,12 +3752,12 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams);
                 }
             }
-            if (item.LockSound is {} LockSoundItem)
+            if (item.LoopSound is {} LoopSoundItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.DLSH))
                 {
-                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)LockSoundItem).BinaryWriteTranslator).Write(
-                        item: LockSoundItem,
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)LoopSoundItem).BinaryWriteTranslator).Write(
+                        item: LoopSoundItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -3623,13 +3779,15 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.CNAM),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.DEVT,
+            EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.SoundLevel,
+                length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.DEVT));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.ANAM,
+            EnumBinaryTranslation<Door.FacingAxisOverrideEnum, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.FacingAxisOverride,
+                length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.ANAM));
             if (item.NavmeshGeometry is {} NavmeshGeometryItem)
             {
@@ -3731,6 +3889,17 @@ namespace Mutagen.Bethesda.Starfield
                     item.ObjectPaletteDefaults = Mutagen.Bethesda.Starfield.ObjectPaletteDefaults.CreateFromBinary(frame: frame);
                     return (int)Door_FieldIndex.ObjectPaletteDefaults;
                 }
+                case RecordTypeInts.PTT2:
+                {
+                    item.Transforms = Mutagen.Bethesda.Starfield.Transforms.CreateFromBinary(frame: frame);
+                    return (int)Door_FieldIndex.Transforms;
+                }
+                case RecordTypeInts.SNTP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.SnapTemplate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Door_FieldIndex.SnapTemplate;
+                }
                 case RecordTypeInts.XALG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -3825,8 +3994,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DLSH:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.LockSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
-                    return (int)Door_FieldIndex.LockSound;
+                    item.LoopSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)Door_FieldIndex.LoopSound;
                 }
                 case RecordTypeInts.FNAM:
                 {
@@ -3861,14 +4030,18 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DEVT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DEVT = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Door_FieldIndex.DEVT;
+                    item.SoundLevel = EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)Door_FieldIndex.SoundLevel;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ANAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Door_FieldIndex.ANAM;
+                    item.FacingAxisOverride = EnumBinaryTranslation<Door.FacingAxisOverrideEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)Door_FieldIndex.FacingAxisOverride;
                 }
                 case RecordTypeInts.NVNM:
                 {
@@ -3962,6 +4135,14 @@ namespace Mutagen.Bethesda.Starfield
         private RangeInt32? _ObjectPaletteDefaultsLocation;
         public IObjectPaletteDefaultsGetter? ObjectPaletteDefaults => _ObjectPaletteDefaultsLocation.HasValue ? ObjectPaletteDefaultsBinaryOverlay.ObjectPaletteDefaultsFactory(_recordData.Slice(_ObjectPaletteDefaultsLocation!.Value.Min), _package) : default;
         #endregion
+        #region Transforms
+        private RangeInt32? _TransformsLocation;
+        public ITransformsGetter? Transforms => _TransformsLocation.HasValue ? TransformsBinaryOverlay.TransformsFactory(_recordData.Slice(_TransformsLocation!.Value.Min), _package) : default;
+        #endregion
+        #region SnapTemplate
+        private int? _SnapTemplateLocation;
+        public IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISnapTemplateGetter>(_package, _recordData, _SnapTemplateLocation);
+        #endregion
         #region XALG
         private int? _XALGLocation;
         public UInt64? XALG => _XALGLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants)) : default(UInt64?);
@@ -3992,7 +4173,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
         public ISoundReferenceGetter? OpenSound { get; private set; }
         public ISoundReferenceGetter? CloseSound { get; private set; }
-        public ISoundReferenceGetter? LockSound { get; private set; }
+        public ISoundReferenceGetter? LoopSound { get; private set; }
         #region Flags
         private int? _FlagsLocation;
         public Door.Flag Flags => _FlagsLocation.HasValue ? (Door.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(Door.Flag);
@@ -4005,13 +4186,13 @@ namespace Mutagen.Bethesda.Starfield
         private int? _AlternateTextCloseLocation;
         public ITranslatedStringGetter? AlternateTextClose => _AlternateTextCloseLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AlternateTextCloseLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
-        #region DEVT
-        private int? _DEVTLocation;
-        public ReadOnlyMemorySlice<Byte>? DEVT => _DEVTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DEVTLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region SoundLevel
+        private int? _SoundLevelLocation;
+        public SoundLevel? SoundLevel => _SoundLevelLocation.HasValue ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundLevelLocation!.Value, _package.MetaData.Constants)) : default(SoundLevel?);
         #endregion
-        #region ANAM
-        private int? _ANAMLocation;
-        public ReadOnlyMemorySlice<Byte>? ANAM => _ANAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ANAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region FacingAxisOverride
+        private int? _FacingAxisOverrideLocation;
+        public Door.FacingAxisOverrideEnum? FacingAxisOverride => _FacingAxisOverrideLocation.HasValue ? (Door.FacingAxisOverrideEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FacingAxisOverrideLocation!.Value, _package.MetaData.Constants)) : default(Door.FacingAxisOverrideEnum?);
         #endregion
         #region NavmeshGeometry
         private int? _NavmeshGeometryLengthOverride;
@@ -4112,6 +4293,16 @@ namespace Mutagen.Bethesda.Starfield
                     _ObjectPaletteDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Door_FieldIndex.ObjectPaletteDefaults;
                 }
+                case RecordTypeInts.PTT2:
+                {
+                    _TransformsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Door_FieldIndex.Transforms;
+                }
+                case RecordTypeInts.SNTP:
+                {
+                    _SnapTemplateLocation = (stream.Position - offset);
+                    return (int)Door_FieldIndex.SnapTemplate;
+                }
                 case RecordTypeInts.XALG:
                 {
                     _XALGLocation = (stream.Position - offset);
@@ -4204,11 +4395,11 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DLSH:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
-                    this.LockSound = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                    this.LoopSound = SoundReferenceBinaryOverlay.SoundReferenceFactory(
                         stream: stream,
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());
-                    return (int)Door_FieldIndex.LockSound;
+                    return (int)Door_FieldIndex.LoopSound;
                 }
                 case RecordTypeInts.FNAM:
                 {
@@ -4227,13 +4418,13 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.DEVT:
                 {
-                    _DEVTLocation = (stream.Position - offset);
-                    return (int)Door_FieldIndex.DEVT;
+                    _SoundLevelLocation = (stream.Position - offset);
+                    return (int)Door_FieldIndex.SoundLevel;
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    _ANAMLocation = (stream.Position - offset);
-                    return (int)Door_FieldIndex.ANAM;
+                    _FacingAxisOverrideLocation = (stream.Position - offset);
+                    return (int)Door_FieldIndex.FacingAxisOverride;
                 }
                 case RecordTypeInts.NVNM:
                 {

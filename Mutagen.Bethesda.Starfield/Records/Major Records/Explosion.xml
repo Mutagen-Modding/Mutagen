@@ -23,22 +23,20 @@
           </FormLink>
           <FormLink name="SpawnProjectile" refName="Projectile" />
           <FormLink name="Condition" refName="ConditionRecord" />
-          <Float name="ENAMFloat1" />
-          <Float name="ENAMFloat2" />
-          <Float name="ENAMFloat3" />
-          <Float name="ENAMFloat4" />
-          <Float name="ENAMFloat5" />
-          <Float name="ENAMFloat6" />
-          <Int32 name="EnamInt1" />
-          <Int32 name="EnamInt2" />
-          <Float name="ENAMFloat7" />
-          <Int32 name="EnamInt3" />
-          <Int32 name="EnamInt4" />
-          <Float name="ENAMFloat8" />
-          <Float name="ENAMFloat9" />
-          <Float name="ENAMFloat10" />
-          <Int32 name="EnamInt5" />
-          <Float name="ENAMFloat11" />
+          <Float name="Force" />
+          <Float name="Damage" />
+          <Float name="InnerRadius" />
+          <Float name="OuterRadius" />
+          <Float name="ISRadius" />
+          <Float name="VerticalOffsetMult" />
+          <Enum name="Flags" enumName="Explosion.Flag" byteLength="4" />
+          <Enum name="SoundLevel" enumName="SoundLevel" byteLength="4" />
+          <Float name="PlacedObjectAutofadeDelay" />
+          <Enum name="Stagger" enumName="Stagger" byteLength="4" />
+          <P3Float name="SpawnPoint" />
+          <Float name="SpawnSpreadDegrees" />
+          <UInt32 name="Count" />
+          <Float name="Duration" />
         </Fields>
         <RecordTypeVersioning formVersion="506" recordType="DATA" />
       </Data>

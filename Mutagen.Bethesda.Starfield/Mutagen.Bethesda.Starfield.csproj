@@ -2182,8 +2182,14 @@
     <Compile Include="Records\Major Records\Door.cs">
       <DependentUpon>Door.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\EffectShader.cs">
+      <DependentUpon>EffectShader.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\EquipType.cs">
       <DependentUpon>EquipType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Explosion.cs">
+      <DependentUpon>Explosion.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Faction.cs">
       <DependentUpon>Faction.xml</DependentUpon>

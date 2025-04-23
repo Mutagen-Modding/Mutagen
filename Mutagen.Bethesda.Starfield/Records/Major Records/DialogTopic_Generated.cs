@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda.Starfield
         public DialogTopic.SubtypeEnum Subtype { get; set; } = default(DialogTopic.SubtypeEnum);
         #endregion
         #region SubtypeName
-        public RecordType SubtypeName { get; set; } = RecordType.Null;
+        public DialogTopic.SubtypeNameEnum SubtypeName { get; set; } = default(DialogTopic.SubtypeNameEnum);
         #endregion
         #region TopicInfoList
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1300,7 +1300,7 @@ namespace Mutagen.Bethesda.Starfield
         new DialogTopic.TopicFlag TopicFlags { get; set; }
         new DialogTopic.CategoryEnum Category { get; set; }
         new DialogTopic.SubtypeEnum Subtype { get; set; }
-        new RecordType SubtypeName { get; set; }
+        new DialogTopic.SubtypeNameEnum SubtypeName { get; set; }
         new ExtendedList<IFormLinkGetter<IDialogResponsesGetter>>? TopicInfoList { get; set; }
         new Int32 Timestamp { get; set; }
         new Int32 Unknown { get; set; }
@@ -1348,7 +1348,7 @@ namespace Mutagen.Bethesda.Starfield
         DialogTopic.TopicFlag TopicFlags { get; }
         DialogTopic.CategoryEnum Category { get; }
         DialogTopic.SubtypeEnum Subtype { get; }
-        RecordType SubtypeName { get; }
+        DialogTopic.SubtypeNameEnum SubtypeName { get; }
         IReadOnlyList<IFormLinkGetter<IDialogResponsesGetter>>? TopicInfoList { get; }
         Int32 Timestamp { get; }
         Int32 Unknown { get; }
@@ -1819,6 +1819,189 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.DIAL);
             var all = RecordCollection.Factory(
                 RecordTypes.DIAL,
+                RecordTypes.ACAC,
+                RecordTypes.ACYI,
+                RecordTypes.AGRE,
+                RecordTypes.ALIL,
+                RecordTypes.ALKL,
+                RecordTypes.ALTC,
+                RecordTypes.ALTN,
+                RecordTypes.ASKF,
+                RecordTypes.ASKG,
+                RecordTypes.ASNC,
+                RecordTypes.ASSA,
+                RecordTypes.ASSI,
+                RecordTypes.ATCK,
+                RecordTypes.AVTH,
+                RecordTypes.BAEX,
+                RecordTypes.BASH,
+                RecordTypes.BGST,
+                RecordTypes.BLED,
+                RecordTypes.BLHE,
+                RecordTypes.BLOC,
+                RecordTypes.BREA,
+                RecordTypes.BRIB,
+                RecordTypes.COLO,
+                RecordTypes.COTN,
+                RecordTypes.CRIL,
+                RecordTypes.CUST,
+                RecordTypes.DEOB,
+                RecordTypes.DETH,
+                RecordTypes.DFDA,
+                RecordTypes.ENBZ,
+                RecordTypes.ENKL,
+                RecordTypes.ENTE,
+                RecordTypes.EXBZ,
+                RecordTypes.FEXT,
+                RecordTypes.FIWE,
+                RecordTypes.FLAT,
+                RecordTypes.FLBK,
+                RecordTypes.FLEE,
+                RecordTypes.FRJT,
+                RecordTypes.FVDL,
+                RecordTypes.GBYE,
+                RecordTypes.GIFF,
+                RecordTypes.GREE,
+                RecordTypes.GRNT,
+                RecordTypes.HEAL,
+                RecordTypes.HELO,
+                RecordTypes.HIT_,
+                RecordTypes.IDAT,
+                RecordTypes.IDLE,
+                RecordTypes.IMNG,
+                RecordTypes.IMNU,
+                RecordTypes.IMPT,
+                RecordTypes.IMQU,
+                RecordTypes.INTI,
+                RecordTypes.JUMP,
+                RecordTypes.KNOO,
+                RecordTypes.LOIL,
+                RecordTypes.LOOB,
+                RecordTypes.LOTC,
+                RecordTypes.LOTN,
+                RecordTypes.LWBS,
+                RecordTypes.MCO2,
+                RecordTypes.MREF,
+                RecordTypes.MUNC,
+                RecordTypes.MURD,
+                RecordTypes.NOTA,
+                RecordTypes.NOTC,
+                RecordTypes.NOTI,
+                RecordTypes.NOTL,
+                RecordTypes.OBCO,
+                RecordTypes.ORAV,
+                RecordTypes.ORFB,
+                RecordTypes.ORFL,
+                RecordTypes.ORTC,
+                RecordTypes.OUTB,
+                RecordTypes.PAAC,
+                RecordTypes.PACO,
+                RecordTypes.PADR,
+                RecordTypes.PAFI,
+                RecordTypes.PAFU,
+                RecordTypes.PATR,
+                RecordTypes.PATT,
+                RecordTypes.PCPS,
+                RecordTypes.PCSH,
+                RecordTypes.PCSS,
+                RecordTypes.PFGT,
+                RecordTypes.PICC,
+                RecordTypes.PICN,
+                RecordTypes.PICT,
+                RecordTypes.PIRA,
+                RecordTypes.PIRN,
+                RecordTypes.POAT,
+                RecordTypes.PRJT,
+                RecordTypes.PURS,
+                RecordTypes.RANG,
+                RecordTypes.RCEX,
+                RecordTypes.RECH,
+                RecordTypes.REEX,
+                RecordTypes.REFU,
+                RecordTypes.RELA,
+                RecordTypes.RELE,
+                RecordTypes.REPA,
+                RecordTypes.RQST,
+                RecordTypes.RUMO,
+                RecordTypes.SCCH,
+                RecordTypes.SCDC,
+                RecordTypes.SCDI,
+                RecordTypes.SCEN,
+                RecordTypes.SCGC,
+                RecordTypes.SCJC,
+                RecordTypes.SCLS,
+                RecordTypes.SCRO,
+                RecordTypes.SCTI,
+                RecordTypes.SCUC,
+                RecordTypes.SEED,
+                RecordTypes.SEER,
+                RecordTypes.SEGD,
+                RecordTypes.SEGR,
+                RecordTypes.SERU,
+                RecordTypes.SESD,
+                RecordTypes.SESR,
+                RecordTypes.SETD,
+                RecordTypes.SETR,
+                RecordTypes.SEWD,
+                RecordTypes.SEWR,
+                RecordTypes.SGNC,
+                RecordTypes.SHOK,
+                RecordTypes.SHOW,
+                RecordTypes.SHRE,
+                RecordTypes.SHRP,
+                RecordTypes.SMUG,
+                RecordTypes.SRTW,
+                RecordTypes.SSEC,
+                RecordTypes.SSED,
+                RecordTypes.SSER,
+                RecordTypes.SSGD,
+                RecordTypes.SSGR,
+                RecordTypes.SSLC,
+                RecordTypes.SSSD,
+                RecordTypes.SSSZ,
+                RecordTypes.SSTD,
+                RecordTypes.SSTR,
+                RecordTypes.SSWD,
+                RecordTypes.SSWR,
+                RecordTypes.STAY,
+                RecordTypes.STEA,
+                RecordTypes.STEB,
+                RecordTypes.STFN,
+                RecordTypes.STOF,
+                RecordTypes.STTB,
+                RecordTypes.SWMW,
+                RecordTypes.TASF,
+                RecordTypes.TAUT,
+                RecordTypes.THGR,
+                RecordTypes.THRB,
+                RecordTypes.TITG,
+                RecordTypes.TRAD,
+                RecordTypes.TRAI,
+                RecordTypes.TRAN,
+                RecordTypes.TRAV,
+                RecordTypes.TRES,
+                RecordTypes.TREX,
+                RecordTypes.TRNV,
+                RecordTypes.USMG,
+                RecordTypes.VPAW,
+                RecordTypes.VPEB,
+                RecordTypes.VPEL,
+                RecordTypes.VPES,
+                RecordTypes.VPEV,
+                RecordTypes.VPEW,
+                RecordTypes.VPHC,
+                RecordTypes.VPKC,
+                RecordTypes.VPKW,
+                RecordTypes.VPLV,
+                RecordTypes.VPNM,
+                RecordTypes.VPSL,
+                RecordTypes.VPSS,
+                RecordTypes.VPTM,
+                RecordTypes.VPVC,
+                RecordTypes.WFPI,
+                RecordTypes.WTCR,
+                RecordTypes.YIEL,
+                RecordTypes.ZKEY,
                 RecordTypes.BFCB,
                 RecordTypes.BFCE,
                 RecordTypes.FULL,
@@ -1917,7 +2100,7 @@ namespace Mutagen.Bethesda.Starfield
             item.TopicFlags = default(DialogTopic.TopicFlag);
             item.Category = default(DialogTopic.CategoryEnum);
             item.Subtype = default(DialogTopic.SubtypeEnum);
-            item.SubtypeName = RecordType.Null;
+            item.SubtypeName = default(DialogTopic.SubtypeNameEnum);
             item.TopicInfoList = null;
             item.Timestamp = default(Int32);
             item.Unknown = default(Int32);
@@ -3367,9 +3550,10 @@ namespace Mutagen.Bethesda.Starfield
                     item.Subtype,
                     length: 2);
             }
-            RecordTypeBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.SubtypeName,
+            EnumBinaryTranslation<DialogTopic.SubtypeNameEnum, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.SubtypeName,
+                length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.SNAM));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDialogResponsesGetter>>.Instance.Write(
                 writer: writer,
@@ -3560,7 +3744,9 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SubtypeName = RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.SubtypeName = EnumBinaryTranslation<DialogTopic.SubtypeNameEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)DialogTopic_FieldIndex.SubtypeName;
                 }
                 case RecordTypeInts.TIFL:
@@ -3714,7 +3900,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SubtypeName
         private int? _SubtypeNameLocation;
-        public RecordType SubtypeName => _SubtypeNameLocation.HasValue ? new RecordType(BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SubtypeNameLocation.Value, _package.MetaData.Constants))) : RecordType.Null;
+        public DialogTopic.SubtypeNameEnum SubtypeName => _SubtypeNameLocation.HasValue ? (DialogTopic.SubtypeNameEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SubtypeNameLocation!.Value, _package.MetaData.Constants)) : default(DialogTopic.SubtypeNameEnum);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IDialogResponsesGetter>>? TopicInfoList { get; private set; }
         #region InfoListCount
