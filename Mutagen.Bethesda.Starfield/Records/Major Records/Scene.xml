@@ -224,29 +224,7 @@
   </Object>
   <Object name="AnimationSceneAction" objType="Subrecord" baseClass="ASceneAction">
     <Fields>
-      <RefList name="Animations" refName="AnimationSceneItem" />
-    </Fields>
-  </Object>
-  <Object name="AnimationSceneItem" objType="Subrecord" endMarkerType="XNAM" >
-    <Fields>
-      <FormLink name="NpcAnimation" refName="IdleAnimation" recordType="BNAM" />
-      <String name="STRV" recordType="STRV" unknown="true" />
-      <FormLink name="VCLR" refName="Keyword" recordType="VCLR" nullable="false" unknown="true" />
-      <FormLink name="FLMV" refName="Keyword" recordType="FLMV" nullable="false" unknown="true" />
-      <FormLink name="FLAV" refName="Keyword" recordType="FLAV" nullable="false" unknown="true" />
-      <Bool name="QUAL" recordType="QUAL" boolAsMarker="True" unknown="true" />
-      <Bool name="SPOR" recordType="SPOR" boolAsMarker="True" unknown="true" />
-      <Bool name="OCOR" recordType="OCOR" boolAsMarker="True" unknown="true" />
-      <Bool name="SOFT" recordType="SOFT" boolAsMarker="True" unknown="true" />
-      <Bool name="DOFT" recordType="DOFT" boolAsMarker="True" unknown="true" />
-      <Float name="LVCR" recordType="LVCR" nullable="false" unknown="true" />
-      <RefList name="Conditions" refName="Condition" />
-      <FormLink name="ATAC" refName="ActionRecord" recordType="ATAC" nullable="false" unknown="true" />
-      <Bool name="PLRL" recordType="PLRL" boolAsMarker="True" unknown="true" />
-      <Bool name="SHRT" recordType="SHRT" boolAsMarker="True" unknown="true" />
-      <Int32 name="DTGT" recordType="DTGT" unknown="true" />
-      <Bool name="DPLT" recordType="DPLT" boolAsMarker="True" unknown="true" />
-      <Bool name="ACEP" recordType="ACEP" boolAsMarker="True" unknown="true" />
+      <RefList name="Animations" refName="Animation" />
     </Fields>
   </Object>
   <Object name="TimelineSceneAction" objType="Subrecord" baseClass="ASceneAction">

@@ -5877,9 +5877,6 @@
     <Compile Include="Records\Major Records\CameraSceneShot_Generated.cs">
       <DependentUpon>Scene.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\AnimationSceneItem_Generated.cs">
-      <DependentUpon>Scene.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\QuestLocationAliasALPS_Generated.cs">
       <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
@@ -6825,6 +6822,9 @@
     </Compile>
     <Compile Include="Records\Major Records\CombatStyleTemplates_Generated.cs">
       <DependentUpon>CombatStyle.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Animation_Generated.cs">
+      <DependentUpon>Animation.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

@@ -7,7 +7,6 @@
       <RefDirect name="Flags" refName="DialogResponseFlags" />
       <FormLink name="SharedDialog" recordType="DNAM" refName="DialogResponses" />
       <FormLink name="DialogGroup" recordType="GNAM" refName="DialogResponses" />
-      <ByteArray name="TPIC" recordType="TPIC" unknown="true" />
       <RefList name="Responses" refName="DialogResponse" />
       <RefList name="Conditions" refName="Condition" />
       <String name="Prompt" recordType="RNAM" translated="Normal" />
@@ -25,9 +24,9 @@
       <FormLink name="Perk" refName="Perk" recordType="PERK" />
     </Fields>
   </Object>
-  <Object name="DialogResponseFlags" objType="Subrecord" recordType="ENAM">
+  <Object name="DialogResponseFlags" objType="Subrecord" recordType="ENAM" >
     <Fields>
-      <Enum name="Flags" enumName="DialogResponses.Flag" byteLength="2" />
+      <Int16 name="Flags" byteLength="2" />
       <Float name="ResetHours" integerType="UShort" divisor="65535" multiplier="24" />
     </Fields>
   </Object>
@@ -51,23 +50,7 @@
       <String name="Edits" recordType="NAM3" nullable="False" />
       <String name="AlternateLipText" recordType="NAM4" nullable="False" />
       <ByteArray name="TextHash" recordType="NAM9" />
-      <FormLink name="NpcAnimation" refName="IdleAnimation" recordType="BNAM" />
-      <String name="AnimationSubgraph" recordType="STRV" />
-      <FormLink name="AnimationBodyArchetype" refName="Keyword" recordType="VCLR" />
-      <FormLink name="AnimationFaceArchetype" refName="Keyword" recordType="FLMV" />
-      <ByteArray name="AnimationFlavor" refName="Keyword" recordType="FLAV" />
-      <Bool name="UseDialogueAnimation" recordType="QUAL" boolAsMarker="True" />
-      <Bool name="UseAnimationBodyArchetype" recordType="DOFT" boolAsMarker="True" />
-      <Bool name="AnimationCompleteEndsPhase" recordType="DPLT" boolAsMarker="True" />
-      <Bool name="AnimationOnlyMovement" recordType="SPOR" boolAsMarker="True" />
-      <Bool name="UseFlavorAnimation" recordType="OCOR" boolAsMarker="True" />
-      <Float name="DelayStartTimeAction" recordType="LVCR" />
-      <FormLink name="Action" recordType="ATAC" refName="ActionRecord" />
-      <Bool name="UseActorAnimationAction" recordType="SHRT" boolAsMarker="True" />
-      <Bool name="AnimationHoldEvent" recordType="PLRL" boolAsMarker="True" />
-      <Int32 name="DTGT" recordType="DTGT" unknown="true" />
-      <Bool name="ACEP" recordType="ACEP" boolAsMarker="True" />
-      <Bool name="XNAM" recordType="XNAM" boolAsMarker="True" unknown="true" />
+      <RefDirect name="Animation" refName="Animation" />
       <RefDirect name="HeadTracking" refName="HeadTracking" />
       <RefDirect name="RVSH" recordType="RVSH" unknown="true" refName="SoundReference" />
     </Fields>

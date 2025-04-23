@@ -107,98 +107,16 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte>? IDialogResponseGetter.TextHash => this.TextHash;
         #endregion
-        #region NpcAnimation
-        private readonly IFormLinkNullable<IIdleAnimationGetter> _NpcAnimation = new FormLinkNullable<IIdleAnimationGetter>();
-        public IFormLinkNullable<IIdleAnimationGetter> NpcAnimation
+        #region Animation
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Animation? _Animation;
+        public Animation? Animation
         {
-            get => _NpcAnimation;
-            set => _NpcAnimation.SetTo(value);
+            get => _Animation;
+            set => _Animation = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IIdleAnimationGetter> IDialogResponseGetter.NpcAnimation => this.NpcAnimation;
-        #endregion
-        #region AnimationSubgraph
-        public String? AnimationSubgraph { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IDialogResponseGetter.AnimationSubgraph => this.AnimationSubgraph;
-        #endregion
-        #region AnimationBodyArchetype
-        private readonly IFormLinkNullable<IKeywordGetter> _AnimationBodyArchetype = new FormLinkNullable<IKeywordGetter>();
-        public IFormLinkNullable<IKeywordGetter> AnimationBodyArchetype
-        {
-            get => _AnimationBodyArchetype;
-            set => _AnimationBodyArchetype.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IKeywordGetter> IDialogResponseGetter.AnimationBodyArchetype => this.AnimationBodyArchetype;
-        #endregion
-        #region AnimationFaceArchetype
-        private readonly IFormLinkNullable<IKeywordGetter> _AnimationFaceArchetype = new FormLinkNullable<IKeywordGetter>();
-        public IFormLinkNullable<IKeywordGetter> AnimationFaceArchetype
-        {
-            get => _AnimationFaceArchetype;
-            set => _AnimationFaceArchetype.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IKeywordGetter> IDialogResponseGetter.AnimationFaceArchetype => this.AnimationFaceArchetype;
-        #endregion
-        #region AnimationFlavor
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _AnimationFlavor;
-        public MemorySlice<Byte>? AnimationFlavor
-        {
-            get => this._AnimationFlavor;
-            set => this._AnimationFlavor = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IDialogResponseGetter.AnimationFlavor => this.AnimationFlavor;
-        #endregion
-        #region UseDialogueAnimation
-        public Boolean UseDialogueAnimation { get; set; } = default(Boolean);
-        #endregion
-        #region UseAnimationBodyArchetype
-        public Boolean UseAnimationBodyArchetype { get; set; } = default(Boolean);
-        #endregion
-        #region AnimationCompleteEndsPhase
-        public Boolean AnimationCompleteEndsPhase { get; set; } = default(Boolean);
-        #endregion
-        #region AnimationOnlyMovement
-        public Boolean AnimationOnlyMovement { get; set; } = default(Boolean);
-        #endregion
-        #region UseFlavorAnimation
-        public Boolean UseFlavorAnimation { get; set; } = default(Boolean);
-        #endregion
-        #region DelayStartTimeAction
-        public Single? DelayStartTimeAction { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IDialogResponseGetter.DelayStartTimeAction => this.DelayStartTimeAction;
-        #endregion
-        #region Action
-        private readonly IFormLinkNullable<IActionRecordGetter> _Action = new FormLinkNullable<IActionRecordGetter>();
-        public IFormLinkNullable<IActionRecordGetter> Action
-        {
-            get => _Action;
-            set => _Action.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IActionRecordGetter> IDialogResponseGetter.Action => this.Action;
-        #endregion
-        #region UseActorAnimationAction
-        public Boolean UseActorAnimationAction { get; set; } = default(Boolean);
-        #endregion
-        #region AnimationHoldEvent
-        public Boolean AnimationHoldEvent { get; set; } = default(Boolean);
-        #endregion
-        #region DTGT
-        public Int32? DTGT { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int32? IDialogResponseGetter.DTGT => this.DTGT;
-        #endregion
-        #region ACEP
-        public Boolean ACEP { get; set; } = default(Boolean);
-        #endregion
-        #region XNAM
-        public Boolean XNAM { get; set; } = default(Boolean);
+        IAnimationGetter? IDialogResponseGetter.Animation => this.Animation;
         #endregion
         #region HeadTracking
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -270,23 +188,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Edits = initialValue;
                 this.AlternateLipText = initialValue;
                 this.TextHash = initialValue;
-                this.NpcAnimation = initialValue;
-                this.AnimationSubgraph = initialValue;
-                this.AnimationBodyArchetype = initialValue;
-                this.AnimationFaceArchetype = initialValue;
-                this.AnimationFlavor = initialValue;
-                this.UseDialogueAnimation = initialValue;
-                this.UseAnimationBodyArchetype = initialValue;
-                this.AnimationCompleteEndsPhase = initialValue;
-                this.AnimationOnlyMovement = initialValue;
-                this.UseFlavorAnimation = initialValue;
-                this.DelayStartTimeAction = initialValue;
-                this.Action = initialValue;
-                this.UseActorAnimationAction = initialValue;
-                this.AnimationHoldEvent = initialValue;
-                this.DTGT = initialValue;
-                this.ACEP = initialValue;
-                this.XNAM = initialValue;
+                this.Animation = new MaskItem<TItem, Animation.Mask<TItem>?>(initialValue, new Animation.Mask<TItem>(initialValue));
                 this.HeadTracking = new MaskItem<TItem, HeadTracking.Mask<TItem>?>(initialValue, new HeadTracking.Mask<TItem>(initialValue));
                 this.RVSH = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
             }
@@ -301,23 +203,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Edits,
                 TItem AlternateLipText,
                 TItem TextHash,
-                TItem NpcAnimation,
-                TItem AnimationSubgraph,
-                TItem AnimationBodyArchetype,
-                TItem AnimationFaceArchetype,
-                TItem AnimationFlavor,
-                TItem UseDialogueAnimation,
-                TItem UseAnimationBodyArchetype,
-                TItem AnimationCompleteEndsPhase,
-                TItem AnimationOnlyMovement,
-                TItem UseFlavorAnimation,
-                TItem DelayStartTimeAction,
-                TItem Action,
-                TItem UseActorAnimationAction,
-                TItem AnimationHoldEvent,
-                TItem DTGT,
-                TItem ACEP,
-                TItem XNAM,
+                TItem Animation,
                 TItem HeadTracking,
                 TItem RVSH)
             {
@@ -330,23 +216,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Edits = Edits;
                 this.AlternateLipText = AlternateLipText;
                 this.TextHash = TextHash;
-                this.NpcAnimation = NpcAnimation;
-                this.AnimationSubgraph = AnimationSubgraph;
-                this.AnimationBodyArchetype = AnimationBodyArchetype;
-                this.AnimationFaceArchetype = AnimationFaceArchetype;
-                this.AnimationFlavor = AnimationFlavor;
-                this.UseDialogueAnimation = UseDialogueAnimation;
-                this.UseAnimationBodyArchetype = UseAnimationBodyArchetype;
-                this.AnimationCompleteEndsPhase = AnimationCompleteEndsPhase;
-                this.AnimationOnlyMovement = AnimationOnlyMovement;
-                this.UseFlavorAnimation = UseFlavorAnimation;
-                this.DelayStartTimeAction = DelayStartTimeAction;
-                this.Action = Action;
-                this.UseActorAnimationAction = UseActorAnimationAction;
-                this.AnimationHoldEvent = AnimationHoldEvent;
-                this.DTGT = DTGT;
-                this.ACEP = ACEP;
-                this.XNAM = XNAM;
+                this.Animation = new MaskItem<TItem, Animation.Mask<TItem>?>(Animation, new Animation.Mask<TItem>(Animation));
                 this.HeadTracking = new MaskItem<TItem, HeadTracking.Mask<TItem>?>(HeadTracking, new HeadTracking.Mask<TItem>(HeadTracking));
                 this.RVSH = new MaskItem<TItem, SoundReference.Mask<TItem>?>(RVSH, new SoundReference.Mask<TItem>(RVSH));
             }
@@ -369,23 +239,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Edits;
             public TItem AlternateLipText;
             public TItem TextHash;
-            public TItem NpcAnimation;
-            public TItem AnimationSubgraph;
-            public TItem AnimationBodyArchetype;
-            public TItem AnimationFaceArchetype;
-            public TItem AnimationFlavor;
-            public TItem UseDialogueAnimation;
-            public TItem UseAnimationBodyArchetype;
-            public TItem AnimationCompleteEndsPhase;
-            public TItem AnimationOnlyMovement;
-            public TItem UseFlavorAnimation;
-            public TItem DelayStartTimeAction;
-            public TItem Action;
-            public TItem UseActorAnimationAction;
-            public TItem AnimationHoldEvent;
-            public TItem DTGT;
-            public TItem ACEP;
-            public TItem XNAM;
+            public MaskItem<TItem, Animation.Mask<TItem>?>? Animation { get; set; }
             public MaskItem<TItem, HeadTracking.Mask<TItem>?>? HeadTracking { get; set; }
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? RVSH { get; set; }
             #endregion
@@ -409,23 +263,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Edits, rhs.Edits)) return false;
                 if (!object.Equals(this.AlternateLipText, rhs.AlternateLipText)) return false;
                 if (!object.Equals(this.TextHash, rhs.TextHash)) return false;
-                if (!object.Equals(this.NpcAnimation, rhs.NpcAnimation)) return false;
-                if (!object.Equals(this.AnimationSubgraph, rhs.AnimationSubgraph)) return false;
-                if (!object.Equals(this.AnimationBodyArchetype, rhs.AnimationBodyArchetype)) return false;
-                if (!object.Equals(this.AnimationFaceArchetype, rhs.AnimationFaceArchetype)) return false;
-                if (!object.Equals(this.AnimationFlavor, rhs.AnimationFlavor)) return false;
-                if (!object.Equals(this.UseDialogueAnimation, rhs.UseDialogueAnimation)) return false;
-                if (!object.Equals(this.UseAnimationBodyArchetype, rhs.UseAnimationBodyArchetype)) return false;
-                if (!object.Equals(this.AnimationCompleteEndsPhase, rhs.AnimationCompleteEndsPhase)) return false;
-                if (!object.Equals(this.AnimationOnlyMovement, rhs.AnimationOnlyMovement)) return false;
-                if (!object.Equals(this.UseFlavorAnimation, rhs.UseFlavorAnimation)) return false;
-                if (!object.Equals(this.DelayStartTimeAction, rhs.DelayStartTimeAction)) return false;
-                if (!object.Equals(this.Action, rhs.Action)) return false;
-                if (!object.Equals(this.UseActorAnimationAction, rhs.UseActorAnimationAction)) return false;
-                if (!object.Equals(this.AnimationHoldEvent, rhs.AnimationHoldEvent)) return false;
-                if (!object.Equals(this.DTGT, rhs.DTGT)) return false;
-                if (!object.Equals(this.ACEP, rhs.ACEP)) return false;
-                if (!object.Equals(this.XNAM, rhs.XNAM)) return false;
+                if (!object.Equals(this.Animation, rhs.Animation)) return false;
                 if (!object.Equals(this.HeadTracking, rhs.HeadTracking)) return false;
                 if (!object.Equals(this.RVSH, rhs.RVSH)) return false;
                 return true;
@@ -442,23 +280,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Edits);
                 hash.Add(this.AlternateLipText);
                 hash.Add(this.TextHash);
-                hash.Add(this.NpcAnimation);
-                hash.Add(this.AnimationSubgraph);
-                hash.Add(this.AnimationBodyArchetype);
-                hash.Add(this.AnimationFaceArchetype);
-                hash.Add(this.AnimationFlavor);
-                hash.Add(this.UseDialogueAnimation);
-                hash.Add(this.UseAnimationBodyArchetype);
-                hash.Add(this.AnimationCompleteEndsPhase);
-                hash.Add(this.AnimationOnlyMovement);
-                hash.Add(this.UseFlavorAnimation);
-                hash.Add(this.DelayStartTimeAction);
-                hash.Add(this.Action);
-                hash.Add(this.UseActorAnimationAction);
-                hash.Add(this.AnimationHoldEvent);
-                hash.Add(this.DTGT);
-                hash.Add(this.ACEP);
-                hash.Add(this.XNAM);
+                hash.Add(this.Animation);
                 hash.Add(this.HeadTracking);
                 hash.Add(this.RVSH);
                 return hash.ToHashCode();
@@ -489,23 +311,11 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.Edits)) return false;
                 if (!eval(this.AlternateLipText)) return false;
                 if (!eval(this.TextHash)) return false;
-                if (!eval(this.NpcAnimation)) return false;
-                if (!eval(this.AnimationSubgraph)) return false;
-                if (!eval(this.AnimationBodyArchetype)) return false;
-                if (!eval(this.AnimationFaceArchetype)) return false;
-                if (!eval(this.AnimationFlavor)) return false;
-                if (!eval(this.UseDialogueAnimation)) return false;
-                if (!eval(this.UseAnimationBodyArchetype)) return false;
-                if (!eval(this.AnimationCompleteEndsPhase)) return false;
-                if (!eval(this.AnimationOnlyMovement)) return false;
-                if (!eval(this.UseFlavorAnimation)) return false;
-                if (!eval(this.DelayStartTimeAction)) return false;
-                if (!eval(this.Action)) return false;
-                if (!eval(this.UseActorAnimationAction)) return false;
-                if (!eval(this.AnimationHoldEvent)) return false;
-                if (!eval(this.DTGT)) return false;
-                if (!eval(this.ACEP)) return false;
-                if (!eval(this.XNAM)) return false;
+                if (Animation != null)
+                {
+                    if (!eval(this.Animation.Overall)) return false;
+                    if (this.Animation.Specific != null && !this.Animation.Specific.All(eval)) return false;
+                }
                 if (HeadTracking != null)
                 {
                     if (!eval(this.HeadTracking.Overall)) return false;
@@ -543,23 +353,11 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.Edits)) return true;
                 if (eval(this.AlternateLipText)) return true;
                 if (eval(this.TextHash)) return true;
-                if (eval(this.NpcAnimation)) return true;
-                if (eval(this.AnimationSubgraph)) return true;
-                if (eval(this.AnimationBodyArchetype)) return true;
-                if (eval(this.AnimationFaceArchetype)) return true;
-                if (eval(this.AnimationFlavor)) return true;
-                if (eval(this.UseDialogueAnimation)) return true;
-                if (eval(this.UseAnimationBodyArchetype)) return true;
-                if (eval(this.AnimationCompleteEndsPhase)) return true;
-                if (eval(this.AnimationOnlyMovement)) return true;
-                if (eval(this.UseFlavorAnimation)) return true;
-                if (eval(this.DelayStartTimeAction)) return true;
-                if (eval(this.Action)) return true;
-                if (eval(this.UseActorAnimationAction)) return true;
-                if (eval(this.AnimationHoldEvent)) return true;
-                if (eval(this.DTGT)) return true;
-                if (eval(this.ACEP)) return true;
-                if (eval(this.XNAM)) return true;
+                if (Animation != null)
+                {
+                    if (eval(this.Animation.Overall)) return true;
+                    if (this.Animation.Specific != null && this.Animation.Specific.Any(eval)) return true;
+                }
                 if (HeadTracking != null)
                 {
                     if (eval(this.HeadTracking.Overall)) return true;
@@ -607,23 +405,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Edits = eval(this.Edits);
                 obj.AlternateLipText = eval(this.AlternateLipText);
                 obj.TextHash = eval(this.TextHash);
-                obj.NpcAnimation = eval(this.NpcAnimation);
-                obj.AnimationSubgraph = eval(this.AnimationSubgraph);
-                obj.AnimationBodyArchetype = eval(this.AnimationBodyArchetype);
-                obj.AnimationFaceArchetype = eval(this.AnimationFaceArchetype);
-                obj.AnimationFlavor = eval(this.AnimationFlavor);
-                obj.UseDialogueAnimation = eval(this.UseDialogueAnimation);
-                obj.UseAnimationBodyArchetype = eval(this.UseAnimationBodyArchetype);
-                obj.AnimationCompleteEndsPhase = eval(this.AnimationCompleteEndsPhase);
-                obj.AnimationOnlyMovement = eval(this.AnimationOnlyMovement);
-                obj.UseFlavorAnimation = eval(this.UseFlavorAnimation);
-                obj.DelayStartTimeAction = eval(this.DelayStartTimeAction);
-                obj.Action = eval(this.Action);
-                obj.UseActorAnimationAction = eval(this.UseActorAnimationAction);
-                obj.AnimationHoldEvent = eval(this.AnimationHoldEvent);
-                obj.DTGT = eval(this.DTGT);
-                obj.ACEP = eval(this.ACEP);
-                obj.XNAM = eval(this.XNAM);
+                obj.Animation = this.Animation == null ? null : new MaskItem<R, Animation.Mask<R>?>(eval(this.Animation.Overall), this.Animation.Specific?.Translate(eval));
                 obj.HeadTracking = this.HeadTracking == null ? null : new MaskItem<R, HeadTracking.Mask<R>?>(eval(this.HeadTracking.Overall), this.HeadTracking.Specific?.Translate(eval));
                 obj.RVSH = this.RVSH == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.RVSH.Overall), this.RVSH.Specific?.Translate(eval));
             }
@@ -695,73 +477,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(TextHash, "TextHash");
                     }
-                    if (printMask?.NpcAnimation ?? true)
+                    if (printMask?.Animation?.Overall ?? true)
                     {
-                        sb.AppendItem(NpcAnimation, "NpcAnimation");
-                    }
-                    if (printMask?.AnimationSubgraph ?? true)
-                    {
-                        sb.AppendItem(AnimationSubgraph, "AnimationSubgraph");
-                    }
-                    if (printMask?.AnimationBodyArchetype ?? true)
-                    {
-                        sb.AppendItem(AnimationBodyArchetype, "AnimationBodyArchetype");
-                    }
-                    if (printMask?.AnimationFaceArchetype ?? true)
-                    {
-                        sb.AppendItem(AnimationFaceArchetype, "AnimationFaceArchetype");
-                    }
-                    if (printMask?.AnimationFlavor ?? true)
-                    {
-                        sb.AppendItem(AnimationFlavor, "AnimationFlavor");
-                    }
-                    if (printMask?.UseDialogueAnimation ?? true)
-                    {
-                        sb.AppendItem(UseDialogueAnimation, "UseDialogueAnimation");
-                    }
-                    if (printMask?.UseAnimationBodyArchetype ?? true)
-                    {
-                        sb.AppendItem(UseAnimationBodyArchetype, "UseAnimationBodyArchetype");
-                    }
-                    if (printMask?.AnimationCompleteEndsPhase ?? true)
-                    {
-                        sb.AppendItem(AnimationCompleteEndsPhase, "AnimationCompleteEndsPhase");
-                    }
-                    if (printMask?.AnimationOnlyMovement ?? true)
-                    {
-                        sb.AppendItem(AnimationOnlyMovement, "AnimationOnlyMovement");
-                    }
-                    if (printMask?.UseFlavorAnimation ?? true)
-                    {
-                        sb.AppendItem(UseFlavorAnimation, "UseFlavorAnimation");
-                    }
-                    if (printMask?.DelayStartTimeAction ?? true)
-                    {
-                        sb.AppendItem(DelayStartTimeAction, "DelayStartTimeAction");
-                    }
-                    if (printMask?.Action ?? true)
-                    {
-                        sb.AppendItem(Action, "Action");
-                    }
-                    if (printMask?.UseActorAnimationAction ?? true)
-                    {
-                        sb.AppendItem(UseActorAnimationAction, "UseActorAnimationAction");
-                    }
-                    if (printMask?.AnimationHoldEvent ?? true)
-                    {
-                        sb.AppendItem(AnimationHoldEvent, "AnimationHoldEvent");
-                    }
-                    if (printMask?.DTGT ?? true)
-                    {
-                        sb.AppendItem(DTGT, "DTGT");
-                    }
-                    if (printMask?.ACEP ?? true)
-                    {
-                        sb.AppendItem(ACEP, "ACEP");
-                    }
-                    if (printMask?.XNAM ?? true)
-                    {
-                        sb.AppendItem(XNAM, "XNAM");
+                        Animation?.Print(sb);
                     }
                     if (printMask?.HeadTracking?.Overall ?? true)
                     {
@@ -804,23 +522,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Edits;
             public Exception? AlternateLipText;
             public Exception? TextHash;
-            public Exception? NpcAnimation;
-            public Exception? AnimationSubgraph;
-            public Exception? AnimationBodyArchetype;
-            public Exception? AnimationFaceArchetype;
-            public Exception? AnimationFlavor;
-            public Exception? UseDialogueAnimation;
-            public Exception? UseAnimationBodyArchetype;
-            public Exception? AnimationCompleteEndsPhase;
-            public Exception? AnimationOnlyMovement;
-            public Exception? UseFlavorAnimation;
-            public Exception? DelayStartTimeAction;
-            public Exception? Action;
-            public Exception? UseActorAnimationAction;
-            public Exception? AnimationHoldEvent;
-            public Exception? DTGT;
-            public Exception? ACEP;
-            public Exception? XNAM;
+            public MaskItem<Exception?, Animation.ErrorMask?>? Animation;
             public MaskItem<Exception?, HeadTracking.ErrorMask?>? HeadTracking;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? RVSH;
             #endregion
@@ -849,40 +551,8 @@ namespace Mutagen.Bethesda.Starfield
                         return AlternateLipText;
                     case DialogResponse_FieldIndex.TextHash:
                         return TextHash;
-                    case DialogResponse_FieldIndex.NpcAnimation:
-                        return NpcAnimation;
-                    case DialogResponse_FieldIndex.AnimationSubgraph:
-                        return AnimationSubgraph;
-                    case DialogResponse_FieldIndex.AnimationBodyArchetype:
-                        return AnimationBodyArchetype;
-                    case DialogResponse_FieldIndex.AnimationFaceArchetype:
-                        return AnimationFaceArchetype;
-                    case DialogResponse_FieldIndex.AnimationFlavor:
-                        return AnimationFlavor;
-                    case DialogResponse_FieldIndex.UseDialogueAnimation:
-                        return UseDialogueAnimation;
-                    case DialogResponse_FieldIndex.UseAnimationBodyArchetype:
-                        return UseAnimationBodyArchetype;
-                    case DialogResponse_FieldIndex.AnimationCompleteEndsPhase:
-                        return AnimationCompleteEndsPhase;
-                    case DialogResponse_FieldIndex.AnimationOnlyMovement:
-                        return AnimationOnlyMovement;
-                    case DialogResponse_FieldIndex.UseFlavorAnimation:
-                        return UseFlavorAnimation;
-                    case DialogResponse_FieldIndex.DelayStartTimeAction:
-                        return DelayStartTimeAction;
-                    case DialogResponse_FieldIndex.Action:
-                        return Action;
-                    case DialogResponse_FieldIndex.UseActorAnimationAction:
-                        return UseActorAnimationAction;
-                    case DialogResponse_FieldIndex.AnimationHoldEvent:
-                        return AnimationHoldEvent;
-                    case DialogResponse_FieldIndex.DTGT:
-                        return DTGT;
-                    case DialogResponse_FieldIndex.ACEP:
-                        return ACEP;
-                    case DialogResponse_FieldIndex.XNAM:
-                        return XNAM;
+                    case DialogResponse_FieldIndex.Animation:
+                        return Animation;
                     case DialogResponse_FieldIndex.HeadTracking:
                         return HeadTracking;
                     case DialogResponse_FieldIndex.RVSH:
@@ -924,56 +594,8 @@ namespace Mutagen.Bethesda.Starfield
                     case DialogResponse_FieldIndex.TextHash:
                         this.TextHash = ex;
                         break;
-                    case DialogResponse_FieldIndex.NpcAnimation:
-                        this.NpcAnimation = ex;
-                        break;
-                    case DialogResponse_FieldIndex.AnimationSubgraph:
-                        this.AnimationSubgraph = ex;
-                        break;
-                    case DialogResponse_FieldIndex.AnimationBodyArchetype:
-                        this.AnimationBodyArchetype = ex;
-                        break;
-                    case DialogResponse_FieldIndex.AnimationFaceArchetype:
-                        this.AnimationFaceArchetype = ex;
-                        break;
-                    case DialogResponse_FieldIndex.AnimationFlavor:
-                        this.AnimationFlavor = ex;
-                        break;
-                    case DialogResponse_FieldIndex.UseDialogueAnimation:
-                        this.UseDialogueAnimation = ex;
-                        break;
-                    case DialogResponse_FieldIndex.UseAnimationBodyArchetype:
-                        this.UseAnimationBodyArchetype = ex;
-                        break;
-                    case DialogResponse_FieldIndex.AnimationCompleteEndsPhase:
-                        this.AnimationCompleteEndsPhase = ex;
-                        break;
-                    case DialogResponse_FieldIndex.AnimationOnlyMovement:
-                        this.AnimationOnlyMovement = ex;
-                        break;
-                    case DialogResponse_FieldIndex.UseFlavorAnimation:
-                        this.UseFlavorAnimation = ex;
-                        break;
-                    case DialogResponse_FieldIndex.DelayStartTimeAction:
-                        this.DelayStartTimeAction = ex;
-                        break;
-                    case DialogResponse_FieldIndex.Action:
-                        this.Action = ex;
-                        break;
-                    case DialogResponse_FieldIndex.UseActorAnimationAction:
-                        this.UseActorAnimationAction = ex;
-                        break;
-                    case DialogResponse_FieldIndex.AnimationHoldEvent:
-                        this.AnimationHoldEvent = ex;
-                        break;
-                    case DialogResponse_FieldIndex.DTGT:
-                        this.DTGT = ex;
-                        break;
-                    case DialogResponse_FieldIndex.ACEP:
-                        this.ACEP = ex;
-                        break;
-                    case DialogResponse_FieldIndex.XNAM:
-                        this.XNAM = ex;
+                    case DialogResponse_FieldIndex.Animation:
+                        this.Animation = new MaskItem<Exception?, Animation.ErrorMask?>(ex, null);
                         break;
                     case DialogResponse_FieldIndex.HeadTracking:
                         this.HeadTracking = new MaskItem<Exception?, HeadTracking.ErrorMask?>(ex, null);
@@ -1018,56 +640,8 @@ namespace Mutagen.Bethesda.Starfield
                     case DialogResponse_FieldIndex.TextHash:
                         this.TextHash = (Exception?)obj;
                         break;
-                    case DialogResponse_FieldIndex.NpcAnimation:
-                        this.NpcAnimation = (Exception?)obj;
-                        break;
-                    case DialogResponse_FieldIndex.AnimationSubgraph:
-                        this.AnimationSubgraph = (Exception?)obj;
-                        break;
-                    case DialogResponse_FieldIndex.AnimationBodyArchetype:
-                        this.AnimationBodyArchetype = (Exception?)obj;
-                        break;
-                    case DialogResponse_FieldIndex.AnimationFaceArchetype:
-                        this.AnimationFaceArchetype = (Exception?)obj;
-                        break;
-                    case DialogResponse_FieldIndex.AnimationFlavor:
-                        this.AnimationFlavor = (Exception?)obj;
-                        break;
-                    case DialogResponse_FieldIndex.UseDialogueAnimation:
-                        this.UseDialogueAnimation = (Exception?)obj;
-                        break;
-                    case DialogResponse_FieldIndex.UseAnimationBodyArchetype:
-                        this.UseAnimationBodyArchetype = (Exception?)obj;
-                        break;
-                    case DialogResponse_FieldIndex.AnimationCompleteEndsPhase:
-                        this.AnimationCompleteEndsPhase = (Exception?)obj;
-                        break;
-                    case DialogResponse_FieldIndex.AnimationOnlyMovement:
-                        this.AnimationOnlyMovement = (Exception?)obj;
-                        break;
-                    case DialogResponse_FieldIndex.UseFlavorAnimation:
-                        this.UseFlavorAnimation = (Exception?)obj;
-                        break;
-                    case DialogResponse_FieldIndex.DelayStartTimeAction:
-                        this.DelayStartTimeAction = (Exception?)obj;
-                        break;
-                    case DialogResponse_FieldIndex.Action:
-                        this.Action = (Exception?)obj;
-                        break;
-                    case DialogResponse_FieldIndex.UseActorAnimationAction:
-                        this.UseActorAnimationAction = (Exception?)obj;
-                        break;
-                    case DialogResponse_FieldIndex.AnimationHoldEvent:
-                        this.AnimationHoldEvent = (Exception?)obj;
-                        break;
-                    case DialogResponse_FieldIndex.DTGT:
-                        this.DTGT = (Exception?)obj;
-                        break;
-                    case DialogResponse_FieldIndex.ACEP:
-                        this.ACEP = (Exception?)obj;
-                        break;
-                    case DialogResponse_FieldIndex.XNAM:
-                        this.XNAM = (Exception?)obj;
+                    case DialogResponse_FieldIndex.Animation:
+                        this.Animation = (MaskItem<Exception?, Animation.ErrorMask?>?)obj;
                         break;
                     case DialogResponse_FieldIndex.HeadTracking:
                         this.HeadTracking = (MaskItem<Exception?, HeadTracking.ErrorMask?>?)obj;
@@ -1092,23 +666,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Edits != null) return true;
                 if (AlternateLipText != null) return true;
                 if (TextHash != null) return true;
-                if (NpcAnimation != null) return true;
-                if (AnimationSubgraph != null) return true;
-                if (AnimationBodyArchetype != null) return true;
-                if (AnimationFaceArchetype != null) return true;
-                if (AnimationFlavor != null) return true;
-                if (UseDialogueAnimation != null) return true;
-                if (UseAnimationBodyArchetype != null) return true;
-                if (AnimationCompleteEndsPhase != null) return true;
-                if (AnimationOnlyMovement != null) return true;
-                if (UseFlavorAnimation != null) return true;
-                if (DelayStartTimeAction != null) return true;
-                if (Action != null) return true;
-                if (UseActorAnimationAction != null) return true;
-                if (AnimationHoldEvent != null) return true;
-                if (DTGT != null) return true;
-                if (ACEP != null) return true;
-                if (XNAM != null) return true;
+                if (Animation != null) return true;
                 if (HeadTracking != null) return true;
                 if (RVSH != null) return true;
                 return false;
@@ -1178,57 +736,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(TextHash, "TextHash");
                 }
-                {
-                    sb.AppendItem(NpcAnimation, "NpcAnimation");
-                }
-                {
-                    sb.AppendItem(AnimationSubgraph, "AnimationSubgraph");
-                }
-                {
-                    sb.AppendItem(AnimationBodyArchetype, "AnimationBodyArchetype");
-                }
-                {
-                    sb.AppendItem(AnimationFaceArchetype, "AnimationFaceArchetype");
-                }
-                {
-                    sb.AppendItem(AnimationFlavor, "AnimationFlavor");
-                }
-                {
-                    sb.AppendItem(UseDialogueAnimation, "UseDialogueAnimation");
-                }
-                {
-                    sb.AppendItem(UseAnimationBodyArchetype, "UseAnimationBodyArchetype");
-                }
-                {
-                    sb.AppendItem(AnimationCompleteEndsPhase, "AnimationCompleteEndsPhase");
-                }
-                {
-                    sb.AppendItem(AnimationOnlyMovement, "AnimationOnlyMovement");
-                }
-                {
-                    sb.AppendItem(UseFlavorAnimation, "UseFlavorAnimation");
-                }
-                {
-                    sb.AppendItem(DelayStartTimeAction, "DelayStartTimeAction");
-                }
-                {
-                    sb.AppendItem(Action, "Action");
-                }
-                {
-                    sb.AppendItem(UseActorAnimationAction, "UseActorAnimationAction");
-                }
-                {
-                    sb.AppendItem(AnimationHoldEvent, "AnimationHoldEvent");
-                }
-                {
-                    sb.AppendItem(DTGT, "DTGT");
-                }
-                {
-                    sb.AppendItem(ACEP, "ACEP");
-                }
-                {
-                    sb.AppendItem(XNAM, "XNAM");
-                }
+                Animation?.Print(sb);
                 HeadTracking?.Print(sb);
                 RVSH?.Print(sb);
             }
@@ -1248,23 +756,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Edits = this.Edits.Combine(rhs.Edits);
                 ret.AlternateLipText = this.AlternateLipText.Combine(rhs.AlternateLipText);
                 ret.TextHash = this.TextHash.Combine(rhs.TextHash);
-                ret.NpcAnimation = this.NpcAnimation.Combine(rhs.NpcAnimation);
-                ret.AnimationSubgraph = this.AnimationSubgraph.Combine(rhs.AnimationSubgraph);
-                ret.AnimationBodyArchetype = this.AnimationBodyArchetype.Combine(rhs.AnimationBodyArchetype);
-                ret.AnimationFaceArchetype = this.AnimationFaceArchetype.Combine(rhs.AnimationFaceArchetype);
-                ret.AnimationFlavor = this.AnimationFlavor.Combine(rhs.AnimationFlavor);
-                ret.UseDialogueAnimation = this.UseDialogueAnimation.Combine(rhs.UseDialogueAnimation);
-                ret.UseAnimationBodyArchetype = this.UseAnimationBodyArchetype.Combine(rhs.UseAnimationBodyArchetype);
-                ret.AnimationCompleteEndsPhase = this.AnimationCompleteEndsPhase.Combine(rhs.AnimationCompleteEndsPhase);
-                ret.AnimationOnlyMovement = this.AnimationOnlyMovement.Combine(rhs.AnimationOnlyMovement);
-                ret.UseFlavorAnimation = this.UseFlavorAnimation.Combine(rhs.UseFlavorAnimation);
-                ret.DelayStartTimeAction = this.DelayStartTimeAction.Combine(rhs.DelayStartTimeAction);
-                ret.Action = this.Action.Combine(rhs.Action);
-                ret.UseActorAnimationAction = this.UseActorAnimationAction.Combine(rhs.UseActorAnimationAction);
-                ret.AnimationHoldEvent = this.AnimationHoldEvent.Combine(rhs.AnimationHoldEvent);
-                ret.DTGT = this.DTGT.Combine(rhs.DTGT);
-                ret.ACEP = this.ACEP.Combine(rhs.ACEP);
-                ret.XNAM = this.XNAM.Combine(rhs.XNAM);
+                ret.Animation = this.Animation.Combine(rhs.Animation, (l, r) => l.Combine(r));
                 ret.HeadTracking = this.HeadTracking.Combine(rhs.HeadTracking, (l, r) => l.Combine(r));
                 ret.RVSH = this.RVSH.Combine(rhs.RVSH, (l, r) => l.Combine(r));
                 return ret;
@@ -1299,23 +791,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Edits;
             public bool AlternateLipText;
             public bool TextHash;
-            public bool NpcAnimation;
-            public bool AnimationSubgraph;
-            public bool AnimationBodyArchetype;
-            public bool AnimationFaceArchetype;
-            public bool AnimationFlavor;
-            public bool UseDialogueAnimation;
-            public bool UseAnimationBodyArchetype;
-            public bool AnimationCompleteEndsPhase;
-            public bool AnimationOnlyMovement;
-            public bool UseFlavorAnimation;
-            public bool DelayStartTimeAction;
-            public bool Action;
-            public bool UseActorAnimationAction;
-            public bool AnimationHoldEvent;
-            public bool DTGT;
-            public bool ACEP;
-            public bool XNAM;
+            public Animation.TranslationMask? Animation;
             public HeadTracking.TranslationMask? HeadTracking;
             public SoundReference.TranslationMask? RVSH;
             #endregion
@@ -1335,23 +811,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.Edits = defaultOn;
                 this.AlternateLipText = defaultOn;
                 this.TextHash = defaultOn;
-                this.NpcAnimation = defaultOn;
-                this.AnimationSubgraph = defaultOn;
-                this.AnimationBodyArchetype = defaultOn;
-                this.AnimationFaceArchetype = defaultOn;
-                this.AnimationFlavor = defaultOn;
-                this.UseDialogueAnimation = defaultOn;
-                this.UseAnimationBodyArchetype = defaultOn;
-                this.AnimationCompleteEndsPhase = defaultOn;
-                this.AnimationOnlyMovement = defaultOn;
-                this.UseFlavorAnimation = defaultOn;
-                this.DelayStartTimeAction = defaultOn;
-                this.Action = defaultOn;
-                this.UseActorAnimationAction = defaultOn;
-                this.AnimationHoldEvent = defaultOn;
-                this.DTGT = defaultOn;
-                this.ACEP = defaultOn;
-                this.XNAM = defaultOn;
             }
 
             #endregion
@@ -1376,23 +835,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Edits, null));
                 ret.Add((AlternateLipText, null));
                 ret.Add((TextHash, null));
-                ret.Add((NpcAnimation, null));
-                ret.Add((AnimationSubgraph, null));
-                ret.Add((AnimationBodyArchetype, null));
-                ret.Add((AnimationFaceArchetype, null));
-                ret.Add((AnimationFlavor, null));
-                ret.Add((UseDialogueAnimation, null));
-                ret.Add((UseAnimationBodyArchetype, null));
-                ret.Add((AnimationCompleteEndsPhase, null));
-                ret.Add((AnimationOnlyMovement, null));
-                ret.Add((UseFlavorAnimation, null));
-                ret.Add((DelayStartTimeAction, null));
-                ret.Add((Action, null));
-                ret.Add((UseActorAnimationAction, null));
-                ret.Add((AnimationHoldEvent, null));
-                ret.Add((DTGT, null));
-                ret.Add((ACEP, null));
-                ret.Add((XNAM, null));
+                ret.Add((Animation != null ? Animation.OnOverall : DefaultOn, Animation?.GetCrystal()));
                 ret.Add((HeadTracking != null ? HeadTracking.OnOverall : DefaultOn, HeadTracking?.GetCrystal()));
                 ret.Add((RVSH != null ? RVSH.OnOverall : DefaultOn, RVSH?.GetCrystal()));
             }
@@ -1482,23 +925,7 @@ namespace Mutagen.Bethesda.Starfield
         new String Edits { get; set; }
         new String AlternateLipText { get; set; }
         new MemorySlice<Byte>? TextHash { get; set; }
-        new IFormLinkNullable<IIdleAnimationGetter> NpcAnimation { get; set; }
-        new String? AnimationSubgraph { get; set; }
-        new IFormLinkNullable<IKeywordGetter> AnimationBodyArchetype { get; set; }
-        new IFormLinkNullable<IKeywordGetter> AnimationFaceArchetype { get; set; }
-        new MemorySlice<Byte>? AnimationFlavor { get; set; }
-        new Boolean UseDialogueAnimation { get; set; }
-        new Boolean UseAnimationBodyArchetype { get; set; }
-        new Boolean AnimationCompleteEndsPhase { get; set; }
-        new Boolean AnimationOnlyMovement { get; set; }
-        new Boolean UseFlavorAnimation { get; set; }
-        new Single? DelayStartTimeAction { get; set; }
-        new IFormLinkNullable<IActionRecordGetter> Action { get; set; }
-        new Boolean UseActorAnimationAction { get; set; }
-        new Boolean AnimationHoldEvent { get; set; }
-        new Int32? DTGT { get; set; }
-        new Boolean ACEP { get; set; }
-        new Boolean XNAM { get; set; }
+        new Animation? Animation { get; set; }
         new HeadTracking? HeadTracking { get; set; }
         new SoundReference? RVSH { get; set; }
     }
@@ -1525,23 +952,7 @@ namespace Mutagen.Bethesda.Starfield
         String Edits { get; }
         String AlternateLipText { get; }
         ReadOnlyMemorySlice<Byte>? TextHash { get; }
-        IFormLinkNullableGetter<IIdleAnimationGetter> NpcAnimation { get; }
-        String? AnimationSubgraph { get; }
-        IFormLinkNullableGetter<IKeywordGetter> AnimationBodyArchetype { get; }
-        IFormLinkNullableGetter<IKeywordGetter> AnimationFaceArchetype { get; }
-        ReadOnlyMemorySlice<Byte>? AnimationFlavor { get; }
-        Boolean UseDialogueAnimation { get; }
-        Boolean UseAnimationBodyArchetype { get; }
-        Boolean AnimationCompleteEndsPhase { get; }
-        Boolean AnimationOnlyMovement { get; }
-        Boolean UseFlavorAnimation { get; }
-        Single? DelayStartTimeAction { get; }
-        IFormLinkNullableGetter<IActionRecordGetter> Action { get; }
-        Boolean UseActorAnimationAction { get; }
-        Boolean AnimationHoldEvent { get; }
-        Int32? DTGT { get; }
-        Boolean ACEP { get; }
-        Boolean XNAM { get; }
+        IAnimationGetter? Animation { get; }
         IHeadTrackingGetter? HeadTracking { get; }
         ISoundReferenceGetter? RVSH { get; }
 
@@ -1722,25 +1133,9 @@ namespace Mutagen.Bethesda.Starfield
         Edits = 6,
         AlternateLipText = 7,
         TextHash = 8,
-        NpcAnimation = 9,
-        AnimationSubgraph = 10,
-        AnimationBodyArchetype = 11,
-        AnimationFaceArchetype = 12,
-        AnimationFlavor = 13,
-        UseDialogueAnimation = 14,
-        UseAnimationBodyArchetype = 15,
-        AnimationCompleteEndsPhase = 16,
-        AnimationOnlyMovement = 17,
-        UseFlavorAnimation = 18,
-        DelayStartTimeAction = 19,
-        Action = 20,
-        UseActorAnimationAction = 21,
-        AnimationHoldEvent = 22,
-        DTGT = 23,
-        ACEP = 24,
-        XNAM = 25,
-        HeadTracking = 26,
-        RVSH = 27,
+        Animation = 9,
+        HeadTracking = 10,
+        RVSH = 11,
     }
     #endregion
 
@@ -1751,9 +1146,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 28;
+        public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 28;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(DialogResponse.Mask<>);
 
@@ -1793,22 +1188,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.NAM4,
                 RecordTypes.NAM9,
                 RecordTypes.BNAM,
-                RecordTypes.STRV,
-                RecordTypes.VCLR,
-                RecordTypes.FLMV,
-                RecordTypes.FLAV,
-                RecordTypes.QUAL,
-                RecordTypes.DOFT,
-                RecordTypes.DPLT,
-                RecordTypes.SPOR,
-                RecordTypes.OCOR,
-                RecordTypes.LVCR,
-                RecordTypes.ATAC,
-                RecordTypes.SHRT,
-                RecordTypes.PLRL,
-                RecordTypes.DTGT,
-                RecordTypes.ACEP,
-                RecordTypes.XNAM,
                 RecordTypes.HNAM,
                 RecordTypes.RVSH);
             return new RecordTriggerSpecs(
@@ -1864,23 +1243,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Edits = string.Empty;
             item.AlternateLipText = string.Empty;
             item.TextHash = default;
-            item.NpcAnimation.Clear();
-            item.AnimationSubgraph = default;
-            item.AnimationBodyArchetype.Clear();
-            item.AnimationFaceArchetype.Clear();
-            item.AnimationFlavor = default;
-            item.UseDialogueAnimation = default(Boolean);
-            item.UseAnimationBodyArchetype = default(Boolean);
-            item.AnimationCompleteEndsPhase = default(Boolean);
-            item.AnimationOnlyMovement = default(Boolean);
-            item.UseFlavorAnimation = default(Boolean);
-            item.DelayStartTimeAction = default;
-            item.Action.Clear();
-            item.UseActorAnimationAction = default(Boolean);
-            item.AnimationHoldEvent = default(Boolean);
-            item.DTGT = default;
-            item.ACEP = default(Boolean);
-            item.XNAM = default(Boolean);
+            item.Animation = null;
             item.HeadTracking = null;
             item.RVSH = null;
         }
@@ -1890,10 +1253,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             obj.Emotion.Relink(mapping);
             obj.TROTs.RemapLinks(mapping);
-            obj.NpcAnimation.Relink(mapping);
-            obj.AnimationBodyArchetype.Relink(mapping);
-            obj.AnimationFaceArchetype.Relink(mapping);
-            obj.Action.Relink(mapping);
+            obj.Animation?.RemapLinks(mapping);
             obj.RVSH?.RemapLinks(mapping);
         }
         
@@ -1951,23 +1311,11 @@ namespace Mutagen.Bethesda.Starfield
             ret.Edits = string.Equals(item.Edits, rhs.Edits);
             ret.AlternateLipText = string.Equals(item.AlternateLipText, rhs.AlternateLipText);
             ret.TextHash = MemorySliceExt.SequenceEqual(item.TextHash, rhs.TextHash);
-            ret.NpcAnimation = item.NpcAnimation.Equals(rhs.NpcAnimation);
-            ret.AnimationSubgraph = string.Equals(item.AnimationSubgraph, rhs.AnimationSubgraph);
-            ret.AnimationBodyArchetype = item.AnimationBodyArchetype.Equals(rhs.AnimationBodyArchetype);
-            ret.AnimationFaceArchetype = item.AnimationFaceArchetype.Equals(rhs.AnimationFaceArchetype);
-            ret.AnimationFlavor = MemorySliceExt.SequenceEqual(item.AnimationFlavor, rhs.AnimationFlavor);
-            ret.UseDialogueAnimation = item.UseDialogueAnimation == rhs.UseDialogueAnimation;
-            ret.UseAnimationBodyArchetype = item.UseAnimationBodyArchetype == rhs.UseAnimationBodyArchetype;
-            ret.AnimationCompleteEndsPhase = item.AnimationCompleteEndsPhase == rhs.AnimationCompleteEndsPhase;
-            ret.AnimationOnlyMovement = item.AnimationOnlyMovement == rhs.AnimationOnlyMovement;
-            ret.UseFlavorAnimation = item.UseFlavorAnimation == rhs.UseFlavorAnimation;
-            ret.DelayStartTimeAction = item.DelayStartTimeAction.EqualsWithin(rhs.DelayStartTimeAction);
-            ret.Action = item.Action.Equals(rhs.Action);
-            ret.UseActorAnimationAction = item.UseActorAnimationAction == rhs.UseActorAnimationAction;
-            ret.AnimationHoldEvent = item.AnimationHoldEvent == rhs.AnimationHoldEvent;
-            ret.DTGT = item.DTGT == rhs.DTGT;
-            ret.ACEP = item.ACEP == rhs.ACEP;
-            ret.XNAM = item.XNAM == rhs.XNAM;
+            ret.Animation = EqualsMaskHelper.EqualsHelper(
+                item.Animation,
+                rhs.Animation,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.HeadTracking = EqualsMaskHelper.EqualsHelper(
                 item.HeadTracking,
                 rhs.HeadTracking,
@@ -2069,77 +1417,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendLine($"TextHash => {SpanExt.ToHexString(TextHashItem)}");
             }
-            if (printMask?.NpcAnimation ?? true)
+            if ((printMask?.Animation?.Overall ?? true)
+                && item.Animation is {} AnimationItem)
             {
-                sb.AppendItem(item.NpcAnimation.FormKeyNullable, "NpcAnimation");
-            }
-            if ((printMask?.AnimationSubgraph ?? true)
-                && item.AnimationSubgraph is {} AnimationSubgraphItem)
-            {
-                sb.AppendItem(AnimationSubgraphItem, "AnimationSubgraph");
-            }
-            if (printMask?.AnimationBodyArchetype ?? true)
-            {
-                sb.AppendItem(item.AnimationBodyArchetype.FormKeyNullable, "AnimationBodyArchetype");
-            }
-            if (printMask?.AnimationFaceArchetype ?? true)
-            {
-                sb.AppendItem(item.AnimationFaceArchetype.FormKeyNullable, "AnimationFaceArchetype");
-            }
-            if ((printMask?.AnimationFlavor ?? true)
-                && item.AnimationFlavor is {} AnimationFlavorItem)
-            {
-                sb.AppendLine($"AnimationFlavor => {SpanExt.ToHexString(AnimationFlavorItem)}");
-            }
-            if (printMask?.UseDialogueAnimation ?? true)
-            {
-                sb.AppendItem(item.UseDialogueAnimation, "UseDialogueAnimation");
-            }
-            if (printMask?.UseAnimationBodyArchetype ?? true)
-            {
-                sb.AppendItem(item.UseAnimationBodyArchetype, "UseAnimationBodyArchetype");
-            }
-            if (printMask?.AnimationCompleteEndsPhase ?? true)
-            {
-                sb.AppendItem(item.AnimationCompleteEndsPhase, "AnimationCompleteEndsPhase");
-            }
-            if (printMask?.AnimationOnlyMovement ?? true)
-            {
-                sb.AppendItem(item.AnimationOnlyMovement, "AnimationOnlyMovement");
-            }
-            if (printMask?.UseFlavorAnimation ?? true)
-            {
-                sb.AppendItem(item.UseFlavorAnimation, "UseFlavorAnimation");
-            }
-            if ((printMask?.DelayStartTimeAction ?? true)
-                && item.DelayStartTimeAction is {} DelayStartTimeActionItem)
-            {
-                sb.AppendItem(DelayStartTimeActionItem, "DelayStartTimeAction");
-            }
-            if (printMask?.Action ?? true)
-            {
-                sb.AppendItem(item.Action.FormKeyNullable, "Action");
-            }
-            if (printMask?.UseActorAnimationAction ?? true)
-            {
-                sb.AppendItem(item.UseActorAnimationAction, "UseActorAnimationAction");
-            }
-            if (printMask?.AnimationHoldEvent ?? true)
-            {
-                sb.AppendItem(item.AnimationHoldEvent, "AnimationHoldEvent");
-            }
-            if ((printMask?.DTGT ?? true)
-                && item.DTGT is {} DTGTItem)
-            {
-                sb.AppendItem(DTGTItem, "DTGT");
-            }
-            if (printMask?.ACEP ?? true)
-            {
-                sb.AppendItem(item.ACEP, "ACEP");
-            }
-            if (printMask?.XNAM ?? true)
-            {
-                sb.AppendItem(item.XNAM, "XNAM");
+                AnimationItem?.Print(sb, "Animation");
             }
             if ((printMask?.HeadTracking?.Overall ?? true)
                 && item.HeadTracking is {} HeadTrackingItem)
@@ -2196,73 +1477,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.TextHash, rhs.TextHash)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.NpcAnimation) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Animation) ?? true))
             {
-                if (!lhs.NpcAnimation.Equals(rhs.NpcAnimation)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.AnimationSubgraph) ?? true))
-            {
-                if (!string.Equals(lhs.AnimationSubgraph, rhs.AnimationSubgraph)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.AnimationBodyArchetype) ?? true))
-            {
-                if (!lhs.AnimationBodyArchetype.Equals(rhs.AnimationBodyArchetype)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.AnimationFaceArchetype) ?? true))
-            {
-                if (!lhs.AnimationFaceArchetype.Equals(rhs.AnimationFaceArchetype)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.AnimationFlavor) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.AnimationFlavor, rhs.AnimationFlavor)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.UseDialogueAnimation) ?? true))
-            {
-                if (lhs.UseDialogueAnimation != rhs.UseDialogueAnimation) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.UseAnimationBodyArchetype) ?? true))
-            {
-                if (lhs.UseAnimationBodyArchetype != rhs.UseAnimationBodyArchetype) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.AnimationCompleteEndsPhase) ?? true))
-            {
-                if (lhs.AnimationCompleteEndsPhase != rhs.AnimationCompleteEndsPhase) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.AnimationOnlyMovement) ?? true))
-            {
-                if (lhs.AnimationOnlyMovement != rhs.AnimationOnlyMovement) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.UseFlavorAnimation) ?? true))
-            {
-                if (lhs.UseFlavorAnimation != rhs.UseFlavorAnimation) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.DelayStartTimeAction) ?? true))
-            {
-                if (!lhs.DelayStartTimeAction.EqualsWithin(rhs.DelayStartTimeAction)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Action) ?? true))
-            {
-                if (!lhs.Action.Equals(rhs.Action)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.UseActorAnimationAction) ?? true))
-            {
-                if (lhs.UseActorAnimationAction != rhs.UseActorAnimationAction) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.AnimationHoldEvent) ?? true))
-            {
-                if (lhs.AnimationHoldEvent != rhs.AnimationHoldEvent) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.DTGT) ?? true))
-            {
-                if (lhs.DTGT != rhs.DTGT) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ACEP) ?? true))
-            {
-                if (lhs.ACEP != rhs.ACEP) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.XNAM) ?? true))
-            {
-                if (lhs.XNAM != rhs.XNAM) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Animation, rhs.Animation, out var lhsAnimation, out var rhsAnimation, out var isAnimationEqual))
+                {
+                    if (!((AnimationCommon)((IAnimationGetter)lhsAnimation).CommonInstance()!).Equals(lhsAnimation, rhsAnimation, equalsMask?.GetSubCrystal((int)DialogResponse_FieldIndex.Animation))) return false;
+                }
+                else if (!isAnimationEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.HeadTracking) ?? true))
             {
@@ -2298,35 +1519,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(TextHashItem);
             }
-            hash.Add(item.NpcAnimation);
-            if (item.AnimationSubgraph is {} AnimationSubgraphitem)
+            if (item.Animation is {} Animationitem)
             {
-                hash.Add(AnimationSubgraphitem);
+                hash.Add(Animationitem);
             }
-            hash.Add(item.AnimationBodyArchetype);
-            hash.Add(item.AnimationFaceArchetype);
-            if (item.AnimationFlavor is {} AnimationFlavorItem)
-            {
-                hash.Add(AnimationFlavorItem);
-            }
-            hash.Add(item.UseDialogueAnimation);
-            hash.Add(item.UseAnimationBodyArchetype);
-            hash.Add(item.AnimationCompleteEndsPhase);
-            hash.Add(item.AnimationOnlyMovement);
-            hash.Add(item.UseFlavorAnimation);
-            if (item.DelayStartTimeAction is {} DelayStartTimeActionitem)
-            {
-                hash.Add(DelayStartTimeActionitem);
-            }
-            hash.Add(item.Action);
-            hash.Add(item.UseActorAnimationAction);
-            hash.Add(item.AnimationHoldEvent);
-            if (item.DTGT is {} DTGTitem)
-            {
-                hash.Add(DTGTitem);
-            }
-            hash.Add(item.ACEP);
-            hash.Add(item.XNAM);
             if (item.HeadTracking is {} HeadTrackingitem)
             {
                 hash.Add(HeadTrackingitem);
@@ -2354,21 +1550,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (FormLinkInformation.TryFactory(obj.NpcAnimation, out var NpcAnimationInfo))
+            if (obj.Animation is {} AnimationItems)
             {
-                yield return NpcAnimationInfo;
-            }
-            if (FormLinkInformation.TryFactory(obj.AnimationBodyArchetype, out var AnimationBodyArchetypeInfo))
-            {
-                yield return AnimationBodyArchetypeInfo;
-            }
-            if (FormLinkInformation.TryFactory(obj.AnimationFaceArchetype, out var AnimationFaceArchetypeInfo))
-            {
-                yield return AnimationFaceArchetypeInfo;
-            }
-            if (FormLinkInformation.TryFactory(obj.Action, out var ActionInfo))
-            {
-                yield return ActionInfo;
+                foreach (var item in AnimationItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             if (obj.RVSH is {} RVSHItems)
             {
@@ -2458,80 +1645,31 @@ namespace Mutagen.Bethesda.Starfield
                     item.TextHash = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.NpcAnimation) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Animation) ?? true))
             {
-                item.NpcAnimation.SetTo(rhs.NpcAnimation.FormKeyNullable);
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.AnimationSubgraph) ?? true))
-            {
-                item.AnimationSubgraph = rhs.AnimationSubgraph;
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.AnimationBodyArchetype) ?? true))
-            {
-                item.AnimationBodyArchetype.SetTo(rhs.AnimationBodyArchetype.FormKeyNullable);
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.AnimationFaceArchetype) ?? true))
-            {
-                item.AnimationFaceArchetype.SetTo(rhs.AnimationFaceArchetype.FormKeyNullable);
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.AnimationFlavor) ?? true))
-            {
-                if(rhs.AnimationFlavor is {} AnimationFlavorrhs)
+                errorMask?.PushIndex((int)DialogResponse_FieldIndex.Animation);
+                try
                 {
-                    item.AnimationFlavor = AnimationFlavorrhs.ToArray();
+                    if(rhs.Animation is {} rhsAnimation)
+                    {
+                        item.Animation = rhsAnimation.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)DialogResponse_FieldIndex.Animation));
+                    }
+                    else
+                    {
+                        item.Animation = default;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.AnimationFlavor = default;
+                    errorMask.ReportException(ex);
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.UseDialogueAnimation) ?? true))
-            {
-                item.UseDialogueAnimation = rhs.UseDialogueAnimation;
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.UseAnimationBodyArchetype) ?? true))
-            {
-                item.UseAnimationBodyArchetype = rhs.UseAnimationBodyArchetype;
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.AnimationCompleteEndsPhase) ?? true))
-            {
-                item.AnimationCompleteEndsPhase = rhs.AnimationCompleteEndsPhase;
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.AnimationOnlyMovement) ?? true))
-            {
-                item.AnimationOnlyMovement = rhs.AnimationOnlyMovement;
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.UseFlavorAnimation) ?? true))
-            {
-                item.UseFlavorAnimation = rhs.UseFlavorAnimation;
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.DelayStartTimeAction) ?? true))
-            {
-                item.DelayStartTimeAction = rhs.DelayStartTimeAction;
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Action) ?? true))
-            {
-                item.Action.SetTo(rhs.Action.FormKeyNullable);
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.UseActorAnimationAction) ?? true))
-            {
-                item.UseActorAnimationAction = rhs.UseActorAnimationAction;
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.AnimationHoldEvent) ?? true))
-            {
-                item.AnimationHoldEvent = rhs.AnimationHoldEvent;
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.DTGT) ?? true))
-            {
-                item.DTGT = rhs.DTGT;
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.ACEP) ?? true))
-            {
-                item.ACEP = rhs.ACEP;
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.XNAM) ?? true))
-            {
-                item.XNAM = rhs.XNAM;
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.HeadTracking) ?? true))
             {
@@ -2740,75 +1878,13 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.TextHash,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM9));
-            FormLinkBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.NpcAnimation,
-                header: translationParams.ConvertToCustom(RecordTypes.BNAM));
-            StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.AnimationSubgraph,
-                header: translationParams.ConvertToCustom(RecordTypes.STRV),
-                binaryType: StringBinaryType.NullTerminate);
-            FormLinkBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.AnimationBodyArchetype,
-                header: translationParams.ConvertToCustom(RecordTypes.VCLR));
-            FormLinkBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.AnimationFaceArchetype,
-                header: translationParams.ConvertToCustom(RecordTypes.FLMV));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.AnimationFlavor,
-                header: translationParams.ConvertToCustom(RecordTypes.FLAV));
-            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
-                writer: writer,
-                item: item.UseDialogueAnimation,
-                header: translationParams.ConvertToCustom(RecordTypes.QUAL));
-            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
-                writer: writer,
-                item: item.UseAnimationBodyArchetype,
-                header: translationParams.ConvertToCustom(RecordTypes.DOFT));
-            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
-                writer: writer,
-                item: item.AnimationCompleteEndsPhase,
-                header: translationParams.ConvertToCustom(RecordTypes.DPLT));
-            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
-                writer: writer,
-                item: item.AnimationOnlyMovement,
-                header: translationParams.ConvertToCustom(RecordTypes.SPOR));
-            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
-                writer: writer,
-                item: item.UseFlavorAnimation,
-                header: translationParams.ConvertToCustom(RecordTypes.OCOR));
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.DelayStartTimeAction,
-                header: translationParams.ConvertToCustom(RecordTypes.LVCR));
-            FormLinkBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.Action,
-                header: translationParams.ConvertToCustom(RecordTypes.ATAC));
-            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
-                writer: writer,
-                item: item.UseActorAnimationAction,
-                header: translationParams.ConvertToCustom(RecordTypes.SHRT));
-            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
-                writer: writer,
-                item: item.AnimationHoldEvent,
-                header: translationParams.ConvertToCustom(RecordTypes.PLRL));
-            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.DTGT,
-                header: translationParams.ConvertToCustom(RecordTypes.DTGT));
-            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
-                writer: writer,
-                item: item.ACEP,
-                header: translationParams.ConvertToCustom(RecordTypes.ACEP));
-            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
-                writer: writer,
-                item: item.XNAM,
-                header: translationParams.ConvertToCustom(RecordTypes.XNAM));
+            if (item.Animation is {} AnimationItem)
+            {
+                ((AnimationBinaryWriteTranslation)((IBinaryItem)AnimationItem).BinaryWriteTranslator).Write(
+                    item: AnimationItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             if (item.HeadTracking is {} HeadTrackingItem)
             {
                 ((HeadTrackingBinaryWriteTranslation)((IBinaryItem)HeadTrackingItem).BinaryWriteTranslator).Write(
@@ -2940,99 +2016,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NpcAnimation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)DialogResponse_FieldIndex.NpcAnimation;
-                }
-                case RecordTypeInts.STRV:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AnimationSubgraph = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
-                    return (int)DialogResponse_FieldIndex.AnimationSubgraph;
-                }
-                case RecordTypeInts.VCLR:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AnimationBodyArchetype.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)DialogResponse_FieldIndex.AnimationBodyArchetype;
-                }
-                case RecordTypeInts.FLMV:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AnimationFaceArchetype.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)DialogResponse_FieldIndex.AnimationFaceArchetype;
-                }
-                case RecordTypeInts.FLAV:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AnimationFlavor = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)DialogResponse_FieldIndex.AnimationFlavor;
-                }
-                case RecordTypeInts.QUAL:
-                {
-                    item.UseDialogueAnimation = true;
-                    return (int)DialogResponse_FieldIndex.UseDialogueAnimation;
-                }
-                case RecordTypeInts.DOFT:
-                {
-                    item.UseAnimationBodyArchetype = true;
-                    return (int)DialogResponse_FieldIndex.UseAnimationBodyArchetype;
-                }
-                case RecordTypeInts.DPLT:
-                {
-                    item.AnimationCompleteEndsPhase = true;
-                    return (int)DialogResponse_FieldIndex.AnimationCompleteEndsPhase;
-                }
-                case RecordTypeInts.SPOR:
-                {
-                    item.AnimationOnlyMovement = true;
-                    return (int)DialogResponse_FieldIndex.AnimationOnlyMovement;
-                }
-                case RecordTypeInts.OCOR:
-                {
-                    item.UseFlavorAnimation = true;
-                    return (int)DialogResponse_FieldIndex.UseFlavorAnimation;
-                }
-                case RecordTypeInts.LVCR:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DelayStartTimeAction = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)DialogResponse_FieldIndex.DelayStartTimeAction;
-                }
-                case RecordTypeInts.ATAC:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Action.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)DialogResponse_FieldIndex.Action;
-                }
-                case RecordTypeInts.SHRT:
-                {
-                    item.UseActorAnimationAction = true;
-                    return (int)DialogResponse_FieldIndex.UseActorAnimationAction;
-                }
-                case RecordTypeInts.PLRL:
-                {
-                    item.AnimationHoldEvent = true;
-                    return (int)DialogResponse_FieldIndex.AnimationHoldEvent;
-                }
-                case RecordTypeInts.DTGT:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DTGT = frame.ReadInt32();
-                    return (int)DialogResponse_FieldIndex.DTGT;
-                }
-                case RecordTypeInts.ACEP:
-                {
-                    item.ACEP = true;
-                    return (int)DialogResponse_FieldIndex.ACEP;
-                }
-                case RecordTypeInts.XNAM:
-                {
-                    item.XNAM = true;
-                    return (int)DialogResponse_FieldIndex.XNAM;
+                    item.Animation = Mutagen.Bethesda.Starfield.Animation.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)DialogResponse_FieldIndex.Animation;
                 }
                 case RecordTypeInts.HNAM:
                 {
@@ -3153,74 +2140,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _TextHashLocation;
         public ReadOnlyMemorySlice<Byte>? TextHash => _TextHashLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextHashLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        #region NpcAnimation
-        private int? _NpcAnimationLocation;
-        public IFormLinkNullableGetter<IIdleAnimationGetter> NpcAnimation => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IIdleAnimationGetter>(_package, _recordData, _NpcAnimationLocation);
-        #endregion
-        #region AnimationSubgraph
-        private int? _AnimationSubgraphLocation;
-        public String? AnimationSubgraph => _AnimationSubgraphLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AnimationSubgraphLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
-        #endregion
-        #region AnimationBodyArchetype
-        private int? _AnimationBodyArchetypeLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> AnimationBodyArchetype => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _AnimationBodyArchetypeLocation);
-        #endregion
-        #region AnimationFaceArchetype
-        private int? _AnimationFaceArchetypeLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> AnimationFaceArchetype => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _AnimationFaceArchetypeLocation);
-        #endregion
-        #region AnimationFlavor
-        private int? _AnimationFlavorLocation;
-        public ReadOnlyMemorySlice<Byte>? AnimationFlavor => _AnimationFlavorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _AnimationFlavorLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region UseDialogueAnimation
-        private int? _UseDialogueAnimationLocation;
-        public Boolean UseDialogueAnimation => _UseDialogueAnimationLocation.HasValue ? true : default(Boolean);
-        #endregion
-        #region UseAnimationBodyArchetype
-        private int? _UseAnimationBodyArchetypeLocation;
-        public Boolean UseAnimationBodyArchetype => _UseAnimationBodyArchetypeLocation.HasValue ? true : default(Boolean);
-        #endregion
-        #region AnimationCompleteEndsPhase
-        private int? _AnimationCompleteEndsPhaseLocation;
-        public Boolean AnimationCompleteEndsPhase => _AnimationCompleteEndsPhaseLocation.HasValue ? true : default(Boolean);
-        #endregion
-        #region AnimationOnlyMovement
-        private int? _AnimationOnlyMovementLocation;
-        public Boolean AnimationOnlyMovement => _AnimationOnlyMovementLocation.HasValue ? true : default(Boolean);
-        #endregion
-        #region UseFlavorAnimation
-        private int? _UseFlavorAnimationLocation;
-        public Boolean UseFlavorAnimation => _UseFlavorAnimationLocation.HasValue ? true : default(Boolean);
-        #endregion
-        #region DelayStartTimeAction
-        private int? _DelayStartTimeActionLocation;
-        public Single? DelayStartTimeAction => _DelayStartTimeActionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DelayStartTimeActionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
-        #endregion
-        #region Action
-        private int? _ActionLocation;
-        public IFormLinkNullableGetter<IActionRecordGetter> Action => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IActionRecordGetter>(_package, _recordData, _ActionLocation);
-        #endregion
-        #region UseActorAnimationAction
-        private int? _UseActorAnimationActionLocation;
-        public Boolean UseActorAnimationAction => _UseActorAnimationActionLocation.HasValue ? true : default(Boolean);
-        #endregion
-        #region AnimationHoldEvent
-        private int? _AnimationHoldEventLocation;
-        public Boolean AnimationHoldEvent => _AnimationHoldEventLocation.HasValue ? true : default(Boolean);
-        #endregion
-        #region DTGT
-        private int? _DTGTLocation;
-        public Int32? DTGT => _DTGTLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DTGTLocation.Value, _package.MetaData.Constants)) : default(Int32?);
-        #endregion
-        #region ACEP
-        private int? _ACEPLocation;
-        public Boolean ACEP => _ACEPLocation.HasValue ? true : default(Boolean);
-        #endregion
-        #region XNAM
-        private int? _XNAMLocation;
-        public Boolean XNAM => _XNAMLocation.HasValue ? true : default(Boolean);
-        #endregion
+        public IAnimationGetter? Animation { get; private set; }
         public IHeadTrackingGetter? HeadTracking { get; private set; }
         public ISoundReferenceGetter? RVSH { get; private set; }
         partial void CustomFactoryEnd(
@@ -3334,88 +2254,11 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    _NpcAnimationLocation = (stream.Position - offset);
-                    return (int)DialogResponse_FieldIndex.NpcAnimation;
-                }
-                case RecordTypeInts.STRV:
-                {
-                    _AnimationSubgraphLocation = (stream.Position - offset);
-                    return (int)DialogResponse_FieldIndex.AnimationSubgraph;
-                }
-                case RecordTypeInts.VCLR:
-                {
-                    _AnimationBodyArchetypeLocation = (stream.Position - offset);
-                    return (int)DialogResponse_FieldIndex.AnimationBodyArchetype;
-                }
-                case RecordTypeInts.FLMV:
-                {
-                    _AnimationFaceArchetypeLocation = (stream.Position - offset);
-                    return (int)DialogResponse_FieldIndex.AnimationFaceArchetype;
-                }
-                case RecordTypeInts.FLAV:
-                {
-                    _AnimationFlavorLocation = (stream.Position - offset);
-                    return (int)DialogResponse_FieldIndex.AnimationFlavor;
-                }
-                case RecordTypeInts.QUAL:
-                {
-                    _UseDialogueAnimationLocation = (stream.Position - offset);
-                    return (int)DialogResponse_FieldIndex.UseDialogueAnimation;
-                }
-                case RecordTypeInts.DOFT:
-                {
-                    _UseAnimationBodyArchetypeLocation = (stream.Position - offset);
-                    return (int)DialogResponse_FieldIndex.UseAnimationBodyArchetype;
-                }
-                case RecordTypeInts.DPLT:
-                {
-                    _AnimationCompleteEndsPhaseLocation = (stream.Position - offset);
-                    return (int)DialogResponse_FieldIndex.AnimationCompleteEndsPhase;
-                }
-                case RecordTypeInts.SPOR:
-                {
-                    _AnimationOnlyMovementLocation = (stream.Position - offset);
-                    return (int)DialogResponse_FieldIndex.AnimationOnlyMovement;
-                }
-                case RecordTypeInts.OCOR:
-                {
-                    _UseFlavorAnimationLocation = (stream.Position - offset);
-                    return (int)DialogResponse_FieldIndex.UseFlavorAnimation;
-                }
-                case RecordTypeInts.LVCR:
-                {
-                    _DelayStartTimeActionLocation = (stream.Position - offset);
-                    return (int)DialogResponse_FieldIndex.DelayStartTimeAction;
-                }
-                case RecordTypeInts.ATAC:
-                {
-                    _ActionLocation = (stream.Position - offset);
-                    return (int)DialogResponse_FieldIndex.Action;
-                }
-                case RecordTypeInts.SHRT:
-                {
-                    _UseActorAnimationActionLocation = (stream.Position - offset);
-                    return (int)DialogResponse_FieldIndex.UseActorAnimationAction;
-                }
-                case RecordTypeInts.PLRL:
-                {
-                    _AnimationHoldEventLocation = (stream.Position - offset);
-                    return (int)DialogResponse_FieldIndex.AnimationHoldEvent;
-                }
-                case RecordTypeInts.DTGT:
-                {
-                    _DTGTLocation = (stream.Position - offset);
-                    return (int)DialogResponse_FieldIndex.DTGT;
-                }
-                case RecordTypeInts.ACEP:
-                {
-                    _ACEPLocation = (stream.Position - offset);
-                    return (int)DialogResponse_FieldIndex.ACEP;
-                }
-                case RecordTypeInts.XNAM:
-                {
-                    _XNAMLocation = (stream.Position - offset);
-                    return (int)DialogResponse_FieldIndex.XNAM;
+                    this.Animation = AnimationBinaryOverlay.AnimationFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)DialogResponse_FieldIndex.Animation;
                 }
                 case RecordTypeInts.HNAM:
                 {
