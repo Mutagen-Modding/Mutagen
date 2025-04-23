@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ConstructibleObject" recordType="COBJ" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="ConstructibleObject" recordType="COBJ" objType="Record" baseClass="StarfieldMajorRecord" majorFlag="true" >
     <Fields>
       <RefList name="Components" refName="AComponent" />
       <String name="Description" recordType="DESC" translated="DL" />
@@ -42,15 +42,15 @@
       <FormLink name="Component">
         <Interface>IItem</Interface>
       </FormLink>
-      <UInt32 name="Count" />
-      <UInt32 name="Unknown" />
+      <UInt32 name="RequiredCount" />
+      <FormLink name="CurveTable" refName="CurveTable" />
     </Fields>
   </Object>
   <Object name="ConstructibleRequiredPerk" objType="Subrecord">
     <Fields>
       <FormLink name="Perk" refName="Perk" />
       <UInt32 name="Rank" />
-      <UInt32 name="Unknown" />
+      <FormLink name="CurveTable" refName="CurveTable" />
     </Fields>
   </Object>
 </Loqui>

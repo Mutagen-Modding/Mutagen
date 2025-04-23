@@ -346,15 +346,15 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISoundReferenceGetter? IContainerGetter.CloseSound => this.CloseSound;
         #endregion
-        #region DisplayFilter
-        private readonly IFormLinkNullable<IFormListGetter> _DisplayFilter = new FormLinkNullable<IFormListGetter>();
-        public IFormLinkNullable<IFormListGetter> DisplayFilter
+        #region ContainsOnlyFilter
+        private readonly IFormLinkNullable<IFormListGetter> _ContainsOnlyFilter = new FormLinkNullable<IFormListGetter>();
+        public IFormLinkNullable<IFormListGetter> ContainsOnlyFilter
         {
-            get => _DisplayFilter;
-            set => _DisplayFilter.SetTo(value);
+            get => _ContainsOnlyFilter;
+            set => _ContainsOnlyFilter.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IFormListGetter> IContainerGetter.DisplayFilter => this.DisplayFilter;
+        IFormLinkNullableGetter<IFormListGetter> IContainerGetter.ContainsOnlyFilter => this.ContainsOnlyFilter;
         #endregion
 
         #region To String
@@ -402,7 +402,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.OpenSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.CloseSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
-                this.DisplayFilter = initialValue;
+                this.ContainsOnlyFilter = initialValue;
             }
 
             public Mask(
@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem AttachParentSlots,
                 TItem OpenSound,
                 TItem CloseSound,
-                TItem DisplayFilter)
+                TItem ContainsOnlyFilter)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, Enumerable.Empty<(int Index, TItem Value)>());
                 this.OpenSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(OpenSound, new SoundReference.Mask<TItem>(OpenSound));
                 this.CloseSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(CloseSound, new SoundReference.Mask<TItem>(CloseSound));
-                this.DisplayFilter = DisplayFilter;
+                this.ContainsOnlyFilter = ContainsOnlyFilter;
             }
 
             #pragma warning disable CS8618
@@ -498,7 +498,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AttachParentSlots;
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? OpenSound { get; set; }
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? CloseSound { get; set; }
-            public TItem DisplayFilter;
+            public TItem ContainsOnlyFilter;
             #endregion
 
             #region Equals
@@ -533,7 +533,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.AttachParentSlots, rhs.AttachParentSlots)) return false;
                 if (!object.Equals(this.OpenSound, rhs.OpenSound)) return false;
                 if (!object.Equals(this.CloseSound, rhs.CloseSound)) return false;
-                if (!object.Equals(this.DisplayFilter, rhs.DisplayFilter)) return false;
+                if (!object.Equals(this.ContainsOnlyFilter, rhs.ContainsOnlyFilter)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -560,7 +560,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.AttachParentSlots);
                 hash.Add(this.OpenSound);
                 hash.Add(this.CloseSound);
-                hash.Add(this.DisplayFilter);
+                hash.Add(this.ContainsOnlyFilter);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -687,7 +687,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.CloseSound.Overall)) return false;
                     if (this.CloseSound.Specific != null && !this.CloseSound.Specific.All(eval)) return false;
                 }
-                if (!eval(this.DisplayFilter)) return false;
+                if (!eval(this.ContainsOnlyFilter)) return false;
                 return true;
             }
             #endregion
@@ -812,7 +812,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.CloseSound.Overall)) return true;
                     if (this.CloseSound.Specific != null && this.CloseSound.Specific.Any(eval)) return true;
                 }
-                if (eval(this.DisplayFilter)) return true;
+                if (eval(this.ContainsOnlyFilter)) return true;
                 return false;
             }
             #endregion
@@ -930,7 +930,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 obj.OpenSound = this.OpenSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.OpenSound.Overall), this.OpenSound.Specific?.Translate(eval));
                 obj.CloseSound = this.CloseSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.CloseSound.Overall), this.CloseSound.Specific?.Translate(eval));
-                obj.DisplayFilter = eval(this.DisplayFilter);
+                obj.ContainsOnlyFilter = eval(this.ContainsOnlyFilter);
             }
             #endregion
 
@@ -1129,9 +1129,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         CloseSound?.Print(sb);
                     }
-                    if (printMask?.DisplayFilter ?? true)
+                    if (printMask?.ContainsOnlyFilter ?? true)
                     {
-                        sb.AppendItem(DisplayFilter, "DisplayFilter");
+                        sb.AppendItem(ContainsOnlyFilter, "ContainsOnlyFilter");
                     }
                 }
             }
@@ -1165,7 +1165,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AttachParentSlots;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? OpenSound;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? CloseSound;
-            public Exception? DisplayFilter;
+            public Exception? ContainsOnlyFilter;
             #endregion
 
             #region IErrorMask
@@ -1216,8 +1216,8 @@ namespace Mutagen.Bethesda.Starfield
                         return OpenSound;
                     case Container_FieldIndex.CloseSound:
                         return CloseSound;
-                    case Container_FieldIndex.DisplayFilter:
-                        return DisplayFilter;
+                    case Container_FieldIndex.ContainsOnlyFilter:
+                        return ContainsOnlyFilter;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1291,8 +1291,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Container_FieldIndex.CloseSound:
                         this.CloseSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
                         break;
-                    case Container_FieldIndex.DisplayFilter:
-                        this.DisplayFilter = ex;
+                    case Container_FieldIndex.ContainsOnlyFilter:
+                        this.ContainsOnlyFilter = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1368,8 +1368,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Container_FieldIndex.CloseSound:
                         this.CloseSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
                         break;
-                    case Container_FieldIndex.DisplayFilter:
-                        this.DisplayFilter = (Exception?)obj;
+                    case Container_FieldIndex.ContainsOnlyFilter:
+                        this.ContainsOnlyFilter = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -1401,7 +1401,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (AttachParentSlots != null) return true;
                 if (OpenSound != null) return true;
                 if (CloseSound != null) return true;
-                if (DisplayFilter != null) return true;
+                if (ContainsOnlyFilter != null) return true;
                 return false;
             }
             #endregion
@@ -1572,7 +1572,7 @@ namespace Mutagen.Bethesda.Starfield
                 OpenSound?.Print(sb);
                 CloseSound?.Print(sb);
                 {
-                    sb.AppendItem(DisplayFilter, "DisplayFilter");
+                    sb.AppendItem(ContainsOnlyFilter, "ContainsOnlyFilter");
                 }
             }
             #endregion
@@ -1603,7 +1603,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
                 ret.OpenSound = this.OpenSound.Combine(rhs.OpenSound, (l, r) => l.Combine(r));
                 ret.CloseSound = this.CloseSound.Combine(rhs.CloseSound, (l, r) => l.Combine(r));
-                ret.DisplayFilter = this.DisplayFilter.Combine(rhs.DisplayFilter);
+                ret.ContainsOnlyFilter = this.ContainsOnlyFilter.Combine(rhs.ContainsOnlyFilter);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1647,7 +1647,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool AttachParentSlots;
             public SoundReference.TranslationMask? OpenSound;
             public SoundReference.TranslationMask? CloseSound;
-            public bool DisplayFilter;
+            public bool ContainsOnlyFilter;
             #endregion
 
             #region Ctors
@@ -1666,7 +1666,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ForcedLocations = defaultOn;
                 this.NativeTerminal = defaultOn;
                 this.AttachParentSlots = defaultOn;
-                this.DisplayFilter = defaultOn;
+                this.ContainsOnlyFilter = defaultOn;
             }
 
             #endregion
@@ -1695,7 +1695,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((AttachParentSlots, null));
                 ret.Add((OpenSound != null ? OpenSound.OnOverall : DefaultOn, OpenSound?.GetCrystal()));
                 ret.Add((CloseSound != null ? CloseSound.OnOverall : DefaultOn, CloseSound?.GetCrystal()));
-                ret.Add((DisplayFilter, null));
+                ret.Add((ContainsOnlyFilter, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1906,7 +1906,7 @@ namespace Mutagen.Bethesda.Starfield
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; set; }
         new SoundReference? OpenSound { get; set; }
         new SoundReference? CloseSound { get; set; }
-        new IFormLinkNullable<IFormListGetter> DisplayFilter { get; set; }
+        new IFormLinkNullable<IFormListGetter> ContainsOnlyFilter { get; set; }
         #region Mutagen
         new Container.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1995,7 +1995,7 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; }
         ISoundReferenceGetter? OpenSound { get; }
         ISoundReferenceGetter? CloseSound { get; }
-        IFormLinkNullableGetter<IFormListGetter> DisplayFilter { get; }
+        IFormLinkNullableGetter<IFormListGetter> ContainsOnlyFilter { get; }
 
         #region Mutagen
         Container.MajorFlag MajorFlags { get; }
@@ -2197,7 +2197,7 @@ namespace Mutagen.Bethesda.Starfield
         AttachParentSlots = 25,
         OpenSound = 26,
         CloseSound = 27,
-        DisplayFilter = 28,
+        ContainsOnlyFilter = 28,
     }
     #endregion
 
@@ -2345,7 +2345,7 @@ namespace Mutagen.Bethesda.Starfield
             item.AttachParentSlots = null;
             item.OpenSound = null;
             item.CloseSound = null;
-            item.DisplayFilter.Clear();
+            item.ContainsOnlyFilter.Clear();
             base.Clear(item);
         }
         
@@ -2378,7 +2378,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.AttachParentSlots?.RemapLinks(mapping);
             obj.OpenSound?.RemapLinks(mapping);
             obj.CloseSound?.RemapLinks(mapping);
-            obj.DisplayFilter.Relink(mapping);
+            obj.ContainsOnlyFilter.Relink(mapping);
         }
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IContainer obj)
@@ -2553,7 +2553,7 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.CloseSound,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.DisplayFilter = item.DisplayFilter.Equals(rhs.DisplayFilter);
+            ret.ContainsOnlyFilter = item.ContainsOnlyFilter.Equals(rhs.ContainsOnlyFilter);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2761,9 +2761,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 CloseSoundItem?.Print(sb, "CloseSound");
             }
-            if (printMask?.DisplayFilter ?? true)
+            if (printMask?.ContainsOnlyFilter ?? true)
             {
-                sb.AppendItem(item.DisplayFilter.FormKeyNullable, "DisplayFilter");
+                sb.AppendItem(item.ContainsOnlyFilter.FormKeyNullable, "ContainsOnlyFilter");
             }
         }
         
@@ -2931,9 +2931,9 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isCloseSoundEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.DisplayFilter) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Container_FieldIndex.ContainsOnlyFilter) ?? true))
             {
-                if (!lhs.DisplayFilter.Equals(rhs.DisplayFilter)) return false;
+                if (!lhs.ContainsOnlyFilter.Equals(rhs.ContainsOnlyFilter)) return false;
             }
             return true;
         }
@@ -3011,7 +3011,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(CloseSounditem);
             }
-            hash.Add(item.DisplayFilter);
+            hash.Add(item.ContainsOnlyFilter);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -3136,9 +3136,9 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
-            if (FormLinkInformation.TryFactory(obj.DisplayFilter, out var DisplayFilterInfo))
+            if (FormLinkInformation.TryFactory(obj.ContainsOnlyFilter, out var ContainsOnlyFilterInfo))
             {
-                yield return DisplayFilterInfo;
+                yield return ContainsOnlyFilterInfo;
             }
             yield break;
         }
@@ -3643,9 +3643,9 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.DisplayFilter) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Container_FieldIndex.ContainsOnlyFilter) ?? true))
             {
-                item.DisplayFilter.SetTo(rhs.DisplayFilter.FormKeyNullable);
+                item.ContainsOnlyFilter.SetTo(rhs.ContainsOnlyFilter.FormKeyNullable);
             }
             DeepCopyInCustom(
                 item: item,
@@ -3981,7 +3981,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.DisplayFilter,
+                item: item.ContainsOnlyFilter,
                 header: translationParams.ConvertToCustom(RecordTypes.ONAM));
         }
 
@@ -4236,8 +4236,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DisplayFilter.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)Container_FieldIndex.DisplayFilter;
+                    item.ContainsOnlyFilter.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Container_FieldIndex.ContainsOnlyFilter;
                 }
                 case RecordTypeInts.XXXX:
                 {
@@ -4375,9 +4375,9 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; private set; }
         public ISoundReferenceGetter? OpenSound { get; private set; }
         public ISoundReferenceGetter? CloseSound { get; private set; }
-        #region DisplayFilter
-        private int? _DisplayFilterLocation;
-        public IFormLinkNullableGetter<IFormListGetter> DisplayFilter => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _DisplayFilterLocation);
+        #region ContainsOnlyFilter
+        private int? _ContainsOnlyFilterLocation;
+        public IFormLinkNullableGetter<IFormListGetter> ContainsOnlyFilter => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _ContainsOnlyFilterLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -4624,8 +4624,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ONAM:
                 {
-                    _DisplayFilterLocation = (stream.Position - offset);
-                    return (int)Container_FieldIndex.DisplayFilter;
+                    _ContainsOnlyFilterLocation = (stream.Position - offset);
+                    return (int)Container_FieldIndex.ContainsOnlyFilter;
                 }
                 case RecordTypeInts.XXXX:
                 {

@@ -5,7 +5,7 @@ partial class CombatStyle
     [Flags]
     public enum MajorFlag
     {
-        AllowDualWeilding = 0x0008_0000
+        AllowDualWielding = 0x0008_0000
     }
 
     [Flags]

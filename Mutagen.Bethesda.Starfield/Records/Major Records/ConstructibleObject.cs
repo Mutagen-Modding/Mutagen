@@ -2,6 +2,12 @@
 
 public partial class ConstructibleObject
 {
+    [Flags]
+    public enum MajorFlag
+    {
+        ListContainsVariants = 0x0008_0000
+    }
+    
     public enum LearnMethodEnum
     {
         PickupOrScript,

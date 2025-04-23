@@ -34,7 +34,7 @@
       <Marker name="STOP" recordType="STOP" />
       <RefDirect name="OpenSound" refName="SoundReference" recordType="WED0" />
       <RefDirect name="CloseSound" refName="SoundReference" recordType="WED1" />
-      <FormLink name="DisplayFilter" refName="FormList" recordType="ONAM" />
+      <FormLink name="ContainsOnlyFilter" refName="FormList" recordType="ONAM" />
     </Fields>
     <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IItem</LinkInterface>

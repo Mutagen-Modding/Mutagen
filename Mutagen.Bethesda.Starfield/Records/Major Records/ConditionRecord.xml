@@ -3,7 +3,8 @@
   <Object name="ConditionRecord" recordType="CNDF" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
       <RefList name="Conditions" refName="Condition" />
-      <FormLink name="Quest" refName="Quest" recordType="QNAM" />
+      <FormLink name="OwnerQuest" refName="Quest" recordType="QNAM" />
+      <FormLink name="OwnerPackage" refName="Package" recordType="PNAM" />
     </Fields>
   </Object>
 </Loqui>

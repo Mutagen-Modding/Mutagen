@@ -8,7 +8,7 @@
   </Object>
   <Object name="DamageTypeItem" objType="Subrecord" recordType="DNAM">
     <Fields>
-      <FormLink name="ActorValue" refName="ActorValueInformation" />
+      <FormLink name="ResistanceActorValue" refName="ActorValueInformation" />
       <FormLink name="Spell" refName="Spell" />
     </Fields>
   </Object>

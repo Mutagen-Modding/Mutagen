@@ -4483,9 +4483,6 @@
     <Compile Include="Interfaces\Link\IPlacedThing_Generated.cs" />
     <Compile Include="Interfaces\Link\IVoiceTypeOrList_Generated.cs" />
     <Compile Include="Interfaces\Link\ISpellRecord_Generated.cs" />
-    <Compile Include="Records\Major Records\DebrisModel.cs">
-      <DependentUpon>Debris.xml</DependentUpon>
-    </Compile>
     <Compile Include="Interfaces\Link\IItem_Generated.cs" />
     <Compile Include="Records\StarfieldGroup_Generated.cs">
       <DependentUpon>StarfieldGroup.xml</DependentUpon>

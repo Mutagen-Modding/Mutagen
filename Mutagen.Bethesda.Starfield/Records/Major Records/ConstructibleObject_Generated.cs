@@ -1715,6 +1715,11 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IConstructibleObject);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ConstructibleObjectCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => ConstructibleObjectSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => ConstructibleObjectSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
@@ -1831,6 +1836,10 @@ namespace Mutagen.Bethesda.Starfield
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? RecipeFilters { get; set; }
         new IFormLinkNullable<IKeywordGetter> InstantiationFilterKeyword { get; set; }
         new ConstructibleObject.Flag? Flags { get; set; }
+        #region Mutagen
+        new ConstructibleObject.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IConstructibleObjectInternal :
@@ -1877,6 +1886,10 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? RecipeFilters { get; }
         IFormLinkNullableGetter<IKeywordGetter> InstantiationFilterKeyword { get; }
         ConstructibleObject.Flag? Flags { get; }
+
+        #region Mutagen
+        ConstructibleObject.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -3991,6 +4004,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         protected override Type LinkType => typeof(IConstructibleObject);
 
+        public ConstructibleObject.MajorFlag MajorFlags => (ConstructibleObject.MajorFlag)this.MajorRecordFlagsRaw;
 
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         #region Description
