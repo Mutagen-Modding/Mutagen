@@ -50,10 +50,6 @@
       <DefaultPackFolder>none</DefaultPackFolder>
       <BuildAction>None</BuildAction>
     </None>
-    <None Update="Records\Major Records\FFKWRecord.xml">
-      <DefaultPackFolder>none</DefaultPackFolder>
-      <BuildAction>None</BuildAction>
-    </None>
     <None Update="Records\Major Records\GameSetting.xml">
       <DefaultPackFolder>none</DefaultPackFolder>
       <BuildAction>None</BuildAction>
@@ -5033,9 +5029,6 @@
     <Compile Include="Records\Major Records\VendorValues_Generated.cs">
       <DependentUpon>Faction.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\FFKWRecord_Generated.cs">
-      <DependentUpon>FFKWRecord.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Flora_Generated.cs">
       <DependentUpon>Flora.xml</DependentUpon>
     </Compile>
@@ -6587,9 +6580,6 @@
     <Compile Include="Records\Major Records\FacialExpression_Generated.cs">
       <DependentUpon>FacialExpression.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\FacialExpressionItem_Generated.cs">
-      <DependentUpon>FacialExpression.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\PTTA_Generated.cs">
       <DependentUpon>PTTA.xml</DependentUpon>
     </Compile>
@@ -6831,6 +6821,12 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\Animation_Generated.cs">
       <DependentUpon>Animation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FacialExpressionMorph_Generated.cs">
+      <DependentUpon>FacialExpression.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FactionPrisons_Generated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

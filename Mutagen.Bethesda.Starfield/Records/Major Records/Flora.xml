@@ -6,6 +6,7 @@
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
       <RefDirect name="ObjectPaletteDefaults" refName="ObjectPaletteDefaults" />
+      <RefDirect name="Transforms" refName="Transforms" />
       <RefList name="Components" refName="AComponent" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
@@ -14,14 +15,14 @@
         <FormLink refName="Keyword" />
       </List>
       <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
-      <ByteArray name="PNAM" recordType="PNAM" unknown="true" />
+      <Color name="MarkerColor" recordType="PNAM" binaryType="Alpha" />
       <String name="ActivateTextOverride" recordType="ATTX" translated="Normal" />
       <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
       <ByteArray name="JNAM" recordType="JNAM" unknown="true" />
       <FormLink name="Ingredient" recordType="PFIG">
         <Interface>IHarvestTarget</Interface>
       </FormLink>
-      <RefDirect name="PFHS" recordType="PFHS" refName="SoundReference" />
+      <RefDirect name="HarvestSound" recordType="PFHS" refName="SoundReference" />
       <RefDirect name="Production" refName="SeasonalIngredientProduction" />
       <List name="AttachParentSlots" recordType="APPR">
         <FormLink refName="Keyword" />
@@ -35,13 +36,13 @@
       </List>
       <Marker name="STOP" recordType="STOP" />
       <FormLink name="ActionKeyword" refName="Keyword" recordType="ANAM" />
-      <Float name="BNAM" recordType="BNAM" unknown="true" />
-      <Float name="FMAH" recordType="FMAH" unknown="true" />
-      <Float name="FMIH" recordType="FMIH" unknown="true" />
+      <Float name="DamageRequiredToHarvest" recordType="BNAM" nullable="False" />
+      <Float name="MaxHarvestCount" recordType="FMAH" nullable="False" />
+      <Float name="MinHarvestCount" recordType="FMIH" nullable="False" />
       <FormLink name="MaxGlobal" refName="Global" recordType="FMAG" />
       <FormLink name="MinGlobal" refName="Global" recordType="FMIG" />
       <FormLink name="Explosion" refName="Explosion" recordType="FLXP" />
-      <RefDirect name="FHLS" recordType="FHLS" refName="SoundReference" />
+      <RefDirect name="HarvestLoopingSound" recordType="FHLS" refName="SoundReference" />
     </Fields>
     <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IItem</LinkInterface>

@@ -70,16 +70,8 @@ namespace Mutagen.Bethesda.Starfield
         #region EntryTypes
         public Furniture.EntryParameterType EntryTypes { get; set; } = default(Furniture.EntryParameterType);
         #endregion
-        #region Unknown
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unknown = new byte[7];
-        public MemorySlice<Byte> Unknown
-        {
-            get => _Unknown;
-            set => this._Unknown = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IFurnitureMarkerParametersGetter.Unknown => this.Unknown;
+        #region ExitTypes
+        public Furniture.EntryParameterType ExitTypes { get; set; } = default(Furniture.EntryParameterType);
         #endregion
 
         #region To String
@@ -124,7 +116,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.RotationZ = initialValue;
                 this.Keyword = initialValue;
                 this.EntryTypes = initialValue;
-                this.Unknown = initialValue;
+                this.ExitTypes = initialValue;
             }
 
             public Mask(
@@ -132,13 +124,13 @@ namespace Mutagen.Bethesda.Starfield
                 TItem RotationZ,
                 TItem Keyword,
                 TItem EntryTypes,
-                TItem Unknown)
+                TItem ExitTypes)
             {
                 this.Offset = Offset;
                 this.RotationZ = RotationZ;
                 this.Keyword = Keyword;
                 this.EntryTypes = EntryTypes;
-                this.Unknown = Unknown;
+                this.ExitTypes = ExitTypes;
             }
 
             #pragma warning disable CS8618
@@ -154,7 +146,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem RotationZ;
             public TItem Keyword;
             public TItem EntryTypes;
-            public TItem Unknown;
+            public TItem ExitTypes;
             #endregion
 
             #region Equals
@@ -171,7 +163,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.RotationZ, rhs.RotationZ)) return false;
                 if (!object.Equals(this.Keyword, rhs.Keyword)) return false;
                 if (!object.Equals(this.EntryTypes, rhs.EntryTypes)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.ExitTypes, rhs.ExitTypes)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -181,7 +173,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.RotationZ);
                 hash.Add(this.Keyword);
                 hash.Add(this.EntryTypes);
-                hash.Add(this.Unknown);
+                hash.Add(this.ExitTypes);
                 return hash.ToHashCode();
             }
 
@@ -194,7 +186,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.RotationZ)) return false;
                 if (!eval(this.Keyword)) return false;
                 if (!eval(this.EntryTypes)) return false;
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.ExitTypes)) return false;
                 return true;
             }
             #endregion
@@ -206,7 +198,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.RotationZ)) return true;
                 if (eval(this.Keyword)) return true;
                 if (eval(this.EntryTypes)) return true;
-                if (eval(this.Unknown)) return true;
+                if (eval(this.ExitTypes)) return true;
                 return false;
             }
             #endregion
@@ -225,7 +217,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.RotationZ = eval(this.RotationZ);
                 obj.Keyword = eval(this.Keyword);
                 obj.EntryTypes = eval(this.EntryTypes);
-                obj.Unknown = eval(this.Unknown);
+                obj.ExitTypes = eval(this.ExitTypes);
             }
             #endregion
 
@@ -260,9 +252,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(EntryTypes, "EntryTypes");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.ExitTypes ?? true)
                     {
-                        sb.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(ExitTypes, "ExitTypes");
                     }
                 }
             }
@@ -292,7 +284,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? RotationZ;
             public Exception? Keyword;
             public Exception? EntryTypes;
-            public Exception? Unknown;
+            public Exception? ExitTypes;
             #endregion
 
             #region IErrorMask
@@ -309,8 +301,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Keyword;
                     case FurnitureMarkerParameters_FieldIndex.EntryTypes:
                         return EntryTypes;
-                    case FurnitureMarkerParameters_FieldIndex.Unknown:
-                        return Unknown;
+                    case FurnitureMarkerParameters_FieldIndex.ExitTypes:
+                        return ExitTypes;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -333,8 +325,8 @@ namespace Mutagen.Bethesda.Starfield
                     case FurnitureMarkerParameters_FieldIndex.EntryTypes:
                         this.EntryTypes = ex;
                         break;
-                    case FurnitureMarkerParameters_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case FurnitureMarkerParameters_FieldIndex.ExitTypes:
+                        this.ExitTypes = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -358,8 +350,8 @@ namespace Mutagen.Bethesda.Starfield
                     case FurnitureMarkerParameters_FieldIndex.EntryTypes:
                         this.EntryTypes = (Exception?)obj;
                         break;
-                    case FurnitureMarkerParameters_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case FurnitureMarkerParameters_FieldIndex.ExitTypes:
+                        this.ExitTypes = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -373,7 +365,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (RotationZ != null) return true;
                 if (Keyword != null) return true;
                 if (EntryTypes != null) return true;
-                if (Unknown != null) return true;
+                if (ExitTypes != null) return true;
                 return false;
             }
             #endregion
@@ -412,7 +404,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(EntryTypes, "EntryTypes");
                 }
                 {
-                    sb.AppendItem(Unknown, "Unknown");
+                    sb.AppendItem(ExitTypes, "ExitTypes");
                 }
             }
             #endregion
@@ -426,7 +418,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.RotationZ = this.RotationZ.Combine(rhs.RotationZ);
                 ret.Keyword = this.Keyword.Combine(rhs.Keyword);
                 ret.EntryTypes = this.EntryTypes.Combine(rhs.EntryTypes);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.ExitTypes = this.ExitTypes.Combine(rhs.ExitTypes);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -454,7 +446,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool RotationZ;
             public bool Keyword;
             public bool EntryTypes;
-            public bool Unknown;
+            public bool ExitTypes;
             #endregion
 
             #region Ctors
@@ -468,7 +460,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.RotationZ = defaultOn;
                 this.Keyword = defaultOn;
                 this.EntryTypes = defaultOn;
-                this.Unknown = defaultOn;
+                this.ExitTypes = defaultOn;
             }
 
             #endregion
@@ -488,7 +480,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((RotationZ, null));
                 ret.Add((Keyword, null));
                 ret.Add((EntryTypes, null));
-                ret.Add((Unknown, null));
+                ret.Add((ExitTypes, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -571,7 +563,7 @@ namespace Mutagen.Bethesda.Starfield
         new Single RotationZ { get; set; }
         new IFormLink<IKeywordGetter> Keyword { get; set; }
         new Furniture.EntryParameterType EntryTypes { get; set; }
-        new MemorySlice<Byte> Unknown { get; set; }
+        new Furniture.EntryParameterType ExitTypes { get; set; }
     }
 
     public partial interface IFurnitureMarkerParametersGetter :
@@ -591,7 +583,7 @@ namespace Mutagen.Bethesda.Starfield
         Single RotationZ { get; }
         IFormLinkGetter<IKeywordGetter> Keyword { get; }
         Furniture.EntryParameterType EntryTypes { get; }
-        ReadOnlyMemorySlice<Byte> Unknown { get; }
+        Furniture.EntryParameterType ExitTypes { get; }
 
     }
 
@@ -765,7 +757,7 @@ namespace Mutagen.Bethesda.Starfield
         RotationZ = 1,
         Keyword = 2,
         EntryTypes = 3,
-        Unknown = 4,
+        ExitTypes = 4,
     }
     #endregion
 
@@ -848,7 +840,7 @@ namespace Mutagen.Bethesda.Starfield
             item.RotationZ = default(Single);
             item.Keyword.Clear();
             item.EntryTypes = default(Furniture.EntryParameterType);
-            item.Unknown = new byte[7];
+            item.ExitTypes = default(Furniture.EntryParameterType);
         }
         
         #region Mutagen
@@ -903,7 +895,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.RotationZ = item.RotationZ.EqualsWithin(rhs.RotationZ);
             ret.Keyword = item.Keyword.Equals(rhs.Keyword);
             ret.EntryTypes = item.EntryTypes == rhs.EntryTypes;
-            ret.Unknown = MemoryExtensions.SequenceEqual(item.Unknown.Span, rhs.Unknown.Span);
+            ret.ExitTypes = item.ExitTypes == rhs.ExitTypes;
         }
         
         public string Print(
@@ -964,9 +956,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.EntryTypes, "EntryTypes");
             }
-            if (printMask?.Unknown ?? true)
+            if (printMask?.ExitTypes ?? true)
             {
-                sb.AppendLine($"Unknown => {SpanExt.ToHexString(item.Unknown)}");
+                sb.AppendItem(item.ExitTypes, "ExitTypes");
             }
         }
         
@@ -993,9 +985,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.EntryTypes != rhs.EntryTypes) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)FurnitureMarkerParameters_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FurnitureMarkerParameters_FieldIndex.ExitTypes) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
+                if (lhs.ExitTypes != rhs.ExitTypes) return false;
             }
             return true;
         }
@@ -1007,7 +999,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.RotationZ);
             hash.Add(item.Keyword);
             hash.Add(item.EntryTypes);
-            hash.Add(item.Unknown);
+            hash.Add(item.ExitTypes);
             return hash.ToHashCode();
         }
         
@@ -1057,9 +1049,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.EntryTypes = rhs.EntryTypes;
             }
-            if ((copyMask?.GetShouldTranslate((int)FurnitureMarkerParameters_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FurnitureMarkerParameters_FieldIndex.ExitTypes) ?? true))
             {
-                item.Unknown = rhs.Unknown.ToArray();
+                item.ExitTypes = rhs.ExitTypes;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1183,10 +1175,11 @@ namespace Mutagen.Bethesda.Starfield
             EnumBinaryTranslation<Furniture.EntryParameterType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.EntryTypes,
-                length: 1);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unknown);
+                length: 4);
+            EnumBinaryTranslation<Furniture.EntryParameterType, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.ExitTypes,
+                length: 4);
         }
 
         public void Write(
@@ -1228,8 +1221,10 @@ namespace Mutagen.Bethesda.Starfield
             item.Keyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.EntryTypes = EnumBinaryTranslation<Furniture.EntryParameterType, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
-                length: 1);
-            item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(7));
+                length: 4);
+            item.ExitTypes = EnumBinaryTranslation<Furniture.EntryParameterType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }
@@ -1299,8 +1294,8 @@ namespace Mutagen.Bethesda.Starfield
         public P3Float Offset => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x0, 0xC));
         public Single RotationZ => _structData.Slice(0xC, 0x4).Float() * 57.2958f;
         public IFormLinkGetter<IKeywordGetter> Keyword => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(_package, _structData.Span.Slice(0x10, 0x4));
-        public Furniture.EntryParameterType EntryTypes => (Furniture.EntryParameterType)_structData.Span.Slice(0x14, 0x1)[0];
-        public ReadOnlyMemorySlice<Byte> Unknown => _structData.Span.Slice(0x15, 0x7).ToArray();
+        public Furniture.EntryParameterType EntryTypes => (Furniture.EntryParameterType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x14, 0x4));
+        public Furniture.EntryParameterType ExitTypes => (Furniture.EntryParameterType)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x18, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

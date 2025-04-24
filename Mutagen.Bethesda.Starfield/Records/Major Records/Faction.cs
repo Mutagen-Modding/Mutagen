@@ -2,8 +2,6 @@
 
 public partial class Faction
 {
-    // ToDo
-    // Copy paste risk
     [Flags]
     public enum FactionFlag
     {
@@ -19,6 +17,8 @@ public partial class Faction
         IgnorePickpocket = 0x0_2000,
         Vendor = 0x0_4000,
         CanBeOwner = 0x0_8000,
-        IgnoreWerewolfUnused = 0x1_0000,
+        IgnorePiracy = 0x1_0000,
+        IgnoreSmuggling = 0x2_0000,
+        ReportCrimesByMembersAgainstMembers = 0x3_0000,
     }
 }

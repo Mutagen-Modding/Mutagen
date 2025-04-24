@@ -1424,30 +1424,6 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         /// <summary>
-        /// Scope a load order query to FFKWRecord
-        /// </summary>
-        /// <param name="listings">ModListings to query</param>
-        /// <returns>A typed object to do further queries on FFKWRecord</returns>
-        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IFFKWRecord, IFFKWRecordGetter> FFKWRecord(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
-        {
-            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IFFKWRecord, IFFKWRecordGetter>(
-                (bool includeDeletedRecords) => listings.WinningOverrides<IFFKWRecordGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IFFKWRecord, IFFKWRecordGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
-        /// Scope a load order query to FFKWRecord
-        /// </summary>
-        /// <param name="mods">Mods to query</param>
-        /// <returns>A typed object to do further queries on FFKWRecord</returns>
-        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IFFKWRecord, IFFKWRecordGetter> FFKWRecord(this IEnumerable<IStarfieldModGetter> mods)
-        {
-            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IFFKWRecord, IFFKWRecordGetter>(
-                (bool includeDeletedRecords) => mods.WinningOverrides<IFFKWRecordGetter>(includeDeletedRecords: includeDeletedRecords),
-                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IFFKWRecord, IFFKWRecordGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
-        }
-
-        /// <summary>
         /// Scope a load order query to Flora
         /// </summary>
         /// <param name="listings">ModListings to query</param>
@@ -1572,9 +1548,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on FormFolderKeywordList</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IFormFolderKeywordList, IFormFolderKeywordListGetter> FormFolderKeywordList(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IFormFolderKeywordList, IFormFolderKeywordListGetter> FormFolderKeywordList(this IEnumerable<IModListingGetter<IStarfieldModGetter>> listings)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IFormFolderKeywordList, IFormFolderKeywordListGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IFormFolderKeywordList, IFormFolderKeywordListGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IFormFolderKeywordListGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IFormFolderKeywordList, IFormFolderKeywordListGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -1584,9 +1560,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on FormFolderKeywordList</returns>
-        public static TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IFormFolderKeywordList, IFormFolderKeywordListGetter> FormFolderKeywordList(this IEnumerable<IStarfieldModGetter> mods)
+        public static TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IFormFolderKeywordList, IFormFolderKeywordListGetter> FormFolderKeywordList(this IEnumerable<IStarfieldModGetter> mods)
         {
-            return new TypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IFormFolderKeywordList, IFormFolderKeywordListGetter>(
+            return new TopLevelTypedLoadOrderAccess<IStarfieldMod, IStarfieldModGetter, IFormFolderKeywordList, IFormFolderKeywordListGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IFormFolderKeywordListGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningContextOverrides<IStarfieldMod, IStarfieldModGetter, IFormFolderKeywordList, IFormFolderKeywordListGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

@@ -5,7 +5,7 @@
       <RefDirect name="ModHeader" refName="StarfieldModHeader" singleton="true" />
       <Group name="GameSettings" refName="GameSetting" />
       <Group name="Keywords" refName="Keyword" />
-      <Group name="FFKW" refName="FFKWRecord" />
+      <Group name="FormFolderKeywordLists" refName="FormFolderKeywordList" />
       <Group name="LocationReferenceTypes" refName="LocationReferenceType" />
       <Group name="Actions" refName="ActionRecord" />
       <Group name="Transforms" refName="Transform" />

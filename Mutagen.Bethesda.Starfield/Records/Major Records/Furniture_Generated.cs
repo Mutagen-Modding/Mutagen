@@ -36,6 +36,7 @@ using RecordTypes = Mutagen.Bethesda.Starfield.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 #endregion
@@ -100,17 +101,6 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region DirtinessScale
         public Percent DirtinessScale { get; set; } = default(Percent);
-        #endregion
-        #region PTTA
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private PTTA? _PTTA;
-        public PTTA? PTTA
-        {
-            get => _PTTA;
-            set => _PTTA = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPTTAGetter? IFurnitureGetter.PTTA => this.PTTA;
         #endregion
         #region ObjectPaletteDefaults
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -245,11 +235,6 @@ namespace Mutagen.Bethesda.Starfield
         IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
         #endregion
         #endregion
-        #region Description
-        public TranslatedString? Description { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter? IFurnitureGetter.Description => this.Description;
-        #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
@@ -299,21 +284,20 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
-        #region PNAM
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _PNAM;
-        public MemorySlice<Byte>? PNAM
+        #region NativeTerminal
+        private readonly IFormLinkNullable<ITerminalMenuGetter> _NativeTerminal = new FormLinkNullable<ITerminalMenuGetter>();
+        public IFormLinkNullable<ITerminalMenuGetter> NativeTerminal
         {
-            get => this._PNAM;
-            set => this._PNAM = value;
+            get => _NativeTerminal;
+            set => _NativeTerminal.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IFurnitureGetter.PNAM => this.PNAM;
+        IFormLinkNullableGetter<ITerminalMenuGetter> IFurnitureGetter.NativeTerminal => this.NativeTerminal;
         #endregion
-        #region ActivateTextOverride
-        public TranslatedString? ActivateTextOverride { get; set; }
+        #region MarkerColor
+        public Color? MarkerColor { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter? IFurnitureGetter.ActivateTextOverride => this.ActivateTextOverride;
+        Color? IFurnitureGetter.MarkerColor => this.MarkerColor;
         #endregion
         #region LoopingSound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -326,48 +310,72 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISoundReferenceGetter? IFurnitureGetter.LoopingSound => this.LoopingSound;
         #endregion
+        #region Water
+        private readonly IFormLinkNullable<IWaterGetter> _Water = new FormLinkNullable<IWaterGetter>();
+        public IFormLinkNullable<IWaterGetter> Water
+        {
+            get => _Water;
+            set => _Water.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IWaterGetter> IFurnitureGetter.Water => this.Water;
+        #endregion
+        #region ActivateTextOverride
+        public TranslatedString? ActivateTextOverride { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IFurnitureGetter.ActivateTextOverride => this.ActivateTextOverride;
+        #endregion
         #region Flags
         public Furniture.Flag? Flags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Furniture.Flag? IFurnitureGetter.Flags => this.Flags;
         #endregion
-        #region JNAM
+        #region ActivationAngleForPlayer
+        public UInt16? ActivationAngleForPlayer { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _JNAM;
-        public MemorySlice<Byte>? JNAM
-        {
-            get => this._JNAM;
-            set => this._JNAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IFurnitureGetter.JNAM => this.JNAM;
+        UInt16? IFurnitureGetter.ActivationAngleForPlayer => this.ActivationAngleForPlayer;
         #endregion
-        #region INAM
-        public Boolean INAM { get; set; } = default(Boolean);
+        #region ActivationAngleInvertFacing
+        public Boolean ActivationAngleInvertFacing { get; set; } = default(Boolean);
+        #endregion
+        #region ContainerItems
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ContainerEntry>? _ContainerItems;
+        public ExtendedList<ContainerEntry>? ContainerItems
+        {
+            get => this._ContainerItems;
+            set => this._ContainerItems = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IContainerEntryGetter>? IFurnitureGetter.ContainerItems => _ContainerItems;
+        #endregion
+
         #endregion
         #region MarkerFlags
         public FurnitureMarkerFlags? MarkerFlags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FurnitureMarkerFlags? IFurnitureGetter.MarkerFlags => this.MarkerFlags;
         #endregion
-        #region GNAM
+        #region ActivationAngleForSittingActor
+        public UInt16? ActivationAngleForSittingActor { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _GNAM;
-        public MemorySlice<Byte>? GNAM
-        {
-            get => this._GNAM;
-            set => this._GNAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IFurnitureGetter.GNAM => this.GNAM;
+        UInt16? IFurnitureGetter.ActivationAngleForSittingActor => this.ActivationAngleForSittingActor;
         #endregion
         #region BenchType
-        public Furniture.BenchTypes BenchType { get; set; } = default(Furniture.BenchTypes);
-        #endregion
-        #region UsesSkill
-        public Skill? UsesSkill { get; set; }
+        public Furniture.BenchTypes? BenchType { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Skill? IFurnitureGetter.UsesSkill => this.UsesSkill;
+        Furniture.BenchTypes? IFurnitureGetter.BenchType => this.BenchType;
+        #endregion
+        #region AssociatedForm
+        private readonly IFormLinkNullable<IStarfieldMajorRecordGetter> _AssociatedForm = new FormLinkNullable<IStarfieldMajorRecordGetter>();
+        public IFormLinkNullable<IStarfieldMajorRecordGetter> AssociatedForm
+        {
+            get => _AssociatedForm;
+            set => _AssociatedForm.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IStarfieldMajorRecordGetter> IFurnitureGetter.AssociatedForm => this.AssociatedForm;
         #endregion
         #region FurnitureTemplate
         private readonly IFormLinkNullable<IFurnitureGetter> _FurnitureTemplate = new FormLinkNullable<IFurnitureGetter>();
@@ -426,9 +434,6 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
-        #region WBDTDataTypeState
-        public Furniture.WBDTDataType WBDTDataTypeState { get; set; } = default(Furniture.WBDTDataType);
-        #endregion
 
         #region To String
 
@@ -457,7 +462,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.DirtinessScale = initialValue;
-                this.PTTA = new MaskItem<TItem, PTTA.Mask<TItem>?>(initialValue, new PTTA.Mask<TItem>(initialValue));
                 this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(initialValue, new ObjectPaletteDefaults.Mask<TItem>(initialValue));
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
                 this.SnapTemplate = initialValue;
@@ -467,26 +471,27 @@ namespace Mutagen.Bethesda.Starfield
                 this.Name = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
-                this.Description = initialValue;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
                 this.ForcedLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.PNAM = initialValue;
-                this.ActivateTextOverride = initialValue;
+                this.NativeTerminal = initialValue;
+                this.MarkerColor = initialValue;
                 this.LoopingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.Water = initialValue;
+                this.ActivateTextOverride = initialValue;
                 this.Flags = initialValue;
-                this.JNAM = initialValue;
-                this.INAM = initialValue;
+                this.ActivationAngleForPlayer = initialValue;
+                this.ActivationAngleInvertFacing = initialValue;
+                this.ContainerItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>());
                 this.MarkerFlags = initialValue;
-                this.GNAM = initialValue;
+                this.ActivationAngleForSittingActor = initialValue;
                 this.BenchType = initialValue;
-                this.UsesSkill = initialValue;
+                this.AssociatedForm = initialValue;
                 this.FurnitureTemplate = initialValue;
                 this.MarkerEntryPoints = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerEntryPoints.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FurnitureMarkerEntryPoints.Mask<TItem>?>>());
                 this.MarkerModel = initialValue;
                 this.MarkerParameters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>());
                 this.MarkerFiles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerFile.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FurnitureMarkerFile.Mask<TItem>?>>());
-                this.WBDTDataTypeState = initialValue;
             }
 
             public Mask(
@@ -500,7 +505,6 @@ namespace Mutagen.Bethesda.Starfield
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem DirtinessScale,
-                TItem PTTA,
                 TItem ObjectPaletteDefaults,
                 TItem Transforms,
                 TItem SnapTemplate,
@@ -510,26 +514,27 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Name,
                 TItem Model,
                 TItem Destructible,
-                TItem Description,
                 TItem Keywords,
                 TItem Properties,
                 TItem ForcedLocations,
-                TItem PNAM,
-                TItem ActivateTextOverride,
+                TItem NativeTerminal,
+                TItem MarkerColor,
                 TItem LoopingSound,
+                TItem Water,
+                TItem ActivateTextOverride,
                 TItem Flags,
-                TItem JNAM,
-                TItem INAM,
+                TItem ActivationAngleForPlayer,
+                TItem ActivationAngleInvertFacing,
+                TItem ContainerItems,
                 TItem MarkerFlags,
-                TItem GNAM,
+                TItem ActivationAngleForSittingActor,
                 TItem BenchType,
-                TItem UsesSkill,
+                TItem AssociatedForm,
                 TItem FurnitureTemplate,
                 TItem MarkerEntryPoints,
                 TItem MarkerModel,
                 TItem MarkerParameters,
-                TItem MarkerFiles,
-                TItem WBDTDataTypeState)
+                TItem MarkerFiles)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -542,7 +547,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.DirtinessScale = DirtinessScale;
-                this.PTTA = new MaskItem<TItem, PTTA.Mask<TItem>?>(PTTA, new PTTA.Mask<TItem>(PTTA));
                 this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(ObjectPaletteDefaults, new ObjectPaletteDefaults.Mask<TItem>(ObjectPaletteDefaults));
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
                 this.SnapTemplate = SnapTemplate;
@@ -552,26 +556,27 @@ namespace Mutagen.Bethesda.Starfield
                 this.Name = Name;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
-                this.Description = Description;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
                 this.ForcedLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ForcedLocations, Enumerable.Empty<(int Index, TItem Value)>());
-                this.PNAM = PNAM;
-                this.ActivateTextOverride = ActivateTextOverride;
+                this.NativeTerminal = NativeTerminal;
+                this.MarkerColor = MarkerColor;
                 this.LoopingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(LoopingSound, new SoundReference.Mask<TItem>(LoopingSound));
+                this.Water = Water;
+                this.ActivateTextOverride = ActivateTextOverride;
                 this.Flags = Flags;
-                this.JNAM = JNAM;
-                this.INAM = INAM;
+                this.ActivationAngleForPlayer = ActivationAngleForPlayer;
+                this.ActivationAngleInvertFacing = ActivationAngleInvertFacing;
+                this.ContainerItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>(ContainerItems, Enumerable.Empty<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>());
                 this.MarkerFlags = MarkerFlags;
-                this.GNAM = GNAM;
+                this.ActivationAngleForSittingActor = ActivationAngleForSittingActor;
                 this.BenchType = BenchType;
-                this.UsesSkill = UsesSkill;
+                this.AssociatedForm = AssociatedForm;
                 this.FurnitureTemplate = FurnitureTemplate;
                 this.MarkerEntryPoints = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerEntryPoints.Mask<TItem>?>>?>(MarkerEntryPoints, Enumerable.Empty<MaskItemIndexed<TItem, FurnitureMarkerEntryPoints.Mask<TItem>?>>());
                 this.MarkerModel = MarkerModel;
                 this.MarkerParameters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>?>(MarkerParameters, Enumerable.Empty<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>());
                 this.MarkerFiles = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerFile.Mask<TItem>?>>?>(MarkerFiles, Enumerable.Empty<MaskItemIndexed<TItem, FurnitureMarkerFile.Mask<TItem>?>>());
-                this.WBDTDataTypeState = WBDTDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -586,7 +591,6 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem DirtinessScale;
-            public MaskItem<TItem, PTTA.Mask<TItem>?>? PTTA { get; set; }
             public MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>? ObjectPaletteDefaults { get; set; }
             public MaskItem<TItem, Transforms.Mask<TItem>?>? Transforms { get; set; }
             public TItem SnapTemplate;
@@ -596,26 +600,27 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Name;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
-            public TItem Description;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>? Properties;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ForcedLocations;
-            public TItem PNAM;
-            public TItem ActivateTextOverride;
+            public TItem NativeTerminal;
+            public TItem MarkerColor;
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? LoopingSound { get; set; }
+            public TItem Water;
+            public TItem ActivateTextOverride;
             public TItem Flags;
-            public TItem JNAM;
-            public TItem INAM;
+            public TItem ActivationAngleForPlayer;
+            public TItem ActivationAngleInvertFacing;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ContainerEntry.Mask<TItem>?>>?>? ContainerItems;
             public TItem MarkerFlags;
-            public TItem GNAM;
+            public TItem ActivationAngleForSittingActor;
             public TItem BenchType;
-            public TItem UsesSkill;
+            public TItem AssociatedForm;
             public TItem FurnitureTemplate;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerEntryPoints.Mask<TItem>?>>?>? MarkerEntryPoints;
             public TItem MarkerModel;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerParameters.Mask<TItem>?>>?>? MarkerParameters;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FurnitureMarkerFile.Mask<TItem>?>>?>? MarkerFiles;
-            public TItem WBDTDataTypeState;
             #endregion
 
             #region Equals
@@ -632,7 +637,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.DirtinessScale, rhs.DirtinessScale)) return false;
-                if (!object.Equals(this.PTTA, rhs.PTTA)) return false;
                 if (!object.Equals(this.ObjectPaletteDefaults, rhs.ObjectPaletteDefaults)) return false;
                 if (!object.Equals(this.Transforms, rhs.Transforms)) return false;
                 if (!object.Equals(this.SnapTemplate, rhs.SnapTemplate)) return false;
@@ -642,26 +646,27 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
-                if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
                 if (!object.Equals(this.Properties, rhs.Properties)) return false;
                 if (!object.Equals(this.ForcedLocations, rhs.ForcedLocations)) return false;
-                if (!object.Equals(this.PNAM, rhs.PNAM)) return false;
-                if (!object.Equals(this.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
+                if (!object.Equals(this.NativeTerminal, rhs.NativeTerminal)) return false;
+                if (!object.Equals(this.MarkerColor, rhs.MarkerColor)) return false;
                 if (!object.Equals(this.LoopingSound, rhs.LoopingSound)) return false;
+                if (!object.Equals(this.Water, rhs.Water)) return false;
+                if (!object.Equals(this.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.JNAM, rhs.JNAM)) return false;
-                if (!object.Equals(this.INAM, rhs.INAM)) return false;
+                if (!object.Equals(this.ActivationAngleForPlayer, rhs.ActivationAngleForPlayer)) return false;
+                if (!object.Equals(this.ActivationAngleInvertFacing, rhs.ActivationAngleInvertFacing)) return false;
+                if (!object.Equals(this.ContainerItems, rhs.ContainerItems)) return false;
                 if (!object.Equals(this.MarkerFlags, rhs.MarkerFlags)) return false;
-                if (!object.Equals(this.GNAM, rhs.GNAM)) return false;
+                if (!object.Equals(this.ActivationAngleForSittingActor, rhs.ActivationAngleForSittingActor)) return false;
                 if (!object.Equals(this.BenchType, rhs.BenchType)) return false;
-                if (!object.Equals(this.UsesSkill, rhs.UsesSkill)) return false;
+                if (!object.Equals(this.AssociatedForm, rhs.AssociatedForm)) return false;
                 if (!object.Equals(this.FurnitureTemplate, rhs.FurnitureTemplate)) return false;
                 if (!object.Equals(this.MarkerEntryPoints, rhs.MarkerEntryPoints)) return false;
                 if (!object.Equals(this.MarkerModel, rhs.MarkerModel)) return false;
                 if (!object.Equals(this.MarkerParameters, rhs.MarkerParameters)) return false;
                 if (!object.Equals(this.MarkerFiles, rhs.MarkerFiles)) return false;
-                if (!object.Equals(this.WBDTDataTypeState, rhs.WBDTDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -670,7 +675,6 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.DirtinessScale);
-                hash.Add(this.PTTA);
                 hash.Add(this.ObjectPaletteDefaults);
                 hash.Add(this.Transforms);
                 hash.Add(this.SnapTemplate);
@@ -680,26 +684,27 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Name);
                 hash.Add(this.Model);
                 hash.Add(this.Destructible);
-                hash.Add(this.Description);
                 hash.Add(this.Keywords);
                 hash.Add(this.Properties);
                 hash.Add(this.ForcedLocations);
-                hash.Add(this.PNAM);
-                hash.Add(this.ActivateTextOverride);
+                hash.Add(this.NativeTerminal);
+                hash.Add(this.MarkerColor);
                 hash.Add(this.LoopingSound);
+                hash.Add(this.Water);
+                hash.Add(this.ActivateTextOverride);
                 hash.Add(this.Flags);
-                hash.Add(this.JNAM);
-                hash.Add(this.INAM);
+                hash.Add(this.ActivationAngleForPlayer);
+                hash.Add(this.ActivationAngleInvertFacing);
+                hash.Add(this.ContainerItems);
                 hash.Add(this.MarkerFlags);
-                hash.Add(this.GNAM);
+                hash.Add(this.ActivationAngleForSittingActor);
                 hash.Add(this.BenchType);
-                hash.Add(this.UsesSkill);
+                hash.Add(this.AssociatedForm);
                 hash.Add(this.FurnitureTemplate);
                 hash.Add(this.MarkerEntryPoints);
                 hash.Add(this.MarkerModel);
                 hash.Add(this.MarkerParameters);
                 hash.Add(this.MarkerFiles);
-                hash.Add(this.WBDTDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -721,11 +726,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (!eval(this.DirtinessScale)) return false;
-                if (PTTA != null)
-                {
-                    if (!eval(this.PTTA.Overall)) return false;
-                    if (this.PTTA.Specific != null && !this.PTTA.Specific.All(eval)) return false;
-                }
                 if (ObjectPaletteDefaults != null)
                 {
                     if (!eval(this.ObjectPaletteDefaults.Overall)) return false;
@@ -762,7 +762,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.Destructible.Overall)) return false;
                     if (this.Destructible.Specific != null && !this.Destructible.Specific.All(eval)) return false;
                 }
-                if (!eval(this.Description)) return false;
                 if (this.Keywords != null)
                 {
                     if (!eval(this.Keywords.Overall)) return false;
@@ -797,20 +796,34 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (!eval(this.PNAM)) return false;
-                if (!eval(this.ActivateTextOverride)) return false;
+                if (!eval(this.NativeTerminal)) return false;
+                if (!eval(this.MarkerColor)) return false;
                 if (LoopingSound != null)
                 {
                     if (!eval(this.LoopingSound.Overall)) return false;
                     if (this.LoopingSound.Specific != null && !this.LoopingSound.Specific.All(eval)) return false;
                 }
+                if (!eval(this.Water)) return false;
+                if (!eval(this.ActivateTextOverride)) return false;
                 if (!eval(this.Flags)) return false;
-                if (!eval(this.JNAM)) return false;
-                if (!eval(this.INAM)) return false;
+                if (!eval(this.ActivationAngleForPlayer)) return false;
+                if (!eval(this.ActivationAngleInvertFacing)) return false;
+                if (this.ContainerItems != null)
+                {
+                    if (!eval(this.ContainerItems.Overall)) return false;
+                    if (this.ContainerItems.Specific != null)
+                    {
+                        foreach (var item in this.ContainerItems.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (!eval(this.MarkerFlags)) return false;
-                if (!eval(this.GNAM)) return false;
+                if (!eval(this.ActivationAngleForSittingActor)) return false;
                 if (!eval(this.BenchType)) return false;
-                if (!eval(this.UsesSkill)) return false;
+                if (!eval(this.AssociatedForm)) return false;
                 if (!eval(this.FurnitureTemplate)) return false;
                 if (this.MarkerEntryPoints != null)
                 {
@@ -849,7 +862,6 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (!eval(this.WBDTDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -869,11 +881,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
                 if (eval(this.DirtinessScale)) return true;
-                if (PTTA != null)
-                {
-                    if (eval(this.PTTA.Overall)) return true;
-                    if (this.PTTA.Specific != null && this.PTTA.Specific.Any(eval)) return true;
-                }
                 if (ObjectPaletteDefaults != null)
                 {
                     if (eval(this.ObjectPaletteDefaults.Overall)) return true;
@@ -910,7 +917,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Destructible.Overall)) return true;
                     if (this.Destructible.Specific != null && this.Destructible.Specific.Any(eval)) return true;
                 }
-                if (eval(this.Description)) return true;
                 if (this.Keywords != null)
                 {
                     if (eval(this.Keywords.Overall)) return true;
@@ -945,20 +951,34 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (eval(this.PNAM)) return true;
-                if (eval(this.ActivateTextOverride)) return true;
+                if (eval(this.NativeTerminal)) return true;
+                if (eval(this.MarkerColor)) return true;
                 if (LoopingSound != null)
                 {
                     if (eval(this.LoopingSound.Overall)) return true;
                     if (this.LoopingSound.Specific != null && this.LoopingSound.Specific.Any(eval)) return true;
                 }
+                if (eval(this.Water)) return true;
+                if (eval(this.ActivateTextOverride)) return true;
                 if (eval(this.Flags)) return true;
-                if (eval(this.JNAM)) return true;
-                if (eval(this.INAM)) return true;
+                if (eval(this.ActivationAngleForPlayer)) return true;
+                if (eval(this.ActivationAngleInvertFacing)) return true;
+                if (this.ContainerItems != null)
+                {
+                    if (eval(this.ContainerItems.Overall)) return true;
+                    if (this.ContainerItems.Specific != null)
+                    {
+                        foreach (var item in this.ContainerItems.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (eval(this.MarkerFlags)) return true;
-                if (eval(this.GNAM)) return true;
+                if (eval(this.ActivationAngleForSittingActor)) return true;
                 if (eval(this.BenchType)) return true;
-                if (eval(this.UsesSkill)) return true;
+                if (eval(this.AssociatedForm)) return true;
                 if (eval(this.FurnitureTemplate)) return true;
                 if (this.MarkerEntryPoints != null)
                 {
@@ -997,7 +1017,6 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (eval(this.WBDTDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -1016,7 +1035,6 @@ namespace Mutagen.Bethesda.Starfield
                 obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.DirtinessScale = eval(this.DirtinessScale);
-                obj.PTTA = this.PTTA == null ? null : new MaskItem<R, PTTA.Mask<R>?>(eval(this.PTTA.Overall), this.PTTA.Specific?.Translate(eval));
                 obj.ObjectPaletteDefaults = this.ObjectPaletteDefaults == null ? null : new MaskItem<R, ObjectPaletteDefaults.Mask<R>?>(eval(this.ObjectPaletteDefaults.Overall), this.ObjectPaletteDefaults.Specific?.Translate(eval));
                 obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Transforms.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
                 obj.SnapTemplate = eval(this.SnapTemplate);
@@ -1040,7 +1058,6 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Name = eval(this.Name);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
-                obj.Description = eval(this.Description);
                 if (Keywords != null)
                 {
                     obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
@@ -1084,16 +1101,33 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                obj.PNAM = eval(this.PNAM);
-                obj.ActivateTextOverride = eval(this.ActivateTextOverride);
+                obj.NativeTerminal = eval(this.NativeTerminal);
+                obj.MarkerColor = eval(this.MarkerColor);
                 obj.LoopingSound = this.LoopingSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.LoopingSound.Overall), this.LoopingSound.Specific?.Translate(eval));
+                obj.Water = eval(this.Water);
+                obj.ActivateTextOverride = eval(this.ActivateTextOverride);
                 obj.Flags = eval(this.Flags);
-                obj.JNAM = eval(this.JNAM);
-                obj.INAM = eval(this.INAM);
+                obj.ActivationAngleForPlayer = eval(this.ActivationAngleForPlayer);
+                obj.ActivationAngleInvertFacing = eval(this.ActivationAngleInvertFacing);
+                if (ContainerItems != null)
+                {
+                    obj.ContainerItems = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ContainerEntry.Mask<R>?>>?>(eval(this.ContainerItems.Overall), Enumerable.Empty<MaskItemIndexed<R, ContainerEntry.Mask<R>?>>());
+                    if (ContainerItems.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ContainerEntry.Mask<R>?>>();
+                        obj.ContainerItems.Specific = l;
+                        foreach (var item in ContainerItems.Specific)
+                        {
+                            MaskItemIndexed<R, ContainerEntry.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ContainerEntry.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
                 obj.MarkerFlags = eval(this.MarkerFlags);
-                obj.GNAM = eval(this.GNAM);
+                obj.ActivationAngleForSittingActor = eval(this.ActivationAngleForSittingActor);
                 obj.BenchType = eval(this.BenchType);
-                obj.UsesSkill = eval(this.UsesSkill);
+                obj.AssociatedForm = eval(this.AssociatedForm);
                 obj.FurnitureTemplate = eval(this.FurnitureTemplate);
                 if (MarkerEntryPoints != null)
                 {
@@ -1141,7 +1175,6 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                obj.WBDTDataTypeState = eval(this.WBDTDataTypeState);
             }
             #endregion
 
@@ -1171,10 +1204,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.DirtinessScale ?? true)
                     {
                         sb.AppendItem(DirtinessScale, "DirtinessScale");
-                    }
-                    if (printMask?.PTTA?.Overall ?? true)
-                    {
-                        PTTA?.Print(sb);
                     }
                     if (printMask?.ObjectPaletteDefaults?.Overall ?? true)
                     {
@@ -1226,10 +1255,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.Destructible?.Overall ?? true)
                     {
                         Destructible?.Print(sb);
-                    }
-                    if (printMask?.Description ?? true)
-                    {
-                        sb.AppendItem(Description, "Description");
                     }
                     if ((printMask?.Keywords?.Overall ?? true)
                         && Keywords is {} KeywordsItem)
@@ -1292,45 +1317,72 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.PNAM ?? true)
+                    if (printMask?.NativeTerminal ?? true)
                     {
-                        sb.AppendItem(PNAM, "PNAM");
+                        sb.AppendItem(NativeTerminal, "NativeTerminal");
                     }
-                    if (printMask?.ActivateTextOverride ?? true)
+                    if (printMask?.MarkerColor ?? true)
                     {
-                        sb.AppendItem(ActivateTextOverride, "ActivateTextOverride");
+                        sb.AppendItem(MarkerColor, "MarkerColor");
                     }
                     if (printMask?.LoopingSound?.Overall ?? true)
                     {
                         LoopingSound?.Print(sb);
                     }
+                    if (printMask?.Water ?? true)
+                    {
+                        sb.AppendItem(Water, "Water");
+                    }
+                    if (printMask?.ActivateTextOverride ?? true)
+                    {
+                        sb.AppendItem(ActivateTextOverride, "ActivateTextOverride");
+                    }
                     if (printMask?.Flags ?? true)
                     {
                         sb.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.JNAM ?? true)
+                    if (printMask?.ActivationAngleForPlayer ?? true)
                     {
-                        sb.AppendItem(JNAM, "JNAM");
+                        sb.AppendItem(ActivationAngleForPlayer, "ActivationAngleForPlayer");
                     }
-                    if (printMask?.INAM ?? true)
+                    if (printMask?.ActivationAngleInvertFacing ?? true)
                     {
-                        sb.AppendItem(INAM, "INAM");
+                        sb.AppendItem(ActivationAngleInvertFacing, "ActivationAngleInvertFacing");
+                    }
+                    if ((printMask?.ContainerItems?.Overall ?? true)
+                        && ContainerItems is {} ContainerItemsItem)
+                    {
+                        sb.AppendLine("ContainerItems =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ContainerItemsItem.Overall);
+                            if (ContainerItemsItem.Specific != null)
+                            {
+                                foreach (var subItem in ContainerItemsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
                     }
                     if (printMask?.MarkerFlags ?? true)
                     {
                         sb.AppendItem(MarkerFlags, "MarkerFlags");
                     }
-                    if (printMask?.GNAM ?? true)
+                    if (printMask?.ActivationAngleForSittingActor ?? true)
                     {
-                        sb.AppendItem(GNAM, "GNAM");
+                        sb.AppendItem(ActivationAngleForSittingActor, "ActivationAngleForSittingActor");
                     }
                     if (printMask?.BenchType ?? true)
                     {
                         sb.AppendItem(BenchType, "BenchType");
                     }
-                    if (printMask?.UsesSkill ?? true)
+                    if (printMask?.AssociatedForm ?? true)
                     {
-                        sb.AppendItem(UsesSkill, "UsesSkill");
+                        sb.AppendItem(AssociatedForm, "AssociatedForm");
                     }
                     if (printMask?.FurnitureTemplate ?? true)
                     {
@@ -1397,10 +1449,6 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.WBDTDataTypeState ?? true)
-                    {
-                        sb.AppendItem(WBDTDataTypeState, "WBDTDataTypeState");
-                    }
                 }
             }
             #endregion
@@ -1415,7 +1463,6 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? DirtinessScale;
-            public MaskItem<Exception?, PTTA.ErrorMask?>? PTTA;
             public MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>? ObjectPaletteDefaults;
             public MaskItem<Exception?, Transforms.ErrorMask?>? Transforms;
             public Exception? SnapTemplate;
@@ -1425,26 +1472,27 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Name;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
-            public Exception? Description;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>? Properties;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ForcedLocations;
-            public Exception? PNAM;
-            public Exception? ActivateTextOverride;
+            public Exception? NativeTerminal;
+            public Exception? MarkerColor;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? LoopingSound;
+            public Exception? Water;
+            public Exception? ActivateTextOverride;
             public Exception? Flags;
-            public Exception? JNAM;
-            public Exception? INAM;
+            public Exception? ActivationAngleForPlayer;
+            public Exception? ActivationAngleInvertFacing;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>? ContainerItems;
             public Exception? MarkerFlags;
-            public Exception? GNAM;
+            public Exception? ActivationAngleForSittingActor;
             public Exception? BenchType;
-            public Exception? UsesSkill;
+            public Exception? AssociatedForm;
             public Exception? FurnitureTemplate;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerEntryPoints.ErrorMask?>>?>? MarkerEntryPoints;
             public Exception? MarkerModel;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerParameters.ErrorMask?>>?>? MarkerParameters;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerFile.ErrorMask?>>?>? MarkerFiles;
-            public Exception? WBDTDataTypeState;
             #endregion
 
             #region IErrorMask
@@ -1459,8 +1507,6 @@ namespace Mutagen.Bethesda.Starfield
                         return ObjectBounds;
                     case Furniture_FieldIndex.DirtinessScale:
                         return DirtinessScale;
-                    case Furniture_FieldIndex.PTTA:
-                        return PTTA;
                     case Furniture_FieldIndex.ObjectPaletteDefaults:
                         return ObjectPaletteDefaults;
                     case Furniture_FieldIndex.Transforms:
@@ -1479,34 +1525,38 @@ namespace Mutagen.Bethesda.Starfield
                         return Model;
                     case Furniture_FieldIndex.Destructible:
                         return Destructible;
-                    case Furniture_FieldIndex.Description:
-                        return Description;
                     case Furniture_FieldIndex.Keywords:
                         return Keywords;
                     case Furniture_FieldIndex.Properties:
                         return Properties;
                     case Furniture_FieldIndex.ForcedLocations:
                         return ForcedLocations;
-                    case Furniture_FieldIndex.PNAM:
-                        return PNAM;
-                    case Furniture_FieldIndex.ActivateTextOverride:
-                        return ActivateTextOverride;
+                    case Furniture_FieldIndex.NativeTerminal:
+                        return NativeTerminal;
+                    case Furniture_FieldIndex.MarkerColor:
+                        return MarkerColor;
                     case Furniture_FieldIndex.LoopingSound:
                         return LoopingSound;
+                    case Furniture_FieldIndex.Water:
+                        return Water;
+                    case Furniture_FieldIndex.ActivateTextOverride:
+                        return ActivateTextOverride;
                     case Furniture_FieldIndex.Flags:
                         return Flags;
-                    case Furniture_FieldIndex.JNAM:
-                        return JNAM;
-                    case Furniture_FieldIndex.INAM:
-                        return INAM;
+                    case Furniture_FieldIndex.ActivationAngleForPlayer:
+                        return ActivationAngleForPlayer;
+                    case Furniture_FieldIndex.ActivationAngleInvertFacing:
+                        return ActivationAngleInvertFacing;
+                    case Furniture_FieldIndex.ContainerItems:
+                        return ContainerItems;
                     case Furniture_FieldIndex.MarkerFlags:
                         return MarkerFlags;
-                    case Furniture_FieldIndex.GNAM:
-                        return GNAM;
+                    case Furniture_FieldIndex.ActivationAngleForSittingActor:
+                        return ActivationAngleForSittingActor;
                     case Furniture_FieldIndex.BenchType:
                         return BenchType;
-                    case Furniture_FieldIndex.UsesSkill:
-                        return UsesSkill;
+                    case Furniture_FieldIndex.AssociatedForm:
+                        return AssociatedForm;
                     case Furniture_FieldIndex.FurnitureTemplate:
                         return FurnitureTemplate;
                     case Furniture_FieldIndex.MarkerEntryPoints:
@@ -1517,8 +1567,6 @@ namespace Mutagen.Bethesda.Starfield
                         return MarkerParameters;
                     case Furniture_FieldIndex.MarkerFiles:
                         return MarkerFiles;
-                    case Furniture_FieldIndex.WBDTDataTypeState:
-                        return WBDTDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1537,9 +1585,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Furniture_FieldIndex.DirtinessScale:
                         this.DirtinessScale = ex;
-                        break;
-                    case Furniture_FieldIndex.PTTA:
-                        this.PTTA = new MaskItem<Exception?, PTTA.ErrorMask?>(ex, null);
                         break;
                     case Furniture_FieldIndex.ObjectPaletteDefaults:
                         this.ObjectPaletteDefaults = new MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>(ex, null);
@@ -1568,9 +1613,6 @@ namespace Mutagen.Bethesda.Starfield
                     case Furniture_FieldIndex.Destructible:
                         this.Destructible = new MaskItem<Exception?, Destructible.ErrorMask?>(ex, null);
                         break;
-                    case Furniture_FieldIndex.Description:
-                        this.Description = ex;
-                        break;
                     case Furniture_FieldIndex.Keywords:
                         this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
@@ -1580,35 +1622,44 @@ namespace Mutagen.Bethesda.Starfield
                     case Furniture_FieldIndex.ForcedLocations:
                         this.ForcedLocations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case Furniture_FieldIndex.PNAM:
-                        this.PNAM = ex;
+                    case Furniture_FieldIndex.NativeTerminal:
+                        this.NativeTerminal = ex;
                         break;
-                    case Furniture_FieldIndex.ActivateTextOverride:
-                        this.ActivateTextOverride = ex;
+                    case Furniture_FieldIndex.MarkerColor:
+                        this.MarkerColor = ex;
                         break;
                     case Furniture_FieldIndex.LoopingSound:
                         this.LoopingSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
                         break;
+                    case Furniture_FieldIndex.Water:
+                        this.Water = ex;
+                        break;
+                    case Furniture_FieldIndex.ActivateTextOverride:
+                        this.ActivateTextOverride = ex;
+                        break;
                     case Furniture_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
-                    case Furniture_FieldIndex.JNAM:
-                        this.JNAM = ex;
+                    case Furniture_FieldIndex.ActivationAngleForPlayer:
+                        this.ActivationAngleForPlayer = ex;
                         break;
-                    case Furniture_FieldIndex.INAM:
-                        this.INAM = ex;
+                    case Furniture_FieldIndex.ActivationAngleInvertFacing:
+                        this.ActivationAngleInvertFacing = ex;
+                        break;
+                    case Furniture_FieldIndex.ContainerItems:
+                        this.ContainerItems = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(ex, null);
                         break;
                     case Furniture_FieldIndex.MarkerFlags:
                         this.MarkerFlags = ex;
                         break;
-                    case Furniture_FieldIndex.GNAM:
-                        this.GNAM = ex;
+                    case Furniture_FieldIndex.ActivationAngleForSittingActor:
+                        this.ActivationAngleForSittingActor = ex;
                         break;
                     case Furniture_FieldIndex.BenchType:
                         this.BenchType = ex;
                         break;
-                    case Furniture_FieldIndex.UsesSkill:
-                        this.UsesSkill = ex;
+                    case Furniture_FieldIndex.AssociatedForm:
+                        this.AssociatedForm = ex;
                         break;
                     case Furniture_FieldIndex.FurnitureTemplate:
                         this.FurnitureTemplate = ex;
@@ -1624,9 +1675,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Furniture_FieldIndex.MarkerFiles:
                         this.MarkerFiles = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerFile.ErrorMask?>>?>(ex, null);
-                        break;
-                    case Furniture_FieldIndex.WBDTDataTypeState:
-                        this.WBDTDataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1647,9 +1695,6 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Furniture_FieldIndex.DirtinessScale:
                         this.DirtinessScale = (Exception?)obj;
-                        break;
-                    case Furniture_FieldIndex.PTTA:
-                        this.PTTA = (MaskItem<Exception?, PTTA.ErrorMask?>?)obj;
                         break;
                     case Furniture_FieldIndex.ObjectPaletteDefaults:
                         this.ObjectPaletteDefaults = (MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>?)obj;
@@ -1678,9 +1723,6 @@ namespace Mutagen.Bethesda.Starfield
                     case Furniture_FieldIndex.Destructible:
                         this.Destructible = (MaskItem<Exception?, Destructible.ErrorMask?>?)obj;
                         break;
-                    case Furniture_FieldIndex.Description:
-                        this.Description = (Exception?)obj;
-                        break;
                     case Furniture_FieldIndex.Keywords:
                         this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
@@ -1690,35 +1732,44 @@ namespace Mutagen.Bethesda.Starfield
                     case Furniture_FieldIndex.ForcedLocations:
                         this.ForcedLocations = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case Furniture_FieldIndex.PNAM:
-                        this.PNAM = (Exception?)obj;
+                    case Furniture_FieldIndex.NativeTerminal:
+                        this.NativeTerminal = (Exception?)obj;
                         break;
-                    case Furniture_FieldIndex.ActivateTextOverride:
-                        this.ActivateTextOverride = (Exception?)obj;
+                    case Furniture_FieldIndex.MarkerColor:
+                        this.MarkerColor = (Exception?)obj;
                         break;
                     case Furniture_FieldIndex.LoopingSound:
                         this.LoopingSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
                         break;
+                    case Furniture_FieldIndex.Water:
+                        this.Water = (Exception?)obj;
+                        break;
+                    case Furniture_FieldIndex.ActivateTextOverride:
+                        this.ActivateTextOverride = (Exception?)obj;
+                        break;
                     case Furniture_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case Furniture_FieldIndex.JNAM:
-                        this.JNAM = (Exception?)obj;
+                    case Furniture_FieldIndex.ActivationAngleForPlayer:
+                        this.ActivationAngleForPlayer = (Exception?)obj;
                         break;
-                    case Furniture_FieldIndex.INAM:
-                        this.INAM = (Exception?)obj;
+                    case Furniture_FieldIndex.ActivationAngleInvertFacing:
+                        this.ActivationAngleInvertFacing = (Exception?)obj;
+                        break;
+                    case Furniture_FieldIndex.ContainerItems:
+                        this.ContainerItems = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>)obj;
                         break;
                     case Furniture_FieldIndex.MarkerFlags:
                         this.MarkerFlags = (Exception?)obj;
                         break;
-                    case Furniture_FieldIndex.GNAM:
-                        this.GNAM = (Exception?)obj;
+                    case Furniture_FieldIndex.ActivationAngleForSittingActor:
+                        this.ActivationAngleForSittingActor = (Exception?)obj;
                         break;
                     case Furniture_FieldIndex.BenchType:
                         this.BenchType = (Exception?)obj;
                         break;
-                    case Furniture_FieldIndex.UsesSkill:
-                        this.UsesSkill = (Exception?)obj;
+                    case Furniture_FieldIndex.AssociatedForm:
+                        this.AssociatedForm = (Exception?)obj;
                         break;
                     case Furniture_FieldIndex.FurnitureTemplate:
                         this.FurnitureTemplate = (Exception?)obj;
@@ -1735,9 +1786,6 @@ namespace Mutagen.Bethesda.Starfield
                     case Furniture_FieldIndex.MarkerFiles:
                         this.MarkerFiles = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerFile.ErrorMask?>>?>)obj;
                         break;
-                    case Furniture_FieldIndex.WBDTDataTypeState:
-                        this.WBDTDataTypeState = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1750,7 +1798,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (VirtualMachineAdapter != null) return true;
                 if (ObjectBounds != null) return true;
                 if (DirtinessScale != null) return true;
-                if (PTTA != null) return true;
                 if (ObjectPaletteDefaults != null) return true;
                 if (Transforms != null) return true;
                 if (SnapTemplate != null) return true;
@@ -1760,26 +1807,27 @@ namespace Mutagen.Bethesda.Starfield
                 if (Name != null) return true;
                 if (Model != null) return true;
                 if (Destructible != null) return true;
-                if (Description != null) return true;
                 if (Keywords != null) return true;
                 if (Properties != null) return true;
                 if (ForcedLocations != null) return true;
-                if (PNAM != null) return true;
-                if (ActivateTextOverride != null) return true;
+                if (NativeTerminal != null) return true;
+                if (MarkerColor != null) return true;
                 if (LoopingSound != null) return true;
+                if (Water != null) return true;
+                if (ActivateTextOverride != null) return true;
                 if (Flags != null) return true;
-                if (JNAM != null) return true;
-                if (INAM != null) return true;
+                if (ActivationAngleForPlayer != null) return true;
+                if (ActivationAngleInvertFacing != null) return true;
+                if (ContainerItems != null) return true;
                 if (MarkerFlags != null) return true;
-                if (GNAM != null) return true;
+                if (ActivationAngleForSittingActor != null) return true;
                 if (BenchType != null) return true;
-                if (UsesSkill != null) return true;
+                if (AssociatedForm != null) return true;
                 if (FurnitureTemplate != null) return true;
                 if (MarkerEntryPoints != null) return true;
                 if (MarkerModel != null) return true;
                 if (MarkerParameters != null) return true;
                 if (MarkerFiles != null) return true;
-                if (WBDTDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -1811,7 +1859,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(DirtinessScale, "DirtinessScale");
                 }
-                PTTA?.Print(sb);
                 ObjectPaletteDefaults?.Print(sb);
                 Transforms?.Print(sb);
                 {
@@ -1846,9 +1893,6 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 Model?.Print(sb);
                 Destructible?.Print(sb);
-                {
-                    sb.AppendItem(Description, "Description");
-                }
                 if (Keywords is {} KeywordsItem)
                 {
                     sb.AppendLine("Keywords =>");
@@ -1908,32 +1952,56 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 {
-                    sb.AppendItem(PNAM, "PNAM");
+                    sb.AppendItem(NativeTerminal, "NativeTerminal");
+                }
+                {
+                    sb.AppendItem(MarkerColor, "MarkerColor");
+                }
+                LoopingSound?.Print(sb);
+                {
+                    sb.AppendItem(Water, "Water");
                 }
                 {
                     sb.AppendItem(ActivateTextOverride, "ActivateTextOverride");
                 }
-                LoopingSound?.Print(sb);
                 {
                     sb.AppendItem(Flags, "Flags");
                 }
                 {
-                    sb.AppendItem(JNAM, "JNAM");
+                    sb.AppendItem(ActivationAngleForPlayer, "ActivationAngleForPlayer");
                 }
                 {
-                    sb.AppendItem(INAM, "INAM");
+                    sb.AppendItem(ActivationAngleInvertFacing, "ActivationAngleInvertFacing");
+                }
+                if (ContainerItems is {} ContainerItemsItem)
+                {
+                    sb.AppendLine("ContainerItems =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ContainerItemsItem.Overall);
+                        if (ContainerItemsItem.Specific != null)
+                        {
+                            foreach (var subItem in ContainerItemsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
                 }
                 {
                     sb.AppendItem(MarkerFlags, "MarkerFlags");
                 }
                 {
-                    sb.AppendItem(GNAM, "GNAM");
+                    sb.AppendItem(ActivationAngleForSittingActor, "ActivationAngleForSittingActor");
                 }
                 {
                     sb.AppendItem(BenchType, "BenchType");
                 }
                 {
-                    sb.AppendItem(UsesSkill, "UsesSkill");
+                    sb.AppendItem(AssociatedForm, "AssociatedForm");
                 }
                 {
                     sb.AppendItem(FurnitureTemplate, "FurnitureTemplate");
@@ -1995,9 +2063,6 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                {
-                    sb.AppendItem(WBDTDataTypeState, "WBDTDataTypeState");
-                }
             }
             #endregion
 
@@ -2009,7 +2074,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.DirtinessScale = this.DirtinessScale.Combine(rhs.DirtinessScale);
-                ret.PTTA = this.PTTA.Combine(rhs.PTTA, (l, r) => l.Combine(r));
                 ret.ObjectPaletteDefaults = this.ObjectPaletteDefaults.Combine(rhs.ObjectPaletteDefaults, (l, r) => l.Combine(r));
                 ret.Transforms = this.Transforms.Combine(rhs.Transforms, (l, r) => l.Combine(r));
                 ret.SnapTemplate = this.SnapTemplate.Combine(rhs.SnapTemplate);
@@ -2019,26 +2083,27 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
-                ret.Description = this.Description.Combine(rhs.Description);
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
                 ret.ForcedLocations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ForcedLocations?.Overall, rhs.ForcedLocations?.Overall), Noggog.ExceptionExt.Combine(this.ForcedLocations?.Specific, rhs.ForcedLocations?.Specific));
-                ret.PNAM = this.PNAM.Combine(rhs.PNAM);
-                ret.ActivateTextOverride = this.ActivateTextOverride.Combine(rhs.ActivateTextOverride);
+                ret.NativeTerminal = this.NativeTerminal.Combine(rhs.NativeTerminal);
+                ret.MarkerColor = this.MarkerColor.Combine(rhs.MarkerColor);
                 ret.LoopingSound = this.LoopingSound.Combine(rhs.LoopingSound, (l, r) => l.Combine(r));
+                ret.Water = this.Water.Combine(rhs.Water);
+                ret.ActivateTextOverride = this.ActivateTextOverride.Combine(rhs.ActivateTextOverride);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.JNAM = this.JNAM.Combine(rhs.JNAM);
-                ret.INAM = this.INAM.Combine(rhs.INAM);
+                ret.ActivationAngleForPlayer = this.ActivationAngleForPlayer.Combine(rhs.ActivationAngleForPlayer);
+                ret.ActivationAngleInvertFacing = this.ActivationAngleInvertFacing.Combine(rhs.ActivationAngleInvertFacing);
+                ret.ContainerItems = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ContainerEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ContainerItems?.Overall, rhs.ContainerItems?.Overall), Noggog.ExceptionExt.Combine(this.ContainerItems?.Specific, rhs.ContainerItems?.Specific));
                 ret.MarkerFlags = this.MarkerFlags.Combine(rhs.MarkerFlags);
-                ret.GNAM = this.GNAM.Combine(rhs.GNAM);
+                ret.ActivationAngleForSittingActor = this.ActivationAngleForSittingActor.Combine(rhs.ActivationAngleForSittingActor);
                 ret.BenchType = this.BenchType.Combine(rhs.BenchType);
-                ret.UsesSkill = this.UsesSkill.Combine(rhs.UsesSkill);
+                ret.AssociatedForm = this.AssociatedForm.Combine(rhs.AssociatedForm);
                 ret.FurnitureTemplate = this.FurnitureTemplate.Combine(rhs.FurnitureTemplate);
                 ret.MarkerEntryPoints = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerEntryPoints.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MarkerEntryPoints?.Overall, rhs.MarkerEntryPoints?.Overall), Noggog.ExceptionExt.Combine(this.MarkerEntryPoints?.Specific, rhs.MarkerEntryPoints?.Specific));
                 ret.MarkerModel = this.MarkerModel.Combine(rhs.MarkerModel);
                 ret.MarkerParameters = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerParameters.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MarkerParameters?.Overall, rhs.MarkerParameters?.Overall), Noggog.ExceptionExt.Combine(this.MarkerParameters?.Specific, rhs.MarkerParameters?.Specific));
                 ret.MarkerFiles = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FurnitureMarkerFile.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MarkerFiles?.Overall, rhs.MarkerFiles?.Overall), Noggog.ExceptionExt.Combine(this.MarkerFiles?.Specific, rhs.MarkerFiles?.Specific));
-                ret.WBDTDataTypeState = this.WBDTDataTypeState.Combine(rhs.WBDTDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2064,7 +2129,6 @@ namespace Mutagen.Bethesda.Starfield
             public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool DirtinessScale;
-            public PTTA.TranslationMask? PTTA;
             public ObjectPaletteDefaults.TranslationMask? ObjectPaletteDefaults;
             public Transforms.TranslationMask? Transforms;
             public bool SnapTemplate;
@@ -2074,26 +2138,27 @@ namespace Mutagen.Bethesda.Starfield
             public bool Name;
             public Model.TranslationMask? Model;
             public Destructible.TranslationMask? Destructible;
-            public bool Description;
             public bool Keywords;
             public ObjectProperty.TranslationMask? Properties;
             public bool ForcedLocations;
-            public bool PNAM;
-            public bool ActivateTextOverride;
+            public bool NativeTerminal;
+            public bool MarkerColor;
             public SoundReference.TranslationMask? LoopingSound;
+            public bool Water;
+            public bool ActivateTextOverride;
             public bool Flags;
-            public bool JNAM;
-            public bool INAM;
+            public bool ActivationAngleForPlayer;
+            public bool ActivationAngleInvertFacing;
+            public ContainerEntry.TranslationMask? ContainerItems;
             public bool MarkerFlags;
-            public bool GNAM;
+            public bool ActivationAngleForSittingActor;
             public bool BenchType;
-            public bool UsesSkill;
+            public bool AssociatedForm;
             public bool FurnitureTemplate;
             public FurnitureMarkerEntryPoints.TranslationMask? MarkerEntryPoints;
             public bool MarkerModel;
             public FurnitureMarkerParameters.TranslationMask? MarkerParameters;
             public FurnitureMarkerFile.TranslationMask? MarkerFiles;
-            public bool WBDTDataTypeState;
             #endregion
 
             #region Ctors
@@ -2107,21 +2172,21 @@ namespace Mutagen.Bethesda.Starfield
                 this.SnapBehavior = defaultOn;
                 this.XALG = defaultOn;
                 this.Name = defaultOn;
-                this.Description = defaultOn;
                 this.Keywords = defaultOn;
                 this.ForcedLocations = defaultOn;
-                this.PNAM = defaultOn;
+                this.NativeTerminal = defaultOn;
+                this.MarkerColor = defaultOn;
+                this.Water = defaultOn;
                 this.ActivateTextOverride = defaultOn;
                 this.Flags = defaultOn;
-                this.JNAM = defaultOn;
-                this.INAM = defaultOn;
+                this.ActivationAngleForPlayer = defaultOn;
+                this.ActivationAngleInvertFacing = defaultOn;
                 this.MarkerFlags = defaultOn;
-                this.GNAM = defaultOn;
+                this.ActivationAngleForSittingActor = defaultOn;
                 this.BenchType = defaultOn;
-                this.UsesSkill = defaultOn;
+                this.AssociatedForm = defaultOn;
                 this.FurnitureTemplate = defaultOn;
                 this.MarkerModel = defaultOn;
-                this.WBDTDataTypeState = defaultOn;
             }
 
             #endregion
@@ -2132,7 +2197,6 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((DirtinessScale, null));
-                ret.Add((PTTA != null ? PTTA.OnOverall : DefaultOn, PTTA?.GetCrystal()));
                 ret.Add((ObjectPaletteDefaults != null ? ObjectPaletteDefaults.OnOverall : DefaultOn, ObjectPaletteDefaults?.GetCrystal()));
                 ret.Add((Transforms != null ? Transforms.OnOverall : DefaultOn, Transforms?.GetCrystal()));
                 ret.Add((SnapTemplate, null));
@@ -2142,26 +2206,27 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Name, null));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
                 ret.Add((Destructible != null ? Destructible.OnOverall : DefaultOn, Destructible?.GetCrystal()));
-                ret.Add((Description, null));
                 ret.Add((Keywords, null));
                 ret.Add((Properties == null ? DefaultOn : !Properties.GetCrystal().CopyNothing, Properties?.GetCrystal()));
                 ret.Add((ForcedLocations, null));
-                ret.Add((PNAM, null));
-                ret.Add((ActivateTextOverride, null));
+                ret.Add((NativeTerminal, null));
+                ret.Add((MarkerColor, null));
                 ret.Add((LoopingSound != null ? LoopingSound.OnOverall : DefaultOn, LoopingSound?.GetCrystal()));
+                ret.Add((Water, null));
+                ret.Add((ActivateTextOverride, null));
                 ret.Add((Flags, null));
-                ret.Add((JNAM, null));
-                ret.Add((INAM, null));
+                ret.Add((ActivationAngleForPlayer, null));
+                ret.Add((ActivationAngleInvertFacing, null));
+                ret.Add((ContainerItems == null ? DefaultOn : !ContainerItems.GetCrystal().CopyNothing, ContainerItems?.GetCrystal()));
                 ret.Add((MarkerFlags, null));
-                ret.Add((GNAM, null));
+                ret.Add((ActivationAngleForSittingActor, null));
                 ret.Add((BenchType, null));
-                ret.Add((UsesSkill, null));
+                ret.Add((AssociatedForm, null));
                 ret.Add((FurnitureTemplate, null));
                 ret.Add((MarkerEntryPoints == null ? DefaultOn : !MarkerEntryPoints.GetCrystal().CopyNothing, MarkerEntryPoints?.GetCrystal()));
                 ret.Add((MarkerModel, null));
                 ret.Add((MarkerParameters == null ? DefaultOn : !MarkerParameters.GetCrystal().CopyNothing, MarkerParameters?.GetCrystal()));
                 ret.Add((MarkerFiles == null ? DefaultOn : !MarkerFiles.GetCrystal().CopyNothing, MarkerFiles?.GetCrystal()));
-                ret.Add((WBDTDataTypeState, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -2229,11 +2294,6 @@ namespace Mutagen.Bethesda.Starfield
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
-        }
-        [Flags]
-        public enum WBDTDataType
-        {
-            Break0 = 1
         }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => FurnitureCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => FurnitureSetterCommon.Instance.EnumerateListedAssetLinks(this);
@@ -2346,7 +2406,6 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new Percent DirtinessScale { get; set; }
-        new PTTA? PTTA { get; set; }
         new ObjectPaletteDefaults? ObjectPaletteDefaults { get; set; }
         new Transforms? Transforms { get; set; }
         new IFormLinkNullable<ISnapTemplateGetter> SnapTemplate { get; set; }
@@ -2365,29 +2424,30 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: IHasDestructible
         /// </summary>
         new Destructible? Destructible { get; set; }
-        new TranslatedString? Description { get; set; }
         /// <summary>
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new ExtendedList<ObjectProperty>? Properties { get; set; }
         new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; set; }
-        new MemorySlice<Byte>? PNAM { get; set; }
-        new TranslatedString? ActivateTextOverride { get; set; }
+        new IFormLinkNullable<ITerminalMenuGetter> NativeTerminal { get; set; }
+        new Color? MarkerColor { get; set; }
         new SoundReference? LoopingSound { get; set; }
+        new IFormLinkNullable<IWaterGetter> Water { get; set; }
+        new TranslatedString? ActivateTextOverride { get; set; }
         new Furniture.Flag? Flags { get; set; }
-        new MemorySlice<Byte>? JNAM { get; set; }
-        new Boolean INAM { get; set; }
+        new UInt16? ActivationAngleForPlayer { get; set; }
+        new Boolean ActivationAngleInvertFacing { get; set; }
+        new ExtendedList<ContainerEntry>? ContainerItems { get; set; }
         new FurnitureMarkerFlags? MarkerFlags { get; set; }
-        new MemorySlice<Byte>? GNAM { get; set; }
-        new Furniture.BenchTypes BenchType { get; set; }
-        new Skill? UsesSkill { get; set; }
+        new UInt16? ActivationAngleForSittingActor { get; set; }
+        new Furniture.BenchTypes? BenchType { get; set; }
+        new IFormLinkNullable<IStarfieldMajorRecordGetter> AssociatedForm { get; set; }
         new IFormLinkNullable<IFurnitureGetter> FurnitureTemplate { get; set; }
         new ExtendedList<FurnitureMarkerEntryPoints> MarkerEntryPoints { get; }
         new String? MarkerModel { get; set; }
         new ExtendedList<FurnitureMarkerParameters>? MarkerParameters { get; set; }
         new ExtendedList<FurnitureMarkerFile>? MarkerFiles { get; set; }
-        new Furniture.WBDTDataType WBDTDataTypeState { get; set; }
         #region Mutagen
         new Furniture.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -2437,7 +2497,6 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
         Percent DirtinessScale { get; }
-        IPTTAGetter? PTTA { get; }
         IObjectPaletteDefaultsGetter? ObjectPaletteDefaults { get; }
         ITransformsGetter? Transforms { get; }
         IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate { get; }
@@ -2462,7 +2521,6 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         IDestructibleGetter? Destructible { get; }
         #endregion
-        ITranslatedStringGetter? Description { get; }
         #region Keywords
         /// <summary>
         /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
@@ -2471,22 +2529,24 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         IReadOnlyList<IObjectPropertyGetter>? Properties { get; }
         IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; }
-        ReadOnlyMemorySlice<Byte>? PNAM { get; }
-        ITranslatedStringGetter? ActivateTextOverride { get; }
+        IFormLinkNullableGetter<ITerminalMenuGetter> NativeTerminal { get; }
+        Color? MarkerColor { get; }
         ISoundReferenceGetter? LoopingSound { get; }
+        IFormLinkNullableGetter<IWaterGetter> Water { get; }
+        ITranslatedStringGetter? ActivateTextOverride { get; }
         Furniture.Flag? Flags { get; }
-        ReadOnlyMemorySlice<Byte>? JNAM { get; }
-        Boolean INAM { get; }
+        UInt16? ActivationAngleForPlayer { get; }
+        Boolean ActivationAngleInvertFacing { get; }
+        IReadOnlyList<IContainerEntryGetter>? ContainerItems { get; }
         FurnitureMarkerFlags? MarkerFlags { get; }
-        ReadOnlyMemorySlice<Byte>? GNAM { get; }
-        Furniture.BenchTypes BenchType { get; }
-        Skill? UsesSkill { get; }
+        UInt16? ActivationAngleForSittingActor { get; }
+        Furniture.BenchTypes? BenchType { get; }
+        IFormLinkNullableGetter<IStarfieldMajorRecordGetter> AssociatedForm { get; }
         IFormLinkNullableGetter<IFurnitureGetter> FurnitureTemplate { get; }
         IReadOnlyList<IFurnitureMarkerEntryPointsGetter> MarkerEntryPoints { get; }
         String? MarkerModel { get; }
         IReadOnlyList<IFurnitureMarkerParametersGetter>? MarkerParameters { get; }
         IReadOnlyList<IFurnitureMarkerFileGetter>? MarkerFiles { get; }
-        Furniture.WBDTDataType WBDTDataTypeState { get; }
 
         #region Mutagen
         Furniture.MajorFlag MajorFlags { get; }
@@ -2670,36 +2730,36 @@ namespace Mutagen.Bethesda.Starfield
         VirtualMachineAdapter = 7,
         ObjectBounds = 8,
         DirtinessScale = 9,
-        PTTA = 10,
-        ObjectPaletteDefaults = 11,
-        Transforms = 12,
-        SnapTemplate = 13,
-        SnapBehavior = 14,
-        XALG = 15,
-        Components = 16,
-        Name = 17,
-        Model = 18,
-        Destructible = 19,
-        Description = 20,
-        Keywords = 21,
-        Properties = 22,
-        ForcedLocations = 23,
-        PNAM = 24,
-        ActivateTextOverride = 25,
-        LoopingSound = 26,
+        ObjectPaletteDefaults = 10,
+        Transforms = 11,
+        SnapTemplate = 12,
+        SnapBehavior = 13,
+        XALG = 14,
+        Components = 15,
+        Name = 16,
+        Model = 17,
+        Destructible = 18,
+        Keywords = 19,
+        Properties = 20,
+        ForcedLocations = 21,
+        NativeTerminal = 22,
+        MarkerColor = 23,
+        LoopingSound = 24,
+        Water = 25,
+        ActivateTextOverride = 26,
         Flags = 27,
-        JNAM = 28,
-        INAM = 29,
-        MarkerFlags = 30,
-        GNAM = 31,
-        BenchType = 32,
-        UsesSkill = 33,
-        FurnitureTemplate = 34,
-        MarkerEntryPoints = 35,
-        MarkerModel = 36,
-        MarkerParameters = 37,
-        MarkerFiles = 38,
-        WBDTDataTypeState = 39,
+        ActivationAngleForPlayer = 28,
+        ActivationAngleInvertFacing = 29,
+        ContainerItems = 30,
+        MarkerFlags = 31,
+        ActivationAngleForSittingActor = 32,
+        BenchType = 33,
+        AssociatedForm = 34,
+        FurnitureTemplate = 35,
+        MarkerEntryPoints = 36,
+        MarkerModel = 37,
+        MarkerParameters = 38,
+        MarkerFiles = 39,
     }
     #endregion
 
@@ -2751,7 +2811,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XXXX,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
-                RecordTypes.PTTA,
                 RecordTypes.OPDS,
                 RecordTypes.PTT2,
                 RecordTypes.SNTP,
@@ -2771,20 +2830,25 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.DAMC,
                 RecordTypes.DSDL,
                 RecordTypes.DSTD,
-                RecordTypes.DESC,
                 RecordTypes.KWDA,
                 RecordTypes.KSIZ,
                 RecordTypes.PRPS,
                 RecordTypes.FTYP,
+                RecordTypes.NTRM,
                 RecordTypes.PNAM,
-                RecordTypes.ATTX,
                 RecordTypes.ALSH,
+                RecordTypes.WTFM,
+                RecordTypes.ATTX,
                 RecordTypes.FNAM,
                 RecordTypes.JNAM,
                 RecordTypes.INAM,
+                RecordTypes.CNTO,
+                RecordTypes.COCT,
+                RecordTypes.COED,
                 RecordTypes.MNAM,
                 RecordTypes.GNAM,
                 RecordTypes.WBDT,
+                RecordTypes.NAM1,
                 RecordTypes.FTMP,
                 RecordTypes.FNPR,
                 RecordTypes.XMRK,
@@ -2838,7 +2902,6 @@ namespace Mutagen.Bethesda.Starfield
             item.VirtualMachineAdapter = null;
             item.ObjectBounds.Clear();
             item.DirtinessScale = default(Percent);
-            item.PTTA = null;
             item.ObjectPaletteDefaults = null;
             item.Transforms = null;
             item.SnapTemplate.Clear();
@@ -2848,26 +2911,27 @@ namespace Mutagen.Bethesda.Starfield
             item.Name = default;
             item.Model = null;
             item.Destructible = null;
-            item.Description = default;
             item.Keywords = null;
             item.Properties = null;
             item.ForcedLocations = null;
-            item.PNAM = default;
-            item.ActivateTextOverride = default;
+            item.NativeTerminal.Clear();
+            item.MarkerColor = default;
             item.LoopingSound = null;
+            item.Water.Clear();
+            item.ActivateTextOverride = default;
             item.Flags = default;
-            item.JNAM = default;
-            item.INAM = default(Boolean);
+            item.ActivationAngleForPlayer = default;
+            item.ActivationAngleInvertFacing = default(Boolean);
+            item.ContainerItems = null;
             item.MarkerFlags = default;
-            item.GNAM = default;
-            item.BenchType = default(Furniture.BenchTypes);
-            item.UsesSkill = default;
+            item.ActivationAngleForSittingActor = default;
+            item.BenchType = default;
+            item.AssociatedForm.Clear();
             item.FurnitureTemplate.Clear();
             item.MarkerEntryPoints.Clear();
             item.MarkerModel = default;
             item.MarkerParameters = null;
             item.MarkerFiles = null;
-            item.WBDTDataTypeState = default(Furniture.WBDTDataType);
             base.Clear(item);
         }
         
@@ -2886,7 +2950,6 @@ namespace Mutagen.Bethesda.Starfield
         {
             base.RemapLinks(obj, mapping);
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
-            obj.PTTA?.RemapLinks(mapping);
             obj.Transforms?.RemapLinks(mapping);
             obj.SnapTemplate.Relink(mapping);
             obj.SnapBehavior.Relink(mapping);
@@ -2896,7 +2959,11 @@ namespace Mutagen.Bethesda.Starfield
             obj.Keywords?.RemapLinks(mapping);
             obj.Properties?.RemapLinks(mapping);
             obj.ForcedLocations?.RemapLinks(mapping);
+            obj.NativeTerminal.Relink(mapping);
             obj.LoopingSound?.RemapLinks(mapping);
+            obj.Water.Relink(mapping);
+            obj.ContainerItems?.RemapLinks(mapping);
+            obj.AssociatedForm.Relink(mapping);
             obj.FurnitureTemplate.Relink(mapping);
             obj.MarkerParameters?.RemapLinks(mapping);
         }
@@ -3013,11 +3080,6 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.DirtinessScale = item.DirtinessScale.Equals(rhs.DirtinessScale);
-            ret.PTTA = EqualsMaskHelper.EqualsHelper(
-                item.PTTA,
-                rhs.PTTA,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
             ret.ObjectPaletteDefaults = EqualsMaskHelper.EqualsHelper(
                 item.ObjectPaletteDefaults,
                 rhs.ObjectPaletteDefaults,
@@ -3046,7 +3108,6 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Destructible,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Description = object.Equals(item.Description, rhs.Description);
             ret.Keywords = item.Keywords.CollectionEqualsHelper(
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
@@ -3059,20 +3120,26 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.ForcedLocations,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.PNAM = MemorySliceExt.SequenceEqual(item.PNAM, rhs.PNAM);
-            ret.ActivateTextOverride = object.Equals(item.ActivateTextOverride, rhs.ActivateTextOverride);
+            ret.NativeTerminal = item.NativeTerminal.Equals(rhs.NativeTerminal);
+            ret.MarkerColor = item.MarkerColor.ColorOnlyEquals(rhs.MarkerColor);
             ret.LoopingSound = EqualsMaskHelper.EqualsHelper(
                 item.LoopingSound,
                 rhs.LoopingSound,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
+            ret.Water = item.Water.Equals(rhs.Water);
+            ret.ActivateTextOverride = object.Equals(item.ActivateTextOverride, rhs.ActivateTextOverride);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.JNAM = MemorySliceExt.SequenceEqual(item.JNAM, rhs.JNAM);
-            ret.INAM = item.INAM == rhs.INAM;
+            ret.ActivationAngleForPlayer = item.ActivationAngleForPlayer == rhs.ActivationAngleForPlayer;
+            ret.ActivationAngleInvertFacing = item.ActivationAngleInvertFacing == rhs.ActivationAngleInvertFacing;
+            ret.ContainerItems = item.ContainerItems.CollectionEqualsHelper(
+                rhs.ContainerItems,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             ret.MarkerFlags = item.MarkerFlags == rhs.MarkerFlags;
-            ret.GNAM = MemorySliceExt.SequenceEqual(item.GNAM, rhs.GNAM);
+            ret.ActivationAngleForSittingActor = item.ActivationAngleForSittingActor == rhs.ActivationAngleForSittingActor;
             ret.BenchType = item.BenchType == rhs.BenchType;
-            ret.UsesSkill = item.UsesSkill == rhs.UsesSkill;
+            ret.AssociatedForm = item.AssociatedForm.Equals(rhs.AssociatedForm);
             ret.FurnitureTemplate = item.FurnitureTemplate.Equals(rhs.FurnitureTemplate);
             ret.MarkerEntryPoints = item.MarkerEntryPoints.CollectionEqualsHelper(
                 rhs.MarkerEntryPoints,
@@ -3087,7 +3154,6 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.MarkerFiles,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.WBDTDataTypeState = item.WBDTDataTypeState == rhs.WBDTDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -3150,11 +3216,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.DirtinessScale, "DirtinessScale");
             }
-            if ((printMask?.PTTA?.Overall ?? true)
-                && item.PTTA is {} PTTAItem)
-            {
-                PTTAItem?.Print(sb, "PTTA");
-            }
             if ((printMask?.ObjectPaletteDefaults?.Overall ?? true)
                 && item.ObjectPaletteDefaults is {} ObjectPaletteDefaultsItem)
             {
@@ -3207,11 +3268,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 DestructibleItem?.Print(sb, "Destructible");
             }
-            if ((printMask?.Description ?? true)
-                && item.Description is {} DescriptionItem)
-            {
-                sb.AppendItem(DescriptionItem, "Description");
-            }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords is {} KeywordsItem)
             {
@@ -3257,53 +3313,76 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.PNAM ?? true)
-                && item.PNAM is {} PNAMItem)
+            if (printMask?.NativeTerminal ?? true)
             {
-                sb.AppendLine($"PNAM => {SpanExt.ToHexString(PNAMItem)}");
+                sb.AppendItem(item.NativeTerminal.FormKeyNullable, "NativeTerminal");
             }
-            if ((printMask?.ActivateTextOverride ?? true)
-                && item.ActivateTextOverride is {} ActivateTextOverrideItem)
+            if ((printMask?.MarkerColor ?? true)
+                && item.MarkerColor is {} MarkerColorItem)
             {
-                sb.AppendItem(ActivateTextOverrideItem, "ActivateTextOverride");
+                sb.AppendItem(MarkerColorItem, "MarkerColor");
             }
             if ((printMask?.LoopingSound?.Overall ?? true)
                 && item.LoopingSound is {} LoopingSoundItem)
             {
                 LoopingSoundItem?.Print(sb, "LoopingSound");
             }
+            if (printMask?.Water ?? true)
+            {
+                sb.AppendItem(item.Water.FormKeyNullable, "Water");
+            }
+            if ((printMask?.ActivateTextOverride ?? true)
+                && item.ActivateTextOverride is {} ActivateTextOverrideItem)
+            {
+                sb.AppendItem(ActivateTextOverrideItem, "ActivateTextOverride");
+            }
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
             {
                 sb.AppendItem(FlagsItem, "Flags");
             }
-            if ((printMask?.JNAM ?? true)
-                && item.JNAM is {} JNAMItem)
+            if ((printMask?.ActivationAngleForPlayer ?? true)
+                && item.ActivationAngleForPlayer is {} ActivationAngleForPlayerItem)
             {
-                sb.AppendLine($"JNAM => {SpanExt.ToHexString(JNAMItem)}");
+                sb.AppendItem(ActivationAngleForPlayerItem, "ActivationAngleForPlayer");
             }
-            if (printMask?.INAM ?? true)
+            if (printMask?.ActivationAngleInvertFacing ?? true)
             {
-                sb.AppendItem(item.INAM, "INAM");
+                sb.AppendItem(item.ActivationAngleInvertFacing, "ActivationAngleInvertFacing");
+            }
+            if ((printMask?.ContainerItems?.Overall ?? true)
+                && item.ContainerItems is {} ContainerItemsItem)
+            {
+                sb.AppendLine("ContainerItems =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in ContainerItemsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
             }
             if ((printMask?.MarkerFlags ?? true)
                 && item.MarkerFlags is {} MarkerFlagsItem)
             {
                 sb.AppendItem(MarkerFlagsItem, "MarkerFlags");
             }
-            if ((printMask?.GNAM ?? true)
-                && item.GNAM is {} GNAMItem)
+            if ((printMask?.ActivationAngleForSittingActor ?? true)
+                && item.ActivationAngleForSittingActor is {} ActivationAngleForSittingActorItem)
             {
-                sb.AppendLine($"GNAM => {SpanExt.ToHexString(GNAMItem)}");
+                sb.AppendItem(ActivationAngleForSittingActorItem, "ActivationAngleForSittingActor");
             }
-            if (printMask?.BenchType ?? true)
+            if ((printMask?.BenchType ?? true)
+                && item.BenchType is {} BenchTypeItem)
             {
-                sb.AppendItem(item.BenchType, "BenchType");
+                sb.AppendItem(BenchTypeItem, "BenchType");
             }
-            if ((printMask?.UsesSkill ?? true)
-                && item.UsesSkill is {} UsesSkillItem)
+            if (printMask?.AssociatedForm ?? true)
             {
-                sb.AppendItem(UsesSkillItem, "UsesSkill");
+                sb.AppendItem(item.AssociatedForm.FormKeyNullable, "AssociatedForm");
             }
             if (printMask?.FurnitureTemplate ?? true)
             {
@@ -3357,10 +3436,6 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-            }
-            if (printMask?.WBDTDataTypeState ?? true)
-            {
-                sb.AppendItem(item.WBDTDataTypeState, "WBDTDataTypeState");
             }
         }
         
@@ -3432,14 +3507,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.DirtinessScale.Equals(rhs.DirtinessScale)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.PTTA) ?? true))
-            {
-                if (EqualsMaskHelper.RefEquality(lhs.PTTA, rhs.PTTA, out var lhsPTTA, out var rhsPTTA, out var isPTTAEqual))
-                {
-                    if (!((PTTACommon)((IPTTAGetter)lhsPTTA).CommonInstance()!).Equals(lhsPTTA, rhsPTTA, equalsMask?.GetSubCrystal((int)Furniture_FieldIndex.PTTA))) return false;
-                }
-                else if (!isPTTAEqual) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.ObjectPaletteDefaults) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.ObjectPaletteDefaults, rhs.ObjectPaletteDefaults, out var lhsObjectPaletteDefaults, out var rhsObjectPaletteDefaults, out var isObjectPaletteDefaultsEqual))
@@ -3492,10 +3559,6 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isDestructibleEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.Description) ?? true))
-            {
-                if (!object.Equals(lhs.Description, rhs.Description)) return false;
-            }
             if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
@@ -3508,13 +3571,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.ForcedLocations.SequenceEqualNullable(rhs.ForcedLocations)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.PNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.NativeTerminal) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.PNAM, rhs.PNAM)) return false;
+                if (!lhs.NativeTerminal.Equals(rhs.NativeTerminal)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.ActivateTextOverride) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerColor) ?? true))
             {
-                if (!object.Equals(lhs.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
+                if (!lhs.MarkerColor.ColorOnlyEquals(rhs.MarkerColor)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.LoopingSound) ?? true))
             {
@@ -3524,33 +3587,45 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isLoopingSoundEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.Water) ?? true))
+            {
+                if (!lhs.Water.Equals(rhs.Water)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.ActivateTextOverride) ?? true))
+            {
+                if (!object.Equals(lhs.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.JNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.ActivationAngleForPlayer) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.JNAM, rhs.JNAM)) return false;
+                if (lhs.ActivationAngleForPlayer != rhs.ActivationAngleForPlayer) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.INAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.ActivationAngleInvertFacing) ?? true))
             {
-                if (lhs.INAM != rhs.INAM) return false;
+                if (lhs.ActivationAngleInvertFacing != rhs.ActivationAngleInvertFacing) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.ContainerItems) ?? true))
+            {
+                if (!lhs.ContainerItems.SequenceEqualNullable(rhs.ContainerItems, (l, r) => ((ContainerEntryCommon)((IContainerEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Furniture_FieldIndex.ContainerItems)))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerFlags) ?? true))
             {
                 if (lhs.MarkerFlags != rhs.MarkerFlags) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.GNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.ActivationAngleForSittingActor) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.GNAM, rhs.GNAM)) return false;
+                if (lhs.ActivationAngleForSittingActor != rhs.ActivationAngleForSittingActor) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.BenchType) ?? true))
             {
                 if (lhs.BenchType != rhs.BenchType) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.UsesSkill) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.AssociatedForm) ?? true))
             {
-                if (lhs.UsesSkill != rhs.UsesSkill) return false;
+                if (!lhs.AssociatedForm.Equals(rhs.AssociatedForm)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.FurnitureTemplate) ?? true))
             {
@@ -3571,10 +3646,6 @@ namespace Mutagen.Bethesda.Starfield
             if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerFiles) ?? true))
             {
                 if (!lhs.MarkerFiles.SequenceEqualNullable(rhs.MarkerFiles, (l, r) => ((FurnitureMarkerFileCommon)((IFurnitureMarkerFileGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Furniture_FieldIndex.MarkerFiles)))) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Furniture_FieldIndex.WBDTDataTypeState) ?? true))
-            {
-                if (lhs.WBDTDataTypeState != rhs.WBDTDataTypeState) return false;
             }
             return true;
         }
@@ -3610,10 +3681,6 @@ namespace Mutagen.Bethesda.Starfield
             }
             hash.Add(item.ObjectBounds);
             hash.Add(item.DirtinessScale);
-            if (item.PTTA is {} PTTAitem)
-            {
-                hash.Add(PTTAitem);
-            }
             if (item.ObjectPaletteDefaults is {} ObjectPaletteDefaultsitem)
             {
                 hash.Add(ObjectPaletteDefaultsitem);
@@ -3641,47 +3708,46 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(Destructibleitem);
             }
-            if (item.Description is {} Descriptionitem)
-            {
-                hash.Add(Descriptionitem);
-            }
             hash.Add(item.Keywords);
             hash.Add(item.Properties);
             hash.Add(item.ForcedLocations);
-            if (item.PNAM is {} PNAMItem)
+            hash.Add(item.NativeTerminal);
+            if (item.MarkerColor is {} MarkerColoritem)
             {
-                hash.Add(PNAMItem);
-            }
-            if (item.ActivateTextOverride is {} ActivateTextOverrideitem)
-            {
-                hash.Add(ActivateTextOverrideitem);
+                hash.Add(MarkerColoritem);
             }
             if (item.LoopingSound is {} LoopingSounditem)
             {
                 hash.Add(LoopingSounditem);
             }
+            hash.Add(item.Water);
+            if (item.ActivateTextOverride is {} ActivateTextOverrideitem)
+            {
+                hash.Add(ActivateTextOverrideitem);
+            }
             if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
             }
-            if (item.JNAM is {} JNAMItem)
+            if (item.ActivationAngleForPlayer is {} ActivationAngleForPlayeritem)
             {
-                hash.Add(JNAMItem);
+                hash.Add(ActivationAngleForPlayeritem);
             }
-            hash.Add(item.INAM);
+            hash.Add(item.ActivationAngleInvertFacing);
+            hash.Add(item.ContainerItems);
             if (item.MarkerFlags is {} MarkerFlagsitem)
             {
                 hash.Add(MarkerFlagsitem);
             }
-            if (item.GNAM is {} GNAMItem)
+            if (item.ActivationAngleForSittingActor is {} ActivationAngleForSittingActoritem)
             {
-                hash.Add(GNAMItem);
+                hash.Add(ActivationAngleForSittingActoritem);
             }
-            hash.Add(item.BenchType);
-            if (item.UsesSkill is {} UsesSkillitem)
+            if (item.BenchType is {} BenchTypeitem)
             {
-                hash.Add(UsesSkillitem);
+                hash.Add(BenchTypeitem);
             }
+            hash.Add(item.AssociatedForm);
             hash.Add(item.FurnitureTemplate);
             hash.Add(item.MarkerEntryPoints);
             if (item.MarkerModel is {} MarkerModelitem)
@@ -3690,7 +3756,6 @@ namespace Mutagen.Bethesda.Starfield
             }
             hash.Add(item.MarkerParameters);
             hash.Add(item.MarkerFiles);
-            hash.Add(item.WBDTDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -3723,13 +3788,6 @@ namespace Mutagen.Bethesda.Starfield
             if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.PTTA is {} PTTAItems)
-            {
-                foreach (var item in PTTAItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -3789,12 +3847,32 @@ namespace Mutagen.Bethesda.Starfield
                     yield return FormLinkInformation.Factory(item);
                 }
             }
+            if (FormLinkInformation.TryFactory(obj.NativeTerminal, out var NativeTerminalInfo))
+            {
+                yield return NativeTerminalInfo;
+            }
             if (obj.LoopingSound is {} LoopingSoundItems)
             {
                 foreach (var item in LoopingSoundItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
+            }
+            if (FormLinkInformation.TryFactory(obj.Water, out var WaterInfo))
+            {
+                yield return WaterInfo;
+            }
+            if (obj.ContainerItems is {} ContainerItemsItem)
+            {
+                foreach (var item in ContainerItemsItem.WhereCastable<IContainerEntryGetter, IFormLinkContainerGetter>()
+                    .SelectMany((f) => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.AssociatedForm, out var AssociatedFormInfo))
+            {
+                yield return AssociatedFormInfo;
             }
             if (FormLinkInformation.TryFactory(obj.FurnitureTemplate, out var FurnitureTemplateInfo))
             {
@@ -3961,32 +4039,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.DirtinessScale = rhs.DirtinessScale;
             }
-            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.PTTA) ?? true))
-            {
-                errorMask?.PushIndex((int)Furniture_FieldIndex.PTTA);
-                try
-                {
-                    if(rhs.PTTA is {} rhsPTTA)
-                    {
-                        item.PTTA = rhsPTTA.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Furniture_FieldIndex.PTTA));
-                    }
-                    else
-                    {
-                        item.PTTA = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.ObjectPaletteDefaults) ?? true))
             {
                 errorMask?.PushIndex((int)Furniture_FieldIndex.ObjectPaletteDefaults);
@@ -4131,10 +4183,6 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.Description) ?? true))
-            {
-                item.Description = rhs.Description?.DeepCopy();
-            }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.Keywords) ?? true))
             {
                 errorMask?.PushIndex((int)Furniture_FieldIndex.Keywords);
@@ -4221,20 +4269,13 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.PNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.NativeTerminal) ?? true))
             {
-                if(rhs.PNAM is {} PNAMrhs)
-                {
-                    item.PNAM = PNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.PNAM = default;
-                }
+                item.NativeTerminal.SetTo(rhs.NativeTerminal.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.ActivateTextOverride) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerColor) ?? true))
             {
-                item.ActivateTextOverride = rhs.ActivateTextOverride?.DeepCopy();
+                item.MarkerColor = rhs.MarkerColor;
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.LoopingSound) ?? true))
             {
@@ -4262,47 +4303,73 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.Water) ?? true))
+            {
+                item.Water.SetTo(rhs.Water.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.ActivateTextOverride) ?? true))
+            {
+                item.ActivateTextOverride = rhs.ActivateTextOverride?.DeepCopy();
+            }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
             }
-            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.JNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.ActivationAngleForPlayer) ?? true))
             {
-                if(rhs.JNAM is {} JNAMrhs)
-                {
-                    item.JNAM = JNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.JNAM = default;
-                }
+                item.ActivationAngleForPlayer = rhs.ActivationAngleForPlayer;
             }
-            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.INAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.ActivationAngleInvertFacing) ?? true))
             {
-                item.INAM = rhs.INAM;
+                item.ActivationAngleInvertFacing = rhs.ActivationAngleInvertFacing;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.ContainerItems) ?? true))
+            {
+                errorMask?.PushIndex((int)Furniture_FieldIndex.ContainerItems);
+                try
+                {
+                    if ((rhs.ContainerItems != null))
+                    {
+                        item.ContainerItems = 
+                            rhs.ContainerItems
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ContainerEntry>();
+                    }
+                    else
+                    {
+                        item.ContainerItems = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.MarkerFlags) ?? true))
             {
                 item.MarkerFlags = rhs.MarkerFlags;
             }
-            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.GNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.ActivationAngleForSittingActor) ?? true))
             {
-                if(rhs.GNAM is {} GNAMrhs)
-                {
-                    item.GNAM = GNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.GNAM = default;
-                }
+                item.ActivationAngleForSittingActor = rhs.ActivationAngleForSittingActor;
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.BenchType) ?? true))
             {
                 item.BenchType = rhs.BenchType;
             }
-            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.UsesSkill) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.AssociatedForm) ?? true))
             {
-                item.UsesSkill = rhs.UsesSkill;
+                item.AssociatedForm.SetTo(rhs.AssociatedForm.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.FurnitureTemplate) ?? true))
             {
@@ -4399,10 +4466,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Furniture_FieldIndex.WBDTDataTypeState) ?? true))
-            {
-                item.WBDTDataTypeState = rhs.WBDTDataTypeState;
             }
             DeepCopyInCustom(
                 item: item,
@@ -4564,15 +4627,6 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly FurnitureBinaryWriteTranslation Instance = new();
 
-        public static void WriteEmbedded(
-            IFurnitureGetter item,
-            MutagenWriter writer)
-        {
-            StarfieldMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
-
         public static void WriteRecordTypes(
             IFurnitureGetter item,
             MutagenWriter writer,
@@ -4599,13 +4653,6 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.DirtinessScale,
                 integerType: FloatIntegerType.UInt,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
-            if (item.PTTA is {} PTTAItem)
-            {
-                ((PTTABinaryWriteTranslation)((IBinaryItem)PTTAItem).BinaryWriteTranslator).Write(
-                    item: PTTAItem,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
             if (item.ObjectPaletteDefaults is {} ObjectPaletteDefaultsItem)
             {
                 ((ObjectPaletteDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPaletteDefaultsItem).BinaryWriteTranslator).Write(
@@ -4663,12 +4710,6 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     translationParams: translationParams);
             }
-            StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.Description,
-                header: translationParams.ConvertToCustom(RecordTypes.DESC),
-                binaryType: StringBinaryType.NullTerminate,
-                source: StringsSource.DL);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
@@ -4703,16 +4744,14 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         item: subItem);
                 });
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.PNAM,
+                item: item.NativeTerminal,
+                header: translationParams.ConvertToCustom(RecordTypes.NTRM));
+            ColorBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.MarkerColor,
                 header: translationParams.ConvertToCustom(RecordTypes.PNAM));
-            StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.ActivateTextOverride,
-                header: translationParams.ConvertToCustom(RecordTypes.ATTX),
-                binaryType: StringBinaryType.NullTerminate,
-                source: StringsSource.Normal);
             if (item.LoopingSound is {} LoopingSoundItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.ALSH))
@@ -4723,42 +4762,60 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams);
                 }
             }
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Water,
+                header: translationParams.ConvertToCustom(RecordTypes.WTFM));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ActivateTextOverride,
+                header: translationParams.ConvertToCustom(RecordTypes.ATTX),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             EnumBinaryTranslation<Furniture.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 2,
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.JNAM,
+                item: item.ActivationAngleForPlayer,
                 header: translationParams.ConvertToCustom(RecordTypes.JNAM));
             BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
-                item: item.INAM,
+                item: item.ActivationAngleInvertFacing,
                 header: translationParams.ConvertToCustom(RecordTypes.INAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IContainerEntryGetter>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.ContainerItems,
+                counterType: RecordTypes.COCT,
+                counterLength: 4,
+                transl: (MutagenWriter subWriter, IContainerEntryGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ContainerEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
             EnumBinaryTranslation<FurnitureMarkerFlags, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.MarkerFlags,
                 length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.MNAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.GNAM,
+                item: item.ActivationAngleForSittingActor,
                 header: translationParams.ConvertToCustom(RecordTypes.GNAM));
-            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.WBDT)))
-            {
-                EnumBinaryTranslation<Furniture.BenchTypes, MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    item.BenchType,
-                    length: 1);
-                if (!item.WBDTDataTypeState.HasFlag(Furniture.WBDTDataType.Break0))
-                {
-                    EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Write(
-                        writer,
-                        ((int?)item.UsesSkill) ?? -1,
-                        length: 1);
-                }
-            }
+            EnumBinaryTranslation<Furniture.BenchTypes, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.BenchType,
+                length: 1,
+                header: translationParams.ConvertToCustom(RecordTypes.WBDT));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.AssociatedForm,
+                header: translationParams.ConvertToCustom(RecordTypes.NAM1));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FurnitureTemplate,
@@ -4860,15 +4917,6 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly FurnitureBinaryCreateTranslation Instance = new FurnitureBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.FURN;
-        public static void FillBinaryStructs(
-            IFurnitureInternal item,
-            MutagenFrame frame)
-        {
-            StarfieldMajorRecordBinaryCreateTranslation.FillBinaryStructs(
-                item: item,
-                frame: frame);
-        }
-
         public static ParseResult FillBinaryRecordTypes(
             IFurnitureInternal item,
             MutagenFrame frame,
@@ -4900,11 +4948,6 @@ namespace Mutagen.Bethesda.Starfield
                         reader: frame,
                         integerType: FloatIntegerType.UInt);
                     return (int)Furniture_FieldIndex.DirtinessScale;
-                }
-                case RecordTypeInts.PTTA:
-                {
-                    item.PTTA = Mutagen.Bethesda.Starfield.PTTA.CreateFromBinary(frame: frame);
-                    return (int)Furniture_FieldIndex.PTTA;
                 }
                 case RecordTypeInts.OPDS:
                 {
@@ -4978,17 +5021,6 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)Furniture_FieldIndex.Destructible;
                 }
-                case RecordTypeInts.DESC:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Description = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        eager: true,
-                        source: StringsSource.DL,
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
-                    return (int)Furniture_FieldIndex.Description;
-                }
                 case RecordTypeInts.KSIZ:
                 case RecordTypeInts.KWDA:
                 {
@@ -5022,11 +5054,29 @@ namespace Mutagen.Bethesda.Starfield
                         .CastExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
                     return (int)Furniture_FieldIndex.ForcedLocations;
                 }
+                case RecordTypeInts.NTRM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.NativeTerminal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Furniture_FieldIndex.NativeTerminal;
+                }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Furniture_FieldIndex.PNAM;
+                    item.MarkerColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    return (int)Furniture_FieldIndex.MarkerColor;
+                }
+                case RecordTypeInts.ALSH:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.LoopingSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)Furniture_FieldIndex.LoopingSound;
+                }
+                case RecordTypeInts.WTFM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Water.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Furniture_FieldIndex.Water;
                 }
                 case RecordTypeInts.ATTX:
                 {
@@ -5039,12 +5089,6 @@ namespace Mutagen.Bethesda.Starfield
                         parseWhole: true);
                     return (int)Furniture_FieldIndex.ActivateTextOverride;
                 }
-                case RecordTypeInts.ALSH:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.LoopingSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
-                    return (int)Furniture_FieldIndex.LoopingSound;
-                }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -5056,13 +5100,27 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.JNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.JNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Furniture_FieldIndex.JNAM;
+                    item.ActivationAngleForPlayer = frame.ReadUInt16();
+                    return (int)Furniture_FieldIndex.ActivationAngleForPlayer;
                 }
                 case RecordTypeInts.INAM:
                 {
-                    item.INAM = true;
-                    return (int)Furniture_FieldIndex.INAM;
+                    item.ActivationAngleInvertFacing = true;
+                    return (int)Furniture_FieldIndex.ActivationAngleInvertFacing;
+                }
+                case RecordTypeInts.CNTO:
+                case RecordTypeInts.COCT:
+                {
+                    item.ContainerItems = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ContainerEntry>.Instance.ParsePerItem(
+                            reader: frame,
+                            countLengthLength: 4,
+                            countRecord: RecordTypes.COCT,
+                            triggeringRecord: ContainerEntry_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: ContainerEntry.TryCreateFromBinary)
+                        .CastExtendedList<ContainerEntry>();
+                    return (int)Furniture_FieldIndex.ContainerItems;
                 }
                 case RecordTypeInts.MNAM:
                 {
@@ -5075,27 +5133,22 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.GNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Furniture_FieldIndex.GNAM;
+                    item.ActivationAngleForSittingActor = frame.ReadUInt16();
+                    return (int)Furniture_FieldIndex.ActivationAngleForSittingActor;
                 }
                 case RecordTypeInts.WBDT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    if (dataFrame.Remaining < 1) return null;
                     item.BenchType = EnumBinaryTranslation<Furniture.BenchTypes, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: dataFrame,
-                        length: 1);
-                    if (dataFrame.Complete)
-                    {
-                        item.WBDTDataTypeState |= Furniture.WBDTDataType.Break0;
-                        return (int)Furniture_FieldIndex.BenchType;
-                    }
-                    if (dataFrame.Remaining < 1) return null;
-                    item.UsesSkill = EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: dataFrame,
-                        length: 1);
-                    return (int)Furniture_FieldIndex.UsesSkill;
+                        reader: frame,
+                        length: contentLength);
+                    return (int)Furniture_FieldIndex.BenchType;
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AssociatedForm.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Furniture_FieldIndex.AssociatedForm;
                 }
                 case RecordTypeInts.FTMP:
                 {
@@ -5228,10 +5281,6 @@ namespace Mutagen.Bethesda.Starfield
         private int? _DirtinessScaleLocation;
         public Percent DirtinessScale => _DirtinessScaleLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DirtinessScaleLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region PTTA
-        private RangeInt32? _PTTALocation;
-        public IPTTAGetter? PTTA => _PTTALocation.HasValue ? PTTABinaryOverlay.PTTAFactory(_recordData.Slice(_PTTALocation!.Value.Min), _package) : default;
-        #endregion
         #region ObjectPaletteDefaults
         private RangeInt32? _ObjectPaletteDefaultsLocation;
         public IObjectPaletteDefaultsGetter? ObjectPaletteDefaults => _ObjectPaletteDefaultsLocation.HasValue ? ObjectPaletteDefaultsBinaryOverlay.ObjectPaletteDefaultsFactory(_recordData.Slice(_ObjectPaletteDefaultsLocation!.Value.Min), _package) : default;
@@ -5267,64 +5316,57 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         public IModelGetter? Model { get; private set; }
         public IDestructibleGetter? Destructible { get; private set; }
-        #region Description
-        private int? _DescriptionLocation;
-        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
-        #endregion
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
         public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; private set; }
-        #region PNAM
-        private int? _PNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? PNAM => _PNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region NativeTerminal
+        private int? _NativeTerminalLocation;
+        public IFormLinkNullableGetter<ITerminalMenuGetter> NativeTerminal => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ITerminalMenuGetter>(_package, _recordData, _NativeTerminalLocation);
+        #endregion
+        #region MarkerColor
+        private int? _MarkerColorLocation;
+        public Color? MarkerColor => _MarkerColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MarkerColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
+        #endregion
+        public ISoundReferenceGetter? LoopingSound { get; private set; }
+        #region Water
+        private int? _WaterLocation;
+        public IFormLinkNullableGetter<IWaterGetter> Water => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IWaterGetter>(_package, _recordData, _WaterLocation);
         #endregion
         #region ActivateTextOverride
         private int? _ActivateTextOverrideLocation;
         public ITranslatedStringGetter? ActivateTextOverride => _ActivateTextOverrideLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActivateTextOverrideLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
-        public ISoundReferenceGetter? LoopingSound { get; private set; }
         #region Flags
         private int? _FlagsLocation;
         public Furniture.Flag? Flags => _FlagsLocation.HasValue ? (Furniture.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Furniture.Flag?);
         #endregion
-        #region JNAM
-        private int? _JNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? JNAM => _JNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _JNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region ActivationAngleForPlayer
+        private int? _ActivationAngleForPlayerLocation;
+        public UInt16? ActivationAngleForPlayer => _ActivationAngleForPlayerLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActivationAngleForPlayerLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
         #endregion
-        #region INAM
-        private int? _INAMLocation;
-        public Boolean INAM => _INAMLocation.HasValue ? true : default(Boolean);
+        #region ActivationAngleInvertFacing
+        private int? _ActivationAngleInvertFacingLocation;
+        public Boolean ActivationAngleInvertFacing => _ActivationAngleInvertFacingLocation.HasValue ? true : default(Boolean);
         #endregion
+        public IReadOnlyList<IContainerEntryGetter>? ContainerItems { get; private set; }
         #region MarkerFlags
         private int? _MarkerFlagsLocation;
         public FurnitureMarkerFlags? MarkerFlags => _MarkerFlagsLocation.HasValue ? (FurnitureMarkerFlags)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MarkerFlagsLocation!.Value, _package.MetaData.Constants)) : default(FurnitureMarkerFlags?);
         #endregion
-        #region GNAM
-        private int? _GNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? GNAM => _GNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _GNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region ActivationAngleForSittingActor
+        private int? _ActivationAngleForSittingActorLocation;
+        public UInt16? ActivationAngleForSittingActor => _ActivationAngleForSittingActorLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActivationAngleForSittingActorLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
         #endregion
-        private RangeInt32? _WBDTLocation;
-        public Furniture.WBDTDataType WBDTDataTypeState { get; private set; }
         #region BenchType
-        private int _BenchTypeLocation => _WBDTLocation!.Value.Min;
-        private bool _BenchType_IsSet => _WBDTLocation.HasValue;
-        public Furniture.BenchTypes BenchType => _BenchType_IsSet ? (Furniture.BenchTypes)_recordData.Span.Slice(_BenchTypeLocation, 0x1)[0] : default;
+        private int? _BenchTypeLocation;
+        public Furniture.BenchTypes? BenchType => _BenchTypeLocation.HasValue ? (Furniture.BenchTypes)HeaderTranslation.ExtractSubrecordMemory(_recordData, _BenchTypeLocation!.Value, _package.MetaData.Constants)[0] : default(Furniture.BenchTypes?);
         #endregion
-        #region UsesSkill
-        private int _UsesSkillLocation => _WBDTLocation!.Value.Min + 0x1;
-        private bool _UsesSkill_IsSet => _WBDTLocation.HasValue && !WBDTDataTypeState.HasFlag(Furniture.WBDTDataType.Break0);
-        public Skill? UsesSkill
-        {
-            get
-            {
-                var val = (Skill)_recordData.Span.Slice(_UsesSkillLocation, 0x1)[0];
-                if (((int)val) == -1) return null;
-                return val;
-            }
-        }
+        #region AssociatedForm
+        private int? _AssociatedFormLocation;
+        public IFormLinkNullableGetter<IStarfieldMajorRecordGetter> AssociatedForm => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStarfieldMajorRecordGetter>(_package, _recordData, _AssociatedFormLocation);
         #endregion
         #region FurnitureTemplate
         private int? _FurnitureTemplateLocation;
@@ -5426,11 +5468,6 @@ namespace Mutagen.Bethesda.Starfield
                     _DirtinessScaleLocation = (stream.Position - offset);
                     return (int)Furniture_FieldIndex.DirtinessScale;
                 }
-                case RecordTypeInts.PTTA:
-                {
-                    _PTTALocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                    return (int)Furniture_FieldIndex.PTTA;
-                }
                 case RecordTypeInts.OPDS:
                 {
                     _ObjectPaletteDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
@@ -5495,11 +5532,6 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)Furniture_FieldIndex.Destructible;
                 }
-                case RecordTypeInts.DESC:
-                {
-                    _DescriptionLocation = (stream.Position - offset);
-                    return (int)Furniture_FieldIndex.Description;
-                }
                 case RecordTypeInts.KSIZ:
                 case RecordTypeInts.KWDA:
                 {
@@ -5533,15 +5565,15 @@ namespace Mutagen.Bethesda.Starfield
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ILocationReferenceTypeGetter>(p, s));
                     return (int)Furniture_FieldIndex.ForcedLocations;
                 }
+                case RecordTypeInts.NTRM:
+                {
+                    _NativeTerminalLocation = (stream.Position - offset);
+                    return (int)Furniture_FieldIndex.NativeTerminal;
+                }
                 case RecordTypeInts.PNAM:
                 {
-                    _PNAMLocation = (stream.Position - offset);
-                    return (int)Furniture_FieldIndex.PNAM;
-                }
-                case RecordTypeInts.ATTX:
-                {
-                    _ActivateTextOverrideLocation = (stream.Position - offset);
-                    return (int)Furniture_FieldIndex.ActivateTextOverride;
+                    _MarkerColorLocation = (stream.Position - offset);
+                    return (int)Furniture_FieldIndex.MarkerColor;
                 }
                 case RecordTypeInts.ALSH:
                 {
@@ -5552,6 +5584,16 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)Furniture_FieldIndex.LoopingSound;
                 }
+                case RecordTypeInts.WTFM:
+                {
+                    _WaterLocation = (stream.Position - offset);
+                    return (int)Furniture_FieldIndex.Water;
+                }
+                case RecordTypeInts.ATTX:
+                {
+                    _ActivateTextOverrideLocation = (stream.Position - offset);
+                    return (int)Furniture_FieldIndex.ActivateTextOverride;
+                }
                 case RecordTypeInts.FNAM:
                 {
                     _FlagsLocation = (stream.Position - offset);
@@ -5559,13 +5601,27 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.JNAM:
                 {
-                    _JNAMLocation = (stream.Position - offset);
-                    return (int)Furniture_FieldIndex.JNAM;
+                    _ActivationAngleForPlayerLocation = (stream.Position - offset);
+                    return (int)Furniture_FieldIndex.ActivationAngleForPlayer;
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _INAMLocation = (stream.Position - offset);
-                    return (int)Furniture_FieldIndex.INAM;
+                    _ActivationAngleInvertFacingLocation = (stream.Position - offset);
+                    return (int)Furniture_FieldIndex.ActivationAngleInvertFacing;
+                }
+                case RecordTypeInts.CNTO:
+                case RecordTypeInts.COCT:
+                {
+                    this.ContainerItems = BinaryOverlayList.FactoryByCountPerItem<IContainerEntryGetter>(
+                        stream: stream,
+                        package: _package,
+                        countLength: 4,
+                        trigger: ContainerEntry_Registration.TriggerSpecs,
+                        countType: RecordTypes.COCT,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => ContainerEntryBinaryOverlay.ContainerEntryFactory(new OverlayStream(s, p), p, recConv),
+                        skipHeader: false);
+                    return (int)Furniture_FieldIndex.ContainerItems;
                 }
                 case RecordTypeInts.MNAM:
                 {
@@ -5574,18 +5630,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.GNAM:
                 {
-                    _GNAMLocation = (stream.Position - offset);
-                    return (int)Furniture_FieldIndex.GNAM;
+                    _ActivationAngleForSittingActorLocation = (stream.Position - offset);
+                    return (int)Furniture_FieldIndex.ActivationAngleForSittingActor;
                 }
                 case RecordTypeInts.WBDT:
                 {
-                    _WBDTLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    var subLen = _package.MetaData.Constants.SubrecordHeader(_recordData.Slice((stream.Position - offset))).ContentLength;
-                    if (subLen <= 0x1)
-                    {
-                        this.WBDTDataTypeState |= Furniture.WBDTDataType.Break0;
-                    }
-                    return (int)Furniture_FieldIndex.UsesSkill;
+                    _BenchTypeLocation = (stream.Position - offset);
+                    return (int)Furniture_FieldIndex.BenchType;
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    _AssociatedFormLocation = (stream.Position - offset);
+                    return (int)Furniture_FieldIndex.AssociatedForm;
                 }
                 case RecordTypeInts.FTMP:
                 {

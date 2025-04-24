@@ -36,6 +36,7 @@ using RecordTypes = Mutagen.Bethesda.Starfield.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 #endregion
@@ -111,6 +112,17 @@ namespace Mutagen.Bethesda.Starfield
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectPaletteDefaultsGetter? IFloraGetter.ObjectPaletteDefaults => this.ObjectPaletteDefaults;
+        #endregion
+        #region Transforms
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Transforms? _Transforms;
+        public Transforms? Transforms
+        {
+            get => _Transforms;
+            set => _Transforms = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITransformsGetter? IFloraGetter.Transforms => this.Transforms;
         #endregion
         #region Components
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -233,16 +245,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
-        #region PNAM
+        #region MarkerColor
+        public Color? MarkerColor { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _PNAM;
-        public MemorySlice<Byte>? PNAM
-        {
-            get => this._PNAM;
-            set => this._PNAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IFloraGetter.PNAM => this.PNAM;
+        Color? IFloraGetter.MarkerColor => this.MarkerColor;
         #endregion
         #region ActivateTextOverride
         public TranslatedString? ActivateTextOverride { get; set; }
@@ -281,16 +287,16 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IHarvestTargetGetter> IFloraGetter.Ingredient => this.Ingredient;
         #endregion
-        #region PFHS
+        #region HarvestSound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private SoundReference? _PFHS;
-        public SoundReference? PFHS
+        private SoundReference? _HarvestSound;
+        public SoundReference? HarvestSound
         {
-            get => _PFHS;
-            set => _PFHS = value;
+            get => _HarvestSound;
+            set => _HarvestSound = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISoundReferenceGetter? IFloraGetter.PFHS => this.PFHS;
+        ISoundReferenceGetter? IFloraGetter.HarvestSound => this.HarvestSound;
         #endregion
         #region Production
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -341,20 +347,14 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IKeywordGetter> IFloraGetter.ActionKeyword => this.ActionKeyword;
         #endregion
-        #region BNAM
-        public Single? BNAM { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IFloraGetter.BNAM => this.BNAM;
+        #region DamageRequiredToHarvest
+        public Single DamageRequiredToHarvest { get; set; } = default(Single);
         #endregion
-        #region FMAH
-        public Single? FMAH { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IFloraGetter.FMAH => this.FMAH;
+        #region MaxHarvestCount
+        public Single MaxHarvestCount { get; set; } = default(Single);
         #endregion
-        #region FMIH
-        public Single? FMIH { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IFloraGetter.FMIH => this.FMIH;
+        #region MinHarvestCount
+        public Single MinHarvestCount { get; set; } = default(Single);
         #endregion
         #region MaxGlobal
         private readonly IFormLinkNullable<IGlobalGetter> _MaxGlobal = new FormLinkNullable<IGlobalGetter>();
@@ -386,16 +386,16 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IExplosionGetter> IFloraGetter.Explosion => this.Explosion;
         #endregion
-        #region FHLS
+        #region HarvestLoopingSound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private SoundReference? _FHLS;
-        public SoundReference? FHLS
+        private SoundReference? _HarvestLoopingSound;
+        public SoundReference? HarvestLoopingSound
         {
-            get => _FHLS;
-            set => _FHLS = value;
+            get => _HarvestLoopingSound;
+            set => _HarvestLoopingSound = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISoundReferenceGetter? IFloraGetter.FHLS => this.FHLS;
+        ISoundReferenceGetter? IFloraGetter.HarvestLoopingSound => this.HarvestLoopingSound;
         #endregion
 
         #region To String
@@ -426,29 +426,30 @@ namespace Mutagen.Bethesda.Starfield
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.DirtinessScale = initialValue;
                 this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(initialValue, new ObjectPaletteDefaults.Mask<TItem>(initialValue));
+                this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Name = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
-                this.PNAM = initialValue;
+                this.MarkerColor = initialValue;
                 this.ActivateTextOverride = initialValue;
                 this.FNAM = initialValue;
                 this.JNAM = initialValue;
                 this.Ingredient = initialValue;
-                this.PFHS = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.HarvestSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.Production = new MaskItem<TItem, SeasonalIngredientProduction.Mask<TItem>?>(initialValue, new SeasonalIngredientProduction.Mask<TItem>(initialValue));
                 this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>());
                 this.ActionKeyword = initialValue;
-                this.BNAM = initialValue;
-                this.FMAH = initialValue;
-                this.FMIH = initialValue;
+                this.DamageRequiredToHarvest = initialValue;
+                this.MaxHarvestCount = initialValue;
+                this.MinHarvestCount = initialValue;
                 this.MaxGlobal = initialValue;
                 this.MinGlobal = initialValue;
                 this.Explosion = initialValue;
-                this.FHLS = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.HarvestLoopingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -463,29 +464,30 @@ namespace Mutagen.Bethesda.Starfield
                 TItem ObjectBounds,
                 TItem DirtinessScale,
                 TItem ObjectPaletteDefaults,
+                TItem Transforms,
                 TItem Components,
                 TItem Name,
                 TItem Model,
                 TItem Destructible,
                 TItem Keywords,
                 TItem Properties,
-                TItem PNAM,
+                TItem MarkerColor,
                 TItem ActivateTextOverride,
                 TItem FNAM,
                 TItem JNAM,
                 TItem Ingredient,
-                TItem PFHS,
+                TItem HarvestSound,
                 TItem Production,
                 TItem AttachParentSlots,
                 TItem ObjectTemplates,
                 TItem ActionKeyword,
-                TItem BNAM,
-                TItem FMAH,
-                TItem FMIH,
+                TItem DamageRequiredToHarvest,
+                TItem MaxHarvestCount,
+                TItem MinHarvestCount,
                 TItem MaxGlobal,
                 TItem MinGlobal,
                 TItem Explosion,
-                TItem FHLS)
+                TItem HarvestLoopingSound)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -499,29 +501,30 @@ namespace Mutagen.Bethesda.Starfield
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.DirtinessScale = DirtinessScale;
                 this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(ObjectPaletteDefaults, new ObjectPaletteDefaults.Mask<TItem>(ObjectPaletteDefaults));
+                this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Name = Name;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Properties = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>(Properties, Enumerable.Empty<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>());
-                this.PNAM = PNAM;
+                this.MarkerColor = MarkerColor;
                 this.ActivateTextOverride = ActivateTextOverride;
                 this.FNAM = FNAM;
                 this.JNAM = JNAM;
                 this.Ingredient = Ingredient;
-                this.PFHS = new MaskItem<TItem, SoundReference.Mask<TItem>?>(PFHS, new SoundReference.Mask<TItem>(PFHS));
+                this.HarvestSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(HarvestSound, new SoundReference.Mask<TItem>(HarvestSound));
                 this.Production = new MaskItem<TItem, SeasonalIngredientProduction.Mask<TItem>?>(Production, new SeasonalIngredientProduction.Mask<TItem>(Production));
                 this.AttachParentSlots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AttachParentSlots, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ObjectTemplates = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>(ObjectTemplates, Enumerable.Empty<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>());
                 this.ActionKeyword = ActionKeyword;
-                this.BNAM = BNAM;
-                this.FMAH = FMAH;
-                this.FMIH = FMIH;
+                this.DamageRequiredToHarvest = DamageRequiredToHarvest;
+                this.MaxHarvestCount = MaxHarvestCount;
+                this.MinHarvestCount = MinHarvestCount;
                 this.MaxGlobal = MaxGlobal;
                 this.MinGlobal = MinGlobal;
                 this.Explosion = Explosion;
-                this.FHLS = new MaskItem<TItem, SoundReference.Mask<TItem>?>(FHLS, new SoundReference.Mask<TItem>(FHLS));
+                this.HarvestLoopingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(HarvestLoopingSound, new SoundReference.Mask<TItem>(HarvestLoopingSound));
             }
 
             #pragma warning disable CS8618
@@ -537,29 +540,30 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem DirtinessScale;
             public MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>? ObjectPaletteDefaults { get; set; }
+            public MaskItem<TItem, Transforms.Mask<TItem>?>? Transforms { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public TItem Name;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectProperty.Mask<TItem>?>>?>? Properties;
-            public TItem PNAM;
+            public TItem MarkerColor;
             public TItem ActivateTextOverride;
             public TItem FNAM;
             public TItem JNAM;
             public TItem Ingredient;
-            public MaskItem<TItem, SoundReference.Mask<TItem>?>? PFHS { get; set; }
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? HarvestSound { get; set; }
             public MaskItem<TItem, SeasonalIngredientProduction.Mask<TItem>?>? Production { get; set; }
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AttachParentSlots;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ObjectTemplate.Mask<TItem>?>>?>? ObjectTemplates;
             public TItem ActionKeyword;
-            public TItem BNAM;
-            public TItem FMAH;
-            public TItem FMIH;
+            public TItem DamageRequiredToHarvest;
+            public TItem MaxHarvestCount;
+            public TItem MinHarvestCount;
             public TItem MaxGlobal;
             public TItem MinGlobal;
             public TItem Explosion;
-            public MaskItem<TItem, SoundReference.Mask<TItem>?>? FHLS { get; set; }
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? HarvestLoopingSound { get; set; }
             #endregion
 
             #region Equals
@@ -577,29 +581,30 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.DirtinessScale, rhs.DirtinessScale)) return false;
                 if (!object.Equals(this.ObjectPaletteDefaults, rhs.ObjectPaletteDefaults)) return false;
+                if (!object.Equals(this.Transforms, rhs.Transforms)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
                 if (!object.Equals(this.Properties, rhs.Properties)) return false;
-                if (!object.Equals(this.PNAM, rhs.PNAM)) return false;
+                if (!object.Equals(this.MarkerColor, rhs.MarkerColor)) return false;
                 if (!object.Equals(this.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
                 if (!object.Equals(this.FNAM, rhs.FNAM)) return false;
                 if (!object.Equals(this.JNAM, rhs.JNAM)) return false;
                 if (!object.Equals(this.Ingredient, rhs.Ingredient)) return false;
-                if (!object.Equals(this.PFHS, rhs.PFHS)) return false;
+                if (!object.Equals(this.HarvestSound, rhs.HarvestSound)) return false;
                 if (!object.Equals(this.Production, rhs.Production)) return false;
                 if (!object.Equals(this.AttachParentSlots, rhs.AttachParentSlots)) return false;
                 if (!object.Equals(this.ObjectTemplates, rhs.ObjectTemplates)) return false;
                 if (!object.Equals(this.ActionKeyword, rhs.ActionKeyword)) return false;
-                if (!object.Equals(this.BNAM, rhs.BNAM)) return false;
-                if (!object.Equals(this.FMAH, rhs.FMAH)) return false;
-                if (!object.Equals(this.FMIH, rhs.FMIH)) return false;
+                if (!object.Equals(this.DamageRequiredToHarvest, rhs.DamageRequiredToHarvest)) return false;
+                if (!object.Equals(this.MaxHarvestCount, rhs.MaxHarvestCount)) return false;
+                if (!object.Equals(this.MinHarvestCount, rhs.MinHarvestCount)) return false;
                 if (!object.Equals(this.MaxGlobal, rhs.MaxGlobal)) return false;
                 if (!object.Equals(this.MinGlobal, rhs.MinGlobal)) return false;
                 if (!object.Equals(this.Explosion, rhs.Explosion)) return false;
-                if (!object.Equals(this.FHLS, rhs.FHLS)) return false;
+                if (!object.Equals(this.HarvestLoopingSound, rhs.HarvestLoopingSound)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -609,29 +614,30 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.DirtinessScale);
                 hash.Add(this.ObjectPaletteDefaults);
+                hash.Add(this.Transforms);
                 hash.Add(this.Components);
                 hash.Add(this.Name);
                 hash.Add(this.Model);
                 hash.Add(this.Destructible);
                 hash.Add(this.Keywords);
                 hash.Add(this.Properties);
-                hash.Add(this.PNAM);
+                hash.Add(this.MarkerColor);
                 hash.Add(this.ActivateTextOverride);
                 hash.Add(this.FNAM);
                 hash.Add(this.JNAM);
                 hash.Add(this.Ingredient);
-                hash.Add(this.PFHS);
+                hash.Add(this.HarvestSound);
                 hash.Add(this.Production);
                 hash.Add(this.AttachParentSlots);
                 hash.Add(this.ObjectTemplates);
                 hash.Add(this.ActionKeyword);
-                hash.Add(this.BNAM);
-                hash.Add(this.FMAH);
-                hash.Add(this.FMIH);
+                hash.Add(this.DamageRequiredToHarvest);
+                hash.Add(this.MaxHarvestCount);
+                hash.Add(this.MinHarvestCount);
                 hash.Add(this.MaxGlobal);
                 hash.Add(this.MinGlobal);
                 hash.Add(this.Explosion);
-                hash.Add(this.FHLS);
+                hash.Add(this.HarvestLoopingSound);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -657,6 +663,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.ObjectPaletteDefaults.Overall)) return false;
                     if (this.ObjectPaletteDefaults.Specific != null && !this.ObjectPaletteDefaults.Specific.All(eval)) return false;
+                }
+                if (Transforms != null)
+                {
+                    if (!eval(this.Transforms.Overall)) return false;
+                    if (this.Transforms.Specific != null && !this.Transforms.Specific.All(eval)) return false;
                 }
                 if (this.Components != null)
                 {
@@ -704,15 +715,15 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (!eval(this.PNAM)) return false;
+                if (!eval(this.MarkerColor)) return false;
                 if (!eval(this.ActivateTextOverride)) return false;
                 if (!eval(this.FNAM)) return false;
                 if (!eval(this.JNAM)) return false;
                 if (!eval(this.Ingredient)) return false;
-                if (PFHS != null)
+                if (HarvestSound != null)
                 {
-                    if (!eval(this.PFHS.Overall)) return false;
-                    if (this.PFHS.Specific != null && !this.PFHS.Specific.All(eval)) return false;
+                    if (!eval(this.HarvestSound.Overall)) return false;
+                    if (this.HarvestSound.Specific != null && !this.HarvestSound.Specific.All(eval)) return false;
                 }
                 if (Production != null)
                 {
@@ -743,16 +754,16 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (!eval(this.ActionKeyword)) return false;
-                if (!eval(this.BNAM)) return false;
-                if (!eval(this.FMAH)) return false;
-                if (!eval(this.FMIH)) return false;
+                if (!eval(this.DamageRequiredToHarvest)) return false;
+                if (!eval(this.MaxHarvestCount)) return false;
+                if (!eval(this.MinHarvestCount)) return false;
                 if (!eval(this.MaxGlobal)) return false;
                 if (!eval(this.MinGlobal)) return false;
                 if (!eval(this.Explosion)) return false;
-                if (FHLS != null)
+                if (HarvestLoopingSound != null)
                 {
-                    if (!eval(this.FHLS.Overall)) return false;
-                    if (this.FHLS.Specific != null && !this.FHLS.Specific.All(eval)) return false;
+                    if (!eval(this.HarvestLoopingSound.Overall)) return false;
+                    if (this.HarvestLoopingSound.Specific != null && !this.HarvestLoopingSound.Specific.All(eval)) return false;
                 }
                 return true;
             }
@@ -777,6 +788,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (eval(this.ObjectPaletteDefaults.Overall)) return true;
                     if (this.ObjectPaletteDefaults.Specific != null && this.ObjectPaletteDefaults.Specific.Any(eval)) return true;
+                }
+                if (Transforms != null)
+                {
+                    if (eval(this.Transforms.Overall)) return true;
+                    if (this.Transforms.Specific != null && this.Transforms.Specific.Any(eval)) return true;
                 }
                 if (this.Components != null)
                 {
@@ -824,15 +840,15 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (eval(this.PNAM)) return true;
+                if (eval(this.MarkerColor)) return true;
                 if (eval(this.ActivateTextOverride)) return true;
                 if (eval(this.FNAM)) return true;
                 if (eval(this.JNAM)) return true;
                 if (eval(this.Ingredient)) return true;
-                if (PFHS != null)
+                if (HarvestSound != null)
                 {
-                    if (eval(this.PFHS.Overall)) return true;
-                    if (this.PFHS.Specific != null && this.PFHS.Specific.Any(eval)) return true;
+                    if (eval(this.HarvestSound.Overall)) return true;
+                    if (this.HarvestSound.Specific != null && this.HarvestSound.Specific.Any(eval)) return true;
                 }
                 if (Production != null)
                 {
@@ -863,16 +879,16 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (eval(this.ActionKeyword)) return true;
-                if (eval(this.BNAM)) return true;
-                if (eval(this.FMAH)) return true;
-                if (eval(this.FMIH)) return true;
+                if (eval(this.DamageRequiredToHarvest)) return true;
+                if (eval(this.MaxHarvestCount)) return true;
+                if (eval(this.MinHarvestCount)) return true;
                 if (eval(this.MaxGlobal)) return true;
                 if (eval(this.MinGlobal)) return true;
                 if (eval(this.Explosion)) return true;
-                if (FHLS != null)
+                if (HarvestLoopingSound != null)
                 {
-                    if (eval(this.FHLS.Overall)) return true;
-                    if (this.FHLS.Specific != null && this.FHLS.Specific.Any(eval)) return true;
+                    if (eval(this.HarvestLoopingSound.Overall)) return true;
+                    if (this.HarvestLoopingSound.Specific != null && this.HarvestLoopingSound.Specific.Any(eval)) return true;
                 }
                 return false;
             }
@@ -893,6 +909,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.DirtinessScale = eval(this.DirtinessScale);
                 obj.ObjectPaletteDefaults = this.ObjectPaletteDefaults == null ? null : new MaskItem<R, ObjectPaletteDefaults.Mask<R>?>(eval(this.ObjectPaletteDefaults.Overall), this.ObjectPaletteDefaults.Specific?.Translate(eval));
+                obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Transforms.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
                 if (Components != null)
                 {
                     obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
@@ -940,12 +957,12 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                obj.PNAM = eval(this.PNAM);
+                obj.MarkerColor = eval(this.MarkerColor);
                 obj.ActivateTextOverride = eval(this.ActivateTextOverride);
                 obj.FNAM = eval(this.FNAM);
                 obj.JNAM = eval(this.JNAM);
                 obj.Ingredient = eval(this.Ingredient);
-                obj.PFHS = this.PFHS == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.PFHS.Overall), this.PFHS.Specific?.Translate(eval));
+                obj.HarvestSound = this.HarvestSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.HarvestSound.Overall), this.HarvestSound.Specific?.Translate(eval));
                 obj.Production = this.Production == null ? null : new MaskItem<R, SeasonalIngredientProduction.Mask<R>?>(eval(this.Production.Overall), this.Production.Specific?.Translate(eval));
                 if (AttachParentSlots != null)
                 {
@@ -977,13 +994,13 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 obj.ActionKeyword = eval(this.ActionKeyword);
-                obj.BNAM = eval(this.BNAM);
-                obj.FMAH = eval(this.FMAH);
-                obj.FMIH = eval(this.FMIH);
+                obj.DamageRequiredToHarvest = eval(this.DamageRequiredToHarvest);
+                obj.MaxHarvestCount = eval(this.MaxHarvestCount);
+                obj.MinHarvestCount = eval(this.MinHarvestCount);
                 obj.MaxGlobal = eval(this.MaxGlobal);
                 obj.MinGlobal = eval(this.MinGlobal);
                 obj.Explosion = eval(this.Explosion);
-                obj.FHLS = this.FHLS == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.FHLS.Overall), this.FHLS.Specific?.Translate(eval));
+                obj.HarvestLoopingSound = this.HarvestLoopingSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.HarvestLoopingSound.Overall), this.HarvestLoopingSound.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1017,6 +1034,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.ObjectPaletteDefaults?.Overall ?? true)
                     {
                         ObjectPaletteDefaults?.Print(sb);
+                    }
+                    if (printMask?.Transforms?.Overall ?? true)
+                    {
+                        Transforms?.Print(sb);
                     }
                     if ((printMask?.Components?.Overall ?? true)
                         && Components is {} ComponentsItem)
@@ -1089,9 +1110,9 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.PNAM ?? true)
+                    if (printMask?.MarkerColor ?? true)
                     {
-                        sb.AppendItem(PNAM, "PNAM");
+                        sb.AppendItem(MarkerColor, "MarkerColor");
                     }
                     if (printMask?.ActivateTextOverride ?? true)
                     {
@@ -1109,9 +1130,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Ingredient, "Ingredient");
                     }
-                    if (printMask?.PFHS?.Overall ?? true)
+                    if (printMask?.HarvestSound?.Overall ?? true)
                     {
-                        PFHS?.Print(sb);
+                        HarvestSound?.Print(sb);
                     }
                     if (printMask?.Production?.Overall ?? true)
                     {
@@ -1161,17 +1182,17 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(ActionKeyword, "ActionKeyword");
                     }
-                    if (printMask?.BNAM ?? true)
+                    if (printMask?.DamageRequiredToHarvest ?? true)
                     {
-                        sb.AppendItem(BNAM, "BNAM");
+                        sb.AppendItem(DamageRequiredToHarvest, "DamageRequiredToHarvest");
                     }
-                    if (printMask?.FMAH ?? true)
+                    if (printMask?.MaxHarvestCount ?? true)
                     {
-                        sb.AppendItem(FMAH, "FMAH");
+                        sb.AppendItem(MaxHarvestCount, "MaxHarvestCount");
                     }
-                    if (printMask?.FMIH ?? true)
+                    if (printMask?.MinHarvestCount ?? true)
                     {
-                        sb.AppendItem(FMIH, "FMIH");
+                        sb.AppendItem(MinHarvestCount, "MinHarvestCount");
                     }
                     if (printMask?.MaxGlobal ?? true)
                     {
@@ -1185,9 +1206,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Explosion, "Explosion");
                     }
-                    if (printMask?.FHLS?.Overall ?? true)
+                    if (printMask?.HarvestLoopingSound?.Overall ?? true)
                     {
-                        FHLS?.Print(sb);
+                        HarvestLoopingSound?.Print(sb);
                     }
                 }
             }
@@ -1204,29 +1225,30 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? DirtinessScale;
             public MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>? ObjectPaletteDefaults;
+            public MaskItem<Exception?, Transforms.ErrorMask?>? Transforms;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public Exception? Name;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>? Properties;
-            public Exception? PNAM;
+            public Exception? MarkerColor;
             public Exception? ActivateTextOverride;
             public Exception? FNAM;
             public Exception? JNAM;
             public Exception? Ingredient;
-            public MaskItem<Exception?, SoundReference.ErrorMask?>? PFHS;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? HarvestSound;
             public MaskItem<Exception?, SeasonalIngredientProduction.ErrorMask?>? Production;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AttachParentSlots;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>? ObjectTemplates;
             public Exception? ActionKeyword;
-            public Exception? BNAM;
-            public Exception? FMAH;
-            public Exception? FMIH;
+            public Exception? DamageRequiredToHarvest;
+            public Exception? MaxHarvestCount;
+            public Exception? MinHarvestCount;
             public Exception? MaxGlobal;
             public Exception? MinGlobal;
             public Exception? Explosion;
-            public MaskItem<Exception?, SoundReference.ErrorMask?>? FHLS;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? HarvestLoopingSound;
             #endregion
 
             #region IErrorMask
@@ -1243,6 +1265,8 @@ namespace Mutagen.Bethesda.Starfield
                         return DirtinessScale;
                     case Flora_FieldIndex.ObjectPaletteDefaults:
                         return ObjectPaletteDefaults;
+                    case Flora_FieldIndex.Transforms:
+                        return Transforms;
                     case Flora_FieldIndex.Components:
                         return Components;
                     case Flora_FieldIndex.Name:
@@ -1255,8 +1279,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Keywords;
                     case Flora_FieldIndex.Properties:
                         return Properties;
-                    case Flora_FieldIndex.PNAM:
-                        return PNAM;
+                    case Flora_FieldIndex.MarkerColor:
+                        return MarkerColor;
                     case Flora_FieldIndex.ActivateTextOverride:
                         return ActivateTextOverride;
                     case Flora_FieldIndex.FNAM:
@@ -1265,8 +1289,8 @@ namespace Mutagen.Bethesda.Starfield
                         return JNAM;
                     case Flora_FieldIndex.Ingredient:
                         return Ingredient;
-                    case Flora_FieldIndex.PFHS:
-                        return PFHS;
+                    case Flora_FieldIndex.HarvestSound:
+                        return HarvestSound;
                     case Flora_FieldIndex.Production:
                         return Production;
                     case Flora_FieldIndex.AttachParentSlots:
@@ -1275,20 +1299,20 @@ namespace Mutagen.Bethesda.Starfield
                         return ObjectTemplates;
                     case Flora_FieldIndex.ActionKeyword:
                         return ActionKeyword;
-                    case Flora_FieldIndex.BNAM:
-                        return BNAM;
-                    case Flora_FieldIndex.FMAH:
-                        return FMAH;
-                    case Flora_FieldIndex.FMIH:
-                        return FMIH;
+                    case Flora_FieldIndex.DamageRequiredToHarvest:
+                        return DamageRequiredToHarvest;
+                    case Flora_FieldIndex.MaxHarvestCount:
+                        return MaxHarvestCount;
+                    case Flora_FieldIndex.MinHarvestCount:
+                        return MinHarvestCount;
                     case Flora_FieldIndex.MaxGlobal:
                         return MaxGlobal;
                     case Flora_FieldIndex.MinGlobal:
                         return MinGlobal;
                     case Flora_FieldIndex.Explosion:
                         return Explosion;
-                    case Flora_FieldIndex.FHLS:
-                        return FHLS;
+                    case Flora_FieldIndex.HarvestLoopingSound:
+                        return HarvestLoopingSound;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1311,6 +1335,9 @@ namespace Mutagen.Bethesda.Starfield
                     case Flora_FieldIndex.ObjectPaletteDefaults:
                         this.ObjectPaletteDefaults = new MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>(ex, null);
                         break;
+                    case Flora_FieldIndex.Transforms:
+                        this.Transforms = new MaskItem<Exception?, Transforms.ErrorMask?>(ex, null);
+                        break;
                     case Flora_FieldIndex.Components:
                         this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
                         break;
@@ -1329,8 +1356,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Flora_FieldIndex.Properties:
                         this.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(ex, null);
                         break;
-                    case Flora_FieldIndex.PNAM:
-                        this.PNAM = ex;
+                    case Flora_FieldIndex.MarkerColor:
+                        this.MarkerColor = ex;
                         break;
                     case Flora_FieldIndex.ActivateTextOverride:
                         this.ActivateTextOverride = ex;
@@ -1344,8 +1371,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Flora_FieldIndex.Ingredient:
                         this.Ingredient = ex;
                         break;
-                    case Flora_FieldIndex.PFHS:
-                        this.PFHS = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                    case Flora_FieldIndex.HarvestSound:
+                        this.HarvestSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
                         break;
                     case Flora_FieldIndex.Production:
                         this.Production = new MaskItem<Exception?, SeasonalIngredientProduction.ErrorMask?>(ex, null);
@@ -1359,14 +1386,14 @@ namespace Mutagen.Bethesda.Starfield
                     case Flora_FieldIndex.ActionKeyword:
                         this.ActionKeyword = ex;
                         break;
-                    case Flora_FieldIndex.BNAM:
-                        this.BNAM = ex;
+                    case Flora_FieldIndex.DamageRequiredToHarvest:
+                        this.DamageRequiredToHarvest = ex;
                         break;
-                    case Flora_FieldIndex.FMAH:
-                        this.FMAH = ex;
+                    case Flora_FieldIndex.MaxHarvestCount:
+                        this.MaxHarvestCount = ex;
                         break;
-                    case Flora_FieldIndex.FMIH:
-                        this.FMIH = ex;
+                    case Flora_FieldIndex.MinHarvestCount:
+                        this.MinHarvestCount = ex;
                         break;
                     case Flora_FieldIndex.MaxGlobal:
                         this.MaxGlobal = ex;
@@ -1377,8 +1404,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Flora_FieldIndex.Explosion:
                         this.Explosion = ex;
                         break;
-                    case Flora_FieldIndex.FHLS:
-                        this.FHLS = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                    case Flora_FieldIndex.HarvestLoopingSound:
+                        this.HarvestLoopingSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1403,6 +1430,9 @@ namespace Mutagen.Bethesda.Starfield
                     case Flora_FieldIndex.ObjectPaletteDefaults:
                         this.ObjectPaletteDefaults = (MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>?)obj;
                         break;
+                    case Flora_FieldIndex.Transforms:
+                        this.Transforms = (MaskItem<Exception?, Transforms.ErrorMask?>?)obj;
+                        break;
                     case Flora_FieldIndex.Components:
                         this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
                         break;
@@ -1421,8 +1451,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Flora_FieldIndex.Properties:
                         this.Properties = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>)obj;
                         break;
-                    case Flora_FieldIndex.PNAM:
-                        this.PNAM = (Exception?)obj;
+                    case Flora_FieldIndex.MarkerColor:
+                        this.MarkerColor = (Exception?)obj;
                         break;
                     case Flora_FieldIndex.ActivateTextOverride:
                         this.ActivateTextOverride = (Exception?)obj;
@@ -1436,8 +1466,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Flora_FieldIndex.Ingredient:
                         this.Ingredient = (Exception?)obj;
                         break;
-                    case Flora_FieldIndex.PFHS:
-                        this.PFHS = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                    case Flora_FieldIndex.HarvestSound:
+                        this.HarvestSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
                         break;
                     case Flora_FieldIndex.Production:
                         this.Production = (MaskItem<Exception?, SeasonalIngredientProduction.ErrorMask?>?)obj;
@@ -1451,14 +1481,14 @@ namespace Mutagen.Bethesda.Starfield
                     case Flora_FieldIndex.ActionKeyword:
                         this.ActionKeyword = (Exception?)obj;
                         break;
-                    case Flora_FieldIndex.BNAM:
-                        this.BNAM = (Exception?)obj;
+                    case Flora_FieldIndex.DamageRequiredToHarvest:
+                        this.DamageRequiredToHarvest = (Exception?)obj;
                         break;
-                    case Flora_FieldIndex.FMAH:
-                        this.FMAH = (Exception?)obj;
+                    case Flora_FieldIndex.MaxHarvestCount:
+                        this.MaxHarvestCount = (Exception?)obj;
                         break;
-                    case Flora_FieldIndex.FMIH:
-                        this.FMIH = (Exception?)obj;
+                    case Flora_FieldIndex.MinHarvestCount:
+                        this.MinHarvestCount = (Exception?)obj;
                         break;
                     case Flora_FieldIndex.MaxGlobal:
                         this.MaxGlobal = (Exception?)obj;
@@ -1469,8 +1499,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Flora_FieldIndex.Explosion:
                         this.Explosion = (Exception?)obj;
                         break;
-                    case Flora_FieldIndex.FHLS:
-                        this.FHLS = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                    case Flora_FieldIndex.HarvestLoopingSound:
+                        this.HarvestLoopingSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -1485,29 +1515,30 @@ namespace Mutagen.Bethesda.Starfield
                 if (ObjectBounds != null) return true;
                 if (DirtinessScale != null) return true;
                 if (ObjectPaletteDefaults != null) return true;
+                if (Transforms != null) return true;
                 if (Components != null) return true;
                 if (Name != null) return true;
                 if (Model != null) return true;
                 if (Destructible != null) return true;
                 if (Keywords != null) return true;
                 if (Properties != null) return true;
-                if (PNAM != null) return true;
+                if (MarkerColor != null) return true;
                 if (ActivateTextOverride != null) return true;
                 if (FNAM != null) return true;
                 if (JNAM != null) return true;
                 if (Ingredient != null) return true;
-                if (PFHS != null) return true;
+                if (HarvestSound != null) return true;
                 if (Production != null) return true;
                 if (AttachParentSlots != null) return true;
                 if (ObjectTemplates != null) return true;
                 if (ActionKeyword != null) return true;
-                if (BNAM != null) return true;
-                if (FMAH != null) return true;
-                if (FMIH != null) return true;
+                if (DamageRequiredToHarvest != null) return true;
+                if (MaxHarvestCount != null) return true;
+                if (MinHarvestCount != null) return true;
                 if (MaxGlobal != null) return true;
                 if (MinGlobal != null) return true;
                 if (Explosion != null) return true;
-                if (FHLS != null) return true;
+                if (HarvestLoopingSound != null) return true;
                 return false;
             }
             #endregion
@@ -1540,6 +1571,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(DirtinessScale, "DirtinessScale");
                 }
                 ObjectPaletteDefaults?.Print(sb);
+                Transforms?.Print(sb);
                 if (Components is {} ComponentsItem)
                 {
                     sb.AppendLine("Components =>");
@@ -1602,7 +1634,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 {
-                    sb.AppendItem(PNAM, "PNAM");
+                    sb.AppendItem(MarkerColor, "MarkerColor");
                 }
                 {
                     sb.AppendItem(ActivateTextOverride, "ActivateTextOverride");
@@ -1616,7 +1648,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(Ingredient, "Ingredient");
                 }
-                PFHS?.Print(sb);
+                HarvestSound?.Print(sb);
                 Production?.Print(sb);
                 if (AttachParentSlots is {} AttachParentSlotsItem)
                 {
@@ -1660,13 +1692,13 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(ActionKeyword, "ActionKeyword");
                 }
                 {
-                    sb.AppendItem(BNAM, "BNAM");
+                    sb.AppendItem(DamageRequiredToHarvest, "DamageRequiredToHarvest");
                 }
                 {
-                    sb.AppendItem(FMAH, "FMAH");
+                    sb.AppendItem(MaxHarvestCount, "MaxHarvestCount");
                 }
                 {
-                    sb.AppendItem(FMIH, "FMIH");
+                    sb.AppendItem(MinHarvestCount, "MinHarvestCount");
                 }
                 {
                     sb.AppendItem(MaxGlobal, "MaxGlobal");
@@ -1677,7 +1709,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(Explosion, "Explosion");
                 }
-                FHLS?.Print(sb);
+                HarvestLoopingSound?.Print(sb);
             }
             #endregion
 
@@ -1690,29 +1722,30 @@ namespace Mutagen.Bethesda.Starfield
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.DirtinessScale = this.DirtinessScale.Combine(rhs.DirtinessScale);
                 ret.ObjectPaletteDefaults = this.ObjectPaletteDefaults.Combine(rhs.ObjectPaletteDefaults, (l, r) => l.Combine(r));
+                ret.Transforms = this.Transforms.Combine(rhs.Transforms, (l, r) => l.Combine(r));
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Properties = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectProperty.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Properties?.Overall, rhs.Properties?.Overall), Noggog.ExceptionExt.Combine(this.Properties?.Specific, rhs.Properties?.Specific));
-                ret.PNAM = this.PNAM.Combine(rhs.PNAM);
+                ret.MarkerColor = this.MarkerColor.Combine(rhs.MarkerColor);
                 ret.ActivateTextOverride = this.ActivateTextOverride.Combine(rhs.ActivateTextOverride);
                 ret.FNAM = this.FNAM.Combine(rhs.FNAM);
                 ret.JNAM = this.JNAM.Combine(rhs.JNAM);
                 ret.Ingredient = this.Ingredient.Combine(rhs.Ingredient);
-                ret.PFHS = this.PFHS.Combine(rhs.PFHS, (l, r) => l.Combine(r));
+                ret.HarvestSound = this.HarvestSound.Combine(rhs.HarvestSound, (l, r) => l.Combine(r));
                 ret.Production = this.Production.Combine(rhs.Production, (l, r) => l.Combine(r));
                 ret.AttachParentSlots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Overall, rhs.AttachParentSlots?.Overall), Noggog.ExceptionExt.Combine(this.AttachParentSlots?.Specific, rhs.AttachParentSlots?.Specific));
                 ret.ObjectTemplates = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ObjectTemplate.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ObjectTemplates?.Overall, rhs.ObjectTemplates?.Overall), Noggog.ExceptionExt.Combine(this.ObjectTemplates?.Specific, rhs.ObjectTemplates?.Specific));
                 ret.ActionKeyword = this.ActionKeyword.Combine(rhs.ActionKeyword);
-                ret.BNAM = this.BNAM.Combine(rhs.BNAM);
-                ret.FMAH = this.FMAH.Combine(rhs.FMAH);
-                ret.FMIH = this.FMIH.Combine(rhs.FMIH);
+                ret.DamageRequiredToHarvest = this.DamageRequiredToHarvest.Combine(rhs.DamageRequiredToHarvest);
+                ret.MaxHarvestCount = this.MaxHarvestCount.Combine(rhs.MaxHarvestCount);
+                ret.MinHarvestCount = this.MinHarvestCount.Combine(rhs.MinHarvestCount);
                 ret.MaxGlobal = this.MaxGlobal.Combine(rhs.MaxGlobal);
                 ret.MinGlobal = this.MinGlobal.Combine(rhs.MinGlobal);
                 ret.Explosion = this.Explosion.Combine(rhs.Explosion);
-                ret.FHLS = this.FHLS.Combine(rhs.FHLS, (l, r) => l.Combine(r));
+                ret.HarvestLoopingSound = this.HarvestLoopingSound.Combine(rhs.HarvestLoopingSound, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1739,29 +1772,30 @@ namespace Mutagen.Bethesda.Starfield
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool DirtinessScale;
             public ObjectPaletteDefaults.TranslationMask? ObjectPaletteDefaults;
+            public Transforms.TranslationMask? Transforms;
             public AComponent.TranslationMask? Components;
             public bool Name;
             public Model.TranslationMask? Model;
             public Destructible.TranslationMask? Destructible;
             public bool Keywords;
             public ObjectProperty.TranslationMask? Properties;
-            public bool PNAM;
+            public bool MarkerColor;
             public bool ActivateTextOverride;
             public bool FNAM;
             public bool JNAM;
             public bool Ingredient;
-            public SoundReference.TranslationMask? PFHS;
+            public SoundReference.TranslationMask? HarvestSound;
             public SeasonalIngredientProduction.TranslationMask? Production;
             public bool AttachParentSlots;
             public ObjectTemplate.TranslationMask? ObjectTemplates;
             public bool ActionKeyword;
-            public bool BNAM;
-            public bool FMAH;
-            public bool FMIH;
+            public bool DamageRequiredToHarvest;
+            public bool MaxHarvestCount;
+            public bool MinHarvestCount;
             public bool MaxGlobal;
             public bool MinGlobal;
             public bool Explosion;
-            public SoundReference.TranslationMask? FHLS;
+            public SoundReference.TranslationMask? HarvestLoopingSound;
             #endregion
 
             #region Ctors
@@ -1773,16 +1807,16 @@ namespace Mutagen.Bethesda.Starfield
                 this.DirtinessScale = defaultOn;
                 this.Name = defaultOn;
                 this.Keywords = defaultOn;
-                this.PNAM = defaultOn;
+                this.MarkerColor = defaultOn;
                 this.ActivateTextOverride = defaultOn;
                 this.FNAM = defaultOn;
                 this.JNAM = defaultOn;
                 this.Ingredient = defaultOn;
                 this.AttachParentSlots = defaultOn;
                 this.ActionKeyword = defaultOn;
-                this.BNAM = defaultOn;
-                this.FMAH = defaultOn;
-                this.FMIH = defaultOn;
+                this.DamageRequiredToHarvest = defaultOn;
+                this.MaxHarvestCount = defaultOn;
+                this.MinHarvestCount = defaultOn;
                 this.MaxGlobal = defaultOn;
                 this.MinGlobal = defaultOn;
                 this.Explosion = defaultOn;
@@ -1797,29 +1831,30 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((DirtinessScale, null));
                 ret.Add((ObjectPaletteDefaults != null ? ObjectPaletteDefaults.OnOverall : DefaultOn, ObjectPaletteDefaults?.GetCrystal()));
+                ret.Add((Transforms != null ? Transforms.OnOverall : DefaultOn, Transforms?.GetCrystal()));
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((Name, null));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
                 ret.Add((Destructible != null ? Destructible.OnOverall : DefaultOn, Destructible?.GetCrystal()));
                 ret.Add((Keywords, null));
                 ret.Add((Properties == null ? DefaultOn : !Properties.GetCrystal().CopyNothing, Properties?.GetCrystal()));
-                ret.Add((PNAM, null));
+                ret.Add((MarkerColor, null));
                 ret.Add((ActivateTextOverride, null));
                 ret.Add((FNAM, null));
                 ret.Add((JNAM, null));
                 ret.Add((Ingredient, null));
-                ret.Add((PFHS != null ? PFHS.OnOverall : DefaultOn, PFHS?.GetCrystal()));
+                ret.Add((HarvestSound != null ? HarvestSound.OnOverall : DefaultOn, HarvestSound?.GetCrystal()));
                 ret.Add((Production != null ? Production.OnOverall : DefaultOn, Production?.GetCrystal()));
                 ret.Add((AttachParentSlots, null));
                 ret.Add((ObjectTemplates == null ? DefaultOn : !ObjectTemplates.GetCrystal().CopyNothing, ObjectTemplates?.GetCrystal()));
                 ret.Add((ActionKeyword, null));
-                ret.Add((BNAM, null));
-                ret.Add((FMAH, null));
-                ret.Add((FMIH, null));
+                ret.Add((DamageRequiredToHarvest, null));
+                ret.Add((MaxHarvestCount, null));
+                ret.Add((MinHarvestCount, null));
                 ret.Add((MaxGlobal, null));
                 ret.Add((MinGlobal, null));
                 ret.Add((Explosion, null));
-                ret.Add((FHLS != null ? FHLS.OnOverall : DefaultOn, FHLS?.GetCrystal()));
+                ret.Add((HarvestLoopingSound != null ? HarvestLoopingSound.OnOverall : DefaultOn, HarvestLoopingSound?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1995,6 +2030,7 @@ namespace Mutagen.Bethesda.Starfield
         new ObjectBounds ObjectBounds { get; set; }
         new Percent DirtinessScale { get; set; }
         new ObjectPaletteDefaults? ObjectPaletteDefaults { get; set; }
+        new Transforms? Transforms { get; set; }
         new ExtendedList<AComponent> Components { get; }
         /// <summary>
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
@@ -2013,23 +2049,23 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new ExtendedList<ObjectProperty>? Properties { get; set; }
-        new MemorySlice<Byte>? PNAM { get; set; }
+        new Color? MarkerColor { get; set; }
         new TranslatedString? ActivateTextOverride { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
         new MemorySlice<Byte>? JNAM { get; set; }
         new IFormLinkNullable<IHarvestTargetGetter> Ingredient { get; set; }
-        new SoundReference? PFHS { get; set; }
+        new SoundReference? HarvestSound { get; set; }
         new SeasonalIngredientProduction? Production { get; set; }
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; set; }
         new ExtendedList<ObjectTemplate<AObjectModification.NoneProperty>>? ObjectTemplates { get; set; }
         new IFormLinkNullable<IKeywordGetter> ActionKeyword { get; set; }
-        new Single? BNAM { get; set; }
-        new Single? FMAH { get; set; }
-        new Single? FMIH { get; set; }
+        new Single DamageRequiredToHarvest { get; set; }
+        new Single MaxHarvestCount { get; set; }
+        new Single MinHarvestCount { get; set; }
         new IFormLinkNullable<IGlobalGetter> MaxGlobal { get; set; }
         new IFormLinkNullable<IGlobalGetter> MinGlobal { get; set; }
         new IFormLinkNullable<IExplosionGetter> Explosion { get; set; }
-        new SoundReference? FHLS { get; set; }
+        new SoundReference? HarvestLoopingSound { get; set; }
     }
 
     public partial interface IFloraInternal :
@@ -2076,6 +2112,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         Percent DirtinessScale { get; }
         IObjectPaletteDefaultsGetter? ObjectPaletteDefaults { get; }
+        ITransformsGetter? Transforms { get; }
         IReadOnlyList<IAComponentGetter> Components { get; }
         #region Name
         /// <summary>
@@ -2102,23 +2139,23 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         #endregion
         IReadOnlyList<IObjectPropertyGetter>? Properties { get; }
-        ReadOnlyMemorySlice<Byte>? PNAM { get; }
+        Color? MarkerColor { get; }
         ITranslatedStringGetter? ActivateTextOverride { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
         ReadOnlyMemorySlice<Byte>? JNAM { get; }
         IFormLinkNullableGetter<IHarvestTargetGetter> Ingredient { get; }
-        ISoundReferenceGetter? PFHS { get; }
+        ISoundReferenceGetter? HarvestSound { get; }
         ISeasonalIngredientProductionGetter? Production { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; }
         IReadOnlyList<IObjectTemplateGetter<AObjectModification.NoneProperty>>? ObjectTemplates { get; }
         IFormLinkNullableGetter<IKeywordGetter> ActionKeyword { get; }
-        Single? BNAM { get; }
-        Single? FMAH { get; }
-        Single? FMIH { get; }
+        Single DamageRequiredToHarvest { get; }
+        Single MaxHarvestCount { get; }
+        Single MinHarvestCount { get; }
         IFormLinkNullableGetter<IGlobalGetter> MaxGlobal { get; }
         IFormLinkNullableGetter<IGlobalGetter> MinGlobal { get; }
         IFormLinkNullableGetter<IExplosionGetter> Explosion { get; }
-        ISoundReferenceGetter? FHLS { get; }
+        ISoundReferenceGetter? HarvestLoopingSound { get; }
 
     }
 
@@ -2299,29 +2336,30 @@ namespace Mutagen.Bethesda.Starfield
         ObjectBounds = 8,
         DirtinessScale = 9,
         ObjectPaletteDefaults = 10,
-        Components = 11,
-        Name = 12,
-        Model = 13,
-        Destructible = 14,
-        Keywords = 15,
-        Properties = 16,
-        PNAM = 17,
-        ActivateTextOverride = 18,
-        FNAM = 19,
-        JNAM = 20,
-        Ingredient = 21,
-        PFHS = 22,
-        Production = 23,
-        AttachParentSlots = 24,
-        ObjectTemplates = 25,
-        ActionKeyword = 26,
-        BNAM = 27,
-        FMAH = 28,
-        FMIH = 29,
-        MaxGlobal = 30,
-        MinGlobal = 31,
-        Explosion = 32,
-        FHLS = 33,
+        Transforms = 11,
+        Components = 12,
+        Name = 13,
+        Model = 14,
+        Destructible = 15,
+        Keywords = 16,
+        Properties = 17,
+        MarkerColor = 18,
+        ActivateTextOverride = 19,
+        FNAM = 20,
+        JNAM = 21,
+        Ingredient = 22,
+        HarvestSound = 23,
+        Production = 24,
+        AttachParentSlots = 25,
+        ObjectTemplates = 26,
+        ActionKeyword = 27,
+        DamageRequiredToHarvest = 28,
+        MaxHarvestCount = 29,
+        MinHarvestCount = 30,
+        MaxGlobal = 31,
+        MinGlobal = 32,
+        Explosion = 33,
+        HarvestLoopingSound = 34,
     }
     #endregion
 
@@ -2332,9 +2370,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 27;
+        public const ushort AdditionalFieldCount = 28;
 
-        public const ushort FieldCount = 34;
+        public const ushort FieldCount = 35;
 
         public static readonly Type MaskType = typeof(Flora.Mask<>);
 
@@ -2372,6 +2410,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
                 RecordTypes.OPDS,
+                RecordTypes.PTT2,
                 RecordTypes.BFCB,
                 RecordTypes.BFCE,
                 RecordTypes.FULL,
@@ -2457,29 +2496,30 @@ namespace Mutagen.Bethesda.Starfield
             item.ObjectBounds.Clear();
             item.DirtinessScale = default(Percent);
             item.ObjectPaletteDefaults = null;
+            item.Transforms = null;
             item.Components.Clear();
             item.Name = default;
             item.Model = null;
             item.Destructible = null;
             item.Keywords = null;
             item.Properties = null;
-            item.PNAM = default;
+            item.MarkerColor = default;
             item.ActivateTextOverride = default;
             item.FNAM = default;
             item.JNAM = default;
             item.Ingredient.Clear();
-            item.PFHS = null;
+            item.HarvestSound = null;
             item.Production = null;
             item.AttachParentSlots = null;
             item.ObjectTemplates = null;
             item.ActionKeyword.Clear();
-            item.BNAM = default;
-            item.FMAH = default;
-            item.FMIH = default;
+            item.DamageRequiredToHarvest = default(Single);
+            item.MaxHarvestCount = default(Single);
+            item.MinHarvestCount = default(Single);
             item.MaxGlobal.Clear();
             item.MinGlobal.Clear();
             item.Explosion.Clear();
-            item.FHLS = null;
+            item.HarvestLoopingSound = null;
             base.Clear(item);
         }
         
@@ -2498,20 +2538,21 @@ namespace Mutagen.Bethesda.Starfield
         {
             base.RemapLinks(obj, mapping);
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Transforms?.RemapLinks(mapping);
             obj.Components.RemapLinks(mapping);
             obj.Model?.RemapLinks(mapping);
             obj.Destructible?.RemapLinks(mapping);
             obj.Keywords?.RemapLinks(mapping);
             obj.Properties?.RemapLinks(mapping);
             obj.Ingredient.Relink(mapping);
-            obj.PFHS?.RemapLinks(mapping);
+            obj.HarvestSound?.RemapLinks(mapping);
             obj.AttachParentSlots?.RemapLinks(mapping);
             obj.ObjectTemplates?.RemapLinks(mapping);
             obj.ActionKeyword.Relink(mapping);
             obj.MaxGlobal.Relink(mapping);
             obj.MinGlobal.Relink(mapping);
             obj.Explosion.Relink(mapping);
-            obj.FHLS?.RemapLinks(mapping);
+            obj.HarvestLoopingSound?.RemapLinks(mapping);
         }
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IFlora obj)
@@ -2631,6 +2672,11 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.ObjectPaletteDefaults,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
+            ret.Transforms = EqualsMaskHelper.EqualsHelper(
+                item.Transforms,
+                rhs.Transforms,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Components = item.Components.CollectionEqualsHelper(
                 rhs.Components,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -2654,14 +2700,14 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Properties,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.PNAM = MemorySliceExt.SequenceEqual(item.PNAM, rhs.PNAM);
+            ret.MarkerColor = item.MarkerColor.ColorOnlyEquals(rhs.MarkerColor);
             ret.ActivateTextOverride = object.Equals(item.ActivateTextOverride, rhs.ActivateTextOverride);
             ret.FNAM = MemorySliceExt.SequenceEqual(item.FNAM, rhs.FNAM);
             ret.JNAM = MemorySliceExt.SequenceEqual(item.JNAM, rhs.JNAM);
             ret.Ingredient = item.Ingredient.Equals(rhs.Ingredient);
-            ret.PFHS = EqualsMaskHelper.EqualsHelper(
-                item.PFHS,
-                rhs.PFHS,
+            ret.HarvestSound = EqualsMaskHelper.EqualsHelper(
+                item.HarvestSound,
+                rhs.HarvestSound,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Production = EqualsMaskHelper.EqualsHelper(
@@ -2678,15 +2724,15 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.ActionKeyword = item.ActionKeyword.Equals(rhs.ActionKeyword);
-            ret.BNAM = item.BNAM.EqualsWithin(rhs.BNAM);
-            ret.FMAH = item.FMAH.EqualsWithin(rhs.FMAH);
-            ret.FMIH = item.FMIH.EqualsWithin(rhs.FMIH);
+            ret.DamageRequiredToHarvest = item.DamageRequiredToHarvest.EqualsWithin(rhs.DamageRequiredToHarvest);
+            ret.MaxHarvestCount = item.MaxHarvestCount.EqualsWithin(rhs.MaxHarvestCount);
+            ret.MinHarvestCount = item.MinHarvestCount.EqualsWithin(rhs.MinHarvestCount);
             ret.MaxGlobal = item.MaxGlobal.Equals(rhs.MaxGlobal);
             ret.MinGlobal = item.MinGlobal.Equals(rhs.MinGlobal);
             ret.Explosion = item.Explosion.Equals(rhs.Explosion);
-            ret.FHLS = EqualsMaskHelper.EqualsHelper(
-                item.FHLS,
-                rhs.FHLS,
+            ret.HarvestLoopingSound = EqualsMaskHelper.EqualsHelper(
+                item.HarvestLoopingSound,
+                rhs.HarvestLoopingSound,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             base.FillEqualsMask(item, rhs, ret, include);
@@ -2756,6 +2802,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 ObjectPaletteDefaultsItem?.Print(sb, "ObjectPaletteDefaults");
             }
+            if ((printMask?.Transforms?.Overall ?? true)
+                && item.Transforms is {} TransformsItem)
+            {
+                TransformsItem?.Print(sb, "Transforms");
+            }
             if (printMask?.Components?.Overall ?? true)
             {
                 sb.AppendLine("Components =>");
@@ -2815,10 +2866,10 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.PNAM ?? true)
-                && item.PNAM is {} PNAMItem)
+            if ((printMask?.MarkerColor ?? true)
+                && item.MarkerColor is {} MarkerColorItem)
             {
-                sb.AppendLine($"PNAM => {SpanExt.ToHexString(PNAMItem)}");
+                sb.AppendItem(MarkerColorItem, "MarkerColor");
             }
             if ((printMask?.ActivateTextOverride ?? true)
                 && item.ActivateTextOverride is {} ActivateTextOverrideItem)
@@ -2839,10 +2890,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Ingredient.FormKeyNullable, "Ingredient");
             }
-            if ((printMask?.PFHS?.Overall ?? true)
-                && item.PFHS is {} PFHSItem)
+            if ((printMask?.HarvestSound?.Overall ?? true)
+                && item.HarvestSound is {} HarvestSoundItem)
             {
-                PFHSItem?.Print(sb, "PFHS");
+                HarvestSoundItem?.Print(sb, "HarvestSound");
             }
             if ((printMask?.Production?.Overall ?? true)
                 && item.Production is {} ProductionItem)
@@ -2883,20 +2934,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.ActionKeyword.FormKeyNullable, "ActionKeyword");
             }
-            if ((printMask?.BNAM ?? true)
-                && item.BNAM is {} BNAMItem)
+            if (printMask?.DamageRequiredToHarvest ?? true)
             {
-                sb.AppendItem(BNAMItem, "BNAM");
+                sb.AppendItem(item.DamageRequiredToHarvest, "DamageRequiredToHarvest");
             }
-            if ((printMask?.FMAH ?? true)
-                && item.FMAH is {} FMAHItem)
+            if (printMask?.MaxHarvestCount ?? true)
             {
-                sb.AppendItem(FMAHItem, "FMAH");
+                sb.AppendItem(item.MaxHarvestCount, "MaxHarvestCount");
             }
-            if ((printMask?.FMIH ?? true)
-                && item.FMIH is {} FMIHItem)
+            if (printMask?.MinHarvestCount ?? true)
             {
-                sb.AppendItem(FMIHItem, "FMIH");
+                sb.AppendItem(item.MinHarvestCount, "MinHarvestCount");
             }
             if (printMask?.MaxGlobal ?? true)
             {
@@ -2910,10 +2958,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Explosion.FormKeyNullable, "Explosion");
             }
-            if ((printMask?.FHLS?.Overall ?? true)
-                && item.FHLS is {} FHLSItem)
+            if ((printMask?.HarvestLoopingSound?.Overall ?? true)
+                && item.HarvestLoopingSound is {} HarvestLoopingSoundItem)
             {
-                FHLSItem?.Print(sb, "FHLS");
+                HarvestLoopingSoundItem?.Print(sb, "HarvestLoopingSound");
             }
         }
         
@@ -2993,6 +3041,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isObjectPaletteDefaultsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.Transforms) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Transforms, rhs.Transforms, out var lhsTransforms, out var rhsTransforms, out var isTransformsEqual))
+                {
+                    if (!((TransformsCommon)((ITransformsGetter)lhsTransforms).CommonInstance()!).Equals(lhsTransforms, rhsTransforms, equalsMask?.GetSubCrystal((int)Flora_FieldIndex.Transforms))) return false;
+                }
+                else if (!isTransformsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.Components) ?? true))
             {
                 if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Flora_FieldIndex.Components)))) return false;
@@ -3025,9 +3081,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Properties.SequenceEqualNullable(rhs.Properties, (l, r) => ((ObjectPropertyCommon)((IObjectPropertyGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Flora_FieldIndex.Properties)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.PNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.MarkerColor) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.PNAM, rhs.PNAM)) return false;
+                if (!lhs.MarkerColor.ColorOnlyEquals(rhs.MarkerColor)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.ActivateTextOverride) ?? true))
             {
@@ -3045,13 +3101,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Ingredient.Equals(rhs.Ingredient)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.PFHS) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.HarvestSound) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.PFHS, rhs.PFHS, out var lhsPFHS, out var rhsPFHS, out var isPFHSEqual))
+                if (EqualsMaskHelper.RefEquality(lhs.HarvestSound, rhs.HarvestSound, out var lhsHarvestSound, out var rhsHarvestSound, out var isHarvestSoundEqual))
                 {
-                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsPFHS).CommonInstance()!).Equals(lhsPFHS, rhsPFHS, equalsMask?.GetSubCrystal((int)Flora_FieldIndex.PFHS))) return false;
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsHarvestSound).CommonInstance()!).Equals(lhsHarvestSound, rhsHarvestSound, equalsMask?.GetSubCrystal((int)Flora_FieldIndex.HarvestSound))) return false;
                 }
-                else if (!isPFHSEqual) return false;
+                else if (!isHarvestSoundEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.Production) ?? true))
             {
@@ -3073,17 +3129,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.ActionKeyword.Equals(rhs.ActionKeyword)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.BNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.DamageRequiredToHarvest) ?? true))
             {
-                if (!lhs.BNAM.EqualsWithin(rhs.BNAM)) return false;
+                if (!lhs.DamageRequiredToHarvest.EqualsWithin(rhs.DamageRequiredToHarvest)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.FMAH) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.MaxHarvestCount) ?? true))
             {
-                if (!lhs.FMAH.EqualsWithin(rhs.FMAH)) return false;
+                if (!lhs.MaxHarvestCount.EqualsWithin(rhs.MaxHarvestCount)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.FMIH) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.MinHarvestCount) ?? true))
             {
-                if (!lhs.FMIH.EqualsWithin(rhs.FMIH)) return false;
+                if (!lhs.MinHarvestCount.EqualsWithin(rhs.MinHarvestCount)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.MaxGlobal) ?? true))
             {
@@ -3097,13 +3153,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Explosion.Equals(rhs.Explosion)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.FHLS) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Flora_FieldIndex.HarvestLoopingSound) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.FHLS, rhs.FHLS, out var lhsFHLS, out var rhsFHLS, out var isFHLSEqual))
+                if (EqualsMaskHelper.RefEquality(lhs.HarvestLoopingSound, rhs.HarvestLoopingSound, out var lhsHarvestLoopingSound, out var rhsHarvestLoopingSound, out var isHarvestLoopingSoundEqual))
                 {
-                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsFHLS).CommonInstance()!).Equals(lhsFHLS, rhsFHLS, equalsMask?.GetSubCrystal((int)Flora_FieldIndex.FHLS))) return false;
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsHarvestLoopingSound).CommonInstance()!).Equals(lhsHarvestLoopingSound, rhsHarvestLoopingSound, equalsMask?.GetSubCrystal((int)Flora_FieldIndex.HarvestLoopingSound))) return false;
                 }
-                else if (!isFHLSEqual) return false;
+                else if (!isHarvestLoopingSoundEqual) return false;
             }
             return true;
         }
@@ -3143,6 +3199,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(ObjectPaletteDefaultsitem);
             }
+            if (item.Transforms is {} Transformsitem)
+            {
+                hash.Add(Transformsitem);
+            }
             hash.Add(item.Components);
             if (item.Name is {} Nameitem)
             {
@@ -3158,9 +3218,9 @@ namespace Mutagen.Bethesda.Starfield
             }
             hash.Add(item.Keywords);
             hash.Add(item.Properties);
-            if (item.PNAM is {} PNAMItem)
+            if (item.MarkerColor is {} MarkerColoritem)
             {
-                hash.Add(PNAMItem);
+                hash.Add(MarkerColoritem);
             }
             if (item.ActivateTextOverride is {} ActivateTextOverrideitem)
             {
@@ -3175,9 +3235,9 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(JNAMItem);
             }
             hash.Add(item.Ingredient);
-            if (item.PFHS is {} PFHSitem)
+            if (item.HarvestSound is {} HarvestSounditem)
             {
-                hash.Add(PFHSitem);
+                hash.Add(HarvestSounditem);
             }
             if (item.Production is {} Productionitem)
             {
@@ -3186,24 +3246,15 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.AttachParentSlots);
             hash.Add(item.ObjectTemplates);
             hash.Add(item.ActionKeyword);
-            if (item.BNAM is {} BNAMitem)
-            {
-                hash.Add(BNAMitem);
-            }
-            if (item.FMAH is {} FMAHitem)
-            {
-                hash.Add(FMAHitem);
-            }
-            if (item.FMIH is {} FMIHitem)
-            {
-                hash.Add(FMIHitem);
-            }
+            hash.Add(item.DamageRequiredToHarvest);
+            hash.Add(item.MaxHarvestCount);
+            hash.Add(item.MinHarvestCount);
             hash.Add(item.MaxGlobal);
             hash.Add(item.MinGlobal);
             hash.Add(item.Explosion);
-            if (item.FHLS is {} FHLSitem)
+            if (item.HarvestLoopingSound is {} HarvestLoopingSounditem)
             {
-                hash.Add(FHLSitem);
+                hash.Add(HarvestLoopingSounditem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -3237,6 +3288,13 @@ namespace Mutagen.Bethesda.Starfield
             if (obj.VirtualMachineAdapter is IFormLinkContainerGetter VirtualMachineAdapterlinkCont)
             {
                 foreach (var item in VirtualMachineAdapterlinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Transforms is {} TransformsItems)
+            {
+                foreach (var item in TransformsItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -3278,9 +3336,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return IngredientInfo;
             }
-            if (obj.PFHS is {} PFHSItems)
+            if (obj.HarvestSound is {} HarvestSoundItems)
             {
-                foreach (var item in PFHSItems.EnumerateFormLinks())
+                foreach (var item in HarvestSoundItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -3315,9 +3373,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return ExplosionInfo;
             }
-            if (obj.FHLS is {} FHLSItems)
+            if (obj.HarvestLoopingSound is {} HarvestLoopingSoundItems)
             {
-                foreach (var item in FHLSItems.EnumerateFormLinks())
+                foreach (var item in HarvestLoopingSoundItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -3502,6 +3560,32 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Transforms) ?? true))
+            {
+                errorMask?.PushIndex((int)Flora_FieldIndex.Transforms);
+                try
+                {
+                    if(rhs.Transforms is {} rhsTransforms)
+                    {
+                        item.Transforms = rhsTransforms.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Flora_FieldIndex.Transforms));
+                    }
+                    else
+                    {
+                        item.Transforms = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.Components) ?? true))
             {
                 errorMask?.PushIndex((int)Flora_FieldIndex.Components);
@@ -3641,16 +3725,9 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.PNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.MarkerColor) ?? true))
             {
-                if(rhs.PNAM is {} PNAMrhs)
-                {
-                    item.PNAM = PNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.PNAM = default;
-                }
+                item.MarkerColor = rhs.MarkerColor;
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.ActivateTextOverride) ?? true))
             {
@@ -3682,20 +3759,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Ingredient.SetTo(rhs.Ingredient.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.PFHS) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.HarvestSound) ?? true))
             {
-                errorMask?.PushIndex((int)Flora_FieldIndex.PFHS);
+                errorMask?.PushIndex((int)Flora_FieldIndex.HarvestSound);
                 try
                 {
-                    if(rhs.PFHS is {} rhsPFHS)
+                    if(rhs.HarvestSound is {} rhsHarvestSound)
                     {
-                        item.PFHS = rhsPFHS.DeepCopy(
+                        item.HarvestSound = rhsHarvestSound.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Flora_FieldIndex.PFHS));
+                            copyMask?.GetSubCrystal((int)Flora_FieldIndex.HarvestSound));
                     }
                     else
                     {
-                        item.PFHS = default;
+                        item.HarvestSound = default;
                     }
                 }
                 catch (Exception ex)
@@ -3797,17 +3874,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ActionKeyword.SetTo(rhs.ActionKeyword.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.BNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.DamageRequiredToHarvest) ?? true))
             {
-                item.BNAM = rhs.BNAM;
+                item.DamageRequiredToHarvest = rhs.DamageRequiredToHarvest;
             }
-            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.FMAH) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.MaxHarvestCount) ?? true))
             {
-                item.FMAH = rhs.FMAH;
+                item.MaxHarvestCount = rhs.MaxHarvestCount;
             }
-            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.FMIH) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.MinHarvestCount) ?? true))
             {
-                item.FMIH = rhs.FMIH;
+                item.MinHarvestCount = rhs.MinHarvestCount;
             }
             if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.MaxGlobal) ?? true))
             {
@@ -3821,20 +3898,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Explosion.SetTo(rhs.Explosion.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.FHLS) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Flora_FieldIndex.HarvestLoopingSound) ?? true))
             {
-                errorMask?.PushIndex((int)Flora_FieldIndex.FHLS);
+                errorMask?.PushIndex((int)Flora_FieldIndex.HarvestLoopingSound);
                 try
                 {
-                    if(rhs.FHLS is {} rhsFHLS)
+                    if(rhs.HarvestLoopingSound is {} rhsHarvestLoopingSound)
                     {
-                        item.FHLS = rhsFHLS.DeepCopy(
+                        item.HarvestLoopingSound = rhsHarvestLoopingSound.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Flora_FieldIndex.FHLS));
+                            copyMask?.GetSubCrystal((int)Flora_FieldIndex.HarvestLoopingSound));
                     }
                     else
                     {
-                        item.FHLS = default;
+                        item.HarvestLoopingSound = default;
                     }
                 }
                 catch (Exception ex)
@@ -4040,6 +4117,13 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     translationParams: translationParams);
             }
+            if (item.Transforms is {} TransformsItem)
+            {
+                ((TransformsBinaryWriteTranslation)((IBinaryItem)TransformsItem).BinaryWriteTranslator).Write(
+                    item: TransformsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
                 writer: writer,
                 items: item.Components,
@@ -4095,9 +4179,9 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            ColorBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.PNAM,
+                item: item.MarkerColor,
                 header: translationParams.ConvertToCustom(RecordTypes.PNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -4117,12 +4201,12 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.Ingredient,
                 header: translationParams.ConvertToCustom(RecordTypes.PFIG));
-            if (item.PFHS is {} PFHSItem)
+            if (item.HarvestSound is {} HarvestSoundItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.PFHS))
                 {
-                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)PFHSItem).BinaryWriteTranslator).Write(
-                        item: PFHSItem,
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)HarvestSoundItem).BinaryWriteTranslator).Write(
+                        item: HarvestSoundItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -4162,17 +4246,17 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.ActionKeyword,
                 header: translationParams.ConvertToCustom(RecordTypes.ANAM));
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.BNAM,
+                item: item.DamageRequiredToHarvest,
                 header: translationParams.ConvertToCustom(RecordTypes.BNAM));
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.FMAH,
+                item: item.MaxHarvestCount,
                 header: translationParams.ConvertToCustom(RecordTypes.FMAH));
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.FMIH,
+                item: item.MinHarvestCount,
                 header: translationParams.ConvertToCustom(RecordTypes.FMIH));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -4186,12 +4270,12 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.Explosion,
                 header: translationParams.ConvertToCustom(RecordTypes.FLXP));
-            if (item.FHLS is {} FHLSItem)
+            if (item.HarvestLoopingSound is {} HarvestLoopingSoundItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.FHLS))
                 {
-                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)FHLSItem).BinaryWriteTranslator).Write(
-                        item: FHLSItem,
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)HarvestLoopingSoundItem).BinaryWriteTranslator).Write(
+                        item: HarvestLoopingSoundItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -4289,6 +4373,11 @@ namespace Mutagen.Bethesda.Starfield
                     item.ObjectPaletteDefaults = Mutagen.Bethesda.Starfield.ObjectPaletteDefaults.CreateFromBinary(frame: frame);
                     return (int)Flora_FieldIndex.ObjectPaletteDefaults;
                 }
+                case RecordTypeInts.PTT2:
+                {
+                    item.Transforms = Mutagen.Bethesda.Starfield.Transforms.CreateFromBinary(frame: frame);
+                    return (int)Flora_FieldIndex.Transforms;
+                }
                 case RecordTypeInts.BFCB:
                 {
                     item.Components.SetTo(
@@ -4359,8 +4448,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Flora_FieldIndex.PNAM;
+                    item.MarkerColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    return (int)Flora_FieldIndex.MarkerColor;
                 }
                 case RecordTypeInts.ATTX:
                 {
@@ -4394,8 +4483,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.PFHS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.PFHS = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
-                    return (int)Flora_FieldIndex.PFHS;
+                    item.HarvestSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)Flora_FieldIndex.HarvestSound;
                 }
                 case RecordTypeInts.PFPC:
                 {
@@ -4439,20 +4528,20 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BNAM = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Flora_FieldIndex.BNAM;
+                    item.DamageRequiredToHarvest = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Flora_FieldIndex.DamageRequiredToHarvest;
                 }
                 case RecordTypeInts.FMAH:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FMAH = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Flora_FieldIndex.FMAH;
+                    item.MaxHarvestCount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Flora_FieldIndex.MaxHarvestCount;
                 }
                 case RecordTypeInts.FMIH:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FMIH = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Flora_FieldIndex.FMIH;
+                    item.MinHarvestCount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Flora_FieldIndex.MinHarvestCount;
                 }
                 case RecordTypeInts.FMAG:
                 {
@@ -4475,8 +4564,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FHLS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.FHLS = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
-                    return (int)Flora_FieldIndex.FHLS;
+                    item.HarvestLoopingSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)Flora_FieldIndex.HarvestLoopingSound;
                 }
                 case RecordTypeInts.XXXX:
                 {
@@ -4562,6 +4651,10 @@ namespace Mutagen.Bethesda.Starfield
         private RangeInt32? _ObjectPaletteDefaultsLocation;
         public IObjectPaletteDefaultsGetter? ObjectPaletteDefaults => _ObjectPaletteDefaultsLocation.HasValue ? ObjectPaletteDefaultsBinaryOverlay.ObjectPaletteDefaultsFactory(_recordData.Slice(_ObjectPaletteDefaultsLocation!.Value.Min), _package) : default;
         #endregion
+        #region Transforms
+        private RangeInt32? _TransformsLocation;
+        public ITransformsGetter? Transforms => _TransformsLocation.HasValue ? TransformsBinaryOverlay.TransformsFactory(_recordData.Slice(_TransformsLocation!.Value.Min), _package) : default;
+        #endregion
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         #region Name
         private int? _NameLocation;
@@ -4582,9 +4675,9 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         public IReadOnlyList<IObjectPropertyGetter>? Properties { get; private set; }
-        #region PNAM
-        private int? _PNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? PNAM => _PNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region MarkerColor
+        private int? _MarkerColorLocation;
+        public Color? MarkerColor => _MarkerColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MarkerColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
         #endregion
         #region ActivateTextOverride
         private int? _ActivateTextOverrideLocation;
@@ -4602,7 +4695,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _IngredientLocation;
         public IFormLinkNullableGetter<IHarvestTargetGetter> Ingredient => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IHarvestTargetGetter>(_package, _recordData, _IngredientLocation);
         #endregion
-        public ISoundReferenceGetter? PFHS { get; private set; }
+        public ISoundReferenceGetter? HarvestSound { get; private set; }
         #region Production
         private RangeInt32? _ProductionLocation;
         public ISeasonalIngredientProductionGetter? Production => _ProductionLocation.HasValue ? SeasonalIngredientProductionBinaryOverlay.SeasonalIngredientProductionFactory(_recordData.Slice(_ProductionLocation!.Value.Min), _package) : default;
@@ -4613,17 +4706,17 @@ namespace Mutagen.Bethesda.Starfield
         private int? _ActionKeywordLocation;
         public IFormLinkNullableGetter<IKeywordGetter> ActionKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _ActionKeywordLocation);
         #endregion
-        #region BNAM
-        private int? _BNAMLocation;
-        public Single? BNAM => _BNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _BNAMLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region DamageRequiredToHarvest
+        private int? _DamageRequiredToHarvestLocation;
+        public Single DamageRequiredToHarvest => _DamageRequiredToHarvestLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DamageRequiredToHarvestLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
-        #region FMAH
-        private int? _FMAHLocation;
-        public Single? FMAH => _FMAHLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FMAHLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region MaxHarvestCount
+        private int? _MaxHarvestCountLocation;
+        public Single MaxHarvestCount => _MaxHarvestCountLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MaxHarvestCountLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
-        #region FMIH
-        private int? _FMIHLocation;
-        public Single? FMIH => _FMIHLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FMIHLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region MinHarvestCount
+        private int? _MinHarvestCountLocation;
+        public Single MinHarvestCount => _MinHarvestCountLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MinHarvestCountLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
         #region MaxGlobal
         private int? _MaxGlobalLocation;
@@ -4637,7 +4730,7 @@ namespace Mutagen.Bethesda.Starfield
         private int? _ExplosionLocation;
         public IFormLinkNullableGetter<IExplosionGetter> Explosion => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IExplosionGetter>(_package, _recordData, _ExplosionLocation);
         #endregion
-        public ISoundReferenceGetter? FHLS { get; private set; }
+        public ISoundReferenceGetter? HarvestLoopingSound { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -4732,6 +4825,11 @@ namespace Mutagen.Bethesda.Starfield
                     _ObjectPaletteDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Flora_FieldIndex.ObjectPaletteDefaults;
                 }
+                case RecordTypeInts.PTT2:
+                {
+                    _TransformsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Flora_FieldIndex.Transforms;
+                }
                 case RecordTypeInts.BFCB:
                 {
                     this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
@@ -4796,8 +4894,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _PNAMLocation = (stream.Position - offset);
-                    return (int)Flora_FieldIndex.PNAM;
+                    _MarkerColorLocation = (stream.Position - offset);
+                    return (int)Flora_FieldIndex.MarkerColor;
                 }
                 case RecordTypeInts.ATTX:
                 {
@@ -4822,11 +4920,11 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.PFHS:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
-                    this.PFHS = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                    this.HarvestSound = SoundReferenceBinaryOverlay.SoundReferenceFactory(
                         stream: stream,
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());
-                    return (int)Flora_FieldIndex.PFHS;
+                    return (int)Flora_FieldIndex.HarvestSound;
                 }
                 case RecordTypeInts.PFPC:
                 {
@@ -4868,18 +4966,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    _BNAMLocation = (stream.Position - offset);
-                    return (int)Flora_FieldIndex.BNAM;
+                    _DamageRequiredToHarvestLocation = (stream.Position - offset);
+                    return (int)Flora_FieldIndex.DamageRequiredToHarvest;
                 }
                 case RecordTypeInts.FMAH:
                 {
-                    _FMAHLocation = (stream.Position - offset);
-                    return (int)Flora_FieldIndex.FMAH;
+                    _MaxHarvestCountLocation = (stream.Position - offset);
+                    return (int)Flora_FieldIndex.MaxHarvestCount;
                 }
                 case RecordTypeInts.FMIH:
                 {
-                    _FMIHLocation = (stream.Position - offset);
-                    return (int)Flora_FieldIndex.FMIH;
+                    _MinHarvestCountLocation = (stream.Position - offset);
+                    return (int)Flora_FieldIndex.MinHarvestCount;
                 }
                 case RecordTypeInts.FMAG:
                 {
@@ -4899,11 +4997,11 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FHLS:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
-                    this.FHLS = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                    this.HarvestLoopingSound = SoundReferenceBinaryOverlay.SoundReferenceFactory(
                         stream: stream,
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());
-                    return (int)Flora_FieldIndex.FHLS;
+                    return (int)Flora_FieldIndex.HarvestLoopingSound;
                 }
                 case RecordTypeInts.XXXX:
                 {

@@ -9,10 +9,10 @@
       <Enum name="Flags" recordType="DATA" enumName="Faction.FactionFlag" byteLength="4" nullable="False" />
       <FormLink name="SharedCrimeFactionList" recordType="CRGR" refName="FormList" />
       <RefDirect name="CrimeValues" refName="CrimeValues" />
+      <RefList name="Prisons" refName="FactionPrisons" recordType="PRIS"  />
+      <RefList name="Ranks" refName="Rank" />
       <FormLink name="VendorBuySellList" recordType="VEND" refName="FormList" />
       <FormLink name="MerchantContainer" recordType="VENC" refName="PlacedObject" />
-      <ByteArray name="PRIS" recordType="PRIS" unknown="true" />
-      <RefList name="Ranks" refName="Rank" />
       <RefDirect name="VendorValues" refName="VendorValues" />
       <RefDirect name="VendorLocation" refName="LocationTargetRadius" recordType="PLVD" />
       <RefList name="Conditions" refName="Condition" counterRecType="CITC" />
@@ -26,6 +26,15 @@
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IRelatable</LinkInterface>
     <LinkInterface>IAliasVoiceType</LinkInterface>
+  </Object>
+  <Object name="FactionPrisons" objType="Subrecord" >
+    <Fields>
+      <FormLink name="PrisonDoorMarker" refName="PlacedObject" />
+      <FormLink name="PrisonShipLandingMarker" refName="PlacedObject" />
+      <FormLink name="CargoContraband" refName="PlacedObject" />
+      <FormLink name="InventoryContraband" refName="PlacedObject" />
+      <FormLink name="CompanionWaitMarker" refName="PlacedObject" />
+    </Fields>
   </Object>
   <Object name="CrimeValues" objType="Subrecord" recordType="CRVA">
     <Fields>

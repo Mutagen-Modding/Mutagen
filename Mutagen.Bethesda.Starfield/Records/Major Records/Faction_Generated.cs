@@ -156,6 +156,34 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ICrimeValuesGetter? IFactionGetter.CrimeValues => this.CrimeValues;
         #endregion
+        #region Prisons
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<FactionPrisons>? _Prisons;
+        public ExtendedList<FactionPrisons>? Prisons
+        {
+            get => this._Prisons;
+            set => this._Prisons = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFactionPrisonsGetter>? IFactionGetter.Prisons => _Prisons;
+        #endregion
+
+        #endregion
+        #region Ranks
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Rank> _Ranks = new ExtendedList<Rank>();
+        public ExtendedList<Rank> Ranks
+        {
+            get => this._Ranks;
+            init => this._Ranks = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IRankGetter> IFactionGetter.Ranks => _Ranks;
+        #endregion
+
+        #endregion
         #region VendorBuySellList
         private readonly IFormLinkNullable<IFormListGetter> _VendorBuySellList = new FormLinkNullable<IFormListGetter>();
         public IFormLinkNullable<IFormListGetter> VendorBuySellList
@@ -175,31 +203,6 @@ namespace Mutagen.Bethesda.Starfield
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.MerchantContainer => this.MerchantContainer;
-        #endregion
-        #region PRIS
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _PRIS;
-        public MemorySlice<Byte>? PRIS
-        {
-            get => this._PRIS;
-            set => this._PRIS = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IFactionGetter.PRIS => this.PRIS;
-        #endregion
-        #region Ranks
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Rank> _Ranks = new ExtendedList<Rank>();
-        public ExtendedList<Rank> Ranks
-        {
-            get => this._Ranks;
-            init => this._Ranks = value;
-        }
-        #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IRankGetter> IFactionGetter.Ranks => _Ranks;
-        #endregion
-
         #endregion
         #region VendorValues
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -295,10 +298,10 @@ namespace Mutagen.Bethesda.Starfield
                 this.Flags = initialValue;
                 this.SharedCrimeFactionList = initialValue;
                 this.CrimeValues = new MaskItem<TItem, CrimeValues.Mask<TItem>?>(initialValue, new CrimeValues.Mask<TItem>(initialValue));
+                this.Prisons = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FactionPrisons.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FactionPrisons.Mask<TItem>?>>());
+                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>());
                 this.VendorBuySellList = initialValue;
                 this.MerchantContainer = initialValue;
-                this.PRIS = initialValue;
-                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>());
                 this.VendorValues = new MaskItem<TItem, VendorValues.Mask<TItem>?>(initialValue, new VendorValues.Mask<TItem>(initialValue));
                 this.VendorLocation = new MaskItem<TItem, LocationTargetRadius.Mask<TItem>?>(initialValue, new LocationTargetRadius.Mask<TItem>(initialValue));
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
@@ -322,10 +325,10 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Flags,
                 TItem SharedCrimeFactionList,
                 TItem CrimeValues,
+                TItem Prisons,
+                TItem Ranks,
                 TItem VendorBuySellList,
                 TItem MerchantContainer,
-                TItem PRIS,
-                TItem Ranks,
                 TItem VendorValues,
                 TItem VendorLocation,
                 TItem Conditions,
@@ -348,10 +351,10 @@ namespace Mutagen.Bethesda.Starfield
                 this.Flags = Flags;
                 this.SharedCrimeFactionList = SharedCrimeFactionList;
                 this.CrimeValues = new MaskItem<TItem, CrimeValues.Mask<TItem>?>(CrimeValues, new CrimeValues.Mask<TItem>(CrimeValues));
+                this.Prisons = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FactionPrisons.Mask<TItem>?>>?>(Prisons, Enumerable.Empty<MaskItemIndexed<TItem, FactionPrisons.Mask<TItem>?>>());
+                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>(Ranks, Enumerable.Empty<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>());
                 this.VendorBuySellList = VendorBuySellList;
                 this.MerchantContainer = MerchantContainer;
-                this.PRIS = PRIS;
-                this.Ranks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>(Ranks, Enumerable.Empty<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>());
                 this.VendorValues = new MaskItem<TItem, VendorValues.Mask<TItem>?>(VendorValues, new VendorValues.Mask<TItem>(VendorValues));
                 this.VendorLocation = new MaskItem<TItem, LocationTargetRadius.Mask<TItem>?>(VendorLocation, new LocationTargetRadius.Mask<TItem>(VendorLocation));
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
@@ -376,10 +379,10 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Flags;
             public TItem SharedCrimeFactionList;
             public MaskItem<TItem, CrimeValues.Mask<TItem>?>? CrimeValues { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FactionPrisons.Mask<TItem>?>>?>? Prisons;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>? Ranks;
             public TItem VendorBuySellList;
             public TItem MerchantContainer;
-            public TItem PRIS;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Rank.Mask<TItem>?>>?>? Ranks;
             public MaskItem<TItem, VendorValues.Mask<TItem>?>? VendorValues { get; set; }
             public MaskItem<TItem, LocationTargetRadius.Mask<TItem>?>? VendorLocation { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
@@ -406,10 +409,10 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.SharedCrimeFactionList, rhs.SharedCrimeFactionList)) return false;
                 if (!object.Equals(this.CrimeValues, rhs.CrimeValues)) return false;
+                if (!object.Equals(this.Prisons, rhs.Prisons)) return false;
+                if (!object.Equals(this.Ranks, rhs.Ranks)) return false;
                 if (!object.Equals(this.VendorBuySellList, rhs.VendorBuySellList)) return false;
                 if (!object.Equals(this.MerchantContainer, rhs.MerchantContainer)) return false;
-                if (!object.Equals(this.PRIS, rhs.PRIS)) return false;
-                if (!object.Equals(this.Ranks, rhs.Ranks)) return false;
                 if (!object.Equals(this.VendorValues, rhs.VendorValues)) return false;
                 if (!object.Equals(this.VendorLocation, rhs.VendorLocation)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
@@ -428,10 +431,10 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Flags);
                 hash.Add(this.SharedCrimeFactionList);
                 hash.Add(this.CrimeValues);
+                hash.Add(this.Prisons);
+                hash.Add(this.Ranks);
                 hash.Add(this.VendorBuySellList);
                 hash.Add(this.MerchantContainer);
-                hash.Add(this.PRIS);
-                hash.Add(this.Ranks);
                 hash.Add(this.VendorValues);
                 hash.Add(this.VendorLocation);
                 hash.Add(this.Conditions);
@@ -481,9 +484,18 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.CrimeValues.Overall)) return false;
                     if (this.CrimeValues.Specific != null && !this.CrimeValues.Specific.All(eval)) return false;
                 }
-                if (!eval(this.VendorBuySellList)) return false;
-                if (!eval(this.MerchantContainer)) return false;
-                if (!eval(this.PRIS)) return false;
+                if (this.Prisons != null)
+                {
+                    if (!eval(this.Prisons.Overall)) return false;
+                    if (this.Prisons.Specific != null)
+                    {
+                        foreach (var item in this.Prisons.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (this.Ranks != null)
                 {
                     if (!eval(this.Ranks.Overall)) return false;
@@ -496,6 +508,8 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (!eval(this.VendorBuySellList)) return false;
+                if (!eval(this.MerchantContainer)) return false;
                 if (VendorValues != null)
                 {
                     if (!eval(this.VendorValues.Overall)) return false;
@@ -566,9 +580,18 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.CrimeValues.Overall)) return true;
                     if (this.CrimeValues.Specific != null && this.CrimeValues.Specific.Any(eval)) return true;
                 }
-                if (eval(this.VendorBuySellList)) return true;
-                if (eval(this.MerchantContainer)) return true;
-                if (eval(this.PRIS)) return true;
+                if (this.Prisons != null)
+                {
+                    if (eval(this.Prisons.Overall)) return true;
+                    if (this.Prisons.Specific != null)
+                    {
+                        foreach (var item in this.Prisons.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (this.Ranks != null)
                 {
                     if (eval(this.Ranks.Overall)) return true;
@@ -581,6 +604,8 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (eval(this.VendorBuySellList)) return true;
+                if (eval(this.MerchantContainer)) return true;
                 if (VendorValues != null)
                 {
                     if (eval(this.VendorValues.Overall)) return true;
@@ -660,9 +685,21 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Flags = eval(this.Flags);
                 obj.SharedCrimeFactionList = eval(this.SharedCrimeFactionList);
                 obj.CrimeValues = this.CrimeValues == null ? null : new MaskItem<R, CrimeValues.Mask<R>?>(eval(this.CrimeValues.Overall), this.CrimeValues.Specific?.Translate(eval));
-                obj.VendorBuySellList = eval(this.VendorBuySellList);
-                obj.MerchantContainer = eval(this.MerchantContainer);
-                obj.PRIS = eval(this.PRIS);
+                if (Prisons != null)
+                {
+                    obj.Prisons = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FactionPrisons.Mask<R>?>>?>(eval(this.Prisons.Overall), Enumerable.Empty<MaskItemIndexed<R, FactionPrisons.Mask<R>?>>());
+                    if (Prisons.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, FactionPrisons.Mask<R>?>>();
+                        obj.Prisons.Specific = l;
+                        foreach (var item in Prisons.Specific)
+                        {
+                            MaskItemIndexed<R, FactionPrisons.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, FactionPrisons.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
                 if (Ranks != null)
                 {
                     obj.Ranks = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Rank.Mask<R>?>>?>(eval(this.Ranks.Overall), Enumerable.Empty<MaskItemIndexed<R, Rank.Mask<R>?>>());
@@ -678,6 +715,8 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                obj.VendorBuySellList = eval(this.VendorBuySellList);
+                obj.MerchantContainer = eval(this.MerchantContainer);
                 obj.VendorValues = this.VendorValues == null ? null : new MaskItem<R, VendorValues.Mask<R>?>(eval(this.VendorValues.Overall), this.VendorValues.Specific?.Translate(eval));
                 obj.VendorLocation = this.VendorLocation == null ? null : new MaskItem<R, LocationTargetRadius.Mask<R>?>(eval(this.VendorLocation.Overall), this.VendorLocation.Specific?.Translate(eval));
                 if (Conditions != null)
@@ -774,17 +813,24 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         CrimeValues?.Print(sb);
                     }
-                    if (printMask?.VendorBuySellList ?? true)
+                    if ((printMask?.Prisons?.Overall ?? true)
+                        && Prisons is {} PrisonsItem)
                     {
-                        sb.AppendItem(VendorBuySellList, "VendorBuySellList");
-                    }
-                    if (printMask?.MerchantContainer ?? true)
-                    {
-                        sb.AppendItem(MerchantContainer, "MerchantContainer");
-                    }
-                    if (printMask?.PRIS ?? true)
-                    {
-                        sb.AppendItem(PRIS, "PRIS");
+                        sb.AppendLine("Prisons =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(PrisonsItem.Overall);
+                            if (PrisonsItem.Specific != null)
+                            {
+                                foreach (var subItem in PrisonsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
                     }
                     if ((printMask?.Ranks?.Overall ?? true)
                         && Ranks is {} RanksItem)
@@ -804,6 +850,14 @@ namespace Mutagen.Bethesda.Starfield
                                 }
                             }
                         }
+                    }
+                    if (printMask?.VendorBuySellList ?? true)
+                    {
+                        sb.AppendItem(VendorBuySellList, "VendorBuySellList");
+                    }
+                    if (printMask?.MerchantContainer ?? true)
+                    {
+                        sb.AppendItem(MerchantContainer, "MerchantContainer");
                     }
                     if (printMask?.VendorValues?.Overall ?? true)
                     {
@@ -862,10 +916,10 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Flags;
             public Exception? SharedCrimeFactionList;
             public MaskItem<Exception?, CrimeValues.ErrorMask?>? CrimeValues;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FactionPrisons.ErrorMask?>>?>? Prisons;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>? Ranks;
             public Exception? VendorBuySellList;
             public Exception? MerchantContainer;
-            public Exception? PRIS;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>? Ranks;
             public MaskItem<Exception?, VendorValues.ErrorMask?>? VendorValues;
             public MaskItem<Exception?, LocationTargetRadius.ErrorMask?>? VendorLocation;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
@@ -894,14 +948,14 @@ namespace Mutagen.Bethesda.Starfield
                         return SharedCrimeFactionList;
                     case Faction_FieldIndex.CrimeValues:
                         return CrimeValues;
+                    case Faction_FieldIndex.Prisons:
+                        return Prisons;
+                    case Faction_FieldIndex.Ranks:
+                        return Ranks;
                     case Faction_FieldIndex.VendorBuySellList:
                         return VendorBuySellList;
                     case Faction_FieldIndex.MerchantContainer:
                         return MerchantContainer;
-                    case Faction_FieldIndex.PRIS:
-                        return PRIS;
-                    case Faction_FieldIndex.Ranks:
-                        return Ranks;
                     case Faction_FieldIndex.VendorValues:
                         return VendorValues;
                     case Faction_FieldIndex.VendorLocation:
@@ -945,17 +999,17 @@ namespace Mutagen.Bethesda.Starfield
                     case Faction_FieldIndex.CrimeValues:
                         this.CrimeValues = new MaskItem<Exception?, CrimeValues.ErrorMask?>(ex, null);
                         break;
+                    case Faction_FieldIndex.Prisons:
+                        this.Prisons = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FactionPrisons.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Faction_FieldIndex.Ranks:
+                        this.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>(ex, null);
+                        break;
                     case Faction_FieldIndex.VendorBuySellList:
                         this.VendorBuySellList = ex;
                         break;
                     case Faction_FieldIndex.MerchantContainer:
                         this.MerchantContainer = ex;
-                        break;
-                    case Faction_FieldIndex.PRIS:
-                        this.PRIS = ex;
-                        break;
-                    case Faction_FieldIndex.Ranks:
-                        this.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>(ex, null);
                         break;
                     case Faction_FieldIndex.VendorValues:
                         this.VendorValues = new MaskItem<Exception?, VendorValues.ErrorMask?>(ex, null);
@@ -1007,17 +1061,17 @@ namespace Mutagen.Bethesda.Starfield
                     case Faction_FieldIndex.CrimeValues:
                         this.CrimeValues = (MaskItem<Exception?, CrimeValues.ErrorMask?>?)obj;
                         break;
+                    case Faction_FieldIndex.Prisons:
+                        this.Prisons = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FactionPrisons.ErrorMask?>>?>)obj;
+                        break;
+                    case Faction_FieldIndex.Ranks:
+                        this.Ranks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>)obj;
+                        break;
                     case Faction_FieldIndex.VendorBuySellList:
                         this.VendorBuySellList = (Exception?)obj;
                         break;
                     case Faction_FieldIndex.MerchantContainer:
                         this.MerchantContainer = (Exception?)obj;
-                        break;
-                    case Faction_FieldIndex.PRIS:
-                        this.PRIS = (Exception?)obj;
-                        break;
-                    case Faction_FieldIndex.Ranks:
-                        this.Ranks = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>)obj;
                         break;
                     case Faction_FieldIndex.VendorValues:
                         this.VendorValues = (MaskItem<Exception?, VendorValues.ErrorMask?>?)obj;
@@ -1053,10 +1107,10 @@ namespace Mutagen.Bethesda.Starfield
                 if (Flags != null) return true;
                 if (SharedCrimeFactionList != null) return true;
                 if (CrimeValues != null) return true;
+                if (Prisons != null) return true;
+                if (Ranks != null) return true;
                 if (VendorBuySellList != null) return true;
                 if (MerchantContainer != null) return true;
-                if (PRIS != null) return true;
-                if (Ranks != null) return true;
                 if (VendorValues != null) return true;
                 if (VendorLocation != null) return true;
                 if (Conditions != null) return true;
@@ -1138,14 +1192,23 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(SharedCrimeFactionList, "SharedCrimeFactionList");
                 }
                 CrimeValues?.Print(sb);
+                if (Prisons is {} PrisonsItem)
                 {
-                    sb.AppendItem(VendorBuySellList, "VendorBuySellList");
-                }
-                {
-                    sb.AppendItem(MerchantContainer, "MerchantContainer");
-                }
-                {
-                    sb.AppendItem(PRIS, "PRIS");
+                    sb.AppendLine("Prisons =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(PrisonsItem.Overall);
+                        if (PrisonsItem.Specific != null)
+                        {
+                            foreach (var subItem in PrisonsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
                 }
                 if (Ranks is {} RanksItem)
                 {
@@ -1164,6 +1227,12 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
+                }
+                {
+                    sb.AppendItem(VendorBuySellList, "VendorBuySellList");
+                }
+                {
+                    sb.AppendItem(MerchantContainer, "MerchantContainer");
                 }
                 VendorValues?.Print(sb);
                 VendorLocation?.Print(sb);
@@ -1207,10 +1276,10 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.SharedCrimeFactionList = this.SharedCrimeFactionList.Combine(rhs.SharedCrimeFactionList);
                 ret.CrimeValues = this.CrimeValues.Combine(rhs.CrimeValues, (l, r) => l.Combine(r));
+                ret.Prisons = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FactionPrisons.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Prisons?.Overall, rhs.Prisons?.Overall), Noggog.ExceptionExt.Combine(this.Prisons?.Specific, rhs.Prisons?.Specific));
+                ret.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Ranks?.Overall, rhs.Ranks?.Overall), Noggog.ExceptionExt.Combine(this.Ranks?.Specific, rhs.Ranks?.Specific));
                 ret.VendorBuySellList = this.VendorBuySellList.Combine(rhs.VendorBuySellList);
                 ret.MerchantContainer = this.MerchantContainer.Combine(rhs.MerchantContainer);
-                ret.PRIS = this.PRIS.Combine(rhs.PRIS);
-                ret.Ranks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Rank.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Ranks?.Overall, rhs.Ranks?.Overall), Noggog.ExceptionExt.Combine(this.Ranks?.Specific, rhs.Ranks?.Specific));
                 ret.VendorValues = this.VendorValues.Combine(rhs.VendorValues, (l, r) => l.Combine(r));
                 ret.VendorLocation = this.VendorLocation.Combine(rhs.VendorLocation, (l, r) => l.Combine(r));
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
@@ -1246,10 +1315,10 @@ namespace Mutagen.Bethesda.Starfield
             public bool Flags;
             public bool SharedCrimeFactionList;
             public CrimeValues.TranslationMask? CrimeValues;
+            public FactionPrisons.TranslationMask? Prisons;
+            public Rank.TranslationMask? Ranks;
             public bool VendorBuySellList;
             public bool MerchantContainer;
-            public bool PRIS;
-            public Rank.TranslationMask? Ranks;
             public VendorValues.TranslationMask? VendorValues;
             public LocationTargetRadius.TranslationMask? VendorLocation;
             public Condition.TranslationMask? Conditions;
@@ -1270,7 +1339,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.SharedCrimeFactionList = defaultOn;
                 this.VendorBuySellList = defaultOn;
                 this.MerchantContainer = defaultOn;
-                this.PRIS = defaultOn;
                 this.VoiceType = defaultOn;
                 this.FormationRadius = defaultOn;
             }
@@ -1287,10 +1355,10 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Flags, null));
                 ret.Add((SharedCrimeFactionList, null));
                 ret.Add((CrimeValues != null ? CrimeValues.OnOverall : DefaultOn, CrimeValues?.GetCrystal()));
+                ret.Add((Prisons == null ? DefaultOn : !Prisons.GetCrystal().CopyNothing, Prisons?.GetCrystal()));
+                ret.Add((Ranks == null ? DefaultOn : !Ranks.GetCrystal().CopyNothing, Ranks?.GetCrystal()));
                 ret.Add((VendorBuySellList, null));
                 ret.Add((MerchantContainer, null));
-                ret.Add((PRIS, null));
-                ret.Add((Ranks == null ? DefaultOn : !Ranks.GetCrystal().CopyNothing, Ranks?.GetCrystal()));
                 ret.Add((VendorValues != null ? VendorValues.OnOverall : DefaultOn, VendorValues?.GetCrystal()));
                 ret.Add((VendorLocation != null ? VendorLocation.OnOverall : DefaultOn, VendorLocation?.GetCrystal()));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
@@ -1467,10 +1535,10 @@ namespace Mutagen.Bethesda.Starfield
         new Faction.FactionFlag Flags { get; set; }
         new IFormLinkNullable<IFormListGetter> SharedCrimeFactionList { get; set; }
         new CrimeValues? CrimeValues { get; set; }
+        new ExtendedList<FactionPrisons>? Prisons { get; set; }
+        new ExtendedList<Rank> Ranks { get; }
         new IFormLinkNullable<IFormListGetter> VendorBuySellList { get; set; }
         new IFormLinkNullable<IPlacedObjectGetter> MerchantContainer { get; set; }
-        new MemorySlice<Byte>? PRIS { get; set; }
-        new ExtendedList<Rank> Ranks { get; }
         new VendorValues? VendorValues { get; set; }
         new LocationTargetRadius? VendorLocation { get; set; }
         new ExtendedList<Condition>? Conditions { get; set; }
@@ -1516,10 +1584,10 @@ namespace Mutagen.Bethesda.Starfield
         Faction.FactionFlag Flags { get; }
         IFormLinkNullableGetter<IFormListGetter> SharedCrimeFactionList { get; }
         ICrimeValuesGetter? CrimeValues { get; }
+        IReadOnlyList<IFactionPrisonsGetter>? Prisons { get; }
+        IReadOnlyList<IRankGetter> Ranks { get; }
         IFormLinkNullableGetter<IFormListGetter> VendorBuySellList { get; }
         IFormLinkNullableGetter<IPlacedObjectGetter> MerchantContainer { get; }
-        ReadOnlyMemorySlice<Byte>? PRIS { get; }
-        IReadOnlyList<IRankGetter> Ranks { get; }
         IVendorValuesGetter? VendorValues { get; }
         ILocationTargetRadiusGetter? VendorLocation { get; }
         IReadOnlyList<IConditionGetter>? Conditions { get; }
@@ -1709,10 +1777,10 @@ namespace Mutagen.Bethesda.Starfield
         Flags = 11,
         SharedCrimeFactionList = 12,
         CrimeValues = 13,
-        VendorBuySellList = 14,
-        MerchantContainer = 15,
-        PRIS = 16,
-        Ranks = 17,
+        Prisons = 14,
+        Ranks = 15,
+        VendorBuySellList = 16,
+        MerchantContainer = 17,
         VendorValues = 18,
         VendorLocation = 19,
         Conditions = 20,
@@ -1772,13 +1840,13 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.DATA,
                 RecordTypes.CRGR,
                 RecordTypes.CRVA,
-                RecordTypes.VEND,
-                RecordTypes.VENC,
                 RecordTypes.PRIS,
                 RecordTypes.RNAM,
                 RecordTypes.MNAM,
                 RecordTypes.FNAM,
                 RecordTypes.INAM,
+                RecordTypes.VEND,
+                RecordTypes.VENC,
                 RecordTypes.VENV,
                 RecordTypes.PLVD,
                 RecordTypes.CTDA,
@@ -1841,10 +1909,10 @@ namespace Mutagen.Bethesda.Starfield
             item.Flags = default(Faction.FactionFlag);
             item.SharedCrimeFactionList.Clear();
             item.CrimeValues = null;
+            item.Prisons = null;
+            item.Ranks.Clear();
             item.VendorBuySellList.Clear();
             item.MerchantContainer.Clear();
-            item.PRIS = default;
-            item.Ranks.Clear();
             item.VendorValues = null;
             item.VendorLocation = null;
             item.Conditions = null;
@@ -1872,6 +1940,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Relations.RemapLinks(mapping);
             obj.Keyword.Relink(mapping);
             obj.SharedCrimeFactionList.Relink(mapping);
+            obj.Prisons?.RemapLinks(mapping);
             obj.VendorBuySellList.Relink(mapping);
             obj.MerchantContainer.Relink(mapping);
             obj.VendorLocation?.RemapLinks(mapping);
@@ -1985,13 +2054,16 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.CrimeValues,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.VendorBuySellList = item.VendorBuySellList.Equals(rhs.VendorBuySellList);
-            ret.MerchantContainer = item.MerchantContainer.Equals(rhs.MerchantContainer);
-            ret.PRIS = MemorySliceExt.SequenceEqual(item.PRIS, rhs.PRIS);
+            ret.Prisons = item.Prisons.CollectionEqualsHelper(
+                rhs.Prisons,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             ret.Ranks = item.Ranks.CollectionEqualsHelper(
                 rhs.Ranks,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.VendorBuySellList = item.VendorBuySellList.Equals(rhs.VendorBuySellList);
+            ret.MerchantContainer = item.MerchantContainer.Equals(rhs.MerchantContainer);
             ret.VendorValues = EqualsMaskHelper.EqualsHelper(
                 item.VendorValues,
                 rhs.VendorValues,
@@ -2112,18 +2184,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 CrimeValuesItem?.Print(sb, "CrimeValues");
             }
-            if (printMask?.VendorBuySellList ?? true)
+            if ((printMask?.Prisons?.Overall ?? true)
+                && item.Prisons is {} PrisonsItem)
             {
-                sb.AppendItem(item.VendorBuySellList.FormKeyNullable, "VendorBuySellList");
-            }
-            if (printMask?.MerchantContainer ?? true)
-            {
-                sb.AppendItem(item.MerchantContainer.FormKeyNullable, "MerchantContainer");
-            }
-            if ((printMask?.PRIS ?? true)
-                && item.PRIS is {} PRISItem)
-            {
-                sb.AppendLine($"PRIS => {SpanExt.ToHexString(PRISItem)}");
+                sb.AppendLine("Prisons =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in PrisonsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
             }
             if (printMask?.Ranks?.Overall ?? true)
             {
@@ -2138,6 +2212,14 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+            }
+            if (printMask?.VendorBuySellList ?? true)
+            {
+                sb.AppendItem(item.VendorBuySellList.FormKeyNullable, "VendorBuySellList");
+            }
+            if (printMask?.MerchantContainer ?? true)
+            {
+                sb.AppendItem(item.MerchantContainer.FormKeyNullable, "MerchantContainer");
             }
             if ((printMask?.VendorValues?.Overall ?? true)
                 && item.VendorValues is {} VendorValuesItem)
@@ -2260,6 +2342,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isCrimeValuesEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.Prisons) ?? true))
+            {
+                if (!lhs.Prisons.SequenceEqualNullable(rhs.Prisons, (l, r) => ((FactionPrisonsCommon)((IFactionPrisonsGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Faction_FieldIndex.Prisons)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.Ranks) ?? true))
+            {
+                if (!lhs.Ranks.SequenceEqual(rhs.Ranks, (l, r) => ((RankCommon)((IRankGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Faction_FieldIndex.Ranks)))) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorBuySellList) ?? true))
             {
                 if (!lhs.VendorBuySellList.Equals(rhs.VendorBuySellList)) return false;
@@ -2267,14 +2357,6 @@ namespace Mutagen.Bethesda.Starfield
             if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.MerchantContainer) ?? true))
             {
                 if (!lhs.MerchantContainer.Equals(rhs.MerchantContainer)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.PRIS) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.PRIS, rhs.PRIS)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.Ranks) ?? true))
-            {
-                if (!lhs.Ranks.SequenceEqual(rhs.Ranks, (l, r) => ((RankCommon)((IRankGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Faction_FieldIndex.Ranks)))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorValues) ?? true))
             {
@@ -2353,13 +2435,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(CrimeValuesitem);
             }
+            hash.Add(item.Prisons);
+            hash.Add(item.Ranks);
             hash.Add(item.VendorBuySellList);
             hash.Add(item.MerchantContainer);
-            if (item.PRIS is {} PRISItem)
-            {
-                hash.Add(PRISItem);
-            }
-            hash.Add(item.Ranks);
             if (item.VendorValues is {} VendorValuesitem)
             {
                 hash.Add(VendorValuesitem);
@@ -2423,6 +2502,13 @@ namespace Mutagen.Bethesda.Starfield
             if (FormLinkInformation.TryFactory(obj.SharedCrimeFactionList, out var SharedCrimeFactionListInfo))
             {
                 yield return SharedCrimeFactionListInfo;
+            }
+            if (obj.Prisons is {} PrisonsItem)
+            {
+                foreach (var item in PrisonsItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
             }
             if (FormLinkInformation.TryFactory(obj.VendorBuySellList, out var VendorBuySellListInfo))
             {
@@ -2628,23 +2714,36 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorBuySellList) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.Prisons) ?? true))
             {
-                item.VendorBuySellList.SetTo(rhs.VendorBuySellList.FormKeyNullable);
-            }
-            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.MerchantContainer) ?? true))
-            {
-                item.MerchantContainer.SetTo(rhs.MerchantContainer.FormKeyNullable);
-            }
-            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.PRIS) ?? true))
-            {
-                if(rhs.PRIS is {} PRISrhs)
+                errorMask?.PushIndex((int)Faction_FieldIndex.Prisons);
+                try
                 {
-                    item.PRIS = PRISrhs.ToArray();
+                    if ((rhs.Prisons != null))
+                    {
+                        item.Prisons = 
+                            rhs.Prisons
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<FactionPrisons>();
+                    }
+                    else
+                    {
+                        item.Prisons = null;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.PRIS = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.Ranks) ?? true))
@@ -2670,6 +2769,14 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorBuySellList) ?? true))
+            {
+                item.VendorBuySellList.SetTo(rhs.VendorBuySellList.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.MerchantContainer) ?? true))
+            {
+                item.MerchantContainer.SetTo(rhs.MerchantContainer.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorValues) ?? true))
             {
@@ -3006,18 +3113,18 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     translationParams: translationParams);
             }
-            FormLinkBinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFactionPrisonsGetter>.Instance.Write(
                 writer: writer,
-                item: item.VendorBuySellList,
-                header: translationParams.ConvertToCustom(RecordTypes.VEND));
-            FormLinkBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.MerchantContainer,
-                header: translationParams.ConvertToCustom(RecordTypes.VENC));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.PRIS,
-                header: translationParams.ConvertToCustom(RecordTypes.PRIS));
+                items: item.Prisons,
+                recordType: translationParams.ConvertToCustom(RecordTypes.PRIS),
+                transl: (MutagenWriter subWriter, IFactionPrisonsGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((FactionPrisonsBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IRankGetter>.Instance.Write(
                 writer: writer,
                 items: item.Ranks,
@@ -3029,6 +3136,14 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.VendorBuySellList,
+                header: translationParams.ConvertToCustom(RecordTypes.VEND));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.MerchantContainer,
+                header: translationParams.ConvertToCustom(RecordTypes.VENC));
             if (item.VendorValues is {} VendorValuesItem)
             {
                 ((VendorValuesBinaryWriteTranslation)((IBinaryItem)VendorValuesItem).BinaryWriteTranslator).Write(
@@ -3200,23 +3315,15 @@ namespace Mutagen.Bethesda.Starfield
                     item.CrimeValues = Mutagen.Bethesda.Starfield.CrimeValues.CreateFromBinary(frame: frame);
                     return (int)Faction_FieldIndex.CrimeValues;
                 }
-                case RecordTypeInts.VEND:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VendorBuySellList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)Faction_FieldIndex.VendorBuySellList;
-                }
-                case RecordTypeInts.VENC:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MerchantContainer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)Faction_FieldIndex.MerchantContainer;
-                }
                 case RecordTypeInts.PRIS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PRIS = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Faction_FieldIndex.PRIS;
+                    item.Prisons = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<FactionPrisons>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FactionPrisons.TryCreateFromBinary)
+                        .CastExtendedList<FactionPrisons>();
+                    return (int)Faction_FieldIndex.Prisons;
                 }
                 case RecordTypeInts.RNAM:
                 case RecordTypeInts.MNAM:
@@ -3230,6 +3337,18 @@ namespace Mutagen.Bethesda.Starfield
                             translationParams: translationParams,
                             transl: Rank.TryCreateFromBinary));
                     return (int)Faction_FieldIndex.Ranks;
+                }
+                case RecordTypeInts.VEND:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.VendorBuySellList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Faction_FieldIndex.VendorBuySellList;
+                }
+                case RecordTypeInts.VENC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MerchantContainer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Faction_FieldIndex.MerchantContainer;
                 }
                 case RecordTypeInts.VENV:
                 {
@@ -3371,6 +3490,8 @@ namespace Mutagen.Bethesda.Starfield
         private RangeInt32? _CrimeValuesLocation;
         public ICrimeValuesGetter? CrimeValues => _CrimeValuesLocation.HasValue ? CrimeValuesBinaryOverlay.CrimeValuesFactory(_recordData.Slice(_CrimeValuesLocation!.Value.Min), _package) : default;
         #endregion
+        public IReadOnlyList<IFactionPrisonsGetter>? Prisons { get; private set; }
+        public IReadOnlyList<IRankGetter> Ranks { get; private set; } = Array.Empty<IRankGetter>();
         #region VendorBuySellList
         private int? _VendorBuySellListLocation;
         public IFormLinkNullableGetter<IFormListGetter> VendorBuySellList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _VendorBuySellListLocation);
@@ -3379,11 +3500,6 @@ namespace Mutagen.Bethesda.Starfield
         private int? _MerchantContainerLocation;
         public IFormLinkNullableGetter<IPlacedObjectGetter> MerchantContainer => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPlacedObjectGetter>(_package, _recordData, _MerchantContainerLocation);
         #endregion
-        #region PRIS
-        private int? _PRISLocation;
-        public ReadOnlyMemorySlice<Byte>? PRIS => _PRISLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PRISLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        public IReadOnlyList<IRankGetter> Ranks { get; private set; } = Array.Empty<IRankGetter>();
         #region VendorValues
         private RangeInt32? _VendorValuesLocation;
         public IVendorValuesGetter? VendorValues => _VendorValuesLocation.HasValue ? VendorValuesBinaryOverlay.VendorValuesFactory(_recordData.Slice(_VendorValuesLocation!.Value.Min), _package) : default;
@@ -3520,20 +3636,15 @@ namespace Mutagen.Bethesda.Starfield
                     _CrimeValuesLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Faction_FieldIndex.CrimeValues;
                 }
-                case RecordTypeInts.VEND:
-                {
-                    _VendorBuySellListLocation = (stream.Position - offset);
-                    return (int)Faction_FieldIndex.VendorBuySellList;
-                }
-                case RecordTypeInts.VENC:
-                {
-                    _MerchantContainerLocation = (stream.Position - offset);
-                    return (int)Faction_FieldIndex.MerchantContainer;
-                }
                 case RecordTypeInts.PRIS:
                 {
-                    _PRISLocation = (stream.Position - offset);
-                    return (int)Faction_FieldIndex.PRIS;
+                    this.Prisons = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFactionPrisonsGetter>(
+                        stream: stream,
+                        package: _package,
+                        finalPos: finalPos,
+                        itemLength: 20,
+                        getter: (s, p) => FactionPrisonsBinaryOverlay.FactionPrisonsFactory(s, p));
+                    return (int)Faction_FieldIndex.Prisons;
                 }
                 case RecordTypeInts.RNAM:
                 case RecordTypeInts.MNAM:
@@ -3546,6 +3657,16 @@ namespace Mutagen.Bethesda.Starfield
                         trigger: Rank_Registration.TriggerSpecs,
                         factory: RankBinaryOverlay.RankFactory);
                     return (int)Faction_FieldIndex.Ranks;
+                }
+                case RecordTypeInts.VEND:
+                {
+                    _VendorBuySellListLocation = (stream.Position - offset);
+                    return (int)Faction_FieldIndex.VendorBuySellList;
+                }
+                case RecordTypeInts.VENC:
+                {
+                    _MerchantContainerLocation = (stream.Position - offset);
+                    return (int)Faction_FieldIndex.MerchantContainer;
                 }
                 case RecordTypeInts.VENV:
                 {

@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             _GameSettings_Object = new StarfieldGroup<GameSetting>(this);
             _Keywords_Object = new StarfieldGroup<Keyword>(this);
-            _FFKW_Object = new StarfieldGroup<FFKWRecord>(this);
+            _FormFolderKeywordLists_Object = new StarfieldGroup<FormFolderKeywordList>(this);
             _LocationReferenceTypes_Object = new StarfieldGroup<LocationReferenceType>(this);
             _Actions_Object = new StarfieldGroup<ActionRecord>(this);
             _Transforms_Object = new StarfieldGroup<Transform>(this);
@@ -262,12 +262,12 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IStarfieldGroupGetter<IKeywordGetter> IStarfieldModGetter.Keywords => _Keywords_Object;
         #endregion
-        #region FFKW
+        #region FormFolderKeywordLists
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private StarfieldGroup<FFKWRecord> _FFKW_Object;
-        public StarfieldGroup<FFKWRecord> FFKW => _FFKW_Object;
+        private StarfieldGroup<FormFolderKeywordList> _FormFolderKeywordLists_Object;
+        public StarfieldGroup<FormFolderKeywordList> FormFolderKeywordLists => _FormFolderKeywordLists_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IStarfieldGroupGetter<IFFKWRecordGetter> IStarfieldModGetter.FFKW => _FFKW_Object;
+        IStarfieldGroupGetter<IFormFolderKeywordListGetter> IStarfieldModGetter.FormFolderKeywordLists => _FormFolderKeywordLists_Object;
         #endregion
         #region LocationReferenceTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1522,7 +1522,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ModHeader = new MaskItem<TItem, StarfieldModHeader.Mask<TItem>?>(initialValue, new StarfieldModHeader.Mask<TItem>(initialValue));
                 this.GameSettings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Keywords = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
-                this.FFKW = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
+                this.FormFolderKeywordLists = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.LocationReferenceTypes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Actions = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
                 this.Transforms = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(initialValue, new StarfieldGroup.Mask<TItem>(initialValue));
@@ -1702,7 +1702,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem ModHeader,
                 TItem GameSettings,
                 TItem Keywords,
-                TItem FFKW,
+                TItem FormFolderKeywordLists,
                 TItem LocationReferenceTypes,
                 TItem Actions,
                 TItem Transforms,
@@ -1880,7 +1880,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.ModHeader = new MaskItem<TItem, StarfieldModHeader.Mask<TItem>?>(ModHeader, new StarfieldModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(GameSettings, new StarfieldGroup.Mask<TItem>(GameSettings));
                 this.Keywords = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Keywords, new StarfieldGroup.Mask<TItem>(Keywords));
-                this.FFKW = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(FFKW, new StarfieldGroup.Mask<TItem>(FFKW));
+                this.FormFolderKeywordLists = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(FormFolderKeywordLists, new StarfieldGroup.Mask<TItem>(FormFolderKeywordLists));
                 this.LocationReferenceTypes = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(LocationReferenceTypes, new StarfieldGroup.Mask<TItem>(LocationReferenceTypes));
                 this.Actions = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Actions, new StarfieldGroup.Mask<TItem>(Actions));
                 this.Transforms = new MaskItem<TItem, StarfieldGroup.Mask<TItem>?>(Transforms, new StarfieldGroup.Mask<TItem>(Transforms));
@@ -2068,7 +2068,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, StarfieldModHeader.Mask<TItem>?>? ModHeader { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? GameSettings { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Keywords { get; set; }
-            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? FFKW { get; set; }
+            public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? FormFolderKeywordLists { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? LocationReferenceTypes { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Actions { get; set; }
             public MaskItem<TItem, StarfieldGroup.Mask<TItem>?>? Transforms { get; set; }
@@ -2257,7 +2257,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.ModHeader, rhs.ModHeader)) return false;
                 if (!object.Equals(this.GameSettings, rhs.GameSettings)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
-                if (!object.Equals(this.FFKW, rhs.FFKW)) return false;
+                if (!object.Equals(this.FormFolderKeywordLists, rhs.FormFolderKeywordLists)) return false;
                 if (!object.Equals(this.LocationReferenceTypes, rhs.LocationReferenceTypes)) return false;
                 if (!object.Equals(this.Actions, rhs.Actions)) return false;
                 if (!object.Equals(this.Transforms, rhs.Transforms)) return false;
@@ -2439,7 +2439,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.ModHeader);
                 hash.Add(this.GameSettings);
                 hash.Add(this.Keywords);
-                hash.Add(this.FFKW);
+                hash.Add(this.FormFolderKeywordLists);
                 hash.Add(this.LocationReferenceTypes);
                 hash.Add(this.Actions);
                 hash.Add(this.Transforms);
@@ -2636,10 +2636,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.Keywords.Overall)) return false;
                     if (this.Keywords.Specific != null && !this.Keywords.Specific.All(eval)) return false;
                 }
-                if (FFKW != null)
+                if (FormFolderKeywordLists != null)
                 {
-                    if (!eval(this.FFKW.Overall)) return false;
-                    if (this.FFKW.Specific != null && !this.FFKW.Specific.All(eval)) return false;
+                    if (!eval(this.FormFolderKeywordLists.Overall)) return false;
+                    if (this.FormFolderKeywordLists.Specific != null && !this.FormFolderKeywordLists.Specific.All(eval)) return false;
                 }
                 if (LocationReferenceTypes != null)
                 {
@@ -3528,10 +3528,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Keywords.Overall)) return true;
                     if (this.Keywords.Specific != null && this.Keywords.Specific.Any(eval)) return true;
                 }
-                if (FFKW != null)
+                if (FormFolderKeywordLists != null)
                 {
-                    if (eval(this.FFKW.Overall)) return true;
-                    if (this.FFKW.Specific != null && this.FFKW.Specific.Any(eval)) return true;
+                    if (eval(this.FormFolderKeywordLists.Overall)) return true;
+                    if (this.FormFolderKeywordLists.Specific != null && this.FormFolderKeywordLists.Specific.Any(eval)) return true;
                 }
                 if (LocationReferenceTypes != null)
                 {
@@ -4415,7 +4415,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ModHeader = this.ModHeader == null ? null : new MaskItem<R, StarfieldModHeader.Mask<R>?>(eval(this.ModHeader.Overall), this.ModHeader.Specific?.Translate(eval));
                 obj.GameSettings = this.GameSettings == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.GameSettings.Overall), this.GameSettings.Specific?.Translate(eval));
                 obj.Keywords = this.Keywords == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Keywords.Overall), this.Keywords.Specific?.Translate(eval));
-                obj.FFKW = this.FFKW == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.FFKW.Overall), this.FFKW.Specific?.Translate(eval));
+                obj.FormFolderKeywordLists = this.FormFolderKeywordLists == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.FormFolderKeywordLists.Overall), this.FormFolderKeywordLists.Specific?.Translate(eval));
                 obj.LocationReferenceTypes = this.LocationReferenceTypes == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.LocationReferenceTypes.Overall), this.LocationReferenceTypes.Specific?.Translate(eval));
                 obj.Actions = this.Actions == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Actions.Overall), this.Actions.Specific?.Translate(eval));
                 obj.Transforms = this.Transforms == null ? null : new MaskItem<R, StarfieldGroup.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
@@ -4619,9 +4619,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         Keywords?.Print(sb);
                     }
-                    if (printMask?.FFKW?.Overall ?? true)
+                    if (printMask?.FormFolderKeywordLists?.Overall ?? true)
                     {
-                        FFKW?.Print(sb);
+                        FormFolderKeywordLists?.Print(sb);
                     }
                     if (printMask?.LocationReferenceTypes?.Overall ?? true)
                     {
@@ -5342,7 +5342,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldModHeader.ErrorMask?>? ModHeader;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<GameSetting.ErrorMask>?>? GameSettings;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Keyword.ErrorMask>?>? Keywords;
-            public MaskItem<Exception?, StarfieldGroup.ErrorMask<FFKWRecord.ErrorMask>?>? FFKW;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<FormFolderKeywordList.ErrorMask>?>? FormFolderKeywordLists;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<LocationReferenceType.ErrorMask>?>? LocationReferenceTypes;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ActionRecord.ErrorMask>?>? Actions;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<Transform.ErrorMask>?>? Transforms;
@@ -5530,8 +5530,8 @@ namespace Mutagen.Bethesda.Starfield
                         return GameSettings;
                     case StarfieldMod_FieldIndex.Keywords:
                         return Keywords;
-                    case StarfieldMod_FieldIndex.FFKW:
-                        return FFKW;
+                    case StarfieldMod_FieldIndex.FormFolderKeywordLists:
+                        return FormFolderKeywordLists;
                     case StarfieldMod_FieldIndex.LocationReferenceTypes:
                         return LocationReferenceTypes;
                     case StarfieldMod_FieldIndex.Actions:
@@ -5897,8 +5897,8 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.Keywords:
                         this.Keywords = new MaskItem<Exception?, StarfieldGroup.ErrorMask<Keyword.ErrorMask>?>(ex, null);
                         break;
-                    case StarfieldMod_FieldIndex.FFKW:
-                        this.FFKW = new MaskItem<Exception?, StarfieldGroup.ErrorMask<FFKWRecord.ErrorMask>?>(ex, null);
+                    case StarfieldMod_FieldIndex.FormFolderKeywordLists:
+                        this.FormFolderKeywordLists = new MaskItem<Exception?, StarfieldGroup.ErrorMask<FormFolderKeywordList.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.LocationReferenceTypes:
                         this.LocationReferenceTypes = new MaskItem<Exception?, StarfieldGroup.ErrorMask<LocationReferenceType.ErrorMask>?>(ex, null);
@@ -6438,8 +6438,8 @@ namespace Mutagen.Bethesda.Starfield
                     case StarfieldMod_FieldIndex.Keywords:
                         this.Keywords = (MaskItem<Exception?, StarfieldGroup.ErrorMask<Keyword.ErrorMask>?>?)obj;
                         break;
-                    case StarfieldMod_FieldIndex.FFKW:
-                        this.FFKW = (MaskItem<Exception?, StarfieldGroup.ErrorMask<FFKWRecord.ErrorMask>?>?)obj;
+                    case StarfieldMod_FieldIndex.FormFolderKeywordLists:
+                        this.FormFolderKeywordLists = (MaskItem<Exception?, StarfieldGroup.ErrorMask<FormFolderKeywordList.ErrorMask>?>?)obj;
                         break;
                     case StarfieldMod_FieldIndex.LocationReferenceTypes:
                         this.LocationReferenceTypes = (MaskItem<Exception?, StarfieldGroup.ErrorMask<LocationReferenceType.ErrorMask>?>?)obj;
@@ -6971,7 +6971,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (ModHeader != null) return true;
                 if (GameSettings != null) return true;
                 if (Keywords != null) return true;
-                if (FFKW != null) return true;
+                if (FormFolderKeywordLists != null) return true;
                 if (LocationReferenceTypes != null) return true;
                 if (Actions != null) return true;
                 if (Transforms != null) return true;
@@ -7173,7 +7173,7 @@ namespace Mutagen.Bethesda.Starfield
                 ModHeader?.Print(sb);
                 GameSettings?.Print(sb);
                 Keywords?.Print(sb);
-                FFKW?.Print(sb);
+                FormFolderKeywordLists?.Print(sb);
                 LocationReferenceTypes?.Print(sb);
                 Actions?.Print(sb);
                 Transforms?.Print(sb);
@@ -7358,7 +7358,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.ModHeader = this.ModHeader.Combine(rhs.ModHeader, (l, r) => l.Combine(r));
                 ret.GameSettings = this.GameSettings.Combine(rhs.GameSettings, (l, r) => l.Combine(r));
                 ret.Keywords = this.Keywords.Combine(rhs.Keywords, (l, r) => l.Combine(r));
-                ret.FFKW = this.FFKW.Combine(rhs.FFKW, (l, r) => l.Combine(r));
+                ret.FormFolderKeywordLists = this.FormFolderKeywordLists.Combine(rhs.FormFolderKeywordLists, (l, r) => l.Combine(r));
                 ret.LocationReferenceTypes = this.LocationReferenceTypes.Combine(rhs.LocationReferenceTypes, (l, r) => l.Combine(r));
                 ret.Actions = this.Actions.Combine(rhs.Actions, (l, r) => l.Combine(r));
                 ret.Transforms = this.Transforms.Combine(rhs.Transforms, (l, r) => l.Combine(r));
@@ -7558,7 +7558,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldModHeader.TranslationMask? ModHeader;
             public StarfieldGroup.TranslationMask<GameSetting.TranslationMask>? GameSettings;
             public StarfieldGroup.TranslationMask<Keyword.TranslationMask>? Keywords;
-            public StarfieldGroup.TranslationMask<FFKWRecord.TranslationMask>? FFKW;
+            public StarfieldGroup.TranslationMask<FormFolderKeywordList.TranslationMask>? FormFolderKeywordLists;
             public StarfieldGroup.TranslationMask<LocationReferenceType.TranslationMask>? LocationReferenceTypes;
             public StarfieldGroup.TranslationMask<ActionRecord.TranslationMask>? Actions;
             public StarfieldGroup.TranslationMask<Transform.TranslationMask>? Transforms;
@@ -7759,7 +7759,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((ModHeader != null ? ModHeader.OnOverall : DefaultOn, ModHeader?.GetCrystal()));
                 ret.Add((GameSettings != null ? GameSettings.OnOverall : DefaultOn, GameSettings?.GetCrystal()));
                 ret.Add((Keywords != null ? Keywords.OnOverall : DefaultOn, Keywords?.GetCrystal()));
-                ret.Add((FFKW != null ? FFKW.OnOverall : DefaultOn, FFKW?.GetCrystal()));
+                ret.Add((FormFolderKeywordLists != null ? FormFolderKeywordLists.OnOverall : DefaultOn, FormFolderKeywordLists?.GetCrystal()));
                 ret.Add((LocationReferenceTypes != null ? LocationReferenceTypes.OnOverall : DefaultOn, LocationReferenceTypes?.GetCrystal()));
                 ret.Add((Actions != null ? Actions.OnOverall : DefaultOn, Actions?.GetCrystal()));
                 ret.Add((Transforms != null ? Transforms.OnOverall : DefaultOn, Transforms?.GetCrystal()));
@@ -7991,7 +7991,7 @@ namespace Mutagen.Bethesda.Starfield
             this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID(forceUseLowerFormIDRanges: forceUseLowerFormIDRanges);
             _GameSettings_Object = new StarfieldGroup<GameSetting>(this);
             _Keywords_Object = new StarfieldGroup<Keyword>(this);
-            _FFKW_Object = new StarfieldGroup<FFKWRecord>(this);
+            _FormFolderKeywordLists_Object = new StarfieldGroup<FormFolderKeywordList>(this);
             _LocationReferenceTypes_Object = new StarfieldGroup<LocationReferenceType>(this);
             _Actions_Object = new StarfieldGroup<ActionRecord>(this);
             _Transforms_Object = new StarfieldGroup<Transform>(this);
@@ -8178,9 +8178,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Keywords.RecordCache.Set(rhsMod.Keywords.RecordCache.Items);
             }
-            if (mask?.FFKW ?? true)
+            if (mask?.FormFolderKeywordLists ?? true)
             {
-                this.FFKW.RecordCache.Set(rhsMod.FFKW.RecordCache.Items);
+                this.FormFolderKeywordLists.RecordCache.Set(rhsMod.FormFolderKeywordLists.RecordCache.Items);
             }
             if (mask?.LocationReferenceTypes ?? true)
             {
@@ -9158,7 +9158,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldModHeader ModHeader { get; }
         new StarfieldGroup<GameSetting> GameSettings { get; }
         new StarfieldGroup<Keyword> Keywords { get; }
-        new StarfieldGroup<FFKWRecord> FFKW { get; }
+        new StarfieldGroup<FormFolderKeywordList> FormFolderKeywordLists { get; }
         new StarfieldGroup<LocationReferenceType> LocationReferenceTypes { get; }
         new StarfieldGroup<ActionRecord> Actions { get; }
         new StarfieldGroup<Transform> Transforms { get; }
@@ -9354,7 +9354,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldModHeaderGetter ModHeader { get; }
         IStarfieldGroupGetter<IGameSettingGetter> GameSettings { get; }
         IStarfieldGroupGetter<IKeywordGetter> Keywords { get; }
-        IStarfieldGroupGetter<IFFKWRecordGetter> FFKW { get; }
+        IStarfieldGroupGetter<IFormFolderKeywordListGetter> FormFolderKeywordLists { get; }
         IStarfieldGroupGetter<ILocationReferenceTypeGetter> LocationReferenceTypes { get; }
         IStarfieldGroupGetter<IActionRecordGetter> Actions { get; }
         IStarfieldGroupGetter<ITransformGetter> Transforms { get; }
@@ -10090,7 +10090,7 @@ namespace Mutagen.Bethesda.Starfield
         ModHeader = 0,
         GameSettings = 1,
         Keywords = 2,
-        FFKW = 3,
+        FormFolderKeywordLists = 3,
         LocationReferenceTypes = 4,
         Actions = 5,
         Transforms = 6,
@@ -10345,7 +10345,7 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.GameSettings.Clear();
             item.Keywords.Clear();
-            item.FFKW.Clear();
+            item.FormFolderKeywordLists.Clear();
             item.LocationReferenceTypes.Clear();
             item.Actions.Clear();
             item.Transforms.Clear();
@@ -10702,7 +10702,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             obj.GameSettings.Remove(keys);
             obj.Keywords.Remove(keys);
-            obj.FFKW.Remove(keys);
+            obj.FormFolderKeywordLists.Remove(keys);
             obj.LocationReferenceTypes.Remove(keys);
             obj.Actions.Remove(keys);
             obj.Transforms.Remove(keys);
@@ -10931,11 +10931,11 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
-                case "FFKWRecord":
-                case "IFFKWRecordGetter":
-                case "IFFKWRecord":
-                case "IFFKWRecordInternal":
-                    obj.FFKW.Remove(
+                case "FormFolderKeywordList":
+                case "IFormFolderKeywordListGetter":
+                case "IFormFolderKeywordList":
+                case "IFormFolderKeywordListInternal":
+                    obj.FormFolderKeywordLists.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -13505,7 +13505,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.ModHeader = MaskItemExt.Factory(item.ModHeader.GetEqualsMask(rhs.ModHeader, include), include);
             ret.GameSettings = MaskItemExt.Factory(item.GameSettings.GetEqualsMask(rhs.GameSettings, include), include);
             ret.Keywords = MaskItemExt.Factory(item.Keywords.GetEqualsMask(rhs.Keywords, include), include);
-            ret.FFKW = MaskItemExt.Factory(item.FFKW.GetEqualsMask(rhs.FFKW, include), include);
+            ret.FormFolderKeywordLists = MaskItemExt.Factory(item.FormFolderKeywordLists.GetEqualsMask(rhs.FormFolderKeywordLists, include), include);
             ret.LocationReferenceTypes = MaskItemExt.Factory(item.LocationReferenceTypes.GetEqualsMask(rhs.LocationReferenceTypes, include), include);
             ret.Actions = MaskItemExt.Factory(item.Actions.GetEqualsMask(rhs.Actions, include), include);
             ret.Transforms = MaskItemExt.Factory(item.Transforms.GetEqualsMask(rhs.Transforms, include), include);
@@ -13735,9 +13735,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Keywords?.Print(sb, "Keywords");
             }
-            if (printMask?.FFKW?.Overall ?? true)
+            if (printMask?.FormFolderKeywordLists?.Overall ?? true)
             {
-                item.FFKW?.Print(sb, "FFKW");
+                item.FormFolderKeywordLists?.Print(sb, "FormFolderKeywordLists");
             }
             if (printMask?.LocationReferenceTypes?.Overall ?? true)
             {
@@ -14464,13 +14464,13 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isKeywordsEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.FFKW) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.FormFolderKeywordLists) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.FFKW, rhs.FFKW, out var lhsFFKW, out var rhsFFKW, out var isFFKWEqual))
+                if (EqualsMaskHelper.RefEquality(lhs.FormFolderKeywordLists, rhs.FormFolderKeywordLists, out var lhsFormFolderKeywordLists, out var rhsFormFolderKeywordLists, out var isFormFolderKeywordListsEqual))
                 {
-                    if (!object.Equals(lhsFFKW, rhsFFKW)) return false;
+                    if (!object.Equals(lhsFormFolderKeywordLists, rhsFormFolderKeywordLists)) return false;
                 }
-                else if (!isFFKWEqual) return false;
+                else if (!isFormFolderKeywordListsEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.LocationReferenceTypes) ?? true))
             {
@@ -15865,7 +15865,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.ModHeader);
             hash.Add(item.GameSettings);
             hash.Add(item.Keywords);
-            hash.Add(item.FFKW);
+            hash.Add(item.FormFolderKeywordLists);
             hash.Add(item.LocationReferenceTypes);
             hash.Add(item.Actions);
             hash.Add(item.Transforms);
@@ -16067,11 +16067,11 @@ namespace Mutagen.Bethesda.Starfield
                 case "IKeyword":
                 case "IKeywordInternal":
                     return obj.Keywords;
-                case "FFKWRecord":
-                case "IFFKWRecordGetter":
-                case "IFFKWRecord":
-                case "IFFKWRecordInternal":
-                    return obj.FFKW;
+                case "FormFolderKeywordList":
+                case "IFormFolderKeywordListGetter":
+                case "IFormFolderKeywordList":
+                case "IFormFolderKeywordListInternal":
+                    return obj.FormFolderKeywordLists;
                 case "LocationReferenceType":
                 case "ILocationReferenceTypeGetter":
                 case "ILocationReferenceType":
@@ -16957,7 +16957,7 @@ namespace Mutagen.Bethesda.Starfield
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Keywords, 1, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.FFKW, 2, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.FormFolderKeywordLists, 2, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.LocationReferenceTypes, 3, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Actions, 4, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Transforms, 5, outputStreams, writer.MetaData, param.Parallel));
@@ -17178,7 +17178,7 @@ namespace Mutagen.Bethesda.Starfield
             uint count = (uint)item.EnumerateMajorRecords().Count();
             count += item.GameSettings.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Keywords.RecordCache.Count > 0 ? 1 : default(uint);
-            count += item.FFKW.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.FormFolderKeywordLists.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.LocationReferenceTypes.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Actions.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Transforms.RecordCache.Count > 0 ? 1 : default(uint);
@@ -17981,7 +17981,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            foreach (var item in obj.FFKW.EnumerateMajorRecords())
+            foreach (var item in obj.FormFolderKeywordLists.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -18730,11 +18730,11 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
-                case "FFKWRecord":
-                case "IFFKWRecordGetter":
-                case "IFFKWRecord":
-                case "IFFKWRecordInternal":
-                    foreach (var item in obj.FFKW.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                case "FormFolderKeywordList":
+                case "IFormFolderKeywordListGetter":
+                case "IFormFolderKeywordList":
+                case "IFormFolderKeywordListInternal":
+                    foreach (var item in obj.FormFolderKeywordLists.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -20430,12 +20430,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, FFKWRecord, IFFKWRecordGetter>(
-                srcGroup: obj.FFKW,
-                type: typeof(IFFKWRecordGetter),
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, FormFolderKeywordList, IFormFolderKeywordListGetter>(
+                srcGroup: obj.FormFolderKeywordLists,
+                type: typeof(IFormFolderKeywordListGetter),
                 modKey: obj.ModKey,
-                group: (m) => m.FFKW,
-                groupGetter: (m) => m.FFKW))
+                group: (m) => m.FormFolderKeywordLists,
+                groupGetter: (m) => m.FormFolderKeywordLists))
             {
                 yield return item;
             }
@@ -22079,16 +22079,16 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
-                case "FFKWRecord":
-                case "IFFKWRecordGetter":
-                case "IFFKWRecord":
-                case "IFFKWRecordInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, FFKWRecord, IFFKWRecordGetter>(
-                        srcGroup: obj.FFKW,
+                case "FormFolderKeywordList":
+                case "IFormFolderKeywordListGetter":
+                case "IFormFolderKeywordList":
+                case "IFormFolderKeywordListInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, FormFolderKeywordList, IFormFolderKeywordListGetter>(
+                        srcGroup: obj.FormFolderKeywordLists,
                         type: type,
                         modKey: obj.ModKey,
-                        group: (m) => m.FFKW,
-                        groupGetter: (m) => m.FFKW))
+                        group: (m) => m.FormFolderKeywordLists,
+                        groupGetter: (m) => m.FormFolderKeywordLists))
                     {
                         yield return item;
                     }
@@ -25363,15 +25363,15 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.FFKW) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)StarfieldMod_FieldIndex.FormFolderKeywordLists) ?? true))
             {
-                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.FFKW);
+                errorMask?.PushIndex((int)StarfieldMod_FieldIndex.FormFolderKeywordLists);
                 try
                 {
-                    item.FFKW.DeepCopyIn(
-                        rhs: rhs.FFKW,
+                    item.FormFolderKeywordLists.DeepCopyIn(
+                        rhs: rhs.FormFolderKeywordLists,
                         errorMask: errorMask,
-                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.FFKW));
+                        copyMask: copyMask?.GetSubCrystal((int)StarfieldMod_FieldIndex.FormFolderKeywordLists));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -28948,7 +28948,7 @@ namespace Mutagen.Bethesda.Starfield
     {
         public bool GameSettings;
         public bool Keywords;
-        public bool FFKW;
+        public bool FormFolderKeywordLists;
         public bool LocationReferenceTypes;
         public bool Actions;
         public bool Transforms;
@@ -29129,7 +29129,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             GameSettings = defaultValue;
             Keywords = defaultValue;
-            FFKW = defaultValue;
+            FormFolderKeywordLists = defaultValue;
             LocationReferenceTypes = defaultValue;
             Actions = defaultValue;
             Transforms = defaultValue;
@@ -29384,13 +29384,13 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams);
                 }
             }
-            if (importMask?.FFKW ?? true)
+            if (importMask?.FormFolderKeywordLists ?? true)
             {
-                var FFKWItem = item.FFKW;
-                if (FFKWItem.RecordCache.Count > 0)
+                var FormFolderKeywordListsItem = item.FormFolderKeywordLists;
+                if (FormFolderKeywordListsItem.RecordCache.Count > 0)
                 {
-                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)FFKWItem).BinaryWriteTranslator).Write<IFFKWRecordGetter>(
-                        item: FFKWItem,
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)FormFolderKeywordListsItem).BinaryWriteTranslator).Write<IFormFolderKeywordListGetter>(
+                        item: FormFolderKeywordListsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -31398,9 +31398,9 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.FFKW:
                 {
-                    if (importMask?.FFKW ?? true)
+                    if (importMask?.FormFolderKeywordLists ?? true)
                     {
-                        item.FFKW.CopyInFromBinary(
+                        item.FormFolderKeywordLists.CopyInFromBinary(
                             frame: frame,
                             translationParams: null);
                     }
@@ -31408,7 +31408,7 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         frame.Position += contentLength;
                     }
-                    return (int)StarfieldMod_FieldIndex.FFKW;
+                    return (int)StarfieldMod_FieldIndex.FormFolderKeywordLists;
                 }
                 case RecordTypeInts.LCRT:
                 {
@@ -34008,10 +34008,10 @@ namespace Mutagen.Bethesda.Starfield
         private IStarfieldGroupGetter<IKeywordGetter>? _Keywords => _KeywordsLocations != null ? StarfieldGroupBinaryOverlay<IKeywordGetter>.StarfieldGroupFactory(_stream, _KeywordsLocations, _package) : default;
         public IStarfieldGroupGetter<IKeywordGetter> Keywords => _Keywords ?? new StarfieldGroup<Keyword>(this);
         #endregion
-        #region FFKW
-        private List<RangeInt64>? _FFKWLocations;
-        private IStarfieldGroupGetter<IFFKWRecordGetter>? _FFKW => _FFKWLocations != null ? StarfieldGroupBinaryOverlay<IFFKWRecordGetter>.StarfieldGroupFactory(_stream, _FFKWLocations, _package) : default;
-        public IStarfieldGroupGetter<IFFKWRecordGetter> FFKW => _FFKW ?? new StarfieldGroup<FFKWRecord>(this);
+        #region FormFolderKeywordLists
+        private List<RangeInt64>? _FormFolderKeywordListsLocations;
+        private IStarfieldGroupGetter<IFormFolderKeywordListGetter>? _FormFolderKeywordLists => _FormFolderKeywordListsLocations != null ? StarfieldGroupBinaryOverlay<IFormFolderKeywordListGetter>.StarfieldGroupFactory(_stream, _FormFolderKeywordListsLocations, _package) : default;
+        public IStarfieldGroupGetter<IFormFolderKeywordListGetter> FormFolderKeywordLists => _FormFolderKeywordLists ?? new StarfieldGroup<FormFolderKeywordList>(this);
         #endregion
         #region LocationReferenceTypes
         private List<RangeInt64>? _LocationReferenceTypesLocations;
@@ -34975,9 +34975,9 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.FFKW:
                 {
-                    _FFKWLocations ??= new();
-                    _FFKWLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
-                    return (int)StarfieldMod_FieldIndex.FFKW;
+                    _FormFolderKeywordListsLocations ??= new();
+                    _FormFolderKeywordListsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)StarfieldMod_FieldIndex.FormFolderKeywordLists;
                 }
                 case RecordTypeInts.LCRT:
                 {

@@ -37,28 +37,28 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class FacialExpressionItem :
-        IEquatable<IFacialExpressionItemGetter>,
-        IFacialExpressionItem,
-        ILoquiObjectSetter<FacialExpressionItem>
+    public partial class FacialExpressionMorph :
+        IEquatable<IFacialExpressionMorphGetter>,
+        IFacialExpressionMorph,
+        ILoquiObjectSetter<FacialExpressionMorph>
     {
         #region Ctor
-        public FacialExpressionItem()
+        public FacialExpressionMorph()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region MNAM
-        public String? MNAM { get; set; }
+        #region Morph
+        public String? Morph { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IFacialExpressionItemGetter.MNAM => this.MNAM;
+        String? IFacialExpressionMorphGetter.Morph => this.Morph;
         #endregion
-        #region MWGT
-        public Single? MWGT { get; set; }
+        #region Value
+        public Single? Value { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IFacialExpressionItemGetter.MWGT => this.MWGT;
+        Single? IFacialExpressionMorphGetter.Value => this.Value;
         #endregion
 
         #region To String
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            FacialExpressionItemMixIn.Print(
+            FacialExpressionMorphMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -78,16 +78,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IFacialExpressionItemGetter rhs) return false;
-            return ((FacialExpressionItemCommon)((IFacialExpressionItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IFacialExpressionMorphGetter rhs) return false;
+            return ((FacialExpressionMorphCommon)((IFacialExpressionMorphGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IFacialExpressionItemGetter? obj)
+        public bool Equals(IFacialExpressionMorphGetter? obj)
         {
-            return ((FacialExpressionItemCommon)((IFacialExpressionItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((FacialExpressionMorphCommon)((IFacialExpressionMorphGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((FacialExpressionItemCommon)((IFacialExpressionItemGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((FacialExpressionMorphCommon)((IFacialExpressionMorphGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -99,16 +99,16 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.MNAM = initialValue;
-                this.MWGT = initialValue;
+                this.Morph = initialValue;
+                this.Value = initialValue;
             }
 
             public Mask(
-                TItem MNAM,
-                TItem MWGT)
+                TItem Morph,
+                TItem Value)
             {
-                this.MNAM = MNAM;
-                this.MWGT = MWGT;
+                this.Morph = Morph;
+                this.Value = Value;
             }
 
             #pragma warning disable CS8618
@@ -120,8 +120,8 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem MNAM;
-            public TItem MWGT;
+            public TItem Morph;
+            public TItem Value;
             #endregion
 
             #region Equals
@@ -134,15 +134,15 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.MNAM, rhs.MNAM)) return false;
-                if (!object.Equals(this.MWGT, rhs.MWGT)) return false;
+                if (!object.Equals(this.Morph, rhs.Morph)) return false;
+                if (!object.Equals(this.Value, rhs.Value)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.MNAM);
-                hash.Add(this.MWGT);
+                hash.Add(this.Morph);
+                hash.Add(this.Value);
                 return hash.ToHashCode();
             }
 
@@ -151,8 +151,8 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.MNAM)) return false;
-                if (!eval(this.MWGT)) return false;
+                if (!eval(this.Morph)) return false;
+                if (!eval(this.Value)) return false;
                 return true;
             }
             #endregion
@@ -160,8 +160,8 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.MNAM)) return true;
-                if (eval(this.MWGT)) return true;
+                if (eval(this.Morph)) return true;
+                if (eval(this.Value)) return true;
                 return false;
             }
             #endregion
@@ -169,40 +169,40 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new FacialExpressionItem.Mask<R>();
+                var ret = new FacialExpressionMorph.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.MNAM = eval(this.MNAM);
-                obj.MWGT = eval(this.MWGT);
+                obj.Morph = eval(this.Morph);
+                obj.Value = eval(this.Value);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(FacialExpressionItem.Mask<bool>? printMask = null)
+            public string Print(FacialExpressionMorph.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, FacialExpressionItem.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, FacialExpressionMorph.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(FacialExpressionItem.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(FacialExpressionMorph.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.MNAM ?? true)
+                    if (printMask?.Morph ?? true)
                     {
-                        sb.AppendItem(MNAM, "MNAM");
+                        sb.AppendItem(Morph, "Morph");
                     }
-                    if (printMask?.MWGT ?? true)
+                    if (printMask?.Value ?? true)
                     {
-                        sb.AppendItem(MWGT, "MWGT");
+                        sb.AppendItem(Value, "Value");
                     }
                 }
             }
@@ -228,20 +228,20 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? MNAM;
-            public Exception? MWGT;
+            public Exception? Morph;
+            public Exception? Value;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                FacialExpressionItem_FieldIndex enu = (FacialExpressionItem_FieldIndex)index;
+                FacialExpressionMorph_FieldIndex enu = (FacialExpressionMorph_FieldIndex)index;
                 switch (enu)
                 {
-                    case FacialExpressionItem_FieldIndex.MNAM:
-                        return MNAM;
-                    case FacialExpressionItem_FieldIndex.MWGT:
-                        return MWGT;
+                    case FacialExpressionMorph_FieldIndex.Morph:
+                        return Morph;
+                    case FacialExpressionMorph_FieldIndex.Value:
+                        return Value;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -249,14 +249,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                FacialExpressionItem_FieldIndex enu = (FacialExpressionItem_FieldIndex)index;
+                FacialExpressionMorph_FieldIndex enu = (FacialExpressionMorph_FieldIndex)index;
                 switch (enu)
                 {
-                    case FacialExpressionItem_FieldIndex.MNAM:
-                        this.MNAM = ex;
+                    case FacialExpressionMorph_FieldIndex.Morph:
+                        this.Morph = ex;
                         break;
-                    case FacialExpressionItem_FieldIndex.MWGT:
-                        this.MWGT = ex;
+                    case FacialExpressionMorph_FieldIndex.Value:
+                        this.Value = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -265,14 +265,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                FacialExpressionItem_FieldIndex enu = (FacialExpressionItem_FieldIndex)index;
+                FacialExpressionMorph_FieldIndex enu = (FacialExpressionMorph_FieldIndex)index;
                 switch (enu)
                 {
-                    case FacialExpressionItem_FieldIndex.MNAM:
-                        this.MNAM = (Exception?)obj;
+                    case FacialExpressionMorph_FieldIndex.Morph:
+                        this.Morph = (Exception?)obj;
                         break;
-                    case FacialExpressionItem_FieldIndex.MWGT:
-                        this.MWGT = (Exception?)obj;
+                    case FacialExpressionMorph_FieldIndex.Value:
+                        this.Value = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -282,8 +282,8 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (MNAM != null) return true;
-                if (MWGT != null) return true;
+                if (Morph != null) return true;
+                if (Value != null) return true;
                 return false;
             }
             #endregion
@@ -310,10 +310,10 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(MNAM, "MNAM");
+                    sb.AppendItem(Morph, "Morph");
                 }
                 {
-                    sb.AppendItem(MWGT, "MWGT");
+                    sb.AppendItem(Value, "Value");
                 }
             }
             #endregion
@@ -323,8 +323,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.MNAM = this.MNAM.Combine(rhs.MNAM);
-                ret.MWGT = this.MWGT.Combine(rhs.MWGT);
+                ret.Morph = this.Morph.Combine(rhs.Morph);
+                ret.Value = this.Value.Combine(rhs.Value);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -348,8 +348,8 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool MNAM;
-            public bool MWGT;
+            public bool Morph;
+            public bool Value;
             #endregion
 
             #region Ctors
@@ -359,8 +359,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.MNAM = defaultOn;
-                this.MWGT = defaultOn;
+                this.Morph = defaultOn;
+                this.Value = defaultOn;
             }
 
             #endregion
@@ -376,8 +376,8 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((MNAM, null));
-                ret.Add((MWGT, null));
+                ret.Add((Morph, null));
+                ret.Add((Value, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -390,25 +390,25 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => FacialExpressionItemBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => FacialExpressionMorphBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((FacialExpressionItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((FacialExpressionMorphBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static FacialExpressionItem CreateFromBinary(
+        public static FacialExpressionMorph CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new FacialExpressionItem();
-            ((FacialExpressionItemSetterCommon)((IFacialExpressionItemGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new FacialExpressionMorph();
+            ((FacialExpressionMorphSetterCommon)((IFacialExpressionMorphGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out FacialExpressionItem item,
+            out FacialExpressionMorph item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -434,30 +434,30 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((FacialExpressionItemSetterCommon)((IFacialExpressionItemGetter)this).CommonSetterInstance()!).Clear(this);
+            ((FacialExpressionMorphSetterCommon)((IFacialExpressionMorphGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static FacialExpressionItem GetNew()
+        internal static FacialExpressionMorph GetNew()
         {
-            return new FacialExpressionItem();
+            return new FacialExpressionMorph();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IFacialExpressionItem :
-        IFacialExpressionItemGetter,
-        ILoquiObjectSetter<IFacialExpressionItem>
+    public partial interface IFacialExpressionMorph :
+        IFacialExpressionMorphGetter,
+        ILoquiObjectSetter<IFacialExpressionMorph>
     {
-        new String? MNAM { get; set; }
-        new Single? MWGT { get; set; }
+        new String? Morph { get; set; }
+        new Single? Value { get; set; }
     }
 
-    public partial interface IFacialExpressionItemGetter :
+    public partial interface IFacialExpressionMorphGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IFacialExpressionItemGetter>
+        ILoquiObject<IFacialExpressionMorphGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -465,51 +465,51 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => FacialExpressionItem_Registration.Instance;
-        String? MNAM { get; }
-        Single? MWGT { get; }
+        static ILoquiRegistration StaticRegistration => FacialExpressionMorph_Registration.Instance;
+        String? Morph { get; }
+        Single? Value { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class FacialExpressionItemMixIn
+    public static partial class FacialExpressionMorphMixIn
     {
-        public static void Clear(this IFacialExpressionItem item)
+        public static void Clear(this IFacialExpressionMorph item)
         {
-            ((FacialExpressionItemSetterCommon)((IFacialExpressionItemGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((FacialExpressionMorphSetterCommon)((IFacialExpressionMorphGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static FacialExpressionItem.Mask<bool> GetEqualsMask(
-            this IFacialExpressionItemGetter item,
-            IFacialExpressionItemGetter rhs,
+        public static FacialExpressionMorph.Mask<bool> GetEqualsMask(
+            this IFacialExpressionMorphGetter item,
+            IFacialExpressionMorphGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((FacialExpressionItemCommon)((IFacialExpressionItemGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((FacialExpressionMorphCommon)((IFacialExpressionMorphGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IFacialExpressionItemGetter item,
+            this IFacialExpressionMorphGetter item,
             string? name = null,
-            FacialExpressionItem.Mask<bool>? printMask = null)
+            FacialExpressionMorph.Mask<bool>? printMask = null)
         {
-            return ((FacialExpressionItemCommon)((IFacialExpressionItemGetter)item).CommonInstance()!).Print(
+            return ((FacialExpressionMorphCommon)((IFacialExpressionMorphGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IFacialExpressionItemGetter item,
+            this IFacialExpressionMorphGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            FacialExpressionItem.Mask<bool>? printMask = null)
+            FacialExpressionMorph.Mask<bool>? printMask = null)
         {
-            ((FacialExpressionItemCommon)((IFacialExpressionItemGetter)item).CommonInstance()!).Print(
+            ((FacialExpressionMorphCommon)((IFacialExpressionMorphGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -517,21 +517,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IFacialExpressionItemGetter item,
-            IFacialExpressionItemGetter rhs,
-            FacialExpressionItem.TranslationMask? equalsMask = null)
+            this IFacialExpressionMorphGetter item,
+            IFacialExpressionMorphGetter rhs,
+            FacialExpressionMorph.TranslationMask? equalsMask = null)
         {
-            return ((FacialExpressionItemCommon)((IFacialExpressionItemGetter)item).CommonInstance()!).Equals(
+            return ((FacialExpressionMorphCommon)((IFacialExpressionMorphGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IFacialExpressionItem lhs,
-            IFacialExpressionItemGetter rhs)
+            this IFacialExpressionMorph lhs,
+            IFacialExpressionMorphGetter rhs)
         {
-            ((FacialExpressionItemSetterTranslationCommon)((IFacialExpressionItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((FacialExpressionMorphSetterTranslationCommon)((IFacialExpressionMorphGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -540,11 +540,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IFacialExpressionItem lhs,
-            IFacialExpressionItemGetter rhs,
-            FacialExpressionItem.TranslationMask? copyMask = null)
+            this IFacialExpressionMorph lhs,
+            IFacialExpressionMorphGetter rhs,
+            FacialExpressionMorph.TranslationMask? copyMask = null)
         {
-            ((FacialExpressionItemSetterTranslationCommon)((IFacialExpressionItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((FacialExpressionMorphSetterTranslationCommon)((IFacialExpressionMorphGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -553,28 +553,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IFacialExpressionItem lhs,
-            IFacialExpressionItemGetter rhs,
-            out FacialExpressionItem.ErrorMask errorMask,
-            FacialExpressionItem.TranslationMask? copyMask = null)
+            this IFacialExpressionMorph lhs,
+            IFacialExpressionMorphGetter rhs,
+            out FacialExpressionMorph.ErrorMask errorMask,
+            FacialExpressionMorph.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((FacialExpressionItemSetterTranslationCommon)((IFacialExpressionItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((FacialExpressionMorphSetterTranslationCommon)((IFacialExpressionMorphGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = FacialExpressionItem.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FacialExpressionMorph.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IFacialExpressionItem lhs,
-            IFacialExpressionItemGetter rhs,
+            this IFacialExpressionMorph lhs,
+            IFacialExpressionMorphGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((FacialExpressionItemSetterTranslationCommon)((IFacialExpressionItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((FacialExpressionMorphSetterTranslationCommon)((IFacialExpressionMorphGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -582,32 +582,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static FacialExpressionItem DeepCopy(
-            this IFacialExpressionItemGetter item,
-            FacialExpressionItem.TranslationMask? copyMask = null)
+        public static FacialExpressionMorph DeepCopy(
+            this IFacialExpressionMorphGetter item,
+            FacialExpressionMorph.TranslationMask? copyMask = null)
         {
-            return ((FacialExpressionItemSetterTranslationCommon)((IFacialExpressionItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((FacialExpressionMorphSetterTranslationCommon)((IFacialExpressionMorphGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static FacialExpressionItem DeepCopy(
-            this IFacialExpressionItemGetter item,
-            out FacialExpressionItem.ErrorMask errorMask,
-            FacialExpressionItem.TranslationMask? copyMask = null)
+        public static FacialExpressionMorph DeepCopy(
+            this IFacialExpressionMorphGetter item,
+            out FacialExpressionMorph.ErrorMask errorMask,
+            FacialExpressionMorph.TranslationMask? copyMask = null)
         {
-            return ((FacialExpressionItemSetterTranslationCommon)((IFacialExpressionItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((FacialExpressionMorphSetterTranslationCommon)((IFacialExpressionMorphGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static FacialExpressionItem DeepCopy(
-            this IFacialExpressionItemGetter item,
+        public static FacialExpressionMorph DeepCopy(
+            this IFacialExpressionMorphGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((FacialExpressionItemSetterTranslationCommon)((IFacialExpressionItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((FacialExpressionMorphSetterTranslationCommon)((IFacialExpressionMorphGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -615,11 +615,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IFacialExpressionItem item,
+            this IFacialExpressionMorph item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((FacialExpressionItemSetterCommon)((IFacialExpressionItemGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((FacialExpressionMorphSetterCommon)((IFacialExpressionMorphGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -635,17 +635,17 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum FacialExpressionItem_FieldIndex
+    internal enum FacialExpressionMorph_FieldIndex
     {
-        MNAM = 0,
-        MWGT = 1,
+        Morph = 0,
+        Value = 1,
     }
     #endregion
 
     #region Registration
-    internal partial class FacialExpressionItem_Registration : ILoquiRegistration
+    internal partial class FacialExpressionMorph_Registration : ILoquiRegistration
     {
-        public static readonly FacialExpressionItem_Registration Instance = new FacialExpressionItem_Registration();
+        public static readonly FacialExpressionMorph_Registration Instance = new FacialExpressionMorph_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -653,23 +653,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(FacialExpressionItem.Mask<>);
+        public static readonly Type MaskType = typeof(FacialExpressionMorph.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(FacialExpressionItem.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(FacialExpressionMorph.ErrorMask);
 
-        public static readonly Type ClassType = typeof(FacialExpressionItem);
+        public static readonly Type ClassType = typeof(FacialExpressionMorph);
 
-        public static readonly Type GetterType = typeof(IFacialExpressionItemGetter);
+        public static readonly Type GetterType = typeof(IFacialExpressionMorphGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IFacialExpressionItem);
+        public static readonly Type SetterType = typeof(IFacialExpressionMorph);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.FacialExpressionItem";
+        public const string FullName = "Mutagen.Bethesda.Starfield.FacialExpressionMorph";
 
-        public const string Name = "FacialExpressionItem";
+        public const string Name = "FacialExpressionMorph";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MWGT);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(FacialExpressionItemBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(FacialExpressionMorphBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -716,21 +716,21 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class FacialExpressionItemSetterCommon
+    internal partial class FacialExpressionMorphSetterCommon
     {
-        public static readonly FacialExpressionItemSetterCommon Instance = new FacialExpressionItemSetterCommon();
+        public static readonly FacialExpressionMorphSetterCommon Instance = new FacialExpressionMorphSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IFacialExpressionItem item)
+        public void Clear(IFacialExpressionMorph item)
         {
             ClearPartial();
-            item.MNAM = default;
-            item.MWGT = default;
+            item.Morph = default;
+            item.Value = default;
         }
         
         #region Mutagen
-        public void RemapLinks(IFacialExpressionItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IFacialExpressionMorph obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
         }
         
@@ -738,7 +738,7 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IFacialExpressionItem item,
+            IFacialExpressionMorph item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -746,23 +746,23 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillTyped: FacialExpressionItemBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillTyped: FacialExpressionMorphBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    internal partial class FacialExpressionItemCommon
+    internal partial class FacialExpressionMorphCommon
     {
-        public static readonly FacialExpressionItemCommon Instance = new FacialExpressionItemCommon();
+        public static readonly FacialExpressionMorphCommon Instance = new FacialExpressionMorphCommon();
 
-        public FacialExpressionItem.Mask<bool> GetEqualsMask(
-            IFacialExpressionItemGetter item,
-            IFacialExpressionItemGetter rhs,
+        public FacialExpressionMorph.Mask<bool> GetEqualsMask(
+            IFacialExpressionMorphGetter item,
+            IFacialExpressionMorphGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new FacialExpressionItem.Mask<bool>(false);
-            ((FacialExpressionItemCommon)((IFacialExpressionItemGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new FacialExpressionMorph.Mask<bool>(false);
+            ((FacialExpressionMorphCommon)((IFacialExpressionMorphGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -771,19 +771,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IFacialExpressionItemGetter item,
-            IFacialExpressionItemGetter rhs,
-            FacialExpressionItem.Mask<bool> ret,
+            IFacialExpressionMorphGetter item,
+            IFacialExpressionMorphGetter rhs,
+            FacialExpressionMorph.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.MNAM = string.Equals(item.MNAM, rhs.MNAM);
-            ret.MWGT = item.MWGT.EqualsWithin(rhs.MWGT);
+            ret.Morph = string.Equals(item.Morph, rhs.Morph);
+            ret.Value = item.Value.EqualsWithin(rhs.Value);
         }
         
         public string Print(
-            IFacialExpressionItemGetter item,
+            IFacialExpressionMorphGetter item,
             string? name = null,
-            FacialExpressionItem.Mask<bool>? printMask = null)
+            FacialExpressionMorph.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -795,18 +795,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IFacialExpressionItemGetter item,
+            IFacialExpressionMorphGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            FacialExpressionItem.Mask<bool>? printMask = null)
+            FacialExpressionMorph.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"FacialExpressionItem =>");
+                sb.AppendLine($"FacialExpressionMorph =>");
             }
             else
             {
-                sb.AppendLine($"{name} (FacialExpressionItem) =>");
+                sb.AppendLine($"{name} (FacialExpressionMorph) =>");
             }
             using (sb.Brace())
             {
@@ -818,50 +818,50 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IFacialExpressionItemGetter item,
+            IFacialExpressionMorphGetter item,
             StructuredStringBuilder sb,
-            FacialExpressionItem.Mask<bool>? printMask = null)
+            FacialExpressionMorph.Mask<bool>? printMask = null)
         {
-            if ((printMask?.MNAM ?? true)
-                && item.MNAM is {} MNAMItem)
+            if ((printMask?.Morph ?? true)
+                && item.Morph is {} MorphItem)
             {
-                sb.AppendItem(MNAMItem, "MNAM");
+                sb.AppendItem(MorphItem, "Morph");
             }
-            if ((printMask?.MWGT ?? true)
-                && item.MWGT is {} MWGTItem)
+            if ((printMask?.Value ?? true)
+                && item.Value is {} ValueItem)
             {
-                sb.AppendItem(MWGTItem, "MWGT");
+                sb.AppendItem(ValueItem, "Value");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IFacialExpressionItemGetter? lhs,
-            IFacialExpressionItemGetter? rhs,
+            IFacialExpressionMorphGetter? lhs,
+            IFacialExpressionMorphGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)FacialExpressionItem_FieldIndex.MNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FacialExpressionMorph_FieldIndex.Morph) ?? true))
             {
-                if (!string.Equals(lhs.MNAM, rhs.MNAM)) return false;
+                if (!string.Equals(lhs.Morph, rhs.Morph)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)FacialExpressionItem_FieldIndex.MWGT) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FacialExpressionMorph_FieldIndex.Value) ?? true))
             {
-                if (!lhs.MWGT.EqualsWithin(rhs.MWGT)) return false;
+                if (!lhs.Value.EqualsWithin(rhs.Value)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IFacialExpressionItemGetter item)
+        public virtual int GetHashCode(IFacialExpressionMorphGetter item)
         {
             var hash = new HashCode();
-            if (item.MNAM is {} MNAMitem)
+            if (item.Morph is {} Morphitem)
             {
-                hash.Add(MNAMitem);
+                hash.Add(Morphitem);
             }
-            if (item.MWGT is {} MWGTitem)
+            if (item.Value is {} Valueitem)
             {
-                hash.Add(MWGTitem);
+                hash.Add(Valueitem);
             }
             return hash.ToHashCode();
         }
@@ -871,11 +871,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return FacialExpressionItem.GetNew();
+            return FacialExpressionMorph.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFacialExpressionItemGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFacialExpressionMorphGetter obj)
         {
             yield break;
         }
@@ -883,25 +883,25 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class FacialExpressionItemSetterTranslationCommon
+    internal partial class FacialExpressionMorphSetterTranslationCommon
     {
-        public static readonly FacialExpressionItemSetterTranslationCommon Instance = new FacialExpressionItemSetterTranslationCommon();
+        public static readonly FacialExpressionMorphSetterTranslationCommon Instance = new FacialExpressionMorphSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IFacialExpressionItem item,
-            IFacialExpressionItemGetter rhs,
+            IFacialExpressionMorph item,
+            IFacialExpressionMorphGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)FacialExpressionItem_FieldIndex.MNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FacialExpressionMorph_FieldIndex.Morph) ?? true))
             {
-                item.MNAM = rhs.MNAM;
+                item.Morph = rhs.Morph;
             }
-            if ((copyMask?.GetShouldTranslate((int)FacialExpressionItem_FieldIndex.MWGT) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FacialExpressionMorph_FieldIndex.Value) ?? true))
             {
-                item.MWGT = rhs.MWGT;
+                item.Value = rhs.Value;
             }
             DeepCopyInCustom(
                 item: item,
@@ -912,19 +912,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         partial void DeepCopyInCustom(
-            IFacialExpressionItem item,
-            IFacialExpressionItemGetter rhs,
+            IFacialExpressionMorph item,
+            IFacialExpressionMorphGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
         #endregion
         
-        public FacialExpressionItem DeepCopy(
-            IFacialExpressionItemGetter item,
-            FacialExpressionItem.TranslationMask? copyMask = null)
+        public FacialExpressionMorph DeepCopy(
+            IFacialExpressionMorphGetter item,
+            FacialExpressionMorph.TranslationMask? copyMask = null)
         {
-            FacialExpressionItem ret = (FacialExpressionItem)((FacialExpressionItemCommon)((IFacialExpressionItemGetter)item).CommonInstance()!).GetNew();
-            ((FacialExpressionItemSetterTranslationCommon)((IFacialExpressionItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            FacialExpressionMorph ret = (FacialExpressionMorph)((FacialExpressionMorphCommon)((IFacialExpressionMorphGetter)item).CommonInstance()!).GetNew();
+            ((FacialExpressionMorphSetterTranslationCommon)((IFacialExpressionMorphGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -933,30 +933,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public FacialExpressionItem DeepCopy(
-            IFacialExpressionItemGetter item,
-            out FacialExpressionItem.ErrorMask errorMask,
-            FacialExpressionItem.TranslationMask? copyMask = null)
+        public FacialExpressionMorph DeepCopy(
+            IFacialExpressionMorphGetter item,
+            out FacialExpressionMorph.ErrorMask errorMask,
+            FacialExpressionMorph.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            FacialExpressionItem ret = (FacialExpressionItem)((FacialExpressionItemCommon)((IFacialExpressionItemGetter)item).CommonInstance()!).GetNew();
-            ((FacialExpressionItemSetterTranslationCommon)((IFacialExpressionItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            FacialExpressionMorph ret = (FacialExpressionMorph)((FacialExpressionMorphCommon)((IFacialExpressionMorphGetter)item).CommonInstance()!).GetNew();
+            ((FacialExpressionMorphSetterTranslationCommon)((IFacialExpressionMorphGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = FacialExpressionItem.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = FacialExpressionMorph.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public FacialExpressionItem DeepCopy(
-            IFacialExpressionItemGetter item,
+        public FacialExpressionMorph DeepCopy(
+            IFacialExpressionMorphGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            FacialExpressionItem ret = (FacialExpressionItem)((FacialExpressionItemCommon)((IFacialExpressionItemGetter)item).CommonInstance()!).GetNew();
-            ((FacialExpressionItemSetterTranslationCommon)((IFacialExpressionItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            FacialExpressionMorph ret = (FacialExpressionMorph)((FacialExpressionMorphCommon)((IFacialExpressionMorphGetter)item).CommonInstance()!).GetNew();
+            ((FacialExpressionMorphSetterTranslationCommon)((IFacialExpressionMorphGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -972,27 +972,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class FacialExpressionItem
+    public partial class FacialExpressionMorph
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => FacialExpressionItem_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => FacialExpressionItem_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => FacialExpressionMorph_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FacialExpressionMorph_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => FacialExpressionItemCommon.Instance;
+        protected object CommonInstance() => FacialExpressionMorphCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return FacialExpressionItemSetterCommon.Instance;
+            return FacialExpressionMorphSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => FacialExpressionItemSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => FacialExpressionMorphSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IFacialExpressionItemGetter.CommonInstance() => this.CommonInstance();
+        object IFacialExpressionMorphGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IFacialExpressionItemGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IFacialExpressionMorphGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IFacialExpressionItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IFacialExpressionMorphGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1003,29 +1003,29 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class FacialExpressionItemBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class FacialExpressionMorphBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly FacialExpressionItemBinaryWriteTranslation Instance = new();
+        public static readonly FacialExpressionMorphBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            IFacialExpressionItemGetter item,
+            IFacialExpressionMorphGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.MNAM,
+                item: item.Morph,
                 header: translationParams.ConvertToCustom(RecordTypes.MNAM),
                 binaryType: StringBinaryType.NullTerminate);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.MWGT,
+                item: item.Value,
                 header: translationParams.ConvertToCustom(RecordTypes.MWGT));
         }
 
         public void Write(
             MutagenWriter writer,
-            IFacialExpressionItemGetter item,
+            IFacialExpressionMorphGetter item,
             TypedWriteParams translationParams)
         {
             WriteRecordTypes(
@@ -1040,19 +1040,19 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IFacialExpressionItemGetter)item,
+                item: (IFacialExpressionMorphGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class FacialExpressionItemBinaryCreateTranslation
+    internal partial class FacialExpressionMorphBinaryCreateTranslation
     {
-        public static readonly FacialExpressionItemBinaryCreateTranslation Instance = new FacialExpressionItemBinaryCreateTranslation();
+        public static readonly FacialExpressionMorphBinaryCreateTranslation Instance = new FacialExpressionMorphBinaryCreateTranslation();
 
         public static ParseResult FillBinaryRecordTypes(
-            IFacialExpressionItem item,
+            IFacialExpressionMorph item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1065,20 +1065,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.MNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)FacialExpressionItem_FieldIndex.MNAM, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FacialExpressionMorph_FieldIndex.Morph, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MNAM = StringBinaryTranslation.Instance.Parse(
+                    item.Morph = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)FacialExpressionItem_FieldIndex.MNAM;
+                    return (int)FacialExpressionMorph_FieldIndex.Morph;
                 }
                 case RecordTypeInts.MWGT:
                 {
-                    if (lastParsed.ShortCircuit((int)FacialExpressionItem_FieldIndex.MWGT, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)FacialExpressionMorph_FieldIndex.Value, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MWGT = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)FacialExpressionItem_FieldIndex.MWGT;
+                    item.Value = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)FacialExpressionMorph_FieldIndex.Value;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1091,14 +1091,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class FacialExpressionItemBinaryTranslationMixIn
+    public static class FacialExpressionMorphBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IFacialExpressionItemGetter item,
+            this IFacialExpressionMorphGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((FacialExpressionItemBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((FacialExpressionMorphBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1111,50 +1111,50 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class FacialExpressionItemBinaryOverlay :
+    internal partial class FacialExpressionMorphBinaryOverlay :
         PluginBinaryOverlay,
-        IFacialExpressionItemGetter
+        IFacialExpressionMorphGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => FacialExpressionItem_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => FacialExpressionItem_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => FacialExpressionMorph_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => FacialExpressionMorph_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => FacialExpressionItemCommon.Instance;
+        protected object CommonInstance() => FacialExpressionMorphCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => FacialExpressionItemSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => FacialExpressionMorphSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IFacialExpressionItemGetter.CommonInstance() => this.CommonInstance();
+        object IFacialExpressionMorphGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IFacialExpressionItemGetter.CommonSetterInstance() => null;
+        object? IFacialExpressionMorphGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IFacialExpressionItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IFacialExpressionMorphGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => FacialExpressionItemBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => FacialExpressionMorphBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((FacialExpressionItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((FacialExpressionMorphBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        #region MNAM
-        private int? _MNAMLocation;
-        public String? MNAM => _MNAMLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MNAMLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region Morph
+        private int? _MorphLocation;
+        public String? Morph => _MorphLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MorphLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        #region MWGT
-        private int? _MWGTLocation;
-        public Single? MWGT => _MWGTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MWGTLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region Value
+        private int? _ValueLocation;
+        public Single? Value => _ValueLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ValueLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1162,7 +1162,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected FacialExpressionItemBinaryOverlay(
+        protected FacialExpressionMorphBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1172,7 +1172,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IFacialExpressionItemGetter FacialExpressionItemFactory(
+        public static IFacialExpressionMorphGetter FacialExpressionMorphFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1184,7 +1184,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new FacialExpressionItemBinaryOverlay(
+            var ret = new FacialExpressionMorphBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret.FillTypelessSubrecordTypes(
@@ -1196,12 +1196,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IFacialExpressionItemGetter FacialExpressionItemFactory(
+        public static IFacialExpressionMorphGetter FacialExpressionMorphFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return FacialExpressionItemFactory(
+            return FacialExpressionMorphFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1221,15 +1221,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.MNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)FacialExpressionItem_FieldIndex.MNAM, translationParams)) return ParseResult.Stop;
-                    _MNAMLocation = (stream.Position - offset);
-                    return (int)FacialExpressionItem_FieldIndex.MNAM;
+                    if (lastParsed.ShortCircuit((int)FacialExpressionMorph_FieldIndex.Morph, translationParams)) return ParseResult.Stop;
+                    _MorphLocation = (stream.Position - offset);
+                    return (int)FacialExpressionMorph_FieldIndex.Morph;
                 }
                 case RecordTypeInts.MWGT:
                 {
-                    if (lastParsed.ShortCircuit((int)FacialExpressionItem_FieldIndex.MWGT, translationParams)) return ParseResult.Stop;
-                    _MWGTLocation = (stream.Position - offset);
-                    return (int)FacialExpressionItem_FieldIndex.MWGT;
+                    if (lastParsed.ShortCircuit((int)FacialExpressionMorph_FieldIndex.Value, translationParams)) return ParseResult.Stop;
+                    _ValueLocation = (stream.Position - offset);
+                    return (int)FacialExpressionMorph_FieldIndex.Value;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1241,7 +1241,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            FacialExpressionItemMixIn.Print(
+            FacialExpressionMorphMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1252,16 +1252,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IFacialExpressionItemGetter rhs) return false;
-            return ((FacialExpressionItemCommon)((IFacialExpressionItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IFacialExpressionMorphGetter rhs) return false;
+            return ((FacialExpressionMorphCommon)((IFacialExpressionMorphGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IFacialExpressionItemGetter? obj)
+        public bool Equals(IFacialExpressionMorphGetter? obj)
         {
-            return ((FacialExpressionItemCommon)((IFacialExpressionItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((FacialExpressionMorphCommon)((IFacialExpressionMorphGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((FacialExpressionItemCommon)((IFacialExpressionItemGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((FacialExpressionMorphCommon)((IFacialExpressionMorphGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
