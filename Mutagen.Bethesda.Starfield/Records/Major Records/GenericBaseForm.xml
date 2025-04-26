@@ -4,13 +4,12 @@
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <String name="Name" recordType="FULL" translated="Normal" />
       <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
       <RefDirect name="ObjectPaletteDefaults" refName="ObjectPaletteDefaults" />
       <RefList name="Components" refName="AComponent" />
       <String name="Filter" recordType="FLTR" />
       <FormLink name="Template" recordType="ANAM" refName="GenericBaseFormTemplate" />
-      <List name="STRVs" >
+      <List name="ObjectTemplateInstanceData" >
         <String recordType="STRV"/>
       </List>
       <List name="ObjectTemplates" counterRecType="OBTE" >

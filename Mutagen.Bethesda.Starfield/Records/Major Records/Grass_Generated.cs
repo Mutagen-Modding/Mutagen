@@ -80,6 +80,22 @@ namespace Mutagen.Bethesda.Starfield
         #region DirtinessScale
         public Percent DirtinessScale { get; set; } = default(Percent);
         #endregion
+        #region ObjectPaletteDefaults
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectPaletteDefaults? _ObjectPaletteDefaults;
+        public ObjectPaletteDefaults? ObjectPaletteDefaults
+        {
+            get => _ObjectPaletteDefaults;
+            set => _ObjectPaletteDefaults = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectPaletteDefaultsGetter? IGrassGetter.ObjectPaletteDefaults => this.ObjectPaletteDefaults;
+        #endregion
+        #region XALG
+        public UInt64? XALG { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt64? IGrassGetter.XALG => this.XALG;
+        #endregion
         #region Components
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
@@ -112,16 +128,50 @@ namespace Mutagen.Bethesda.Starfield
         IModelGetter? IModeledGetter.Model => this.Model;
         #endregion
         #endregion
-        #region DNAM
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _DNAM;
-        public MemorySlice<Byte>? DNAM
-        {
-            get => this._DNAM;
-            set => this._DNAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IGrassGetter.DNAM => this.DNAM;
+        #region Contrast
+        public Single Contrast { get; set; } = default(Single);
+        public static RangeFloat Contrast_Range = new RangeFloat(0f, 100f);
+        #endregion
+        #region ClusterScale
+        public Single ClusterScale { get; set; } = default(Single);
+        public static RangeFloat ClusterScale_Range = new RangeFloat(0f, 10f);
+        #endregion
+        #region HeightRange
+        public Percent HeightRange { get; set; } = default(Percent);
+        #endregion
+        #region ColorRange
+        public Percent ColorRange { get; set; } = default(Percent);
+        #endregion
+        #region WindFrequency
+        public Single WindFrequency { get; set; } = default(Single);
+        #endregion
+        #region AboveWaterClamp
+        public Single AboveWaterClamp { get; set; } = default(Single);
+        #endregion
+        #region BelowWaterClamp
+        public Single BelowWaterClamp { get; set; } = default(Single);
+        #endregion
+        #region MaxDensity
+        public Byte MaxDensity { get; set; } = default(Byte);
+        #endregion
+        #region MinSlope
+        public Byte MinSlope { get; set; } = default(Byte);
+        #endregion
+        #region MaxSlope
+        public Byte MaxSlope { get; set; } = default(Byte);
+        #endregion
+        #region Flags
+        public Grass.Flag Flags { get; set; } = default(Grass.Flag);
+        #endregion
+        #region Coverage
+        public Single Coverage { get; set; } = default(Single);
+        public static RangeFloat Coverage_Range = new RangeFloat(0f, 100f);
+        #endregion
+        #region DirtinessMin
+        public Percent DirtinessMin { get; set; } = default(Percent);
+        #endregion
+        #region DirtinessMax
+        public Percent DirtinessMax { get; set; } = default(Percent);
         #endregion
 
         #region To String
@@ -150,9 +200,24 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.DirtinessScale = initialValue;
+                this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(initialValue, new ObjectPaletteDefaults.Mask<TItem>(initialValue));
+                this.XALG = initialValue;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.DNAM = initialValue;
+                this.Contrast = initialValue;
+                this.ClusterScale = initialValue;
+                this.HeightRange = initialValue;
+                this.ColorRange = initialValue;
+                this.WindFrequency = initialValue;
+                this.AboveWaterClamp = initialValue;
+                this.BelowWaterClamp = initialValue;
+                this.MaxDensity = initialValue;
+                this.MinSlope = initialValue;
+                this.MaxSlope = initialValue;
+                this.Flags = initialValue;
+                this.Coverage = initialValue;
+                this.DirtinessMin = initialValue;
+                this.DirtinessMax = initialValue;
             }
 
             public Mask(
@@ -165,9 +230,24 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem ObjectBounds,
                 TItem DirtinessScale,
+                TItem ObjectPaletteDefaults,
+                TItem XALG,
                 TItem Components,
                 TItem Model,
-                TItem DNAM)
+                TItem Contrast,
+                TItem ClusterScale,
+                TItem HeightRange,
+                TItem ColorRange,
+                TItem WindFrequency,
+                TItem AboveWaterClamp,
+                TItem BelowWaterClamp,
+                TItem MaxDensity,
+                TItem MinSlope,
+                TItem MaxSlope,
+                TItem Flags,
+                TItem Coverage,
+                TItem DirtinessMin,
+                TItem DirtinessMax)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -179,9 +259,24 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.DirtinessScale = DirtinessScale;
+                this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(ObjectPaletteDefaults, new ObjectPaletteDefaults.Mask<TItem>(ObjectPaletteDefaults));
+                this.XALG = XALG;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.DNAM = DNAM;
+                this.Contrast = Contrast;
+                this.ClusterScale = ClusterScale;
+                this.HeightRange = HeightRange;
+                this.ColorRange = ColorRange;
+                this.WindFrequency = WindFrequency;
+                this.AboveWaterClamp = AboveWaterClamp;
+                this.BelowWaterClamp = BelowWaterClamp;
+                this.MaxDensity = MaxDensity;
+                this.MinSlope = MinSlope;
+                this.MaxSlope = MaxSlope;
+                this.Flags = Flags;
+                this.Coverage = Coverage;
+                this.DirtinessMin = DirtinessMin;
+                this.DirtinessMax = DirtinessMax;
             }
 
             #pragma warning disable CS8618
@@ -195,9 +290,24 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem DirtinessScale;
+            public MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>? ObjectPaletteDefaults { get; set; }
+            public TItem XALG;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
-            public TItem DNAM;
+            public TItem Contrast;
+            public TItem ClusterScale;
+            public TItem HeightRange;
+            public TItem ColorRange;
+            public TItem WindFrequency;
+            public TItem AboveWaterClamp;
+            public TItem BelowWaterClamp;
+            public TItem MaxDensity;
+            public TItem MinSlope;
+            public TItem MaxSlope;
+            public TItem Flags;
+            public TItem Coverage;
+            public TItem DirtinessMin;
+            public TItem DirtinessMax;
             #endregion
 
             #region Equals
@@ -213,9 +323,24 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.DirtinessScale, rhs.DirtinessScale)) return false;
+                if (!object.Equals(this.ObjectPaletteDefaults, rhs.ObjectPaletteDefaults)) return false;
+                if (!object.Equals(this.XALG, rhs.XALG)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
-                if (!object.Equals(this.DNAM, rhs.DNAM)) return false;
+                if (!object.Equals(this.Contrast, rhs.Contrast)) return false;
+                if (!object.Equals(this.ClusterScale, rhs.ClusterScale)) return false;
+                if (!object.Equals(this.HeightRange, rhs.HeightRange)) return false;
+                if (!object.Equals(this.ColorRange, rhs.ColorRange)) return false;
+                if (!object.Equals(this.WindFrequency, rhs.WindFrequency)) return false;
+                if (!object.Equals(this.AboveWaterClamp, rhs.AboveWaterClamp)) return false;
+                if (!object.Equals(this.BelowWaterClamp, rhs.BelowWaterClamp)) return false;
+                if (!object.Equals(this.MaxDensity, rhs.MaxDensity)) return false;
+                if (!object.Equals(this.MinSlope, rhs.MinSlope)) return false;
+                if (!object.Equals(this.MaxSlope, rhs.MaxSlope)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Coverage, rhs.Coverage)) return false;
+                if (!object.Equals(this.DirtinessMin, rhs.DirtinessMin)) return false;
+                if (!object.Equals(this.DirtinessMax, rhs.DirtinessMax)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -223,9 +348,24 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.DirtinessScale);
+                hash.Add(this.ObjectPaletteDefaults);
+                hash.Add(this.XALG);
                 hash.Add(this.Components);
                 hash.Add(this.Model);
-                hash.Add(this.DNAM);
+                hash.Add(this.Contrast);
+                hash.Add(this.ClusterScale);
+                hash.Add(this.HeightRange);
+                hash.Add(this.ColorRange);
+                hash.Add(this.WindFrequency);
+                hash.Add(this.AboveWaterClamp);
+                hash.Add(this.BelowWaterClamp);
+                hash.Add(this.MaxDensity);
+                hash.Add(this.MinSlope);
+                hash.Add(this.MaxSlope);
+                hash.Add(this.Flags);
+                hash.Add(this.Coverage);
+                hash.Add(this.DirtinessMin);
+                hash.Add(this.DirtinessMax);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -242,6 +382,12 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (!eval(this.DirtinessScale)) return false;
+                if (ObjectPaletteDefaults != null)
+                {
+                    if (!eval(this.ObjectPaletteDefaults.Overall)) return false;
+                    if (this.ObjectPaletteDefaults.Specific != null && !this.ObjectPaletteDefaults.Specific.All(eval)) return false;
+                }
+                if (!eval(this.XALG)) return false;
                 if (this.Components != null)
                 {
                     if (!eval(this.Components.Overall)) return false;
@@ -259,7 +405,20 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
-                if (!eval(this.DNAM)) return false;
+                if (!eval(this.Contrast)) return false;
+                if (!eval(this.ClusterScale)) return false;
+                if (!eval(this.HeightRange)) return false;
+                if (!eval(this.ColorRange)) return false;
+                if (!eval(this.WindFrequency)) return false;
+                if (!eval(this.AboveWaterClamp)) return false;
+                if (!eval(this.BelowWaterClamp)) return false;
+                if (!eval(this.MaxDensity)) return false;
+                if (!eval(this.MinSlope)) return false;
+                if (!eval(this.MaxSlope)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Coverage)) return false;
+                if (!eval(this.DirtinessMin)) return false;
+                if (!eval(this.DirtinessMax)) return false;
                 return true;
             }
             #endregion
@@ -274,6 +433,12 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
                 if (eval(this.DirtinessScale)) return true;
+                if (ObjectPaletteDefaults != null)
+                {
+                    if (eval(this.ObjectPaletteDefaults.Overall)) return true;
+                    if (this.ObjectPaletteDefaults.Specific != null && this.ObjectPaletteDefaults.Specific.Any(eval)) return true;
+                }
+                if (eval(this.XALG)) return true;
                 if (this.Components != null)
                 {
                     if (eval(this.Components.Overall)) return true;
@@ -291,7 +456,20 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
-                if (eval(this.DNAM)) return true;
+                if (eval(this.Contrast)) return true;
+                if (eval(this.ClusterScale)) return true;
+                if (eval(this.HeightRange)) return true;
+                if (eval(this.ColorRange)) return true;
+                if (eval(this.WindFrequency)) return true;
+                if (eval(this.AboveWaterClamp)) return true;
+                if (eval(this.BelowWaterClamp)) return true;
+                if (eval(this.MaxDensity)) return true;
+                if (eval(this.MinSlope)) return true;
+                if (eval(this.MaxSlope)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Coverage)) return true;
+                if (eval(this.DirtinessMin)) return true;
+                if (eval(this.DirtinessMax)) return true;
                 return false;
             }
             #endregion
@@ -309,6 +487,8 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.DirtinessScale = eval(this.DirtinessScale);
+                obj.ObjectPaletteDefaults = this.ObjectPaletteDefaults == null ? null : new MaskItem<R, ObjectPaletteDefaults.Mask<R>?>(eval(this.ObjectPaletteDefaults.Overall), this.ObjectPaletteDefaults.Specific?.Translate(eval));
+                obj.XALG = eval(this.XALG);
                 if (Components != null)
                 {
                     obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
@@ -325,7 +505,20 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-                obj.DNAM = eval(this.DNAM);
+                obj.Contrast = eval(this.Contrast);
+                obj.ClusterScale = eval(this.ClusterScale);
+                obj.HeightRange = eval(this.HeightRange);
+                obj.ColorRange = eval(this.ColorRange);
+                obj.WindFrequency = eval(this.WindFrequency);
+                obj.AboveWaterClamp = eval(this.AboveWaterClamp);
+                obj.BelowWaterClamp = eval(this.BelowWaterClamp);
+                obj.MaxDensity = eval(this.MaxDensity);
+                obj.MinSlope = eval(this.MinSlope);
+                obj.MaxSlope = eval(this.MaxSlope);
+                obj.Flags = eval(this.Flags);
+                obj.Coverage = eval(this.Coverage);
+                obj.DirtinessMin = eval(this.DirtinessMin);
+                obj.DirtinessMax = eval(this.DirtinessMax);
             }
             #endregion
 
@@ -352,6 +545,14 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(DirtinessScale, "DirtinessScale");
                     }
+                    if (printMask?.ObjectPaletteDefaults?.Overall ?? true)
+                    {
+                        ObjectPaletteDefaults?.Print(sb);
+                    }
+                    if (printMask?.XALG ?? true)
+                    {
+                        sb.AppendItem(XALG, "XALG");
+                    }
                     if ((printMask?.Components?.Overall ?? true)
                         && Components is {} ComponentsItem)
                     {
@@ -375,9 +576,61 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         Model?.Print(sb);
                     }
-                    if (printMask?.DNAM ?? true)
+                    if (printMask?.Contrast ?? true)
                     {
-                        sb.AppendItem(DNAM, "DNAM");
+                        sb.AppendItem(Contrast, "Contrast");
+                    }
+                    if (printMask?.ClusterScale ?? true)
+                    {
+                        sb.AppendItem(ClusterScale, "ClusterScale");
+                    }
+                    if (printMask?.HeightRange ?? true)
+                    {
+                        sb.AppendItem(HeightRange, "HeightRange");
+                    }
+                    if (printMask?.ColorRange ?? true)
+                    {
+                        sb.AppendItem(ColorRange, "ColorRange");
+                    }
+                    if (printMask?.WindFrequency ?? true)
+                    {
+                        sb.AppendItem(WindFrequency, "WindFrequency");
+                    }
+                    if (printMask?.AboveWaterClamp ?? true)
+                    {
+                        sb.AppendItem(AboveWaterClamp, "AboveWaterClamp");
+                    }
+                    if (printMask?.BelowWaterClamp ?? true)
+                    {
+                        sb.AppendItem(BelowWaterClamp, "BelowWaterClamp");
+                    }
+                    if (printMask?.MaxDensity ?? true)
+                    {
+                        sb.AppendItem(MaxDensity, "MaxDensity");
+                    }
+                    if (printMask?.MinSlope ?? true)
+                    {
+                        sb.AppendItem(MinSlope, "MinSlope");
+                    }
+                    if (printMask?.MaxSlope ?? true)
+                    {
+                        sb.AppendItem(MaxSlope, "MaxSlope");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.Coverage ?? true)
+                    {
+                        sb.AppendItem(Coverage, "Coverage");
+                    }
+                    if (printMask?.DirtinessMin ?? true)
+                    {
+                        sb.AppendItem(DirtinessMin, "DirtinessMin");
+                    }
+                    if (printMask?.DirtinessMax ?? true)
+                    {
+                        sb.AppendItem(DirtinessMax, "DirtinessMax");
                     }
                 }
             }
@@ -392,9 +645,24 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? DirtinessScale;
+            public MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>? ObjectPaletteDefaults;
+            public Exception? XALG;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
-            public Exception? DNAM;
+            public Exception? Contrast;
+            public Exception? ClusterScale;
+            public Exception? HeightRange;
+            public Exception? ColorRange;
+            public Exception? WindFrequency;
+            public Exception? AboveWaterClamp;
+            public Exception? BelowWaterClamp;
+            public Exception? MaxDensity;
+            public Exception? MinSlope;
+            public Exception? MaxSlope;
+            public Exception? Flags;
+            public Exception? Coverage;
+            public Exception? DirtinessMin;
+            public Exception? DirtinessMax;
             #endregion
 
             #region IErrorMask
@@ -407,12 +675,42 @@ namespace Mutagen.Bethesda.Starfield
                         return ObjectBounds;
                     case Grass_FieldIndex.DirtinessScale:
                         return DirtinessScale;
+                    case Grass_FieldIndex.ObjectPaletteDefaults:
+                        return ObjectPaletteDefaults;
+                    case Grass_FieldIndex.XALG:
+                        return XALG;
                     case Grass_FieldIndex.Components:
                         return Components;
                     case Grass_FieldIndex.Model:
                         return Model;
-                    case Grass_FieldIndex.DNAM:
-                        return DNAM;
+                    case Grass_FieldIndex.Contrast:
+                        return Contrast;
+                    case Grass_FieldIndex.ClusterScale:
+                        return ClusterScale;
+                    case Grass_FieldIndex.HeightRange:
+                        return HeightRange;
+                    case Grass_FieldIndex.ColorRange:
+                        return ColorRange;
+                    case Grass_FieldIndex.WindFrequency:
+                        return WindFrequency;
+                    case Grass_FieldIndex.AboveWaterClamp:
+                        return AboveWaterClamp;
+                    case Grass_FieldIndex.BelowWaterClamp:
+                        return BelowWaterClamp;
+                    case Grass_FieldIndex.MaxDensity:
+                        return MaxDensity;
+                    case Grass_FieldIndex.MinSlope:
+                        return MinSlope;
+                    case Grass_FieldIndex.MaxSlope:
+                        return MaxSlope;
+                    case Grass_FieldIndex.Flags:
+                        return Flags;
+                    case Grass_FieldIndex.Coverage:
+                        return Coverage;
+                    case Grass_FieldIndex.DirtinessMin:
+                        return DirtinessMin;
+                    case Grass_FieldIndex.DirtinessMax:
+                        return DirtinessMax;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -429,14 +727,59 @@ namespace Mutagen.Bethesda.Starfield
                     case Grass_FieldIndex.DirtinessScale:
                         this.DirtinessScale = ex;
                         break;
+                    case Grass_FieldIndex.ObjectPaletteDefaults:
+                        this.ObjectPaletteDefaults = new MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>(ex, null);
+                        break;
+                    case Grass_FieldIndex.XALG:
+                        this.XALG = ex;
+                        break;
                     case Grass_FieldIndex.Components:
                         this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
                         break;
                     case Grass_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
-                    case Grass_FieldIndex.DNAM:
-                        this.DNAM = ex;
+                    case Grass_FieldIndex.Contrast:
+                        this.Contrast = ex;
+                        break;
+                    case Grass_FieldIndex.ClusterScale:
+                        this.ClusterScale = ex;
+                        break;
+                    case Grass_FieldIndex.HeightRange:
+                        this.HeightRange = ex;
+                        break;
+                    case Grass_FieldIndex.ColorRange:
+                        this.ColorRange = ex;
+                        break;
+                    case Grass_FieldIndex.WindFrequency:
+                        this.WindFrequency = ex;
+                        break;
+                    case Grass_FieldIndex.AboveWaterClamp:
+                        this.AboveWaterClamp = ex;
+                        break;
+                    case Grass_FieldIndex.BelowWaterClamp:
+                        this.BelowWaterClamp = ex;
+                        break;
+                    case Grass_FieldIndex.MaxDensity:
+                        this.MaxDensity = ex;
+                        break;
+                    case Grass_FieldIndex.MinSlope:
+                        this.MinSlope = ex;
+                        break;
+                    case Grass_FieldIndex.MaxSlope:
+                        this.MaxSlope = ex;
+                        break;
+                    case Grass_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Grass_FieldIndex.Coverage:
+                        this.Coverage = ex;
+                        break;
+                    case Grass_FieldIndex.DirtinessMin:
+                        this.DirtinessMin = ex;
+                        break;
+                    case Grass_FieldIndex.DirtinessMax:
+                        this.DirtinessMax = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -455,14 +798,59 @@ namespace Mutagen.Bethesda.Starfield
                     case Grass_FieldIndex.DirtinessScale:
                         this.DirtinessScale = (Exception?)obj;
                         break;
+                    case Grass_FieldIndex.ObjectPaletteDefaults:
+                        this.ObjectPaletteDefaults = (MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>?)obj;
+                        break;
+                    case Grass_FieldIndex.XALG:
+                        this.XALG = (Exception?)obj;
+                        break;
                     case Grass_FieldIndex.Components:
                         this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
                         break;
                     case Grass_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case Grass_FieldIndex.DNAM:
-                        this.DNAM = (Exception?)obj;
+                    case Grass_FieldIndex.Contrast:
+                        this.Contrast = (Exception?)obj;
+                        break;
+                    case Grass_FieldIndex.ClusterScale:
+                        this.ClusterScale = (Exception?)obj;
+                        break;
+                    case Grass_FieldIndex.HeightRange:
+                        this.HeightRange = (Exception?)obj;
+                        break;
+                    case Grass_FieldIndex.ColorRange:
+                        this.ColorRange = (Exception?)obj;
+                        break;
+                    case Grass_FieldIndex.WindFrequency:
+                        this.WindFrequency = (Exception?)obj;
+                        break;
+                    case Grass_FieldIndex.AboveWaterClamp:
+                        this.AboveWaterClamp = (Exception?)obj;
+                        break;
+                    case Grass_FieldIndex.BelowWaterClamp:
+                        this.BelowWaterClamp = (Exception?)obj;
+                        break;
+                    case Grass_FieldIndex.MaxDensity:
+                        this.MaxDensity = (Exception?)obj;
+                        break;
+                    case Grass_FieldIndex.MinSlope:
+                        this.MinSlope = (Exception?)obj;
+                        break;
+                    case Grass_FieldIndex.MaxSlope:
+                        this.MaxSlope = (Exception?)obj;
+                        break;
+                    case Grass_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Grass_FieldIndex.Coverage:
+                        this.Coverage = (Exception?)obj;
+                        break;
+                    case Grass_FieldIndex.DirtinessMin:
+                        this.DirtinessMin = (Exception?)obj;
+                        break;
+                    case Grass_FieldIndex.DirtinessMax:
+                        this.DirtinessMax = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -475,9 +863,24 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (ObjectBounds != null) return true;
                 if (DirtinessScale != null) return true;
+                if (ObjectPaletteDefaults != null) return true;
+                if (XALG != null) return true;
                 if (Components != null) return true;
                 if (Model != null) return true;
-                if (DNAM != null) return true;
+                if (Contrast != null) return true;
+                if (ClusterScale != null) return true;
+                if (HeightRange != null) return true;
+                if (ColorRange != null) return true;
+                if (WindFrequency != null) return true;
+                if (AboveWaterClamp != null) return true;
+                if (BelowWaterClamp != null) return true;
+                if (MaxDensity != null) return true;
+                if (MinSlope != null) return true;
+                if (MaxSlope != null) return true;
+                if (Flags != null) return true;
+                if (Coverage != null) return true;
+                if (DirtinessMin != null) return true;
+                if (DirtinessMax != null) return true;
                 return false;
             }
             #endregion
@@ -508,6 +911,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(DirtinessScale, "DirtinessScale");
                 }
+                ObjectPaletteDefaults?.Print(sb);
+                {
+                    sb.AppendItem(XALG, "XALG");
+                }
                 if (Components is {} ComponentsItem)
                 {
                     sb.AppendLine("Components =>");
@@ -528,7 +935,46 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 Model?.Print(sb);
                 {
-                    sb.AppendItem(DNAM, "DNAM");
+                    sb.AppendItem(Contrast, "Contrast");
+                }
+                {
+                    sb.AppendItem(ClusterScale, "ClusterScale");
+                }
+                {
+                    sb.AppendItem(HeightRange, "HeightRange");
+                }
+                {
+                    sb.AppendItem(ColorRange, "ColorRange");
+                }
+                {
+                    sb.AppendItem(WindFrequency, "WindFrequency");
+                }
+                {
+                    sb.AppendItem(AboveWaterClamp, "AboveWaterClamp");
+                }
+                {
+                    sb.AppendItem(BelowWaterClamp, "BelowWaterClamp");
+                }
+                {
+                    sb.AppendItem(MaxDensity, "MaxDensity");
+                }
+                {
+                    sb.AppendItem(MinSlope, "MinSlope");
+                }
+                {
+                    sb.AppendItem(MaxSlope, "MaxSlope");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(Coverage, "Coverage");
+                }
+                {
+                    sb.AppendItem(DirtinessMin, "DirtinessMin");
+                }
+                {
+                    sb.AppendItem(DirtinessMax, "DirtinessMax");
                 }
             }
             #endregion
@@ -540,9 +986,24 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.DirtinessScale = this.DirtinessScale.Combine(rhs.DirtinessScale);
+                ret.ObjectPaletteDefaults = this.ObjectPaletteDefaults.Combine(rhs.ObjectPaletteDefaults, (l, r) => l.Combine(r));
+                ret.XALG = this.XALG.Combine(rhs.XALG);
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.DNAM = this.DNAM.Combine(rhs.DNAM);
+                ret.Contrast = this.Contrast.Combine(rhs.Contrast);
+                ret.ClusterScale = this.ClusterScale.Combine(rhs.ClusterScale);
+                ret.HeightRange = this.HeightRange.Combine(rhs.HeightRange);
+                ret.ColorRange = this.ColorRange.Combine(rhs.ColorRange);
+                ret.WindFrequency = this.WindFrequency.Combine(rhs.WindFrequency);
+                ret.AboveWaterClamp = this.AboveWaterClamp.Combine(rhs.AboveWaterClamp);
+                ret.BelowWaterClamp = this.BelowWaterClamp.Combine(rhs.BelowWaterClamp);
+                ret.MaxDensity = this.MaxDensity.Combine(rhs.MaxDensity);
+                ret.MinSlope = this.MinSlope.Combine(rhs.MinSlope);
+                ret.MaxSlope = this.MaxSlope.Combine(rhs.MaxSlope);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Coverage = this.Coverage.Combine(rhs.Coverage);
+                ret.DirtinessMin = this.DirtinessMin.Combine(rhs.DirtinessMin);
+                ret.DirtinessMax = this.DirtinessMax.Combine(rhs.DirtinessMax);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -567,9 +1028,24 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool DirtinessScale;
+            public ObjectPaletteDefaults.TranslationMask? ObjectPaletteDefaults;
+            public bool XALG;
             public AComponent.TranslationMask? Components;
             public Model.TranslationMask? Model;
-            public bool DNAM;
+            public bool Contrast;
+            public bool ClusterScale;
+            public bool HeightRange;
+            public bool ColorRange;
+            public bool WindFrequency;
+            public bool AboveWaterClamp;
+            public bool BelowWaterClamp;
+            public bool MaxDensity;
+            public bool MinSlope;
+            public bool MaxSlope;
+            public bool Flags;
+            public bool Coverage;
+            public bool DirtinessMin;
+            public bool DirtinessMax;
             #endregion
 
             #region Ctors
@@ -579,7 +1055,21 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.DirtinessScale = defaultOn;
-                this.DNAM = defaultOn;
+                this.XALG = defaultOn;
+                this.Contrast = defaultOn;
+                this.ClusterScale = defaultOn;
+                this.HeightRange = defaultOn;
+                this.ColorRange = defaultOn;
+                this.WindFrequency = defaultOn;
+                this.AboveWaterClamp = defaultOn;
+                this.BelowWaterClamp = defaultOn;
+                this.MaxDensity = defaultOn;
+                this.MinSlope = defaultOn;
+                this.MaxSlope = defaultOn;
+                this.Flags = defaultOn;
+                this.Coverage = defaultOn;
+                this.DirtinessMin = defaultOn;
+                this.DirtinessMax = defaultOn;
             }
 
             #endregion
@@ -589,9 +1079,24 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((DirtinessScale, null));
+                ret.Add((ObjectPaletteDefaults != null ? ObjectPaletteDefaults.OnOverall : DefaultOn, ObjectPaletteDefaults?.GetCrystal()));
+                ret.Add((XALG, null));
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
-                ret.Add((DNAM, null));
+                ret.Add((Contrast, null));
+                ret.Add((ClusterScale, null));
+                ret.Add((HeightRange, null));
+                ret.Add((ColorRange, null));
+                ret.Add((WindFrequency, null));
+                ret.Add((AboveWaterClamp, null));
+                ret.Add((BelowWaterClamp, null));
+                ret.Add((MaxDensity, null));
+                ret.Add((MinSlope, null));
+                ret.Add((MaxSlope, null));
+                ret.Add((Flags, null));
+                ret.Add((Coverage, null));
+                ret.Add((DirtinessMin, null));
+                ret.Add((DirtinessMax, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -752,12 +1257,27 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new Percent DirtinessScale { get; set; }
+        new ObjectPaletteDefaults? ObjectPaletteDefaults { get; set; }
+        new UInt64? XALG { get; set; }
         new ExtendedList<AComponent> Components { get; }
         /// <summary>
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new MemorySlice<Byte>? DNAM { get; set; }
+        new Single Contrast { get; set; }
+        new Single ClusterScale { get; set; }
+        new Percent HeightRange { get; set; }
+        new Percent ColorRange { get; set; }
+        new Single WindFrequency { get; set; }
+        new Single AboveWaterClamp { get; set; }
+        new Single BelowWaterClamp { get; set; }
+        new Byte MaxDensity { get; set; }
+        new Byte MinSlope { get; set; }
+        new Byte MaxSlope { get; set; }
+        new Grass.Flag Flags { get; set; }
+        new Single Coverage { get; set; }
+        new Percent DirtinessMin { get; set; }
+        new Percent DirtinessMax { get; set; }
     }
 
     public partial interface IGrassInternal :
@@ -787,6 +1307,8 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
         Percent DirtinessScale { get; }
+        IObjectPaletteDefaultsGetter? ObjectPaletteDefaults { get; }
+        UInt64? XALG { get; }
         IReadOnlyList<IAComponentGetter> Components { get; }
         #region Model
         /// <summary>
@@ -794,7 +1316,20 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
-        ReadOnlyMemorySlice<Byte>? DNAM { get; }
+        Single Contrast { get; }
+        Single ClusterScale { get; }
+        Percent HeightRange { get; }
+        Percent ColorRange { get; }
+        Single WindFrequency { get; }
+        Single AboveWaterClamp { get; }
+        Single BelowWaterClamp { get; }
+        Byte MaxDensity { get; }
+        Byte MinSlope { get; }
+        Byte MaxSlope { get; }
+        Grass.Flag Flags { get; }
+        Single Coverage { get; }
+        Percent DirtinessMin { get; }
+        Percent DirtinessMax { get; }
 
     }
 
@@ -973,9 +1508,24 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         ObjectBounds = 7,
         DirtinessScale = 8,
-        Components = 9,
-        Model = 10,
-        DNAM = 11,
+        ObjectPaletteDefaults = 9,
+        XALG = 10,
+        Components = 11,
+        Model = 12,
+        Contrast = 13,
+        ClusterScale = 14,
+        HeightRange = 15,
+        ColorRange = 16,
+        WindFrequency = 17,
+        AboveWaterClamp = 18,
+        BelowWaterClamp = 19,
+        MaxDensity = 20,
+        MinSlope = 21,
+        MaxSlope = 22,
+        Flags = 23,
+        Coverage = 24,
+        DirtinessMin = 25,
+        DirtinessMax = 26,
     }
     #endregion
 
@@ -986,9 +1536,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 20;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 27;
 
         public static readonly Type MaskType = typeof(Grass.Mask<>);
 
@@ -1023,6 +1573,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.GRAS,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
+                RecordTypes.OPDS,
+                RecordTypes.XALG,
                 RecordTypes.BFCB,
                 RecordTypes.BFCE,
                 RecordTypes.MODL,
@@ -1079,9 +1631,24 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.ObjectBounds.Clear();
             item.DirtinessScale = default(Percent);
+            item.ObjectPaletteDefaults = null;
+            item.XALG = default;
             item.Components.Clear();
             item.Model = null;
-            item.DNAM = default;
+            item.Contrast = default(Single);
+            item.ClusterScale = default(Single);
+            item.HeightRange = default(Percent);
+            item.ColorRange = default(Percent);
+            item.WindFrequency = default(Single);
+            item.AboveWaterClamp = default(Single);
+            item.BelowWaterClamp = default(Single);
+            item.MaxDensity = default(Byte);
+            item.MinSlope = default(Byte);
+            item.MaxSlope = default(Byte);
+            item.Flags = default(Grass.Flag);
+            item.Coverage = default(Single);
+            item.DirtinessMin = default(Percent);
+            item.DirtinessMax = default(Percent);
             base.Clear(item);
         }
         
@@ -1202,6 +1769,12 @@ namespace Mutagen.Bethesda.Starfield
         {
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.DirtinessScale = item.DirtinessScale.Equals(rhs.DirtinessScale);
+            ret.ObjectPaletteDefaults = EqualsMaskHelper.EqualsHelper(
+                item.ObjectPaletteDefaults,
+                rhs.ObjectPaletteDefaults,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.XALG = item.XALG == rhs.XALG;
             ret.Components = item.Components.CollectionEqualsHelper(
                 rhs.Components,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1211,7 +1784,20 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.DNAM = MemorySliceExt.SequenceEqual(item.DNAM, rhs.DNAM);
+            ret.Contrast = item.Contrast.EqualsWithin(rhs.Contrast);
+            ret.ClusterScale = item.ClusterScale.EqualsWithin(rhs.ClusterScale);
+            ret.HeightRange = item.HeightRange.Equals(rhs.HeightRange);
+            ret.ColorRange = item.ColorRange.Equals(rhs.ColorRange);
+            ret.WindFrequency = item.WindFrequency.EqualsWithin(rhs.WindFrequency);
+            ret.AboveWaterClamp = item.AboveWaterClamp.EqualsWithin(rhs.AboveWaterClamp);
+            ret.BelowWaterClamp = item.BelowWaterClamp.EqualsWithin(rhs.BelowWaterClamp);
+            ret.MaxDensity = item.MaxDensity == rhs.MaxDensity;
+            ret.MinSlope = item.MinSlope == rhs.MinSlope;
+            ret.MaxSlope = item.MaxSlope == rhs.MaxSlope;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Coverage = item.Coverage.EqualsWithin(rhs.Coverage);
+            ret.DirtinessMin = item.DirtinessMin.Equals(rhs.DirtinessMin);
+            ret.DirtinessMax = item.DirtinessMax.Equals(rhs.DirtinessMax);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1269,6 +1855,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.DirtinessScale, "DirtinessScale");
             }
+            if ((printMask?.ObjectPaletteDefaults?.Overall ?? true)
+                && item.ObjectPaletteDefaults is {} ObjectPaletteDefaultsItem)
+            {
+                ObjectPaletteDefaultsItem?.Print(sb, "ObjectPaletteDefaults");
+            }
+            if ((printMask?.XALG ?? true)
+                && item.XALG is {} XALGItem)
+            {
+                sb.AppendItem(XALGItem, "XALG");
+            }
             if (printMask?.Components?.Overall ?? true)
             {
                 sb.AppendLine("Components =>");
@@ -1288,10 +1884,61 @@ namespace Mutagen.Bethesda.Starfield
             {
                 ModelItem?.Print(sb, "Model");
             }
-            if ((printMask?.DNAM ?? true)
-                && item.DNAM is {} DNAMItem)
+            if (printMask?.Contrast ?? true)
             {
-                sb.AppendLine($"DNAM => {SpanExt.ToHexString(DNAMItem)}");
+                sb.AppendItem(item.Contrast, "Contrast");
+            }
+            if (printMask?.ClusterScale ?? true)
+            {
+                sb.AppendItem(item.ClusterScale, "ClusterScale");
+            }
+            if (printMask?.HeightRange ?? true)
+            {
+                sb.AppendItem(item.HeightRange, "HeightRange");
+            }
+            if (printMask?.ColorRange ?? true)
+            {
+                sb.AppendItem(item.ColorRange, "ColorRange");
+            }
+            if (printMask?.WindFrequency ?? true)
+            {
+                sb.AppendItem(item.WindFrequency, "WindFrequency");
+            }
+            if (printMask?.AboveWaterClamp ?? true)
+            {
+                sb.AppendItem(item.AboveWaterClamp, "AboveWaterClamp");
+            }
+            if (printMask?.BelowWaterClamp ?? true)
+            {
+                sb.AppendItem(item.BelowWaterClamp, "BelowWaterClamp");
+            }
+            if (printMask?.MaxDensity ?? true)
+            {
+                sb.AppendItem(item.MaxDensity, "MaxDensity");
+            }
+            if (printMask?.MinSlope ?? true)
+            {
+                sb.AppendItem(item.MinSlope, "MinSlope");
+            }
+            if (printMask?.MaxSlope ?? true)
+            {
+                sb.AppendItem(item.MaxSlope, "MaxSlope");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                sb.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.Coverage ?? true)
+            {
+                sb.AppendItem(item.Coverage, "Coverage");
+            }
+            if (printMask?.DirtinessMin ?? true)
+            {
+                sb.AppendItem(item.DirtinessMin, "DirtinessMin");
+            }
+            if (printMask?.DirtinessMax ?? true)
+            {
+                sb.AppendItem(item.DirtinessMax, "DirtinessMax");
             }
         }
         
@@ -1355,6 +2002,18 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.DirtinessScale.Equals(rhs.DirtinessScale)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.ObjectPaletteDefaults) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectPaletteDefaults, rhs.ObjectPaletteDefaults, out var lhsObjectPaletteDefaults, out var rhsObjectPaletteDefaults, out var isObjectPaletteDefaultsEqual))
+                {
+                    if (!((ObjectPaletteDefaultsCommon)((IObjectPaletteDefaultsGetter)lhsObjectPaletteDefaults).CommonInstance()!).Equals(lhsObjectPaletteDefaults, rhsObjectPaletteDefaults, equalsMask?.GetSubCrystal((int)Grass_FieldIndex.ObjectPaletteDefaults))) return false;
+                }
+                else if (!isObjectPaletteDefaultsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.XALG) ?? true))
+            {
+                if (lhs.XALG != rhs.XALG) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.Components) ?? true))
             {
                 if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Grass_FieldIndex.Components)))) return false;
@@ -1367,9 +2026,61 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.DNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.Contrast) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.DNAM, rhs.DNAM)) return false;
+                if (!lhs.Contrast.EqualsWithin(rhs.Contrast)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.ClusterScale) ?? true))
+            {
+                if (!lhs.ClusterScale.EqualsWithin(rhs.ClusterScale)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.HeightRange) ?? true))
+            {
+                if (!lhs.HeightRange.Equals(rhs.HeightRange)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.ColorRange) ?? true))
+            {
+                if (!lhs.ColorRange.Equals(rhs.ColorRange)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.WindFrequency) ?? true))
+            {
+                if (!lhs.WindFrequency.EqualsWithin(rhs.WindFrequency)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.AboveWaterClamp) ?? true))
+            {
+                if (!lhs.AboveWaterClamp.EqualsWithin(rhs.AboveWaterClamp)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.BelowWaterClamp) ?? true))
+            {
+                if (!lhs.BelowWaterClamp.EqualsWithin(rhs.BelowWaterClamp)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.MaxDensity) ?? true))
+            {
+                if (lhs.MaxDensity != rhs.MaxDensity) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.MinSlope) ?? true))
+            {
+                if (lhs.MinSlope != rhs.MinSlope) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.MaxSlope) ?? true))
+            {
+                if (lhs.MaxSlope != rhs.MaxSlope) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.Coverage) ?? true))
+            {
+                if (!lhs.Coverage.EqualsWithin(rhs.Coverage)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.DirtinessMin) ?? true))
+            {
+                if (!lhs.DirtinessMin.Equals(rhs.DirtinessMin)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Grass_FieldIndex.DirtinessMax) ?? true))
+            {
+                if (!lhs.DirtinessMax.Equals(rhs.DirtinessMax)) return false;
             }
             return true;
         }
@@ -1401,15 +2112,33 @@ namespace Mutagen.Bethesda.Starfield
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
             hash.Add(item.DirtinessScale);
+            if (item.ObjectPaletteDefaults is {} ObjectPaletteDefaultsitem)
+            {
+                hash.Add(ObjectPaletteDefaultsitem);
+            }
+            if (item.XALG is {} XALGitem)
+            {
+                hash.Add(XALGitem);
+            }
             hash.Add(item.Components);
             if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
-            if (item.DNAM is {} DNAMItem)
-            {
-                hash.Add(DNAMItem);
-            }
+            hash.Add(item.Contrast);
+            hash.Add(item.ClusterScale);
+            hash.Add(item.HeightRange);
+            hash.Add(item.ColorRange);
+            hash.Add(item.WindFrequency);
+            hash.Add(item.AboveWaterClamp);
+            hash.Add(item.BelowWaterClamp);
+            hash.Add(item.MaxDensity);
+            hash.Add(item.MinSlope);
+            hash.Add(item.MaxSlope);
+            hash.Add(item.Flags);
+            hash.Add(item.Coverage);
+            hash.Add(item.DirtinessMin);
+            hash.Add(item.DirtinessMax);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1572,6 +2301,36 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.DirtinessScale = rhs.DirtinessScale;
             }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.ObjectPaletteDefaults) ?? true))
+            {
+                errorMask?.PushIndex((int)Grass_FieldIndex.ObjectPaletteDefaults);
+                try
+                {
+                    if(rhs.ObjectPaletteDefaults is {} rhsObjectPaletteDefaults)
+                    {
+                        item.ObjectPaletteDefaults = rhsObjectPaletteDefaults.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Grass_FieldIndex.ObjectPaletteDefaults));
+                    }
+                    else
+                    {
+                        item.ObjectPaletteDefaults = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.XALG) ?? true))
+            {
+                item.XALG = rhs.XALG;
+            }
             if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.Components) ?? true))
             {
                 errorMask?.PushIndex((int)Grass_FieldIndex.Components);
@@ -1622,16 +2381,61 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.DNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.Contrast) ?? true))
             {
-                if(rhs.DNAM is {} DNAMrhs)
-                {
-                    item.DNAM = DNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.DNAM = default;
-                }
+                item.Contrast = rhs.Contrast;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.ClusterScale) ?? true))
+            {
+                item.ClusterScale = rhs.ClusterScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.HeightRange) ?? true))
+            {
+                item.HeightRange = rhs.HeightRange;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.ColorRange) ?? true))
+            {
+                item.ColorRange = rhs.ColorRange;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.WindFrequency) ?? true))
+            {
+                item.WindFrequency = rhs.WindFrequency;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.AboveWaterClamp) ?? true))
+            {
+                item.AboveWaterClamp = rhs.AboveWaterClamp;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.BelowWaterClamp) ?? true))
+            {
+                item.BelowWaterClamp = rhs.BelowWaterClamp;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.MaxDensity) ?? true))
+            {
+                item.MaxDensity = rhs.MaxDensity;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.MinSlope) ?? true))
+            {
+                item.MinSlope = rhs.MinSlope;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.MaxSlope) ?? true))
+            {
+                item.MaxSlope = rhs.MaxSlope;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.Coverage) ?? true))
+            {
+                item.Coverage = rhs.Coverage;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.DirtinessMin) ?? true))
+            {
+                item.DirtinessMin = rhs.DirtinessMin;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Grass_FieldIndex.DirtinessMax) ?? true))
+            {
+                item.DirtinessMax = rhs.DirtinessMax;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1812,6 +2616,17 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.DirtinessScale,
                 integerType: FloatIntegerType.UInt,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            if (item.ObjectPaletteDefaults is {} ObjectPaletteDefaultsItem)
+            {
+                ((ObjectPaletteDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPaletteDefaultsItem).BinaryWriteTranslator).Write(
+                    item: ObjectPaletteDefaultsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            UInt64BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.XALG,
+                header: translationParams.ConvertToCustom(RecordTypes.XALG));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
                 writer: writer,
                 items: item.Components,
@@ -1830,10 +2645,50 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     translationParams: translationParams);
             }
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.DNAM,
-                header: translationParams.ConvertToCustom(RecordTypes.DNAM));
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Contrast);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ClusterScale);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.HeightRange,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.ColorRange,
+                    integerType: FloatIntegerType.UInt);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.WindFrequency);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.AboveWaterClamp);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.BelowWaterClamp);
+                writer.Write(item.MaxDensity);
+                writer.Write(item.MinSlope);
+                writer.Write(item.MaxSlope);
+                EnumBinaryTranslation<Grass.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 1);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.Coverage);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.DirtinessMin,
+                    integerType: FloatIntegerType.Byte);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.DirtinessMax,
+                    integerType: FloatIntegerType.Byte);
+            }
         }
 
         public void Write(
@@ -1915,6 +2770,17 @@ namespace Mutagen.Bethesda.Starfield
                         integerType: FloatIntegerType.UInt);
                     return (int)Grass_FieldIndex.DirtinessScale;
                 }
+                case RecordTypeInts.OPDS:
+                {
+                    item.ObjectPaletteDefaults = Mutagen.Bethesda.Starfield.ObjectPaletteDefaults.CreateFromBinary(frame: frame);
+                    return (int)Grass_FieldIndex.ObjectPaletteDefaults;
+                }
+                case RecordTypeInts.XALG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XALG = frame.ReadUInt64();
+                    return (int)Grass_FieldIndex.XALG;
+                }
                 case RecordTypeInts.BFCB:
                 {
                     item.Components.SetTo(
@@ -1941,8 +2807,46 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Grass_FieldIndex.DNAM;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Contrast = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ClusterScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.HeightRange = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ColorRange = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WindFrequency = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.AboveWaterClamp = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.BelowWaterClamp = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.MaxDensity = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
+                    item.MinSlope = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
+                    item.MaxSlope = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
+                    item.Flags = EnumBinaryTranslation<Grass.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Coverage = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.DirtinessMin = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.Byte);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.DirtinessMax = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.Byte);
+                    return (int)Grass_FieldIndex.DirtinessMax;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2013,11 +2917,86 @@ namespace Mutagen.Bethesda.Starfield
         private int? _DirtinessScaleLocation;
         public Percent DirtinessScale => _DirtinessScaleLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DirtinessScaleLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt) : default(Percent);
         #endregion
+        #region ObjectPaletteDefaults
+        private RangeInt32? _ObjectPaletteDefaultsLocation;
+        public IObjectPaletteDefaultsGetter? ObjectPaletteDefaults => _ObjectPaletteDefaultsLocation.HasValue ? ObjectPaletteDefaultsBinaryOverlay.ObjectPaletteDefaultsFactory(_recordData.Slice(_ObjectPaletteDefaultsLocation!.Value.Min), _package) : default;
+        #endregion
+        #region XALG
+        private int? _XALGLocation;
+        public UInt64? XALG => _XALGLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants)) : default(UInt64?);
+        #endregion
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         public IModelGetter? Model { get; private set; }
-        #region DNAM
-        private int? _DNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? DNAM => _DNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        private RangeInt32? _DNAMLocation;
+        #region Contrast
+        private int _ContrastLocation => _DNAMLocation!.Value.Min;
+        private bool _Contrast_IsSet => _DNAMLocation.HasValue;
+        public Single Contrast => _Contrast_IsSet ? _recordData.Slice(_ContrastLocation, 4).Float() : default(Single);
+        #endregion
+        #region ClusterScale
+        private int _ClusterScaleLocation => _DNAMLocation!.Value.Min + 0x4;
+        private bool _ClusterScale_IsSet => _DNAMLocation.HasValue;
+        public Single ClusterScale => _ClusterScale_IsSet ? _recordData.Slice(_ClusterScaleLocation, 4).Float() : default(Single);
+        #endregion
+        #region HeightRange
+        private int _HeightRangeLocation => _DNAMLocation!.Value.Min + 0x8;
+        private bool _HeightRange_IsSet => _DNAMLocation.HasValue;
+        public Percent HeightRange => _HeightRange_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_HeightRangeLocation, 4), FloatIntegerType.UInt) : default(Percent);
+        #endregion
+        #region ColorRange
+        private int _ColorRangeLocation => _DNAMLocation!.Value.Min + 0xC;
+        private bool _ColorRange_IsSet => _DNAMLocation.HasValue;
+        public Percent ColorRange => _ColorRange_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_ColorRangeLocation, 4), FloatIntegerType.UInt) : default(Percent);
+        #endregion
+        #region WindFrequency
+        private int _WindFrequencyLocation => _DNAMLocation!.Value.Min + 0x10;
+        private bool _WindFrequency_IsSet => _DNAMLocation.HasValue;
+        public Single WindFrequency => _WindFrequency_IsSet ? _recordData.Slice(_WindFrequencyLocation, 4).Float() : default(Single);
+        #endregion
+        #region AboveWaterClamp
+        private int _AboveWaterClampLocation => _DNAMLocation!.Value.Min + 0x14;
+        private bool _AboveWaterClamp_IsSet => _DNAMLocation.HasValue;
+        public Single AboveWaterClamp => _AboveWaterClamp_IsSet ? _recordData.Slice(_AboveWaterClampLocation, 4).Float() : default(Single);
+        #endregion
+        #region BelowWaterClamp
+        private int _BelowWaterClampLocation => _DNAMLocation!.Value.Min + 0x18;
+        private bool _BelowWaterClamp_IsSet => _DNAMLocation.HasValue;
+        public Single BelowWaterClamp => _BelowWaterClamp_IsSet ? _recordData.Slice(_BelowWaterClampLocation, 4).Float() : default(Single);
+        #endregion
+        #region MaxDensity
+        private int _MaxDensityLocation => _DNAMLocation!.Value.Min + 0x1C;
+        private bool _MaxDensity_IsSet => _DNAMLocation.HasValue;
+        public Byte MaxDensity => _MaxDensity_IsSet ? _recordData.Span[_MaxDensityLocation] : default;
+        #endregion
+        #region MinSlope
+        private int _MinSlopeLocation => _DNAMLocation!.Value.Min + 0x1D;
+        private bool _MinSlope_IsSet => _DNAMLocation.HasValue;
+        public Byte MinSlope => _MinSlope_IsSet ? _recordData.Span[_MinSlopeLocation] : default;
+        #endregion
+        #region MaxSlope
+        private int _MaxSlopeLocation => _DNAMLocation!.Value.Min + 0x1E;
+        private bool _MaxSlope_IsSet => _DNAMLocation.HasValue;
+        public Byte MaxSlope => _MaxSlope_IsSet ? _recordData.Span[_MaxSlopeLocation] : default;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _DNAMLocation!.Value.Min + 0x1F;
+        private bool _Flags_IsSet => _DNAMLocation.HasValue;
+        public Grass.Flag Flags => _Flags_IsSet ? (Grass.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        #endregion
+        #region Coverage
+        private int _CoverageLocation => _DNAMLocation!.Value.Min + 0x20;
+        private bool _Coverage_IsSet => _DNAMLocation.HasValue;
+        public Single Coverage => _Coverage_IsSet ? _recordData.Slice(_CoverageLocation, 4).Float() : default(Single);
+        #endregion
+        #region DirtinessMin
+        private int _DirtinessMinLocation => _DNAMLocation!.Value.Min + 0x24;
+        private bool _DirtinessMin_IsSet => _DNAMLocation.HasValue;
+        public Percent DirtinessMin => _DirtinessMin_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_DirtinessMinLocation, 1), FloatIntegerType.Byte) : default(Percent);
+        #endregion
+        #region DirtinessMax
+        private int _DirtinessMaxLocation => _DNAMLocation!.Value.Min + 0x25;
+        private bool _DirtinessMax_IsSet => _DNAMLocation.HasValue;
+        public Percent DirtinessMax => _DirtinessMax_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_DirtinessMaxLocation, 1), FloatIntegerType.Byte) : default(Percent);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2098,6 +3077,16 @@ namespace Mutagen.Bethesda.Starfield
                     _DirtinessScaleLocation = (stream.Position - offset);
                     return (int)Grass_FieldIndex.DirtinessScale;
                 }
+                case RecordTypeInts.OPDS:
+                {
+                    _ObjectPaletteDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Grass_FieldIndex.ObjectPaletteDefaults;
+                }
+                case RecordTypeInts.XALG:
+                {
+                    _XALGLocation = (stream.Position - offset);
+                    return (int)Grass_FieldIndex.XALG;
+                }
                 case RecordTypeInts.BFCB:
                 {
                     this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
@@ -2123,8 +3112,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _DNAMLocation = (stream.Position - offset);
-                    return (int)Grass_FieldIndex.DNAM;
+                    _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)Grass_FieldIndex.DirtinessMax;
                 }
                 default:
                     return base.FillRecordType(

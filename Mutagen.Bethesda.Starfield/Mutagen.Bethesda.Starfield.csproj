@@ -2223,6 +2223,9 @@
     <Compile Include="Records\Major Records\GameSettingUInt.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Grass.cs">
+      <DependentUpon>Grass.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Hazard.cs">
       <DependentUpon>Hazard.xml</DependentUpon>
     </Compile>
