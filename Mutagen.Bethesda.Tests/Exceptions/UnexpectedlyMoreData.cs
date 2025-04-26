@@ -15,7 +15,7 @@ public class UnexpectedlyMoreData : Exception, IPrintable
 
     public override string ToString()
     {
-        return $"{Path} had more data past position 0x{Position} than source stream.";
+        return $"{Path} had more data past position 0x{Position:X} than source stream.";
     }
 
     public void Print(StructuredStringBuilder sb, string name)
@@ -23,7 +23,7 @@ public class UnexpectedlyMoreData : Exception, IPrintable
         sb.AppendLine(Path);
         using (sb.IncreaseDepth())
         {
-            sb.AppendLine($"had more data past position 0x{Position} than source stream.");
+            sb.AppendLine($"had more data past position 0x{Position:X} than source stream.");
         }
     }
 }
