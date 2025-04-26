@@ -229,7 +229,7 @@ namespace Mutagen.Bethesda.Starfield
             _ParticleSystemDefineCollisions_Object = new StarfieldGroup<ParticleSystemDefineCollision>(this);
             _SunPresets_Object = new StarfieldGroup<SunPreset>(this);
             _PhotoModeFeatures_Object = new StarfieldGroup<PhotoModeFeature>(this);
-            _GameplayOptions_Object = new StarfieldGroup<GameplayOptions>(this);
+            _GameplayOptions_Object = new StarfieldGroup<GameplayOption>(this);
             _GameplayOptionsGroups_Object = new StarfieldGroup<GameplayOptionsGroup>(this);
             _TimeOfDays_Object = new StarfieldGroup<TimeOfDayRecord>(this);
             _ActorValueModulations_Object = new StarfieldGroup<ActorValueModulation>(this);
@@ -1433,10 +1433,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region GameplayOptions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private StarfieldGroup<GameplayOptions> _GameplayOptions_Object;
-        public StarfieldGroup<GameplayOptions> GameplayOptions => _GameplayOptions_Object;
+        private StarfieldGroup<GameplayOption> _GameplayOptions_Object;
+        public StarfieldGroup<GameplayOption> GameplayOptions => _GameplayOptions_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IStarfieldGroupGetter<IGameplayOptionsGetter> IStarfieldModGetter.GameplayOptions => _GameplayOptions_Object;
+        IStarfieldGroupGetter<IGameplayOptionGetter> IStarfieldModGetter.GameplayOptions => _GameplayOptions_Object;
         #endregion
         #region GameplayOptionsGroups
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -5509,7 +5509,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ParticleSystemDefineCollision.ErrorMask>?>? ParticleSystemDefineCollisions;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<SunPreset.ErrorMask>?>? SunPresets;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<PhotoModeFeature.ErrorMask>?>? PhotoModeFeatures;
-            public MaskItem<Exception?, StarfieldGroup.ErrorMask<GameplayOptions.ErrorMask>?>? GameplayOptions;
+            public MaskItem<Exception?, StarfieldGroup.ErrorMask<GameplayOption.ErrorMask>?>? GameplayOptions;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<GameplayOptionsGroup.ErrorMask>?>? GameplayOptionsGroups;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<TimeOfDayRecord.ErrorMask>?>? TimeOfDays;
             public MaskItem<Exception?, StarfieldGroup.ErrorMask<ActorValueModulation.ErrorMask>?>? ActorValueModulations;
@@ -6399,7 +6399,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.PhotoModeFeatures = new MaskItem<Exception?, StarfieldGroup.ErrorMask<PhotoModeFeature.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.GameplayOptions:
-                        this.GameplayOptions = new MaskItem<Exception?, StarfieldGroup.ErrorMask<GameplayOptions.ErrorMask>?>(ex, null);
+                        this.GameplayOptions = new MaskItem<Exception?, StarfieldGroup.ErrorMask<GameplayOption.ErrorMask>?>(ex, null);
                         break;
                     case StarfieldMod_FieldIndex.GameplayOptionsGroups:
                         this.GameplayOptionsGroups = new MaskItem<Exception?, StarfieldGroup.ErrorMask<GameplayOptionsGroup.ErrorMask>?>(ex, null);
@@ -6940,7 +6940,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.PhotoModeFeatures = (MaskItem<Exception?, StarfieldGroup.ErrorMask<PhotoModeFeature.ErrorMask>?>?)obj;
                         break;
                     case StarfieldMod_FieldIndex.GameplayOptions:
-                        this.GameplayOptions = (MaskItem<Exception?, StarfieldGroup.ErrorMask<GameplayOptions.ErrorMask>?>?)obj;
+                        this.GameplayOptions = (MaskItem<Exception?, StarfieldGroup.ErrorMask<GameplayOption.ErrorMask>?>?)obj;
                         break;
                     case StarfieldMod_FieldIndex.GameplayOptionsGroups:
                         this.GameplayOptionsGroups = (MaskItem<Exception?, StarfieldGroup.ErrorMask<GameplayOptionsGroup.ErrorMask>?>?)obj;
@@ -7725,7 +7725,7 @@ namespace Mutagen.Bethesda.Starfield
             public StarfieldGroup.TranslationMask<ParticleSystemDefineCollision.TranslationMask>? ParticleSystemDefineCollisions;
             public StarfieldGroup.TranslationMask<SunPreset.TranslationMask>? SunPresets;
             public StarfieldGroup.TranslationMask<PhotoModeFeature.TranslationMask>? PhotoModeFeatures;
-            public StarfieldGroup.TranslationMask<GameplayOptions.TranslationMask>? GameplayOptions;
+            public StarfieldGroup.TranslationMask<GameplayOption.TranslationMask>? GameplayOptions;
             public StarfieldGroup.TranslationMask<GameplayOptionsGroup.TranslationMask>? GameplayOptionsGroups;
             public StarfieldGroup.TranslationMask<TimeOfDayRecord.TranslationMask>? TimeOfDays;
             public StarfieldGroup.TranslationMask<ActorValueModulation.TranslationMask>? ActorValueModulations;
@@ -8157,7 +8157,7 @@ namespace Mutagen.Bethesda.Starfield
             _ParticleSystemDefineCollisions_Object = new StarfieldGroup<ParticleSystemDefineCollision>(this);
             _SunPresets_Object = new StarfieldGroup<SunPreset>(this);
             _PhotoModeFeatures_Object = new StarfieldGroup<PhotoModeFeature>(this);
-            _GameplayOptions_Object = new StarfieldGroup<GameplayOptions>(this);
+            _GameplayOptions_Object = new StarfieldGroup<GameplayOption>(this);
             _GameplayOptionsGroups_Object = new StarfieldGroup<GameplayOptionsGroup>(this);
             _TimeOfDays_Object = new StarfieldGroup<TimeOfDayRecord>(this);
             _ActorValueModulations_Object = new StarfieldGroup<ActorValueModulation>(this);
@@ -9325,7 +9325,7 @@ namespace Mutagen.Bethesda.Starfield
         new StarfieldGroup<ParticleSystemDefineCollision> ParticleSystemDefineCollisions { get; }
         new StarfieldGroup<SunPreset> SunPresets { get; }
         new StarfieldGroup<PhotoModeFeature> PhotoModeFeatures { get; }
-        new StarfieldGroup<GameplayOptions> GameplayOptions { get; }
+        new StarfieldGroup<GameplayOption> GameplayOptions { get; }
         new StarfieldGroup<GameplayOptionsGroup> GameplayOptionsGroups { get; }
         new StarfieldGroup<TimeOfDayRecord> TimeOfDays { get; }
         new StarfieldGroup<ActorValueModulation> ActorValueModulations { get; }
@@ -9521,7 +9521,7 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldGroupGetter<IParticleSystemDefineCollisionGetter> ParticleSystemDefineCollisions { get; }
         IStarfieldGroupGetter<ISunPresetGetter> SunPresets { get; }
         IStarfieldGroupGetter<IPhotoModeFeatureGetter> PhotoModeFeatures { get; }
-        IStarfieldGroupGetter<IGameplayOptionsGetter> GameplayOptions { get; }
+        IStarfieldGroupGetter<IGameplayOptionGetter> GameplayOptions { get; }
         IStarfieldGroupGetter<IGameplayOptionsGroupGetter> GameplayOptionsGroups { get; }
         IStarfieldGroupGetter<ITimeOfDayRecordGetter> TimeOfDays { get; }
         IStarfieldGroupGetter<IActorValueModulationGetter> ActorValueModulations { get; }
@@ -12287,10 +12287,10 @@ namespace Mutagen.Bethesda.Starfield
                         type: type,
                         keys: keys);
                     break;
-                case "GameplayOptions":
-                case "IGameplayOptionsGetter":
-                case "IGameplayOptions":
-                case "IGameplayOptionsInternal":
+                case "GameplayOption":
+                case "IGameplayOptionGetter":
+                case "IGameplayOption":
+                case "IGameplayOptionInternal":
                     obj.GameplayOptions.Remove(
                         type: type,
                         keys: keys);
@@ -16901,10 +16901,10 @@ namespace Mutagen.Bethesda.Starfield
                 case "IPhotoModeFeature":
                 case "IPhotoModeFeatureInternal":
                     return obj.PhotoModeFeatures;
-                case "GameplayOptions":
-                case "IGameplayOptionsGetter":
-                case "IGameplayOptions":
-                case "IGameplayOptionsInternal":
+                case "GameplayOption":
+                case "IGameplayOptionGetter":
+                case "IGameplayOption":
+                case "IGameplayOptionInternal":
                     return obj.GameplayOptions;
                 case "GameplayOptionsGroup":
                 case "IGameplayOptionsGroupGetter":
@@ -17942,9 +17942,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            foreach (var item in obj.GameplayOptionsGroups.EnumerateFormLinks())
+            if (obj.GameplayOptionsGroups is IFormLinkContainerGetter GameplayOptionsGroupslinkCont)
             {
-                yield return item;
+                foreach (var item in GameplayOptionsGroupslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             if (obj.TimeOfDays is IFormLinkContainerGetter TimeOfDayslinkCont)
             {
@@ -20224,10 +20227,10 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
-                case "GameplayOptions":
-                case "IGameplayOptionsGetter":
-                case "IGameplayOptions":
-                case "IGameplayOptionsInternal":
+                case "GameplayOption":
+                case "IGameplayOptionGetter":
+                case "IGameplayOption":
+                case "IGameplayOptionInternal":
                     foreach (var item in obj.GameplayOptions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -21957,9 +21960,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, GameplayOptions, IGameplayOptionsGetter>(
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, GameplayOption, IGameplayOptionGetter>(
                 srcGroup: obj.GameplayOptions,
-                type: typeof(IGameplayOptionsGetter),
+                type: typeof(IGameplayOptionGetter),
                 modKey: obj.ModKey,
                 group: (m) => m.GameplayOptions,
                 groupGetter: (m) => m.GameplayOptions))
@@ -24403,11 +24406,11 @@ namespace Mutagen.Bethesda.Starfield
                         yield return item;
                     }
                     yield break;
-                case "GameplayOptions":
-                case "IGameplayOptionsGetter":
-                case "IGameplayOptions":
-                case "IGameplayOptionsInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, GameplayOptions, IGameplayOptionsGetter>(
+                case "GameplayOption":
+                case "IGameplayOptionGetter":
+                case "IGameplayOption":
+                case "IGameplayOptionInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IStarfieldMod, IStarfieldModGetter, GameplayOption, IGameplayOptionGetter>(
                         srcGroup: obj.GameplayOptions,
                         type: type,
                         modKey: obj.ModKey,
@@ -31226,7 +31229,7 @@ namespace Mutagen.Bethesda.Starfield
                 var GameplayOptionsItem = item.GameplayOptions;
                 if (GameplayOptionsItem.RecordCache.Count > 0)
                 {
-                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)GameplayOptionsItem).BinaryWriteTranslator).Write<IGameplayOptionsGetter>(
+                    ((StarfieldGroupBinaryWriteTranslation)((IBinaryItem)GameplayOptionsItem).BinaryWriteTranslator).Write<IGameplayOptionGetter>(
                         item: GameplayOptionsItem,
                         writer: writer,
                         translationParams: translationParams);
@@ -34845,8 +34848,8 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region GameplayOptions
         private List<RangeInt64>? _GameplayOptionsLocations;
-        private IStarfieldGroupGetter<IGameplayOptionsGetter>? _GameplayOptions => _GameplayOptionsLocations != null ? StarfieldGroupBinaryOverlay<IGameplayOptionsGetter>.StarfieldGroupFactory(_stream, _GameplayOptionsLocations, _package) : default;
-        public IStarfieldGroupGetter<IGameplayOptionsGetter> GameplayOptions => _GameplayOptions ?? new StarfieldGroup<GameplayOptions>(this);
+        private IStarfieldGroupGetter<IGameplayOptionGetter>? _GameplayOptions => _GameplayOptionsLocations != null ? StarfieldGroupBinaryOverlay<IGameplayOptionGetter>.StarfieldGroupFactory(_stream, _GameplayOptionsLocations, _package) : default;
+        public IStarfieldGroupGetter<IGameplayOptionGetter> GameplayOptions => _GameplayOptions ?? new StarfieldGroup<GameplayOption>(this);
         #endregion
         #region GameplayOptionsGroups
         private List<RangeInt64>? _GameplayOptionsGroupsLocations;

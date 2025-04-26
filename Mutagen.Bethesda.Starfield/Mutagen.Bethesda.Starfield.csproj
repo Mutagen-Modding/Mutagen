@@ -2037,9 +2037,6 @@
     <Compile Include="Records\Common Subrecords\VolumesComponentItem.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\GameplayOptions.cs">
-      <DependentUpon>GameplayOptions.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\AcousticSpace.cs">
       <DependentUpon>AcousticSpace.xml</DependentUpon>
     </Compile>
@@ -2201,6 +2198,12 @@
     </Compile>
     <Compile Include="Records\Major Records\Furniture.cs">
       <DependentUpon>Furniture.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameplayOption.cs">
+      <DependentUpon>GameplayOption.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameplayOptionsGroup.cs">
+      <DependentUpon>GameplayOptionsGroup.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\GameSetting.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
@@ -6589,15 +6592,6 @@
     <Compile Include="Records\Common Subrecords\CityMapsUsageComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\GameplayOptions_Generated.cs">
-      <DependentUpon>GameplayOptions.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\GPOD_Generated.cs">
-      <DependentUpon>GameplayOptions.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\SliderEntry_Generated.cs">
-      <DependentUpon>GameplayOptions.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\GameplayOptionsGroup_Generated.cs">
       <DependentUpon>GameplayOptionsGroup.xml</DependentUpon>
     </Compile>
@@ -6743,21 +6737,6 @@
     <Compile Include="Records\Major Records\FactionHerd_Generated.cs">
       <DependentUpon>Faction.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\AGameplayOptionsData_Generated.cs">
-      <DependentUpon>GameplayOptions.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\BoolGameplayOptionsData_Generated.cs">
-      <DependentUpon>GameplayOptions.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\FloatGameplayOptionsData_Generated.cs">
-      <DependentUpon>GameplayOptions.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\GameplayOptionDataRange_Generated.cs">
-      <DependentUpon>GameplayOptions.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\GameplayOptionReward_Generated.cs">
-      <DependentUpon>GameplayOptions.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\ResearchProjectRequiredItem_Generated.cs">
       <DependentUpon>ResearchProject.xml</DependentUpon>
     </Compile>
@@ -6827,6 +6806,30 @@
     </Compile>
     <Compile Include="Records\Major Records\FactionPrisons_Generated.cs">
       <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameplayOption_Generated.cs">
+      <DependentUpon>GameplayOption.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AGameplayOptionData_Generated.cs">
+      <DependentUpon>GameplayOption.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BoolGameplayOptionData_Generated.cs">
+      <DependentUpon>GameplayOption.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FloatGameplayOptionData_Generated.cs">
+      <DependentUpon>GameplayOption.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameplayOptionReward_Generated.cs">
+      <DependentUpon>GameplayOption.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AGameplayOptionsNode_Generated.cs">
+      <DependentUpon>GameplayOptionsGroup.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameplayOptionsGroupLeaf_Generated.cs">
+      <DependentUpon>GameplayOptionsGroup.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameplayOptionsGroupRoot_Generated.cs">
+      <DependentUpon>GameplayOptionsGroup.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

@@ -38,14 +38,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class BoolGameplayOptionsData :
-        AGameplayOptionsData,
-        IBoolGameplayOptionsData,
-        IEquatable<IBoolGameplayOptionsDataGetter>,
-        ILoquiObjectSetter<BoolGameplayOptionsData>
+    public partial class BoolGameplayOptionData :
+        AGameplayOptionData,
+        IBoolGameplayOptionData,
+        IEquatable<IBoolGameplayOptionDataGetter>,
+        ILoquiObjectSetter<BoolGameplayOptionData>
     {
         #region Ctor
-        public BoolGameplayOptionsData()
+        public BoolGameplayOptionData()
         {
             CustomCtor();
         }
@@ -55,12 +55,12 @@ namespace Mutagen.Bethesda.Starfield
         #region Value1
         public Boolean? Value1 { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Boolean? IBoolGameplayOptionsDataGetter.Value1 => this.Value1;
+        Boolean? IBoolGameplayOptionDataGetter.Value1 => this.Value1;
         #endregion
         #region Value2
         public Boolean? Value2 { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Boolean? IBoolGameplayOptionsDataGetter.Value2 => this.Value2;
+        Boolean? IBoolGameplayOptionDataGetter.Value2 => this.Value2;
         #endregion
 
         #region To String
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            BoolGameplayOptionsDataMixIn.Print(
+            BoolGameplayOptionDataMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -80,22 +80,22 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IBoolGameplayOptionsDataGetter rhs) return false;
-            return ((BoolGameplayOptionsDataCommon)((IBoolGameplayOptionsDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IBoolGameplayOptionDataGetter rhs) return false;
+            return ((BoolGameplayOptionDataCommon)((IBoolGameplayOptionDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IBoolGameplayOptionsDataGetter? obj)
+        public bool Equals(IBoolGameplayOptionDataGetter? obj)
         {
-            return ((BoolGameplayOptionsDataCommon)((IBoolGameplayOptionsDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((BoolGameplayOptionDataCommon)((IBoolGameplayOptionDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((BoolGameplayOptionsDataCommon)((IBoolGameplayOptionsDataGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((BoolGameplayOptionDataCommon)((IBoolGameplayOptionDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Mask
         public new class Mask<TItem> :
-            AGameplayOptionsData.Mask<TItem>,
+            AGameplayOptionData.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new BoolGameplayOptionsData.Mask<R>();
+                var ret = new BoolGameplayOptionData.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -194,16 +194,16 @@ namespace Mutagen.Bethesda.Starfield
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(BoolGameplayOptionsData.Mask<bool>? printMask = null)
+            public string Print(BoolGameplayOptionData.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, BoolGameplayOptionsData.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, BoolGameplayOptionData.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(BoolGameplayOptionsData.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(BoolGameplayOptionData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                     if (printMask?.Value1 ?? true)
@@ -221,7 +221,7 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public new class ErrorMask :
-            AGameplayOptionsData.ErrorMask,
+            AGameplayOptionData.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -232,12 +232,12 @@ namespace Mutagen.Bethesda.Starfield
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                BoolGameplayOptionsData_FieldIndex enu = (BoolGameplayOptionsData_FieldIndex)index;
+                BoolGameplayOptionData_FieldIndex enu = (BoolGameplayOptionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case BoolGameplayOptionsData_FieldIndex.Value1:
+                    case BoolGameplayOptionData_FieldIndex.Value1:
                         return Value1;
-                    case BoolGameplayOptionsData_FieldIndex.Value2:
+                    case BoolGameplayOptionData_FieldIndex.Value2:
                         return Value2;
                     default:
                         return base.GetNthMask(index);
@@ -246,13 +246,13 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthException(int index, Exception ex)
             {
-                BoolGameplayOptionsData_FieldIndex enu = (BoolGameplayOptionsData_FieldIndex)index;
+                BoolGameplayOptionData_FieldIndex enu = (BoolGameplayOptionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case BoolGameplayOptionsData_FieldIndex.Value1:
+                    case BoolGameplayOptionData_FieldIndex.Value1:
                         this.Value1 = ex;
                         break;
-                    case BoolGameplayOptionsData_FieldIndex.Value2:
+                    case BoolGameplayOptionData_FieldIndex.Value2:
                         this.Value2 = ex;
                         break;
                     default:
@@ -263,13 +263,13 @@ namespace Mutagen.Bethesda.Starfield
 
             public override void SetNthMask(int index, object obj)
             {
-                BoolGameplayOptionsData_FieldIndex enu = (BoolGameplayOptionsData_FieldIndex)index;
+                BoolGameplayOptionData_FieldIndex enu = (BoolGameplayOptionData_FieldIndex)index;
                 switch (enu)
                 {
-                    case BoolGameplayOptionsData_FieldIndex.Value1:
+                    case BoolGameplayOptionData_FieldIndex.Value1:
                         this.Value1 = (Exception?)obj;
                         break;
-                    case BoolGameplayOptionsData_FieldIndex.Value2:
+                    case BoolGameplayOptionData_FieldIndex.Value2:
                         this.Value2 = (Exception?)obj;
                         break;
                     default:
@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda.Starfield
 
         }
         public new class TranslationMask :
-            AGameplayOptionsData.TranslationMask,
+            AGameplayOptionData.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -380,23 +380,23 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => BoolGameplayOptionsDataBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => BoolGameplayOptionDataBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((BoolGameplayOptionsDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((BoolGameplayOptionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static BoolGameplayOptionsData CreateFromBinary(
+        public new static BoolGameplayOptionData CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new BoolGameplayOptionsData();
-            ((BoolGameplayOptionsDataSetterCommon)((IBoolGameplayOptionsDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new BoolGameplayOptionData();
+            ((BoolGameplayOptionDataSetterCommon)((IBoolGameplayOptionDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -407,7 +407,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out BoolGameplayOptionsData item,
+            out BoolGameplayOptionData item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -422,33 +422,33 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((BoolGameplayOptionsDataSetterCommon)((IBoolGameplayOptionsDataGetter)this).CommonSetterInstance()!).Clear(this);
+            ((BoolGameplayOptionDataSetterCommon)((IBoolGameplayOptionDataGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new BoolGameplayOptionsData GetNew()
+        internal static new BoolGameplayOptionData GetNew()
         {
-            return new BoolGameplayOptionsData();
+            return new BoolGameplayOptionData();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IBoolGameplayOptionsData :
-        IAGameplayOptionsData,
-        IBoolGameplayOptionsDataGetter,
-        ILoquiObjectSetter<IBoolGameplayOptionsData>
+    public partial interface IBoolGameplayOptionData :
+        IAGameplayOptionData,
+        IBoolGameplayOptionDataGetter,
+        ILoquiObjectSetter<IBoolGameplayOptionData>
     {
         new Boolean? Value1 { get; set; }
         new Boolean? Value2 { get; set; }
     }
 
-    public partial interface IBoolGameplayOptionsDataGetter :
-        IAGameplayOptionsDataGetter,
+    public partial interface IBoolGameplayOptionDataGetter :
+        IAGameplayOptionDataGetter,
         IBinaryItem,
-        ILoquiObject<IBoolGameplayOptionsDataGetter>
+        ILoquiObject<IBoolGameplayOptionDataGetter>
     {
-        static new ILoquiRegistration StaticRegistration => BoolGameplayOptionsData_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => BoolGameplayOptionData_Registration.Instance;
         Boolean? Value1 { get; }
         Boolean? Value2 { get; }
 
@@ -457,42 +457,42 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common MixIn
-    public static partial class BoolGameplayOptionsDataMixIn
+    public static partial class BoolGameplayOptionDataMixIn
     {
-        public static void Clear(this IBoolGameplayOptionsData item)
+        public static void Clear(this IBoolGameplayOptionData item)
         {
-            ((BoolGameplayOptionsDataSetterCommon)((IBoolGameplayOptionsDataGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((BoolGameplayOptionDataSetterCommon)((IBoolGameplayOptionDataGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static BoolGameplayOptionsData.Mask<bool> GetEqualsMask(
-            this IBoolGameplayOptionsDataGetter item,
-            IBoolGameplayOptionsDataGetter rhs,
+        public static BoolGameplayOptionData.Mask<bool> GetEqualsMask(
+            this IBoolGameplayOptionDataGetter item,
+            IBoolGameplayOptionDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((BoolGameplayOptionsDataCommon)((IBoolGameplayOptionsDataGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((BoolGameplayOptionDataCommon)((IBoolGameplayOptionDataGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IBoolGameplayOptionsDataGetter item,
+            this IBoolGameplayOptionDataGetter item,
             string? name = null,
-            BoolGameplayOptionsData.Mask<bool>? printMask = null)
+            BoolGameplayOptionData.Mask<bool>? printMask = null)
         {
-            return ((BoolGameplayOptionsDataCommon)((IBoolGameplayOptionsDataGetter)item).CommonInstance()!).Print(
+            return ((BoolGameplayOptionDataCommon)((IBoolGameplayOptionDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IBoolGameplayOptionsDataGetter item,
+            this IBoolGameplayOptionDataGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            BoolGameplayOptionsData.Mask<bool>? printMask = null)
+            BoolGameplayOptionData.Mask<bool>? printMask = null)
         {
-            ((BoolGameplayOptionsDataCommon)((IBoolGameplayOptionsDataGetter)item).CommonInstance()!).Print(
+            ((BoolGameplayOptionDataCommon)((IBoolGameplayOptionDataGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -500,39 +500,39 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IBoolGameplayOptionsDataGetter item,
-            IBoolGameplayOptionsDataGetter rhs,
-            BoolGameplayOptionsData.TranslationMask? equalsMask = null)
+            this IBoolGameplayOptionDataGetter item,
+            IBoolGameplayOptionDataGetter rhs,
+            BoolGameplayOptionData.TranslationMask? equalsMask = null)
         {
-            return ((BoolGameplayOptionsDataCommon)((IBoolGameplayOptionsDataGetter)item).CommonInstance()!).Equals(
+            return ((BoolGameplayOptionDataCommon)((IBoolGameplayOptionDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IBoolGameplayOptionsData lhs,
-            IBoolGameplayOptionsDataGetter rhs,
-            out BoolGameplayOptionsData.ErrorMask errorMask,
-            BoolGameplayOptionsData.TranslationMask? copyMask = null)
+            this IBoolGameplayOptionData lhs,
+            IBoolGameplayOptionDataGetter rhs,
+            out BoolGameplayOptionData.ErrorMask errorMask,
+            BoolGameplayOptionData.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((BoolGameplayOptionsDataSetterTranslationCommon)((IBoolGameplayOptionsDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((BoolGameplayOptionDataSetterTranslationCommon)((IBoolGameplayOptionDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = BoolGameplayOptionsData.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = BoolGameplayOptionData.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IBoolGameplayOptionsData lhs,
-            IBoolGameplayOptionsDataGetter rhs,
+            this IBoolGameplayOptionData lhs,
+            IBoolGameplayOptionDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((BoolGameplayOptionsDataSetterTranslationCommon)((IBoolGameplayOptionsDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((BoolGameplayOptionDataSetterTranslationCommon)((IBoolGameplayOptionDataGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -540,32 +540,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static BoolGameplayOptionsData DeepCopy(
-            this IBoolGameplayOptionsDataGetter item,
-            BoolGameplayOptionsData.TranslationMask? copyMask = null)
+        public static BoolGameplayOptionData DeepCopy(
+            this IBoolGameplayOptionDataGetter item,
+            BoolGameplayOptionData.TranslationMask? copyMask = null)
         {
-            return ((BoolGameplayOptionsDataSetterTranslationCommon)((IBoolGameplayOptionsDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((BoolGameplayOptionDataSetterTranslationCommon)((IBoolGameplayOptionDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static BoolGameplayOptionsData DeepCopy(
-            this IBoolGameplayOptionsDataGetter item,
-            out BoolGameplayOptionsData.ErrorMask errorMask,
-            BoolGameplayOptionsData.TranslationMask? copyMask = null)
+        public static BoolGameplayOptionData DeepCopy(
+            this IBoolGameplayOptionDataGetter item,
+            out BoolGameplayOptionData.ErrorMask errorMask,
+            BoolGameplayOptionData.TranslationMask? copyMask = null)
         {
-            return ((BoolGameplayOptionsDataSetterTranslationCommon)((IBoolGameplayOptionsDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((BoolGameplayOptionDataSetterTranslationCommon)((IBoolGameplayOptionDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static BoolGameplayOptionsData DeepCopy(
-            this IBoolGameplayOptionsDataGetter item,
+        public static BoolGameplayOptionData DeepCopy(
+            this IBoolGameplayOptionDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((BoolGameplayOptionsDataSetterTranslationCommon)((IBoolGameplayOptionsDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((BoolGameplayOptionDataSetterTranslationCommon)((IBoolGameplayOptionDataGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -573,11 +573,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IBoolGameplayOptionsData item,
+            this IBoolGameplayOptionData item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((BoolGameplayOptionsDataSetterCommon)((IBoolGameplayOptionsDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((BoolGameplayOptionDataSetterCommon)((IBoolGameplayOptionDataGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -593,7 +593,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum BoolGameplayOptionsData_FieldIndex
+    internal enum BoolGameplayOptionData_FieldIndex
     {
         Value1 = 0,
         Value2 = 1,
@@ -601,9 +601,9 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Registration
-    internal partial class BoolGameplayOptionsData_Registration : ILoquiRegistration
+    internal partial class BoolGameplayOptionData_Registration : ILoquiRegistration
     {
-        public static readonly BoolGameplayOptionsData_Registration Instance = new BoolGameplayOptionsData_Registration();
+        public static readonly BoolGameplayOptionData_Registration Instance = new BoolGameplayOptionData_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -611,23 +611,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(BoolGameplayOptionsData.Mask<>);
+        public static readonly Type MaskType = typeof(BoolGameplayOptionData.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(BoolGameplayOptionsData.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(BoolGameplayOptionData.ErrorMask);
 
-        public static readonly Type ClassType = typeof(BoolGameplayOptionsData);
+        public static readonly Type ClassType = typeof(BoolGameplayOptionData);
 
-        public static readonly Type GetterType = typeof(IBoolGameplayOptionsDataGetter);
+        public static readonly Type GetterType = typeof(IBoolGameplayOptionDataGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IBoolGameplayOptionsData);
+        public static readonly Type SetterType = typeof(IBoolGameplayOptionData);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.BoolGameplayOptionsData";
+        public const string FullName = "Mutagen.Bethesda.Starfield.BoolGameplayOptionData";
 
-        public const string Name = "BoolGameplayOptionsData";
+        public const string Name = "BoolGameplayOptionData";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -643,7 +643,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.WNAM);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(BoolGameplayOptionsDataBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(BoolGameplayOptionDataBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -674,13 +674,13 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class BoolGameplayOptionsDataSetterCommon : AGameplayOptionsDataSetterCommon
+    internal partial class BoolGameplayOptionDataSetterCommon : AGameplayOptionDataSetterCommon
     {
-        public new static readonly BoolGameplayOptionsDataSetterCommon Instance = new BoolGameplayOptionsDataSetterCommon();
+        public new static readonly BoolGameplayOptionDataSetterCommon Instance = new BoolGameplayOptionDataSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IBoolGameplayOptionsData item)
+        public void Clear(IBoolGameplayOptionData item)
         {
             ClearPartial();
             item.Value1 = default;
@@ -688,13 +688,13 @@ namespace Mutagen.Bethesda.Starfield
             base.Clear(item);
         }
         
-        public override void Clear(IAGameplayOptionsData item)
+        public override void Clear(IAGameplayOptionData item)
         {
-            Clear(item: (IBoolGameplayOptionsData)item);
+            Clear(item: (IBoolGameplayOptionData)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IBoolGameplayOptionsData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IBoolGameplayOptionData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
         }
         
@@ -702,7 +702,7 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IBoolGameplayOptionsData item,
+            IBoolGameplayOptionData item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -710,16 +710,16 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillTyped: BoolGameplayOptionsDataBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillTyped: BoolGameplayOptionDataBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
-            IAGameplayOptionsData item,
+            IAGameplayOptionData item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (BoolGameplayOptionsData)item,
+                item: (BoolGameplayOptionData)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -727,17 +727,17 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class BoolGameplayOptionsDataCommon : AGameplayOptionsDataCommon
+    internal partial class BoolGameplayOptionDataCommon : AGameplayOptionDataCommon
     {
-        public new static readonly BoolGameplayOptionsDataCommon Instance = new BoolGameplayOptionsDataCommon();
+        public new static readonly BoolGameplayOptionDataCommon Instance = new BoolGameplayOptionDataCommon();
 
-        public BoolGameplayOptionsData.Mask<bool> GetEqualsMask(
-            IBoolGameplayOptionsDataGetter item,
-            IBoolGameplayOptionsDataGetter rhs,
+        public BoolGameplayOptionData.Mask<bool> GetEqualsMask(
+            IBoolGameplayOptionDataGetter item,
+            IBoolGameplayOptionDataGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new BoolGameplayOptionsData.Mask<bool>(false);
-            ((BoolGameplayOptionsDataCommon)((IBoolGameplayOptionsDataGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new BoolGameplayOptionData.Mask<bool>(false);
+            ((BoolGameplayOptionDataCommon)((IBoolGameplayOptionDataGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -746,9 +746,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IBoolGameplayOptionsDataGetter item,
-            IBoolGameplayOptionsDataGetter rhs,
-            BoolGameplayOptionsData.Mask<bool> ret,
+            IBoolGameplayOptionDataGetter item,
+            IBoolGameplayOptionDataGetter rhs,
+            BoolGameplayOptionData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Value1 = item.Value1 == rhs.Value1;
@@ -757,9 +757,9 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public string Print(
-            IBoolGameplayOptionsDataGetter item,
+            IBoolGameplayOptionDataGetter item,
             string? name = null,
-            BoolGameplayOptionsData.Mask<bool>? printMask = null)
+            BoolGameplayOptionData.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -771,18 +771,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IBoolGameplayOptionsDataGetter item,
+            IBoolGameplayOptionDataGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            BoolGameplayOptionsData.Mask<bool>? printMask = null)
+            BoolGameplayOptionData.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"BoolGameplayOptionsData =>");
+                sb.AppendLine($"BoolGameplayOptionData =>");
             }
             else
             {
-                sb.AppendLine($"{name} (BoolGameplayOptionsData) =>");
+                sb.AppendLine($"{name} (BoolGameplayOptionData) =>");
             }
             using (sb.Brace())
             {
@@ -794,11 +794,11 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IBoolGameplayOptionsDataGetter item,
+            IBoolGameplayOptionDataGetter item,
             StructuredStringBuilder sb,
-            BoolGameplayOptionsData.Mask<bool>? printMask = null)
+            BoolGameplayOptionData.Mask<bool>? printMask = null)
         {
-            AGameplayOptionsDataCommon.ToStringFields(
+            AGameplayOptionDataCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
@@ -814,7 +814,7 @@ namespace Mutagen.Bethesda.Starfield
             }
         }
         
-        public static BoolGameplayOptionsData_FieldIndex ConvertFieldIndex(AGameplayOptionsData_FieldIndex index)
+        public static BoolGameplayOptionData_FieldIndex ConvertFieldIndex(AGameplayOptionData_FieldIndex index)
         {
             switch (index)
             {
@@ -825,17 +825,17 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Equals and Hash
         public virtual bool Equals(
-            IBoolGameplayOptionsDataGetter? lhs,
-            IBoolGameplayOptionsDataGetter? rhs,
+            IBoolGameplayOptionDataGetter? lhs,
+            IBoolGameplayOptionDataGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IAGameplayOptionsDataGetter)lhs, (IAGameplayOptionsDataGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)BoolGameplayOptionsData_FieldIndex.Value1) ?? true))
+            if (!base.Equals((IAGameplayOptionDataGetter)lhs, (IAGameplayOptionDataGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)BoolGameplayOptionData_FieldIndex.Value1) ?? true))
             {
                 if (lhs.Value1 != rhs.Value1) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)BoolGameplayOptionsData_FieldIndex.Value2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BoolGameplayOptionData_FieldIndex.Value2) ?? true))
             {
                 if (lhs.Value2 != rhs.Value2) return false;
             }
@@ -843,17 +843,17 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public override bool Equals(
-            IAGameplayOptionsDataGetter? lhs,
-            IAGameplayOptionsDataGetter? rhs,
+            IAGameplayOptionDataGetter? lhs,
+            IAGameplayOptionDataGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IBoolGameplayOptionsDataGetter?)lhs,
-                rhs: rhs as IBoolGameplayOptionsDataGetter,
+                lhs: (IBoolGameplayOptionDataGetter?)lhs,
+                rhs: rhs as IBoolGameplayOptionDataGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IBoolGameplayOptionsDataGetter item)
+        public virtual int GetHashCode(IBoolGameplayOptionDataGetter item)
         {
             var hash = new HashCode();
             if (item.Value1 is {} Value1item)
@@ -868,9 +868,9 @@ namespace Mutagen.Bethesda.Starfield
             return hash.ToHashCode();
         }
         
-        public override int GetHashCode(IAGameplayOptionsDataGetter item)
+        public override int GetHashCode(IAGameplayOptionDataGetter item)
         {
-            return GetHashCode(item: (IBoolGameplayOptionsDataGetter)item);
+            return GetHashCode(item: (IBoolGameplayOptionDataGetter)item);
         }
         
         #endregion
@@ -878,11 +878,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public override object GetNew()
         {
-            return BoolGameplayOptionsData.GetNew();
+            return BoolGameplayOptionData.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBoolGameplayOptionsDataGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBoolGameplayOptionDataGetter obj)
         {
             yield break;
         }
@@ -890,29 +890,29 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class BoolGameplayOptionsDataSetterTranslationCommon : AGameplayOptionsDataSetterTranslationCommon
+    internal partial class BoolGameplayOptionDataSetterTranslationCommon : AGameplayOptionDataSetterTranslationCommon
     {
-        public new static readonly BoolGameplayOptionsDataSetterTranslationCommon Instance = new BoolGameplayOptionsDataSetterTranslationCommon();
+        public new static readonly BoolGameplayOptionDataSetterTranslationCommon Instance = new BoolGameplayOptionDataSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IBoolGameplayOptionsData item,
-            IBoolGameplayOptionsDataGetter rhs,
+            IBoolGameplayOptionData item,
+            IBoolGameplayOptionDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IAGameplayOptionsData)item,
-                (IAGameplayOptionsDataGetter)rhs,
+                (IAGameplayOptionData)item,
+                (IAGameplayOptionDataGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)BoolGameplayOptionsData_FieldIndex.Value1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)BoolGameplayOptionData_FieldIndex.Value1) ?? true))
             {
                 item.Value1 = rhs.Value1;
             }
-            if ((copyMask?.GetShouldTranslate((int)BoolGameplayOptionsData_FieldIndex.Value2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)BoolGameplayOptionData_FieldIndex.Value2) ?? true))
             {
                 item.Value2 = rhs.Value2;
             }
@@ -925,22 +925,22 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         partial void DeepCopyInCustom(
-            IBoolGameplayOptionsData item,
-            IBoolGameplayOptionsDataGetter rhs,
+            IBoolGameplayOptionData item,
+            IBoolGameplayOptionDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
         
         public override void DeepCopyIn(
-            IAGameplayOptionsData item,
-            IAGameplayOptionsDataGetter rhs,
+            IAGameplayOptionData item,
+            IAGameplayOptionDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IBoolGameplayOptionsData)item,
-                rhs: (IBoolGameplayOptionsDataGetter)rhs,
+                item: (IBoolGameplayOptionData)item,
+                rhs: (IBoolGameplayOptionDataGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -948,12 +948,12 @@ namespace Mutagen.Bethesda.Starfield
         
         #endregion
         
-        public BoolGameplayOptionsData DeepCopy(
-            IBoolGameplayOptionsDataGetter item,
-            BoolGameplayOptionsData.TranslationMask? copyMask = null)
+        public BoolGameplayOptionData DeepCopy(
+            IBoolGameplayOptionDataGetter item,
+            BoolGameplayOptionData.TranslationMask? copyMask = null)
         {
-            BoolGameplayOptionsData ret = (BoolGameplayOptionsData)((BoolGameplayOptionsDataCommon)((IBoolGameplayOptionsDataGetter)item).CommonInstance()!).GetNew();
-            ((BoolGameplayOptionsDataSetterTranslationCommon)((IBoolGameplayOptionsDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            BoolGameplayOptionData ret = (BoolGameplayOptionData)((BoolGameplayOptionDataCommon)((IBoolGameplayOptionDataGetter)item).CommonInstance()!).GetNew();
+            ((BoolGameplayOptionDataSetterTranslationCommon)((IBoolGameplayOptionDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -962,30 +962,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public BoolGameplayOptionsData DeepCopy(
-            IBoolGameplayOptionsDataGetter item,
-            out BoolGameplayOptionsData.ErrorMask errorMask,
-            BoolGameplayOptionsData.TranslationMask? copyMask = null)
+        public BoolGameplayOptionData DeepCopy(
+            IBoolGameplayOptionDataGetter item,
+            out BoolGameplayOptionData.ErrorMask errorMask,
+            BoolGameplayOptionData.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            BoolGameplayOptionsData ret = (BoolGameplayOptionsData)((BoolGameplayOptionsDataCommon)((IBoolGameplayOptionsDataGetter)item).CommonInstance()!).GetNew();
-            ((BoolGameplayOptionsDataSetterTranslationCommon)((IBoolGameplayOptionsDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            BoolGameplayOptionData ret = (BoolGameplayOptionData)((BoolGameplayOptionDataCommon)((IBoolGameplayOptionDataGetter)item).CommonInstance()!).GetNew();
+            ((BoolGameplayOptionDataSetterTranslationCommon)((IBoolGameplayOptionDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = BoolGameplayOptionsData.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = BoolGameplayOptionData.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public BoolGameplayOptionsData DeepCopy(
-            IBoolGameplayOptionsDataGetter item,
+        public BoolGameplayOptionData DeepCopy(
+            IBoolGameplayOptionDataGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            BoolGameplayOptionsData ret = (BoolGameplayOptionsData)((BoolGameplayOptionsDataCommon)((IBoolGameplayOptionsDataGetter)item).CommonInstance()!).GetNew();
-            ((BoolGameplayOptionsDataSetterTranslationCommon)((IBoolGameplayOptionsDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            BoolGameplayOptionData ret = (BoolGameplayOptionData)((BoolGameplayOptionDataCommon)((IBoolGameplayOptionDataGetter)item).CommonInstance()!).GetNew();
+            ((BoolGameplayOptionDataSetterTranslationCommon)((IBoolGameplayOptionDataGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1001,21 +1001,21 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class BoolGameplayOptionsData
+    public partial class BoolGameplayOptionData
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BoolGameplayOptionsData_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => BoolGameplayOptionsData_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => BoolGameplayOptionData_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => BoolGameplayOptionData_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => BoolGameplayOptionsDataCommon.Instance;
+        protected override object CommonInstance() => BoolGameplayOptionDataCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return BoolGameplayOptionsDataSetterCommon.Instance;
+            return BoolGameplayOptionDataSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => BoolGameplayOptionsDataSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => BoolGameplayOptionDataSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1026,14 +1026,14 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class BoolGameplayOptionsDataBinaryWriteTranslation :
-        AGameplayOptionsDataBinaryWriteTranslation,
+    public partial class BoolGameplayOptionDataBinaryWriteTranslation :
+        AGameplayOptionDataBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly BoolGameplayOptionsDataBinaryWriteTranslation Instance = new();
+        public new static readonly BoolGameplayOptionDataBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            IBoolGameplayOptionsDataGetter item,
+            IBoolGameplayOptionDataGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public void Write(
             MutagenWriter writer,
-            IBoolGameplayOptionsDataGetter item,
+            IBoolGameplayOptionDataGetter item,
             TypedWriteParams translationParams)
         {
             WriteRecordTypes(
@@ -1064,30 +1064,30 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IBoolGameplayOptionsDataGetter)item,
+                item: (IBoolGameplayOptionDataGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
         public override void Write(
             MutagenWriter writer,
-            IAGameplayOptionsDataGetter item,
+            IAGameplayOptionDataGetter item,
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IBoolGameplayOptionsDataGetter)item,
+                item: (IBoolGameplayOptionDataGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class BoolGameplayOptionsDataBinaryCreateTranslation : AGameplayOptionsDataBinaryCreateTranslation
+    internal partial class BoolGameplayOptionDataBinaryCreateTranslation : AGameplayOptionDataBinaryCreateTranslation
     {
-        public new static readonly BoolGameplayOptionsDataBinaryCreateTranslation Instance = new BoolGameplayOptionsDataBinaryCreateTranslation();
+        public new static readonly BoolGameplayOptionDataBinaryCreateTranslation Instance = new BoolGameplayOptionDataBinaryCreateTranslation();
 
         public static ParseResult FillBinaryRecordTypes(
-            IBoolGameplayOptionsData item,
+            IBoolGameplayOptionData item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1100,17 +1100,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.VNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)BoolGameplayOptionsData_FieldIndex.Value1, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)BoolGameplayOptionData_FieldIndex.Value1, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Value1 = frame.ReadBoolean();
-                    return (int)BoolGameplayOptionsData_FieldIndex.Value1;
+                    return (int)BoolGameplayOptionData_FieldIndex.Value1;
                 }
                 case RecordTypeInts.WNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)BoolGameplayOptionsData_FieldIndex.Value2, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)BoolGameplayOptionData_FieldIndex.Value2, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Value2 = frame.ReadBoolean();
-                    return (int)BoolGameplayOptionsData_FieldIndex.Value2;
+                    return (int)BoolGameplayOptionData_FieldIndex.Value2;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1123,7 +1123,7 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class BoolGameplayOptionsDataBinaryTranslationMixIn
+    public static class BoolGameplayOptionDataBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1132,30 +1132,30 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class BoolGameplayOptionsDataBinaryOverlay :
-        AGameplayOptionsDataBinaryOverlay,
-        IBoolGameplayOptionsDataGetter
+    internal partial class BoolGameplayOptionDataBinaryOverlay :
+        AGameplayOptionDataBinaryOverlay,
+        IBoolGameplayOptionDataGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BoolGameplayOptionsData_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => BoolGameplayOptionsData_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => BoolGameplayOptionData_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => BoolGameplayOptionData_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => BoolGameplayOptionsDataCommon.Instance;
+        protected override object CommonInstance() => BoolGameplayOptionDataCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => BoolGameplayOptionsDataSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => BoolGameplayOptionDataSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => BoolGameplayOptionsDataBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => BoolGameplayOptionDataBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((BoolGameplayOptionsDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((BoolGameplayOptionDataBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
@@ -1175,7 +1175,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected BoolGameplayOptionsDataBinaryOverlay(
+        protected BoolGameplayOptionDataBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1185,7 +1185,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IBoolGameplayOptionsDataGetter BoolGameplayOptionsDataFactory(
+        public static IBoolGameplayOptionDataGetter BoolGameplayOptionDataFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1197,7 +1197,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new BoolGameplayOptionsDataBinaryOverlay(
+            var ret = new BoolGameplayOptionDataBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret.FillTypelessSubrecordTypes(
@@ -1209,12 +1209,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IBoolGameplayOptionsDataGetter BoolGameplayOptionsDataFactory(
+        public static IBoolGameplayOptionDataGetter BoolGameplayOptionDataFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return BoolGameplayOptionsDataFactory(
+            return BoolGameplayOptionDataFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1234,15 +1234,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.VNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)BoolGameplayOptionsData_FieldIndex.Value1, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)BoolGameplayOptionData_FieldIndex.Value1, translationParams)) return ParseResult.Stop;
                     _Value1Location = (stream.Position - offset);
-                    return (int)BoolGameplayOptionsData_FieldIndex.Value1;
+                    return (int)BoolGameplayOptionData_FieldIndex.Value1;
                 }
                 case RecordTypeInts.WNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)BoolGameplayOptionsData_FieldIndex.Value2, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)BoolGameplayOptionData_FieldIndex.Value2, translationParams)) return ParseResult.Stop;
                     _Value2Location = (stream.Position - offset);
-                    return (int)BoolGameplayOptionsData_FieldIndex.Value2;
+                    return (int)BoolGameplayOptionData_FieldIndex.Value2;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1254,7 +1254,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            BoolGameplayOptionsDataMixIn.Print(
+            BoolGameplayOptionDataMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1265,16 +1265,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IBoolGameplayOptionsDataGetter rhs) return false;
-            return ((BoolGameplayOptionsDataCommon)((IBoolGameplayOptionsDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IBoolGameplayOptionDataGetter rhs) return false;
+            return ((BoolGameplayOptionDataCommon)((IBoolGameplayOptionDataGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IBoolGameplayOptionsDataGetter? obj)
+        public bool Equals(IBoolGameplayOptionDataGetter? obj)
         {
-            return ((BoolGameplayOptionsDataCommon)((IBoolGameplayOptionsDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((BoolGameplayOptionDataCommon)((IBoolGameplayOptionDataGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((BoolGameplayOptionsDataCommon)((IBoolGameplayOptionsDataGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((BoolGameplayOptionDataCommon)((IBoolGameplayOptionDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

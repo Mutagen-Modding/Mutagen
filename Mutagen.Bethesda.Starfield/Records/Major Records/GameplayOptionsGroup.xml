@@ -2,10 +2,23 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="GameplayOptionsGroup" recordType="GPOG" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
-      <String name="Title" recordType="NNAM" translated="Normal" />
-      <ByteArray name="BNAM" recordType="BNAM" unknown="true" />
-      <List name="Options" recordType="GOGL" >
-        <FormLink refName="GameplayOptions" />
+      <String name="Name" recordType="NNAM" translated="Normal" />
+      <CustomLogic name="Groups" recordType="BNAM" />
+      <RefDirect name="Options" refName="AGameplayOptionsNode" binary="NoGeneration" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="AGameplayOptionsNode" objType="Subrecord" abstract="true" />
+  <Object name="GameplayOptionsGroupLeaf" objType="Subrecord" baseClass="AGameplayOptionsNode" >
+    <Fields>
+      <List name="GameplayOptions" recordType="GOGL" nullable="False" >
+        <FormLink refName="GameplayOption" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="GameplayOptionsGroupRoot" objType="Subrecord" baseClass="AGameplayOptionsNode" >
+    <Fields>
+      <List name="GameplayOptionGroups" recordType="GOGL" nullable="False" >
+        <FormLink refName="GameplayOptionsGroup" />
       </List>
     </Fields>
   </Object>

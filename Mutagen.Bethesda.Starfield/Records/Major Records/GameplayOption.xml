@@ -1,35 +1,34 @@
 ﻿<?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="GameplayOptions" recordType="GPOF" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="GameplayOption" recordType="GPOF" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
       <String name="Name" recordType="NNAM" translated="Normal" />
       <String name="Description" recordType="DNAM" translated="Normal" />
-      <RefDirect name="Data" refName="AGameplayOptionsData" recordType="TNAM" binary="Custom" />
-      <RefDirect name="GameplayOptionDataRange" refName="GameplayOptionDataRange" />
+      <RefDirect name="Data" refName="AGameplayOptionData" recordType="TNAM" binary="Custom" />
       <RefList name="Rewards" refName="GameplayOptionReward" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
     </Fields>
   </Object>
-  <Object name="AGameplayOptionsData" objType="Subrecord" />
-  <Object name="BoolGameplayOptionsData" objType="Subrecord" baseClass="AGameplayOptionsData" >
+  <Object name="AGameplayOptionData" objType="Subrecord" />
+  <Object name="BoolGameplayOptionData" objType="Subrecord" baseClass="AGameplayOptionData" >
     <Fields>
       <Bool name="Value1" byteLength="1" recordType="VNAM" />
       <Bool name="Value2" byteLength="1" recordType="WNAM" />
     </Fields>
   </Object>
-  <Object name="FloatGameplayOptionsData" objType="Subrecord" baseClass="AGameplayOptionsData" >
+  <Object name="FloatGameplayOptionData" objType="Subrecord" baseClass="AGameplayOptionData" >
     <Fields>
-      <Float name="Value1" byteLength="1" recordType="VNAM" />
-      <Float name="Value2" byteLength="1" recordType="WNAM" />
-    </Fields>
-  </Object>
-  <Object name="GameplayOptionDataRange" recordType="GPOD" objType="Subrecord">
-    <Fields>
-      <Float name="Min" />
-      <Float name="Max" />
-      <Float name="Step" />
+      <Float name="Value1" recordType="VNAM" />
+      <Float name="Value2" recordType="WNAM" />
+      <Data recordType="GPOD" >
+        <Fields>
+          <Float name="Min" />
+          <Float name="Max" />
+          <Float name="Step" />
+        </Fields>
+      </Data>
     </Fields>
   </Object>
   <Object name="GameplayOptionReward" objType="Subrecord">

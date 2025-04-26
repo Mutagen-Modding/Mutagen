@@ -7,7 +7,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Starfield;
 
-internal partial class AGameplayOptionsDataBinaryOverlay
+internal partial class AGameplayOptionDataBinaryOverlay
 {
     public ParseResult FillRecordType(
         OverlayStream stream,
@@ -22,7 +22,7 @@ internal partial class AGameplayOptionsDataBinaryOverlay
     }
 }
 
-internal partial class GameplayOptionsBinaryCreateTranslation
+internal partial class GameplayOptionBinaryCreateTranslation
 {
     public enum Type
     {
@@ -32,7 +32,7 @@ internal partial class GameplayOptionsBinaryCreateTranslation
     
     public static partial void FillBinaryDataCustom(
         MutagenFrame frame,
-        IGameplayOptionsInternal item,
+        IGameplayOptionInternal item,
         PreviousParse lastParsed)
     {
         var type = frame.GetSubrecord(RecordTypes.TNAM);
@@ -40,10 +40,10 @@ internal partial class GameplayOptionsBinaryCreateTranslation
         switch ((Type)type.AsUInt8())
         {
             case Type.Bool:
-                item.Data = BoolGameplayOptionsData.CreateFromBinary(frame);
+                item.Data = BoolGameplayOptionData.CreateFromBinary(frame);
                 return;
             case Type.Float:
-                item.Data = FloatGameplayOptionsData.CreateFromBinary(frame);
+                item.Data = FloatGameplayOptionData.CreateFromBinary(frame);
                 return;
             default:
                     throw new NotImplementedException();
@@ -51,7 +51,7 @@ internal partial class GameplayOptionsBinaryCreateTranslation
     }
 }
 
-internal partial class GameplayOptionsBinaryOverlay
+internal partial class GameplayOptionBinaryOverlay
 {
     private RangeInt32? _DataLocation;
     
@@ -64,20 +64,21 @@ internal partial class GameplayOptionsBinaryOverlay
         stream.ReadSubrecord(RecordTypes.TNAM);
         stream.TryReadSubrecord(RecordTypes.VNAM, out _);
         stream.TryReadSubrecord(RecordTypes.WNAM, out _);
+        stream.TryReadSubrecord(RecordTypes.GPOD, out _);
     }
     
-    public partial IAGameplayOptionsDataGetter? GetDataCustom()
+    public partial IAGameplayOptionDataGetter? GetDataCustom()
     {
         if (!_DataLocation.HasValue) return null;
         
-        GameplayOptionsBinaryCreateTranslation.Type type = (GameplayOptionsBinaryCreateTranslation.Type)HeaderTranslation.ExtractSubrecordMemory(_recordData, _DataLocation.Value.Min, _package.MetaData.Constants)[0];
+        GameplayOptionBinaryCreateTranslation.Type type = (GameplayOptionBinaryCreateTranslation.Type)HeaderTranslation.ExtractSubrecordMemory(_recordData, _DataLocation.Value.Min, _package.MetaData.Constants)[0];
         switch (type)
         {
-            case GameplayOptionsBinaryCreateTranslation.Type.Bool:
-                return BoolGameplayOptionsDataBinaryOverlay.BoolGameplayOptionsDataFactory(
+            case GameplayOptionBinaryCreateTranslation.Type.Bool:
+                return BoolGameplayOptionDataBinaryOverlay.BoolGameplayOptionDataFactory(
                     _recordData.Slice(_DataLocation.Value.Max), _package);
-            case GameplayOptionsBinaryCreateTranslation.Type.Float:
-                return FloatGameplayOptionsDataBinaryOverlay.FloatGameplayOptionsDataFactory(
+            case GameplayOptionBinaryCreateTranslation.Type.Float:
+                return FloatGameplayOptionDataBinaryOverlay.FloatGameplayOptionDataFactory(
                     _recordData.Slice(_DataLocation.Value.Max), _package);
             default:
                 throw new NotImplementedException();
@@ -86,23 +87,23 @@ internal partial class GameplayOptionsBinaryOverlay
 }
 
 
-public partial class GameplayOptionsBinaryWriteTranslation
+public partial class GameplayOptionBinaryWriteTranslation
 {
     public static partial void WriteBinaryDataCustom(
         MutagenWriter writer,
-        IGameplayOptionsGetter item)
+        IGameplayOptionGetter item)
     {
         if (item.Data is not {} data) return;
         using (HeaderExport.Subrecord(writer, RecordTypes.TNAM))
         {
-            GameplayOptionsBinaryCreateTranslation.Type type;
+            GameplayOptionBinaryCreateTranslation.Type type;
             switch (data)
             {
-                case IBoolGameplayOptionsDataGetter:
-                    type = GameplayOptionsBinaryCreateTranslation.Type.Bool;
+                case IBoolGameplayOptionDataGetter:
+                    type = GameplayOptionBinaryCreateTranslation.Type.Bool;
                     break;
-                case IFloatGameplayOptionsDataGetter:
-                    type = GameplayOptionsBinaryCreateTranslation.Type.Float;
+                case IFloatGameplayOptionDataGetter:
+                    type = GameplayOptionBinaryCreateTranslation.Type.Float;
                     break;
                 default:
                     throw new NotImplementedException();

@@ -9,6 +9,7 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -55,35 +56,46 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region Title
-        public TranslatedString? Title { get; set; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter? IGameplayOptionsGroupGetter.Title => this.Title;
-        #endregion
-        #region BNAM
+        ITranslatedStringGetter? IGameplayOptionsGroupGetter.Name => this.Name;
+        #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _BNAM;
-        public MemorySlice<Byte>? BNAM
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? ITranslatedNamedGetter.Name => this.Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamed.Name
         {
-            get => this._BNAM;
-            set => this._BNAM = value;
+            get => this.Name?.String;
+            set => this.Name = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IGameplayOptionsGroupGetter.BNAM => this.BNAM;
+        string INamedRequired.Name
+        {
+            get => this.Name?.String ?? string.Empty;
+            set => this.Name = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString ITranslatedNamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
         #endregion
         #region Options
+        public AGameplayOptionsNode Options { get; set; } = default!;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<IGameplayOptionsGetter>>? _Options;
-        public ExtendedList<IFormLinkGetter<IGameplayOptionsGetter>>? Options
-        {
-            get => this._Options;
-            set => this._Options = value;
-        }
-        #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IGameplayOptionsGetter>>? IGameplayOptionsGroupGetter.Options => _Options;
-        #endregion
-
+        IAGameplayOptionsNodeGetter IGameplayOptionsGroupGetter.Options => Options;
         #endregion
 
         #region To String
@@ -110,9 +122,8 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Title = initialValue;
-                this.BNAM = initialValue;
-                this.Options = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Name = initialValue;
+                this.Options = new MaskItem<TItem, AGameplayOptionsNode.Mask<TItem>?>(initialValue, new AGameplayOptionsNode.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -123,8 +134,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
-                TItem Title,
-                TItem BNAM,
+                TItem Name,
                 TItem Options)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -135,9 +145,8 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Title = Title;
-                this.BNAM = BNAM;
-                this.Options = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Options, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Name = Name;
+                this.Options = new MaskItem<TItem, AGameplayOptionsNode.Mask<TItem>?>(Options, new AGameplayOptionsNode.Mask<TItem>(Options));
             }
 
             #pragma warning disable CS8618
@@ -149,9 +158,8 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Title;
-            public TItem BNAM;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Options;
+            public TItem Name;
+            public MaskItem<TItem, AGameplayOptionsNode.Mask<TItem>?>? Options { get; set; }
             #endregion
 
             #region Equals
@@ -165,16 +173,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Title, rhs.Title)) return false;
-                if (!object.Equals(this.BNAM, rhs.BNAM)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Options, rhs.Options)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Title);
-                hash.Add(this.BNAM);
+                hash.Add(this.Name);
                 hash.Add(this.Options);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -186,18 +192,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.Title)) return false;
-                if (!eval(this.BNAM)) return false;
-                if (this.Options != null)
+                if (!eval(this.Name)) return false;
+                if (Options != null)
                 {
                     if (!eval(this.Options.Overall)) return false;
-                    if (this.Options.Specific != null)
-                    {
-                        foreach (var item in this.Options.Specific)
-                        {
-                            if (!eval(item.Value)) return false;
-                        }
-                    }
+                    if (this.Options.Specific != null && !this.Options.Specific.All(eval)) return false;
                 }
                 return true;
             }
@@ -207,18 +206,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.Title)) return true;
-                if (eval(this.BNAM)) return true;
-                if (this.Options != null)
+                if (eval(this.Name)) return true;
+                if (Options != null)
                 {
                     if (eval(this.Options.Overall)) return true;
-                    if (this.Options.Specific != null)
-                    {
-                        foreach (var item in this.Options.Specific)
-                        {
-                            if (!eval(item.Value)) return false;
-                        }
-                    }
+                    if (this.Options.Specific != null && this.Options.Specific.Any(eval)) return true;
                 }
                 return false;
             }
@@ -235,22 +227,8 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Title = eval(this.Title);
-                obj.BNAM = eval(this.BNAM);
-                if (Options != null)
-                {
-                    obj.Options = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Options.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (Options.Specific != null)
-                    {
-                        var l = new List<(int Index, R Item)>();
-                        obj.Options.Specific = l;
-                        foreach (var item in Options.Specific)
-                        {
-                            R mask = eval(item.Value);
-                            l.Add((item.Index, mask));
-                        }
-                    }
-                }
+                obj.Name = eval(this.Name);
+                obj.Options = this.Options == null ? null : new MaskItem<R, AGameplayOptionsNode.Mask<R>?>(eval(this.Options.Overall), this.Options.Specific?.Translate(eval));
             }
             #endregion
 
@@ -269,34 +247,13 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(GameplayOptionsGroup.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Title ?? true)
+                    if (printMask?.Name ?? true)
                     {
-                        sb.AppendItem(Title, "Title");
+                        sb.AppendItem(Name, "Name");
                     }
-                    if (printMask?.BNAM ?? true)
+                    if (printMask?.Options?.Overall ?? true)
                     {
-                        sb.AppendItem(BNAM, "BNAM");
-                    }
-                    if ((printMask?.Options?.Overall ?? true)
-                        && Options is {} OptionsItem)
-                    {
-                        sb.AppendLine("Options =>");
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(OptionsItem.Overall);
-                            if (OptionsItem.Specific != null)
-                            {
-                                foreach (var subItem in OptionsItem.Specific)
-                                {
-                                    using (sb.Brace())
-                                    {
-                                        {
-                                            sb.AppendItem(subItem);
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        Options?.Print(sb);
                     }
                 }
             }
@@ -309,9 +266,8 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? Title;
-            public Exception? BNAM;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Options;
+            public Exception? Name;
+            public MaskItem<Exception?, AGameplayOptionsNode.ErrorMask?>? Options;
             #endregion
 
             #region IErrorMask
@@ -320,10 +276,8 @@ namespace Mutagen.Bethesda.Starfield
                 GameplayOptionsGroup_FieldIndex enu = (GameplayOptionsGroup_FieldIndex)index;
                 switch (enu)
                 {
-                    case GameplayOptionsGroup_FieldIndex.Title:
-                        return Title;
-                    case GameplayOptionsGroup_FieldIndex.BNAM:
-                        return BNAM;
+                    case GameplayOptionsGroup_FieldIndex.Name:
+                        return Name;
                     case GameplayOptionsGroup_FieldIndex.Options:
                         return Options;
                     default:
@@ -336,14 +290,11 @@ namespace Mutagen.Bethesda.Starfield
                 GameplayOptionsGroup_FieldIndex enu = (GameplayOptionsGroup_FieldIndex)index;
                 switch (enu)
                 {
-                    case GameplayOptionsGroup_FieldIndex.Title:
-                        this.Title = ex;
-                        break;
-                    case GameplayOptionsGroup_FieldIndex.BNAM:
-                        this.BNAM = ex;
+                    case GameplayOptionsGroup_FieldIndex.Name:
+                        this.Name = ex;
                         break;
                     case GameplayOptionsGroup_FieldIndex.Options:
-                        this.Options = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        this.Options = new MaskItem<Exception?, AGameplayOptionsNode.ErrorMask?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -356,14 +307,11 @@ namespace Mutagen.Bethesda.Starfield
                 GameplayOptionsGroup_FieldIndex enu = (GameplayOptionsGroup_FieldIndex)index;
                 switch (enu)
                 {
-                    case GameplayOptionsGroup_FieldIndex.Title:
-                        this.Title = (Exception?)obj;
-                        break;
-                    case GameplayOptionsGroup_FieldIndex.BNAM:
-                        this.BNAM = (Exception?)obj;
+                    case GameplayOptionsGroup_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
                         break;
                     case GameplayOptionsGroup_FieldIndex.Options:
-                        this.Options = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        this.Options = (MaskItem<Exception?, AGameplayOptionsNode.ErrorMask?>?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -374,8 +322,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Title != null) return true;
-                if (BNAM != null) return true;
+                if (Name != null) return true;
                 if (Options != null) return true;
                 return false;
             }
@@ -404,31 +351,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(Title, "Title");
+                    sb.AppendItem(Name, "Name");
                 }
-                {
-                    sb.AppendItem(BNAM, "BNAM");
-                }
-                if (Options is {} OptionsItem)
-                {
-                    sb.AppendLine("Options =>");
-                    using (sb.Brace())
-                    {
-                        sb.AppendItem(OptionsItem.Overall);
-                        if (OptionsItem.Specific != null)
-                        {
-                            foreach (var subItem in OptionsItem.Specific)
-                            {
-                                using (sb.Brace())
-                                {
-                                    {
-                                        sb.AppendItem(subItem);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                Options?.Print(sb);
             }
             #endregion
 
@@ -437,9 +362,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Title = this.Title.Combine(rhs.Title);
-                ret.BNAM = this.BNAM.Combine(rhs.BNAM);
-                ret.Options = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Options?.Overall, rhs.Options?.Overall), Noggog.ExceptionExt.Combine(this.Options?.Specific, rhs.Options?.Specific));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Options = this.Options.Combine(rhs.Options, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -462,9 +386,8 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
-            public bool Title;
-            public bool BNAM;
-            public bool Options;
+            public bool Name;
+            public AGameplayOptionsNode.TranslationMask? Options;
             #endregion
 
             #region Ctors
@@ -473,9 +396,7 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.Title = defaultOn;
-                this.BNAM = defaultOn;
-                this.Options = defaultOn;
+                this.Name = defaultOn;
             }
 
             #endregion
@@ -483,9 +404,8 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Title, null));
-                ret.Add((BNAM, null));
-                ret.Add((Options, null));
+                ret.Add((Name, null));
+                ret.Add((Options != null ? Options.OnOverall : DefaultOn, Options?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -631,11 +551,17 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkContainer,
         IGameplayOptionsGroupGetter,
         ILoquiObjectSetter<IGameplayOptionsGroupInternal>,
-        IStarfieldMajorRecordInternal
+        INamed,
+        INamedRequired,
+        IStarfieldMajorRecordInternal,
+        ITranslatedNamed,
+        ITranslatedNamedRequired
     {
-        new TranslatedString? Title { get; set; }
-        new MemorySlice<Byte>? BNAM { get; set; }
-        new ExtendedList<IFormLinkGetter<IGameplayOptionsGetter>>? Options { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
+        new TranslatedString? Name { get; set; }
+        new AGameplayOptionsNode Options { get; set; }
     }
 
     public partial interface IGameplayOptionsGroupInternal :
@@ -651,12 +577,20 @@ namespace Mutagen.Bethesda.Starfield
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IGameplayOptionsGroupGetter>,
-        IMapsToGetter<IGameplayOptionsGroupGetter>
+        IMapsToGetter<IGameplayOptionsGroupGetter>,
+        INamedGetter,
+        INamedRequiredGetter,
+        ITranslatedNamedGetter,
+        ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => GameplayOptionsGroup_Registration.Instance;
-        ITranslatedStringGetter? Title { get; }
-        ReadOnlyMemorySlice<Byte>? BNAM { get; }
-        IReadOnlyList<IFormLinkGetter<IGameplayOptionsGetter>>? Options { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
+        ITranslatedStringGetter? Name { get; }
+        #endregion
+        IAGameplayOptionsNodeGetter Options { get; }
 
     }
 
@@ -833,9 +767,8 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        Title = 7,
-        BNAM = 8,
-        Options = 9,
+        Name = 7,
+        Options = 8,
     }
     #endregion
 
@@ -846,9 +779,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(GameplayOptionsGroup.Mask<>);
 
@@ -928,9 +861,8 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IGameplayOptionsGroupInternal item)
         {
             ClearPartial();
-            item.Title = default;
-            item.BNAM = default;
-            item.Options = null;
+            item.Name = default;
+            item.Options.Clear();
             base.Clear(item);
         }
         
@@ -948,7 +880,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IGameplayOptionsGroup obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Options?.RemapLinks(mapping);
+            obj.Options.RemapLinks(mapping);
         }
         
         #endregion
@@ -1016,12 +948,8 @@ namespace Mutagen.Bethesda.Starfield
             GameplayOptionsGroup.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Title = object.Equals(item.Title, rhs.Title);
-            ret.BNAM = MemorySliceExt.SequenceEqual(item.BNAM, rhs.BNAM);
-            ret.Options = item.Options.CollectionEqualsHelper(
-                rhs.Options,
-                (l, r) => object.Equals(l, r),
-                include);
+            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Options = MaskItemExt.Factory(item.Options.GetEqualsMask(rhs.Options, include), include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1071,30 +999,14 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.Title ?? true)
-                && item.Title is {} TitleItem)
+            if ((printMask?.Name ?? true)
+                && item.Name is {} NameItem)
             {
-                sb.AppendItem(TitleItem, "Title");
+                sb.AppendItem(NameItem, "Name");
             }
-            if ((printMask?.BNAM ?? true)
-                && item.BNAM is {} BNAMItem)
+            if (printMask?.Options?.Overall ?? true)
             {
-                sb.AppendLine($"BNAM => {SpanExt.ToHexString(BNAMItem)}");
-            }
-            if ((printMask?.Options?.Overall ?? true)
-                && item.Options is {} OptionsItem)
-            {
-                sb.AppendLine("Options =>");
-                using (sb.Brace())
-                {
-                    foreach (var subItem in OptionsItem)
-                    {
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(subItem.FormKey);
-                        }
-                    }
-                }
+                item.Options?.Print(sb, "Options");
             }
         }
         
@@ -1146,17 +1058,17 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)GameplayOptionsGroup_FieldIndex.Title) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)GameplayOptionsGroup_FieldIndex.Name) ?? true))
             {
-                if (!object.Equals(lhs.Title, rhs.Title)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)GameplayOptionsGroup_FieldIndex.BNAM) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.BNAM, rhs.BNAM)) return false;
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)GameplayOptionsGroup_FieldIndex.Options) ?? true))
             {
-                if (!lhs.Options.SequenceEqualNullable(rhs.Options)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Options, rhs.Options, out var lhsOptions, out var rhsOptions, out var isOptionsEqual))
+                {
+                    if (!((AGameplayOptionsNodeCommon)((IAGameplayOptionsNodeGetter)lhsOptions).CommonInstance()!).Equals(lhsOptions, rhsOptions, equalsMask?.GetSubCrystal((int)GameplayOptionsGroup_FieldIndex.Options))) return false;
+                }
+                else if (!isOptionsEqual) return false;
             }
             return true;
         }
@@ -1186,13 +1098,9 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IGameplayOptionsGroupGetter item)
         {
             var hash = new HashCode();
-            if (item.Title is {} Titleitem)
+            if (item.Name is {} Nameitem)
             {
-                hash.Add(Titleitem);
-            }
-            if (item.BNAM is {} BNAMItem)
-            {
-                hash.Add(BNAMItem);
+                hash.Add(Nameitem);
             }
             hash.Add(item.Options);
             hash.Add(base.GetHashCode());
@@ -1224,11 +1132,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            if (obj.Options is {} OptionsItem)
+            if (obj.Options is IFormLinkContainerGetter OptionslinkCont)
             {
-                foreach (var item in OptionsItem)
+                foreach (var item in OptionslinkCont.EnumerateFormLinks())
                 {
-                    yield return FormLinkInformation.Factory(item);
+                    yield return item;
                 }
             }
             yield break;
@@ -1305,36 +1213,20 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)GameplayOptionsGroup_FieldIndex.Title) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)GameplayOptionsGroup_FieldIndex.Name) ?? true))
             {
-                item.Title = rhs.Title?.DeepCopy();
-            }
-            if ((copyMask?.GetShouldTranslate((int)GameplayOptionsGroup_FieldIndex.BNAM) ?? true))
-            {
-                if(rhs.BNAM is {} BNAMrhs)
-                {
-                    item.BNAM = BNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.BNAM = default;
-                }
+                item.Name = rhs.Name?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)GameplayOptionsGroup_FieldIndex.Options) ?? true))
             {
                 errorMask?.PushIndex((int)GameplayOptionsGroup_FieldIndex.Options);
                 try
                 {
-                    if ((rhs.Options != null))
+                    if ((copyMask?.GetShouldTranslate((int)GameplayOptionsGroup_FieldIndex.Options) ?? true))
                     {
-                        item.Options = 
-                            rhs.Options
-                                .Select(b => (IFormLinkGetter<IGameplayOptionsGetter>)new FormLink<IGameplayOptionsGetter>(b.FormKey))
-                            .ToExtendedList<IFormLinkGetter<IGameplayOptionsGetter>>();
-                    }
-                    else
-                    {
-                        item.Options = null;
+                        item.Options = rhs.Options.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)GameplayOptionsGroup_FieldIndex.Options),
+                            errorMask: errorMask);
                     }
                 }
                 catch (Exception ex)
@@ -1518,24 +1410,26 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Title,
+                item: item.Name,
                 header: translationParams.ConvertToCustom(RecordTypes.NNAM),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            GameplayOptionsGroupBinaryWriteTranslation.WriteBinaryGroups(
                 writer: writer,
-                item: item.BNAM,
-                header: translationParams.ConvertToCustom(RecordTypes.BNAM));
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IGameplayOptionsGetter>>.Instance.Write(
+                item: item);
+        }
+
+        public static partial void WriteBinaryGroupsCustom(
+            MutagenWriter writer,
+            IGameplayOptionsGroupGetter item);
+
+        public static void WriteBinaryGroups(
+            MutagenWriter writer,
+            IGameplayOptionsGroupGetter item)
+        {
+            WriteBinaryGroupsCustom(
                 writer: writer,
-                items: item.Options,
-                recordType: translationParams.ConvertToCustom(RecordTypes.GOGL),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IGameplayOptionsGetter> subItem, TypedWriteParams conv) =>
-                {
-                    FormLinkBinaryTranslation.Instance.Write(
-                        writer: subWriter,
-                        item: subItem);
-                });
+                item: item);
         }
 
         public void Write(
@@ -1607,29 +1501,20 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Title = StringBinaryTranslation.Instance.Parse(
+                    item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         eager: true,
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)GameplayOptionsGroup_FieldIndex.Title;
+                    return (int)GameplayOptionsGroup_FieldIndex.Name;
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)GameplayOptionsGroup_FieldIndex.BNAM;
-                }
-                case RecordTypeInts.GOGL:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Options = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IGameplayOptionsGetter>>.Instance.Parse(
-                            reader: frame.SpawnWithLength(contentLength),
-                            transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLinkGetter<IGameplayOptionsGetter>>();
-                    return (int)GameplayOptionsGroup_FieldIndex.Options;
+                    return GameplayOptionsGroupBinaryCreateTranslation.FillBinaryGroupsCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1642,6 +1527,11 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams.WithNoConverter());
             }
         }
+
+        public static partial ParseResult FillBinaryGroupsCustom(
+            MutagenFrame frame,
+            IGameplayOptionsGroupInternal item,
+            PreviousParse lastParsed);
 
     }
 
@@ -1690,15 +1580,24 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IGameplayOptionsGroup);
 
 
-        #region Title
-        private int? _TitleLocation;
-        public ITranslatedStringGetter? Title => _TitleLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TitleLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
+        #region Name
+        private int? _NameLocation;
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string? INamedGetter.Name => this.Name?.String;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
-        #region BNAM
-        private int? _BNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? BNAM => _BNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _BNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IGameplayOptionsGetter>>? Options { get; private set; }
+        #region Groups
+        public partial ParseResult GroupsCustomParse(
+            OverlayStream stream,
+            int offset,
+            PreviousParse lastParsed);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1770,23 +1669,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.NNAM:
                 {
-                    _TitleLocation = (stream.Position - offset);
-                    return (int)GameplayOptionsGroup_FieldIndex.Title;
+                    _NameLocation = (stream.Position - offset);
+                    return (int)GameplayOptionsGroup_FieldIndex.Name;
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    _BNAMLocation = (stream.Position - offset);
-                    return (int)GameplayOptionsGroup_FieldIndex.BNAM;
-                }
-                case RecordTypeInts.GOGL:
-                {
-                    this.Options = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IGameplayOptionsGetter>>(
-                        stream: stream,
-                        package: _package,
-                        finalPos: finalPos,
-                        itemLength: 4,
-                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IGameplayOptionsGetter>(p, s));
-                    return (int)GameplayOptionsGroup_FieldIndex.Options;
+                    return GroupsCustomParse(
+                        stream,
+                        offset,
+                        lastParsed: lastParsed);
                 }
                 default:
                     return base.FillRecordType(
