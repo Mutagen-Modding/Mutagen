@@ -14,7 +14,9 @@ public partial class MainWindow : MetroWindow
     {
         InitializeComponent();
         Task.Run(LoquiRegistration.SpinUp).FireAndForget();
-        var vm = this.WireMainVM<MainVM>($"Settings.json");
+        var vm = this.WireMainVM<MainVM>(
+            $"Settings.json",
+            initialize: vm => vm.FreshInitialize());
         if (Environment.GetCommandLineArgs().Contains("Start"))
         {
             vm.RunAllCommand.Execute();

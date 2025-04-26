@@ -47,8 +47,10 @@ public record DataFolderLocations
                 return Fallout4;
             case GameRelease.Starfield:
                 return Starfield;
+            case GameRelease.SkyrimVR:
+                return SkyrimVR;
             default:
-                throw new NotImplementedException();
+                return string.Empty;
         }
     }
 
