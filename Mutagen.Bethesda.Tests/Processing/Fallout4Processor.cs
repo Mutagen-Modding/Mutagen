@@ -71,13 +71,13 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.LVLI, ProcessLeveledItems);
     }
 
-    protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
+    protected override IEnumerable<Func<Task>> ExtraJobs(Func<IMutagenReadStream> streamGetter)
     {
         foreach (var job in base.ExtraJobs(streamGetter))
         {
             yield return job;
         }
-        yield return WorkDropoff.EnqueueAndWait(() => AddOrphanedRecords(streamGetter));
+        yield return async () => AddOrphanedRecords(streamGetter);
     }
     
 

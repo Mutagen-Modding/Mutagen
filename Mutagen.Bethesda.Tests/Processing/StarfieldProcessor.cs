@@ -66,7 +66,7 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.PNDT, ProcessPlanets);
     }
 
-    protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
+    protected override IEnumerable<Func<Task>> ExtraJobs(Func<IMutagenReadStream> streamGetter)
     {
         foreach (var job in base.ExtraJobs(streamGetter))
         {

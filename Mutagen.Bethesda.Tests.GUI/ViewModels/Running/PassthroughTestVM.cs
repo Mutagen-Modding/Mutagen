@@ -103,12 +103,8 @@ public class PassthroughTestVM : ViewModel
             });
     }
 
-    public async Task Run()
+    public async Task Run(IWorkDropoff dropoff)
     {
-        var dropoff = new WorkDropoff();
-        using var consumer = new WorkConsumer(
-            new NumWorkThreadsConstant(null),
-            dropoff, dropoff);
         List<Test> tests = new List<Test>();
         var passthroughSettings = Settings.Parent.Parent.GetPassthroughSettings();
         var passthrough = PassthroughTest.Factory(new PassthroughTestParams()
@@ -131,10 +127,9 @@ public class PassthroughTestVM : ViewModel
         {
             tests.Add(AddTest(passthrough.TestEquality()));
         }
-        consumer.Start();
         Stopwatch sw = new Stopwatch();
         sw.Start();
-        await Task.WhenAll(tests.Select(t => dropoff.EnqueueAndWait(t.Start)));
+        await dropoff.EnqueueAndWait(tests.Select(t => t), t => t.Start());
         sw.Stop();
         TimeSpent = sw.Elapsed;
     }

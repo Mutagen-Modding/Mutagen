@@ -104,7 +104,7 @@ public abstract class Processor
         {
             await PreProcessorJobs(streamGetter);
 
-            await Task.WhenAll(ExtraJobs(streamGetter));
+            await WorkDropoff.EnqueueAndWait(ExtraJobs(streamGetter), x => x());
 
             AddDynamicProcessorInstructions();
             Parallel.ForEach(DynamicProcessors.Keys
@@ -159,17 +159,17 @@ public abstract class Processor
     {
     }
 
-    protected virtual IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
+    protected virtual IEnumerable<Func<Task>> ExtraJobs(Func<IMutagenReadStream> streamGetter)
     {
-        yield return WorkDropoff.EnqueueAndWait(() => RemoveEmptyGroups(streamGetter));
+        yield return async () => RemoveEmptyGroups(streamGetter);
 
         if (GameRelease.ToCategory().HasLocalization())
         {
-            yield return WorkDropoff.EnqueueAndWait(() => RealignStrings(streamGetter));
+            yield return () => RealignStrings(streamGetter);
         }
 
-        yield return WorkDropoff.EnqueueAndWait(() => RemoveDeletedContent(streamGetter));
-        // yield return WorkDropoff.EnqueueAndWait(() => OrderOverridenForms(streamGetter));
+        yield return async () => RemoveDeletedContent(streamGetter);
+        // yield return () => OrderOverridenForms(streamGetter);
     }
 
     protected virtual void AddDynamicProcessorInstructions()

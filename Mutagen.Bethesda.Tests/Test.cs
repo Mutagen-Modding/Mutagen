@@ -61,7 +61,11 @@ public class Test
             _output.OnNext($"{sw.ElapsedMilliseconds / 1000d}s");
             _output.OnNext("========================================/");
             _stateSignal.OnNext(TestState.Complete);
-            await Task.WhenAll(_children.Select(c => _dropoff.EnqueueAndWait(c.Start)));
+            await _dropoff.EnqueueAndWait(_children, c =>
+            {
+                Debug.WriteLine($"Enqueuing {c.Name}");
+                return c.Start();
+            });
             _disposables.Dispose();
         }
         catch (Exception ex)
