@@ -17,11 +17,13 @@ using Mutagen.Bethesda.Plugins.Masters.DI;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Strings.DI;
+using Noggog.WorkEngine;
 
 namespace Mutagen.Bethesda.Tests;
 
 public abstract class Processor
 {
+    public IWorkDropoff WorkDropoff { get; }
     public GameRelease GameRelease { get; }
     public IReadOnlyCache<IModMasterStyledGetter, ModKey> MasterFlagLookup { get; }
     public readonly GameConstants Meta;
@@ -33,7 +35,6 @@ public abstract class Processor
     protected ParsingMeta Bundle;
     protected ModPath SourcePath;
     protected DirectoryPath TempFolder;
-    public bool DoMultithreading = true;
     public ModKey ModKey => SourcePath.ModKey;
     protected DirectoryPath DataFolder => new DirectoryInfo(Path.GetDirectoryName(SourcePath));
 
@@ -51,15 +52,15 @@ public abstract class Processor
     public virtual KeyValuePair<RecordType, FormKey>[] TrimmedRecords =>
         Array.Empty<KeyValuePair<RecordType, FormKey>>();
 
-    public Processor(bool multithread, GameRelease release, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup)
+    public Processor(IWorkDropoff workDropoff, GameRelease release, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup)
     {
+        WorkDropoff = workDropoff;
         GameRelease = release;
         MasterFlagLookup = masterFlagLookup;
         Meta = GameConstants.Get(GameRelease);
-        DoMultithreading = multithread;
         ParallelOptions = new ParallelOptions()
         {
-            MaxDegreeOfParallelism = multithread ? -1 : 1
+            MaxDegreeOfParallelism = -1
         };
     }
 
@@ -160,15 +161,15 @@ public abstract class Processor
 
     protected virtual IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
     {
-        yield return TaskExt.Run(DoMultithreading, () => RemoveEmptyGroups(streamGetter));
+        yield return WorkDropoff.EnqueueAndWait(() => RemoveEmptyGroups(streamGetter));
 
         if (GameRelease.ToCategory().HasLocalization())
         {
-            yield return TaskExt.Run(DoMultithreading, () => RealignStrings(streamGetter));
+            yield return WorkDropoff.EnqueueAndWait(() => RealignStrings(streamGetter));
         }
 
-        yield return TaskExt.Run(DoMultithreading, () => RemoveDeletedContent(streamGetter));
-        // yield return TaskExt.Run(DoMultithreading, () => OrderOverridenForms(streamGetter));
+        yield return WorkDropoff.EnqueueAndWait(() => RemoveDeletedContent(streamGetter));
+        // yield return WorkDropoff.EnqueueAndWait(() => OrderOverridenForms(streamGetter));
     }
 
     protected virtual void AddDynamicProcessorInstructions()

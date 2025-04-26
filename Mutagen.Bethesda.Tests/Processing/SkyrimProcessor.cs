@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
 using Noggog;
+using Noggog.WorkEngine;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -25,8 +26,8 @@ public class SkyrimProcessor : Processor
         };
     }
 
-    public SkyrimProcessor(bool multithread, GameRelease release, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup)
-        : base(multithread, release, masterFlagLookup)
+    public SkyrimProcessor(IWorkDropoff workDropoff, GameRelease release, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup)
+        : base(workDropoff, release, masterFlagLookup)
     {
     }
 

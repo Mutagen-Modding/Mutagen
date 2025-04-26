@@ -88,8 +88,7 @@ public record PassthroughSettings
     public bool TestBinaryOverlay { get; set; }
     public bool TestImport { get; set; }
     public bool TestCopyIn { get; set; }
-    public bool ParallelWriting { get; set; }
-    public bool ParallelProcessingSteps { get; set; }
+    public bool ParallelModTranslations { get; set; }
     public bool ThrowOnUnknown { get; set; } = true;
 
     public bool HasAnyToRun => TestNormal

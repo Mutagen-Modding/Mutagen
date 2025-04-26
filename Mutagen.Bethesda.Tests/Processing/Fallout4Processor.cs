@@ -11,6 +11,7 @@ using Noggog;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
+using Noggog.WorkEngine;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -18,8 +19,8 @@ public class Fallout4Processor : Processor
 {
     public override bool StrictStrings => true;
     
-    public Fallout4Processor(bool multithread, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup) 
-        : base(multithread, GameRelease.Fallout4, masterFlagLookup)
+    public Fallout4Processor(IWorkDropoff workDropoff, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup) 
+        : base(workDropoff, GameRelease.Fallout4, masterFlagLookup)
     {
     }
 
@@ -76,7 +77,7 @@ public class Fallout4Processor : Processor
         {
             yield return job;
         }
-        yield return TaskExt.Run(DoMultithreading, () => AddOrphanedRecords(streamGetter));
+        yield return WorkDropoff.EnqueueAndWait(() => AddOrphanedRecords(streamGetter));
     }
     
 

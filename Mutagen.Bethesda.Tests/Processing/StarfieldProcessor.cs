@@ -9,6 +9,7 @@ using Mutagen.Bethesda.Starfield.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
 using Noggog;
+using Noggog.WorkEngine;
 using APerkEntryPointEffect = Mutagen.Bethesda.Starfield.APerkEntryPointEffect;
 using ScriptBoolListProperty = Mutagen.Bethesda.Starfield.ScriptBoolListProperty;
 using ScriptBoolProperty = Mutagen.Bethesda.Starfield.ScriptBoolProperty;
@@ -28,8 +29,8 @@ public class StarfieldProcessor : Processor
 {
     public override bool StrictStrings => true;
 
-    public StarfieldProcessor(bool multithread, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup) 
-        : base(multithread, GameRelease.Starfield, masterFlagLookup)
+    public StarfieldProcessor(IWorkDropoff workDropoff, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup) 
+        : base(workDropoff, GameRelease.Starfield, masterFlagLookup)
     {
     }
     

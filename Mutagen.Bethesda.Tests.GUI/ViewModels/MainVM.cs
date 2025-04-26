@@ -270,9 +270,8 @@ public class MainVM : ViewModel
                 TestBinaryOverlay = true,
                 DeleteCachesAfter = false,
                 TestImport = false,
-                ParallelWriting = false,
+                ParallelModTranslations = false,
                 TestCopyIn = false,
-                ParallelProcessingSteps = false,
                 Trimming = new TrimmingSettings()
                 {
                     Enabled = false
@@ -303,7 +302,7 @@ public class MainVM : ViewModel
         this.TestCopyIn = settings.PassthroughSettings.TestCopyIn;
         this.TestImport = settings.PassthroughSettings.TestImport;
         this.TestOverlay = settings.PassthroughSettings.TestBinaryOverlay;
-        this.TestParallel = settings.PassthroughSettings.ParallelWriting;
+        this.TestParallel = settings.PassthroughSettings.ParallelModTranslations;
         this.TestEquals = settings.TestEquality;
         this.TestPex = settings.TestPex;
 
@@ -361,7 +360,7 @@ public class MainVM : ViewModel
         settings.PassthroughSettings.TestImport = this.TestImport;
         settings.PassthroughSettings.TestBinaryOverlay = this.TestOverlay;
         settings.PassthroughSettings.TestCopyIn = this.TestCopyIn;
-        settings.PassthroughSettings.ParallelWriting = this.TestParallel;
+        settings.PassthroughSettings.ParallelModTranslations = this.TestParallel;
         settings.TestEquality = this.TestEquals;
         settings.TestPex = this.TestPex;
 
@@ -406,7 +405,6 @@ public class MainVM : ViewModel
         return new PassthroughSettings()
         {
             DeleteCachesAfter = false,
-            ParallelProcessingSteps = false,
             CacheReuse = new CacheReuse()
             {
                 ReuseAlignment = CacheAlignment,
@@ -419,7 +417,7 @@ public class MainVM : ViewModel
             TestCopyIn = TestCopyIn,
             TestImport = TestImport,
             TestNormal = TestNormal,
-            ParallelWriting = TestParallel,
+            ParallelModTranslations = TestParallel,
             Trimming = new TrimmingSettings()
             {
                 TypesToTrim = SkippedRecordTypes.Select(x => x.RecordType.Type).ToList(),
