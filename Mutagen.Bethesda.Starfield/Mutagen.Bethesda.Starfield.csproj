@@ -2229,6 +2229,9 @@
     <Compile Include="Records\Major Records\Hazard.cs">
       <DependentUpon>Hazard.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\IdleAnimation.cs">
+      <DependentUpon>IdleAnimation.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\IdleMarker.cs">
       <DependentUpon>IdleMarker.xml</DependentUpon>
     </Compile>
