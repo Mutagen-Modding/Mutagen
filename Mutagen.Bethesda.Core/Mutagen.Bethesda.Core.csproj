@@ -720,6 +720,7 @@
             <BuildAction>Compile</BuildAction>
         </Compile>
         <Compile Include="Translations\Binary\PrimitiveBinaryTranslation.cs" />
+        <Compile Include="Translations\Binary\SByteBinaryTranslation.cs" />
         <Compile Include="Translations\Binary\TypicalBinaryTranslation.cs" />
         <Compile Include="Translations\Binary\UInt16BinaryTranslation.cs" />
         <Compile Include="Translations\Binary\UInt32BinaryTranslation.cs" />

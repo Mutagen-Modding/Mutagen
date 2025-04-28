@@ -2094,6 +2094,7 @@
     <Compile Include="Records\Major Records\ArmorAddon.cs">
       <DependentUpon>ArmorAddon.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Array2dCopyHelper.cs" />
     <Compile Include="Records\Major Records\ArtObject.cs">
       <DependentUpon>ArtObject.xml</DependentUpon>
     </Compile>
@@ -6501,9 +6502,6 @@
     <Compile Include="Records\Common Subrecords\BlockCellHeightGridComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\SurfacePatternConfigItem_Generated.cs">
-      <DependentUpon>SurfacePatternConfig.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\BlockHeightAdjustmentComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
@@ -6836,6 +6834,12 @@
     </Compile>
     <Compile Include="Records\Major Records\GameplayOptionsGroupRoot_Generated.cs">
       <DependentUpon>GameplayOptionsGroup.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SurfacePatternStyleConfig_Generated.cs">
+      <DependentUpon>SurfacePatternConfig.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SurfacePatternRarityConfig_Generated.cs">
+      <DependentUpon>SurfacePatternConfig.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

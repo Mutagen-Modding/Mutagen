@@ -345,6 +345,7 @@ public partial class RecordTypeInts
     public const int EFID = 0x44494645;
     public const int EFIF = 0x46494645;
     public const int EFIT = 0x54494645;
+    public const int EFRM = 0x4D524645;
     public const int EFSD = 0x44534645;
     public const int EFSH = 0x48534645;
     public const int EFSQ = 0x51534645;
@@ -355,6 +356,7 @@ public partial class RecordTypeInts
     public const int ENIT = 0x54494E45;
     public const int ENKL = 0x4C4B4E45;
     public const int ENTE = 0x45544E45;
+    public const int EORI = 0x49524F45;
     public const int EOVR = 0x52564F45;
     public const int EPF2 = 0x32465045;
     public const int EPF3 = 0x33465045;

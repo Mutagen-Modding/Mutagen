@@ -347,6 +347,7 @@ public partial class RecordTypes
     public static readonly RecordType EFID = new(0x44494645);
     public static readonly RecordType EFIF = new(0x46494645);
     public static readonly RecordType EFIT = new(0x54494645);
+    public static readonly RecordType EFRM = new(0x4D524645);
     public static readonly RecordType EFSD = new(0x44534645);
     public static readonly RecordType EFSH = new(0x48534645);
     public static readonly RecordType EFSQ = new(0x51534645);
@@ -357,6 +358,7 @@ public partial class RecordTypes
     public static readonly RecordType ENIT = new(0x54494E45);
     public static readonly RecordType ENKL = new(0x4C4B4E45);
     public static readonly RecordType ENTE = new(0x45544E45);
+    public static readonly RecordType EORI = new(0x49524F45);
     public static readonly RecordType EOVR = new(0x52564F45);
     public static readonly RecordType EPF2 = new(0x32465045);
     public static readonly RecordType EPF3 = new(0x33465045);

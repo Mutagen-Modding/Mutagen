@@ -66,28 +66,31 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<SurfacePatternConfigItem> _Items = new ExtendedList<SurfacePatternConfigItem>();
-        public ExtendedList<SurfacePatternConfigItem> Items
+        private ExtendedList<SurfacePatternStyleConfig> _Items = new ExtendedList<SurfacePatternStyleConfig>();
+        public ExtendedList<SurfacePatternStyleConfig> Items
         {
             get => this._Items;
             init => this._Items = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ISurfacePatternConfigItemGetter> ISurfacePatternConfigGetter.Items => _Items;
+        IReadOnlyList<ISurfacePatternStyleConfigGetter> ISurfacePatternConfigGetter.Items => _Items;
         #endregion
 
         #endregion
-        #region DNAM
+        #region Rarity
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _DNAM = new byte[12];
-        public MemorySlice<Byte> DNAM
+        private ExtendedList<SurfacePatternRarityConfig> _Rarity = new ExtendedList<SurfacePatternRarityConfig>();
+        public ExtendedList<SurfacePatternRarityConfig> Rarity
         {
-            get => _DNAM;
-            set => this._DNAM = value;
+            get => this._Rarity;
+            init => this._Rarity = value;
         }
+        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ISurfacePatternConfigGetter.DNAM => this.DNAM;
+        IReadOnlyList<ISurfacePatternRarityConfigGetter> ISurfacePatternConfigGetter.Rarity => _Rarity;
+        #endregion
+
         #endregion
 
         #region To String
@@ -115,8 +118,8 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.SurfacePatternStyle = initialValue;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SurfacePatternConfigItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SurfacePatternConfigItem.Mask<TItem>?>>());
-                this.DNAM = initialValue;
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SurfacePatternStyleConfig.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SurfacePatternStyleConfig.Mask<TItem>?>>());
+                this.Rarity = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SurfacePatternRarityConfig.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, SurfacePatternRarityConfig.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -129,7 +132,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem SurfacePatternStyle,
                 TItem Items,
-                TItem DNAM)
+                TItem Rarity)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -140,8 +143,8 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.SurfacePatternStyle = SurfacePatternStyle;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SurfacePatternConfigItem.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, SurfacePatternConfigItem.Mask<TItem>?>>());
-                this.DNAM = DNAM;
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SurfacePatternStyleConfig.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, SurfacePatternStyleConfig.Mask<TItem>?>>());
+                this.Rarity = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SurfacePatternRarityConfig.Mask<TItem>?>>?>(Rarity, Enumerable.Empty<MaskItemIndexed<TItem, SurfacePatternRarityConfig.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -154,8 +157,8 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public TItem SurfacePatternStyle;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SurfacePatternConfigItem.Mask<TItem>?>>?>? Items;
-            public TItem DNAM;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SurfacePatternStyleConfig.Mask<TItem>?>>?>? Items;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, SurfacePatternRarityConfig.Mask<TItem>?>>?>? Rarity;
             #endregion
 
             #region Equals
@@ -171,7 +174,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.SurfacePatternStyle, rhs.SurfacePatternStyle)) return false;
                 if (!object.Equals(this.Items, rhs.Items)) return false;
-                if (!object.Equals(this.DNAM, rhs.DNAM)) return false;
+                if (!object.Equals(this.Rarity, rhs.Rarity)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -179,7 +182,7 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.SurfacePatternStyle);
                 hash.Add(this.Items);
-                hash.Add(this.DNAM);
+                hash.Add(this.Rarity);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -203,7 +206,18 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (!eval(this.DNAM)) return false;
+                if (this.Rarity != null)
+                {
+                    if (!eval(this.Rarity.Overall)) return false;
+                    if (this.Rarity.Specific != null)
+                    {
+                        foreach (var item in this.Rarity.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -225,7 +239,18 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (eval(this.DNAM)) return true;
+                if (this.Rarity != null)
+                {
+                    if (eval(this.Rarity.Overall)) return true;
+                    if (this.Rarity.Specific != null)
+                    {
+                        foreach (var item in this.Rarity.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -244,20 +269,34 @@ namespace Mutagen.Bethesda.Starfield
                 obj.SurfacePatternStyle = eval(this.SurfacePatternStyle);
                 if (Items != null)
                 {
-                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SurfacePatternConfigItem.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, SurfacePatternConfigItem.Mask<R>?>>());
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SurfacePatternStyleConfig.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, SurfacePatternStyleConfig.Mask<R>?>>());
                     if (Items.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, SurfacePatternConfigItem.Mask<R>?>>();
+                        var l = new List<MaskItemIndexed<R, SurfacePatternStyleConfig.Mask<R>?>>();
                         obj.Items.Specific = l;
                         foreach (var item in Items.Specific)
                         {
-                            MaskItemIndexed<R, SurfacePatternConfigItem.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, SurfacePatternConfigItem.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, SurfacePatternStyleConfig.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, SurfacePatternStyleConfig.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
                     }
                 }
-                obj.DNAM = eval(this.DNAM);
+                if (Rarity != null)
+                {
+                    obj.Rarity = new MaskItem<R, IEnumerable<MaskItemIndexed<R, SurfacePatternRarityConfig.Mask<R>?>>?>(eval(this.Rarity.Overall), Enumerable.Empty<MaskItemIndexed<R, SurfacePatternRarityConfig.Mask<R>?>>());
+                    if (Rarity.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, SurfacePatternRarityConfig.Mask<R>?>>();
+                        obj.Rarity.Specific = l;
+                        foreach (var item in Rarity.Specific)
+                        {
+                            MaskItemIndexed<R, SurfacePatternRarityConfig.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, SurfacePatternRarityConfig.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -299,9 +338,24 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.DNAM ?? true)
+                    if ((printMask?.Rarity?.Overall ?? true)
+                        && Rarity is {} RarityItem)
                     {
-                        sb.AppendItem(DNAM, "DNAM");
+                        sb.AppendLine("Rarity =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(RarityItem.Overall);
+                            if (RarityItem.Specific != null)
+                            {
+                                foreach (var subItem in RarityItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -315,8 +369,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public Exception? SurfacePatternStyle;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SurfacePatternConfigItem.ErrorMask?>>?>? Items;
-            public Exception? DNAM;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SurfacePatternStyleConfig.ErrorMask?>>?>? Items;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SurfacePatternRarityConfig.ErrorMask?>>?>? Rarity;
             #endregion
 
             #region IErrorMask
@@ -329,8 +383,8 @@ namespace Mutagen.Bethesda.Starfield
                         return SurfacePatternStyle;
                     case SurfacePatternConfig_FieldIndex.Items:
                         return Items;
-                    case SurfacePatternConfig_FieldIndex.DNAM:
-                        return DNAM;
+                    case SurfacePatternConfig_FieldIndex.Rarity:
+                        return Rarity;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -345,10 +399,10 @@ namespace Mutagen.Bethesda.Starfield
                         this.SurfacePatternStyle = ex;
                         break;
                     case SurfacePatternConfig_FieldIndex.Items:
-                        this.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SurfacePatternConfigItem.ErrorMask?>>?>(ex, null);
+                        this.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SurfacePatternStyleConfig.ErrorMask?>>?>(ex, null);
                         break;
-                    case SurfacePatternConfig_FieldIndex.DNAM:
-                        this.DNAM = ex;
+                    case SurfacePatternConfig_FieldIndex.Rarity:
+                        this.Rarity = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SurfacePatternRarityConfig.ErrorMask?>>?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -365,10 +419,10 @@ namespace Mutagen.Bethesda.Starfield
                         this.SurfacePatternStyle = (Exception?)obj;
                         break;
                     case SurfacePatternConfig_FieldIndex.Items:
-                        this.Items = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SurfacePatternConfigItem.ErrorMask?>>?>)obj;
+                        this.Items = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SurfacePatternStyleConfig.ErrorMask?>>?>)obj;
                         break;
-                    case SurfacePatternConfig_FieldIndex.DNAM:
-                        this.DNAM = (Exception?)obj;
+                    case SurfacePatternConfig_FieldIndex.Rarity:
+                        this.Rarity = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SurfacePatternRarityConfig.ErrorMask?>>?>)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -381,7 +435,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (SurfacePatternStyle != null) return true;
                 if (Items != null) return true;
-                if (DNAM != null) return true;
+                if (Rarity != null) return true;
                 return false;
             }
             #endregion
@@ -429,8 +483,23 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (Rarity is {} RarityItem)
                 {
-                    sb.AppendItem(DNAM, "DNAM");
+                    sb.AppendLine("Rarity =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(RarityItem.Overall);
+                        if (RarityItem.Specific != null)
+                        {
+                            foreach (var subItem in RarityItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -441,8 +510,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.SurfacePatternStyle = this.SurfacePatternStyle.Combine(rhs.SurfacePatternStyle);
-                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SurfacePatternConfigItem.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
-                ret.DNAM = this.DNAM.Combine(rhs.DNAM);
+                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SurfacePatternStyleConfig.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
+                ret.Rarity = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, SurfacePatternRarityConfig.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Rarity?.Overall, rhs.Rarity?.Overall), Noggog.ExceptionExt.Combine(this.Rarity?.Specific, rhs.Rarity?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -466,8 +535,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public bool SurfacePatternStyle;
-            public SurfacePatternConfigItem.TranslationMask? Items;
-            public bool DNAM;
+            public SurfacePatternStyleConfig.TranslationMask? Items;
+            public SurfacePatternRarityConfig.TranslationMask? Rarity;
             #endregion
 
             #region Ctors
@@ -477,7 +546,6 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.SurfacePatternStyle = defaultOn;
-                this.DNAM = defaultOn;
             }
 
             #endregion
@@ -487,7 +555,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((SurfacePatternStyle, null));
                 ret.Add((Items == null ? DefaultOn : !Items.GetCrystal().CopyNothing, Items?.GetCrystal()));
-                ret.Add((DNAM, null));
+                ret.Add((Rarity == null ? DefaultOn : !Rarity.GetCrystal().CopyNothing, Rarity?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -636,8 +704,8 @@ namespace Mutagen.Bethesda.Starfield
         ISurfacePatternConfigGetter
     {
         new IFormLink<ISurfacePatternStyleGetter> SurfacePatternStyle { get; set; }
-        new ExtendedList<SurfacePatternConfigItem> Items { get; }
-        new MemorySlice<Byte> DNAM { get; set; }
+        new ExtendedList<SurfacePatternStyleConfig> Items { get; }
+        new ExtendedList<SurfacePatternRarityConfig> Rarity { get; }
     }
 
     public partial interface ISurfacePatternConfigInternal :
@@ -657,8 +725,8 @@ namespace Mutagen.Bethesda.Starfield
     {
         static new ILoquiRegistration StaticRegistration => SurfacePatternConfig_Registration.Instance;
         IFormLinkGetter<ISurfacePatternStyleGetter> SurfacePatternStyle { get; }
-        IReadOnlyList<ISurfacePatternConfigItemGetter> Items { get; }
-        ReadOnlyMemorySlice<Byte> DNAM { get; }
+        IReadOnlyList<ISurfacePatternStyleConfigGetter> Items { get; }
+        IReadOnlyList<ISurfacePatternRarityConfigGetter> Rarity { get; }
 
     }
 
@@ -837,7 +905,7 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         SurfacePatternStyle = 7,
         Items = 8,
-        DNAM = 9,
+        Rarity = 9,
     }
     #endregion
 
@@ -933,7 +1001,7 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.SurfacePatternStyle.Clear();
             item.Items.Clear();
-            item.DNAM = new byte[12];
+            item.Rarity.Clear();
             base.Clear(item);
         }
         
@@ -1024,7 +1092,10 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Items,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.DNAM = MemoryExtensions.SequenceEqual(item.DNAM.Span, rhs.DNAM.Span);
+            ret.Rarity = item.Rarity.CollectionEqualsHelper(
+                rhs.Rarity,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1092,9 +1163,19 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if (printMask?.DNAM ?? true)
+            if (printMask?.Rarity?.Overall ?? true)
             {
-                sb.AppendLine($"DNAM => {SpanExt.ToHexString(item.DNAM)}");
+                sb.AppendLine("Rarity =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Rarity)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
             }
         }
         
@@ -1152,11 +1233,11 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)SurfacePatternConfig_FieldIndex.Items) ?? true))
             {
-                if (!lhs.Items.SequenceEqual(rhs.Items, (l, r) => ((SurfacePatternConfigItemCommon)((ISurfacePatternConfigItemGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)SurfacePatternConfig_FieldIndex.Items)))) return false;
+                if (!lhs.Items.SequenceEqual(rhs.Items, (l, r) => ((SurfacePatternStyleConfigCommon)((ISurfacePatternStyleConfigGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)SurfacePatternConfig_FieldIndex.Items)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)SurfacePatternConfig_FieldIndex.DNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SurfacePatternConfig_FieldIndex.Rarity) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.DNAM.Span, rhs.DNAM.Span)) return false;
+                if (!lhs.Rarity.SequenceEqual(rhs.Rarity, (l, r) => ((SurfacePatternRarityConfigCommon)((ISurfacePatternRarityConfigGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)SurfacePatternConfig_FieldIndex.Rarity)))) return false;
             }
             return true;
         }
@@ -1188,7 +1269,7 @@ namespace Mutagen.Bethesda.Starfield
             var hash = new HashCode();
             hash.Add(item.SurfacePatternStyle);
             hash.Add(item.Items);
-            hash.Add(item.DNAM);
+            hash.Add(item.Rarity);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1321,9 +1402,29 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)SurfacePatternConfig_FieldIndex.DNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SurfacePatternConfig_FieldIndex.Rarity) ?? true))
             {
-                item.DNAM = rhs.DNAM.ToArray();
+                errorMask?.PushIndex((int)SurfacePatternConfig_FieldIndex.Rarity);
+                try
+                {
+                    item.Rarity.SetTo(
+                        rhs.Rarity
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             DeepCopyInCustom(
                 item: item,
@@ -1498,21 +1599,28 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.SurfacePatternStyle,
                 header: translationParams.ConvertToCustom(RecordTypes.ENAM));
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ISurfacePatternConfigItemGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ISurfacePatternStyleConfigGetter>.Instance.Write(
                 writer: writer,
                 items: item.Items,
-                transl: (MutagenWriter subWriter, ISurfacePatternConfigItemGetter subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, ISurfacePatternStyleConfigGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
-                    ((SurfacePatternConfigItemBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((SurfacePatternStyleConfigBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
                 });
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ISurfacePatternRarityConfigGetter>.Instance.Write(
                 writer: writer,
-                item: item.DNAM,
-                header: translationParams.ConvertToCustom(RecordTypes.DNAM));
+                items: item.Rarity,
+                transl: (MutagenWriter subWriter, ISurfacePatternRarityConfigGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((SurfacePatternRarityConfigBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
         }
 
         public void Write(
@@ -1591,18 +1699,22 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.CNAM:
                 {
                     item.Items.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<SurfacePatternConfigItem>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<SurfacePatternStyleConfig>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: SurfacePatternConfigItem_Registration.TriggerSpecs,
+                            triggeringRecord: SurfacePatternStyleConfig_Registration.TriggerSpecs,
                             translationParams: translationParams,
-                            transl: SurfacePatternConfigItem.TryCreateFromBinary));
+                            transl: SurfacePatternStyleConfig.TryCreateFromBinary));
                     return (int)SurfacePatternConfig_FieldIndex.Items;
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)SurfacePatternConfig_FieldIndex.DNAM;
+                    item.Rarity.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<SurfacePatternRarityConfig>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: SurfacePatternRarityConfig_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: SurfacePatternRarityConfig.TryCreateFromBinary));
+                    return (int)SurfacePatternConfig_FieldIndex.Rarity;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1667,11 +1779,8 @@ namespace Mutagen.Bethesda.Starfield
         private int? _SurfacePatternStyleLocation;
         public IFormLinkGetter<ISurfacePatternStyleGetter> SurfacePatternStyle => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISurfacePatternStyleGetter>(_package, _recordData, _SurfacePatternStyleLocation);
         #endregion
-        public IReadOnlyList<ISurfacePatternConfigItemGetter> Items { get; private set; } = Array.Empty<ISurfacePatternConfigItemGetter>();
-        #region DNAM
-        private int? _DNAMLocation;
-        public ReadOnlyMemorySlice<Byte> DNAM => _DNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DNAMLocation.Value, _package.MetaData.Constants) : ReadOnlyMemorySlice<byte>.Empty;
-        #endregion
+        public IReadOnlyList<ISurfacePatternStyleConfigGetter> Items { get; private set; } = Array.Empty<ISurfacePatternStyleConfigGetter>();
+        public IReadOnlyList<ISurfacePatternRarityConfigGetter> Rarity { get; private set; } = Array.Empty<ISurfacePatternRarityConfigGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1749,17 +1858,27 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.BNAM:
                 case RecordTypeInts.CNAM:
                 {
-                    this.Items = this.ParseRepeatedTypelessSubrecord<ISurfacePatternConfigItemGetter>(
+                    this.Items = this.ParseRepeatedTypelessSubrecord<ISurfacePatternStyleConfigGetter>(
                         stream: stream,
                         translationParams: translationParams,
-                        trigger: SurfacePatternConfigItem_Registration.TriggerSpecs,
-                        factory: SurfacePatternConfigItemBinaryOverlay.SurfacePatternConfigItemFactory);
+                        trigger: SurfacePatternStyleConfig_Registration.TriggerSpecs,
+                        factory: SurfacePatternStyleConfigBinaryOverlay.SurfacePatternStyleConfigFactory);
                     return (int)SurfacePatternConfig_FieldIndex.Items;
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _DNAMLocation = (stream.Position - offset);
-                    return (int)SurfacePatternConfig_FieldIndex.DNAM;
+                    this.Rarity = BinaryOverlayList.FactoryByArray<ISurfacePatternRarityConfigGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => SurfacePatternRarityConfigBinaryOverlay.SurfacePatternRarityConfigFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: SurfacePatternRarityConfig_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)SurfacePatternConfig_FieldIndex.Rarity;
                 }
                 default:
                     return base.FillRecordType(

@@ -37,28 +37,28 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class SurfacePatternConfigItem :
-        IEquatable<ISurfacePatternConfigItemGetter>,
-        ILoquiObjectSetter<SurfacePatternConfigItem>,
-        ISurfacePatternConfigItem
+    public partial class SurfacePatternStyleConfig :
+        IEquatable<ISurfacePatternStyleConfigGetter>,
+        ILoquiObjectSetter<SurfacePatternStyleConfig>,
+        ISurfacePatternStyleConfig
     {
         #region Ctor
-        public SurfacePatternConfigItem()
+        public SurfacePatternStyleConfig()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region BNAM
-        public String? BNAM { get; set; }
+        #region Style
+        public String? Style { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ISurfacePatternConfigItemGetter.BNAM => this.BNAM;
+        String? ISurfacePatternStyleConfigGetter.Style => this.Style;
         #endregion
-        #region CNAM
-        public Single? CNAM { get; set; }
+        #region Weight
+        public Single? Weight { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? ISurfacePatternConfigItemGetter.CNAM => this.CNAM;
+        Single? ISurfacePatternStyleConfigGetter.Weight => this.Weight;
         #endregion
 
         #region To String
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            SurfacePatternConfigItemMixIn.Print(
+            SurfacePatternStyleConfigMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -78,16 +78,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ISurfacePatternConfigItemGetter rhs) return false;
-            return ((SurfacePatternConfigItemCommon)((ISurfacePatternConfigItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ISurfacePatternStyleConfigGetter rhs) return false;
+            return ((SurfacePatternStyleConfigCommon)((ISurfacePatternStyleConfigGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ISurfacePatternConfigItemGetter? obj)
+        public bool Equals(ISurfacePatternStyleConfigGetter? obj)
         {
-            return ((SurfacePatternConfigItemCommon)((ISurfacePatternConfigItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((SurfacePatternStyleConfigCommon)((ISurfacePatternStyleConfigGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((SurfacePatternConfigItemCommon)((ISurfacePatternConfigItemGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((SurfacePatternStyleConfigCommon)((ISurfacePatternStyleConfigGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -99,16 +99,16 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.BNAM = initialValue;
-                this.CNAM = initialValue;
+                this.Style = initialValue;
+                this.Weight = initialValue;
             }
 
             public Mask(
-                TItem BNAM,
-                TItem CNAM)
+                TItem Style,
+                TItem Weight)
             {
-                this.BNAM = BNAM;
-                this.CNAM = CNAM;
+                this.Style = Style;
+                this.Weight = Weight;
             }
 
             #pragma warning disable CS8618
@@ -120,8 +120,8 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem BNAM;
-            public TItem CNAM;
+            public TItem Style;
+            public TItem Weight;
             #endregion
 
             #region Equals
@@ -134,15 +134,15 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.BNAM, rhs.BNAM)) return false;
-                if (!object.Equals(this.CNAM, rhs.CNAM)) return false;
+                if (!object.Equals(this.Style, rhs.Style)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.BNAM);
-                hash.Add(this.CNAM);
+                hash.Add(this.Style);
+                hash.Add(this.Weight);
                 return hash.ToHashCode();
             }
 
@@ -151,8 +151,8 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.BNAM)) return false;
-                if (!eval(this.CNAM)) return false;
+                if (!eval(this.Style)) return false;
+                if (!eval(this.Weight)) return false;
                 return true;
             }
             #endregion
@@ -160,8 +160,8 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.BNAM)) return true;
-                if (eval(this.CNAM)) return true;
+                if (eval(this.Style)) return true;
+                if (eval(this.Weight)) return true;
                 return false;
             }
             #endregion
@@ -169,40 +169,40 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new SurfacePatternConfigItem.Mask<R>();
+                var ret = new SurfacePatternStyleConfig.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.BNAM = eval(this.BNAM);
-                obj.CNAM = eval(this.CNAM);
+                obj.Style = eval(this.Style);
+                obj.Weight = eval(this.Weight);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(SurfacePatternConfigItem.Mask<bool>? printMask = null)
+            public string Print(SurfacePatternStyleConfig.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, SurfacePatternConfigItem.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, SurfacePatternStyleConfig.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(SurfacePatternConfigItem.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(SurfacePatternStyleConfig.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.BNAM ?? true)
+                    if (printMask?.Style ?? true)
                     {
-                        sb.AppendItem(BNAM, "BNAM");
+                        sb.AppendItem(Style, "Style");
                     }
-                    if (printMask?.CNAM ?? true)
+                    if (printMask?.Weight ?? true)
                     {
-                        sb.AppendItem(CNAM, "CNAM");
+                        sb.AppendItem(Weight, "Weight");
                     }
                 }
             }
@@ -228,20 +228,20 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? BNAM;
-            public Exception? CNAM;
+            public Exception? Style;
+            public Exception? Weight;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                SurfacePatternConfigItem_FieldIndex enu = (SurfacePatternConfigItem_FieldIndex)index;
+                SurfacePatternStyleConfig_FieldIndex enu = (SurfacePatternStyleConfig_FieldIndex)index;
                 switch (enu)
                 {
-                    case SurfacePatternConfigItem_FieldIndex.BNAM:
-                        return BNAM;
-                    case SurfacePatternConfigItem_FieldIndex.CNAM:
-                        return CNAM;
+                    case SurfacePatternStyleConfig_FieldIndex.Style:
+                        return Style;
+                    case SurfacePatternStyleConfig_FieldIndex.Weight:
+                        return Weight;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -249,14 +249,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                SurfacePatternConfigItem_FieldIndex enu = (SurfacePatternConfigItem_FieldIndex)index;
+                SurfacePatternStyleConfig_FieldIndex enu = (SurfacePatternStyleConfig_FieldIndex)index;
                 switch (enu)
                 {
-                    case SurfacePatternConfigItem_FieldIndex.BNAM:
-                        this.BNAM = ex;
+                    case SurfacePatternStyleConfig_FieldIndex.Style:
+                        this.Style = ex;
                         break;
-                    case SurfacePatternConfigItem_FieldIndex.CNAM:
-                        this.CNAM = ex;
+                    case SurfacePatternStyleConfig_FieldIndex.Weight:
+                        this.Weight = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -265,14 +265,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                SurfacePatternConfigItem_FieldIndex enu = (SurfacePatternConfigItem_FieldIndex)index;
+                SurfacePatternStyleConfig_FieldIndex enu = (SurfacePatternStyleConfig_FieldIndex)index;
                 switch (enu)
                 {
-                    case SurfacePatternConfigItem_FieldIndex.BNAM:
-                        this.BNAM = (Exception?)obj;
+                    case SurfacePatternStyleConfig_FieldIndex.Style:
+                        this.Style = (Exception?)obj;
                         break;
-                    case SurfacePatternConfigItem_FieldIndex.CNAM:
-                        this.CNAM = (Exception?)obj;
+                    case SurfacePatternStyleConfig_FieldIndex.Weight:
+                        this.Weight = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -282,8 +282,8 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (BNAM != null) return true;
-                if (CNAM != null) return true;
+                if (Style != null) return true;
+                if (Weight != null) return true;
                 return false;
             }
             #endregion
@@ -310,10 +310,10 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(BNAM, "BNAM");
+                    sb.AppendItem(Style, "Style");
                 }
                 {
-                    sb.AppendItem(CNAM, "CNAM");
+                    sb.AppendItem(Weight, "Weight");
                 }
             }
             #endregion
@@ -323,8 +323,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.BNAM = this.BNAM.Combine(rhs.BNAM);
-                ret.CNAM = this.CNAM.Combine(rhs.CNAM);
+                ret.Style = this.Style.Combine(rhs.Style);
+                ret.Weight = this.Weight.Combine(rhs.Weight);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -348,8 +348,8 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool BNAM;
-            public bool CNAM;
+            public bool Style;
+            public bool Weight;
             #endregion
 
             #region Ctors
@@ -359,8 +359,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.BNAM = defaultOn;
-                this.CNAM = defaultOn;
+                this.Style = defaultOn;
+                this.Weight = defaultOn;
             }
 
             #endregion
@@ -376,8 +376,8 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((BNAM, null));
-                ret.Add((CNAM, null));
+                ret.Add((Style, null));
+                ret.Add((Weight, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -390,25 +390,25 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => SurfacePatternConfigItemBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => SurfacePatternStyleConfigBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((SurfacePatternConfigItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((SurfacePatternStyleConfigBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static SurfacePatternConfigItem CreateFromBinary(
+        public static SurfacePatternStyleConfig CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new SurfacePatternConfigItem();
-            ((SurfacePatternConfigItemSetterCommon)((ISurfacePatternConfigItemGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new SurfacePatternStyleConfig();
+            ((SurfacePatternStyleConfigSetterCommon)((ISurfacePatternStyleConfigGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out SurfacePatternConfigItem item,
+            out SurfacePatternStyleConfig item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -434,30 +434,30 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((SurfacePatternConfigItemSetterCommon)((ISurfacePatternConfigItemGetter)this).CommonSetterInstance()!).Clear(this);
+            ((SurfacePatternStyleConfigSetterCommon)((ISurfacePatternStyleConfigGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static SurfacePatternConfigItem GetNew()
+        internal static SurfacePatternStyleConfig GetNew()
         {
-            return new SurfacePatternConfigItem();
+            return new SurfacePatternStyleConfig();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ISurfacePatternConfigItem :
-        ILoquiObjectSetter<ISurfacePatternConfigItem>,
-        ISurfacePatternConfigItemGetter
+    public partial interface ISurfacePatternStyleConfig :
+        ILoquiObjectSetter<ISurfacePatternStyleConfig>,
+        ISurfacePatternStyleConfigGetter
     {
-        new String? BNAM { get; set; }
-        new Single? CNAM { get; set; }
+        new String? Style { get; set; }
+        new Single? Weight { get; set; }
     }
 
-    public partial interface ISurfacePatternConfigItemGetter :
+    public partial interface ISurfacePatternStyleConfigGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<ISurfacePatternConfigItemGetter>
+        ILoquiObject<ISurfacePatternStyleConfigGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -465,51 +465,51 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => SurfacePatternConfigItem_Registration.Instance;
-        String? BNAM { get; }
-        Single? CNAM { get; }
+        static ILoquiRegistration StaticRegistration => SurfacePatternStyleConfig_Registration.Instance;
+        String? Style { get; }
+        Single? Weight { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class SurfacePatternConfigItemMixIn
+    public static partial class SurfacePatternStyleConfigMixIn
     {
-        public static void Clear(this ISurfacePatternConfigItem item)
+        public static void Clear(this ISurfacePatternStyleConfig item)
         {
-            ((SurfacePatternConfigItemSetterCommon)((ISurfacePatternConfigItemGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((SurfacePatternStyleConfigSetterCommon)((ISurfacePatternStyleConfigGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static SurfacePatternConfigItem.Mask<bool> GetEqualsMask(
-            this ISurfacePatternConfigItemGetter item,
-            ISurfacePatternConfigItemGetter rhs,
+        public static SurfacePatternStyleConfig.Mask<bool> GetEqualsMask(
+            this ISurfacePatternStyleConfigGetter item,
+            ISurfacePatternStyleConfigGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((SurfacePatternConfigItemCommon)((ISurfacePatternConfigItemGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((SurfacePatternStyleConfigCommon)((ISurfacePatternStyleConfigGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this ISurfacePatternConfigItemGetter item,
+            this ISurfacePatternStyleConfigGetter item,
             string? name = null,
-            SurfacePatternConfigItem.Mask<bool>? printMask = null)
+            SurfacePatternStyleConfig.Mask<bool>? printMask = null)
         {
-            return ((SurfacePatternConfigItemCommon)((ISurfacePatternConfigItemGetter)item).CommonInstance()!).Print(
+            return ((SurfacePatternStyleConfigCommon)((ISurfacePatternStyleConfigGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this ISurfacePatternConfigItemGetter item,
+            this ISurfacePatternStyleConfigGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            SurfacePatternConfigItem.Mask<bool>? printMask = null)
+            SurfacePatternStyleConfig.Mask<bool>? printMask = null)
         {
-            ((SurfacePatternConfigItemCommon)((ISurfacePatternConfigItemGetter)item).CommonInstance()!).Print(
+            ((SurfacePatternStyleConfigCommon)((ISurfacePatternStyleConfigGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -517,21 +517,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this ISurfacePatternConfigItemGetter item,
-            ISurfacePatternConfigItemGetter rhs,
-            SurfacePatternConfigItem.TranslationMask? equalsMask = null)
+            this ISurfacePatternStyleConfigGetter item,
+            ISurfacePatternStyleConfigGetter rhs,
+            SurfacePatternStyleConfig.TranslationMask? equalsMask = null)
         {
-            return ((SurfacePatternConfigItemCommon)((ISurfacePatternConfigItemGetter)item).CommonInstance()!).Equals(
+            return ((SurfacePatternStyleConfigCommon)((ISurfacePatternStyleConfigGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this ISurfacePatternConfigItem lhs,
-            ISurfacePatternConfigItemGetter rhs)
+            this ISurfacePatternStyleConfig lhs,
+            ISurfacePatternStyleConfigGetter rhs)
         {
-            ((SurfacePatternConfigItemSetterTranslationCommon)((ISurfacePatternConfigItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((SurfacePatternStyleConfigSetterTranslationCommon)((ISurfacePatternStyleConfigGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -540,11 +540,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this ISurfacePatternConfigItem lhs,
-            ISurfacePatternConfigItemGetter rhs,
-            SurfacePatternConfigItem.TranslationMask? copyMask = null)
+            this ISurfacePatternStyleConfig lhs,
+            ISurfacePatternStyleConfigGetter rhs,
+            SurfacePatternStyleConfig.TranslationMask? copyMask = null)
         {
-            ((SurfacePatternConfigItemSetterTranslationCommon)((ISurfacePatternConfigItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((SurfacePatternStyleConfigSetterTranslationCommon)((ISurfacePatternStyleConfigGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -553,28 +553,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this ISurfacePatternConfigItem lhs,
-            ISurfacePatternConfigItemGetter rhs,
-            out SurfacePatternConfigItem.ErrorMask errorMask,
-            SurfacePatternConfigItem.TranslationMask? copyMask = null)
+            this ISurfacePatternStyleConfig lhs,
+            ISurfacePatternStyleConfigGetter rhs,
+            out SurfacePatternStyleConfig.ErrorMask errorMask,
+            SurfacePatternStyleConfig.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((SurfacePatternConfigItemSetterTranslationCommon)((ISurfacePatternConfigItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((SurfacePatternStyleConfigSetterTranslationCommon)((ISurfacePatternStyleConfigGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = SurfacePatternConfigItem.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SurfacePatternStyleConfig.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ISurfacePatternConfigItem lhs,
-            ISurfacePatternConfigItemGetter rhs,
+            this ISurfacePatternStyleConfig lhs,
+            ISurfacePatternStyleConfigGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((SurfacePatternConfigItemSetterTranslationCommon)((ISurfacePatternConfigItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((SurfacePatternStyleConfigSetterTranslationCommon)((ISurfacePatternStyleConfigGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -582,32 +582,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static SurfacePatternConfigItem DeepCopy(
-            this ISurfacePatternConfigItemGetter item,
-            SurfacePatternConfigItem.TranslationMask? copyMask = null)
+        public static SurfacePatternStyleConfig DeepCopy(
+            this ISurfacePatternStyleConfigGetter item,
+            SurfacePatternStyleConfig.TranslationMask? copyMask = null)
         {
-            return ((SurfacePatternConfigItemSetterTranslationCommon)((ISurfacePatternConfigItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((SurfacePatternStyleConfigSetterTranslationCommon)((ISurfacePatternStyleConfigGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static SurfacePatternConfigItem DeepCopy(
-            this ISurfacePatternConfigItemGetter item,
-            out SurfacePatternConfigItem.ErrorMask errorMask,
-            SurfacePatternConfigItem.TranslationMask? copyMask = null)
+        public static SurfacePatternStyleConfig DeepCopy(
+            this ISurfacePatternStyleConfigGetter item,
+            out SurfacePatternStyleConfig.ErrorMask errorMask,
+            SurfacePatternStyleConfig.TranslationMask? copyMask = null)
         {
-            return ((SurfacePatternConfigItemSetterTranslationCommon)((ISurfacePatternConfigItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((SurfacePatternStyleConfigSetterTranslationCommon)((ISurfacePatternStyleConfigGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static SurfacePatternConfigItem DeepCopy(
-            this ISurfacePatternConfigItemGetter item,
+        public static SurfacePatternStyleConfig DeepCopy(
+            this ISurfacePatternStyleConfigGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((SurfacePatternConfigItemSetterTranslationCommon)((ISurfacePatternConfigItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((SurfacePatternStyleConfigSetterTranslationCommon)((ISurfacePatternStyleConfigGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -615,11 +615,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this ISurfacePatternConfigItem item,
+            this ISurfacePatternStyleConfig item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((SurfacePatternConfigItemSetterCommon)((ISurfacePatternConfigItemGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((SurfacePatternStyleConfigSetterCommon)((ISurfacePatternStyleConfigGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -635,17 +635,17 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum SurfacePatternConfigItem_FieldIndex
+    internal enum SurfacePatternStyleConfig_FieldIndex
     {
-        BNAM = 0,
-        CNAM = 1,
+        Style = 0,
+        Weight = 1,
     }
     #endregion
 
     #region Registration
-    internal partial class SurfacePatternConfigItem_Registration : ILoquiRegistration
+    internal partial class SurfacePatternStyleConfig_Registration : ILoquiRegistration
     {
-        public static readonly SurfacePatternConfigItem_Registration Instance = new SurfacePatternConfigItem_Registration();
+        public static readonly SurfacePatternStyleConfig_Registration Instance = new SurfacePatternStyleConfig_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -653,23 +653,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(SurfacePatternConfigItem.Mask<>);
+        public static readonly Type MaskType = typeof(SurfacePatternStyleConfig.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(SurfacePatternConfigItem.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(SurfacePatternStyleConfig.ErrorMask);
 
-        public static readonly Type ClassType = typeof(SurfacePatternConfigItem);
+        public static readonly Type ClassType = typeof(SurfacePatternStyleConfig);
 
-        public static readonly Type GetterType = typeof(ISurfacePatternConfigItemGetter);
+        public static readonly Type GetterType = typeof(ISurfacePatternStyleConfigGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ISurfacePatternConfigItem);
+        public static readonly Type SetterType = typeof(ISurfacePatternStyleConfig);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.SurfacePatternConfigItem";
+        public const string FullName = "Mutagen.Bethesda.Starfield.SurfacePatternStyleConfig";
 
-        public const string Name = "SurfacePatternConfigItem";
+        public const string Name = "SurfacePatternStyleConfig";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.CNAM);
             return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(SurfacePatternConfigItemBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(SurfacePatternStyleConfigBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -716,21 +716,21 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class SurfacePatternConfigItemSetterCommon
+    internal partial class SurfacePatternStyleConfigSetterCommon
     {
-        public static readonly SurfacePatternConfigItemSetterCommon Instance = new SurfacePatternConfigItemSetterCommon();
+        public static readonly SurfacePatternStyleConfigSetterCommon Instance = new SurfacePatternStyleConfigSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(ISurfacePatternConfigItem item)
+        public void Clear(ISurfacePatternStyleConfig item)
         {
             ClearPartial();
-            item.BNAM = default;
-            item.CNAM = default;
+            item.Style = default;
+            item.Weight = default;
         }
         
         #region Mutagen
-        public void RemapLinks(ISurfacePatternConfigItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(ISurfacePatternStyleConfig obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
         }
         
@@ -738,7 +738,7 @@ namespace Mutagen.Bethesda.Starfield
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            ISurfacePatternConfigItem item,
+            ISurfacePatternStyleConfig item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -746,23 +746,23 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillTyped: SurfacePatternConfigItemBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillTyped: SurfacePatternStyleConfigBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    internal partial class SurfacePatternConfigItemCommon
+    internal partial class SurfacePatternStyleConfigCommon
     {
-        public static readonly SurfacePatternConfigItemCommon Instance = new SurfacePatternConfigItemCommon();
+        public static readonly SurfacePatternStyleConfigCommon Instance = new SurfacePatternStyleConfigCommon();
 
-        public SurfacePatternConfigItem.Mask<bool> GetEqualsMask(
-            ISurfacePatternConfigItemGetter item,
-            ISurfacePatternConfigItemGetter rhs,
+        public SurfacePatternStyleConfig.Mask<bool> GetEqualsMask(
+            ISurfacePatternStyleConfigGetter item,
+            ISurfacePatternStyleConfigGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new SurfacePatternConfigItem.Mask<bool>(false);
-            ((SurfacePatternConfigItemCommon)((ISurfacePatternConfigItemGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new SurfacePatternStyleConfig.Mask<bool>(false);
+            ((SurfacePatternStyleConfigCommon)((ISurfacePatternStyleConfigGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -771,19 +771,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            ISurfacePatternConfigItemGetter item,
-            ISurfacePatternConfigItemGetter rhs,
-            SurfacePatternConfigItem.Mask<bool> ret,
+            ISurfacePatternStyleConfigGetter item,
+            ISurfacePatternStyleConfigGetter rhs,
+            SurfacePatternStyleConfig.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.BNAM = string.Equals(item.BNAM, rhs.BNAM);
-            ret.CNAM = item.CNAM.EqualsWithin(rhs.CNAM);
+            ret.Style = string.Equals(item.Style, rhs.Style);
+            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
         }
         
         public string Print(
-            ISurfacePatternConfigItemGetter item,
+            ISurfacePatternStyleConfigGetter item,
             string? name = null,
-            SurfacePatternConfigItem.Mask<bool>? printMask = null)
+            SurfacePatternStyleConfig.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -795,18 +795,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            ISurfacePatternConfigItemGetter item,
+            ISurfacePatternStyleConfigGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            SurfacePatternConfigItem.Mask<bool>? printMask = null)
+            SurfacePatternStyleConfig.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"SurfacePatternConfigItem =>");
+                sb.AppendLine($"SurfacePatternStyleConfig =>");
             }
             else
             {
-                sb.AppendLine($"{name} (SurfacePatternConfigItem) =>");
+                sb.AppendLine($"{name} (SurfacePatternStyleConfig) =>");
             }
             using (sb.Brace())
             {
@@ -818,50 +818,50 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            ISurfacePatternConfigItemGetter item,
+            ISurfacePatternStyleConfigGetter item,
             StructuredStringBuilder sb,
-            SurfacePatternConfigItem.Mask<bool>? printMask = null)
+            SurfacePatternStyleConfig.Mask<bool>? printMask = null)
         {
-            if ((printMask?.BNAM ?? true)
-                && item.BNAM is {} BNAMItem)
+            if ((printMask?.Style ?? true)
+                && item.Style is {} StyleItem)
             {
-                sb.AppendItem(BNAMItem, "BNAM");
+                sb.AppendItem(StyleItem, "Style");
             }
-            if ((printMask?.CNAM ?? true)
-                && item.CNAM is {} CNAMItem)
+            if ((printMask?.Weight ?? true)
+                && item.Weight is {} WeightItem)
             {
-                sb.AppendItem(CNAMItem, "CNAM");
+                sb.AppendItem(WeightItem, "Weight");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            ISurfacePatternConfigItemGetter? lhs,
-            ISurfacePatternConfigItemGetter? rhs,
+            ISurfacePatternStyleConfigGetter? lhs,
+            ISurfacePatternStyleConfigGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)SurfacePatternConfigItem_FieldIndex.BNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SurfacePatternStyleConfig_FieldIndex.Style) ?? true))
             {
-                if (!string.Equals(lhs.BNAM, rhs.BNAM)) return false;
+                if (!string.Equals(lhs.Style, rhs.Style)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)SurfacePatternConfigItem_FieldIndex.CNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SurfacePatternStyleConfig_FieldIndex.Weight) ?? true))
             {
-                if (!lhs.CNAM.EqualsWithin(rhs.CNAM)) return false;
+                if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(ISurfacePatternConfigItemGetter item)
+        public virtual int GetHashCode(ISurfacePatternStyleConfigGetter item)
         {
             var hash = new HashCode();
-            if (item.BNAM is {} BNAMitem)
+            if (item.Style is {} Styleitem)
             {
-                hash.Add(BNAMitem);
+                hash.Add(Styleitem);
             }
-            if (item.CNAM is {} CNAMitem)
+            if (item.Weight is {} Weightitem)
             {
-                hash.Add(CNAMitem);
+                hash.Add(Weightitem);
             }
             return hash.ToHashCode();
         }
@@ -871,11 +871,11 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return SurfacePatternConfigItem.GetNew();
+            return SurfacePatternStyleConfig.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISurfacePatternConfigItemGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISurfacePatternStyleConfigGetter obj)
         {
             yield break;
         }
@@ -883,25 +883,25 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         
     }
-    internal partial class SurfacePatternConfigItemSetterTranslationCommon
+    internal partial class SurfacePatternStyleConfigSetterTranslationCommon
     {
-        public static readonly SurfacePatternConfigItemSetterTranslationCommon Instance = new SurfacePatternConfigItemSetterTranslationCommon();
+        public static readonly SurfacePatternStyleConfigSetterTranslationCommon Instance = new SurfacePatternStyleConfigSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            ISurfacePatternConfigItem item,
-            ISurfacePatternConfigItemGetter rhs,
+            ISurfacePatternStyleConfig item,
+            ISurfacePatternStyleConfigGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)SurfacePatternConfigItem_FieldIndex.BNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SurfacePatternStyleConfig_FieldIndex.Style) ?? true))
             {
-                item.BNAM = rhs.BNAM;
+                item.Style = rhs.Style;
             }
-            if ((copyMask?.GetShouldTranslate((int)SurfacePatternConfigItem_FieldIndex.CNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SurfacePatternStyleConfig_FieldIndex.Weight) ?? true))
             {
-                item.CNAM = rhs.CNAM;
+                item.Weight = rhs.Weight;
             }
             DeepCopyInCustom(
                 item: item,
@@ -912,19 +912,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         partial void DeepCopyInCustom(
-            ISurfacePatternConfigItem item,
-            ISurfacePatternConfigItemGetter rhs,
+            ISurfacePatternStyleConfig item,
+            ISurfacePatternStyleConfigGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
         #endregion
         
-        public SurfacePatternConfigItem DeepCopy(
-            ISurfacePatternConfigItemGetter item,
-            SurfacePatternConfigItem.TranslationMask? copyMask = null)
+        public SurfacePatternStyleConfig DeepCopy(
+            ISurfacePatternStyleConfigGetter item,
+            SurfacePatternStyleConfig.TranslationMask? copyMask = null)
         {
-            SurfacePatternConfigItem ret = (SurfacePatternConfigItem)((SurfacePatternConfigItemCommon)((ISurfacePatternConfigItemGetter)item).CommonInstance()!).GetNew();
-            ((SurfacePatternConfigItemSetterTranslationCommon)((ISurfacePatternConfigItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            SurfacePatternStyleConfig ret = (SurfacePatternStyleConfig)((SurfacePatternStyleConfigCommon)((ISurfacePatternStyleConfigGetter)item).CommonInstance()!).GetNew();
+            ((SurfacePatternStyleConfigSetterTranslationCommon)((ISurfacePatternStyleConfigGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -933,30 +933,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public SurfacePatternConfigItem DeepCopy(
-            ISurfacePatternConfigItemGetter item,
-            out SurfacePatternConfigItem.ErrorMask errorMask,
-            SurfacePatternConfigItem.TranslationMask? copyMask = null)
+        public SurfacePatternStyleConfig DeepCopy(
+            ISurfacePatternStyleConfigGetter item,
+            out SurfacePatternStyleConfig.ErrorMask errorMask,
+            SurfacePatternStyleConfig.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            SurfacePatternConfigItem ret = (SurfacePatternConfigItem)((SurfacePatternConfigItemCommon)((ISurfacePatternConfigItemGetter)item).CommonInstance()!).GetNew();
-            ((SurfacePatternConfigItemSetterTranslationCommon)((ISurfacePatternConfigItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            SurfacePatternStyleConfig ret = (SurfacePatternStyleConfig)((SurfacePatternStyleConfigCommon)((ISurfacePatternStyleConfigGetter)item).CommonInstance()!).GetNew();
+            ((SurfacePatternStyleConfigSetterTranslationCommon)((ISurfacePatternStyleConfigGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = SurfacePatternConfigItem.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SurfacePatternStyleConfig.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public SurfacePatternConfigItem DeepCopy(
-            ISurfacePatternConfigItemGetter item,
+        public SurfacePatternStyleConfig DeepCopy(
+            ISurfacePatternStyleConfigGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            SurfacePatternConfigItem ret = (SurfacePatternConfigItem)((SurfacePatternConfigItemCommon)((ISurfacePatternConfigItemGetter)item).CommonInstance()!).GetNew();
-            ((SurfacePatternConfigItemSetterTranslationCommon)((ISurfacePatternConfigItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            SurfacePatternStyleConfig ret = (SurfacePatternStyleConfig)((SurfacePatternStyleConfigCommon)((ISurfacePatternStyleConfigGetter)item).CommonInstance()!).GetNew();
+            ((SurfacePatternStyleConfigSetterTranslationCommon)((ISurfacePatternStyleConfigGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -972,27 +972,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class SurfacePatternConfigItem
+    public partial class SurfacePatternStyleConfig
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => SurfacePatternConfigItem_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => SurfacePatternConfigItem_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => SurfacePatternStyleConfig_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SurfacePatternStyleConfig_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => SurfacePatternConfigItemCommon.Instance;
+        protected object CommonInstance() => SurfacePatternStyleConfigCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return SurfacePatternConfigItemSetterCommon.Instance;
+            return SurfacePatternStyleConfigSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => SurfacePatternConfigItemSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => SurfacePatternStyleConfigSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ISurfacePatternConfigItemGetter.CommonInstance() => this.CommonInstance();
+        object ISurfacePatternStyleConfigGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object ISurfacePatternConfigItemGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ISurfacePatternStyleConfigGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object ISurfacePatternConfigItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ISurfacePatternStyleConfigGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1003,29 +1003,29 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class SurfacePatternConfigItemBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class SurfacePatternStyleConfigBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly SurfacePatternConfigItemBinaryWriteTranslation Instance = new();
+        public static readonly SurfacePatternStyleConfigBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            ISurfacePatternConfigItemGetter item,
+            ISurfacePatternStyleConfigGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.BNAM,
+                item: item.Style,
                 header: translationParams.ConvertToCustom(RecordTypes.BNAM),
                 binaryType: StringBinaryType.NullTerminate);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.CNAM,
+                item: item.Weight,
                 header: translationParams.ConvertToCustom(RecordTypes.CNAM));
         }
 
         public void Write(
             MutagenWriter writer,
-            ISurfacePatternConfigItemGetter item,
+            ISurfacePatternStyleConfigGetter item,
             TypedWriteParams translationParams)
         {
             WriteRecordTypes(
@@ -1040,19 +1040,19 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (ISurfacePatternConfigItemGetter)item,
+                item: (ISurfacePatternStyleConfigGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class SurfacePatternConfigItemBinaryCreateTranslation
+    internal partial class SurfacePatternStyleConfigBinaryCreateTranslation
     {
-        public static readonly SurfacePatternConfigItemBinaryCreateTranslation Instance = new SurfacePatternConfigItemBinaryCreateTranslation();
+        public static readonly SurfacePatternStyleConfigBinaryCreateTranslation Instance = new SurfacePatternStyleConfigBinaryCreateTranslation();
 
         public static ParseResult FillBinaryRecordTypes(
-            ISurfacePatternConfigItem item,
+            ISurfacePatternStyleConfig item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1065,20 +1065,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.BNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)SurfacePatternConfigItem_FieldIndex.BNAM, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)SurfacePatternStyleConfig_FieldIndex.Style, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BNAM = StringBinaryTranslation.Instance.Parse(
+                    item.Style = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)SurfacePatternConfigItem_FieldIndex.BNAM;
+                    return (int)SurfacePatternStyleConfig_FieldIndex.Style;
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)SurfacePatternConfigItem_FieldIndex.CNAM, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)SurfacePatternStyleConfig_FieldIndex.Weight, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CNAM = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)SurfacePatternConfigItem_FieldIndex.CNAM;
+                    item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)SurfacePatternStyleConfig_FieldIndex.Weight;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1091,14 +1091,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class SurfacePatternConfigItemBinaryTranslationMixIn
+    public static class SurfacePatternStyleConfigBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this ISurfacePatternConfigItemGetter item,
+            this ISurfacePatternStyleConfigGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((SurfacePatternConfigItemBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((SurfacePatternStyleConfigBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1111,50 +1111,50 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class SurfacePatternConfigItemBinaryOverlay :
+    internal partial class SurfacePatternStyleConfigBinaryOverlay :
         PluginBinaryOverlay,
-        ISurfacePatternConfigItemGetter
+        ISurfacePatternStyleConfigGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => SurfacePatternConfigItem_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => SurfacePatternConfigItem_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => SurfacePatternStyleConfig_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SurfacePatternStyleConfig_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => SurfacePatternConfigItemCommon.Instance;
+        protected object CommonInstance() => SurfacePatternStyleConfigCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => SurfacePatternConfigItemSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => SurfacePatternStyleConfigSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ISurfacePatternConfigItemGetter.CommonInstance() => this.CommonInstance();
+        object ISurfacePatternStyleConfigGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? ISurfacePatternConfigItemGetter.CommonSetterInstance() => null;
+        object? ISurfacePatternStyleConfigGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object ISurfacePatternConfigItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ISurfacePatternStyleConfigGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => SurfacePatternConfigItemBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => SurfacePatternStyleConfigBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((SurfacePatternConfigItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((SurfacePatternStyleConfigBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        #region BNAM
-        private int? _BNAMLocation;
-        public String? BNAM => _BNAMLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _BNAMLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region Style
+        private int? _StyleLocation;
+        public String? Style => _StyleLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StyleLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        #region CNAM
-        private int? _CNAMLocation;
-        public Single? CNAM => _CNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CNAMLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region Weight
+        private int? _WeightLocation;
+        public Single? Weight => _WeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _WeightLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1162,7 +1162,7 @@ namespace Mutagen.Bethesda.Starfield
             int offset);
 
         partial void CustomCtor();
-        protected SurfacePatternConfigItemBinaryOverlay(
+        protected SurfacePatternStyleConfigBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1172,7 +1172,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static ISurfacePatternConfigItemGetter SurfacePatternConfigItemFactory(
+        public static ISurfacePatternStyleConfigGetter SurfacePatternStyleConfigFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1184,7 +1184,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new SurfacePatternConfigItemBinaryOverlay(
+            var ret = new SurfacePatternStyleConfigBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret.FillTypelessSubrecordTypes(
@@ -1196,12 +1196,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static ISurfacePatternConfigItemGetter SurfacePatternConfigItemFactory(
+        public static ISurfacePatternStyleConfigGetter SurfacePatternStyleConfigFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return SurfacePatternConfigItemFactory(
+            return SurfacePatternStyleConfigFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1221,15 +1221,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.BNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)SurfacePatternConfigItem_FieldIndex.BNAM, translationParams)) return ParseResult.Stop;
-                    _BNAMLocation = (stream.Position - offset);
-                    return (int)SurfacePatternConfigItem_FieldIndex.BNAM;
+                    if (lastParsed.ShortCircuit((int)SurfacePatternStyleConfig_FieldIndex.Style, translationParams)) return ParseResult.Stop;
+                    _StyleLocation = (stream.Position - offset);
+                    return (int)SurfacePatternStyleConfig_FieldIndex.Style;
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)SurfacePatternConfigItem_FieldIndex.CNAM, translationParams)) return ParseResult.Stop;
-                    _CNAMLocation = (stream.Position - offset);
-                    return (int)SurfacePatternConfigItem_FieldIndex.CNAM;
+                    if (lastParsed.ShortCircuit((int)SurfacePatternStyleConfig_FieldIndex.Weight, translationParams)) return ParseResult.Stop;
+                    _WeightLocation = (stream.Position - offset);
+                    return (int)SurfacePatternStyleConfig_FieldIndex.Weight;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1241,7 +1241,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            SurfacePatternConfigItemMixIn.Print(
+            SurfacePatternStyleConfigMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1252,16 +1252,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ISurfacePatternConfigItemGetter rhs) return false;
-            return ((SurfacePatternConfigItemCommon)((ISurfacePatternConfigItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ISurfacePatternStyleConfigGetter rhs) return false;
+            return ((SurfacePatternStyleConfigCommon)((ISurfacePatternStyleConfigGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ISurfacePatternConfigItemGetter? obj)
+        public bool Equals(ISurfacePatternStyleConfigGetter? obj)
         {
-            return ((SurfacePatternConfigItemCommon)((ISurfacePatternConfigItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((SurfacePatternStyleConfigCommon)((ISurfacePatternStyleConfigGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((SurfacePatternConfigItemCommon)((ISurfacePatternConfigItemGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((SurfacePatternStyleConfigCommon)((ISurfacePatternStyleConfigGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
