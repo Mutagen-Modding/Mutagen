@@ -40,7 +40,7 @@ public class FormIDCompactionOutOfBoundsException : Exception
         sb.Append(" range: [");
         sb.Append(Range.Min.ToString());
         sb.Append(",");
-        sb.Append(Range.Min.ToString());
+        sb.Append(Range.Max.ToString());
         sb.AppendLine("]");
         return sb.ToString();
     }
