@@ -481,8 +481,8 @@
   </Object>
   <Object name="BlockHeightAdjustmentComponentItem" objType="Subrecord">
     <Fields>
-      <Float name="Float1" />
-      <Float name="Float2" />
+      <Float name="TerrainHeight" />
+      <Float name="WaterHeight" />
     </Fields>
   </Object>
   <Object name="UniqueOverlayListComponent" objType="Subrecord" baseClass="AComponent">
@@ -509,7 +509,13 @@
   </Object>
   <Object name="SurfaceTreePatternSwapInfoComponent" objType="Subrecord" baseClass="AComponent">
     <Fields>
-      <ByteArray name="DAT2" recordType="DAT2" />
+      <RefList name="Items" recordType="DAT2" refName="SurfaceTreePatternSwapInfoItem" counterLength="4" />
+    </Fields>
+  </Object>
+  <Object name="SurfaceTreePatternSwapInfoItem" objType="Subrecord" >
+    <Fields>
+      <FormLink name="SurfacePattern" refName="SurfacePattern" />
+      <Int8 name="Unknown" />
     </Fields>
   </Object>
   <Object name="OrbitedDataComponent" objType="Subrecord" baseClass="AComponent">
@@ -569,7 +575,13 @@
   </Object>
   <Object name="OverlayDesignatedPlacementInfoComponent" objType="Subrecord" baseClass="AComponent" >
     <Fields>
-      <Int32 name="DATA" recordType="DATA" unknown="true" />
+      <RefList name="Items" recordType="DATA" refName="OverlayDesignatedPlacementInfoItem" counterLength="4" />
+    </Fields>
+  </Object>
+  <Object name="OverlayDesignatedPlacementInfoItem" objType="Subrecord" >
+    <Fields>
+      <FormLink name="OverlayWorldspace" refName="Worldspace" />
+      <P2Int32 name="Point" />
     </Fields>
   </Object>
 </Loqui>

@@ -6841,5 +6841,11 @@
     <Compile Include="Records\Major Records\SurfacePatternRarityConfig_Generated.cs">
       <DependentUpon>SurfacePatternConfig.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\SurfaceTreePatternSwapInfoItem_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\OverlayDesignatedPlacementInfoItem_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

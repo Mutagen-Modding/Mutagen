@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -37,24 +38,31 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class BlockHeightAdjustmentComponentItem :
-        IBlockHeightAdjustmentComponentItem,
-        IEquatable<IBlockHeightAdjustmentComponentItemGetter>,
-        ILoquiObjectSetter<BlockHeightAdjustmentComponentItem>
+    public partial class SurfaceTreePatternSwapInfoItem :
+        IEquatable<ISurfaceTreePatternSwapInfoItemGetter>,
+        ILoquiObjectSetter<SurfaceTreePatternSwapInfoItem>,
+        ISurfaceTreePatternSwapInfoItem
     {
         #region Ctor
-        public BlockHeightAdjustmentComponentItem()
+        public SurfaceTreePatternSwapInfoItem()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region TerrainHeight
-        public Single TerrainHeight { get; set; } = default(Single);
+        #region SurfacePattern
+        private readonly IFormLink<ISurfacePatternGetter> _SurfacePattern = new FormLink<ISurfacePatternGetter>();
+        public IFormLink<ISurfacePatternGetter> SurfacePattern
+        {
+            get => _SurfacePattern;
+            set => _SurfacePattern.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISurfacePatternGetter> ISurfaceTreePatternSwapInfoItemGetter.SurfacePattern => this.SurfacePattern;
         #endregion
-        #region WaterHeight
-        public Single WaterHeight { get; set; } = default(Single);
+        #region Unknown
+        public SByte Unknown { get; set; } = default(SByte);
         #endregion
 
         #region To String
@@ -63,7 +71,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            BlockHeightAdjustmentComponentItemMixIn.Print(
+            SurfaceTreePatternSwapInfoItemMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -74,16 +82,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IBlockHeightAdjustmentComponentItemGetter rhs) return false;
-            return ((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ISurfaceTreePatternSwapInfoItemGetter rhs) return false;
+            return ((SurfaceTreePatternSwapInfoItemCommon)((ISurfaceTreePatternSwapInfoItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IBlockHeightAdjustmentComponentItemGetter? obj)
+        public bool Equals(ISurfaceTreePatternSwapInfoItemGetter? obj)
         {
-            return ((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((SurfaceTreePatternSwapInfoItemCommon)((ISurfaceTreePatternSwapInfoItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((SurfaceTreePatternSwapInfoItemCommon)((ISurfaceTreePatternSwapInfoItemGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -95,16 +103,16 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.TerrainHeight = initialValue;
-                this.WaterHeight = initialValue;
+                this.SurfacePattern = initialValue;
+                this.Unknown = initialValue;
             }
 
             public Mask(
-                TItem TerrainHeight,
-                TItem WaterHeight)
+                TItem SurfacePattern,
+                TItem Unknown)
             {
-                this.TerrainHeight = TerrainHeight;
-                this.WaterHeight = WaterHeight;
+                this.SurfacePattern = SurfacePattern;
+                this.Unknown = Unknown;
             }
 
             #pragma warning disable CS8618
@@ -116,8 +124,8 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem TerrainHeight;
-            public TItem WaterHeight;
+            public TItem SurfacePattern;
+            public TItem Unknown;
             #endregion
 
             #region Equals
@@ -130,15 +138,15 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.TerrainHeight, rhs.TerrainHeight)) return false;
-                if (!object.Equals(this.WaterHeight, rhs.WaterHeight)) return false;
+                if (!object.Equals(this.SurfacePattern, rhs.SurfacePattern)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.TerrainHeight);
-                hash.Add(this.WaterHeight);
+                hash.Add(this.SurfacePattern);
+                hash.Add(this.Unknown);
                 return hash.ToHashCode();
             }
 
@@ -147,8 +155,8 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.TerrainHeight)) return false;
-                if (!eval(this.WaterHeight)) return false;
+                if (!eval(this.SurfacePattern)) return false;
+                if (!eval(this.Unknown)) return false;
                 return true;
             }
             #endregion
@@ -156,8 +164,8 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.TerrainHeight)) return true;
-                if (eval(this.WaterHeight)) return true;
+                if (eval(this.SurfacePattern)) return true;
+                if (eval(this.Unknown)) return true;
                 return false;
             }
             #endregion
@@ -165,40 +173,40 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new BlockHeightAdjustmentComponentItem.Mask<R>();
+                var ret = new SurfaceTreePatternSwapInfoItem.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.TerrainHeight = eval(this.TerrainHeight);
-                obj.WaterHeight = eval(this.WaterHeight);
+                obj.SurfacePattern = eval(this.SurfacePattern);
+                obj.Unknown = eval(this.Unknown);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(BlockHeightAdjustmentComponentItem.Mask<bool>? printMask = null)
+            public string Print(SurfaceTreePatternSwapInfoItem.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, BlockHeightAdjustmentComponentItem.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, SurfaceTreePatternSwapInfoItem.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(BlockHeightAdjustmentComponentItem.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(SurfaceTreePatternSwapInfoItem.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.TerrainHeight ?? true)
+                    if (printMask?.SurfacePattern ?? true)
                     {
-                        sb.AppendItem(TerrainHeight, "TerrainHeight");
+                        sb.AppendItem(SurfacePattern, "SurfacePattern");
                     }
-                    if (printMask?.WaterHeight ?? true)
+                    if (printMask?.Unknown ?? true)
                     {
-                        sb.AppendItem(WaterHeight, "WaterHeight");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                 }
             }
@@ -224,20 +232,20 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? TerrainHeight;
-            public Exception? WaterHeight;
+            public Exception? SurfacePattern;
+            public Exception? Unknown;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                BlockHeightAdjustmentComponentItem_FieldIndex enu = (BlockHeightAdjustmentComponentItem_FieldIndex)index;
+                SurfaceTreePatternSwapInfoItem_FieldIndex enu = (SurfaceTreePatternSwapInfoItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case BlockHeightAdjustmentComponentItem_FieldIndex.TerrainHeight:
-                        return TerrainHeight;
-                    case BlockHeightAdjustmentComponentItem_FieldIndex.WaterHeight:
-                        return WaterHeight;
+                    case SurfaceTreePatternSwapInfoItem_FieldIndex.SurfacePattern:
+                        return SurfacePattern;
+                    case SurfaceTreePatternSwapInfoItem_FieldIndex.Unknown:
+                        return Unknown;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -245,14 +253,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                BlockHeightAdjustmentComponentItem_FieldIndex enu = (BlockHeightAdjustmentComponentItem_FieldIndex)index;
+                SurfaceTreePatternSwapInfoItem_FieldIndex enu = (SurfaceTreePatternSwapInfoItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case BlockHeightAdjustmentComponentItem_FieldIndex.TerrainHeight:
-                        this.TerrainHeight = ex;
+                    case SurfaceTreePatternSwapInfoItem_FieldIndex.SurfacePattern:
+                        this.SurfacePattern = ex;
                         break;
-                    case BlockHeightAdjustmentComponentItem_FieldIndex.WaterHeight:
-                        this.WaterHeight = ex;
+                    case SurfaceTreePatternSwapInfoItem_FieldIndex.Unknown:
+                        this.Unknown = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -261,14 +269,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                BlockHeightAdjustmentComponentItem_FieldIndex enu = (BlockHeightAdjustmentComponentItem_FieldIndex)index;
+                SurfaceTreePatternSwapInfoItem_FieldIndex enu = (SurfaceTreePatternSwapInfoItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case BlockHeightAdjustmentComponentItem_FieldIndex.TerrainHeight:
-                        this.TerrainHeight = (Exception?)obj;
+                    case SurfaceTreePatternSwapInfoItem_FieldIndex.SurfacePattern:
+                        this.SurfacePattern = (Exception?)obj;
                         break;
-                    case BlockHeightAdjustmentComponentItem_FieldIndex.WaterHeight:
-                        this.WaterHeight = (Exception?)obj;
+                    case SurfaceTreePatternSwapInfoItem_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -278,8 +286,8 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (TerrainHeight != null) return true;
-                if (WaterHeight != null) return true;
+                if (SurfacePattern != null) return true;
+                if (Unknown != null) return true;
                 return false;
             }
             #endregion
@@ -306,10 +314,10 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(TerrainHeight, "TerrainHeight");
+                    sb.AppendItem(SurfacePattern, "SurfacePattern");
                 }
                 {
-                    sb.AppendItem(WaterHeight, "WaterHeight");
+                    sb.AppendItem(Unknown, "Unknown");
                 }
             }
             #endregion
@@ -319,8 +327,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.TerrainHeight = this.TerrainHeight.Combine(rhs.TerrainHeight);
-                ret.WaterHeight = this.WaterHeight.Combine(rhs.WaterHeight);
+                ret.SurfacePattern = this.SurfacePattern.Combine(rhs.SurfacePattern);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -344,8 +352,8 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool TerrainHeight;
-            public bool WaterHeight;
+            public bool SurfacePattern;
+            public bool Unknown;
             #endregion
 
             #region Ctors
@@ -355,8 +363,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.TerrainHeight = defaultOn;
-                this.WaterHeight = defaultOn;
+                this.SurfacePattern = defaultOn;
+                this.Unknown = defaultOn;
             }
 
             #endregion
@@ -372,8 +380,8 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((TerrainHeight, null));
-                ret.Add((WaterHeight, null));
+                ret.Add((SurfacePattern, null));
+                ret.Add((Unknown, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -384,27 +392,32 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
 
+        #region Mutagen
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SurfaceTreePatternSwapInfoItemCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SurfaceTreePatternSwapInfoItemSetterCommon.Instance.RemapLinks(this, mapping);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => BlockHeightAdjustmentComponentItemBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => SurfaceTreePatternSwapInfoItemBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((BlockHeightAdjustmentComponentItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((SurfaceTreePatternSwapInfoItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static BlockHeightAdjustmentComponentItem CreateFromBinary(
+        public static SurfaceTreePatternSwapInfoItem CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new BlockHeightAdjustmentComponentItem();
-            ((BlockHeightAdjustmentComponentItemSetterCommon)((IBlockHeightAdjustmentComponentItemGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new SurfaceTreePatternSwapInfoItem();
+            ((SurfaceTreePatternSwapInfoItemSetterCommon)((ISurfaceTreePatternSwapInfoItemGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -415,7 +428,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out BlockHeightAdjustmentComponentItem item,
+            out SurfaceTreePatternSwapInfoItem item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -430,30 +443,32 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((BlockHeightAdjustmentComponentItemSetterCommon)((IBlockHeightAdjustmentComponentItemGetter)this).CommonSetterInstance()!).Clear(this);
+            ((SurfaceTreePatternSwapInfoItemSetterCommon)((ISurfaceTreePatternSwapInfoItemGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static BlockHeightAdjustmentComponentItem GetNew()
+        internal static SurfaceTreePatternSwapInfoItem GetNew()
         {
-            return new BlockHeightAdjustmentComponentItem();
+            return new SurfaceTreePatternSwapInfoItem();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IBlockHeightAdjustmentComponentItem :
-        IBlockHeightAdjustmentComponentItemGetter,
-        ILoquiObjectSetter<IBlockHeightAdjustmentComponentItem>
+    public partial interface ISurfaceTreePatternSwapInfoItem :
+        IFormLinkContainer,
+        ILoquiObjectSetter<ISurfaceTreePatternSwapInfoItem>,
+        ISurfaceTreePatternSwapInfoItemGetter
     {
-        new Single TerrainHeight { get; set; }
-        new Single WaterHeight { get; set; }
+        new IFormLink<ISurfacePatternGetter> SurfacePattern { get; set; }
+        new SByte Unknown { get; set; }
     }
 
-    public partial interface IBlockHeightAdjustmentComponentItemGetter :
+    public partial interface ISurfaceTreePatternSwapInfoItemGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IBlockHeightAdjustmentComponentItemGetter>
+        IFormLinkContainerGetter,
+        ILoquiObject<ISurfaceTreePatternSwapInfoItemGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -461,51 +476,51 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => BlockHeightAdjustmentComponentItem_Registration.Instance;
-        Single TerrainHeight { get; }
-        Single WaterHeight { get; }
+        static ILoquiRegistration StaticRegistration => SurfaceTreePatternSwapInfoItem_Registration.Instance;
+        IFormLinkGetter<ISurfacePatternGetter> SurfacePattern { get; }
+        SByte Unknown { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class BlockHeightAdjustmentComponentItemMixIn
+    public static partial class SurfaceTreePatternSwapInfoItemMixIn
     {
-        public static void Clear(this IBlockHeightAdjustmentComponentItem item)
+        public static void Clear(this ISurfaceTreePatternSwapInfoItem item)
         {
-            ((BlockHeightAdjustmentComponentItemSetterCommon)((IBlockHeightAdjustmentComponentItemGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((SurfaceTreePatternSwapInfoItemSetterCommon)((ISurfaceTreePatternSwapInfoItemGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static BlockHeightAdjustmentComponentItem.Mask<bool> GetEqualsMask(
-            this IBlockHeightAdjustmentComponentItemGetter item,
-            IBlockHeightAdjustmentComponentItemGetter rhs,
+        public static SurfaceTreePatternSwapInfoItem.Mask<bool> GetEqualsMask(
+            this ISurfaceTreePatternSwapInfoItemGetter item,
+            ISurfaceTreePatternSwapInfoItemGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((SurfaceTreePatternSwapInfoItemCommon)((ISurfaceTreePatternSwapInfoItemGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IBlockHeightAdjustmentComponentItemGetter item,
+            this ISurfaceTreePatternSwapInfoItemGetter item,
             string? name = null,
-            BlockHeightAdjustmentComponentItem.Mask<bool>? printMask = null)
+            SurfaceTreePatternSwapInfoItem.Mask<bool>? printMask = null)
         {
-            return ((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)item).CommonInstance()!).Print(
+            return ((SurfaceTreePatternSwapInfoItemCommon)((ISurfaceTreePatternSwapInfoItemGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IBlockHeightAdjustmentComponentItemGetter item,
+            this ISurfaceTreePatternSwapInfoItemGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            BlockHeightAdjustmentComponentItem.Mask<bool>? printMask = null)
+            SurfaceTreePatternSwapInfoItem.Mask<bool>? printMask = null)
         {
-            ((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)item).CommonInstance()!).Print(
+            ((SurfaceTreePatternSwapInfoItemCommon)((ISurfaceTreePatternSwapInfoItemGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -513,21 +528,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IBlockHeightAdjustmentComponentItemGetter item,
-            IBlockHeightAdjustmentComponentItemGetter rhs,
-            BlockHeightAdjustmentComponentItem.TranslationMask? equalsMask = null)
+            this ISurfaceTreePatternSwapInfoItemGetter item,
+            ISurfaceTreePatternSwapInfoItemGetter rhs,
+            SurfaceTreePatternSwapInfoItem.TranslationMask? equalsMask = null)
         {
-            return ((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)item).CommonInstance()!).Equals(
+            return ((SurfaceTreePatternSwapInfoItemCommon)((ISurfaceTreePatternSwapInfoItemGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IBlockHeightAdjustmentComponentItem lhs,
-            IBlockHeightAdjustmentComponentItemGetter rhs)
+            this ISurfaceTreePatternSwapInfoItem lhs,
+            ISurfaceTreePatternSwapInfoItemGetter rhs)
         {
-            ((BlockHeightAdjustmentComponentItemSetterTranslationCommon)((IBlockHeightAdjustmentComponentItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((SurfaceTreePatternSwapInfoItemSetterTranslationCommon)((ISurfaceTreePatternSwapInfoItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -536,11 +551,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IBlockHeightAdjustmentComponentItem lhs,
-            IBlockHeightAdjustmentComponentItemGetter rhs,
-            BlockHeightAdjustmentComponentItem.TranslationMask? copyMask = null)
+            this ISurfaceTreePatternSwapInfoItem lhs,
+            ISurfaceTreePatternSwapInfoItemGetter rhs,
+            SurfaceTreePatternSwapInfoItem.TranslationMask? copyMask = null)
         {
-            ((BlockHeightAdjustmentComponentItemSetterTranslationCommon)((IBlockHeightAdjustmentComponentItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((SurfaceTreePatternSwapInfoItemSetterTranslationCommon)((ISurfaceTreePatternSwapInfoItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -549,28 +564,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IBlockHeightAdjustmentComponentItem lhs,
-            IBlockHeightAdjustmentComponentItemGetter rhs,
-            out BlockHeightAdjustmentComponentItem.ErrorMask errorMask,
-            BlockHeightAdjustmentComponentItem.TranslationMask? copyMask = null)
+            this ISurfaceTreePatternSwapInfoItem lhs,
+            ISurfaceTreePatternSwapInfoItemGetter rhs,
+            out SurfaceTreePatternSwapInfoItem.ErrorMask errorMask,
+            SurfaceTreePatternSwapInfoItem.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((BlockHeightAdjustmentComponentItemSetterTranslationCommon)((IBlockHeightAdjustmentComponentItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((SurfaceTreePatternSwapInfoItemSetterTranslationCommon)((ISurfaceTreePatternSwapInfoItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = BlockHeightAdjustmentComponentItem.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SurfaceTreePatternSwapInfoItem.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IBlockHeightAdjustmentComponentItem lhs,
-            IBlockHeightAdjustmentComponentItemGetter rhs,
+            this ISurfaceTreePatternSwapInfoItem lhs,
+            ISurfaceTreePatternSwapInfoItemGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((BlockHeightAdjustmentComponentItemSetterTranslationCommon)((IBlockHeightAdjustmentComponentItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((SurfaceTreePatternSwapInfoItemSetterTranslationCommon)((ISurfaceTreePatternSwapInfoItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -578,32 +593,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static BlockHeightAdjustmentComponentItem DeepCopy(
-            this IBlockHeightAdjustmentComponentItemGetter item,
-            BlockHeightAdjustmentComponentItem.TranslationMask? copyMask = null)
+        public static SurfaceTreePatternSwapInfoItem DeepCopy(
+            this ISurfaceTreePatternSwapInfoItemGetter item,
+            SurfaceTreePatternSwapInfoItem.TranslationMask? copyMask = null)
         {
-            return ((BlockHeightAdjustmentComponentItemSetterTranslationCommon)((IBlockHeightAdjustmentComponentItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((SurfaceTreePatternSwapInfoItemSetterTranslationCommon)((ISurfaceTreePatternSwapInfoItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static BlockHeightAdjustmentComponentItem DeepCopy(
-            this IBlockHeightAdjustmentComponentItemGetter item,
-            out BlockHeightAdjustmentComponentItem.ErrorMask errorMask,
-            BlockHeightAdjustmentComponentItem.TranslationMask? copyMask = null)
+        public static SurfaceTreePatternSwapInfoItem DeepCopy(
+            this ISurfaceTreePatternSwapInfoItemGetter item,
+            out SurfaceTreePatternSwapInfoItem.ErrorMask errorMask,
+            SurfaceTreePatternSwapInfoItem.TranslationMask? copyMask = null)
         {
-            return ((BlockHeightAdjustmentComponentItemSetterTranslationCommon)((IBlockHeightAdjustmentComponentItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((SurfaceTreePatternSwapInfoItemSetterTranslationCommon)((ISurfaceTreePatternSwapInfoItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static BlockHeightAdjustmentComponentItem DeepCopy(
-            this IBlockHeightAdjustmentComponentItemGetter item,
+        public static SurfaceTreePatternSwapInfoItem DeepCopy(
+            this ISurfaceTreePatternSwapInfoItemGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((BlockHeightAdjustmentComponentItemSetterTranslationCommon)((IBlockHeightAdjustmentComponentItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((SurfaceTreePatternSwapInfoItemSetterTranslationCommon)((ISurfaceTreePatternSwapInfoItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -611,11 +626,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IBlockHeightAdjustmentComponentItem item,
+            this ISurfaceTreePatternSwapInfoItem item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((BlockHeightAdjustmentComponentItemSetterCommon)((IBlockHeightAdjustmentComponentItemGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((SurfaceTreePatternSwapInfoItemSetterCommon)((ISurfaceTreePatternSwapInfoItemGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -631,17 +646,17 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum BlockHeightAdjustmentComponentItem_FieldIndex
+    internal enum SurfaceTreePatternSwapInfoItem_FieldIndex
     {
-        TerrainHeight = 0,
-        WaterHeight = 1,
+        SurfacePattern = 0,
+        Unknown = 1,
     }
     #endregion
 
     #region Registration
-    internal partial class BlockHeightAdjustmentComponentItem_Registration : ILoquiRegistration
+    internal partial class SurfaceTreePatternSwapInfoItem_Registration : ILoquiRegistration
     {
-        public static readonly BlockHeightAdjustmentComponentItem_Registration Instance = new BlockHeightAdjustmentComponentItem_Registration();
+        public static readonly SurfaceTreePatternSwapInfoItem_Registration Instance = new SurfaceTreePatternSwapInfoItem_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -649,23 +664,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(BlockHeightAdjustmentComponentItem.Mask<>);
+        public static readonly Type MaskType = typeof(SurfaceTreePatternSwapInfoItem.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(BlockHeightAdjustmentComponentItem.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(SurfaceTreePatternSwapInfoItem.ErrorMask);
 
-        public static readonly Type ClassType = typeof(BlockHeightAdjustmentComponentItem);
+        public static readonly Type ClassType = typeof(SurfaceTreePatternSwapInfoItem);
 
-        public static readonly Type GetterType = typeof(IBlockHeightAdjustmentComponentItemGetter);
+        public static readonly Type GetterType = typeof(ISurfaceTreePatternSwapInfoItemGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IBlockHeightAdjustmentComponentItem);
+        public static readonly Type SetterType = typeof(ISurfaceTreePatternSwapInfoItem);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.BlockHeightAdjustmentComponentItem";
+        public const string FullName = "Mutagen.Bethesda.Starfield.SurfaceTreePatternSwapInfoItem";
 
-        public const string Name = "BlockHeightAdjustmentComponentItem";
+        public const string Name = "SurfaceTreePatternSwapInfoItem";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -673,7 +688,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(BlockHeightAdjustmentComponentItemBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(SurfaceTreePatternSwapInfoItemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -704,29 +719,30 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class BlockHeightAdjustmentComponentItemSetterCommon
+    internal partial class SurfaceTreePatternSwapInfoItemSetterCommon
     {
-        public static readonly BlockHeightAdjustmentComponentItemSetterCommon Instance = new BlockHeightAdjustmentComponentItemSetterCommon();
+        public static readonly SurfaceTreePatternSwapInfoItemSetterCommon Instance = new SurfaceTreePatternSwapInfoItemSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IBlockHeightAdjustmentComponentItem item)
+        public void Clear(ISurfaceTreePatternSwapInfoItem item)
         {
             ClearPartial();
-            item.TerrainHeight = default(Single);
-            item.WaterHeight = default(Single);
+            item.SurfacePattern.Clear();
+            item.Unknown = default(SByte);
         }
         
         #region Mutagen
-        public void RemapLinks(IBlockHeightAdjustmentComponentItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(ISurfaceTreePatternSwapInfoItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.SurfacePattern.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IBlockHeightAdjustmentComponentItem item,
+            ISurfaceTreePatternSwapInfoItem item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -734,23 +750,23 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: BlockHeightAdjustmentComponentItemBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: SurfaceTreePatternSwapInfoItemBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class BlockHeightAdjustmentComponentItemCommon
+    internal partial class SurfaceTreePatternSwapInfoItemCommon
     {
-        public static readonly BlockHeightAdjustmentComponentItemCommon Instance = new BlockHeightAdjustmentComponentItemCommon();
+        public static readonly SurfaceTreePatternSwapInfoItemCommon Instance = new SurfaceTreePatternSwapInfoItemCommon();
 
-        public BlockHeightAdjustmentComponentItem.Mask<bool> GetEqualsMask(
-            IBlockHeightAdjustmentComponentItemGetter item,
-            IBlockHeightAdjustmentComponentItemGetter rhs,
+        public SurfaceTreePatternSwapInfoItem.Mask<bool> GetEqualsMask(
+            ISurfaceTreePatternSwapInfoItemGetter item,
+            ISurfaceTreePatternSwapInfoItemGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new BlockHeightAdjustmentComponentItem.Mask<bool>(false);
-            ((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new SurfaceTreePatternSwapInfoItem.Mask<bool>(false);
+            ((SurfaceTreePatternSwapInfoItemCommon)((ISurfaceTreePatternSwapInfoItemGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -759,19 +775,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IBlockHeightAdjustmentComponentItemGetter item,
-            IBlockHeightAdjustmentComponentItemGetter rhs,
-            BlockHeightAdjustmentComponentItem.Mask<bool> ret,
+            ISurfaceTreePatternSwapInfoItemGetter item,
+            ISurfaceTreePatternSwapInfoItemGetter rhs,
+            SurfaceTreePatternSwapInfoItem.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.TerrainHeight = item.TerrainHeight.EqualsWithin(rhs.TerrainHeight);
-            ret.WaterHeight = item.WaterHeight.EqualsWithin(rhs.WaterHeight);
+            ret.SurfacePattern = item.SurfacePattern.Equals(rhs.SurfacePattern);
+            ret.Unknown = item.Unknown == rhs.Unknown;
         }
         
         public string Print(
-            IBlockHeightAdjustmentComponentItemGetter item,
+            ISurfaceTreePatternSwapInfoItemGetter item,
             string? name = null,
-            BlockHeightAdjustmentComponentItem.Mask<bool>? printMask = null)
+            SurfaceTreePatternSwapInfoItem.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -783,18 +799,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IBlockHeightAdjustmentComponentItemGetter item,
+            ISurfaceTreePatternSwapInfoItemGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            BlockHeightAdjustmentComponentItem.Mask<bool>? printMask = null)
+            SurfaceTreePatternSwapInfoItem.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"BlockHeightAdjustmentComponentItem =>");
+                sb.AppendLine($"SurfaceTreePatternSwapInfoItem =>");
             }
             else
             {
-                sb.AppendLine($"{name} (BlockHeightAdjustmentComponentItem) =>");
+                sb.AppendLine($"{name} (SurfaceTreePatternSwapInfoItem) =>");
             }
             using (sb.Brace())
             {
@@ -806,43 +822,43 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IBlockHeightAdjustmentComponentItemGetter item,
+            ISurfaceTreePatternSwapInfoItemGetter item,
             StructuredStringBuilder sb,
-            BlockHeightAdjustmentComponentItem.Mask<bool>? printMask = null)
+            SurfaceTreePatternSwapInfoItem.Mask<bool>? printMask = null)
         {
-            if (printMask?.TerrainHeight ?? true)
+            if (printMask?.SurfacePattern ?? true)
             {
-                sb.AppendItem(item.TerrainHeight, "TerrainHeight");
+                sb.AppendItem(item.SurfacePattern.FormKey, "SurfacePattern");
             }
-            if (printMask?.WaterHeight ?? true)
+            if (printMask?.Unknown ?? true)
             {
-                sb.AppendItem(item.WaterHeight, "WaterHeight");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IBlockHeightAdjustmentComponentItemGetter? lhs,
-            IBlockHeightAdjustmentComponentItemGetter? rhs,
+            ISurfaceTreePatternSwapInfoItemGetter? lhs,
+            ISurfaceTreePatternSwapInfoItemGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)BlockHeightAdjustmentComponentItem_FieldIndex.TerrainHeight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SurfaceTreePatternSwapInfoItem_FieldIndex.SurfacePattern) ?? true))
             {
-                if (!lhs.TerrainHeight.EqualsWithin(rhs.TerrainHeight)) return false;
+                if (!lhs.SurfacePattern.Equals(rhs.SurfacePattern)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)BlockHeightAdjustmentComponentItem_FieldIndex.WaterHeight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SurfaceTreePatternSwapInfoItem_FieldIndex.Unknown) ?? true))
             {
-                if (!lhs.WaterHeight.EqualsWithin(rhs.WaterHeight)) return false;
+                if (lhs.Unknown != rhs.Unknown) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IBlockHeightAdjustmentComponentItemGetter item)
+        public virtual int GetHashCode(ISurfaceTreePatternSwapInfoItemGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.TerrainHeight);
-            hash.Add(item.WaterHeight);
+            hash.Add(item.SurfacePattern);
+            hash.Add(item.Unknown);
             return hash.ToHashCode();
         }
         
@@ -851,37 +867,38 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return BlockHeightAdjustmentComponentItem.GetNew();
+            return SurfaceTreePatternSwapInfoItem.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBlockHeightAdjustmentComponentItemGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ISurfaceTreePatternSwapInfoItemGetter obj)
         {
+            yield return FormLinkInformation.Factory(obj.SurfacePattern);
             yield break;
         }
         
         #endregion
         
     }
-    internal partial class BlockHeightAdjustmentComponentItemSetterTranslationCommon
+    internal partial class SurfaceTreePatternSwapInfoItemSetterTranslationCommon
     {
-        public static readonly BlockHeightAdjustmentComponentItemSetterTranslationCommon Instance = new BlockHeightAdjustmentComponentItemSetterTranslationCommon();
+        public static readonly SurfaceTreePatternSwapInfoItemSetterTranslationCommon Instance = new SurfaceTreePatternSwapInfoItemSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IBlockHeightAdjustmentComponentItem item,
-            IBlockHeightAdjustmentComponentItemGetter rhs,
+            ISurfaceTreePatternSwapInfoItem item,
+            ISurfaceTreePatternSwapInfoItemGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)BlockHeightAdjustmentComponentItem_FieldIndex.TerrainHeight) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SurfaceTreePatternSwapInfoItem_FieldIndex.SurfacePattern) ?? true))
             {
-                item.TerrainHeight = rhs.TerrainHeight;
+                item.SurfacePattern.SetTo(rhs.SurfacePattern.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)BlockHeightAdjustmentComponentItem_FieldIndex.WaterHeight) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SurfaceTreePatternSwapInfoItem_FieldIndex.Unknown) ?? true))
             {
-                item.WaterHeight = rhs.WaterHeight;
+                item.Unknown = rhs.Unknown;
             }
             DeepCopyInCustom(
                 item: item,
@@ -892,19 +909,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         partial void DeepCopyInCustom(
-            IBlockHeightAdjustmentComponentItem item,
-            IBlockHeightAdjustmentComponentItemGetter rhs,
+            ISurfaceTreePatternSwapInfoItem item,
+            ISurfaceTreePatternSwapInfoItemGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
         #endregion
         
-        public BlockHeightAdjustmentComponentItem DeepCopy(
-            IBlockHeightAdjustmentComponentItemGetter item,
-            BlockHeightAdjustmentComponentItem.TranslationMask? copyMask = null)
+        public SurfaceTreePatternSwapInfoItem DeepCopy(
+            ISurfaceTreePatternSwapInfoItemGetter item,
+            SurfaceTreePatternSwapInfoItem.TranslationMask? copyMask = null)
         {
-            BlockHeightAdjustmentComponentItem ret = (BlockHeightAdjustmentComponentItem)((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)item).CommonInstance()!).GetNew();
-            ((BlockHeightAdjustmentComponentItemSetterTranslationCommon)((IBlockHeightAdjustmentComponentItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            SurfaceTreePatternSwapInfoItem ret = (SurfaceTreePatternSwapInfoItem)((SurfaceTreePatternSwapInfoItemCommon)((ISurfaceTreePatternSwapInfoItemGetter)item).CommonInstance()!).GetNew();
+            ((SurfaceTreePatternSwapInfoItemSetterTranslationCommon)((ISurfaceTreePatternSwapInfoItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -913,30 +930,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public BlockHeightAdjustmentComponentItem DeepCopy(
-            IBlockHeightAdjustmentComponentItemGetter item,
-            out BlockHeightAdjustmentComponentItem.ErrorMask errorMask,
-            BlockHeightAdjustmentComponentItem.TranslationMask? copyMask = null)
+        public SurfaceTreePatternSwapInfoItem DeepCopy(
+            ISurfaceTreePatternSwapInfoItemGetter item,
+            out SurfaceTreePatternSwapInfoItem.ErrorMask errorMask,
+            SurfaceTreePatternSwapInfoItem.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            BlockHeightAdjustmentComponentItem ret = (BlockHeightAdjustmentComponentItem)((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)item).CommonInstance()!).GetNew();
-            ((BlockHeightAdjustmentComponentItemSetterTranslationCommon)((IBlockHeightAdjustmentComponentItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            SurfaceTreePatternSwapInfoItem ret = (SurfaceTreePatternSwapInfoItem)((SurfaceTreePatternSwapInfoItemCommon)((ISurfaceTreePatternSwapInfoItemGetter)item).CommonInstance()!).GetNew();
+            ((SurfaceTreePatternSwapInfoItemSetterTranslationCommon)((ISurfaceTreePatternSwapInfoItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = BlockHeightAdjustmentComponentItem.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SurfaceTreePatternSwapInfoItem.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public BlockHeightAdjustmentComponentItem DeepCopy(
-            IBlockHeightAdjustmentComponentItemGetter item,
+        public SurfaceTreePatternSwapInfoItem DeepCopy(
+            ISurfaceTreePatternSwapInfoItemGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            BlockHeightAdjustmentComponentItem ret = (BlockHeightAdjustmentComponentItem)((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)item).CommonInstance()!).GetNew();
-            ((BlockHeightAdjustmentComponentItemSetterTranslationCommon)((IBlockHeightAdjustmentComponentItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            SurfaceTreePatternSwapInfoItem ret = (SurfaceTreePatternSwapInfoItem)((SurfaceTreePatternSwapInfoItemCommon)((ISurfaceTreePatternSwapInfoItemGetter)item).CommonInstance()!).GetNew();
+            ((SurfaceTreePatternSwapInfoItemSetterTranslationCommon)((ISurfaceTreePatternSwapInfoItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -952,27 +969,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class BlockHeightAdjustmentComponentItem
+    public partial class SurfaceTreePatternSwapInfoItem
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BlockHeightAdjustmentComponentItem_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => BlockHeightAdjustmentComponentItem_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => SurfaceTreePatternSwapInfoItem_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SurfaceTreePatternSwapInfoItem_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => BlockHeightAdjustmentComponentItemCommon.Instance;
+        protected object CommonInstance() => SurfaceTreePatternSwapInfoItemCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return BlockHeightAdjustmentComponentItemSetterCommon.Instance;
+            return SurfaceTreePatternSwapInfoItemSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => BlockHeightAdjustmentComponentItemSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => SurfaceTreePatternSwapInfoItemSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IBlockHeightAdjustmentComponentItemGetter.CommonInstance() => this.CommonInstance();
+        object ISurfaceTreePatternSwapInfoItemGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IBlockHeightAdjustmentComponentItemGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ISurfaceTreePatternSwapInfoItemGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IBlockHeightAdjustmentComponentItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ISurfaceTreePatternSwapInfoItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -983,25 +1000,23 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class BlockHeightAdjustmentComponentItemBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class SurfaceTreePatternSwapInfoItemBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly BlockHeightAdjustmentComponentItemBinaryWriteTranslation Instance = new();
+        public static readonly SurfaceTreePatternSwapInfoItemBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            IBlockHeightAdjustmentComponentItemGetter item,
+            ISurfaceTreePatternSwapInfoItemGetter item,
             MutagenWriter writer)
         {
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.TerrainHeight);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.WaterHeight);
+                item: item.SurfacePattern);
+            writer.Write(item.Unknown);
         }
 
         public void Write(
             MutagenWriter writer,
-            IBlockHeightAdjustmentComponentItemGetter item,
+            ISurfaceTreePatternSwapInfoItemGetter item,
             TypedWriteParams translationParams)
         {
             WriteEmbedded(
@@ -1015,23 +1030,23 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IBlockHeightAdjustmentComponentItemGetter)item,
+                item: (ISurfaceTreePatternSwapInfoItemGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class BlockHeightAdjustmentComponentItemBinaryCreateTranslation
+    internal partial class SurfaceTreePatternSwapInfoItemBinaryCreateTranslation
     {
-        public static readonly BlockHeightAdjustmentComponentItemBinaryCreateTranslation Instance = new BlockHeightAdjustmentComponentItemBinaryCreateTranslation();
+        public static readonly SurfaceTreePatternSwapInfoItemBinaryCreateTranslation Instance = new SurfaceTreePatternSwapInfoItemBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IBlockHeightAdjustmentComponentItem item,
+            ISurfaceTreePatternSwapInfoItem item,
             MutagenFrame frame)
         {
-            item.TerrainHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.WaterHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.SurfacePattern.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Unknown = frame.ReadInt8();
         }
 
     }
@@ -1040,14 +1055,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class BlockHeightAdjustmentComponentItemBinaryTranslationMixIn
+    public static class SurfaceTreePatternSwapInfoItemBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IBlockHeightAdjustmentComponentItemGetter item,
+            this ISurfaceTreePatternSwapInfoItemGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((BlockHeightAdjustmentComponentItemBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((SurfaceTreePatternSwapInfoItemBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1060,52 +1075,53 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class BlockHeightAdjustmentComponentItemBinaryOverlay :
+    internal partial class SurfaceTreePatternSwapInfoItemBinaryOverlay :
         PluginBinaryOverlay,
-        IBlockHeightAdjustmentComponentItemGetter
+        ISurfaceTreePatternSwapInfoItemGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BlockHeightAdjustmentComponentItem_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => BlockHeightAdjustmentComponentItem_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => SurfaceTreePatternSwapInfoItem_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => SurfaceTreePatternSwapInfoItem_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => BlockHeightAdjustmentComponentItemCommon.Instance;
+        protected object CommonInstance() => SurfaceTreePatternSwapInfoItemCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => BlockHeightAdjustmentComponentItemSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => SurfaceTreePatternSwapInfoItemSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IBlockHeightAdjustmentComponentItemGetter.CommonInstance() => this.CommonInstance();
+        object ISurfaceTreePatternSwapInfoItemGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IBlockHeightAdjustmentComponentItemGetter.CommonSetterInstance() => null;
+        object? ISurfaceTreePatternSwapInfoItemGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IBlockHeightAdjustmentComponentItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ISurfaceTreePatternSwapInfoItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SurfaceTreePatternSwapInfoItemCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => BlockHeightAdjustmentComponentItemBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => SurfaceTreePatternSwapInfoItemBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((BlockHeightAdjustmentComponentItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((SurfaceTreePatternSwapInfoItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public Single TerrainHeight => _structData.Slice(0x0, 0x4).Float();
-        public Single WaterHeight => _structData.Slice(0x4, 0x4).Float();
+        public IFormLinkGetter<ISurfacePatternGetter> SurfacePattern => FormLinkBinaryTranslation.Instance.OverlayFactory<ISurfacePatternGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public SByte Unknown => (sbyte)_structData.Slice(0x4, 0x1)[0];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected BlockHeightAdjustmentComponentItemBinaryOverlay(
+        protected SurfaceTreePatternSwapInfoItemBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1115,7 +1131,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IBlockHeightAdjustmentComponentItemGetter BlockHeightAdjustmentComponentItemFactory(
+        public static ISurfaceTreePatternSwapInfoItemGetter SurfaceTreePatternSwapInfoItemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1124,13 +1140,13 @@ namespace Mutagen.Bethesda.Starfield
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
-                length: 0x8,
+                length: 0x5,
                 memoryPair: out var memoryPair,
                 offset: out var offset);
-            var ret = new BlockHeightAdjustmentComponentItemBinaryOverlay(
+            var ret = new SurfaceTreePatternSwapInfoItemBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            stream.Position += 0x8;
+            stream.Position += 0x5;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1138,12 +1154,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IBlockHeightAdjustmentComponentItemGetter BlockHeightAdjustmentComponentItemFactory(
+        public static ISurfaceTreePatternSwapInfoItemGetter SurfaceTreePatternSwapInfoItemFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return BlockHeightAdjustmentComponentItemFactory(
+            return SurfaceTreePatternSwapInfoItemFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1155,7 +1171,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            BlockHeightAdjustmentComponentItemMixIn.Print(
+            SurfaceTreePatternSwapInfoItemMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1166,16 +1182,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IBlockHeightAdjustmentComponentItemGetter rhs) return false;
-            return ((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ISurfaceTreePatternSwapInfoItemGetter rhs) return false;
+            return ((SurfaceTreePatternSwapInfoItemCommon)((ISurfaceTreePatternSwapInfoItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IBlockHeightAdjustmentComponentItemGetter? obj)
+        public bool Equals(ISurfaceTreePatternSwapInfoItemGetter? obj)
         {
-            return ((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((SurfaceTreePatternSwapInfoItemCommon)((ISurfaceTreePatternSwapInfoItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((SurfaceTreePatternSwapInfoItemCommon)((ISurfaceTreePatternSwapInfoItemGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -37,24 +38,31 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Starfield
 {
     #region Class
-    public partial class BlockHeightAdjustmentComponentItem :
-        IBlockHeightAdjustmentComponentItem,
-        IEquatable<IBlockHeightAdjustmentComponentItemGetter>,
-        ILoquiObjectSetter<BlockHeightAdjustmentComponentItem>
+    public partial class OverlayDesignatedPlacementInfoItem :
+        IEquatable<IOverlayDesignatedPlacementInfoItemGetter>,
+        ILoquiObjectSetter<OverlayDesignatedPlacementInfoItem>,
+        IOverlayDesignatedPlacementInfoItem
     {
         #region Ctor
-        public BlockHeightAdjustmentComponentItem()
+        public OverlayDesignatedPlacementInfoItem()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region TerrainHeight
-        public Single TerrainHeight { get; set; } = default(Single);
+        #region OverlayWorldspace
+        private readonly IFormLink<IWorldspaceGetter> _OverlayWorldspace = new FormLink<IWorldspaceGetter>();
+        public IFormLink<IWorldspaceGetter> OverlayWorldspace
+        {
+            get => _OverlayWorldspace;
+            set => _OverlayWorldspace.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IWorldspaceGetter> IOverlayDesignatedPlacementInfoItemGetter.OverlayWorldspace => this.OverlayWorldspace;
         #endregion
-        #region WaterHeight
-        public Single WaterHeight { get; set; } = default(Single);
+        #region Point
+        public P2Int Point { get; set; } = default(P2Int);
         #endregion
 
         #region To String
@@ -63,7 +71,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            BlockHeightAdjustmentComponentItemMixIn.Print(
+            OverlayDesignatedPlacementInfoItemMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -74,16 +82,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IBlockHeightAdjustmentComponentItemGetter rhs) return false;
-            return ((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IOverlayDesignatedPlacementInfoItemGetter rhs) return false;
+            return ((OverlayDesignatedPlacementInfoItemCommon)((IOverlayDesignatedPlacementInfoItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IBlockHeightAdjustmentComponentItemGetter? obj)
+        public bool Equals(IOverlayDesignatedPlacementInfoItemGetter? obj)
         {
-            return ((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((OverlayDesignatedPlacementInfoItemCommon)((IOverlayDesignatedPlacementInfoItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((OverlayDesignatedPlacementInfoItemCommon)((IOverlayDesignatedPlacementInfoItemGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -95,16 +103,16 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.TerrainHeight = initialValue;
-                this.WaterHeight = initialValue;
+                this.OverlayWorldspace = initialValue;
+                this.Point = initialValue;
             }
 
             public Mask(
-                TItem TerrainHeight,
-                TItem WaterHeight)
+                TItem OverlayWorldspace,
+                TItem Point)
             {
-                this.TerrainHeight = TerrainHeight;
-                this.WaterHeight = WaterHeight;
+                this.OverlayWorldspace = OverlayWorldspace;
+                this.Point = Point;
             }
 
             #pragma warning disable CS8618
@@ -116,8 +124,8 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem TerrainHeight;
-            public TItem WaterHeight;
+            public TItem OverlayWorldspace;
+            public TItem Point;
             #endregion
 
             #region Equals
@@ -130,15 +138,15 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.TerrainHeight, rhs.TerrainHeight)) return false;
-                if (!object.Equals(this.WaterHeight, rhs.WaterHeight)) return false;
+                if (!object.Equals(this.OverlayWorldspace, rhs.OverlayWorldspace)) return false;
+                if (!object.Equals(this.Point, rhs.Point)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.TerrainHeight);
-                hash.Add(this.WaterHeight);
+                hash.Add(this.OverlayWorldspace);
+                hash.Add(this.Point);
                 return hash.ToHashCode();
             }
 
@@ -147,8 +155,8 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.TerrainHeight)) return false;
-                if (!eval(this.WaterHeight)) return false;
+                if (!eval(this.OverlayWorldspace)) return false;
+                if (!eval(this.Point)) return false;
                 return true;
             }
             #endregion
@@ -156,8 +164,8 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.TerrainHeight)) return true;
-                if (eval(this.WaterHeight)) return true;
+                if (eval(this.OverlayWorldspace)) return true;
+                if (eval(this.Point)) return true;
                 return false;
             }
             #endregion
@@ -165,40 +173,40 @@ namespace Mutagen.Bethesda.Starfield
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new BlockHeightAdjustmentComponentItem.Mask<R>();
+                var ret = new OverlayDesignatedPlacementInfoItem.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.TerrainHeight = eval(this.TerrainHeight);
-                obj.WaterHeight = eval(this.WaterHeight);
+                obj.OverlayWorldspace = eval(this.OverlayWorldspace);
+                obj.Point = eval(this.Point);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(BlockHeightAdjustmentComponentItem.Mask<bool>? printMask = null)
+            public string Print(OverlayDesignatedPlacementInfoItem.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, BlockHeightAdjustmentComponentItem.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, OverlayDesignatedPlacementInfoItem.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(BlockHeightAdjustmentComponentItem.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(OverlayDesignatedPlacementInfoItem.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.TerrainHeight ?? true)
+                    if (printMask?.OverlayWorldspace ?? true)
                     {
-                        sb.AppendItem(TerrainHeight, "TerrainHeight");
+                        sb.AppendItem(OverlayWorldspace, "OverlayWorldspace");
                     }
-                    if (printMask?.WaterHeight ?? true)
+                    if (printMask?.Point ?? true)
                     {
-                        sb.AppendItem(WaterHeight, "WaterHeight");
+                        sb.AppendItem(Point, "Point");
                     }
                 }
             }
@@ -224,20 +232,20 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? TerrainHeight;
-            public Exception? WaterHeight;
+            public Exception? OverlayWorldspace;
+            public Exception? Point;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                BlockHeightAdjustmentComponentItem_FieldIndex enu = (BlockHeightAdjustmentComponentItem_FieldIndex)index;
+                OverlayDesignatedPlacementInfoItem_FieldIndex enu = (OverlayDesignatedPlacementInfoItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case BlockHeightAdjustmentComponentItem_FieldIndex.TerrainHeight:
-                        return TerrainHeight;
-                    case BlockHeightAdjustmentComponentItem_FieldIndex.WaterHeight:
-                        return WaterHeight;
+                    case OverlayDesignatedPlacementInfoItem_FieldIndex.OverlayWorldspace:
+                        return OverlayWorldspace;
+                    case OverlayDesignatedPlacementInfoItem_FieldIndex.Point:
+                        return Point;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -245,14 +253,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthException(int index, Exception ex)
             {
-                BlockHeightAdjustmentComponentItem_FieldIndex enu = (BlockHeightAdjustmentComponentItem_FieldIndex)index;
+                OverlayDesignatedPlacementInfoItem_FieldIndex enu = (OverlayDesignatedPlacementInfoItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case BlockHeightAdjustmentComponentItem_FieldIndex.TerrainHeight:
-                        this.TerrainHeight = ex;
+                    case OverlayDesignatedPlacementInfoItem_FieldIndex.OverlayWorldspace:
+                        this.OverlayWorldspace = ex;
                         break;
-                    case BlockHeightAdjustmentComponentItem_FieldIndex.WaterHeight:
-                        this.WaterHeight = ex;
+                    case OverlayDesignatedPlacementInfoItem_FieldIndex.Point:
+                        this.Point = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -261,14 +269,14 @@ namespace Mutagen.Bethesda.Starfield
 
             public void SetNthMask(int index, object obj)
             {
-                BlockHeightAdjustmentComponentItem_FieldIndex enu = (BlockHeightAdjustmentComponentItem_FieldIndex)index;
+                OverlayDesignatedPlacementInfoItem_FieldIndex enu = (OverlayDesignatedPlacementInfoItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case BlockHeightAdjustmentComponentItem_FieldIndex.TerrainHeight:
-                        this.TerrainHeight = (Exception?)obj;
+                    case OverlayDesignatedPlacementInfoItem_FieldIndex.OverlayWorldspace:
+                        this.OverlayWorldspace = (Exception?)obj;
                         break;
-                    case BlockHeightAdjustmentComponentItem_FieldIndex.WaterHeight:
-                        this.WaterHeight = (Exception?)obj;
+                    case OverlayDesignatedPlacementInfoItem_FieldIndex.Point:
+                        this.Point = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -278,8 +286,8 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (TerrainHeight != null) return true;
-                if (WaterHeight != null) return true;
+                if (OverlayWorldspace != null) return true;
+                if (Point != null) return true;
                 return false;
             }
             #endregion
@@ -306,10 +314,10 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(TerrainHeight, "TerrainHeight");
+                    sb.AppendItem(OverlayWorldspace, "OverlayWorldspace");
                 }
                 {
-                    sb.AppendItem(WaterHeight, "WaterHeight");
+                    sb.AppendItem(Point, "Point");
                 }
             }
             #endregion
@@ -319,8 +327,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.TerrainHeight = this.TerrainHeight.Combine(rhs.TerrainHeight);
-                ret.WaterHeight = this.WaterHeight.Combine(rhs.WaterHeight);
+                ret.OverlayWorldspace = this.OverlayWorldspace.Combine(rhs.OverlayWorldspace);
+                ret.Point = this.Point.Combine(rhs.Point);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -344,8 +352,8 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool TerrainHeight;
-            public bool WaterHeight;
+            public bool OverlayWorldspace;
+            public bool Point;
             #endregion
 
             #region Ctors
@@ -355,8 +363,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.TerrainHeight = defaultOn;
-                this.WaterHeight = defaultOn;
+                this.OverlayWorldspace = defaultOn;
+                this.Point = defaultOn;
             }
 
             #endregion
@@ -372,8 +380,8 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((TerrainHeight, null));
-                ret.Add((WaterHeight, null));
+                ret.Add((OverlayWorldspace, null));
+                ret.Add((Point, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -384,27 +392,32 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
 
+        #region Mutagen
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => OverlayDesignatedPlacementInfoItemCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OverlayDesignatedPlacementInfoItemSetterCommon.Instance.RemapLinks(this, mapping);
+        #endregion
+
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => BlockHeightAdjustmentComponentItemBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => OverlayDesignatedPlacementInfoItemBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((BlockHeightAdjustmentComponentItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((OverlayDesignatedPlacementInfoItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static BlockHeightAdjustmentComponentItem CreateFromBinary(
+        public static OverlayDesignatedPlacementInfoItem CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new BlockHeightAdjustmentComponentItem();
-            ((BlockHeightAdjustmentComponentItemSetterCommon)((IBlockHeightAdjustmentComponentItemGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new OverlayDesignatedPlacementInfoItem();
+            ((OverlayDesignatedPlacementInfoItemSetterCommon)((IOverlayDesignatedPlacementInfoItemGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -415,7 +428,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out BlockHeightAdjustmentComponentItem item,
+            out OverlayDesignatedPlacementInfoItem item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -430,30 +443,32 @@ namespace Mutagen.Bethesda.Starfield
 
         void IClearable.Clear()
         {
-            ((BlockHeightAdjustmentComponentItemSetterCommon)((IBlockHeightAdjustmentComponentItemGetter)this).CommonSetterInstance()!).Clear(this);
+            ((OverlayDesignatedPlacementInfoItemSetterCommon)((IOverlayDesignatedPlacementInfoItemGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static BlockHeightAdjustmentComponentItem GetNew()
+        internal static OverlayDesignatedPlacementInfoItem GetNew()
         {
-            return new BlockHeightAdjustmentComponentItem();
+            return new OverlayDesignatedPlacementInfoItem();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IBlockHeightAdjustmentComponentItem :
-        IBlockHeightAdjustmentComponentItemGetter,
-        ILoquiObjectSetter<IBlockHeightAdjustmentComponentItem>
+    public partial interface IOverlayDesignatedPlacementInfoItem :
+        IFormLinkContainer,
+        ILoquiObjectSetter<IOverlayDesignatedPlacementInfoItem>,
+        IOverlayDesignatedPlacementInfoItemGetter
     {
-        new Single TerrainHeight { get; set; }
-        new Single WaterHeight { get; set; }
+        new IFormLink<IWorldspaceGetter> OverlayWorldspace { get; set; }
+        new P2Int Point { get; set; }
     }
 
-    public partial interface IBlockHeightAdjustmentComponentItemGetter :
+    public partial interface IOverlayDesignatedPlacementInfoItemGetter :
         ILoquiObject,
         IBinaryItem,
-        ILoquiObject<IBlockHeightAdjustmentComponentItemGetter>
+        IFormLinkContainerGetter,
+        ILoquiObject<IOverlayDesignatedPlacementInfoItemGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -461,51 +476,51 @@ namespace Mutagen.Bethesda.Starfield
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => BlockHeightAdjustmentComponentItem_Registration.Instance;
-        Single TerrainHeight { get; }
-        Single WaterHeight { get; }
+        static ILoquiRegistration StaticRegistration => OverlayDesignatedPlacementInfoItem_Registration.Instance;
+        IFormLinkGetter<IWorldspaceGetter> OverlayWorldspace { get; }
+        P2Int Point { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class BlockHeightAdjustmentComponentItemMixIn
+    public static partial class OverlayDesignatedPlacementInfoItemMixIn
     {
-        public static void Clear(this IBlockHeightAdjustmentComponentItem item)
+        public static void Clear(this IOverlayDesignatedPlacementInfoItem item)
         {
-            ((BlockHeightAdjustmentComponentItemSetterCommon)((IBlockHeightAdjustmentComponentItemGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((OverlayDesignatedPlacementInfoItemSetterCommon)((IOverlayDesignatedPlacementInfoItemGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static BlockHeightAdjustmentComponentItem.Mask<bool> GetEqualsMask(
-            this IBlockHeightAdjustmentComponentItemGetter item,
-            IBlockHeightAdjustmentComponentItemGetter rhs,
+        public static OverlayDesignatedPlacementInfoItem.Mask<bool> GetEqualsMask(
+            this IOverlayDesignatedPlacementInfoItemGetter item,
+            IOverlayDesignatedPlacementInfoItemGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((OverlayDesignatedPlacementInfoItemCommon)((IOverlayDesignatedPlacementInfoItemGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IBlockHeightAdjustmentComponentItemGetter item,
+            this IOverlayDesignatedPlacementInfoItemGetter item,
             string? name = null,
-            BlockHeightAdjustmentComponentItem.Mask<bool>? printMask = null)
+            OverlayDesignatedPlacementInfoItem.Mask<bool>? printMask = null)
         {
-            return ((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)item).CommonInstance()!).Print(
+            return ((OverlayDesignatedPlacementInfoItemCommon)((IOverlayDesignatedPlacementInfoItemGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IBlockHeightAdjustmentComponentItemGetter item,
+            this IOverlayDesignatedPlacementInfoItemGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            BlockHeightAdjustmentComponentItem.Mask<bool>? printMask = null)
+            OverlayDesignatedPlacementInfoItem.Mask<bool>? printMask = null)
         {
-            ((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)item).CommonInstance()!).Print(
+            ((OverlayDesignatedPlacementInfoItemCommon)((IOverlayDesignatedPlacementInfoItemGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -513,21 +528,21 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static bool Equals(
-            this IBlockHeightAdjustmentComponentItemGetter item,
-            IBlockHeightAdjustmentComponentItemGetter rhs,
-            BlockHeightAdjustmentComponentItem.TranslationMask? equalsMask = null)
+            this IOverlayDesignatedPlacementInfoItemGetter item,
+            IOverlayDesignatedPlacementInfoItemGetter rhs,
+            OverlayDesignatedPlacementInfoItem.TranslationMask? equalsMask = null)
         {
-            return ((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)item).CommonInstance()!).Equals(
+            return ((OverlayDesignatedPlacementInfoItemCommon)((IOverlayDesignatedPlacementInfoItemGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IBlockHeightAdjustmentComponentItem lhs,
-            IBlockHeightAdjustmentComponentItemGetter rhs)
+            this IOverlayDesignatedPlacementInfoItem lhs,
+            IOverlayDesignatedPlacementInfoItemGetter rhs)
         {
-            ((BlockHeightAdjustmentComponentItemSetterTranslationCommon)((IBlockHeightAdjustmentComponentItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((OverlayDesignatedPlacementInfoItemSetterTranslationCommon)((IOverlayDesignatedPlacementInfoItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -536,11 +551,11 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IBlockHeightAdjustmentComponentItem lhs,
-            IBlockHeightAdjustmentComponentItemGetter rhs,
-            BlockHeightAdjustmentComponentItem.TranslationMask? copyMask = null)
+            this IOverlayDesignatedPlacementInfoItem lhs,
+            IOverlayDesignatedPlacementInfoItemGetter rhs,
+            OverlayDesignatedPlacementInfoItem.TranslationMask? copyMask = null)
         {
-            ((BlockHeightAdjustmentComponentItemSetterTranslationCommon)((IBlockHeightAdjustmentComponentItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((OverlayDesignatedPlacementInfoItemSetterTranslationCommon)((IOverlayDesignatedPlacementInfoItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -549,28 +564,28 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public static void DeepCopyIn(
-            this IBlockHeightAdjustmentComponentItem lhs,
-            IBlockHeightAdjustmentComponentItemGetter rhs,
-            out BlockHeightAdjustmentComponentItem.ErrorMask errorMask,
-            BlockHeightAdjustmentComponentItem.TranslationMask? copyMask = null)
+            this IOverlayDesignatedPlacementInfoItem lhs,
+            IOverlayDesignatedPlacementInfoItemGetter rhs,
+            out OverlayDesignatedPlacementInfoItem.ErrorMask errorMask,
+            OverlayDesignatedPlacementInfoItem.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((BlockHeightAdjustmentComponentItemSetterTranslationCommon)((IBlockHeightAdjustmentComponentItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((OverlayDesignatedPlacementInfoItemSetterTranslationCommon)((IOverlayDesignatedPlacementInfoItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = BlockHeightAdjustmentComponentItem.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = OverlayDesignatedPlacementInfoItem.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IBlockHeightAdjustmentComponentItem lhs,
-            IBlockHeightAdjustmentComponentItemGetter rhs,
+            this IOverlayDesignatedPlacementInfoItem lhs,
+            IOverlayDesignatedPlacementInfoItemGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((BlockHeightAdjustmentComponentItemSetterTranslationCommon)((IBlockHeightAdjustmentComponentItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((OverlayDesignatedPlacementInfoItemSetterTranslationCommon)((IOverlayDesignatedPlacementInfoItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -578,32 +593,32 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: false);
         }
 
-        public static BlockHeightAdjustmentComponentItem DeepCopy(
-            this IBlockHeightAdjustmentComponentItemGetter item,
-            BlockHeightAdjustmentComponentItem.TranslationMask? copyMask = null)
+        public static OverlayDesignatedPlacementInfoItem DeepCopy(
+            this IOverlayDesignatedPlacementInfoItemGetter item,
+            OverlayDesignatedPlacementInfoItem.TranslationMask? copyMask = null)
         {
-            return ((BlockHeightAdjustmentComponentItemSetterTranslationCommon)((IBlockHeightAdjustmentComponentItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((OverlayDesignatedPlacementInfoItemSetterTranslationCommon)((IOverlayDesignatedPlacementInfoItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static BlockHeightAdjustmentComponentItem DeepCopy(
-            this IBlockHeightAdjustmentComponentItemGetter item,
-            out BlockHeightAdjustmentComponentItem.ErrorMask errorMask,
-            BlockHeightAdjustmentComponentItem.TranslationMask? copyMask = null)
+        public static OverlayDesignatedPlacementInfoItem DeepCopy(
+            this IOverlayDesignatedPlacementInfoItemGetter item,
+            out OverlayDesignatedPlacementInfoItem.ErrorMask errorMask,
+            OverlayDesignatedPlacementInfoItem.TranslationMask? copyMask = null)
         {
-            return ((BlockHeightAdjustmentComponentItemSetterTranslationCommon)((IBlockHeightAdjustmentComponentItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((OverlayDesignatedPlacementInfoItemSetterTranslationCommon)((IOverlayDesignatedPlacementInfoItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static BlockHeightAdjustmentComponentItem DeepCopy(
-            this IBlockHeightAdjustmentComponentItemGetter item,
+        public static OverlayDesignatedPlacementInfoItem DeepCopy(
+            this IOverlayDesignatedPlacementInfoItemGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((BlockHeightAdjustmentComponentItemSetterTranslationCommon)((IBlockHeightAdjustmentComponentItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((OverlayDesignatedPlacementInfoItemSetterTranslationCommon)((IOverlayDesignatedPlacementInfoItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -611,11 +626,11 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IBlockHeightAdjustmentComponentItem item,
+            this IOverlayDesignatedPlacementInfoItem item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((BlockHeightAdjustmentComponentItemSetterCommon)((IBlockHeightAdjustmentComponentItemGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((OverlayDesignatedPlacementInfoItemSetterCommon)((IOverlayDesignatedPlacementInfoItemGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -631,17 +646,17 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Field Index
-    internal enum BlockHeightAdjustmentComponentItem_FieldIndex
+    internal enum OverlayDesignatedPlacementInfoItem_FieldIndex
     {
-        TerrainHeight = 0,
-        WaterHeight = 1,
+        OverlayWorldspace = 0,
+        Point = 1,
     }
     #endregion
 
     #region Registration
-    internal partial class BlockHeightAdjustmentComponentItem_Registration : ILoquiRegistration
+    internal partial class OverlayDesignatedPlacementInfoItem_Registration : ILoquiRegistration
     {
-        public static readonly BlockHeightAdjustmentComponentItem_Registration Instance = new BlockHeightAdjustmentComponentItem_Registration();
+        public static readonly OverlayDesignatedPlacementInfoItem_Registration Instance = new OverlayDesignatedPlacementInfoItem_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
@@ -649,23 +664,23 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(BlockHeightAdjustmentComponentItem.Mask<>);
+        public static readonly Type MaskType = typeof(OverlayDesignatedPlacementInfoItem.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(BlockHeightAdjustmentComponentItem.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(OverlayDesignatedPlacementInfoItem.ErrorMask);
 
-        public static readonly Type ClassType = typeof(BlockHeightAdjustmentComponentItem);
+        public static readonly Type ClassType = typeof(OverlayDesignatedPlacementInfoItem);
 
-        public static readonly Type GetterType = typeof(IBlockHeightAdjustmentComponentItemGetter);
+        public static readonly Type GetterType = typeof(IOverlayDesignatedPlacementInfoItemGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IBlockHeightAdjustmentComponentItem);
+        public static readonly Type SetterType = typeof(IOverlayDesignatedPlacementInfoItem);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Starfield.BlockHeightAdjustmentComponentItem";
+        public const string FullName = "Mutagen.Bethesda.Starfield.OverlayDesignatedPlacementInfoItem";
 
-        public const string Name = "BlockHeightAdjustmentComponentItem";
+        public const string Name = "OverlayDesignatedPlacementInfoItem";
 
         public const string Namespace = "Mutagen.Bethesda.Starfield";
 
@@ -673,7 +688,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(BlockHeightAdjustmentComponentItemBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(OverlayDesignatedPlacementInfoItemBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -704,29 +719,30 @@ namespace Mutagen.Bethesda.Starfield
     #endregion
 
     #region Common
-    internal partial class BlockHeightAdjustmentComponentItemSetterCommon
+    internal partial class OverlayDesignatedPlacementInfoItemSetterCommon
     {
-        public static readonly BlockHeightAdjustmentComponentItemSetterCommon Instance = new BlockHeightAdjustmentComponentItemSetterCommon();
+        public static readonly OverlayDesignatedPlacementInfoItemSetterCommon Instance = new OverlayDesignatedPlacementInfoItemSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IBlockHeightAdjustmentComponentItem item)
+        public void Clear(IOverlayDesignatedPlacementInfoItem item)
         {
             ClearPartial();
-            item.TerrainHeight = default(Single);
-            item.WaterHeight = default(Single);
+            item.OverlayWorldspace.Clear();
+            item.Point = default(P2Int);
         }
         
         #region Mutagen
-        public void RemapLinks(IBlockHeightAdjustmentComponentItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IOverlayDesignatedPlacementInfoItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.OverlayWorldspace.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IBlockHeightAdjustmentComponentItem item,
+            IOverlayDesignatedPlacementInfoItem item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -734,23 +750,23 @@ namespace Mutagen.Bethesda.Starfield
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: BlockHeightAdjustmentComponentItemBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: OverlayDesignatedPlacementInfoItemBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class BlockHeightAdjustmentComponentItemCommon
+    internal partial class OverlayDesignatedPlacementInfoItemCommon
     {
-        public static readonly BlockHeightAdjustmentComponentItemCommon Instance = new BlockHeightAdjustmentComponentItemCommon();
+        public static readonly OverlayDesignatedPlacementInfoItemCommon Instance = new OverlayDesignatedPlacementInfoItemCommon();
 
-        public BlockHeightAdjustmentComponentItem.Mask<bool> GetEqualsMask(
-            IBlockHeightAdjustmentComponentItemGetter item,
-            IBlockHeightAdjustmentComponentItemGetter rhs,
+        public OverlayDesignatedPlacementInfoItem.Mask<bool> GetEqualsMask(
+            IOverlayDesignatedPlacementInfoItemGetter item,
+            IOverlayDesignatedPlacementInfoItemGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new BlockHeightAdjustmentComponentItem.Mask<bool>(false);
-            ((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new OverlayDesignatedPlacementInfoItem.Mask<bool>(false);
+            ((OverlayDesignatedPlacementInfoItemCommon)((IOverlayDesignatedPlacementInfoItemGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -759,19 +775,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void FillEqualsMask(
-            IBlockHeightAdjustmentComponentItemGetter item,
-            IBlockHeightAdjustmentComponentItemGetter rhs,
-            BlockHeightAdjustmentComponentItem.Mask<bool> ret,
+            IOverlayDesignatedPlacementInfoItemGetter item,
+            IOverlayDesignatedPlacementInfoItemGetter rhs,
+            OverlayDesignatedPlacementInfoItem.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.TerrainHeight = item.TerrainHeight.EqualsWithin(rhs.TerrainHeight);
-            ret.WaterHeight = item.WaterHeight.EqualsWithin(rhs.WaterHeight);
+            ret.OverlayWorldspace = item.OverlayWorldspace.Equals(rhs.OverlayWorldspace);
+            ret.Point = item.Point.Equals(rhs.Point);
         }
         
         public string Print(
-            IBlockHeightAdjustmentComponentItemGetter item,
+            IOverlayDesignatedPlacementInfoItemGetter item,
             string? name = null,
-            BlockHeightAdjustmentComponentItem.Mask<bool>? printMask = null)
+            OverlayDesignatedPlacementInfoItem.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -783,18 +799,18 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         public void Print(
-            IBlockHeightAdjustmentComponentItemGetter item,
+            IOverlayDesignatedPlacementInfoItemGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            BlockHeightAdjustmentComponentItem.Mask<bool>? printMask = null)
+            OverlayDesignatedPlacementInfoItem.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"BlockHeightAdjustmentComponentItem =>");
+                sb.AppendLine($"OverlayDesignatedPlacementInfoItem =>");
             }
             else
             {
-                sb.AppendLine($"{name} (BlockHeightAdjustmentComponentItem) =>");
+                sb.AppendLine($"{name} (OverlayDesignatedPlacementInfoItem) =>");
             }
             using (sb.Brace())
             {
@@ -806,43 +822,43 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         protected static void ToStringFields(
-            IBlockHeightAdjustmentComponentItemGetter item,
+            IOverlayDesignatedPlacementInfoItemGetter item,
             StructuredStringBuilder sb,
-            BlockHeightAdjustmentComponentItem.Mask<bool>? printMask = null)
+            OverlayDesignatedPlacementInfoItem.Mask<bool>? printMask = null)
         {
-            if (printMask?.TerrainHeight ?? true)
+            if (printMask?.OverlayWorldspace ?? true)
             {
-                sb.AppendItem(item.TerrainHeight, "TerrainHeight");
+                sb.AppendItem(item.OverlayWorldspace.FormKey, "OverlayWorldspace");
             }
-            if (printMask?.WaterHeight ?? true)
+            if (printMask?.Point ?? true)
             {
-                sb.AppendItem(item.WaterHeight, "WaterHeight");
+                sb.AppendItem(item.Point, "Point");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IBlockHeightAdjustmentComponentItemGetter? lhs,
-            IBlockHeightAdjustmentComponentItemGetter? rhs,
+            IOverlayDesignatedPlacementInfoItemGetter? lhs,
+            IOverlayDesignatedPlacementInfoItemGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)BlockHeightAdjustmentComponentItem_FieldIndex.TerrainHeight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OverlayDesignatedPlacementInfoItem_FieldIndex.OverlayWorldspace) ?? true))
             {
-                if (!lhs.TerrainHeight.EqualsWithin(rhs.TerrainHeight)) return false;
+                if (!lhs.OverlayWorldspace.Equals(rhs.OverlayWorldspace)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)BlockHeightAdjustmentComponentItem_FieldIndex.WaterHeight) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OverlayDesignatedPlacementInfoItem_FieldIndex.Point) ?? true))
             {
-                if (!lhs.WaterHeight.EqualsWithin(rhs.WaterHeight)) return false;
+                if (!lhs.Point.Equals(rhs.Point)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(IBlockHeightAdjustmentComponentItemGetter item)
+        public virtual int GetHashCode(IOverlayDesignatedPlacementInfoItemGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.TerrainHeight);
-            hash.Add(item.WaterHeight);
+            hash.Add(item.OverlayWorldspace);
+            hash.Add(item.Point);
             return hash.ToHashCode();
         }
         
@@ -851,37 +867,38 @@ namespace Mutagen.Bethesda.Starfield
         
         public object GetNew()
         {
-            return BlockHeightAdjustmentComponentItem.GetNew();
+            return OverlayDesignatedPlacementInfoItem.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IBlockHeightAdjustmentComponentItemGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IOverlayDesignatedPlacementInfoItemGetter obj)
         {
+            yield return FormLinkInformation.Factory(obj.OverlayWorldspace);
             yield break;
         }
         
         #endregion
         
     }
-    internal partial class BlockHeightAdjustmentComponentItemSetterTranslationCommon
+    internal partial class OverlayDesignatedPlacementInfoItemSetterTranslationCommon
     {
-        public static readonly BlockHeightAdjustmentComponentItemSetterTranslationCommon Instance = new BlockHeightAdjustmentComponentItemSetterTranslationCommon();
+        public static readonly OverlayDesignatedPlacementInfoItemSetterTranslationCommon Instance = new OverlayDesignatedPlacementInfoItemSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            IBlockHeightAdjustmentComponentItem item,
-            IBlockHeightAdjustmentComponentItemGetter rhs,
+            IOverlayDesignatedPlacementInfoItem item,
+            IOverlayDesignatedPlacementInfoItemGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)BlockHeightAdjustmentComponentItem_FieldIndex.TerrainHeight) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)OverlayDesignatedPlacementInfoItem_FieldIndex.OverlayWorldspace) ?? true))
             {
-                item.TerrainHeight = rhs.TerrainHeight;
+                item.OverlayWorldspace.SetTo(rhs.OverlayWorldspace.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)BlockHeightAdjustmentComponentItem_FieldIndex.WaterHeight) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)OverlayDesignatedPlacementInfoItem_FieldIndex.Point) ?? true))
             {
-                item.WaterHeight = rhs.WaterHeight;
+                item.Point = rhs.Point;
             }
             DeepCopyInCustom(
                 item: item,
@@ -892,19 +909,19 @@ namespace Mutagen.Bethesda.Starfield
         }
         
         partial void DeepCopyInCustom(
-            IBlockHeightAdjustmentComponentItem item,
-            IBlockHeightAdjustmentComponentItemGetter rhs,
+            IOverlayDesignatedPlacementInfoItem item,
+            IOverlayDesignatedPlacementInfoItemGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
         #endregion
         
-        public BlockHeightAdjustmentComponentItem DeepCopy(
-            IBlockHeightAdjustmentComponentItemGetter item,
-            BlockHeightAdjustmentComponentItem.TranslationMask? copyMask = null)
+        public OverlayDesignatedPlacementInfoItem DeepCopy(
+            IOverlayDesignatedPlacementInfoItemGetter item,
+            OverlayDesignatedPlacementInfoItem.TranslationMask? copyMask = null)
         {
-            BlockHeightAdjustmentComponentItem ret = (BlockHeightAdjustmentComponentItem)((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)item).CommonInstance()!).GetNew();
-            ((BlockHeightAdjustmentComponentItemSetterTranslationCommon)((IBlockHeightAdjustmentComponentItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            OverlayDesignatedPlacementInfoItem ret = (OverlayDesignatedPlacementInfoItem)((OverlayDesignatedPlacementInfoItemCommon)((IOverlayDesignatedPlacementInfoItemGetter)item).CommonInstance()!).GetNew();
+            ((OverlayDesignatedPlacementInfoItemSetterTranslationCommon)((IOverlayDesignatedPlacementInfoItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -913,30 +930,30 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
         
-        public BlockHeightAdjustmentComponentItem DeepCopy(
-            IBlockHeightAdjustmentComponentItemGetter item,
-            out BlockHeightAdjustmentComponentItem.ErrorMask errorMask,
-            BlockHeightAdjustmentComponentItem.TranslationMask? copyMask = null)
+        public OverlayDesignatedPlacementInfoItem DeepCopy(
+            IOverlayDesignatedPlacementInfoItemGetter item,
+            out OverlayDesignatedPlacementInfoItem.ErrorMask errorMask,
+            OverlayDesignatedPlacementInfoItem.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            BlockHeightAdjustmentComponentItem ret = (BlockHeightAdjustmentComponentItem)((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)item).CommonInstance()!).GetNew();
-            ((BlockHeightAdjustmentComponentItemSetterTranslationCommon)((IBlockHeightAdjustmentComponentItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            OverlayDesignatedPlacementInfoItem ret = (OverlayDesignatedPlacementInfoItem)((OverlayDesignatedPlacementInfoItemCommon)((IOverlayDesignatedPlacementInfoItemGetter)item).CommonInstance()!).GetNew();
+            ((OverlayDesignatedPlacementInfoItemSetterTranslationCommon)((IOverlayDesignatedPlacementInfoItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = BlockHeightAdjustmentComponentItem.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = OverlayDesignatedPlacementInfoItem.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public BlockHeightAdjustmentComponentItem DeepCopy(
-            IBlockHeightAdjustmentComponentItemGetter item,
+        public OverlayDesignatedPlacementInfoItem DeepCopy(
+            IOverlayDesignatedPlacementInfoItemGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            BlockHeightAdjustmentComponentItem ret = (BlockHeightAdjustmentComponentItem)((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)item).CommonInstance()!).GetNew();
-            ((BlockHeightAdjustmentComponentItemSetterTranslationCommon)((IBlockHeightAdjustmentComponentItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            OverlayDesignatedPlacementInfoItem ret = (OverlayDesignatedPlacementInfoItem)((OverlayDesignatedPlacementInfoItemCommon)((IOverlayDesignatedPlacementInfoItemGetter)item).CommonInstance()!).GetNew();
+            ((OverlayDesignatedPlacementInfoItemSetterTranslationCommon)((IOverlayDesignatedPlacementInfoItemGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -952,27 +969,27 @@ namespace Mutagen.Bethesda.Starfield
 
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class BlockHeightAdjustmentComponentItem
+    public partial class OverlayDesignatedPlacementInfoItem
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BlockHeightAdjustmentComponentItem_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => BlockHeightAdjustmentComponentItem_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => OverlayDesignatedPlacementInfoItem_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => OverlayDesignatedPlacementInfoItem_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => BlockHeightAdjustmentComponentItemCommon.Instance;
+        protected object CommonInstance() => OverlayDesignatedPlacementInfoItemCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return BlockHeightAdjustmentComponentItemSetterCommon.Instance;
+            return OverlayDesignatedPlacementInfoItemSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => BlockHeightAdjustmentComponentItemSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => OverlayDesignatedPlacementInfoItemSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IBlockHeightAdjustmentComponentItemGetter.CommonInstance() => this.CommonInstance();
+        object IOverlayDesignatedPlacementInfoItemGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IBlockHeightAdjustmentComponentItemGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IOverlayDesignatedPlacementInfoItemGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IBlockHeightAdjustmentComponentItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IOverlayDesignatedPlacementInfoItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -983,25 +1000,25 @@ namespace Mutagen.Bethesda.Starfield
 #region Binary Translation
 namespace Mutagen.Bethesda.Starfield
 {
-    public partial class BlockHeightAdjustmentComponentItemBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class OverlayDesignatedPlacementInfoItemBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly BlockHeightAdjustmentComponentItemBinaryWriteTranslation Instance = new();
+        public static readonly OverlayDesignatedPlacementInfoItemBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            IBlockHeightAdjustmentComponentItemGetter item,
+            IOverlayDesignatedPlacementInfoItemGetter item,
             MutagenWriter writer)
         {
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.TerrainHeight);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                item: item.OverlayWorldspace);
+            P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.WaterHeight);
+                item: item.Point);
         }
 
         public void Write(
             MutagenWriter writer,
-            IBlockHeightAdjustmentComponentItemGetter item,
+            IOverlayDesignatedPlacementInfoItemGetter item,
             TypedWriteParams translationParams)
         {
             WriteEmbedded(
@@ -1015,23 +1032,23 @@ namespace Mutagen.Bethesda.Starfield
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IBlockHeightAdjustmentComponentItemGetter)item,
+                item: (IOverlayDesignatedPlacementInfoItemGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class BlockHeightAdjustmentComponentItemBinaryCreateTranslation
+    internal partial class OverlayDesignatedPlacementInfoItemBinaryCreateTranslation
     {
-        public static readonly BlockHeightAdjustmentComponentItemBinaryCreateTranslation Instance = new BlockHeightAdjustmentComponentItemBinaryCreateTranslation();
+        public static readonly OverlayDesignatedPlacementInfoItemBinaryCreateTranslation Instance = new OverlayDesignatedPlacementInfoItemBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IBlockHeightAdjustmentComponentItem item,
+            IOverlayDesignatedPlacementInfoItem item,
             MutagenFrame frame)
         {
-            item.TerrainHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.WaterHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.OverlayWorldspace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Point = P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -1040,14 +1057,14 @@ namespace Mutagen.Bethesda.Starfield
 namespace Mutagen.Bethesda.Starfield
 {
     #region Binary Write Mixins
-    public static class BlockHeightAdjustmentComponentItemBinaryTranslationMixIn
+    public static class OverlayDesignatedPlacementInfoItemBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IBlockHeightAdjustmentComponentItemGetter item,
+            this IOverlayDesignatedPlacementInfoItemGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((BlockHeightAdjustmentComponentItemBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((OverlayDesignatedPlacementInfoItemBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1060,52 +1077,53 @@ namespace Mutagen.Bethesda.Starfield
 }
 namespace Mutagen.Bethesda.Starfield
 {
-    internal partial class BlockHeightAdjustmentComponentItemBinaryOverlay :
+    internal partial class OverlayDesignatedPlacementInfoItemBinaryOverlay :
         PluginBinaryOverlay,
-        IBlockHeightAdjustmentComponentItemGetter
+        IOverlayDesignatedPlacementInfoItemGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => BlockHeightAdjustmentComponentItem_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => BlockHeightAdjustmentComponentItem_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => OverlayDesignatedPlacementInfoItem_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => OverlayDesignatedPlacementInfoItem_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => BlockHeightAdjustmentComponentItemCommon.Instance;
+        protected object CommonInstance() => OverlayDesignatedPlacementInfoItemCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => BlockHeightAdjustmentComponentItemSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => OverlayDesignatedPlacementInfoItemSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IBlockHeightAdjustmentComponentItemGetter.CommonInstance() => this.CommonInstance();
+        object IOverlayDesignatedPlacementInfoItemGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IBlockHeightAdjustmentComponentItemGetter.CommonSetterInstance() => null;
+        object? IOverlayDesignatedPlacementInfoItemGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IBlockHeightAdjustmentComponentItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IOverlayDesignatedPlacementInfoItemGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => OverlayDesignatedPlacementInfoItemCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => BlockHeightAdjustmentComponentItemBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => OverlayDesignatedPlacementInfoItemBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((BlockHeightAdjustmentComponentItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((OverlayDesignatedPlacementInfoItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public Single TerrainHeight => _structData.Slice(0x0, 0x4).Float();
-        public Single WaterHeight => _structData.Slice(0x4, 0x4).Float();
+        public IFormLinkGetter<IWorldspaceGetter> OverlayWorldspace => FormLinkBinaryTranslation.Instance.OverlayFactory<IWorldspaceGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public P2Int Point => P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x4, 0x8));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected BlockHeightAdjustmentComponentItemBinaryOverlay(
+        protected OverlayDesignatedPlacementInfoItemBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1115,7 +1133,7 @@ namespace Mutagen.Bethesda.Starfield
             this.CustomCtor();
         }
 
-        public static IBlockHeightAdjustmentComponentItemGetter BlockHeightAdjustmentComponentItemFactory(
+        public static IOverlayDesignatedPlacementInfoItemGetter OverlayDesignatedPlacementInfoItemFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1124,13 +1142,13 @@ namespace Mutagen.Bethesda.Starfield
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
-                length: 0x8,
+                length: 0xC,
                 memoryPair: out var memoryPair,
                 offset: out var offset);
-            var ret = new BlockHeightAdjustmentComponentItemBinaryOverlay(
+            var ret = new OverlayDesignatedPlacementInfoItemBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            stream.Position += 0x8;
+            stream.Position += 0xC;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1138,12 +1156,12 @@ namespace Mutagen.Bethesda.Starfield
             return ret;
         }
 
-        public static IBlockHeightAdjustmentComponentItemGetter BlockHeightAdjustmentComponentItemFactory(
+        public static IOverlayDesignatedPlacementInfoItemGetter OverlayDesignatedPlacementInfoItemFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return BlockHeightAdjustmentComponentItemFactory(
+            return OverlayDesignatedPlacementInfoItemFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1155,7 +1173,7 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             string? name = null)
         {
-            BlockHeightAdjustmentComponentItemMixIn.Print(
+            OverlayDesignatedPlacementInfoItemMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1166,16 +1184,16 @@ namespace Mutagen.Bethesda.Starfield
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not IBlockHeightAdjustmentComponentItemGetter rhs) return false;
-            return ((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IOverlayDesignatedPlacementInfoItemGetter rhs) return false;
+            return ((OverlayDesignatedPlacementInfoItemCommon)((IOverlayDesignatedPlacementInfoItemGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IBlockHeightAdjustmentComponentItemGetter? obj)
+        public bool Equals(IOverlayDesignatedPlacementInfoItemGetter? obj)
         {
-            return ((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((OverlayDesignatedPlacementInfoItemCommon)((IOverlayDesignatedPlacementInfoItemGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((BlockHeightAdjustmentComponentItemCommon)((IBlockHeightAdjustmentComponentItemGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((OverlayDesignatedPlacementInfoItemCommon)((IOverlayDesignatedPlacementInfoItemGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
