@@ -509,7 +509,13 @@
   </Object>
   <Object name="SurfaceTreePatternSwapInfoComponent" objType="Subrecord" baseClass="AComponent">
     <Fields>
-      <RefList name="Items" recordType="DAT2" refName="SurfaceTreePatternSwapInfoItem" counterLength="4" />
+      <RefDirect name="Data" refName="SurfaceTreePatternSwapInfoComponentData" />
+    </Fields>
+  </Object>
+  <Object name="SurfaceTreePatternSwapInfoComponentData" objType="Subrecord" recordType="DAT2" >
+    <Fields>
+      <RefList name="Data" refName="SurfaceTreePatternSwapInfoItem" counterLength="4" />
+      <ByteArray name="Unknown" />
     </Fields>
   </Object>
   <Object name="SurfaceTreePatternSwapInfoItem" objType="Subrecord" >

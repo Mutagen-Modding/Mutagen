@@ -6847,5 +6847,8 @@
     <Compile Include="Records\Common Subrecords\OverlayDesignatedPlacementInfoItem_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\SurfaceTreePatternSwapInfoComponentData_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
