@@ -14,8 +14,9 @@
         <FormLink refName="IdleAnimation" />
       </List>
       <RefDirect name="Model" refName="Model" />
+      <FormLink name="ActorAction" refName="ActionRecord" recordType="RNAM" />
       <FormLink name="AnimationFlavor" refName="Keyword" recordType="QNAM" />
-      <FormLink name="PNAM" refName="Keyword" recordType="PNAM" />
+      <FormLink name="AnimationArchetype" refName="Keyword" recordType="PNAM" />
     </Fields>
     <LinkInterface>IBaseObject</LinkInterface>
   </Object>

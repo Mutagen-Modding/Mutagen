@@ -143,6 +143,16 @@ namespace Mutagen.Bethesda.Starfield
         IModelGetter? IModeledGetter.Model => this.Model;
         #endregion
         #endregion
+        #region ActorAction
+        private readonly IFormLinkNullable<IActionRecordGetter> _ActorAction = new FormLinkNullable<IActionRecordGetter>();
+        public IFormLinkNullable<IActionRecordGetter> ActorAction
+        {
+            get => _ActorAction;
+            set => _ActorAction.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IActionRecordGetter> IIdleMarkerGetter.ActorAction => this.ActorAction;
+        #endregion
         #region AnimationFlavor
         private readonly IFormLinkNullable<IKeywordGetter> _AnimationFlavor = new FormLinkNullable<IKeywordGetter>();
         public IFormLinkNullable<IKeywordGetter> AnimationFlavor
@@ -153,15 +163,15 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IKeywordGetter> IIdleMarkerGetter.AnimationFlavor => this.AnimationFlavor;
         #endregion
-        #region PNAM
-        private readonly IFormLinkNullable<IKeywordGetter> _PNAM = new FormLinkNullable<IKeywordGetter>();
-        public IFormLinkNullable<IKeywordGetter> PNAM
+        #region AnimationArchetype
+        private readonly IFormLinkNullable<IKeywordGetter> _AnimationArchetype = new FormLinkNullable<IKeywordGetter>();
+        public IFormLinkNullable<IKeywordGetter> AnimationArchetype
         {
-            get => _PNAM;
-            set => _PNAM.SetTo(value);
+            get => _AnimationArchetype;
+            set => _AnimationArchetype.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IKeywordGetter> IIdleMarkerGetter.PNAM => this.PNAM;
+        IFormLinkNullableGetter<IKeywordGetter> IIdleMarkerGetter.AnimationArchetype => this.AnimationArchetype;
         #endregion
 
         #region To String
@@ -195,8 +205,9 @@ namespace Mutagen.Bethesda.Starfield
                 this.IdleTimer = initialValue;
                 this.Animations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.ActorAction = initialValue;
                 this.AnimationFlavor = initialValue;
-                this.PNAM = initialValue;
+                this.AnimationArchetype = initialValue;
             }
 
             public Mask(
@@ -214,8 +225,9 @@ namespace Mutagen.Bethesda.Starfield
                 TItem IdleTimer,
                 TItem Animations,
                 TItem Model,
+                TItem ActorAction,
                 TItem AnimationFlavor,
-                TItem PNAM)
+                TItem AnimationArchetype)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -232,8 +244,9 @@ namespace Mutagen.Bethesda.Starfield
                 this.IdleTimer = IdleTimer;
                 this.Animations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Animations, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.ActorAction = ActorAction;
                 this.AnimationFlavor = AnimationFlavor;
-                this.PNAM = PNAM;
+                this.AnimationArchetype = AnimationArchetype;
             }
 
             #pragma warning disable CS8618
@@ -252,8 +265,9 @@ namespace Mutagen.Bethesda.Starfield
             public TItem IdleTimer;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Animations;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public TItem ActorAction;
             public TItem AnimationFlavor;
-            public TItem PNAM;
+            public TItem AnimationArchetype;
             #endregion
 
             #region Equals
@@ -274,8 +288,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.IdleTimer, rhs.IdleTimer)) return false;
                 if (!object.Equals(this.Animations, rhs.Animations)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.ActorAction, rhs.ActorAction)) return false;
                 if (!object.Equals(this.AnimationFlavor, rhs.AnimationFlavor)) return false;
-                if (!object.Equals(this.PNAM, rhs.PNAM)) return false;
+                if (!object.Equals(this.AnimationArchetype, rhs.AnimationArchetype)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -288,8 +303,9 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.IdleTimer);
                 hash.Add(this.Animations);
                 hash.Add(this.Model);
+                hash.Add(this.ActorAction);
                 hash.Add(this.AnimationFlavor);
-                hash.Add(this.PNAM);
+                hash.Add(this.AnimationArchetype);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -335,8 +351,9 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
+                if (!eval(this.ActorAction)) return false;
                 if (!eval(this.AnimationFlavor)) return false;
-                if (!eval(this.PNAM)) return false;
+                if (!eval(this.AnimationArchetype)) return false;
                 return true;
             }
             #endregion
@@ -380,8 +397,9 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
+                if (eval(this.ActorAction)) return true;
                 if (eval(this.AnimationFlavor)) return true;
-                if (eval(this.PNAM)) return true;
+                if (eval(this.AnimationArchetype)) return true;
                 return false;
             }
             #endregion
@@ -430,8 +448,9 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.ActorAction = eval(this.ActorAction);
                 obj.AnimationFlavor = eval(this.AnimationFlavor);
-                obj.PNAM = eval(this.PNAM);
+                obj.AnimationArchetype = eval(this.AnimationArchetype);
             }
             #endregion
 
@@ -512,13 +531,17 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         Model?.Print(sb);
                     }
+                    if (printMask?.ActorAction ?? true)
+                    {
+                        sb.AppendItem(ActorAction, "ActorAction");
+                    }
                     if (printMask?.AnimationFlavor ?? true)
                     {
                         sb.AppendItem(AnimationFlavor, "AnimationFlavor");
                     }
-                    if (printMask?.PNAM ?? true)
+                    if (printMask?.AnimationArchetype ?? true)
                     {
-                        sb.AppendItem(PNAM, "PNAM");
+                        sb.AppendItem(AnimationArchetype, "AnimationArchetype");
                     }
                 }
             }
@@ -538,8 +561,9 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? IdleTimer;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Animations;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public Exception? ActorAction;
             public Exception? AnimationFlavor;
-            public Exception? PNAM;
+            public Exception? AnimationArchetype;
             #endregion
 
             #region IErrorMask
@@ -562,10 +586,12 @@ namespace Mutagen.Bethesda.Starfield
                         return Animations;
                     case IdleMarker_FieldIndex.Model:
                         return Model;
+                    case IdleMarker_FieldIndex.ActorAction:
+                        return ActorAction;
                     case IdleMarker_FieldIndex.AnimationFlavor:
                         return AnimationFlavor;
-                    case IdleMarker_FieldIndex.PNAM:
-                        return PNAM;
+                    case IdleMarker_FieldIndex.AnimationArchetype:
+                        return AnimationArchetype;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -597,11 +623,14 @@ namespace Mutagen.Bethesda.Starfield
                     case IdleMarker_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
+                    case IdleMarker_FieldIndex.ActorAction:
+                        this.ActorAction = ex;
+                        break;
                     case IdleMarker_FieldIndex.AnimationFlavor:
                         this.AnimationFlavor = ex;
                         break;
-                    case IdleMarker_FieldIndex.PNAM:
-                        this.PNAM = ex;
+                    case IdleMarker_FieldIndex.AnimationArchetype:
+                        this.AnimationArchetype = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -635,11 +664,14 @@ namespace Mutagen.Bethesda.Starfield
                     case IdleMarker_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
+                    case IdleMarker_FieldIndex.ActorAction:
+                        this.ActorAction = (Exception?)obj;
+                        break;
                     case IdleMarker_FieldIndex.AnimationFlavor:
                         this.AnimationFlavor = (Exception?)obj;
                         break;
-                    case IdleMarker_FieldIndex.PNAM:
-                        this.PNAM = (Exception?)obj;
+                    case IdleMarker_FieldIndex.AnimationArchetype:
+                        this.AnimationArchetype = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -657,8 +689,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (IdleTimer != null) return true;
                 if (Animations != null) return true;
                 if (Model != null) return true;
+                if (ActorAction != null) return true;
                 if (AnimationFlavor != null) return true;
-                if (PNAM != null) return true;
+                if (AnimationArchetype != null) return true;
                 return false;
             }
             #endregion
@@ -737,10 +770,13 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 Model?.Print(sb);
                 {
+                    sb.AppendItem(ActorAction, "ActorAction");
+                }
+                {
                     sb.AppendItem(AnimationFlavor, "AnimationFlavor");
                 }
                 {
-                    sb.AppendItem(PNAM, "PNAM");
+                    sb.AppendItem(AnimationArchetype, "AnimationArchetype");
                 }
             }
             #endregion
@@ -757,8 +793,9 @@ namespace Mutagen.Bethesda.Starfield
                 ret.IdleTimer = this.IdleTimer.Combine(rhs.IdleTimer);
                 ret.Animations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Animations?.Overall, rhs.Animations?.Overall), Noggog.ExceptionExt.Combine(this.Animations?.Specific, rhs.Animations?.Specific));
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.ActorAction = this.ActorAction.Combine(rhs.ActorAction);
                 ret.AnimationFlavor = this.AnimationFlavor.Combine(rhs.AnimationFlavor);
-                ret.PNAM = this.PNAM.Combine(rhs.PNAM);
+                ret.AnimationArchetype = this.AnimationArchetype.Combine(rhs.AnimationArchetype);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -788,8 +825,9 @@ namespace Mutagen.Bethesda.Starfield
             public bool IdleTimer;
             public bool Animations;
             public Model.TranslationMask? Model;
+            public bool ActorAction;
             public bool AnimationFlavor;
-            public bool PNAM;
+            public bool AnimationArchetype;
             #endregion
 
             #region Ctors
@@ -803,8 +841,9 @@ namespace Mutagen.Bethesda.Starfield
                 this.Flags = defaultOn;
                 this.IdleTimer = defaultOn;
                 this.Animations = defaultOn;
+                this.ActorAction = defaultOn;
                 this.AnimationFlavor = defaultOn;
-                this.PNAM = defaultOn;
+                this.AnimationArchetype = defaultOn;
             }
 
             #endregion
@@ -819,8 +858,9 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((IdleTimer, null));
                 ret.Add((Animations, null));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((ActorAction, null));
                 ret.Add((AnimationFlavor, null));
-                ret.Add((PNAM, null));
+                ret.Add((AnimationArchetype, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -998,8 +1038,9 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
+        new IFormLinkNullable<IActionRecordGetter> ActorAction { get; set; }
         new IFormLinkNullable<IKeywordGetter> AnimationFlavor { get; set; }
-        new IFormLinkNullable<IKeywordGetter> PNAM { get; set; }
+        new IFormLinkNullable<IKeywordGetter> AnimationArchetype { get; set; }
         #region Mutagen
         new IdleMarker.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1049,8 +1090,9 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
+        IFormLinkNullableGetter<IActionRecordGetter> ActorAction { get; }
         IFormLinkNullableGetter<IKeywordGetter> AnimationFlavor { get; }
-        IFormLinkNullableGetter<IKeywordGetter> PNAM { get; }
+        IFormLinkNullableGetter<IKeywordGetter> AnimationArchetype { get; }
 
         #region Mutagen
         IdleMarker.MajorFlag MajorFlags { get; }
@@ -1238,8 +1280,9 @@ namespace Mutagen.Bethesda.Starfield
         IdleTimer = 11,
         Animations = 12,
         Model = 13,
-        AnimationFlavor = 14,
-        PNAM = 15,
+        ActorAction = 14,
+        AnimationFlavor = 15,
+        AnimationArchetype = 16,
     }
     #endregion
 
@@ -1250,9 +1293,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 9;
+        public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 16;
+        public const ushort FieldCount = 17;
 
         public static readonly Type MaskType = typeof(IdleMarker.Mask<>);
 
@@ -1300,6 +1343,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
                 RecordTypes.MODF,
+                RecordTypes.RNAM,
                 RecordTypes.QNAM,
                 RecordTypes.PNAM);
             return new RecordTriggerSpecs(
@@ -1353,8 +1397,9 @@ namespace Mutagen.Bethesda.Starfield
             item.IdleTimer = default;
             item.Animations = null;
             item.Model = null;
+            item.ActorAction.Clear();
             item.AnimationFlavor.Clear();
-            item.PNAM.Clear();
+            item.AnimationArchetype.Clear();
             base.Clear(item);
         }
         
@@ -1375,8 +1420,9 @@ namespace Mutagen.Bethesda.Starfield
             obj.Keywords?.RemapLinks(mapping);
             obj.Animations?.RemapLinks(mapping);
             obj.Model?.RemapLinks(mapping);
+            obj.ActorAction.Relink(mapping);
             obj.AnimationFlavor.Relink(mapping);
-            obj.PNAM.Relink(mapping);
+            obj.AnimationArchetype.Relink(mapping);
         }
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IIdleMarker obj)
@@ -1487,8 +1533,9 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
+            ret.ActorAction = item.ActorAction.Equals(rhs.ActorAction);
             ret.AnimationFlavor = item.AnimationFlavor.Equals(rhs.AnimationFlavor);
-            ret.PNAM = item.PNAM.Equals(rhs.PNAM);
+            ret.AnimationArchetype = item.AnimationArchetype.Equals(rhs.AnimationArchetype);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1591,13 +1638,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 ModelItem?.Print(sb, "Model");
             }
+            if (printMask?.ActorAction ?? true)
+            {
+                sb.AppendItem(item.ActorAction.FormKeyNullable, "ActorAction");
+            }
             if (printMask?.AnimationFlavor ?? true)
             {
                 sb.AppendItem(item.AnimationFlavor.FormKeyNullable, "AnimationFlavor");
             }
-            if (printMask?.PNAM ?? true)
+            if (printMask?.AnimationArchetype ?? true)
             {
-                sb.AppendItem(item.PNAM.FormKeyNullable, "PNAM");
+                sb.AppendItem(item.AnimationArchetype.FormKeyNullable, "AnimationArchetype");
             }
         }
         
@@ -1685,13 +1736,17 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isModelEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.ActorAction) ?? true))
+            {
+                if (!lhs.ActorAction.Equals(rhs.ActorAction)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.AnimationFlavor) ?? true))
             {
                 if (!lhs.AnimationFlavor.Equals(rhs.AnimationFlavor)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.PNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.AnimationArchetype) ?? true))
             {
-                if (!lhs.PNAM.Equals(rhs.PNAM)) return false;
+                if (!lhs.AnimationArchetype.Equals(rhs.AnimationArchetype)) return false;
             }
             return true;
         }
@@ -1737,8 +1792,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(Modelitem);
             }
+            hash.Add(item.ActorAction);
             hash.Add(item.AnimationFlavor);
-            hash.Add(item.PNAM);
+            hash.Add(item.AnimationArchetype);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1789,13 +1845,17 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (FormLinkInformation.TryFactory(obj.ActorAction, out var ActorActionInfo))
+            {
+                yield return ActorActionInfo;
+            }
             if (FormLinkInformation.TryFactory(obj.AnimationFlavor, out var AnimationFlavorInfo))
             {
                 yield return AnimationFlavorInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.PNAM, out var PNAMInfo))
+            if (FormLinkInformation.TryFactory(obj.AnimationArchetype, out var AnimationArchetypeInfo))
             {
-                yield return PNAMInfo;
+                yield return AnimationArchetypeInfo;
             }
             yield break;
         }
@@ -2001,13 +2061,17 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.ActorAction) ?? true))
+            {
+                item.ActorAction.SetTo(rhs.ActorAction.FormKeyNullable);
+            }
             if ((copyMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.AnimationFlavor) ?? true))
             {
                 item.AnimationFlavor.SetTo(rhs.AnimationFlavor.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.PNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)IdleMarker_FieldIndex.AnimationArchetype) ?? true))
             {
-                item.PNAM.SetTo(rhs.PNAM.FormKeyNullable);
+                item.AnimationArchetype.SetTo(rhs.AnimationArchetype.FormKeyNullable);
             }
             DeepCopyInCustom(
                 item: item,
@@ -2224,11 +2288,15 @@ namespace Mutagen.Bethesda.Starfield
             }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
+                item: item.ActorAction,
+                header: translationParams.ConvertToCustom(RecordTypes.RNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
                 item: item.AnimationFlavor,
                 header: translationParams.ConvertToCustom(RecordTypes.QNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.PNAM,
+                item: item.AnimationArchetype,
                 header: translationParams.ConvertToCustom(RecordTypes.PNAM));
         }
 
@@ -2392,6 +2460,12 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)IdleMarker_FieldIndex.Model;
                 }
+                case RecordTypeInts.RNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ActorAction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)IdleMarker_FieldIndex.ActorAction;
+                }
                 case RecordTypeInts.QNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2401,8 +2475,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PNAM.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)IdleMarker_FieldIndex.PNAM;
+                    item.AnimationArchetype.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)IdleMarker_FieldIndex.AnimationArchetype;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2511,13 +2585,17 @@ namespace Mutagen.Bethesda.Starfield
             PreviousParse lastParsed);
         #endregion
         public IModelGetter? Model { get; private set; }
+        #region ActorAction
+        private int? _ActorActionLocation;
+        public IFormLinkNullableGetter<IActionRecordGetter> ActorAction => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IActionRecordGetter>(_package, _recordData, _ActorActionLocation);
+        #endregion
         #region AnimationFlavor
         private int? _AnimationFlavorLocation;
         public IFormLinkNullableGetter<IKeywordGetter> AnimationFlavor => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _AnimationFlavorLocation);
         #endregion
-        #region PNAM
-        private int? _PNAMLocation;
-        public IFormLinkNullableGetter<IKeywordGetter> PNAM => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _PNAMLocation);
+        #region AnimationArchetype
+        private int? _AnimationArchetypeLocation;
+        public IFormLinkNullableGetter<IKeywordGetter> AnimationArchetype => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _AnimationArchetypeLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2652,6 +2730,11 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)IdleMarker_FieldIndex.Model;
                 }
+                case RecordTypeInts.RNAM:
+                {
+                    _ActorActionLocation = (stream.Position - offset);
+                    return (int)IdleMarker_FieldIndex.ActorAction;
+                }
                 case RecordTypeInts.QNAM:
                 {
                     _AnimationFlavorLocation = (stream.Position - offset);
@@ -2659,8 +2742,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _PNAMLocation = (stream.Position - offset);
-                    return (int)IdleMarker_FieldIndex.PNAM;
+                    _AnimationArchetypeLocation = (stream.Position - offset);
+                    return (int)IdleMarker_FieldIndex.AnimationArchetype;
                 }
                 default:
                     return base.FillRecordType(

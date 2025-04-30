@@ -127,16 +127,19 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
-        #region HNAM
+        #region ScatterProjectedDecals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ImpactHNAM? _HNAM;
-        public ImpactHNAM? HNAM
+        private ExtendedList<IFormLinkGetter<IProjectedDecalGetter>>? _ScatterProjectedDecals;
+        public ExtendedList<IFormLinkGetter<IProjectedDecalGetter>>? ScatterProjectedDecals
         {
-            get => _HNAM;
-            set => _HNAM = value;
+            get => this._ScatterProjectedDecals;
+            set => this._ScatterProjectedDecals = value;
         }
+        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IImpactHNAMGetter? IImpactGetter.HNAM => this.HNAM;
+        IReadOnlyList<IFormLinkGetter<IProjectedDecalGetter>>? IImpactGetter.ScatterProjectedDecals => _ScatterProjectedDecals;
+        #endregion
+
         #endregion
         #region Decal
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -149,43 +152,48 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDecalGetter? IImpactGetter.Decal => this.Decal;
         #endregion
-        #region IDSH
+        #region ImpactSoundDefault
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private SoundReference? _IDSH;
-        public SoundReference? IDSH
+        private SoundReference? _ImpactSoundDefault;
+        public SoundReference? ImpactSoundDefault
         {
-            get => _IDSH;
-            set => _IDSH = value;
+            get => _ImpactSoundDefault;
+            set => _ImpactSoundDefault = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISoundReferenceGetter? IImpactGetter.IDSH => this.IDSH;
+        ISoundReferenceGetter? IImpactGetter.ImpactSoundDefault => this.ImpactSoundDefault;
         #endregion
-        #region IDP1
+        #region ImpactSoundPlayerFirstShooter
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private SoundReference? _IDP1;
-        public SoundReference? IDP1
+        private SoundReference? _ImpactSoundPlayerFirstShooter;
+        public SoundReference? ImpactSoundPlayerFirstShooter
         {
-            get => _IDP1;
-            set => _IDP1 = value;
+            get => _ImpactSoundPlayerFirstShooter;
+            set => _ImpactSoundPlayerFirstShooter = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISoundReferenceGetter? IImpactGetter.IDP1 => this.IDP1;
+        ISoundReferenceGetter? IImpactGetter.ImpactSoundPlayerFirstShooter => this.ImpactSoundPlayerFirstShooter;
         #endregion
-        #region IDP3
+        #region ImpactSoundPlayerThirdTarget
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private SoundReference? _IDP3;
-        public SoundReference? IDP3
+        private SoundReference? _ImpactSoundPlayerThirdTarget;
+        public SoundReference? ImpactSoundPlayerThirdTarget
         {
-            get => _IDP3;
-            set => _IDP3 = value;
+            get => _ImpactSoundPlayerThirdTarget;
+            set => _ImpactSoundPlayerThirdTarget = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISoundReferenceGetter? IImpactGetter.IDP3 => this.IDP3;
+        ISoundReferenceGetter? IImpactGetter.ImpactSoundPlayerThirdTarget => this.ImpactSoundPlayerThirdTarget;
         #endregion
         #region FootstepParticleMaxDist
         public Single? FootstepParticleMaxDist { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IImpactGetter.FootstepParticleMaxDist => this.FootstepParticleMaxDist;
+        #endregion
+        #region DecalLifetime
+        public Single? DecalLifetime { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IImpactGetter.DecalLifetime => this.DecalLifetime;
         #endregion
 
         #region To String
@@ -223,12 +231,13 @@ namespace Mutagen.Bethesda.Starfield
                 this.Result = initialValue;
                 this.Unknown = initialValue;
                 this.ProjectedDecals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.HNAM = new MaskItem<TItem, ImpactHNAM.Mask<TItem>?>(initialValue, new ImpactHNAM.Mask<TItem>(initialValue));
+                this.ScatterProjectedDecals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Decal = new MaskItem<TItem, Decal.Mask<TItem>?>(initialValue, new Decal.Mask<TItem>(initialValue));
-                this.IDSH = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
-                this.IDP1 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
-                this.IDP3 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.ImpactSoundDefault = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.ImpactSoundPlayerFirstShooter = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.ImpactSoundPlayerThirdTarget = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.FootstepParticleMaxDist = initialValue;
+                this.DecalLifetime = initialValue;
             }
 
             public Mask(
@@ -250,12 +259,13 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Result,
                 TItem Unknown,
                 TItem ProjectedDecals,
-                TItem HNAM,
+                TItem ScatterProjectedDecals,
                 TItem Decal,
-                TItem IDSH,
-                TItem IDP1,
-                TItem IDP3,
-                TItem FootstepParticleMaxDist)
+                TItem ImpactSoundDefault,
+                TItem ImpactSoundPlayerFirstShooter,
+                TItem ImpactSoundPlayerThirdTarget,
+                TItem FootstepParticleMaxDist,
+                TItem DecalLifetime)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -276,12 +286,13 @@ namespace Mutagen.Bethesda.Starfield
                 this.Result = Result;
                 this.Unknown = Unknown;
                 this.ProjectedDecals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ProjectedDecals, Enumerable.Empty<(int Index, TItem Value)>());
-                this.HNAM = new MaskItem<TItem, ImpactHNAM.Mask<TItem>?>(HNAM, new ImpactHNAM.Mask<TItem>(HNAM));
+                this.ScatterProjectedDecals = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ScatterProjectedDecals, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Decal = new MaskItem<TItem, Decal.Mask<TItem>?>(Decal, new Decal.Mask<TItem>(Decal));
-                this.IDSH = new MaskItem<TItem, SoundReference.Mask<TItem>?>(IDSH, new SoundReference.Mask<TItem>(IDSH));
-                this.IDP1 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(IDP1, new SoundReference.Mask<TItem>(IDP1));
-                this.IDP3 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(IDP3, new SoundReference.Mask<TItem>(IDP3));
+                this.ImpactSoundDefault = new MaskItem<TItem, SoundReference.Mask<TItem>?>(ImpactSoundDefault, new SoundReference.Mask<TItem>(ImpactSoundDefault));
+                this.ImpactSoundPlayerFirstShooter = new MaskItem<TItem, SoundReference.Mask<TItem>?>(ImpactSoundPlayerFirstShooter, new SoundReference.Mask<TItem>(ImpactSoundPlayerFirstShooter));
+                this.ImpactSoundPlayerThirdTarget = new MaskItem<TItem, SoundReference.Mask<TItem>?>(ImpactSoundPlayerThirdTarget, new SoundReference.Mask<TItem>(ImpactSoundPlayerThirdTarget));
                 this.FootstepParticleMaxDist = FootstepParticleMaxDist;
+                this.DecalLifetime = DecalLifetime;
             }
 
             #pragma warning disable CS8618
@@ -304,12 +315,13 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Result;
             public TItem Unknown;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ProjectedDecals;
-            public MaskItem<TItem, ImpactHNAM.Mask<TItem>?>? HNAM { get; set; }
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ScatterProjectedDecals;
             public MaskItem<TItem, Decal.Mask<TItem>?>? Decal { get; set; }
-            public MaskItem<TItem, SoundReference.Mask<TItem>?>? IDSH { get; set; }
-            public MaskItem<TItem, SoundReference.Mask<TItem>?>? IDP1 { get; set; }
-            public MaskItem<TItem, SoundReference.Mask<TItem>?>? IDP3 { get; set; }
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? ImpactSoundDefault { get; set; }
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? ImpactSoundPlayerFirstShooter { get; set; }
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? ImpactSoundPlayerThirdTarget { get; set; }
             public TItem FootstepParticleMaxDist;
+            public TItem DecalLifetime;
             #endregion
 
             #region Equals
@@ -334,12 +346,13 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Result, rhs.Result)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.ProjectedDecals, rhs.ProjectedDecals)) return false;
-                if (!object.Equals(this.HNAM, rhs.HNAM)) return false;
+                if (!object.Equals(this.ScatterProjectedDecals, rhs.ScatterProjectedDecals)) return false;
                 if (!object.Equals(this.Decal, rhs.Decal)) return false;
-                if (!object.Equals(this.IDSH, rhs.IDSH)) return false;
-                if (!object.Equals(this.IDP1, rhs.IDP1)) return false;
-                if (!object.Equals(this.IDP3, rhs.IDP3)) return false;
+                if (!object.Equals(this.ImpactSoundDefault, rhs.ImpactSoundDefault)) return false;
+                if (!object.Equals(this.ImpactSoundPlayerFirstShooter, rhs.ImpactSoundPlayerFirstShooter)) return false;
+                if (!object.Equals(this.ImpactSoundPlayerThirdTarget, rhs.ImpactSoundPlayerThirdTarget)) return false;
                 if (!object.Equals(this.FootstepParticleMaxDist, rhs.FootstepParticleMaxDist)) return false;
+                if (!object.Equals(this.DecalLifetime, rhs.DecalLifetime)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -356,12 +369,13 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Result);
                 hash.Add(this.Unknown);
                 hash.Add(this.ProjectedDecals);
-                hash.Add(this.HNAM);
+                hash.Add(this.ScatterProjectedDecals);
                 hash.Add(this.Decal);
-                hash.Add(this.IDSH);
-                hash.Add(this.IDP1);
-                hash.Add(this.IDP3);
+                hash.Add(this.ImpactSoundDefault);
+                hash.Add(this.ImpactSoundPlayerFirstShooter);
+                hash.Add(this.ImpactSoundPlayerThirdTarget);
                 hash.Add(this.FootstepParticleMaxDist);
+                hash.Add(this.DecalLifetime);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -408,32 +422,39 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (HNAM != null)
+                if (this.ScatterProjectedDecals != null)
                 {
-                    if (!eval(this.HNAM.Overall)) return false;
-                    if (this.HNAM.Specific != null && !this.HNAM.Specific.All(eval)) return false;
+                    if (!eval(this.ScatterProjectedDecals.Overall)) return false;
+                    if (this.ScatterProjectedDecals.Specific != null)
+                    {
+                        foreach (var item in this.ScatterProjectedDecals.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
                 }
                 if (Decal != null)
                 {
                     if (!eval(this.Decal.Overall)) return false;
                     if (this.Decal.Specific != null && !this.Decal.Specific.All(eval)) return false;
                 }
-                if (IDSH != null)
+                if (ImpactSoundDefault != null)
                 {
-                    if (!eval(this.IDSH.Overall)) return false;
-                    if (this.IDSH.Specific != null && !this.IDSH.Specific.All(eval)) return false;
+                    if (!eval(this.ImpactSoundDefault.Overall)) return false;
+                    if (this.ImpactSoundDefault.Specific != null && !this.ImpactSoundDefault.Specific.All(eval)) return false;
                 }
-                if (IDP1 != null)
+                if (ImpactSoundPlayerFirstShooter != null)
                 {
-                    if (!eval(this.IDP1.Overall)) return false;
-                    if (this.IDP1.Specific != null && !this.IDP1.Specific.All(eval)) return false;
+                    if (!eval(this.ImpactSoundPlayerFirstShooter.Overall)) return false;
+                    if (this.ImpactSoundPlayerFirstShooter.Specific != null && !this.ImpactSoundPlayerFirstShooter.Specific.All(eval)) return false;
                 }
-                if (IDP3 != null)
+                if (ImpactSoundPlayerThirdTarget != null)
                 {
-                    if (!eval(this.IDP3.Overall)) return false;
-                    if (this.IDP3.Specific != null && !this.IDP3.Specific.All(eval)) return false;
+                    if (!eval(this.ImpactSoundPlayerThirdTarget.Overall)) return false;
+                    if (this.ImpactSoundPlayerThirdTarget.Specific != null && !this.ImpactSoundPlayerThirdTarget.Specific.All(eval)) return false;
                 }
                 if (!eval(this.FootstepParticleMaxDist)) return false;
+                if (!eval(this.DecalLifetime)) return false;
                 return true;
             }
             #endregion
@@ -478,32 +499,39 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (HNAM != null)
+                if (this.ScatterProjectedDecals != null)
                 {
-                    if (eval(this.HNAM.Overall)) return true;
-                    if (this.HNAM.Specific != null && this.HNAM.Specific.Any(eval)) return true;
+                    if (eval(this.ScatterProjectedDecals.Overall)) return true;
+                    if (this.ScatterProjectedDecals.Specific != null)
+                    {
+                        foreach (var item in this.ScatterProjectedDecals.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
                 }
                 if (Decal != null)
                 {
                     if (eval(this.Decal.Overall)) return true;
                     if (this.Decal.Specific != null && this.Decal.Specific.Any(eval)) return true;
                 }
-                if (IDSH != null)
+                if (ImpactSoundDefault != null)
                 {
-                    if (eval(this.IDSH.Overall)) return true;
-                    if (this.IDSH.Specific != null && this.IDSH.Specific.Any(eval)) return true;
+                    if (eval(this.ImpactSoundDefault.Overall)) return true;
+                    if (this.ImpactSoundDefault.Specific != null && this.ImpactSoundDefault.Specific.Any(eval)) return true;
                 }
-                if (IDP1 != null)
+                if (ImpactSoundPlayerFirstShooter != null)
                 {
-                    if (eval(this.IDP1.Overall)) return true;
-                    if (this.IDP1.Specific != null && this.IDP1.Specific.Any(eval)) return true;
+                    if (eval(this.ImpactSoundPlayerFirstShooter.Overall)) return true;
+                    if (this.ImpactSoundPlayerFirstShooter.Specific != null && this.ImpactSoundPlayerFirstShooter.Specific.Any(eval)) return true;
                 }
-                if (IDP3 != null)
+                if (ImpactSoundPlayerThirdTarget != null)
                 {
-                    if (eval(this.IDP3.Overall)) return true;
-                    if (this.IDP3.Specific != null && this.IDP3.Specific.Any(eval)) return true;
+                    if (eval(this.ImpactSoundPlayerThirdTarget.Overall)) return true;
+                    if (this.ImpactSoundPlayerThirdTarget.Specific != null && this.ImpactSoundPlayerThirdTarget.Specific.Any(eval)) return true;
                 }
                 if (eval(this.FootstepParticleMaxDist)) return true;
+                if (eval(this.DecalLifetime)) return true;
                 return false;
             }
             #endregion
@@ -557,12 +585,26 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                obj.HNAM = this.HNAM == null ? null : new MaskItem<R, ImpactHNAM.Mask<R>?>(eval(this.HNAM.Overall), this.HNAM.Specific?.Translate(eval));
+                if (ScatterProjectedDecals != null)
+                {
+                    obj.ScatterProjectedDecals = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ScatterProjectedDecals.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (ScatterProjectedDecals.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.ScatterProjectedDecals.Specific = l;
+                        foreach (var item in ScatterProjectedDecals.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
                 obj.Decal = this.Decal == null ? null : new MaskItem<R, Decal.Mask<R>?>(eval(this.Decal.Overall), this.Decal.Specific?.Translate(eval));
-                obj.IDSH = this.IDSH == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.IDSH.Overall), this.IDSH.Specific?.Translate(eval));
-                obj.IDP1 = this.IDP1 == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.IDP1.Overall), this.IDP1.Specific?.Translate(eval));
-                obj.IDP3 = this.IDP3 == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.IDP3.Overall), this.IDP3.Specific?.Translate(eval));
+                obj.ImpactSoundDefault = this.ImpactSoundDefault == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.ImpactSoundDefault.Overall), this.ImpactSoundDefault.Specific?.Translate(eval));
+                obj.ImpactSoundPlayerFirstShooter = this.ImpactSoundPlayerFirstShooter == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.ImpactSoundPlayerFirstShooter.Overall), this.ImpactSoundPlayerFirstShooter.Specific?.Translate(eval));
+                obj.ImpactSoundPlayerThirdTarget = this.ImpactSoundPlayerThirdTarget == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.ImpactSoundPlayerThirdTarget.Overall), this.ImpactSoundPlayerThirdTarget.Specific?.Translate(eval));
                 obj.FootstepParticleMaxDist = eval(this.FootstepParticleMaxDist);
+                obj.DecalLifetime = eval(this.DecalLifetime);
             }
             #endregion
 
@@ -657,29 +699,50 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.HNAM?.Overall ?? true)
+                    if ((printMask?.ScatterProjectedDecals?.Overall ?? true)
+                        && ScatterProjectedDecals is {} ScatterProjectedDecalsItem)
                     {
-                        HNAM?.Print(sb);
+                        sb.AppendLine("ScatterProjectedDecals =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ScatterProjectedDecalsItem.Overall);
+                            if (ScatterProjectedDecalsItem.Specific != null)
+                            {
+                                foreach (var subItem in ScatterProjectedDecalsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                     if (printMask?.Decal?.Overall ?? true)
                     {
                         Decal?.Print(sb);
                     }
-                    if (printMask?.IDSH?.Overall ?? true)
+                    if (printMask?.ImpactSoundDefault?.Overall ?? true)
                     {
-                        IDSH?.Print(sb);
+                        ImpactSoundDefault?.Print(sb);
                     }
-                    if (printMask?.IDP1?.Overall ?? true)
+                    if (printMask?.ImpactSoundPlayerFirstShooter?.Overall ?? true)
                     {
-                        IDP1?.Print(sb);
+                        ImpactSoundPlayerFirstShooter?.Print(sb);
                     }
-                    if (printMask?.IDP3?.Overall ?? true)
+                    if (printMask?.ImpactSoundPlayerThirdTarget?.Overall ?? true)
                     {
-                        IDP3?.Print(sb);
+                        ImpactSoundPlayerThirdTarget?.Print(sb);
                     }
                     if (printMask?.FootstepParticleMaxDist ?? true)
                     {
                         sb.AppendItem(FootstepParticleMaxDist, "FootstepParticleMaxDist");
+                    }
+                    if (printMask?.DecalLifetime ?? true)
+                    {
+                        sb.AppendItem(DecalLifetime, "DecalLifetime");
                     }
                 }
             }
@@ -703,12 +766,13 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Result;
             public Exception? Unknown;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ProjectedDecals;
-            public MaskItem<Exception?, ImpactHNAM.ErrorMask?>? HNAM;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ScatterProjectedDecals;
             public MaskItem<Exception?, Decal.ErrorMask?>? Decal;
-            public MaskItem<Exception?, SoundReference.ErrorMask?>? IDSH;
-            public MaskItem<Exception?, SoundReference.ErrorMask?>? IDP1;
-            public MaskItem<Exception?, SoundReference.ErrorMask?>? IDP3;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? ImpactSoundDefault;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? ImpactSoundPlayerFirstShooter;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? ImpactSoundPlayerThirdTarget;
             public Exception? FootstepParticleMaxDist;
+            public Exception? DecalLifetime;
             #endregion
 
             #region IErrorMask
@@ -739,18 +803,20 @@ namespace Mutagen.Bethesda.Starfield
                         return Unknown;
                     case Impact_FieldIndex.ProjectedDecals:
                         return ProjectedDecals;
-                    case Impact_FieldIndex.HNAM:
-                        return HNAM;
+                    case Impact_FieldIndex.ScatterProjectedDecals:
+                        return ScatterProjectedDecals;
                     case Impact_FieldIndex.Decal:
                         return Decal;
-                    case Impact_FieldIndex.IDSH:
-                        return IDSH;
-                    case Impact_FieldIndex.IDP1:
-                        return IDP1;
-                    case Impact_FieldIndex.IDP3:
-                        return IDP3;
+                    case Impact_FieldIndex.ImpactSoundDefault:
+                        return ImpactSoundDefault;
+                    case Impact_FieldIndex.ImpactSoundPlayerFirstShooter:
+                        return ImpactSoundPlayerFirstShooter;
+                    case Impact_FieldIndex.ImpactSoundPlayerThirdTarget:
+                        return ImpactSoundPlayerThirdTarget;
                     case Impact_FieldIndex.FootstepParticleMaxDist:
                         return FootstepParticleMaxDist;
+                    case Impact_FieldIndex.DecalLifetime:
+                        return DecalLifetime;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -794,23 +860,26 @@ namespace Mutagen.Bethesda.Starfield
                     case Impact_FieldIndex.ProjectedDecals:
                         this.ProjectedDecals = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case Impact_FieldIndex.HNAM:
-                        this.HNAM = new MaskItem<Exception?, ImpactHNAM.ErrorMask?>(ex, null);
+                    case Impact_FieldIndex.ScatterProjectedDecals:
+                        this.ScatterProjectedDecals = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case Impact_FieldIndex.Decal:
                         this.Decal = new MaskItem<Exception?, Decal.ErrorMask?>(ex, null);
                         break;
-                    case Impact_FieldIndex.IDSH:
-                        this.IDSH = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                    case Impact_FieldIndex.ImpactSoundDefault:
+                        this.ImpactSoundDefault = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
                         break;
-                    case Impact_FieldIndex.IDP1:
-                        this.IDP1 = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                    case Impact_FieldIndex.ImpactSoundPlayerFirstShooter:
+                        this.ImpactSoundPlayerFirstShooter = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
                         break;
-                    case Impact_FieldIndex.IDP3:
-                        this.IDP3 = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                    case Impact_FieldIndex.ImpactSoundPlayerThirdTarget:
+                        this.ImpactSoundPlayerThirdTarget = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
                         break;
                     case Impact_FieldIndex.FootstepParticleMaxDist:
                         this.FootstepParticleMaxDist = ex;
+                        break;
+                    case Impact_FieldIndex.DecalLifetime:
+                        this.DecalLifetime = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -856,23 +925,26 @@ namespace Mutagen.Bethesda.Starfield
                     case Impact_FieldIndex.ProjectedDecals:
                         this.ProjectedDecals = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case Impact_FieldIndex.HNAM:
-                        this.HNAM = (MaskItem<Exception?, ImpactHNAM.ErrorMask?>?)obj;
+                    case Impact_FieldIndex.ScatterProjectedDecals:
+                        this.ScatterProjectedDecals = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case Impact_FieldIndex.Decal:
                         this.Decal = (MaskItem<Exception?, Decal.ErrorMask?>?)obj;
                         break;
-                    case Impact_FieldIndex.IDSH:
-                        this.IDSH = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                    case Impact_FieldIndex.ImpactSoundDefault:
+                        this.ImpactSoundDefault = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
                         break;
-                    case Impact_FieldIndex.IDP1:
-                        this.IDP1 = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                    case Impact_FieldIndex.ImpactSoundPlayerFirstShooter:
+                        this.ImpactSoundPlayerFirstShooter = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
                         break;
-                    case Impact_FieldIndex.IDP3:
-                        this.IDP3 = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                    case Impact_FieldIndex.ImpactSoundPlayerThirdTarget:
+                        this.ImpactSoundPlayerThirdTarget = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
                         break;
                     case Impact_FieldIndex.FootstepParticleMaxDist:
                         this.FootstepParticleMaxDist = (Exception?)obj;
+                        break;
+                    case Impact_FieldIndex.DecalLifetime:
+                        this.DecalLifetime = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -894,12 +966,13 @@ namespace Mutagen.Bethesda.Starfield
                 if (Result != null) return true;
                 if (Unknown != null) return true;
                 if (ProjectedDecals != null) return true;
-                if (HNAM != null) return true;
+                if (ScatterProjectedDecals != null) return true;
                 if (Decal != null) return true;
-                if (IDSH != null) return true;
-                if (IDP1 != null) return true;
-                if (IDP3 != null) return true;
+                if (ImpactSoundDefault != null) return true;
+                if (ImpactSoundPlayerFirstShooter != null) return true;
+                if (ImpactSoundPlayerThirdTarget != null) return true;
                 if (FootstepParticleMaxDist != null) return true;
+                if (DecalLifetime != null) return true;
                 return false;
             }
             #endregion
@@ -989,13 +1062,35 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                HNAM?.Print(sb);
+                if (ScatterProjectedDecals is {} ScatterProjectedDecalsItem)
+                {
+                    sb.AppendLine("ScatterProjectedDecals =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ScatterProjectedDecalsItem.Overall);
+                        if (ScatterProjectedDecalsItem.Specific != null)
+                        {
+                            foreach (var subItem in ScatterProjectedDecalsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 Decal?.Print(sb);
-                IDSH?.Print(sb);
-                IDP1?.Print(sb);
-                IDP3?.Print(sb);
+                ImpactSoundDefault?.Print(sb);
+                ImpactSoundPlayerFirstShooter?.Print(sb);
+                ImpactSoundPlayerThirdTarget?.Print(sb);
                 {
                     sb.AppendItem(FootstepParticleMaxDist, "FootstepParticleMaxDist");
+                }
+                {
+                    sb.AppendItem(DecalLifetime, "DecalLifetime");
                 }
             }
             #endregion
@@ -1016,12 +1111,13 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Result = this.Result.Combine(rhs.Result);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.ProjectedDecals = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ProjectedDecals?.Overall, rhs.ProjectedDecals?.Overall), Noggog.ExceptionExt.Combine(this.ProjectedDecals?.Specific, rhs.ProjectedDecals?.Specific));
-                ret.HNAM = this.HNAM.Combine(rhs.HNAM, (l, r) => l.Combine(r));
+                ret.ScatterProjectedDecals = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ScatterProjectedDecals?.Overall, rhs.ScatterProjectedDecals?.Overall), Noggog.ExceptionExt.Combine(this.ScatterProjectedDecals?.Specific, rhs.ScatterProjectedDecals?.Specific));
                 ret.Decal = this.Decal.Combine(rhs.Decal, (l, r) => l.Combine(r));
-                ret.IDSH = this.IDSH.Combine(rhs.IDSH, (l, r) => l.Combine(r));
-                ret.IDP1 = this.IDP1.Combine(rhs.IDP1, (l, r) => l.Combine(r));
-                ret.IDP3 = this.IDP3.Combine(rhs.IDP3, (l, r) => l.Combine(r));
+                ret.ImpactSoundDefault = this.ImpactSoundDefault.Combine(rhs.ImpactSoundDefault, (l, r) => l.Combine(r));
+                ret.ImpactSoundPlayerFirstShooter = this.ImpactSoundPlayerFirstShooter.Combine(rhs.ImpactSoundPlayerFirstShooter, (l, r) => l.Combine(r));
+                ret.ImpactSoundPlayerThirdTarget = this.ImpactSoundPlayerThirdTarget.Combine(rhs.ImpactSoundPlayerThirdTarget, (l, r) => l.Combine(r));
                 ret.FootstepParticleMaxDist = this.FootstepParticleMaxDist.Combine(rhs.FootstepParticleMaxDist);
+                ret.DecalLifetime = this.DecalLifetime.Combine(rhs.DecalLifetime);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1055,12 +1151,13 @@ namespace Mutagen.Bethesda.Starfield
             public bool Result;
             public bool Unknown;
             public bool ProjectedDecals;
-            public ImpactHNAM.TranslationMask? HNAM;
+            public bool ScatterProjectedDecals;
             public Decal.TranslationMask? Decal;
-            public SoundReference.TranslationMask? IDSH;
-            public SoundReference.TranslationMask? IDP1;
-            public SoundReference.TranslationMask? IDP3;
+            public SoundReference.TranslationMask? ImpactSoundDefault;
+            public SoundReference.TranslationMask? ImpactSoundPlayerFirstShooter;
+            public SoundReference.TranslationMask? ImpactSoundPlayerThirdTarget;
             public bool FootstepParticleMaxDist;
+            public bool DecalLifetime;
             #endregion
 
             #region Ctors
@@ -1078,7 +1175,9 @@ namespace Mutagen.Bethesda.Starfield
                 this.Result = defaultOn;
                 this.Unknown = defaultOn;
                 this.ProjectedDecals = defaultOn;
+                this.ScatterProjectedDecals = defaultOn;
                 this.FootstepParticleMaxDist = defaultOn;
+                this.DecalLifetime = defaultOn;
             }
 
             #endregion
@@ -1097,12 +1196,13 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Result, null));
                 ret.Add((Unknown, null));
                 ret.Add((ProjectedDecals, null));
-                ret.Add((HNAM != null ? HNAM.OnOverall : DefaultOn, HNAM?.GetCrystal()));
+                ret.Add((ScatterProjectedDecals, null));
                 ret.Add((Decal != null ? Decal.OnOverall : DefaultOn, Decal?.GetCrystal()));
-                ret.Add((IDSH != null ? IDSH.OnOverall : DefaultOn, IDSH?.GetCrystal()));
-                ret.Add((IDP1 != null ? IDP1.OnOverall : DefaultOn, IDP1?.GetCrystal()));
-                ret.Add((IDP3 != null ? IDP3.OnOverall : DefaultOn, IDP3?.GetCrystal()));
+                ret.Add((ImpactSoundDefault != null ? ImpactSoundDefault.OnOverall : DefaultOn, ImpactSoundDefault?.GetCrystal()));
+                ret.Add((ImpactSoundPlayerFirstShooter != null ? ImpactSoundPlayerFirstShooter.OnOverall : DefaultOn, ImpactSoundPlayerFirstShooter?.GetCrystal()));
+                ret.Add((ImpactSoundPlayerThirdTarget != null ? ImpactSoundPlayerThirdTarget.OnOverall : DefaultOn, ImpactSoundPlayerThirdTarget?.GetCrystal()));
                 ret.Add((FootstepParticleMaxDist, null));
+                ret.Add((DecalLifetime, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1270,12 +1370,13 @@ namespace Mutagen.Bethesda.Starfield
         new Impact.ResultType Result { get; set; }
         new Int16 Unknown { get; set; }
         new ExtendedList<IFormLinkGetter<IProjectedDecalGetter>>? ProjectedDecals { get; set; }
-        new ImpactHNAM? HNAM { get; set; }
+        new ExtendedList<IFormLinkGetter<IProjectedDecalGetter>>? ScatterProjectedDecals { get; set; }
         new Decal? Decal { get; set; }
-        new SoundReference? IDSH { get; set; }
-        new SoundReference? IDP1 { get; set; }
-        new SoundReference? IDP3 { get; set; }
+        new SoundReference? ImpactSoundDefault { get; set; }
+        new SoundReference? ImpactSoundPlayerFirstShooter { get; set; }
+        new SoundReference? ImpactSoundPlayerThirdTarget { get; set; }
         new Single? FootstepParticleMaxDist { get; set; }
+        new Single? DecalLifetime { get; set; }
     }
 
     public partial interface IImpactInternal :
@@ -1312,12 +1413,13 @@ namespace Mutagen.Bethesda.Starfield
         Impact.ResultType Result { get; }
         Int16 Unknown { get; }
         IReadOnlyList<IFormLinkGetter<IProjectedDecalGetter>>? ProjectedDecals { get; }
-        IImpactHNAMGetter? HNAM { get; }
+        IReadOnlyList<IFormLinkGetter<IProjectedDecalGetter>>? ScatterProjectedDecals { get; }
         IDecalGetter? Decal { get; }
-        ISoundReferenceGetter? IDSH { get; }
-        ISoundReferenceGetter? IDP1 { get; }
-        ISoundReferenceGetter? IDP3 { get; }
+        ISoundReferenceGetter? ImpactSoundDefault { get; }
+        ISoundReferenceGetter? ImpactSoundPlayerFirstShooter { get; }
+        ISoundReferenceGetter? ImpactSoundPlayerThirdTarget { get; }
         Single? FootstepParticleMaxDist { get; }
+        Single? DecalLifetime { get; }
 
     }
 
@@ -1505,12 +1607,13 @@ namespace Mutagen.Bethesda.Starfield
         Result = 15,
         Unknown = 16,
         ProjectedDecals = 17,
-        HNAM = 18,
+        ScatterProjectedDecals = 18,
         Decal = 19,
-        IDSH = 20,
-        IDP1 = 21,
-        IDP3 = 22,
+        ImpactSoundDefault = 20,
+        ImpactSoundPlayerFirstShooter = 21,
+        ImpactSoundPlayerThirdTarget = 22,
         FootstepParticleMaxDist = 23,
+        DecalLifetime = 24,
     }
     #endregion
 
@@ -1521,9 +1624,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 17;
+        public const ushort AdditionalFieldCount = 18;
 
-        public const ushort FieldCount = 24;
+        public const ushort FieldCount = 25;
 
         public static readonly Type MaskType = typeof(Impact.Mask<>);
 
@@ -1572,7 +1675,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.IDSH,
                 RecordTypes.IDP1,
                 RecordTypes.IDP3,
-                RecordTypes.FNAM);
+                RecordTypes.FNAM,
+                RecordTypes.INAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -1628,12 +1732,13 @@ namespace Mutagen.Bethesda.Starfield
             item.Result = default(Impact.ResultType);
             item.Unknown = default(Int16);
             item.ProjectedDecals = null;
-            item.HNAM = null;
+            item.ScatterProjectedDecals = null;
             item.Decal = null;
-            item.IDSH = null;
-            item.IDP1 = null;
-            item.IDP3 = null;
+            item.ImpactSoundDefault = null;
+            item.ImpactSoundPlayerFirstShooter = null;
+            item.ImpactSoundPlayerThirdTarget = null;
             item.FootstepParticleMaxDist = default;
+            item.DecalLifetime = default;
             base.Clear(item);
         }
         
@@ -1654,10 +1759,10 @@ namespace Mutagen.Bethesda.Starfield
             obj.Components.RemapLinks(mapping);
             obj.Model?.RemapLinks(mapping);
             obj.ProjectedDecals?.RemapLinks(mapping);
-            obj.HNAM?.RemapLinks(mapping);
-            obj.IDSH?.RemapLinks(mapping);
-            obj.IDP1?.RemapLinks(mapping);
-            obj.IDP3?.RemapLinks(mapping);
+            obj.ScatterProjectedDecals?.RemapLinks(mapping);
+            obj.ImpactSoundDefault?.RemapLinks(mapping);
+            obj.ImpactSoundPlayerFirstShooter?.RemapLinks(mapping);
+            obj.ImpactSoundPlayerThirdTarget?.RemapLinks(mapping);
         }
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IImpact obj)
@@ -1778,32 +1883,32 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.ProjectedDecals,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.HNAM = EqualsMaskHelper.EqualsHelper(
-                item.HNAM,
-                rhs.HNAM,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+            ret.ScatterProjectedDecals = item.ScatterProjectedDecals.CollectionEqualsHelper(
+                rhs.ScatterProjectedDecals,
+                (l, r) => object.Equals(l, r),
                 include);
             ret.Decal = EqualsMaskHelper.EqualsHelper(
                 item.Decal,
                 rhs.Decal,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.IDSH = EqualsMaskHelper.EqualsHelper(
-                item.IDSH,
-                rhs.IDSH,
+            ret.ImpactSoundDefault = EqualsMaskHelper.EqualsHelper(
+                item.ImpactSoundDefault,
+                rhs.ImpactSoundDefault,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.IDP1 = EqualsMaskHelper.EqualsHelper(
-                item.IDP1,
-                rhs.IDP1,
+            ret.ImpactSoundPlayerFirstShooter = EqualsMaskHelper.EqualsHelper(
+                item.ImpactSoundPlayerFirstShooter,
+                rhs.ImpactSoundPlayerFirstShooter,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.IDP3 = EqualsMaskHelper.EqualsHelper(
-                item.IDP3,
-                rhs.IDP3,
+            ret.ImpactSoundPlayerThirdTarget = EqualsMaskHelper.EqualsHelper(
+                item.ImpactSoundPlayerThirdTarget,
+                rhs.ImpactSoundPlayerThirdTarget,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.FootstepParticleMaxDist = item.FootstepParticleMaxDist.EqualsWithin(rhs.FootstepParticleMaxDist);
+            ret.DecalLifetime = item.DecalLifetime.EqualsWithin(rhs.DecalLifetime);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1919,35 +2024,50 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.HNAM?.Overall ?? true)
-                && item.HNAM is {} HNAMItem)
+            if ((printMask?.ScatterProjectedDecals?.Overall ?? true)
+                && item.ScatterProjectedDecals is {} ScatterProjectedDecalsItem)
             {
-                HNAMItem?.Print(sb, "HNAM");
+                sb.AppendLine("ScatterProjectedDecals =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in ScatterProjectedDecalsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
             }
             if ((printMask?.Decal?.Overall ?? true)
                 && item.Decal is {} DecalItem)
             {
                 DecalItem?.Print(sb, "Decal");
             }
-            if ((printMask?.IDSH?.Overall ?? true)
-                && item.IDSH is {} IDSHItem)
+            if ((printMask?.ImpactSoundDefault?.Overall ?? true)
+                && item.ImpactSoundDefault is {} ImpactSoundDefaultItem)
             {
-                IDSHItem?.Print(sb, "IDSH");
+                ImpactSoundDefaultItem?.Print(sb, "ImpactSoundDefault");
             }
-            if ((printMask?.IDP1?.Overall ?? true)
-                && item.IDP1 is {} IDP1Item)
+            if ((printMask?.ImpactSoundPlayerFirstShooter?.Overall ?? true)
+                && item.ImpactSoundPlayerFirstShooter is {} ImpactSoundPlayerFirstShooterItem)
             {
-                IDP1Item?.Print(sb, "IDP1");
+                ImpactSoundPlayerFirstShooterItem?.Print(sb, "ImpactSoundPlayerFirstShooter");
             }
-            if ((printMask?.IDP3?.Overall ?? true)
-                && item.IDP3 is {} IDP3Item)
+            if ((printMask?.ImpactSoundPlayerThirdTarget?.Overall ?? true)
+                && item.ImpactSoundPlayerThirdTarget is {} ImpactSoundPlayerThirdTargetItem)
             {
-                IDP3Item?.Print(sb, "IDP3");
+                ImpactSoundPlayerThirdTargetItem?.Print(sb, "ImpactSoundPlayerThirdTarget");
             }
             if ((printMask?.FootstepParticleMaxDist ?? true)
                 && item.FootstepParticleMaxDist is {} FootstepParticleMaxDistItem)
             {
                 sb.AppendItem(FootstepParticleMaxDistItem, "FootstepParticleMaxDist");
+            }
+            if ((printMask?.DecalLifetime ?? true)
+                && item.DecalLifetime is {} DecalLifetimeItem)
+            {
+                sb.AppendItem(DecalLifetimeItem, "DecalLifetime");
             }
         }
         
@@ -2047,13 +2167,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.ProjectedDecals.SequenceEqualNullable(rhs.ProjectedDecals)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.HNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.ScatterProjectedDecals) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.HNAM, rhs.HNAM, out var lhsHNAM, out var rhsHNAM, out var isHNAMEqual))
-                {
-                    if (!((ImpactHNAMCommon)((IImpactHNAMGetter)lhsHNAM).CommonInstance()!).Equals(lhsHNAM, rhsHNAM, equalsMask?.GetSubCrystal((int)Impact_FieldIndex.HNAM))) return false;
-                }
-                else if (!isHNAMEqual) return false;
+                if (!lhs.ScatterProjectedDecals.SequenceEqualNullable(rhs.ScatterProjectedDecals)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.Decal) ?? true))
             {
@@ -2063,33 +2179,37 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isDecalEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.IDSH) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.ImpactSoundDefault) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.IDSH, rhs.IDSH, out var lhsIDSH, out var rhsIDSH, out var isIDSHEqual))
+                if (EqualsMaskHelper.RefEquality(lhs.ImpactSoundDefault, rhs.ImpactSoundDefault, out var lhsImpactSoundDefault, out var rhsImpactSoundDefault, out var isImpactSoundDefaultEqual))
                 {
-                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsIDSH).CommonInstance()!).Equals(lhsIDSH, rhsIDSH, equalsMask?.GetSubCrystal((int)Impact_FieldIndex.IDSH))) return false;
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsImpactSoundDefault).CommonInstance()!).Equals(lhsImpactSoundDefault, rhsImpactSoundDefault, equalsMask?.GetSubCrystal((int)Impact_FieldIndex.ImpactSoundDefault))) return false;
                 }
-                else if (!isIDSHEqual) return false;
+                else if (!isImpactSoundDefaultEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.IDP1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.ImpactSoundPlayerFirstShooter) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.IDP1, rhs.IDP1, out var lhsIDP1, out var rhsIDP1, out var isIDP1Equal))
+                if (EqualsMaskHelper.RefEquality(lhs.ImpactSoundPlayerFirstShooter, rhs.ImpactSoundPlayerFirstShooter, out var lhsImpactSoundPlayerFirstShooter, out var rhsImpactSoundPlayerFirstShooter, out var isImpactSoundPlayerFirstShooterEqual))
                 {
-                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsIDP1).CommonInstance()!).Equals(lhsIDP1, rhsIDP1, equalsMask?.GetSubCrystal((int)Impact_FieldIndex.IDP1))) return false;
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsImpactSoundPlayerFirstShooter).CommonInstance()!).Equals(lhsImpactSoundPlayerFirstShooter, rhsImpactSoundPlayerFirstShooter, equalsMask?.GetSubCrystal((int)Impact_FieldIndex.ImpactSoundPlayerFirstShooter))) return false;
                 }
-                else if (!isIDP1Equal) return false;
+                else if (!isImpactSoundPlayerFirstShooterEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.IDP3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.ImpactSoundPlayerThirdTarget) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.IDP3, rhs.IDP3, out var lhsIDP3, out var rhsIDP3, out var isIDP3Equal))
+                if (EqualsMaskHelper.RefEquality(lhs.ImpactSoundPlayerThirdTarget, rhs.ImpactSoundPlayerThirdTarget, out var lhsImpactSoundPlayerThirdTarget, out var rhsImpactSoundPlayerThirdTarget, out var isImpactSoundPlayerThirdTargetEqual))
                 {
-                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsIDP3).CommonInstance()!).Equals(lhsIDP3, rhsIDP3, equalsMask?.GetSubCrystal((int)Impact_FieldIndex.IDP3))) return false;
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsImpactSoundPlayerThirdTarget).CommonInstance()!).Equals(lhsImpactSoundPlayerThirdTarget, rhsImpactSoundPlayerThirdTarget, equalsMask?.GetSubCrystal((int)Impact_FieldIndex.ImpactSoundPlayerThirdTarget))) return false;
                 }
-                else if (!isIDP3Equal) return false;
+                else if (!isImpactSoundPlayerThirdTargetEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.FootstepParticleMaxDist) ?? true))
             {
                 if (!lhs.FootstepParticleMaxDist.EqualsWithin(rhs.FootstepParticleMaxDist)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Impact_FieldIndex.DecalLifetime) ?? true))
+            {
+                if (!lhs.DecalLifetime.EqualsWithin(rhs.DecalLifetime)) return false;
             }
             return true;
         }
@@ -2133,29 +2253,30 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Result);
             hash.Add(item.Unknown);
             hash.Add(item.ProjectedDecals);
-            if (item.HNAM is {} HNAMitem)
-            {
-                hash.Add(HNAMitem);
-            }
+            hash.Add(item.ScatterProjectedDecals);
             if (item.Decal is {} Decalitem)
             {
                 hash.Add(Decalitem);
             }
-            if (item.IDSH is {} IDSHitem)
+            if (item.ImpactSoundDefault is {} ImpactSoundDefaultitem)
             {
-                hash.Add(IDSHitem);
+                hash.Add(ImpactSoundDefaultitem);
             }
-            if (item.IDP1 is {} IDP1item)
+            if (item.ImpactSoundPlayerFirstShooter is {} ImpactSoundPlayerFirstShooteritem)
             {
-                hash.Add(IDP1item);
+                hash.Add(ImpactSoundPlayerFirstShooteritem);
             }
-            if (item.IDP3 is {} IDP3item)
+            if (item.ImpactSoundPlayerThirdTarget is {} ImpactSoundPlayerThirdTargetitem)
             {
-                hash.Add(IDP3item);
+                hash.Add(ImpactSoundPlayerThirdTargetitem);
             }
             if (item.FootstepParticleMaxDist is {} FootstepParticleMaxDistitem)
             {
                 hash.Add(FootstepParticleMaxDistitem);
+            }
+            if (item.DecalLifetime is {} DecalLifetimeitem)
+            {
+                hash.Add(DecalLifetimeitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -2205,30 +2326,30 @@ namespace Mutagen.Bethesda.Starfield
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.HNAM is {} HNAMItems)
+            if (obj.ScatterProjectedDecals is {} ScatterProjectedDecalsItem)
             {
-                foreach (var item in HNAMItems.EnumerateFormLinks())
+                foreach (var item in ScatterProjectedDecalsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.ImpactSoundDefault is {} ImpactSoundDefaultItems)
+            {
+                foreach (var item in ImpactSoundDefaultItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            if (obj.IDSH is {} IDSHItems)
+            if (obj.ImpactSoundPlayerFirstShooter is {} ImpactSoundPlayerFirstShooterItems)
             {
-                foreach (var item in IDSHItems.EnumerateFormLinks())
+                foreach (var item in ImpactSoundPlayerFirstShooterItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            if (obj.IDP1 is {} IDP1Items)
+            if (obj.ImpactSoundPlayerThirdTarget is {} ImpactSoundPlayerThirdTargetItems)
             {
-                foreach (var item in IDP1Items.EnumerateFormLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.IDP3 is {} IDP3Items)
-            {
-                foreach (var item in IDP3Items.EnumerateFormLinks())
+                foreach (var item in ImpactSoundPlayerThirdTargetItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -2437,20 +2558,21 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.HNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.ScatterProjectedDecals) ?? true))
             {
-                errorMask?.PushIndex((int)Impact_FieldIndex.HNAM);
+                errorMask?.PushIndex((int)Impact_FieldIndex.ScatterProjectedDecals);
                 try
                 {
-                    if(rhs.HNAM is {} rhsHNAM)
+                    if ((rhs.ScatterProjectedDecals != null))
                     {
-                        item.HNAM = rhsHNAM.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Impact_FieldIndex.HNAM));
+                        item.ScatterProjectedDecals = 
+                            rhs.ScatterProjectedDecals
+                                .Select(b => (IFormLinkGetter<IProjectedDecalGetter>)new FormLink<IProjectedDecalGetter>(b.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IProjectedDecalGetter>>();
                     }
                     else
                     {
-                        item.HNAM = default;
+                        item.ScatterProjectedDecals = null;
                     }
                 }
                 catch (Exception ex)
@@ -2489,20 +2611,20 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.IDSH) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.ImpactSoundDefault) ?? true))
             {
-                errorMask?.PushIndex((int)Impact_FieldIndex.IDSH);
+                errorMask?.PushIndex((int)Impact_FieldIndex.ImpactSoundDefault);
                 try
                 {
-                    if(rhs.IDSH is {} rhsIDSH)
+                    if(rhs.ImpactSoundDefault is {} rhsImpactSoundDefault)
                     {
-                        item.IDSH = rhsIDSH.DeepCopy(
+                        item.ImpactSoundDefault = rhsImpactSoundDefault.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Impact_FieldIndex.IDSH));
+                            copyMask?.GetSubCrystal((int)Impact_FieldIndex.ImpactSoundDefault));
                     }
                     else
                     {
-                        item.IDSH = default;
+                        item.ImpactSoundDefault = default;
                     }
                 }
                 catch (Exception ex)
@@ -2515,20 +2637,20 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.IDP1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.ImpactSoundPlayerFirstShooter) ?? true))
             {
-                errorMask?.PushIndex((int)Impact_FieldIndex.IDP1);
+                errorMask?.PushIndex((int)Impact_FieldIndex.ImpactSoundPlayerFirstShooter);
                 try
                 {
-                    if(rhs.IDP1 is {} rhsIDP1)
+                    if(rhs.ImpactSoundPlayerFirstShooter is {} rhsImpactSoundPlayerFirstShooter)
                     {
-                        item.IDP1 = rhsIDP1.DeepCopy(
+                        item.ImpactSoundPlayerFirstShooter = rhsImpactSoundPlayerFirstShooter.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Impact_FieldIndex.IDP1));
+                            copyMask?.GetSubCrystal((int)Impact_FieldIndex.ImpactSoundPlayerFirstShooter));
                     }
                     else
                     {
-                        item.IDP1 = default;
+                        item.ImpactSoundPlayerFirstShooter = default;
                     }
                 }
                 catch (Exception ex)
@@ -2541,20 +2663,20 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.IDP3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.ImpactSoundPlayerThirdTarget) ?? true))
             {
-                errorMask?.PushIndex((int)Impact_FieldIndex.IDP3);
+                errorMask?.PushIndex((int)Impact_FieldIndex.ImpactSoundPlayerThirdTarget);
                 try
                 {
-                    if(rhs.IDP3 is {} rhsIDP3)
+                    if(rhs.ImpactSoundPlayerThirdTarget is {} rhsImpactSoundPlayerThirdTarget)
                     {
-                        item.IDP3 = rhsIDP3.DeepCopy(
+                        item.ImpactSoundPlayerThirdTarget = rhsImpactSoundPlayerThirdTarget.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Impact_FieldIndex.IDP3));
+                            copyMask?.GetSubCrystal((int)Impact_FieldIndex.ImpactSoundPlayerThirdTarget));
                     }
                     else
                     {
-                        item.IDP3 = default;
+                        item.ImpactSoundPlayerThirdTarget = default;
                     }
                 }
                 catch (Exception ex)
@@ -2570,6 +2692,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.FootstepParticleMaxDist) ?? true))
             {
                 item.FootstepParticleMaxDist = rhs.FootstepParticleMaxDist;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.DecalLifetime) ?? true))
+            {
+                item.DecalLifetime = rhs.DecalLifetime;
             }
             DeepCopyInCustom(
                 item: item,
@@ -2794,13 +2920,16 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         item: subItem);
                 });
-            if (item.HNAM is {} HNAMItem)
-            {
-                ((ImpactHNAMBinaryWriteTranslation)((IBinaryItem)HNAMItem).BinaryWriteTranslator).Write(
-                    item: HNAMItem,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IProjectedDecalGetter>>.Instance.Write(
+                writer: writer,
+                items: item.ScatterProjectedDecals,
+                recordType: translationParams.ConvertToCustom(RecordTypes.HNAM),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IProjectedDecalGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
             if (item.Decal is {} DecalItem)
             {
                 ((DecalBinaryWriteTranslation)((IBinaryItem)DecalItem).BinaryWriteTranslator).Write(
@@ -2808,32 +2937,32 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     translationParams: translationParams);
             }
-            if (item.IDSH is {} IDSHItem)
+            if (item.ImpactSoundDefault is {} ImpactSoundDefaultItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.IDSH))
                 {
-                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)IDSHItem).BinaryWriteTranslator).Write(
-                        item: IDSHItem,
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)ImpactSoundDefaultItem).BinaryWriteTranslator).Write(
+                        item: ImpactSoundDefaultItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
             }
-            if (item.IDP1 is {} IDP1Item)
+            if (item.ImpactSoundPlayerFirstShooter is {} ImpactSoundPlayerFirstShooterItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.IDP1))
                 {
-                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)IDP1Item).BinaryWriteTranslator).Write(
-                        item: IDP1Item,
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)ImpactSoundPlayerFirstShooterItem).BinaryWriteTranslator).Write(
+                        item: ImpactSoundPlayerFirstShooterItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
             }
-            if (item.IDP3 is {} IDP3Item)
+            if (item.ImpactSoundPlayerThirdTarget is {} ImpactSoundPlayerThirdTargetItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.IDP3))
                 {
-                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)IDP3Item).BinaryWriteTranslator).Write(
-                        item: IDP3Item,
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)ImpactSoundPlayerThirdTargetItem).BinaryWriteTranslator).Write(
+                        item: ImpactSoundPlayerThirdTargetItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -2842,6 +2971,10 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.FootstepParticleMaxDist,
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM));
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.DecalLifetime,
+                header: translationParams.ConvertToCustom(RecordTypes.INAM));
         }
 
         public void Write(
@@ -2973,8 +3106,13 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    item.HNAM = Mutagen.Bethesda.Starfield.ImpactHNAM.CreateFromBinary(frame: frame);
-                    return (int)Impact_FieldIndex.HNAM;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ScatterProjectedDecals = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IProjectedDecalGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedList<IFormLinkGetter<IProjectedDecalGetter>>();
+                    return (int)Impact_FieldIndex.ScatterProjectedDecals;
                 }
                 case RecordTypeInts.DODT:
                 {
@@ -2984,26 +3122,32 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.IDSH:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.IDSH = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
-                    return (int)Impact_FieldIndex.IDSH;
+                    item.ImpactSoundDefault = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)Impact_FieldIndex.ImpactSoundDefault;
                 }
                 case RecordTypeInts.IDP1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.IDP1 = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
-                    return (int)Impact_FieldIndex.IDP1;
+                    item.ImpactSoundPlayerFirstShooter = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)Impact_FieldIndex.ImpactSoundPlayerFirstShooter;
                 }
                 case RecordTypeInts.IDP3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.IDP3 = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
-                    return (int)Impact_FieldIndex.IDP3;
+                    item.ImpactSoundPlayerThirdTarget = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)Impact_FieldIndex.ImpactSoundPlayerThirdTarget;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FootstepParticleMaxDist = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Impact_FieldIndex.FootstepParticleMaxDist;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DecalLifetime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Impact_FieldIndex.DecalLifetime;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3109,20 +3253,21 @@ namespace Mutagen.Bethesda.Starfield
         public Int16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default(Int16);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IProjectedDecalGetter>>? ProjectedDecals { get; private set; }
-        #region HNAM
-        private RangeInt32? _HNAMLocation;
-        public IImpactHNAMGetter? HNAM => _HNAMLocation.HasValue ? ImpactHNAMBinaryOverlay.ImpactHNAMFactory(_recordData.Slice(_HNAMLocation!.Value.Min), _package) : default;
-        #endregion
+        public IReadOnlyList<IFormLinkGetter<IProjectedDecalGetter>>? ScatterProjectedDecals { get; private set; }
         #region Decal
         private RangeInt32? _DecalLocation;
         public IDecalGetter? Decal => _DecalLocation.HasValue ? DecalBinaryOverlay.DecalFactory(_recordData.Slice(_DecalLocation!.Value.Min), _package) : default;
         #endregion
-        public ISoundReferenceGetter? IDSH { get; private set; }
-        public ISoundReferenceGetter? IDP1 { get; private set; }
-        public ISoundReferenceGetter? IDP3 { get; private set; }
+        public ISoundReferenceGetter? ImpactSoundDefault { get; private set; }
+        public ISoundReferenceGetter? ImpactSoundPlayerFirstShooter { get; private set; }
+        public ISoundReferenceGetter? ImpactSoundPlayerThirdTarget { get; private set; }
         #region FootstepParticleMaxDist
         private int? _FootstepParticleMaxDistLocation;
         public Single? FootstepParticleMaxDist => _FootstepParticleMaxDistLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FootstepParticleMaxDistLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #endregion
+        #region DecalLifetime
+        private int? _DecalLifetimeLocation;
+        public Single? DecalLifetime => _DecalLifetimeLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DecalLifetimeLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3233,8 +3378,13 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    _HNAMLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                    return (int)Impact_FieldIndex.HNAM;
+                    this.ScatterProjectedDecals = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IProjectedDecalGetter>>(
+                        stream: stream,
+                        package: _package,
+                        finalPos: finalPos,
+                        itemLength: 4,
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IProjectedDecalGetter>(p, s));
+                    return (int)Impact_FieldIndex.ScatterProjectedDecals;
                 }
                 case RecordTypeInts.DODT:
                 {
@@ -3244,34 +3394,39 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.IDSH:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
-                    this.IDSH = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                    this.ImpactSoundDefault = SoundReferenceBinaryOverlay.SoundReferenceFactory(
                         stream: stream,
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());
-                    return (int)Impact_FieldIndex.IDSH;
+                    return (int)Impact_FieldIndex.ImpactSoundDefault;
                 }
                 case RecordTypeInts.IDP1:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
-                    this.IDP1 = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                    this.ImpactSoundPlayerFirstShooter = SoundReferenceBinaryOverlay.SoundReferenceFactory(
                         stream: stream,
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());
-                    return (int)Impact_FieldIndex.IDP1;
+                    return (int)Impact_FieldIndex.ImpactSoundPlayerFirstShooter;
                 }
                 case RecordTypeInts.IDP3:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
-                    this.IDP3 = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                    this.ImpactSoundPlayerThirdTarget = SoundReferenceBinaryOverlay.SoundReferenceFactory(
                         stream: stream,
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());
-                    return (int)Impact_FieldIndex.IDP3;
+                    return (int)Impact_FieldIndex.ImpactSoundPlayerThirdTarget;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     _FootstepParticleMaxDistLocation = (stream.Position - offset);
                     return (int)Impact_FieldIndex.FootstepParticleMaxDist;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    _DecalLifetimeLocation = (stream.Position - offset);
+                    return (int)Impact_FieldIndex.DecalLifetime;
                 }
                 default:
                     return base.FillRecordType(

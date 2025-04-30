@@ -7,7 +7,7 @@
       <Float name="MinHeight" />
       <Float name="MaxHeight" />
       <Float name="Depth" />
-      <Float name="Shininess" />
+      <Float name="Alpha" />
     </Fields>
   </Object>
 </Loqui>

@@ -61,11 +61,8 @@ namespace Mutagen.Bethesda.Starfield
             get => _Data;
             set => _Data = value;
         }
-        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISurfaceTreePatternSwapInfoComponentDataGetter? ISurfaceTreePatternSwapInfoComponentGetter.Data => this.Data;
-        #endregion
-
         #endregion
 
         #region To String

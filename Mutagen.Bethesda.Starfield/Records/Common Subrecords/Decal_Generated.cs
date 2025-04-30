@@ -65,8 +65,8 @@ namespace Mutagen.Bethesda.Starfield
         #region Depth
         public Single Depth { get; set; } = default(Single);
         #endregion
-        #region Shininess
-        public Single Shininess { get; set; } = default(Single);
+        #region Alpha
+        public Single Alpha { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.MinHeight = initialValue;
                 this.MaxHeight = initialValue;
                 this.Depth = initialValue;
-                this.Shininess = initialValue;
+                this.Alpha = initialValue;
             }
 
             public Mask(
@@ -121,14 +121,14 @@ namespace Mutagen.Bethesda.Starfield
                 TItem MinHeight,
                 TItem MaxHeight,
                 TItem Depth,
-                TItem Shininess)
+                TItem Alpha)
             {
                 this.MinWidth = MinWidth;
                 this.MaxWidth = MaxWidth;
                 this.MinHeight = MinHeight;
                 this.MaxHeight = MaxHeight;
                 this.Depth = Depth;
-                this.Shininess = Shininess;
+                this.Alpha = Alpha;
             }
 
             #pragma warning disable CS8618
@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem MinHeight;
             public TItem MaxHeight;
             public TItem Depth;
-            public TItem Shininess;
+            public TItem Alpha;
             #endregion
 
             #region Equals
@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.MinHeight, rhs.MinHeight)) return false;
                 if (!object.Equals(this.MaxHeight, rhs.MaxHeight)) return false;
                 if (!object.Equals(this.Depth, rhs.Depth)) return false;
-                if (!object.Equals(this.Shininess, rhs.Shininess)) return false;
+                if (!object.Equals(this.Alpha, rhs.Alpha)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.MinHeight);
                 hash.Add(this.MaxHeight);
                 hash.Add(this.Depth);
-                hash.Add(this.Shininess);
+                hash.Add(this.Alpha);
                 return hash.ToHashCode();
             }
 
@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.MinHeight)) return false;
                 if (!eval(this.MaxHeight)) return false;
                 if (!eval(this.Depth)) return false;
-                if (!eval(this.Shininess)) return false;
+                if (!eval(this.Alpha)) return false;
                 return true;
             }
             #endregion
@@ -201,7 +201,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.MinHeight)) return true;
                 if (eval(this.MaxHeight)) return true;
                 if (eval(this.Depth)) return true;
-                if (eval(this.Shininess)) return true;
+                if (eval(this.Alpha)) return true;
                 return false;
             }
             #endregion
@@ -221,7 +221,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.MinHeight = eval(this.MinHeight);
                 obj.MaxHeight = eval(this.MaxHeight);
                 obj.Depth = eval(this.Depth);
-                obj.Shininess = eval(this.Shininess);
+                obj.Alpha = eval(this.Alpha);
             }
             #endregion
 
@@ -260,9 +260,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Depth, "Depth");
                     }
-                    if (printMask?.Shininess ?? true)
+                    if (printMask?.Alpha ?? true)
                     {
-                        sb.AppendItem(Shininess, "Shininess");
+                        sb.AppendItem(Alpha, "Alpha");
                     }
                 }
             }
@@ -293,7 +293,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? MinHeight;
             public Exception? MaxHeight;
             public Exception? Depth;
-            public Exception? Shininess;
+            public Exception? Alpha;
             #endregion
 
             #region IErrorMask
@@ -312,8 +312,8 @@ namespace Mutagen.Bethesda.Starfield
                         return MaxHeight;
                     case Decal_FieldIndex.Depth:
                         return Depth;
-                    case Decal_FieldIndex.Shininess:
-                        return Shininess;
+                    case Decal_FieldIndex.Alpha:
+                        return Alpha;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -339,8 +339,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Decal_FieldIndex.Depth:
                         this.Depth = ex;
                         break;
-                    case Decal_FieldIndex.Shininess:
-                        this.Shininess = ex;
+                    case Decal_FieldIndex.Alpha:
+                        this.Alpha = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -367,8 +367,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Decal_FieldIndex.Depth:
                         this.Depth = (Exception?)obj;
                         break;
-                    case Decal_FieldIndex.Shininess:
-                        this.Shininess = (Exception?)obj;
+                    case Decal_FieldIndex.Alpha:
+                        this.Alpha = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -383,7 +383,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (MinHeight != null) return true;
                 if (MaxHeight != null) return true;
                 if (Depth != null) return true;
-                if (Shininess != null) return true;
+                if (Alpha != null) return true;
                 return false;
             }
             #endregion
@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Depth, "Depth");
                 }
                 {
-                    sb.AppendItem(Shininess, "Shininess");
+                    sb.AppendItem(Alpha, "Alpha");
                 }
             }
             #endregion
@@ -440,7 +440,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.MinHeight = this.MinHeight.Combine(rhs.MinHeight);
                 ret.MaxHeight = this.MaxHeight.Combine(rhs.MaxHeight);
                 ret.Depth = this.Depth.Combine(rhs.Depth);
-                ret.Shininess = this.Shininess.Combine(rhs.Shininess);
+                ret.Alpha = this.Alpha.Combine(rhs.Alpha);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool MinHeight;
             public bool MaxHeight;
             public bool Depth;
-            public bool Shininess;
+            public bool Alpha;
             #endregion
 
             #region Ctors
@@ -484,7 +484,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.MinHeight = defaultOn;
                 this.MaxHeight = defaultOn;
                 this.Depth = defaultOn;
-                this.Shininess = defaultOn;
+                this.Alpha = defaultOn;
             }
 
             #endregion
@@ -505,7 +505,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((MinHeight, null));
                 ret.Add((MaxHeight, null));
                 ret.Add((Depth, null));
-                ret.Add((Shininess, null));
+                ret.Add((Alpha, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -583,7 +583,7 @@ namespace Mutagen.Bethesda.Starfield
         new Single MinHeight { get; set; }
         new Single MaxHeight { get; set; }
         new Single Depth { get; set; }
-        new Single Shininess { get; set; }
+        new Single Alpha { get; set; }
     }
 
     public partial interface IDecalGetter :
@@ -603,7 +603,7 @@ namespace Mutagen.Bethesda.Starfield
         Single MinHeight { get; }
         Single MaxHeight { get; }
         Single Depth { get; }
-        Single Shininess { get; }
+        Single Alpha { get; }
 
     }
 
@@ -778,7 +778,7 @@ namespace Mutagen.Bethesda.Starfield
         MinHeight = 2,
         MaxHeight = 3,
         Depth = 4,
-        Shininess = 5,
+        Alpha = 5,
     }
     #endregion
 
@@ -869,7 +869,7 @@ namespace Mutagen.Bethesda.Starfield
             item.MinHeight = default(Single);
             item.MaxHeight = default(Single);
             item.Depth = default(Single);
-            item.Shininess = default(Single);
+            item.Alpha = default(Single);
         }
         
         #region Mutagen
@@ -928,7 +928,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.MinHeight = item.MinHeight.EqualsWithin(rhs.MinHeight);
             ret.MaxHeight = item.MaxHeight.EqualsWithin(rhs.MaxHeight);
             ret.Depth = item.Depth.EqualsWithin(rhs.Depth);
-            ret.Shininess = item.Shininess.EqualsWithin(rhs.Shininess);
+            ret.Alpha = item.Alpha.EqualsWithin(rhs.Alpha);
         }
         
         public string Print(
@@ -993,9 +993,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Depth, "Depth");
             }
-            if (printMask?.Shininess ?? true)
+            if (printMask?.Alpha ?? true)
             {
-                sb.AppendItem(item.Shininess, "Shininess");
+                sb.AppendItem(item.Alpha, "Alpha");
             }
         }
         
@@ -1026,9 +1026,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Depth.EqualsWithin(rhs.Depth)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Decal_FieldIndex.Shininess) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Decal_FieldIndex.Alpha) ?? true))
             {
-                if (!lhs.Shininess.EqualsWithin(rhs.Shininess)) return false;
+                if (!lhs.Alpha.EqualsWithin(rhs.Alpha)) return false;
             }
             return true;
         }
@@ -1041,7 +1041,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.MinHeight);
             hash.Add(item.MaxHeight);
             hash.Add(item.Depth);
-            hash.Add(item.Shininess);
+            hash.Add(item.Alpha);
             return hash.ToHashCode();
         }
         
@@ -1094,9 +1094,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Depth = rhs.Depth;
             }
-            if ((copyMask?.GetShouldTranslate((int)Decal_FieldIndex.Shininess) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Decal_FieldIndex.Alpha) ?? true))
             {
-                item.Shininess = rhs.Shininess;
+                item.Alpha = rhs.Alpha;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1223,7 +1223,7 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.Depth);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.Shininess);
+                item: item.Alpha);
         }
 
         public void Write(
@@ -1269,7 +1269,7 @@ namespace Mutagen.Bethesda.Starfield
             item.MinHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.MaxHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Depth = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Shininess = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Alpha = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -1340,7 +1340,7 @@ namespace Mutagen.Bethesda.Starfield
         public Single MinHeight => _structData.Slice(0x8, 0x4).Float();
         public Single MaxHeight => _structData.Slice(0xC, 0x4).Float();
         public Single Depth => _structData.Slice(0x10, 0x4).Float();
-        public Single Shininess => _structData.Slice(0x14, 0x4).Float();
+        public Single Alpha => _structData.Slice(0x14, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

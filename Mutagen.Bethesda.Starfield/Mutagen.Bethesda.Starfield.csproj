@@ -6411,9 +6411,6 @@
     <Compile Include="Records\Common Subrecords\Decal_Generated.cs">
       <DependentUpon>Decal.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ImpactHNAM_Generated.cs">
-      <DependentUpon>Impact.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\ImpactData_Generated.cs">
       <DependentUpon>ImpactDataSet.xml</DependentUpon>
     </Compile>

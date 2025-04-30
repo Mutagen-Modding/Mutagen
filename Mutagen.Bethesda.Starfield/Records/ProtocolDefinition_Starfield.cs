@@ -661,7 +661,6 @@ internal class ProtocolDefinition_Starfield : IProtocolRegistration
             Impact_Registration.Instance,
             ImpactData_Registration.Instance,
             ImpactDataSet_Registration.Instance,
-            ImpactHNAM_Registration.Instance,
             Ingestible_Registration.Instance,
             InstanceNamingRule_Registration.Instance,
             InstanceNamingRuleProperties_Registration.Instance,
