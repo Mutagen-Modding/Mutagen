@@ -1,5 +1,5 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -31,17 +31,17 @@ public abstract class ABodyTemplateTests
         }
         var exported = fs.File.ReadAllBytes($"{PathingUtil.DrivePrefix}output");
         var expected = File.ReadAllBytes(path);
-        exported.Should().Equal(expected);
+        exported.ShouldBe(expected);
     }
 
     [Fact]
     public void BodtLength8With42()
     {
         var race = Get(TestDataPathing.SkyrimBodtLength8With42);
-        race.BodyTemplate.Should().NotBeNull();
-        race.BodyTemplate!.FirstPersonFlags.Should().Be(BipedObjectFlag.Tail);
-        race.BodyTemplate!.Flags.Should().Be(default);
-        race.BodyTemplate!.ArmorType.Should().Be(ArmorType.Clothing);
+        race.BodyTemplate.ShouldNotBeNull();
+        race.BodyTemplate!.FirstPersonFlags.ShouldBe(BipedObjectFlag.Tail);
+        race.BodyTemplate!.Flags.ShouldBe(default);
+        race.BodyTemplate!.ArmorType.ShouldBe(ArmorType.Clothing);
         AssertBinaryEquality(race, TestDataPathing.SkyrimBodtEmptyFlagsOutput);
     }
 
@@ -49,10 +49,10 @@ public abstract class ABodyTemplateTests
     public void BodtLength12With42()
     {
         var race = Get(TestDataPathing.SkyrimBodtLength12With42);
-        race.BodyTemplate.Should().NotBeNull();
-        race.BodyTemplate!.FirstPersonFlags.Should().Be(BipedObjectFlag.Tail);
-        race.BodyTemplate!.Flags.Should().Be(BodyTemplate.Flag.NonPlayable);
-        race.BodyTemplate!.ArmorType.Should().Be(ArmorType.Clothing);
+        race.BodyTemplate.ShouldNotBeNull();
+        race.BodyTemplate!.FirstPersonFlags.ShouldBe(BipedObjectFlag.Tail);
+        race.BodyTemplate!.Flags.ShouldBe(BodyTemplate.Flag.NonPlayable);
+        race.BodyTemplate!.ArmorType.ShouldBe(ArmorType.Clothing);
         AssertBinaryEquality(race, TestDataPathing.SkyrimBodtTypicalOutput);
     }
 
@@ -60,10 +60,10 @@ public abstract class ABodyTemplateTests
     public void BodtLength8With43()
     {
         var race = Get(TestDataPathing.SkyrimBodtLength8With43);
-        race.BodyTemplate.Should().NotBeNull();
-        race.BodyTemplate!.FirstPersonFlags.Should().Be(BipedObjectFlag.Tail);
-        race.BodyTemplate!.Flags.Should().Be(default);
-        race.BodyTemplate!.ArmorType.Should().Be(ArmorType.Clothing);
+        race.BodyTemplate.ShouldNotBeNull();
+        race.BodyTemplate!.FirstPersonFlags.ShouldBe(BipedObjectFlag.Tail);
+        race.BodyTemplate!.Flags.ShouldBe(default);
+        race.BodyTemplate!.ArmorType.ShouldBe(ArmorType.Clothing);
         AssertBinaryEquality(race, TestDataPathing.SkyrimBodtEmptyFlagsOutput);
     }
 
@@ -71,10 +71,10 @@ public abstract class ABodyTemplateTests
     public void BodtLength12With43Normal()
     {
         var race = Get(TestDataPathing.SkyrimBodtLength12With43);
-        race.BodyTemplate.Should().NotBeNull();
-        race.BodyTemplate!.FirstPersonFlags.Should().Be(BipedObjectFlag.Tail);
-        race.BodyTemplate!.Flags.Should().Be(BodyTemplate.Flag.NonPlayable);
-        race.BodyTemplate!.ArmorType.Should().Be(ArmorType.Clothing);
+        race.BodyTemplate.ShouldNotBeNull();
+        race.BodyTemplate!.FirstPersonFlags.ShouldBe(BipedObjectFlag.Tail);
+        race.BodyTemplate!.Flags.ShouldBe(BodyTemplate.Flag.NonPlayable);
+        race.BodyTemplate!.ArmorType.ShouldBe(ArmorType.Clothing);
         AssertBinaryEquality(race, TestDataPathing.SkyrimBodtTypicalOutput);
     }
 
@@ -82,10 +82,10 @@ public abstract class ABodyTemplateTests
     public void BodtLength12With44()
     {
         var race = Get(TestDataPathing.SkyrimBodtLength12With44);
-        race.BodyTemplate.Should().NotBeNull();
-        race.BodyTemplate!.FirstPersonFlags.Should().Be(BipedObjectFlag.Tail);
-        race.BodyTemplate!.Flags.Should().Be(BodyTemplate.Flag.NonPlayable);
-        race.BodyTemplate!.ArmorType.Should().Be(ArmorType.Clothing);
+        race.BodyTemplate.ShouldNotBeNull();
+        race.BodyTemplate!.FirstPersonFlags.ShouldBe(BipedObjectFlag.Tail);
+        race.BodyTemplate!.Flags.ShouldBe(BodyTemplate.Flag.NonPlayable);
+        race.BodyTemplate!.ArmorType.ShouldBe(ArmorType.Clothing);
         AssertBinaryEquality(race, TestDataPathing.SkyrimBod2TypicalOutput);
     }
 
@@ -95,10 +95,10 @@ public abstract class ABodyTemplateTests
         Assert.Throws<SubrecordException>(() =>
         {
             var race = Get(TestDataPathing.SkyrimBodtLength8With44);
-            race.BodyTemplate.Should().NotBeNull();
-            race.BodyTemplate!.FirstPersonFlags.Should().Be(BipedObjectFlag.Tail);
-            race.BodyTemplate!.Flags.Should().Be(BodyTemplate.Flag.NonPlayable);
-            race.BodyTemplate!.ArmorType.Should().Be(ArmorType.Clothing);
+            race.BodyTemplate.ShouldNotBeNull();
+            race.BodyTemplate!.FirstPersonFlags.ShouldBe(BipedObjectFlag.Tail);
+            race.BodyTemplate!.Flags.ShouldBe(BodyTemplate.Flag.NonPlayable);
+            race.BodyTemplate!.ArmorType.ShouldBe(ArmorType.Clothing);
             AssertBinaryEquality(race, TestDataPathing.SkyrimBodtEmptyFlagsOutput);
         });
     }
@@ -107,10 +107,10 @@ public abstract class ABodyTemplateTests
     public void Bod2Length8With42()
     {
         var race = Get(TestDataPathing.SkyrimBod2Length8With42);
-        race.BodyTemplate.Should().NotBeNull();
-        race.BodyTemplate!.FirstPersonFlags.Should().Be(BipedObjectFlag.Tail);
-        race.BodyTemplate!.Flags.Should().Be(default);
-        race.BodyTemplate!.ArmorType.Should().Be(ArmorType.Clothing);
+        race.BodyTemplate.ShouldNotBeNull();
+        race.BodyTemplate!.FirstPersonFlags.ShouldBe(BipedObjectFlag.Tail);
+        race.BodyTemplate!.Flags.ShouldBe(default);
+        race.BodyTemplate!.ArmorType.ShouldBe(ArmorType.Clothing);
         AssertBinaryEquality(race, TestDataPathing.SkyrimBod2TypicalOutput);
     }
 
@@ -118,10 +118,10 @@ public abstract class ABodyTemplateTests
     public void Bod2Length12With42()
     {
         var race = Get(TestDataPathing.SkyrimBod2Length12With42);
-        race.BodyTemplate.Should().NotBeNull();
-        race.BodyTemplate!.FirstPersonFlags.Should().Be(BipedObjectFlag.Tail);
-        race.BodyTemplate!.Flags.Should().Be(BodyTemplate.Flag.NonPlayable);
-        race.BodyTemplate!.ArmorType.Should().Be(ArmorType.Clothing);
+        race.BodyTemplate.ShouldNotBeNull();
+        race.BodyTemplate!.FirstPersonFlags.ShouldBe(BipedObjectFlag.Tail);
+        race.BodyTemplate!.Flags.ShouldBe(BodyTemplate.Flag.NonPlayable);
+        race.BodyTemplate!.ArmorType.ShouldBe(ArmorType.Clothing);
         AssertBinaryEquality(race, TestDataPathing.SkyrimBod2TypicalOutput);
     }
 
@@ -129,10 +129,10 @@ public abstract class ABodyTemplateTests
     public void Bod2Length12With43()
     {
         var race = Get(TestDataPathing.SkyrimBod2Length12With43);
-        race.BodyTemplate.Should().NotBeNull();
-        race.BodyTemplate!.FirstPersonFlags.Should().Be(BipedObjectFlag.Tail);
-        race.BodyTemplate!.Flags.Should().Be(BodyTemplate.Flag.NonPlayable);
-        race.BodyTemplate!.ArmorType.Should().Be(ArmorType.Clothing);
+        race.BodyTemplate.ShouldNotBeNull();
+        race.BodyTemplate!.FirstPersonFlags.ShouldBe(BipedObjectFlag.Tail);
+        race.BodyTemplate!.Flags.ShouldBe(BodyTemplate.Flag.NonPlayable);
+        race.BodyTemplate!.ArmorType.ShouldBe(ArmorType.Clothing);
         AssertBinaryEquality(race, TestDataPathing.SkyrimBod2TypicalOutput);
     }
 
@@ -140,10 +140,10 @@ public abstract class ABodyTemplateTests
     public void Bod2Length8With43()
     {
         var race = Get(TestDataPathing.SkyrimBod2Length8With43);
-        race.BodyTemplate.Should().NotBeNull();
-        race.BodyTemplate!.FirstPersonFlags.Should().Be(BipedObjectFlag.Tail);
-        race.BodyTemplate!.Flags.Should().Be(default);
-        race.BodyTemplate!.ArmorType.Should().Be(ArmorType.Clothing);
+        race.BodyTemplate.ShouldNotBeNull();
+        race.BodyTemplate!.FirstPersonFlags.ShouldBe(BipedObjectFlag.Tail);
+        race.BodyTemplate!.Flags.ShouldBe(default);
+        race.BodyTemplate!.ArmorType.ShouldBe(ArmorType.Clothing);
         AssertBinaryEquality(race, TestDataPathing.SkyrimBod2TypicalOutput);
     }
 
@@ -151,10 +151,10 @@ public abstract class ABodyTemplateTests
     public void Bod2Length8With44Normal()
     {
         var race = Get(TestDataPathing.SkyrimBod2Length8With44);
-        race.BodyTemplate.Should().NotBeNull();
-        race.BodyTemplate!.FirstPersonFlags.Should().Be(BipedObjectFlag.Tail);
-        race.BodyTemplate!.Flags.Should().Be(default);
-        race.BodyTemplate!.ArmorType.Should().Be(ArmorType.Clothing);
+        race.BodyTemplate.ShouldNotBeNull();
+        race.BodyTemplate!.FirstPersonFlags.ShouldBe(BipedObjectFlag.Tail);
+        race.BodyTemplate!.Flags.ShouldBe(default);
+        race.BodyTemplate!.ArmorType.ShouldBe(ArmorType.Clothing);
         AssertBinaryEquality(race, TestDataPathing.SkyrimBod2TypicalOutput);
     }
 
@@ -162,10 +162,10 @@ public abstract class ABodyTemplateTests
     public void Bod2Length12With44()
     {
         var race = Get(TestDataPathing.SkyrimBod2Length12With44);
-        race.BodyTemplate.Should().NotBeNull();
-        race.BodyTemplate!.FirstPersonFlags.Should().Be(BipedObjectFlag.Tail);
-        race.BodyTemplate!.Flags.Should().Be(BodyTemplate.Flag.NonPlayable);
-        race.BodyTemplate!.ArmorType.Should().Be(ArmorType.Clothing);
+        race.BodyTemplate.ShouldNotBeNull();
+        race.BodyTemplate!.FirstPersonFlags.ShouldBe(BipedObjectFlag.Tail);
+        race.BodyTemplate!.Flags.ShouldBe(BodyTemplate.Flag.NonPlayable);
+        race.BodyTemplate!.ArmorType.ShouldBe(ArmorType.Clothing);
         AssertBinaryEquality(race, TestDataPathing.SkyrimBod2TypicalOutput);
     }
 }

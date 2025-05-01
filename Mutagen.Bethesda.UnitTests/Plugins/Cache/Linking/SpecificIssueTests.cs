@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
@@ -43,14 +43,14 @@ public partial class ALinkingTests
         WrapPotentialThrow(cacheType, style, () =>
         {
             contextRetriever.TryResolveContext<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(placed.AsLink(), package, out var rec)
-                .Should().BeTrue();
-            rec.Record.Should().Be(placed);
+                .ShouldBeTrue();
+            rec.Record.ShouldBe(placed);
         });
         WrapPotentialThrow(cacheType, style, () =>
         {
             package.TryResolve<ISkyrimMajorRecordGetter>(placed.FormKey, out var rec2)
-                .Should().BeTrue();
-            rec2.Should().Be(placed);
+                .ShouldBeTrue();
+            rec2.ShouldBe(placed);
         });
     }
 
@@ -90,14 +90,14 @@ public partial class ALinkingTests
         WrapPotentialThrow(cacheType, style, () =>
         {
             package.TryResolve<ISkyrimMajorRecordGetter>(placed.FormKey, out var rec2)
-                .Should().BeTrue();
-            rec2.Should().Be(placed);
+                .ShouldBeTrue();
+            rec2.ShouldBe(placed);
         });
         WrapPotentialThrow(cacheType, style, () =>
         {
             contextRetriever.TryResolveContext<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(placed.AsLink(), package, out var rec)
-                .Should().BeTrue();
-            rec.Record.Should().Be(placed);
+                .ShouldBeTrue();
+            rec.Record.ShouldBe(placed);
         });
     }
 
@@ -123,14 +123,14 @@ public partial class ALinkingTests
         WrapPotentialThrow(cacheType, style, () =>
         {
             package.TryResolve<IPlacedGetter>(placed.FormKey, out var rec2)
-                .Should().BeTrue();
-            rec2.Should().Be(placed);
+                .ShouldBeTrue();
+            rec2.ShouldBe(placed);
         });
         WrapPotentialThrow(cacheType, style, () =>
         {
             contextRetriever.TryResolveContext<IPlaced, IPlacedGetter>(placed.AsLink(), package, out var rec)
-                .Should().BeTrue();
-            rec.Record.Should().Be(placed);
+                .ShouldBeTrue();
+            rec.Record.ShouldBe(placed);
         });
     }
 
@@ -173,10 +173,10 @@ public partial class ALinkingTests
         WrapPotentialThrow(cacheType, style, () =>
         {
             package.TryResolveContext<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(placed.FormKey, out var rec)
-                .Should().BeTrue();
-            rec.Record.Should().Be(placed);
+                .ShouldBeTrue();
+            rec.Record.ShouldBe(placed);
             rec.GetOrAddAsOverride(outgoing);
-            outgoing.Worldspaces.First().SubCells.First().Items.First().Items.First().Landscape.Should().BeNull();
+            outgoing.Worldspaces.First().SubCells.First().Items.First().Items.First().Landscape.ShouldBeNull();
         });
     }
 }

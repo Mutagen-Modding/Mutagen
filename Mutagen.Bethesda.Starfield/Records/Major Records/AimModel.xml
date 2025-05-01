@@ -4,23 +4,23 @@
     <Fields>
       <Data recordType="ANAM">
         <Fields>
-          <Float name="ConeOfFireMinAngle" />
-          <Float name="ConeOfFireMaxAngle" />
+          <Float name="ConeOfFireDegreesX" />
+          <Float name="ConeOfFireDegreesY" />
           <Float name="ConeOfFireIncreasePerShot" />
           <Float name="ConeOfFireIncreasePerSec" />
-          <UInt32 name="ConeOfFireDecreaseDelaySeconds" />
+          <Float name="ConeOfFireDecreaseDelaySeconds" />
           <Float name="ConeOfFireSneakMult" />
           <Float name="RecoilDiminishSpringForce" />
           <Float name="RecoilDiminishSightsMult" />
-          <Float name="RecoilMinPerShot" />
-          <Float name="RecoilMaxPerShot" />
+          <Float name="RecoilDegreesPerShotX" />
+          <Float name="RecoilDegreesPerShotY" />
           <Float name="RecoilHipMult" />
-          <UInt32 name="RunawayRecoilShots" />
+          <UInt32 name="RecoilShotsForRunaway" />
           <Float name="RecoilArc" />
           <Float name="RecoilArcRotate" />
           <Float name="ConeOfFireIronSightsMult" />
-          <Float name="BaseStability" />
-          <UInt8 name="Unknown" />
+          <Float name="RecoilBaseStability" />
+          <Bool name="ConeOfFireIgnoresMovement" byteLength="1" />
         </Fields>
       </Data>
     </Fields>

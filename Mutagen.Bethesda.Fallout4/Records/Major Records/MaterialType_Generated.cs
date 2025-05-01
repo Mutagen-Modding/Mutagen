@@ -1842,7 +1842,8 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)MaterialType_FieldIndex.Name;
                 }
                 case RecordTypeInts.CNAM:
@@ -1876,7 +1877,8 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.BreakableFX = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)MaterialType_FieldIndex.BreakableFX;
                 }
                 case RecordTypeInts.MODT:

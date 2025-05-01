@@ -1,9 +1,10 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
+using Noggog.Testing.Extensions;
 using Xunit;
 using AssetLinkQuery = Mutagen.Bethesda.Plugins.Assets.AssetLinkQuery;
 
@@ -20,8 +21,7 @@ public class EnumerateAssetLinkTests
             Name = scriptName
         };
         entry.EnumerateAssetLinks(AssetLinkQuery.Inferred, null, null)
-            .Should()
-            .Equal(
+            .ShouldEqual(
                 new AssetLink<SkyrimScriptCompiledAssetType>(Path.Combine("Scripts", $"{scriptName}.pex")),
                     new AssetLink<SkyrimScriptSourceAssetType>(Path.Combine("Scripts", "Source", $"{scriptName}.psc")));
     }
@@ -43,8 +43,7 @@ public class EnumerateAssetLinkTests
             }
         };
         quest.EnumerateAssetLinks(AssetLinkQuery.Inferred, null, null)
-            .Should()
-            .Equal(
+            .ShouldEqual(
                 new AssetLink<SkyrimScriptCompiledAssetType>(Path.Combine("Scripts", $"{scriptName}.pex")),
                 new AssetLink<SkyrimScriptSourceAssetType>(Path.Combine("Scripts", "Source", $"{scriptName}.psc")));
     }
@@ -66,7 +65,6 @@ public class EnumerateAssetLinkTests
             }
         };
         quest.EnumerateAssetLinks(AssetLinkQuery.Listed, null, null)
-            .Should()
-            .Equal();
+            .ShouldBeEmpty();
     }
 }

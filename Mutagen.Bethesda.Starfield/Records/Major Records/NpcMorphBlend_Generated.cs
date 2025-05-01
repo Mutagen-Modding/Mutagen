@@ -1061,7 +1061,8 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.BlendName = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)NpcMorphBlend_FieldIndex.BlendName;
                 }
                 case RecordTypeInts.BMPV:

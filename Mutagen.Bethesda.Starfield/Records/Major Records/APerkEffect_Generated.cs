@@ -22,6 +22,7 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -75,6 +76,21 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
+        #region PerkEntryID
+        public UInt16? PerkEntryID { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt16? IAPerkEffectGetter.PerkEntryID => this.PerkEntryID;
+        #endregion
+        #region ButtonLabel
+        public TranslatedString? ButtonLabel { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IAPerkEffectGetter.ButtonLabel => this.ButtonLabel;
+        #endregion
+        #region Flags
+        public APerkEffect.Flag? Flags { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        APerkEffect.Flag? IAPerkEffectGetter.Flags => this.Flags;
+        #endregion
 
         #region To String
 
@@ -117,16 +133,25 @@ namespace Mutagen.Bethesda.Starfield
                 this.Rank = initialValue;
                 this.Priority = initialValue;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkCondition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PerkCondition.Mask<TItem>?>>());
+                this.PerkEntryID = initialValue;
+                this.ButtonLabel = initialValue;
+                this.Flags = initialValue;
             }
 
             public Mask(
                 TItem Rank,
                 TItem Priority,
-                TItem Conditions)
+                TItem Conditions,
+                TItem PerkEntryID,
+                TItem ButtonLabel,
+                TItem Flags)
             {
                 this.Rank = Rank;
                 this.Priority = Priority;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkCondition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, PerkCondition.Mask<TItem>?>>());
+                this.PerkEntryID = PerkEntryID;
+                this.ButtonLabel = ButtonLabel;
+                this.Flags = Flags;
             }
 
             #pragma warning disable CS8618
@@ -141,6 +166,9 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Rank;
             public TItem Priority;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PerkCondition.Mask<TItem>?>>?>? Conditions;
+            public TItem PerkEntryID;
+            public TItem ButtonLabel;
+            public TItem Flags;
             #endregion
 
             #region Equals
@@ -156,6 +184,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Rank, rhs.Rank)) return false;
                 if (!object.Equals(this.Priority, rhs.Priority)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.PerkEntryID, rhs.PerkEntryID)) return false;
+                if (!object.Equals(this.ButtonLabel, rhs.ButtonLabel)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -164,6 +195,9 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Rank);
                 hash.Add(this.Priority);
                 hash.Add(this.Conditions);
+                hash.Add(this.PerkEntryID);
+                hash.Add(this.ButtonLabel);
+                hash.Add(this.Flags);
                 return hash.ToHashCode();
             }
 
@@ -186,6 +220,9 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (!eval(this.PerkEntryID)) return false;
+                if (!eval(this.ButtonLabel)) return false;
+                if (!eval(this.Flags)) return false;
                 return true;
             }
             #endregion
@@ -207,6 +244,9 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (eval(this.PerkEntryID)) return true;
+                if (eval(this.ButtonLabel)) return true;
+                if (eval(this.Flags)) return true;
                 return false;
             }
             #endregion
@@ -238,6 +278,9 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                obj.PerkEntryID = eval(this.PerkEntryID);
+                obj.ButtonLabel = eval(this.ButtonLabel);
+                obj.Flags = eval(this.Flags);
             }
             #endregion
 
@@ -283,6 +326,18 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
+                    if (printMask?.PerkEntryID ?? true)
+                    {
+                        sb.AppendItem(PerkEntryID, "PerkEntryID");
+                    }
+                    if (printMask?.ButtonLabel ?? true)
+                    {
+                        sb.AppendItem(ButtonLabel, "ButtonLabel");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
+                    }
                 }
             }
             #endregion
@@ -310,6 +365,9 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Rank;
             public Exception? Priority;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkCondition.ErrorMask?>>?>? Conditions;
+            public Exception? PerkEntryID;
+            public Exception? ButtonLabel;
+            public Exception? Flags;
             #endregion
 
             #region IErrorMask
@@ -324,6 +382,12 @@ namespace Mutagen.Bethesda.Starfield
                         return Priority;
                     case APerkEffect_FieldIndex.Conditions:
                         return Conditions;
+                    case APerkEffect_FieldIndex.PerkEntryID:
+                        return PerkEntryID;
+                    case APerkEffect_FieldIndex.ButtonLabel:
+                        return ButtonLabel;
+                    case APerkEffect_FieldIndex.Flags:
+                        return Flags;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -342,6 +406,15 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case APerkEffect_FieldIndex.Conditions:
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkCondition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case APerkEffect_FieldIndex.PerkEntryID:
+                        this.PerkEntryID = ex;
+                        break;
+                    case APerkEffect_FieldIndex.ButtonLabel:
+                        this.ButtonLabel = ex;
+                        break;
+                    case APerkEffect_FieldIndex.Flags:
+                        this.Flags = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -362,6 +435,15 @@ namespace Mutagen.Bethesda.Starfield
                     case APerkEffect_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkCondition.ErrorMask?>>?>)obj;
                         break;
+                    case APerkEffect_FieldIndex.PerkEntryID:
+                        this.PerkEntryID = (Exception?)obj;
+                        break;
+                    case APerkEffect_FieldIndex.ButtonLabel:
+                        this.ButtonLabel = (Exception?)obj;
+                        break;
+                    case APerkEffect_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -373,6 +455,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (Rank != null) return true;
                 if (Priority != null) return true;
                 if (Conditions != null) return true;
+                if (PerkEntryID != null) return true;
+                if (ButtonLabel != null) return true;
+                if (Flags != null) return true;
                 return false;
             }
             #endregion
@@ -422,6 +507,15 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                {
+                    sb.AppendItem(PerkEntryID, "PerkEntryID");
+                }
+                {
+                    sb.AppendItem(ButtonLabel, "ButtonLabel");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
+                }
             }
             #endregion
 
@@ -433,6 +527,9 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Rank = this.Rank.Combine(rhs.Rank);
                 ret.Priority = this.Priority.Combine(rhs.Priority);
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PerkCondition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.PerkEntryID = this.PerkEntryID.Combine(rhs.PerkEntryID);
+                ret.ButtonLabel = this.ButtonLabel.Combine(rhs.ButtonLabel);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -459,6 +556,9 @@ namespace Mutagen.Bethesda.Starfield
             public bool Rank;
             public bool Priority;
             public PerkCondition.TranslationMask? Conditions;
+            public bool PerkEntryID;
+            public bool ButtonLabel;
+            public bool Flags;
             #endregion
 
             #region Ctors
@@ -470,6 +570,9 @@ namespace Mutagen.Bethesda.Starfield
                 this.OnOverall = onOverall;
                 this.Rank = defaultOn;
                 this.Priority = defaultOn;
+                this.PerkEntryID = defaultOn;
+                this.ButtonLabel = defaultOn;
+                this.Flags = defaultOn;
             }
 
             #endregion
@@ -488,6 +591,9 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Rank, null));
                 ret.Add((Priority, null));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
+                ret.Add((PerkEntryID, null));
+                ret.Add((ButtonLabel, null));
+                ret.Add((Flags, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -546,6 +652,9 @@ namespace Mutagen.Bethesda.Starfield
         new Byte Rank { get; set; }
         new Byte Priority { get; set; }
         new ExtendedList<PerkCondition> Conditions { get; }
+        new UInt16? PerkEntryID { get; set; }
+        new TranslatedString? ButtonLabel { get; set; }
+        new APerkEffect.Flag? Flags { get; set; }
     }
 
     /// <summary>
@@ -567,6 +676,9 @@ namespace Mutagen.Bethesda.Starfield
         Byte Rank { get; }
         Byte Priority { get; }
         IReadOnlyList<IPerkConditionGetter> Conditions { get; }
+        UInt16? PerkEntryID { get; }
+        ITranslatedStringGetter? ButtonLabel { get; }
+        APerkEffect.Flag? Flags { get; }
 
     }
 
@@ -739,6 +851,9 @@ namespace Mutagen.Bethesda.Starfield
         Rank = 0,
         Priority = 1,
         Conditions = 2,
+        PerkEntryID = 3,
+        ButtonLabel = 4,
+        Flags = 5,
     }
     #endregion
 
@@ -749,9 +864,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(APerkEffect.Mask<>);
 
@@ -790,7 +905,11 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.CTDA,
                 RecordTypes.CITC,
                 RecordTypes.CIS1,
-                RecordTypes.CIS2);
+                RecordTypes.CIS2,
+                RecordTypes.EPFT,
+                RecordTypes.EPFB,
+                RecordTypes.EPF2,
+                RecordTypes.EPF3);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers,
@@ -839,6 +958,9 @@ namespace Mutagen.Bethesda.Starfield
             item.Rank = default(Byte);
             item.Priority = default(Byte);
             item.Conditions.Clear();
+            item.PerkEntryID = default;
+            item.ButtonLabel = default;
+            item.Flags = default;
         }
         
         #region Mutagen
@@ -895,6 +1017,9 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
+            ret.PerkEntryID = item.PerkEntryID == rhs.PerkEntryID;
+            ret.ButtonLabel = object.Equals(item.ButtonLabel, rhs.ButtonLabel);
+            ret.Flags = item.Flags == rhs.Flags;
         }
         
         public string Print(
@@ -961,6 +1086,21 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
+            if ((printMask?.PerkEntryID ?? true)
+                && item.PerkEntryID is {} PerkEntryIDItem)
+            {
+                sb.AppendItem(PerkEntryIDItem, "PerkEntryID");
+            }
+            if ((printMask?.ButtonLabel ?? true)
+                && item.ButtonLabel is {} ButtonLabelItem)
+            {
+                sb.AppendItem(ButtonLabelItem, "ButtonLabel");
+            }
+            if ((printMask?.Flags ?? true)
+                && item.Flags is {} FlagsItem)
+            {
+                sb.AppendItem(FlagsItem, "Flags");
+            }
         }
         
         #region Equals and Hash
@@ -982,6 +1122,18 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((PerkConditionCommon)((IPerkConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)APerkEffect_FieldIndex.Conditions)))) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)APerkEffect_FieldIndex.PerkEntryID) ?? true))
+            {
+                if (lhs.PerkEntryID != rhs.PerkEntryID) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)APerkEffect_FieldIndex.ButtonLabel) ?? true))
+            {
+                if (!object.Equals(lhs.ButtonLabel, rhs.ButtonLabel)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)APerkEffect_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
             return true;
         }
         
@@ -991,6 +1143,18 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Rank);
             hash.Add(item.Priority);
             hash.Add(item.Conditions);
+            if (item.PerkEntryID is {} PerkEntryIDitem)
+            {
+                hash.Add(PerkEntryIDitem);
+            }
+            if (item.ButtonLabel is {} ButtonLabelitem)
+            {
+                hash.Add(ButtonLabelitem);
+            }
+            if (item.Flags is {} Flagsitem)
+            {
+                hash.Add(Flagsitem);
+            }
             return hash.ToHashCode();
         }
         
@@ -1058,6 +1222,18 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)APerkEffect_FieldIndex.PerkEntryID) ?? true))
+            {
+                item.PerkEntryID = rhs.PerkEntryID;
+            }
+            if ((copyMask?.GetShouldTranslate((int)APerkEffect_FieldIndex.ButtonLabel) ?? true))
+            {
+                item.ButtonLabel = rhs.ButtonLabel?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)APerkEffect_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1171,6 +1347,34 @@ namespace Mutagen.Bethesda.Starfield
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.PRKE)))
             {
             }
+            UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.PerkEntryID,
+                header: translationParams.ConvertToCustom(RecordTypes.EPFB));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ButtonLabel,
+                header: translationParams.ConvertToCustom(RecordTypes.EPF2),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            EnumBinaryTranslation<APerkEffect.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Flags,
+                length: 2,
+                header: translationParams.ConvertToCustom(RecordTypes.EPF3));
+        }
+
+        public static partial void WriteBinaryFunctionParametersCustom(
+            MutagenWriter writer,
+            IAPerkEffectGetter item);
+
+        public static void WriteBinaryFunctionParameters(
+            MutagenWriter writer,
+            IAPerkEffectGetter item)
+        {
+            WriteBinaryFunctionParametersCustom(
+                writer: writer,
+                item: item);
         }
 
         public virtual void Write(
@@ -1221,6 +1425,31 @@ namespace Mutagen.Bethesda.Starfield
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     return (int)APerkEffect_FieldIndex.Priority;
                 }
+                case RecordTypeInts.EPFB:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.PerkEntryID = frame.ReadUInt16();
+                    return (int)APerkEffect_FieldIndex.PerkEntryID;
+                }
+                case RecordTypeInts.EPF2:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ButtonLabel = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
+                    return (int)APerkEffect_FieldIndex.ButtonLabel;
+                }
+                case RecordTypeInts.EPF3:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<APerkEffect.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)APerkEffect_FieldIndex.Flags;
+                }
                 case RecordTypeInts.PRKF: // End Marker
                 {
                     frame.ReadSubrecord();
@@ -1230,6 +1459,11 @@ namespace Mutagen.Bethesda.Starfield
                     return ParseResult.Stop;
             }
         }
+
+        public static partial ParseResult FillBinaryFunctionParametersCustom(
+            MutagenFrame frame,
+            IAPerkEffect item,
+            PreviousParse lastParsed);
 
     }
 
@@ -1296,6 +1530,18 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         private RangeInt32? _PRKELocation;
+        #region PerkEntryID
+        private int? _PerkEntryIDLocation;
+        public UInt16? PerkEntryID => _PerkEntryIDLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PerkEntryIDLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
+        #endregion
+        #region ButtonLabel
+        private int? _ButtonLabelLocation;
+        public ITranslatedStringGetter? ButtonLabel => _ButtonLabelLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ButtonLabelLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public APerkEffect.Flag? Flags => _FlagsLocation.HasValue ? (APerkEffect.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(APerkEffect.Flag?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1330,6 +1576,21 @@ namespace Mutagen.Bethesda.Starfield
                     if (lastParsed.ShortCircuit((int)APerkEffect_FieldIndex.Priority, translationParams)) return ParseResult.Stop;
                     _PRKELocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
                     return (int)APerkEffect_FieldIndex.Priority;
+                }
+                case RecordTypeInts.EPFB:
+                {
+                    _PerkEntryIDLocation = (stream.Position - offset);
+                    return (int)APerkEffect_FieldIndex.PerkEntryID;
+                }
+                case RecordTypeInts.EPF2:
+                {
+                    _ButtonLabelLocation = (stream.Position - offset);
+                    return (int)APerkEffect_FieldIndex.ButtonLabel;
+                }
+                case RecordTypeInts.EPF3:
+                {
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)APerkEffect_FieldIndex.Flags;
                 }
                 case RecordTypeInts.PRKF: // End Marker
                 {

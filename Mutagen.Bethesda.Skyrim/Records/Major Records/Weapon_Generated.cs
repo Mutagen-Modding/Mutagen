@@ -171,14 +171,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region ObjectEffect
-        private readonly IFormLinkNullable<IEffectRecordGetter> _ObjectEffect = new FormLinkNullable<IEffectRecordGetter>();
-        public IFormLinkNullable<IEffectRecordGetter> ObjectEffect
+        private readonly IFormLinkNullable<IObjectEffectGetter> _ObjectEffect = new FormLinkNullable<IObjectEffectGetter>();
+        public IFormLinkNullable<IObjectEffectGetter> ObjectEffect
         {
             get => _ObjectEffect;
             set => _ObjectEffect.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IEffectRecordGetter> IWeaponGetter.ObjectEffect => this.ObjectEffect;
+        IFormLinkNullableGetter<IObjectEffectGetter> IWeaponGetter.ObjectEffect => this.ObjectEffect;
         #endregion
         #region EnchantmentAmount
         public UInt16? EnchantmentAmount { get; set; }
@@ -188,6 +188,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Destructible? _Destructible;
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         public Destructible? Destructible
         {
             get => _Destructible;
@@ -195,6 +198,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDestructibleGetter? IWeaponGetter.Destructible => this.Destructible;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
+        #endregion
         #endregion
         #region EquipmentType
         private readonly IFormLinkNullable<IEquipTypeGetter> _EquipmentType = new FormLinkNullable<IEquipTypeGetter>();
@@ -1875,6 +1882,7 @@ namespace Mutagen.Bethesda.Skyrim
         IEnchantable,
         IExplodeSpawn,
         IFormLinkContainer,
+        IHasDestructible,
         IHasIcons,
         IHaveVirtualMachineAdapter,
         IItem,
@@ -1915,8 +1923,11 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: IHasIcons
         /// </summary>
         new Icons? Icons { get; set; }
-        new IFormLinkNullable<IEffectRecordGetter> ObjectEffect { get; set; }
+        new IFormLinkNullable<IObjectEffectGetter> ObjectEffect { get; set; }
         new UInt16? EnchantmentAmount { get; set; }
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         new Destructible? Destructible { get; set; }
         new IFormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; }
         new IFormLinkNullable<IImpactDataSetGetter> BlockBashImpact { get; set; }
@@ -1967,6 +1978,7 @@ namespace Mutagen.Bethesda.Skyrim
         IEnchantableGetter,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
+        IHasDestructibleGetter,
         IHasIconsGetter,
         IHaveVirtualMachineAdapterGetter,
         IItemGetter,
@@ -2017,9 +2029,14 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         IIconsGetter? Icons { get; }
         #endregion
-        IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect { get; }
+        IFormLinkNullableGetter<IObjectEffectGetter> ObjectEffect { get; }
         UInt16? EnchantmentAmount { get; }
+        #region Destructible
+        /// <summary>
+        /// Aspects: IHasDestructibleGetter
+        /// </summary>
         IDestructibleGetter? Destructible { get; }
+        #endregion
         IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType { get; }
         IFormLinkNullableGetter<IImpactDataSetGetter> BlockBashImpact { get; }
         IFormLinkNullableGetter<IMaterialTypeGetter> AlternateBlockMaterial { get; }
@@ -4178,8 +4195,10 @@ namespace Mutagen.Bethesda.Skyrim
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Weapon_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
@@ -4265,8 +4284,10 @@ namespace Mutagen.Bethesda.Skyrim
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
                         source: StringsSource.DL,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Weapon_FieldIndex.Description;
                 }
                 case RecordTypeInts.MOD3:
@@ -4444,7 +4465,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -4458,7 +4479,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IIconsGetter? Icons { get; private set; }
         #region ObjectEffect
         private int? _ObjectEffectLocation;
-        public IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEffectRecordGetter>(_package, _recordData, _ObjectEffectLocation);
+        public IFormLinkNullableGetter<IObjectEffectGetter> ObjectEffect => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IObjectEffectGetter>(_package, _recordData, _ObjectEffectLocation);
         #endregion
         #region EnchantmentAmount
         private int? _EnchantmentAmountLocation;
@@ -4491,7 +4512,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
         public IModelGetter? ScopeModel { get; private set; }
         #region Unused

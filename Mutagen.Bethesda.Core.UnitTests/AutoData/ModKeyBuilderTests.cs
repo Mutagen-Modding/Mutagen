@@ -1,5 +1,5 @@
 ﻿using AutoFixture.Kernel;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Testing.AutoData;
 using Xunit;
@@ -14,7 +14,7 @@ public class ModKeyBuilderTests
         ModKeyBuilder sut)
     {
         sut.Create(typeof(ModKey), context)
-            .Should().BeOfType<ModKey>();
+            .ShouldBeOfType<ModKey>();
     }
         
     [Theory, BasicAutoData]
@@ -23,7 +23,7 @@ public class ModKeyBuilderTests
         ModKeyBuilder sut)
     {
         ((ModKey) sut.Create(typeof(ModKey), context))
-            .Type.Should().Be(ModType.Plugin);
+            .Type.ShouldBe(ModType.Plugin);
     }
         
     [Theory, BasicAutoData]
@@ -32,7 +32,35 @@ public class ModKeyBuilderTests
         ModKeyBuilder sut)
     {
         sut.Create(typeof(ModKey), context)
-            .Should().NotBe(
+            .ShouldNotBe(
                 sut.Create(typeof(ModKey), context));
     }
+
+    public class Wrapper
+    {
+        public ModKey ModKey { get; set; }
+    }
+        
+    [Theory, MutagenAutoData]
+    public void ModKeyReset1(Wrapper mk)
+    {
+        mk.ModKey.ToString().ShouldBe("Mod0.esp");
+    }
+        
+    [Theory, MutagenAutoData]
+    public void ModKeyReset2(Wrapper mk)
+    {
+        mk.ModKey.ToString().ShouldBe("Mod0.esp");
+    }
+    
+    [Theory, MutagenAutoData]
+    public void ModKeyFuncBuilder(Func<ModKey> modKeyFunc)
+    {
+        var modKey = modKeyFunc();
+        modKey.ShouldNotBe(ModKey.Null);
+        var modKey2 = modKeyFunc();
+        modKey2.ShouldNotBe(ModKey.Null);
+        modKey2.ShouldNotBe(modKey);
+    }
+
 }

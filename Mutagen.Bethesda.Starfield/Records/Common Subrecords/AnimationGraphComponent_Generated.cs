@@ -1309,7 +1309,8 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ANAM = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)AnimationGraphComponent_FieldIndex.ANAM;
                 }
                 case RecordTypeInts.BNAM:
@@ -1317,7 +1318,8 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.BNAM = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)AnimationGraphComponent_FieldIndex.BNAM;
                 }
                 case RecordTypeInts.CNAM:
@@ -1325,7 +1327,8 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CNAM = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)AnimationGraphComponent_FieldIndex.CNAM;
                 }
                 case RecordTypeInts.DNAM:
@@ -1333,7 +1336,8 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DNAM = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)AnimationGraphComponent_FieldIndex.DNAM;
                 }
                 case RecordTypeInts.ENAM:
@@ -1341,7 +1345,8 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ENAM = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminateIfNotEmpty);
+                        stringBinaryType: StringBinaryType.NullTerminateIfNotEmpty,
+                        parseWhole: true);
                     return (int)AnimationGraphComponent_FieldIndex.ENAM;
                 }
                 default:

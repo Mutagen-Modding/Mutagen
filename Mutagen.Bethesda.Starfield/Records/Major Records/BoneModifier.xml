@@ -8,67 +8,46 @@
   </Object>
   <Object name="ABoneModifierData" abstract="true" objType="Subrecord" >
     <Fields>
-      <String name="UnknownString1" binaryType="PrependLengthWithNullIfContent" unknown="true" />
-      <String name="UnknownString2" binaryType="PrependLengthWithNullIfContent" unknown="true" />
+      <String name="Driver" binaryType="PrependLengthWithNullIfContent" />
+      <String name="Target" binaryType="PrependLengthWithNullIfContent" />
+      <Float name="MaxAnimationDistance" />
     </Fields>
   </Object>
   <Object name="BoneModifierLookAtChainData" objType="Subrecord" baseClass="ABoneModifierData" >
     <Fields>
-      <Float name="Unknown1" />
-      <String name="UnknownString3" binaryType="PrependLengthWithNullIfContent" unknown="true" />
+      <String name="ChainEnd" binaryType="PrependLengthWithNullIfContent" />
     </Fields>
   </Object>
   <Object name="BoneModifierMorphDriverData" objType="Subrecord" baseClass="ABoneModifierData" >
     <Fields>
-      <Float name="Unknown1" />
-      <Float name="Unknown2" />
-      <Float name="Unknown3" />
-      <Float name="Unknown4" />
-      <Float name="Unknown5" />
-      <Float name="Unknown6" />
-      <UInt8 name="Unknown7" />
+      <P3Float name="Vector" />
+      <Float name="InnerRadius" />
+      <Float name="OuterRadius" />
+      <Enum name="Axis" enumName="Axis" byteLength="1" />
     </Fields>
   </Object>
   <Object name="BoneModifierPoseDeformerData" objType="Subrecord" baseClass="ABoneModifierData" >
     <Fields>
-      <Float name="Unknown1" />
-      <Float name="Unknown2" />
-      <Float name="Unknown3" />
-      <Float name="Unknown4" />
-      <Float name="Unknown5" />
-      <Float name="Unknown6" />
-      <Float name="Unknown7" />
-      <Float name="Unknown8" />
-      <Float name="Unknown9" />
-      <Float name="Unknown10" />
-      <Float name="Unknown11" />
-      <Float name="Unknown12" />
-      <Float name="Unknown13" />
-      <Float name="Unknown14" />
-      <Float name="Unknown15" />
-      <UInt8 name="Unknown16" />
+      <P3Float name="Vector" />
+      <P3Float name="Position" />
+      <P3Float name="Angle" />
+      <P3Float name="Scale" />
+      <Float name="InnerRadius" />
+      <Float name="OuterRadius" />
+      <Enum name="Axis" enumName="Axis" byteLength="1" />
     </Fields>
   </Object>
   <Object name="BoneModifierSpringBoneData" objType="Subrecord" baseClass="ABoneModifierData" >
     <Fields>
-      <Float name="Unknown1" />
+      <P3Float name="Strength" />
+      <Float name="Unknown" />
+      <P3Float name="Damp" />
       <Float name="Unknown2" />
+      <P3Float name="Scale" />
       <Float name="Unknown3" />
+      <P3Float name="MaxDist" />
       <Float name="Unknown4" />
-      <Float name="Unknown5" />
-      <Float name="Unknown6" />
-      <Float name="Unknown7" />
-      <Float name="Unknown8" />
-      <Float name="Unknown9" />
-      <Float name="Unknown10" />
-      <Float name="Unknown11" />
-      <Float name="Unknown12" />
-      <Float name="Unknown13" />
-      <Float name="Unknown14" />
-      <Float name="Unknown15" />
-      <Float name="Unknown16" />
-      <Float name="Unknown17" />
-      <UInt8 name="Unknown18" />
+      <Bool name="LookAtParent" byteLength="1" />
     </Fields>
   </Object>
 </Loqui>

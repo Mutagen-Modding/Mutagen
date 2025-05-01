@@ -82,6 +82,10 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
                 {
                     args.Add($"header: translationParams.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
                 }
+                if (data.MarkerType.HasValue)
+                {
+                    args.Add($"markerType: RecordTypes.{data.MarkerType.Value.Type}");
+                }
                 foreach (var writeParam in this.AdditionalWriteParams)
                 {
                     var get = writeParam(
@@ -112,6 +116,7 @@ public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGenerati
         Accessor translationMaskAccessor)
     {
         var fieldData = typeGen.GetFieldData();
+        
         if (fieldData.HasTrigger)
         {
             sb.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingMeta.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");

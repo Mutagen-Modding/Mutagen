@@ -14,6 +14,7 @@ partial class VolumesComponentItemBinaryWriteTranslation
             IVolumesUnknownEnderSingleGetter _ => 1,
             IVolumesUnknownEnderDoubleGetter _ => 3,
             IVolumesUnknownEnderTrioGetter _ => 5,
+            IVolumesUnknownEnderEmptyGetter _ => 11,
             _ => throw new NotImplementedException()
         });
     }
@@ -44,6 +45,9 @@ partial class VolumesComponentItemBinaryCreateTranslation
             case 5:
                 item.Ender = new VolumesUnknownEnderTrio();
                 break;
+            case 11:
+                item.Ender = new VolumesUnknownEnderEmpty();
+                break;
             default:
                 throw new NotImplementedException();
         }
@@ -68,6 +72,7 @@ partial class VolumesComponentItemBinaryOverlay
             1 => 4,
             3 => 8,
             5 => 12,
+            11 => 0,
             _ => throw new NotImplementedException()
         };
     }
@@ -82,6 +87,8 @@ partial class VolumesComponentItemBinaryOverlay
             3 => VolumesUnknownEnderDoubleBinaryOverlay.VolumesUnknownEnderDoubleFactory(_structData.Slice(location),
                 _package),
             5 => VolumesUnknownEnderTrioBinaryOverlay.VolumesUnknownEnderTrioFactory(_structData.Slice(location),
+                _package),
+            11 => VolumesUnknownEnderEmptyBinaryOverlay.VolumesUnknownEnderEmptyFactory(_structData.Slice(location),
                 _package),
             _ => throw new NotImplementedException()
         };

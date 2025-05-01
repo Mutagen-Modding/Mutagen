@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -52,10 +53,19 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region DATA
-        public Int32? DATA { get; set; }
+        #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int32? IOverlayDesignatedPlacementInfoComponentGetter.DATA => this.DATA;
+        private ExtendedList<OverlayDesignatedPlacementInfoItem>? _Items;
+        public ExtendedList<OverlayDesignatedPlacementInfoItem>? Items
+        {
+            get => this._Items;
+            set => this._Items = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IOverlayDesignatedPlacementInfoItemGetter>? IOverlayDesignatedPlacementInfoComponentGetter.Items => _Items;
+        #endregion
+
         #endregion
 
         #region To String
@@ -95,10 +105,10 @@ namespace Mutagen.Bethesda.Starfield
             IMask<TItem>
         {
             #region Ctors
-            public Mask(TItem DATA)
+            public Mask(TItem Items)
             : base()
             {
-                this.DATA = DATA;
+                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, OverlayDesignatedPlacementInfoItem.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, OverlayDesignatedPlacementInfoItem.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -110,7 +120,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem DATA;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, OverlayDesignatedPlacementInfoItem.Mask<TItem>?>>?>? Items;
             #endregion
 
             #region Equals
@@ -124,13 +134,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.DATA, rhs.DATA)) return false;
+                if (!object.Equals(this.Items, rhs.Items)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.DATA);
+                hash.Add(this.Items);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -141,7 +151,18 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.DATA)) return false;
+                if (this.Items != null)
+                {
+                    if (!eval(this.Items.Overall)) return false;
+                    if (this.Items.Specific != null)
+                    {
+                        foreach (var item in this.Items.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -150,7 +171,18 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.DATA)) return true;
+                if (this.Items != null)
+                {
+                    if (eval(this.Items.Overall)) return true;
+                    if (this.Items.Specific != null)
+                    {
+                        foreach (var item in this.Items.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -166,7 +198,21 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.DATA = eval(this.DATA);
+                if (Items != null)
+                {
+                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, OverlayDesignatedPlacementInfoItem.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, OverlayDesignatedPlacementInfoItem.Mask<R>?>>());
+                    if (Items.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, OverlayDesignatedPlacementInfoItem.Mask<R>?>>();
+                        obj.Items.Specific = l;
+                        foreach (var item in Items.Specific)
+                        {
+                            MaskItemIndexed<R, OverlayDesignatedPlacementInfoItem.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, OverlayDesignatedPlacementInfoItem.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -185,9 +231,24 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(OverlayDesignatedPlacementInfoComponent.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.DATA ?? true)
+                    if ((printMask?.Items?.Overall ?? true)
+                        && Items is {} ItemsItem)
                     {
-                        sb.AppendItem(DATA, "DATA");
+                        sb.AppendLine("Items =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ItemsItem.Overall);
+                            if (ItemsItem.Specific != null)
+                            {
+                                foreach (var subItem in ItemsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -200,7 +261,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? DATA;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, OverlayDesignatedPlacementInfoItem.ErrorMask?>>?>? Items;
             #endregion
 
             #region IErrorMask
@@ -209,8 +270,8 @@ namespace Mutagen.Bethesda.Starfield
                 OverlayDesignatedPlacementInfoComponent_FieldIndex enu = (OverlayDesignatedPlacementInfoComponent_FieldIndex)index;
                 switch (enu)
                 {
-                    case OverlayDesignatedPlacementInfoComponent_FieldIndex.DATA:
-                        return DATA;
+                    case OverlayDesignatedPlacementInfoComponent_FieldIndex.Items:
+                        return Items;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -221,8 +282,8 @@ namespace Mutagen.Bethesda.Starfield
                 OverlayDesignatedPlacementInfoComponent_FieldIndex enu = (OverlayDesignatedPlacementInfoComponent_FieldIndex)index;
                 switch (enu)
                 {
-                    case OverlayDesignatedPlacementInfoComponent_FieldIndex.DATA:
-                        this.DATA = ex;
+                    case OverlayDesignatedPlacementInfoComponent_FieldIndex.Items:
+                        this.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, OverlayDesignatedPlacementInfoItem.ErrorMask?>>?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -235,8 +296,8 @@ namespace Mutagen.Bethesda.Starfield
                 OverlayDesignatedPlacementInfoComponent_FieldIndex enu = (OverlayDesignatedPlacementInfoComponent_FieldIndex)index;
                 switch (enu)
                 {
-                    case OverlayDesignatedPlacementInfoComponent_FieldIndex.DATA:
-                        this.DATA = (Exception?)obj;
+                    case OverlayDesignatedPlacementInfoComponent_FieldIndex.Items:
+                        this.Items = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, OverlayDesignatedPlacementInfoItem.ErrorMask?>>?>)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -247,7 +308,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (DATA != null) return true;
+                if (Items != null) return true;
                 return false;
             }
             #endregion
@@ -274,8 +335,23 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Items is {} ItemsItem)
                 {
-                    sb.AppendItem(DATA, "DATA");
+                    sb.AppendLine("Items =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ItemsItem.Overall);
+                        if (ItemsItem.Specific != null)
+                        {
+                            foreach (var subItem in ItemsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -285,7 +361,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.DATA = this.DATA.Combine(rhs.DATA);
+                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, OverlayDesignatedPlacementInfoItem.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -308,7 +384,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
-            public bool DATA;
+            public OverlayDesignatedPlacementInfoItem.TranslationMask? Items;
             #endregion
 
             #region Ctors
@@ -317,7 +393,6 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.DATA = defaultOn;
             }
 
             #endregion
@@ -325,7 +400,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((DATA, null));
+                ret.Add((Items == null ? DefaultOn : !Items.GetCrystal().CopyNothing, Items?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -334,6 +409,11 @@ namespace Mutagen.Bethesda.Starfield
             }
 
         }
+        #endregion
+
+        #region Mutagen
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => OverlayDesignatedPlacementInfoComponentCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => OverlayDesignatedPlacementInfoComponentSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -394,19 +474,21 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IOverlayDesignatedPlacementInfoComponent :
         IAComponent,
+        IFormLinkContainer,
         ILoquiObjectSetter<IOverlayDesignatedPlacementInfoComponent>,
         IOverlayDesignatedPlacementInfoComponentGetter
     {
-        new Int32? DATA { get; set; }
+        new ExtendedList<OverlayDesignatedPlacementInfoItem>? Items { get; set; }
     }
 
     public partial interface IOverlayDesignatedPlacementInfoComponentGetter :
         IAComponentGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IOverlayDesignatedPlacementInfoComponentGetter>
     {
         static new ILoquiRegistration StaticRegistration => OverlayDesignatedPlacementInfoComponent_Registration.Instance;
-        Int32? DATA { get; }
+        IReadOnlyList<IOverlayDesignatedPlacementInfoItemGetter>? Items { get; }
 
     }
 
@@ -551,7 +633,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum OverlayDesignatedPlacementInfoComponent_FieldIndex
     {
-        DATA = 0,
+        Items = 0,
     }
     #endregion
 
@@ -642,7 +724,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IOverlayDesignatedPlacementInfoComponent item)
         {
             ClearPartial();
-            item.DATA = default;
+            item.Items = null;
             base.Clear(item);
         }
         
@@ -655,6 +737,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IOverlayDesignatedPlacementInfoComponent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Items?.RemapLinks(mapping);
         }
         
         #endregion
@@ -710,7 +793,10 @@ namespace Mutagen.Bethesda.Starfield
             OverlayDesignatedPlacementInfoComponent.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.DATA = item.DATA == rhs.DATA;
+            ret.Items = item.Items.CollectionEqualsHelper(
+                rhs.Items,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -760,10 +846,20 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.DATA ?? true)
-                && item.DATA is {} DATAItem)
+            if ((printMask?.Items?.Overall ?? true)
+                && item.Items is {} ItemsItem)
             {
-                sb.AppendItem(DATAItem, "DATA");
+                sb.AppendLine("Items =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in ItemsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
             }
         }
         
@@ -784,9 +880,9 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IAComponentGetter)lhs, (IAComponentGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)OverlayDesignatedPlacementInfoComponent_FieldIndex.DATA) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)OverlayDesignatedPlacementInfoComponent_FieldIndex.Items) ?? true))
             {
-                if (lhs.DATA != rhs.DATA) return false;
+                if (!lhs.Items.SequenceEqualNullable(rhs.Items, (l, r) => ((OverlayDesignatedPlacementInfoItemCommon)((IOverlayDesignatedPlacementInfoItemGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)OverlayDesignatedPlacementInfoComponent_FieldIndex.Items)))) return false;
             }
             return true;
         }
@@ -805,10 +901,7 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IOverlayDesignatedPlacementInfoComponentGetter item)
         {
             var hash = new HashCode();
-            if (item.DATA is {} DATAitem)
-            {
-                hash.Add(DATAitem);
-            }
+            hash.Add(item.Items);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -832,6 +925,13 @@ namespace Mutagen.Bethesda.Starfield
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
+            }
+            if (obj.Items is {} ItemsItem)
+            {
+                foreach (var item in ItemsItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
             }
             yield break;
         }
@@ -857,9 +957,37 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)OverlayDesignatedPlacementInfoComponent_FieldIndex.DATA) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)OverlayDesignatedPlacementInfoComponent_FieldIndex.Items) ?? true))
             {
-                item.DATA = rhs.DATA;
+                errorMask?.PushIndex((int)OverlayDesignatedPlacementInfoComponent_FieldIndex.Items);
+                try
+                {
+                    if ((rhs.Items != null))
+                    {
+                        item.Items = 
+                            rhs.Items
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<OverlayDesignatedPlacementInfoItem>();
+                    }
+                    else
+                    {
+                        item.Items = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             DeepCopyInCustom(
                 item: item,
@@ -986,10 +1114,19 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IOverlayDesignatedPlacementInfoItemGetter>.Instance.Write(
                 writer: writer,
-                item: item.DATA,
-                header: translationParams.ConvertToCustom(RecordTypes.DATA));
+                items: item.Items,
+                recordType: translationParams.ConvertToCustom(RecordTypes.DATA),
+                countLengthLength: 4,
+                transl: (MutagenWriter subWriter, IOverlayDesignatedPlacementInfoItemGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((OverlayDesignatedPlacementInfoItemBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
         }
 
         public void Write(
@@ -1047,8 +1184,13 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DATA = frame.ReadInt32();
-                    return (int)OverlayDesignatedPlacementInfoComponent_FieldIndex.DATA;
+                    item.Items = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<OverlayDesignatedPlacementInfoItem>.Instance.Parse(
+                            amount: checked((int)frame.ReadUInt32()),
+                            reader: frame,
+                            transl: OverlayDesignatedPlacementInfoItem.TryCreateFromBinary)
+                        .CastExtendedList<OverlayDesignatedPlacementInfoItem>();
+                    return (int)OverlayDesignatedPlacementInfoComponent_FieldIndex.Items;
                 }
                 default:
                     return AComponentBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1094,6 +1236,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => OverlayDesignatedPlacementInfoComponentCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => OverlayDesignatedPlacementInfoComponentBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1106,10 +1249,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        #region DATA
-        private int? _DATALocation;
-        public Int32? DATA => _DATALocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DATALocation.Value, _package.MetaData.Constants)) : default(Int32?);
-        #endregion
+        public IReadOnlyList<IOverlayDesignatedPlacementInfoItemGetter>? Items { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1175,8 +1315,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset);
-                    return (int)OverlayDesignatedPlacementInfoComponent_FieldIndex.DATA;
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    var count = stream.ReadUInt32();
+                    this.Items = BinaryOverlayList.FactoryByCountLength<IOverlayDesignatedPlacementInfoItemGetter>(
+                        stream: stream,
+                        package: _package,
+                        itemLength: 12,
+                        count: count,
+                        getter: (s, p) => OverlayDesignatedPlacementInfoItemBinaryOverlay.OverlayDesignatedPlacementInfoItemFactory(s, p));
+                    return (int)OverlayDesignatedPlacementInfoComponent_FieldIndex.Items;
                 }
                 default:
                     return base.FillRecordType(

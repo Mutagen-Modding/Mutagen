@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Records;
@@ -68,7 +68,30 @@ public class EqualityTests
         other.BasicStats!.Damage = 10;
 
         someWeapon.Equals(other, _verificationMask)
-            .Should().BeTrue();
+            .ShouldBeTrue();
+    }
+        
+    [Theory, MutagenModAutoData]
+    public void NpcHeadparts(Npc npc, FormKey fk, FormKey fk2, FormKey fk3)
+    {
+        Npc.TranslationMask _verificationMask = new(defaultOn: false)
+        {
+            HeadParts = true
+        };
+        
+        npc.HeadParts.Add(fk);
+        npc.HeadParts.Add(fk2);
+
+        var other = npc.DeepCopy();
+        other.Name = "TEST";
+
+        npc.Equals(other, _verificationMask)
+            .ShouldBeTrue();
+        
+        other.HeadParts.Add(fk3);
+
+        npc.Equals(other, _verificationMask)
+            .ShouldBeFalse();
     }
         
     [Fact]
@@ -76,7 +99,7 @@ public class EqualityTests
     {
         var someWeapon = GetSomeWeapon();
         someWeapon.Equals(someWeapon)
-            .Should().BeTrue();
+            .ShouldBeTrue();
     }
         
     [Fact]
@@ -86,7 +109,7 @@ public class EqualityTests
         var other = someWeapon.DeepCopy();
 
         someWeapon.Equals(other)
-            .Should().BeTrue();
+            .ShouldBeTrue();
     }
         
     [Fact]
@@ -97,7 +120,7 @@ public class EqualityTests
         other.BasicStats!.Damage *= 10;
 
         someWeapon.Equals(other)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 
     [Fact]
@@ -137,7 +160,7 @@ public class EqualityTests
             {
                 Properties = false,
             }
-        }).Should().BeTrue();
+        }).ShouldBeTrue();
     }
 
     [Theory, MutagenModAutoData]
@@ -165,10 +188,10 @@ public class EqualityTests
         weather3.CloudTextures[1] = assetLink2;
 
         weather1.Equals(weather1, mask)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         weather1.Equals(weather3, mask)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         weather1.Equals(weather2, mask)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 }

@@ -2,6 +2,12 @@
 
 public partial class ConstructibleObject
 {
+    [Flags]
+    public enum MajorFlag
+    {
+        ListContainsVariants = 0x0008_0000
+    }
+    
     public enum LearnMethodEnum
     {
         PickupOrScript,
@@ -9,5 +15,12 @@ public partial class ConstructibleObject
         Ingesting,
         DefaultOrConditions,
         Plan,
+    }
+
+    [Flags]
+    public enum Flag
+    {
+        FilterNotRequiredToLearn = 0x00000001,
+        ExcludeFromWorkshopLod = 0x00000004,
     }
 }

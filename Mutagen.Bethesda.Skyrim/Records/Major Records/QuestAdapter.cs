@@ -10,7 +10,10 @@ partial class QuestAdapterBinaryCreateTranslation
     public static partial void FillBinaryFragmentCountCustom(MutagenFrame frame, IQuestAdapter item)
     {
         var count = frame.ReadUInt16();
-        item.FileName = StringBinaryTranslation.Instance.Parse(frame, stringBinaryType: StringBinaryType.PrependLengthUShort);
+        item.FileName = StringBinaryTranslation.Instance.Parse(
+            frame, 
+            parseWhole: true, 
+            stringBinaryType: StringBinaryType.PrependLengthUShort);
         item.Fragments.SetTo(
             ListBinaryTranslation<QuestScriptFragment>.Instance.Parse(
                 frame,

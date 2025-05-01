@@ -66,9 +66,9 @@ namespace Mutagen.Bethesda.Starfield
         ISoundReferenceGetter? IPlayerDialogueSceneActionGetter.WED0 => this.WED0;
         #endregion
         #region HNAM
-        public HnamHnam HNAM { get; set; } = new HnamHnam();
+        public HeadTracking HNAM { get; set; } = new HeadTracking();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IHnamHnamGetter IPlayerDialogueSceneActionGetter.HNAM => HNAM;
+        IHeadTrackingGetter IPlayerDialogueSceneActionGetter.HNAM => HNAM;
         #endregion
         #region DialogueTargetActor
         public Int32? DialogueTargetActor { get; set; }
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.WED0 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
-                this.HNAM = new MaskItem<TItem, HnamHnam.Mask<TItem>?>(initialValue, new HnamHnam.Mask<TItem>(initialValue));
+                this.HNAM = new MaskItem<TItem, HeadTracking.Mask<TItem>?>(initialValue, new HeadTracking.Mask<TItem>(initialValue));
                 this.DialogueTargetActor = initialValue;
                 this.DialogueList = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlayerDialogueSceneActionItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PlayerDialogueSceneActionItem.Mask<TItem>?>>());
                 this.ATTR = initialValue;
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Starfield
                 EndPhase: EndPhase)
             {
                 this.WED0 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(WED0, new SoundReference.Mask<TItem>(WED0));
-                this.HNAM = new MaskItem<TItem, HnamHnam.Mask<TItem>?>(HNAM, new HnamHnam.Mask<TItem>(HNAM));
+                this.HNAM = new MaskItem<TItem, HeadTracking.Mask<TItem>?>(HNAM, new HeadTracking.Mask<TItem>(HNAM));
                 this.DialogueTargetActor = DialogueTargetActor;
                 this.DialogueList = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlayerDialogueSceneActionItem.Mask<TItem>?>>?>(DialogueList, Enumerable.Empty<MaskItemIndexed<TItem, PlayerDialogueSceneActionItem.Mask<TItem>?>>());
                 this.ATTR = ATTR;
@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? WED0 { get; set; }
-            public MaskItem<TItem, HnamHnam.Mask<TItem>?>? HNAM { get; set; }
+            public MaskItem<TItem, HeadTracking.Mask<TItem>?>? HNAM { get; set; }
             public TItem DialogueTargetActor;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlayerDialogueSceneActionItem.Mask<TItem>?>>?>? DialogueList;
             public TItem ATTR;
@@ -323,7 +323,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.WED0 = this.WED0 == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.WED0.Overall), this.WED0.Specific?.Translate(eval));
-                obj.HNAM = this.HNAM == null ? null : new MaskItem<R, HnamHnam.Mask<R>?>(eval(this.HNAM.Overall), this.HNAM.Specific?.Translate(eval));
+                obj.HNAM = this.HNAM == null ? null : new MaskItem<R, HeadTracking.Mask<R>?>(eval(this.HNAM.Overall), this.HNAM.Specific?.Translate(eval));
                 obj.DialogueTargetActor = eval(this.DialogueTargetActor);
                 if (DialogueList != null)
                 {
@@ -416,7 +416,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public MaskItem<Exception?, SoundReference.ErrorMask?>? WED0;
-            public MaskItem<Exception?, HnamHnam.ErrorMask?>? HNAM;
+            public MaskItem<Exception?, HeadTracking.ErrorMask?>? HNAM;
             public Exception? DialogueTargetActor;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlayerDialogueSceneActionItem.ErrorMask?>>?>? DialogueList;
             public Exception? ATTR;
@@ -458,7 +458,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.WED0 = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
                         break;
                     case PlayerDialogueSceneAction_FieldIndex.HNAM:
-                        this.HNAM = new MaskItem<Exception?, HnamHnam.ErrorMask?>(ex, null);
+                        this.HNAM = new MaskItem<Exception?, HeadTracking.ErrorMask?>(ex, null);
                         break;
                     case PlayerDialogueSceneAction_FieldIndex.DialogueTargetActor:
                         this.DialogueTargetActor = ex;
@@ -490,7 +490,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.WED0 = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
                         break;
                     case PlayerDialogueSceneAction_FieldIndex.HNAM:
-                        this.HNAM = (MaskItem<Exception?, HnamHnam.ErrorMask?>?)obj;
+                        this.HNAM = (MaskItem<Exception?, HeadTracking.ErrorMask?>?)obj;
                         break;
                     case PlayerDialogueSceneAction_FieldIndex.DialogueTargetActor:
                         this.DialogueTargetActor = (Exception?)obj;
@@ -619,7 +619,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public SoundReference.TranslationMask? WED0;
-            public HnamHnam.TranslationMask? HNAM;
+            public HeadTracking.TranslationMask? HNAM;
             public bool DialogueTargetActor;
             public PlayerDialogueSceneActionItem.TranslationMask? DialogueList;
             public bool ATTR;
@@ -730,7 +730,7 @@ namespace Mutagen.Bethesda.Starfield
         IPlayerDialogueSceneActionGetter
     {
         new SoundReference? WED0 { get; set; }
-        new HnamHnam HNAM { get; set; }
+        new HeadTracking HNAM { get; set; }
         new Int32? DialogueTargetActor { get; set; }
         new ExtendedList<PlayerDialogueSceneActionItem> DialogueList { get; }
         new MemorySlice<Byte>? ATTR { get; set; }
@@ -747,7 +747,7 @@ namespace Mutagen.Bethesda.Starfield
     {
         static new ILoquiRegistration StaticRegistration => PlayerDialogueSceneAction_Registration.Instance;
         ISoundReferenceGetter? WED0 { get; }
-        IHnamHnamGetter HNAM { get; }
+        IHeadTrackingGetter HNAM { get; }
         Int32? DialogueTargetActor { get; }
         IReadOnlyList<IPlayerDialogueSceneActionItemGetter> DialogueList { get; }
         ReadOnlyMemorySlice<Byte>? ATTR { get; }
@@ -1238,7 +1238,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (EqualsMaskHelper.RefEquality(lhs.HNAM, rhs.HNAM, out var lhsHNAM, out var rhsHNAM, out var isHNAMEqual))
                 {
-                    if (!((HnamHnamCommon)((IHnamHnamGetter)lhsHNAM).CommonInstance()!).Equals(lhsHNAM, rhsHNAM, equalsMask?.GetSubCrystal((int)PlayerDialogueSceneAction_FieldIndex.HNAM))) return false;
+                    if (!((HeadTrackingCommon)((IHeadTrackingGetter)lhsHNAM).CommonInstance()!).Equals(lhsHNAM, rhsHNAM, equalsMask?.GetSubCrystal((int)PlayerDialogueSceneAction_FieldIndex.HNAM))) return false;
                 }
                 else if (!isHNAMEqual) return false;
             }
@@ -1585,7 +1585,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
             }
             var HNAMItem = item.HNAM;
-            ((HnamHnamBinaryWriteTranslation)((IBinaryItem)HNAMItem).BinaryWriteTranslator).Write(
+            ((HeadTrackingBinaryWriteTranslation)((IBinaryItem)HNAMItem).BinaryWriteTranslator).Write(
                 item: HNAMItem,
                 writer: writer,
                 translationParams: translationParams);
@@ -1677,7 +1677,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    item.HNAM = Mutagen.Bethesda.Starfield.HnamHnam.CreateFromBinary(
+                    item.HNAM = Mutagen.Bethesda.Starfield.HeadTracking.CreateFromBinary(
                         frame: frame,
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)PlayerDialogueSceneAction_FieldIndex.HNAM;
@@ -1779,8 +1779,8 @@ namespace Mutagen.Bethesda.Starfield
 
         public ISoundReferenceGetter? WED0 { get; private set; }
         #region HNAM
-        private IHnamHnamGetter? _HNAM;
-        public IHnamHnamGetter HNAM => _HNAM ?? new HnamHnam();
+        private IHeadTrackingGetter? _HNAM;
+        public IHeadTrackingGetter HNAM => _HNAM ?? new HeadTracking();
         #endregion
         #region DialogueTargetActor
         private int? _DialogueTargetActorLocation;
@@ -1873,7 +1873,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    this._HNAM = HnamHnamBinaryOverlay.HnamHnamFactory(
+                    this._HNAM = HeadTrackingBinaryOverlay.HeadTrackingFactory(
                         stream: stream,
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());

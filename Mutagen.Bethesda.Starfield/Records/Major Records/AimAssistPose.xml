@@ -8,10 +8,10 @@
   </Object>
   <Object name="AimAssistPosePoint" objType="Subrecord" >
     <Fields>
-      <String name="ANAM" recordType="ANAM" unknown="true" />
-      <String name="BNAM" recordType="BNAM" unknown="true" />
-      <Float name="RADR" recordType="RADR" unknown="true" />
-      <Float name="WTMX" recordType="WTMX" unknown="true" />
+      <String name="StartBoneName" recordType="ANAM" />
+      <String name="EndBoneName" recordType="BNAM" />
+      <Float name="Radius" recordType="RADR" />
+      <Float name="Weight" recordType="WTMX" />
     </Fields>
   </Object>
 </Loqui>

@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim;
@@ -36,9 +36,9 @@ public partial class ALinkingTests
         WrapPotentialThrow(cacheType, style, () =>
         {
             Assert.True(contextRetriever.TryResolveContext<INpc, INpcGetter>(formLink, package, out var linkedRec));
-            linkedRec.Record.Should().BeSameAs(npc);
-            linkedRec.ModKey.Should().Be(TestConstants.PluginModKey);
-            linkedRec.Parent.Should().BeNull();
+            linkedRec.Record.ShouldBeSameAs(npc);
+            linkedRec.ModKey.ShouldBe(TestConstants.PluginModKey);
+            linkedRec.Parent.ShouldBeNull();
         });
     }
 
@@ -73,19 +73,19 @@ public partial class ALinkingTests
         WrapPotentialThrow(cacheType, style, () =>
         {
             Assert.True(contextRetriever.TryResolveContext<IPlacedNpc, IPlacedNpcGetter>(placedFormLink, package, out var linkedPlacedNpc));
-            linkedPlacedNpc.Record.Should().BeSameAs(placedNpc);
-            linkedPlacedNpc.ModKey.Should().Be(TestConstants.PluginModKey);
-            linkedPlacedNpc.Parent.Record.Should().Be(cell);
+            linkedPlacedNpc.Record.ShouldBeSameAs(placedNpc);
+            linkedPlacedNpc.ModKey.ShouldBe(TestConstants.PluginModKey);
+            linkedPlacedNpc.Parent.Record.ShouldBe(cell);
             var cellFormLink = new FormLink<ICellGetter>(cell.FormKey);
             Assert.True(contextRetriever.TryResolveContext<ICell, ICellGetter>(cellFormLink, package, out var linkedCell));
-            linkedCell.Record.Should().BeSameAs(cell);
-            linkedCell.ModKey.Should().Be(TestConstants.PluginModKey);
-            linkedCell.Parent.Record.Should().Be(subBlock);
+            linkedCell.Record.ShouldBeSameAs(cell);
+            linkedCell.ModKey.ShouldBe(TestConstants.PluginModKey);
+            linkedCell.Parent.Record.ShouldBe(subBlock);
             var worldspaceFormLink = new FormLink<IWorldspaceGetter>(worldspace.FormKey);
             Assert.True(contextRetriever.TryResolveContext<IWorldspace, IWorldspaceGetter>(worldspaceFormLink, package, out var linkedWorldspace));
-            linkedWorldspace.Record.Should().BeSameAs(worldspace);
-            linkedWorldspace.ModKey.Should().Be(TestConstants.PluginModKey);
-            linkedWorldspace.Parent.Should().BeNull();
+            linkedWorldspace.Record.ShouldBeSameAs(worldspace);
+            linkedWorldspace.ModKey.ShouldBe(TestConstants.PluginModKey);
+            linkedWorldspace.Parent.ShouldBeNull();
         });
     }
 
@@ -112,9 +112,9 @@ public partial class ALinkingTests
         WrapPotentialThrow(cacheType, style, () =>
         {
             var resolvedNpc = contextRetriever.ResolveContext<INpc, INpcGetter>(formLink, package);
-            resolvedNpc.Record.Should().BeSameAs(npc);
-            resolvedNpc.ModKey.Should().Be(TestConstants.PluginModKey);
-            resolvedNpc.Parent.Should().BeNull();
+            resolvedNpc.Record.ShouldBeSameAs(npc);
+            resolvedNpc.ModKey.ShouldBe(TestConstants.PluginModKey);
+            resolvedNpc.Parent.ShouldBeNull();
         });
     }
 
@@ -149,19 +149,19 @@ public partial class ALinkingTests
         WrapPotentialThrow(cacheType, style, () =>
         {
             var linkedPlacedNpc = contextRetriever.ResolveContext<IPlacedNpc, IPlacedNpcGetter>(placedFormLink, package);
-            linkedPlacedNpc.Record.Should().BeSameAs(placedNpc);
-            linkedPlacedNpc.ModKey.Should().Be(TestConstants.PluginModKey);
-            linkedPlacedNpc.Parent.Record.Should().BeSameAs(cell);
+            linkedPlacedNpc.Record.ShouldBeSameAs(placedNpc);
+            linkedPlacedNpc.ModKey.ShouldBe(TestConstants.PluginModKey);
+            linkedPlacedNpc.Parent.Record.ShouldBeSameAs(cell);
             var cellFormLink = new FormLink<ICell>(cell.FormKey);
             var linkedCell = contextRetriever.ResolveContext<ICell, ICellGetter>(cellFormLink, package);
-            linkedCell.Record.Should().BeSameAs(cell);
-            linkedCell.ModKey.Should().Be(TestConstants.PluginModKey);
-            linkedCell.Parent.Record.Should().BeSameAs(subBlock);
+            linkedCell.Record.ShouldBeSameAs(cell);
+            linkedCell.ModKey.ShouldBe(TestConstants.PluginModKey);
+            linkedCell.Parent.Record.ShouldBeSameAs(subBlock);
             var worldspaceFormLink = new FormLink<IWorldspace>(worldspace.FormKey);
             var linkedWorldspace = contextRetriever.ResolveContext<IWorldspace, IWorldspaceGetter>(worldspaceFormLink, package);
-            linkedWorldspace.Record.Should().BeSameAs(worldspace);
-            linkedWorldspace.ModKey.Should().Be(TestConstants.PluginModKey);
-            linkedWorldspace.Parent.Should().BeNull();
+            linkedWorldspace.Record.ShouldBeSameAs(worldspace);
+            linkedWorldspace.ModKey.ShouldBe(TestConstants.PluginModKey);
+            linkedWorldspace.Parent.ShouldBeNull();
         });
     }
 
@@ -176,9 +176,9 @@ public partial class ALinkingTests
         WrapPotentialThrow(cacheType, style, () =>
         {
             Assert.True(contextRetriever.TryResolveContext<IEffectRecord, IEffectRecordGetter>(formLink, package, out var linkedRec));
-            linkedRec.Record.Should().BeSameAs(spell);
-            linkedRec.ModKey.Should().Be(TestConstants.PluginModKey);
-            linkedRec.Parent.Should().BeNull();
+            linkedRec.Record.ShouldBeSameAs(spell);
+            linkedRec.ModKey.ShouldBe(TestConstants.PluginModKey);
+            linkedRec.Parent.ShouldBeNull();
         });
     }
 
@@ -225,19 +225,19 @@ public partial class ALinkingTests
         WrapPotentialThrow(cacheType, style, () =>
         {
             Assert.True(contextRetriever.TryResolveContext<IPlaced, IPlacedGetter>(placedFormLink, package, out var linkedPlacedNpc));
-            linkedPlacedNpc.Record.Should().BeSameAs(placedNpc);
-            linkedPlacedNpc.ModKey.Should().Be(TestConstants.PluginModKey);
-            linkedPlacedNpc.Parent.Record.Should().BeSameAs(cell);
+            linkedPlacedNpc.Record.ShouldBeSameAs(placedNpc);
+            linkedPlacedNpc.ModKey.ShouldBe(TestConstants.PluginModKey);
+            linkedPlacedNpc.Parent.Record.ShouldBeSameAs(cell);
             var cellFormLink = new FormLink<ICellGetter>(cell.FormKey);
             Assert.True(contextRetriever.TryResolveContext<ICell, ICellGetter>(cellFormLink, package, out var linkedCell));
-            linkedCell.Record.Should().BeSameAs(cell);
-            linkedCell.ModKey.Should().Be(TestConstants.PluginModKey);
-            linkedCell.Parent.Record.Should().BeSameAs(subBlock);
+            linkedCell.Record.ShouldBeSameAs(cell);
+            linkedCell.ModKey.ShouldBe(TestConstants.PluginModKey);
+            linkedCell.Parent.Record.ShouldBeSameAs(subBlock);
             var worldspaceFormLink = new FormLink<IWorldspaceGetter>(worldspace.FormKey);
             Assert.True(contextRetriever.TryResolveContext<IWorldspace, IWorldspaceGetter>(worldspaceFormLink, package, out var linkedWorldspace));
-            linkedWorldspace.Record.Should().BeSameAs(worldspace);
-            linkedWorldspace.ModKey.Should().Be(TestConstants.PluginModKey);
-            linkedWorldspace.Parent.Should().BeNull();
+            linkedWorldspace.Record.ShouldBeSameAs(worldspace);
+            linkedWorldspace.ModKey.ShouldBe(TestConstants.PluginModKey);
+            linkedWorldspace.Parent.ShouldBeNull();
         });
     }
 
@@ -252,9 +252,9 @@ public partial class ALinkingTests
         WrapPotentialThrow(cacheType, style, () =>
         {
             var resolved = contextRetriever.ResolveContext<IEffectRecord, IEffectRecordGetter>(formLink, package);
-            resolved.Record.Should().BeSameAs(spell);
-            resolved.ModKey.Should().Be(TestConstants.PluginModKey);
-            resolved.Parent.Should().BeNull();
+            resolved.Record.ShouldBeSameAs(spell);
+            resolved.ModKey.ShouldBe(TestConstants.PluginModKey);
+            resolved.Parent.ShouldBeNull();
         });
     }
 
@@ -303,19 +303,19 @@ public partial class ALinkingTests
         WrapPotentialThrow(cacheType, style, () =>
         {
             var resolvedPlaced = contextRetriever.ResolveContext<IPlaced, IPlacedGetter>(placedFormLink, package);
-            resolvedPlaced.Record.Should().BeSameAs(placedNpc);
-            resolvedPlaced.ModKey.Should().Be(TestConstants.PluginModKey);
-            resolvedPlaced.Parent.Record.Should().BeSameAs(cell);
+            resolvedPlaced.Record.ShouldBeSameAs(placedNpc);
+            resolvedPlaced.ModKey.ShouldBe(TestConstants.PluginModKey);
+            resolvedPlaced.Parent.Record.ShouldBeSameAs(cell);
             var cellFormLink = new FormLink<ICellGetter>(cell.FormKey);
             var resolvedCell = contextRetriever.ResolveContext<ICell, ICellGetter>(cellFormLink, package);
-            resolvedCell.Record.Should().BeSameAs(cell);
-            resolvedCell.ModKey.Should().Be(TestConstants.PluginModKey);
-            resolvedCell.Parent.Record.Should().BeSameAs(subBlock);
+            resolvedCell.Record.ShouldBeSameAs(cell);
+            resolvedCell.ModKey.ShouldBe(TestConstants.PluginModKey);
+            resolvedCell.Parent.Record.ShouldBeSameAs(subBlock);
             var worldspaceFormLink = new FormLink<IWorldspaceGetter>(worldspace.FormKey);
             var resolvedWorldspace = contextRetriever.ResolveContext<IWorldspace, IWorldspaceGetter>(worldspaceFormLink, package);
-            resolvedWorldspace.Record.Should().BeSameAs(worldspace);
-            resolvedWorldspace.ModKey.Should().Be(TestConstants.PluginModKey);
-            resolvedWorldspace.Parent.Should().BeNull();
+            resolvedWorldspace.Record.ShouldBeSameAs(worldspace);
+            resolvedWorldspace.ModKey.ShouldBe(TestConstants.PluginModKey);
+            resolvedWorldspace.Parent.ShouldBeNull();
         });
     }
 }

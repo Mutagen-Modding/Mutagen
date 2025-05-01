@@ -75,16 +75,16 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkGetter<ILocationGetter> IEncounterZoneGetter.Location => this.Location;
         #endregion
         #region Rank
-        public SByte Rank { get; set; } = default(SByte);
+        public Byte Rank { get; set; } = default(Byte);
         #endregion
         #region MinLevel
-        public SByte MinLevel { get; set; } = default(SByte);
+        public Byte MinLevel { get; set; } = default(Byte);
         #endregion
         #region Flags
         public EncounterZone.Flag Flags { get; set; } = default(EncounterZone.Flag);
         #endregion
         #region MaxLevel
-        public SByte MaxLevel { get; set; } = default(SByte);
+        public Byte MaxLevel { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -659,10 +659,10 @@ namespace Mutagen.Bethesda.Fallout4
     {
         new IFormLink<IOwnerGetter> Owner { get; set; }
         new IFormLink<ILocationGetter> Location { get; set; }
-        new SByte Rank { get; set; }
-        new SByte MinLevel { get; set; }
+        new Byte Rank { get; set; }
+        new Byte MinLevel { get; set; }
         new EncounterZone.Flag Flags { get; set; }
-        new SByte MaxLevel { get; set; }
+        new Byte MaxLevel { get; set; }
     }
 
     public partial interface IEncounterZoneInternal :
@@ -683,10 +683,10 @@ namespace Mutagen.Bethesda.Fallout4
         static new ILoquiRegistration StaticRegistration => EncounterZone_Registration.Instance;
         IFormLinkGetter<IOwnerGetter> Owner { get; }
         IFormLinkGetter<ILocationGetter> Location { get; }
-        SByte Rank { get; }
-        SByte MinLevel { get; }
+        Byte Rank { get; }
+        Byte MinLevel { get; }
         EncounterZone.Flag Flags { get; }
-        SByte MaxLevel { get; }
+        Byte MaxLevel { get; }
 
     }
 
@@ -961,10 +961,10 @@ namespace Mutagen.Bethesda.Fallout4
             ClearPartial();
             item.Owner.Clear();
             item.Location.Clear();
-            item.Rank = default(SByte);
-            item.MinLevel = default(SByte);
+            item.Rank = default(Byte);
+            item.MinLevel = default(Byte);
             item.Flags = default(EncounterZone.Flag);
-            item.MaxLevel = default(SByte);
+            item.MaxLevel = default(Byte);
             base.Clear(item);
         }
         
@@ -1629,15 +1629,15 @@ namespace Mutagen.Bethesda.Fallout4
                     if (dataFrame.Remaining < 4) return null;
                     item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Remaining < 1) return null;
-                    item.Rank = dataFrame.ReadInt8();
+                    item.Rank = dataFrame.ReadUInt8();
                     if (dataFrame.Remaining < 1) return null;
-                    item.MinLevel = dataFrame.ReadInt8();
+                    item.MinLevel = dataFrame.ReadUInt8();
                     if (dataFrame.Remaining < 1) return null;
                     item.Flags = EnumBinaryTranslation<EncounterZone.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         length: 1);
                     if (dataFrame.Remaining < 1) return null;
-                    item.MaxLevel = dataFrame.ReadInt8();
+                    item.MaxLevel = dataFrame.ReadUInt8();
                     return (int)EncounterZone_FieldIndex.MaxLevel;
                 }
                 default:
@@ -1713,12 +1713,12 @@ namespace Mutagen.Bethesda.Fallout4
         #region Rank
         private int _RankLocation => _DATALocation!.Value.Min + 0x8;
         private bool _Rank_IsSet => _DATALocation.HasValue;
-        public SByte Rank => _Rank_IsSet ? (sbyte)_recordData.Slice(_RankLocation, 1)[0] : default(SByte);
+        public Byte Rank => _Rank_IsSet ? _recordData.Span[_RankLocation] : default;
         #endregion
         #region MinLevel
         private int _MinLevelLocation => _DATALocation!.Value.Min + 0x9;
         private bool _MinLevel_IsSet => _DATALocation.HasValue;
-        public SByte MinLevel => _MinLevel_IsSet ? (sbyte)_recordData.Slice(_MinLevelLocation, 1)[0] : default(SByte);
+        public Byte MinLevel => _MinLevel_IsSet ? _recordData.Span[_MinLevelLocation] : default;
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value.Min + 0xA;
@@ -1728,7 +1728,7 @@ namespace Mutagen.Bethesda.Fallout4
         #region MaxLevel
         private int _MaxLevelLocation => _DATALocation!.Value.Min + 0xB;
         private bool _MaxLevel_IsSet => _DATALocation.HasValue;
-        public SByte MaxLevel => _MaxLevel_IsSet ? (sbyte)_recordData.Slice(_MaxLevelLocation, 1)[0] : default(SByte);
+        public Byte MaxLevel => _MaxLevel_IsSet ? _recordData.Span[_MaxLevelLocation] : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

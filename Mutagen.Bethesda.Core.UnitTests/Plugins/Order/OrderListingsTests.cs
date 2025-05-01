@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Xunit;
@@ -24,30 +24,30 @@ public class OrderListingsTests
         ModKey esp2 = new ModKey("Normal2", ModType.Plugin);
 
         var ordered = new OrderListings().Order(
-                implicitListings: new ModKey[]
-                {
+                implicitListings:
+                [
                     baseEsm,
-                    baseEsm2,
-                },
-                creationClubListings: new ModKey[]
-                {
+                    baseEsm2
+                ],
+                creationClubListings:
+                [
                     ccEsl,
                     ccEsl2,
                     ccEsm,
-                    ccEsm2,
-                },
-                pluginsListings: new ModKey[]
-                {
+                    ccEsm2
+                ],
+                pluginsListings:
+                [
                     esm,
                     esm2,
                     esl,
                     esl2,
                     esp,
-                    esp2,
-                },
+                    esp2
+                ],
                 selector: m => m)
             .ToList();
-        ordered.Should().Equal(new ModKey[]
+        ordered.ShouldBe(new[]
         {
             baseEsm,
             baseEsm2,
@@ -75,22 +75,21 @@ public class OrderListingsTests
 
         new OrderListings().Order(
                 implicitListings: Array.Empty<ModKey>(),
-                creationClubListings: new ModKey[]
-                {
+                creationClubListings:
+                [
                     ccEsm,
                     ccEsm2,
-                    ccEsm3,
-                },
-                pluginsListings: new ModKey[]
-                {
+                    ccEsm3
+                ],
+                pluginsListings:
+                [
                     ccEsm2,
                     esm,
                     ccEsm,
-                    esm2,
-                },
+                    esm2
+                ],
                 selector: m => m)
-            .Should().Equal(new ModKey[]
-            {
+            .ShouldBe([
                 // First, because wasn't listed on plugins
                 ccEsm3,
                 // 2nd because it was first on the plugins listings
@@ -98,7 +97,7 @@ public class OrderListingsTests
                 // Was listed last on the plugins listing
                 ccEsm,
                 esm,
-                esm2,
-            });
+                esm2
+            ]);
     }
 }

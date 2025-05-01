@@ -10,5 +10,5 @@ public partial class Weapon
         NonPlayable = 0x0000_0004
     }
     
-    IFormLinkNullableGetter<IEffectRecordGetter> IEnchantableGetter.ObjectEffect => this.ObjectEffect;
+    IFormLinkNullableGetter<IObjectEffectGetter> IEnchantableGetter.ObjectEffect => this.ObjectEffect;
 }

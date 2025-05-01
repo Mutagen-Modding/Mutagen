@@ -80,31 +80,80 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<ISurfacePatternStyleGetter> ISurfacePatternGetter.SurfacePatternStyle => this.SurfacePatternStyle;
         #endregion
-        #region SurfaceBlocks
-        public static readonly P2Int SurfaceBlocksFixedSize = new P2Int(16, 16);
+        #region Blocks
+        public static readonly P2Int BlocksFixedSize = new P2Int(16, 16);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IArray2d<IFormLinkGetter<ISurfaceBlockGetter>> _SurfaceBlocks = new Array2d<IFormLinkGetter<ISurfaceBlockGetter>>(16, 16, FormLink<ISurfaceBlockGetter>.Null);
-        public IArray2d<IFormLinkGetter<ISurfaceBlockGetter>> SurfaceBlocks
+        private IArray2d<IFormLinkGetter<ISurfaceBlockGetter>>? _Blocks;
+        public IArray2d<IFormLinkGetter<ISurfaceBlockGetter>>? Blocks
         {
-            get => this._SurfaceBlocks;
-            init => this._SurfaceBlocks = value;
+            get => this._Blocks;
+            set => this._Blocks = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyArray2d<IFormLinkGetter<ISurfaceBlockGetter>> ISurfacePatternGetter.SurfaceBlocks => _SurfaceBlocks;
+        IReadOnlyArray2d<IFormLinkGetter<ISurfaceBlockGetter>>? ISurfacePatternGetter.Blocks => _Blocks;
         #endregion
 
         #endregion
-        #region GNAM
+        #region MasterBlocks
+        public static readonly P2Int MasterBlocksFixedSize = new P2Int(16, 16);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _GNAM;
-        public MemorySlice<Byte>? GNAM
+        private IArray2d<IFormLinkGetter<ISurfaceBlockGetter>>? _MasterBlocks;
+        public IArray2d<IFormLinkGetter<ISurfaceBlockGetter>>? MasterBlocks
         {
-            get => this._GNAM;
-            set => this._GNAM = value;
+            get => this._MasterBlocks;
+            set => this._MasterBlocks = value;
         }
+        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ISurfacePatternGetter.GNAM => this.GNAM;
+        IReadOnlyArray2d<IFormLinkGetter<ISurfaceBlockGetter>>? ISurfacePatternGetter.MasterBlocks => _MasterBlocks;
+        #endregion
+
+        #endregion
+        #region MasterBlockRotations
+        public static readonly P2Int MasterBlockRotationsFixedSize = new P2Int(16, 16);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private IArray2d<SByte>? _MasterBlockRotations;
+        public IArray2d<SByte>? MasterBlockRotations
+        {
+            get => this._MasterBlockRotations;
+            set => this._MasterBlockRotations = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyArray2d<SByte>? ISurfacePatternGetter.MasterBlockRotations => _MasterBlockRotations;
+        #endregion
+
+        #endregion
+        #region OverrideBlocks
+        public static readonly P2Int OverrideBlocksFixedSize = new P2Int(16, 16);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private IArray2d<IFormLinkGetter<ISurfaceBlockGetter>>? _OverrideBlocks;
+        public IArray2d<IFormLinkGetter<ISurfaceBlockGetter>>? OverrideBlocks
+        {
+            get => this._OverrideBlocks;
+            set => this._OverrideBlocks = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyArray2d<IFormLinkGetter<ISurfaceBlockGetter>>? ISurfacePatternGetter.OverrideBlocks => _OverrideBlocks;
+        #endregion
+
+        #endregion
+        #region OverrideBlockRotations
+        public static readonly P2Int OverrideBlockRotationsFixedSize = new P2Int(16, 16);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private IArray2d<SByte>? _OverrideBlockRotations;
+        public IArray2d<SByte>? OverrideBlockRotations
+        {
+            get => this._OverrideBlockRotations;
+            set => this._OverrideBlockRotations = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyArray2d<SByte>? ISurfacePatternGetter.OverrideBlockRotations => _OverrideBlockRotations;
+        #endregion
+
         #endregion
         #region Worldspaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -147,8 +196,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.SurfacePatternStyle = initialValue;
-                this.SurfaceBlocks = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(P2Int Index, TItem Value)>());
-                this.GNAM = initialValue;
+                this.Blocks = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(P2Int Index, TItem Value)>());
+                this.MasterBlocks = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(P2Int Index, TItem Value)>());
+                this.MasterBlockRotations = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(P2Int Index, TItem Value)>());
+                this.OverrideBlocks = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(P2Int Index, TItem Value)>());
+                this.OverrideBlockRotations = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(P2Int Index, TItem Value)>());
                 this.Worldspaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
@@ -162,8 +214,11 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem Components,
                 TItem SurfacePatternStyle,
-                TItem SurfaceBlocks,
-                TItem GNAM,
+                TItem Blocks,
+                TItem MasterBlocks,
+                TItem MasterBlockRotations,
+                TItem OverrideBlocks,
+                TItem OverrideBlockRotations,
                 TItem Worldspaces)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -176,8 +231,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.SurfacePatternStyle = SurfacePatternStyle;
-                this.SurfaceBlocks = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(SurfaceBlocks, Enumerable.Empty<(P2Int Index, TItem Value)>());
-                this.GNAM = GNAM;
+                this.Blocks = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(Blocks, Enumerable.Empty<(P2Int Index, TItem Value)>());
+                this.MasterBlocks = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(MasterBlocks, Enumerable.Empty<(P2Int Index, TItem Value)>());
+                this.MasterBlockRotations = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(MasterBlockRotations, Enumerable.Empty<(P2Int Index, TItem Value)>());
+                this.OverrideBlocks = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(OverrideBlocks, Enumerable.Empty<(P2Int Index, TItem Value)>());
+                this.OverrideBlockRotations = new MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>(OverrideBlockRotations, Enumerable.Empty<(P2Int Index, TItem Value)>());
                 this.Worldspaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Worldspaces, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
@@ -192,8 +250,11 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public TItem SurfacePatternStyle;
-            public MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>? SurfaceBlocks;
-            public TItem GNAM;
+            public MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>? Blocks;
+            public MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>? MasterBlocks;
+            public MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>? MasterBlockRotations;
+            public MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>? OverrideBlocks;
+            public MaskItem<TItem, IEnumerable<(P2Int Index, TItem Value)>?>? OverrideBlockRotations;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Worldspaces;
             #endregion
 
@@ -210,8 +271,11 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.SurfacePatternStyle, rhs.SurfacePatternStyle)) return false;
-                if (!object.Equals(this.SurfaceBlocks, rhs.SurfaceBlocks)) return false;
-                if (!object.Equals(this.GNAM, rhs.GNAM)) return false;
+                if (!object.Equals(this.Blocks, rhs.Blocks)) return false;
+                if (!object.Equals(this.MasterBlocks, rhs.MasterBlocks)) return false;
+                if (!object.Equals(this.MasterBlockRotations, rhs.MasterBlockRotations)) return false;
+                if (!object.Equals(this.OverrideBlocks, rhs.OverrideBlocks)) return false;
+                if (!object.Equals(this.OverrideBlockRotations, rhs.OverrideBlockRotations)) return false;
                 if (!object.Equals(this.Worldspaces, rhs.Worldspaces)) return false;
                 return true;
             }
@@ -220,8 +284,11 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.Components);
                 hash.Add(this.SurfacePatternStyle);
-                hash.Add(this.SurfaceBlocks);
-                hash.Add(this.GNAM);
+                hash.Add(this.Blocks);
+                hash.Add(this.MasterBlocks);
+                hash.Add(this.MasterBlockRotations);
+                hash.Add(this.OverrideBlocks);
+                hash.Add(this.OverrideBlockRotations);
                 hash.Add(this.Worldspaces);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -246,18 +313,61 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (!eval(this.SurfacePatternStyle)) return false;
-                if (this.SurfaceBlocks != null)
+                if (this.Blocks != null)
                 {
-                    if (!eval(this.SurfaceBlocks.Overall)) return false;
-                    if (this.SurfaceBlocks.Specific != null)
+                    if (!eval(this.Blocks.Overall)) return false;
+                    if (this.Blocks.Specific != null)
                     {
-                        foreach (var item in this.SurfaceBlocks.Specific)
+                        foreach (var item in this.Blocks.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
-                if (!eval(this.GNAM)) return false;
+                if (this.MasterBlocks != null)
+                {
+                    if (!eval(this.MasterBlocks.Overall)) return false;
+                    if (this.MasterBlocks.Specific != null)
+                    {
+                        foreach (var item in this.MasterBlocks.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.MasterBlockRotations != null)
+                {
+                    if (!eval(this.MasterBlockRotations.Overall)) return false;
+                    if (this.MasterBlockRotations.Specific != null)
+                    {
+                        foreach (var item in this.MasterBlockRotations.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.OverrideBlocks != null)
+                {
+                    if (!eval(this.OverrideBlocks.Overall)) return false;
+                    if (this.OverrideBlocks.Specific != null)
+                    {
+                        foreach (var item in this.OverrideBlocks.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.OverrideBlockRotations != null)
+                {
+                    if (!eval(this.OverrideBlockRotations.Overall)) return false;
+                    if (this.OverrideBlockRotations.Specific != null)
+                    {
+                        foreach (var item in this.OverrideBlockRotations.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (this.Worldspaces != null)
                 {
                     if (!eval(this.Worldspaces.Overall)) return false;
@@ -290,18 +400,61 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (eval(this.SurfacePatternStyle)) return true;
-                if (this.SurfaceBlocks != null)
+                if (this.Blocks != null)
                 {
-                    if (eval(this.SurfaceBlocks.Overall)) return true;
-                    if (this.SurfaceBlocks.Specific != null)
+                    if (eval(this.Blocks.Overall)) return true;
+                    if (this.Blocks.Specific != null)
                     {
-                        foreach (var item in this.SurfaceBlocks.Specific)
+                        foreach (var item in this.Blocks.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
-                if (eval(this.GNAM)) return true;
+                if (this.MasterBlocks != null)
+                {
+                    if (eval(this.MasterBlocks.Overall)) return true;
+                    if (this.MasterBlocks.Specific != null)
+                    {
+                        foreach (var item in this.MasterBlocks.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.MasterBlockRotations != null)
+                {
+                    if (eval(this.MasterBlockRotations.Overall)) return true;
+                    if (this.MasterBlockRotations.Specific != null)
+                    {
+                        foreach (var item in this.MasterBlockRotations.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.OverrideBlocks != null)
+                {
+                    if (eval(this.OverrideBlocks.Overall)) return true;
+                    if (this.OverrideBlocks.Specific != null)
+                    {
+                        foreach (var item in this.OverrideBlocks.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.OverrideBlockRotations != null)
+                {
+                    if (eval(this.OverrideBlockRotations.Overall)) return true;
+                    if (this.OverrideBlockRotations.Specific != null)
+                    {
+                        foreach (var item in this.OverrideBlockRotations.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (this.Worldspaces != null)
                 {
                     if (eval(this.Worldspaces.Overall)) return true;
@@ -344,21 +497,76 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 obj.SurfacePatternStyle = eval(this.SurfacePatternStyle);
-                if (SurfaceBlocks != null)
+                if (Blocks != null)
                 {
-                    obj.SurfaceBlocks = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.SurfaceBlocks.Overall), Enumerable.Empty<(P2Int Index, R Value)>());
-                    if (SurfaceBlocks.Specific != null)
+                    obj.Blocks = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.Blocks.Overall), Enumerable.Empty<(P2Int Index, R Value)>());
+                    if (Blocks.Specific != null)
                     {
                         var l = new List<(P2Int Index, R Item)>();
-                        obj.SurfaceBlocks.Specific = l;
-                        foreach (var item in SurfaceBlocks.Specific)
+                        obj.Blocks.Specific = l;
+                        foreach (var item in Blocks.Specific)
                         {
                             R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
                 }
-                obj.GNAM = eval(this.GNAM);
+                if (MasterBlocks != null)
+                {
+                    obj.MasterBlocks = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.MasterBlocks.Overall), Enumerable.Empty<(P2Int Index, R Value)>());
+                    if (MasterBlocks.Specific != null)
+                    {
+                        var l = new List<(P2Int Index, R Item)>();
+                        obj.MasterBlocks.Specific = l;
+                        foreach (var item in MasterBlocks.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (MasterBlockRotations != null)
+                {
+                    obj.MasterBlockRotations = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.MasterBlockRotations.Overall), Enumerable.Empty<(P2Int Index, R Value)>());
+                    if (MasterBlockRotations.Specific != null)
+                    {
+                        var l = new List<(P2Int Index, R Item)>();
+                        obj.MasterBlockRotations.Specific = l;
+                        foreach (var item in MasterBlockRotations.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (OverrideBlocks != null)
+                {
+                    obj.OverrideBlocks = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.OverrideBlocks.Overall), Enumerable.Empty<(P2Int Index, R Value)>());
+                    if (OverrideBlocks.Specific != null)
+                    {
+                        var l = new List<(P2Int Index, R Item)>();
+                        obj.OverrideBlocks.Specific = l;
+                        foreach (var item in OverrideBlocks.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (OverrideBlockRotations != null)
+                {
+                    obj.OverrideBlockRotations = new MaskItem<R, IEnumerable<(P2Int Index, R Value)>?>(eval(this.OverrideBlockRotations.Overall), Enumerable.Empty<(P2Int Index, R Value)>());
+                    if (OverrideBlockRotations.Specific != null)
+                    {
+                        var l = new List<(P2Int Index, R Item)>();
+                        obj.OverrideBlockRotations.Specific = l;
+                        foreach (var item in OverrideBlockRotations.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
                 if (Worldspaces != null)
                 {
                     obj.Worldspaces = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Worldspaces.Overall), Enumerable.Empty<(int Index, R Value)>());
@@ -414,16 +622,16 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(SurfacePatternStyle, "SurfacePatternStyle");
                     }
-                    if ((printMask?.SurfaceBlocks?.Overall ?? true)
-                        && SurfaceBlocks is {} SurfaceBlocksItem)
+                    if ((printMask?.Blocks?.Overall ?? true)
+                        && Blocks is {} BlocksItem)
                     {
-                        sb.AppendLine("SurfaceBlocks =>");
+                        sb.AppendLine("Blocks =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(SurfaceBlocksItem.Overall);
-                            if (SurfaceBlocksItem.Specific != null)
+                            sb.AppendItem(BlocksItem.Overall);
+                            if (BlocksItem.Specific != null)
                             {
-                                foreach (var subItem in SurfaceBlocksItem.Specific)
+                                foreach (var subItem in BlocksItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -435,9 +643,89 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.GNAM ?? true)
+                    if ((printMask?.MasterBlocks?.Overall ?? true)
+                        && MasterBlocks is {} MasterBlocksItem)
                     {
-                        sb.AppendItem(GNAM, "GNAM");
+                        sb.AppendLine("MasterBlocks =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(MasterBlocksItem.Overall);
+                            if (MasterBlocksItem.Specific != null)
+                            {
+                                foreach (var subItem in MasterBlocksItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.MasterBlockRotations?.Overall ?? true)
+                        && MasterBlockRotations is {} MasterBlockRotationsItem)
+                    {
+                        sb.AppendLine("MasterBlockRotations =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(MasterBlockRotationsItem.Overall);
+                            if (MasterBlockRotationsItem.Specific != null)
+                            {
+                                foreach (var subItem in MasterBlockRotationsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.OverrideBlocks?.Overall ?? true)
+                        && OverrideBlocks is {} OverrideBlocksItem)
+                    {
+                        sb.AppendLine("OverrideBlocks =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(OverrideBlocksItem.Overall);
+                            if (OverrideBlocksItem.Specific != null)
+                            {
+                                foreach (var subItem in OverrideBlocksItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.OverrideBlockRotations?.Overall ?? true)
+                        && OverrideBlockRotations is {} OverrideBlockRotationsItem)
+                    {
+                        sb.AppendLine("OverrideBlockRotations =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(OverrideBlockRotationsItem.Overall);
+                            if (OverrideBlockRotationsItem.Specific != null)
+                            {
+                                foreach (var subItem in OverrideBlockRotationsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                     if ((printMask?.Worldspaces?.Overall ?? true)
                         && Worldspaces is {} WorldspacesItem)
@@ -473,8 +761,11 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public Exception? SurfacePatternStyle;
-            public MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>? SurfaceBlocks;
-            public Exception? GNAM;
+            public MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>? Blocks;
+            public MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>? MasterBlocks;
+            public MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>? MasterBlockRotations;
+            public MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>? OverrideBlocks;
+            public MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>? OverrideBlockRotations;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Worldspaces;
             #endregion
 
@@ -488,10 +779,16 @@ namespace Mutagen.Bethesda.Starfield
                         return Components;
                     case SurfacePattern_FieldIndex.SurfacePatternStyle:
                         return SurfacePatternStyle;
-                    case SurfacePattern_FieldIndex.SurfaceBlocks:
-                        return SurfaceBlocks;
-                    case SurfacePattern_FieldIndex.GNAM:
-                        return GNAM;
+                    case SurfacePattern_FieldIndex.Blocks:
+                        return Blocks;
+                    case SurfacePattern_FieldIndex.MasterBlocks:
+                        return MasterBlocks;
+                    case SurfacePattern_FieldIndex.MasterBlockRotations:
+                        return MasterBlockRotations;
+                    case SurfacePattern_FieldIndex.OverrideBlocks:
+                        return OverrideBlocks;
+                    case SurfacePattern_FieldIndex.OverrideBlockRotations:
+                        return OverrideBlockRotations;
                     case SurfacePattern_FieldIndex.Worldspaces:
                         return Worldspaces;
                     default:
@@ -510,11 +807,20 @@ namespace Mutagen.Bethesda.Starfield
                     case SurfacePattern_FieldIndex.SurfacePatternStyle:
                         this.SurfacePatternStyle = ex;
                         break;
-                    case SurfacePattern_FieldIndex.SurfaceBlocks:
-                        this.SurfaceBlocks = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ex, null);
+                    case SurfacePattern_FieldIndex.Blocks:
+                        this.Blocks = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ex, null);
                         break;
-                    case SurfacePattern_FieldIndex.GNAM:
-                        this.GNAM = ex;
+                    case SurfacePattern_FieldIndex.MasterBlocks:
+                        this.MasterBlocks = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case SurfacePattern_FieldIndex.MasterBlockRotations:
+                        this.MasterBlockRotations = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case SurfacePattern_FieldIndex.OverrideBlocks:
+                        this.OverrideBlocks = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case SurfacePattern_FieldIndex.OverrideBlockRotations:
+                        this.OverrideBlockRotations = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(ex, null);
                         break;
                     case SurfacePattern_FieldIndex.Worldspaces:
                         this.Worldspaces = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
@@ -536,11 +842,20 @@ namespace Mutagen.Bethesda.Starfield
                     case SurfacePattern_FieldIndex.SurfacePatternStyle:
                         this.SurfacePatternStyle = (Exception?)obj;
                         break;
-                    case SurfacePattern_FieldIndex.SurfaceBlocks:
-                        this.SurfaceBlocks = (MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>)obj;
+                    case SurfacePattern_FieldIndex.Blocks:
+                        this.Blocks = (MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>)obj;
                         break;
-                    case SurfacePattern_FieldIndex.GNAM:
-                        this.GNAM = (Exception?)obj;
+                    case SurfacePattern_FieldIndex.MasterBlocks:
+                        this.MasterBlocks = (MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>)obj;
+                        break;
+                    case SurfacePattern_FieldIndex.MasterBlockRotations:
+                        this.MasterBlockRotations = (MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>)obj;
+                        break;
+                    case SurfacePattern_FieldIndex.OverrideBlocks:
+                        this.OverrideBlocks = (MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>)obj;
+                        break;
+                    case SurfacePattern_FieldIndex.OverrideBlockRotations:
+                        this.OverrideBlockRotations = (MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>)obj;
                         break;
                     case SurfacePattern_FieldIndex.Worldspaces:
                         this.Worldspaces = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
@@ -556,8 +871,11 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (Components != null) return true;
                 if (SurfacePatternStyle != null) return true;
-                if (SurfaceBlocks != null) return true;
-                if (GNAM != null) return true;
+                if (Blocks != null) return true;
+                if (MasterBlocks != null) return true;
+                if (MasterBlockRotations != null) return true;
+                if (OverrideBlocks != null) return true;
+                if (OverrideBlockRotations != null) return true;
                 if (Worldspaces != null) return true;
                 return false;
             }
@@ -606,15 +924,15 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(SurfacePatternStyle, "SurfacePatternStyle");
                 }
-                if (SurfaceBlocks is {} SurfaceBlocksItem)
+                if (Blocks is {} BlocksItem)
                 {
-                    sb.AppendLine("SurfaceBlocks =>");
+                    sb.AppendLine("Blocks =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(SurfaceBlocksItem.Overall);
-                        if (SurfaceBlocksItem.Specific != null)
+                        sb.AppendItem(BlocksItem.Overall);
+                        if (BlocksItem.Specific != null)
                         {
-                            foreach (var subItem in SurfaceBlocksItem.Specific)
+                            foreach (var subItem in BlocksItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -626,8 +944,85 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (MasterBlocks is {} MasterBlocksItem)
                 {
-                    sb.AppendItem(GNAM, "GNAM");
+                    sb.AppendLine("MasterBlocks =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(MasterBlocksItem.Overall);
+                        if (MasterBlocksItem.Specific != null)
+                        {
+                            foreach (var subItem in MasterBlocksItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (MasterBlockRotations is {} MasterBlockRotationsItem)
+                {
+                    sb.AppendLine("MasterBlockRotations =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(MasterBlockRotationsItem.Overall);
+                        if (MasterBlockRotationsItem.Specific != null)
+                        {
+                            foreach (var subItem in MasterBlockRotationsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (OverrideBlocks is {} OverrideBlocksItem)
+                {
+                    sb.AppendLine("OverrideBlocks =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(OverrideBlocksItem.Overall);
+                        if (OverrideBlocksItem.Specific != null)
+                        {
+                            foreach (var subItem in OverrideBlocksItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (OverrideBlockRotations is {} OverrideBlockRotationsItem)
+                {
+                    sb.AppendLine("OverrideBlockRotations =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(OverrideBlockRotationsItem.Overall);
+                        if (OverrideBlockRotationsItem.Specific != null)
+                        {
+                            foreach (var subItem in OverrideBlockRotationsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 if (Worldspaces is {} WorldspacesItem)
                 {
@@ -659,8 +1054,11 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.SurfacePatternStyle = this.SurfacePatternStyle.Combine(rhs.SurfacePatternStyle);
-                ret.SurfaceBlocks = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.SurfaceBlocks?.Overall, rhs.SurfaceBlocks?.Overall), Noggog.ExceptionExt.Combine(this.SurfaceBlocks?.Specific, rhs.SurfaceBlocks?.Specific));
-                ret.GNAM = this.GNAM.Combine(rhs.GNAM);
+                ret.Blocks = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Blocks?.Overall, rhs.Blocks?.Overall), Noggog.ExceptionExt.Combine(this.Blocks?.Specific, rhs.Blocks?.Specific));
+                ret.MasterBlocks = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.MasterBlocks?.Overall, rhs.MasterBlocks?.Overall), Noggog.ExceptionExt.Combine(this.MasterBlocks?.Specific, rhs.MasterBlocks?.Specific));
+                ret.MasterBlockRotations = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.MasterBlockRotations?.Overall, rhs.MasterBlockRotations?.Overall), Noggog.ExceptionExt.Combine(this.MasterBlockRotations?.Specific, rhs.MasterBlockRotations?.Specific));
+                ret.OverrideBlocks = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.OverrideBlocks?.Overall, rhs.OverrideBlocks?.Overall), Noggog.ExceptionExt.Combine(this.OverrideBlocks?.Specific, rhs.OverrideBlocks?.Specific));
+                ret.OverrideBlockRotations = new MaskItem<Exception?, IEnumerable<(P2Int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.OverrideBlockRotations?.Overall, rhs.OverrideBlockRotations?.Overall), Noggog.ExceptionExt.Combine(this.OverrideBlockRotations?.Specific, rhs.OverrideBlockRotations?.Specific));
                 ret.Worldspaces = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Worldspaces?.Overall, rhs.Worldspaces?.Overall), Noggog.ExceptionExt.Combine(this.Worldspaces?.Specific, rhs.Worldspaces?.Specific));
                 return ret;
             }
@@ -686,8 +1084,11 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public AComponent.TranslationMask? Components;
             public bool SurfacePatternStyle;
-            public bool SurfaceBlocks;
-            public bool GNAM;
+            public bool Blocks;
+            public bool MasterBlocks;
+            public bool MasterBlockRotations;
+            public bool OverrideBlocks;
+            public bool OverrideBlockRotations;
             public bool Worldspaces;
             #endregion
 
@@ -698,8 +1099,11 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.SurfacePatternStyle = defaultOn;
-                this.SurfaceBlocks = defaultOn;
-                this.GNAM = defaultOn;
+                this.Blocks = defaultOn;
+                this.MasterBlocks = defaultOn;
+                this.MasterBlockRotations = defaultOn;
+                this.OverrideBlocks = defaultOn;
+                this.OverrideBlockRotations = defaultOn;
                 this.Worldspaces = defaultOn;
             }
 
@@ -710,8 +1114,11 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((SurfacePatternStyle, null));
-                ret.Add((SurfaceBlocks, null));
-                ret.Add((GNAM, null));
+                ret.Add((Blocks, null));
+                ret.Add((MasterBlocks, null));
+                ret.Add((MasterBlockRotations, null));
+                ret.Add((OverrideBlocks, null));
+                ret.Add((OverrideBlockRotations, null));
                 ret.Add((Worldspaces, null));
             }
 
@@ -867,8 +1274,11 @@ namespace Mutagen.Bethesda.Starfield
     {
         new ExtendedList<AComponent> Components { get; }
         new IFormLink<ISurfacePatternStyleGetter> SurfacePatternStyle { get; set; }
-        new IArray2d<IFormLinkGetter<ISurfaceBlockGetter>> SurfaceBlocks { get; }
-        new MemorySlice<Byte>? GNAM { get; set; }
+        new IArray2d<IFormLinkGetter<ISurfaceBlockGetter>>? Blocks { get; set; }
+        new IArray2d<IFormLinkGetter<ISurfaceBlockGetter>>? MasterBlocks { get; set; }
+        new IArray2d<SByte>? MasterBlockRotations { get; set; }
+        new IArray2d<IFormLinkGetter<ISurfaceBlockGetter>>? OverrideBlocks { get; set; }
+        new IArray2d<SByte>? OverrideBlockRotations { get; set; }
         new ExtendedList<IFormLinkGetter<IWorldspaceGetter>>? Worldspaces { get; set; }
     }
 
@@ -891,8 +1301,11 @@ namespace Mutagen.Bethesda.Starfield
         static new ILoquiRegistration StaticRegistration => SurfacePattern_Registration.Instance;
         IReadOnlyList<IAComponentGetter> Components { get; }
         IFormLinkGetter<ISurfacePatternStyleGetter> SurfacePatternStyle { get; }
-        IReadOnlyArray2d<IFormLinkGetter<ISurfaceBlockGetter>> SurfaceBlocks { get; }
-        ReadOnlyMemorySlice<Byte>? GNAM { get; }
+        IReadOnlyArray2d<IFormLinkGetter<ISurfaceBlockGetter>>? Blocks { get; }
+        IReadOnlyArray2d<IFormLinkGetter<ISurfaceBlockGetter>>? MasterBlocks { get; }
+        IReadOnlyArray2d<SByte>? MasterBlockRotations { get; }
+        IReadOnlyArray2d<IFormLinkGetter<ISurfaceBlockGetter>>? OverrideBlocks { get; }
+        IReadOnlyArray2d<SByte>? OverrideBlockRotations { get; }
         IReadOnlyList<IFormLinkGetter<IWorldspaceGetter>>? Worldspaces { get; }
 
     }
@@ -1072,9 +1485,12 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         Components = 7,
         SurfacePatternStyle = 8,
-        SurfaceBlocks = 9,
-        GNAM = 10,
-        Worldspaces = 11,
+        Blocks = 9,
+        MasterBlocks = 10,
+        MasterBlockRotations = 11,
+        OverrideBlocks = 12,
+        OverrideBlockRotations = 13,
+        Worldspaces = 14,
     }
     #endregion
 
@@ -1085,9 +1501,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(SurfacePattern.Mask<>);
 
@@ -1123,8 +1539,11 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.BFCB,
                 RecordTypes.BFCE,
                 RecordTypes.CNAM,
+                RecordTypes.BNAM,
                 RecordTypes.FNAM,
                 RecordTypes.GNAM,
+                RecordTypes.EFRM,
+                RecordTypes.EORI,
                 RecordTypes.DNAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
@@ -1172,8 +1591,11 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.Components.Clear();
             item.SurfacePatternStyle.Clear();
-            item.SurfaceBlocks.SetAllTo(FormLink<ISurfaceBlockGetter>.Null);
-            item.GNAM = default;
+            item.Blocks = null;
+            item.MasterBlocks = null;
+            item.MasterBlockRotations = null;
+            item.OverrideBlocks = null;
+            item.OverrideBlockRotations = null;
             item.Worldspaces = null;
             base.Clear(item);
         }
@@ -1194,7 +1616,9 @@ namespace Mutagen.Bethesda.Starfield
             base.RemapLinks(obj, mapping);
             obj.Components.RemapLinks(mapping);
             obj.SurfacePatternStyle.Relink(mapping);
-            obj.SurfaceBlocks.RemapLinks(mapping);
+            obj.Blocks?.RemapLinks(mapping);
+            obj.MasterBlocks?.RemapLinks(mapping);
+            obj.OverrideBlocks?.RemapLinks(mapping);
             obj.Worldspaces?.RemapLinks(mapping);
         }
         
@@ -1292,11 +1716,26 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.SurfacePatternStyle = item.SurfacePatternStyle.Equals(rhs.SurfacePatternStyle);
-            ret.SurfaceBlocks = item.SurfaceBlocks.Array2dEqualsHelper(
-                rhs.SurfaceBlocks,
+            ret.Blocks = item.Blocks.Array2dEqualsHelper(
+                rhs.Blocks,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.GNAM = MemorySliceExt.SequenceEqual(item.GNAM, rhs.GNAM);
+            ret.MasterBlocks = item.MasterBlocks.Array2dEqualsHelper(
+                rhs.MasterBlocks,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.MasterBlockRotations = item.MasterBlockRotations.Array2dEqualsHelper(
+                rhs.MasterBlockRotations,
+                (l, r) => l == r,
+                include);
+            ret.OverrideBlocks = item.OverrideBlocks.Array2dEqualsHelper(
+                rhs.OverrideBlocks,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.OverrideBlockRotations = item.OverrideBlockRotations.Array2dEqualsHelper(
+                rhs.OverrideBlockRotations,
+                (l, r) => l == r,
+                include);
             ret.Worldspaces = item.Worldspaces.CollectionEqualsHelper(
                 rhs.Worldspaces,
                 (l, r) => object.Equals(l, r),
@@ -1368,12 +1807,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.SurfacePatternStyle.FormKey, "SurfacePatternStyle");
             }
-            if (printMask?.SurfaceBlocks?.Overall ?? true)
+            if ((printMask?.Blocks?.Overall ?? true)
+                && item.Blocks is {} BlocksItem)
             {
-                sb.AppendLine("SurfaceBlocks =>");
+                sb.AppendLine("Blocks =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.SurfaceBlocks)
+                    foreach (var subItem in BlocksItem)
                     {
                         using (sb.Brace())
                         {
@@ -1383,10 +1823,69 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.GNAM ?? true)
-                && item.GNAM is {} GNAMItem)
+            if ((printMask?.MasterBlocks?.Overall ?? true)
+                && item.MasterBlocks is {} MasterBlocksItem)
             {
-                sb.AppendLine($"GNAM => {SpanExt.ToHexString(GNAMItem)}");
+                sb.AppendLine("MasterBlocks =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in MasterBlocksItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.Key);
+                            sb.AppendItem(subItem.Value.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.MasterBlockRotations?.Overall ?? true)
+                && item.MasterBlockRotations is {} MasterBlockRotationsItem)
+            {
+                sb.AppendLine("MasterBlockRotations =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in MasterBlockRotationsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.Key);
+                            sb.AppendItem(subItem.Value);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.OverrideBlocks?.Overall ?? true)
+                && item.OverrideBlocks is {} OverrideBlocksItem)
+            {
+                sb.AppendLine("OverrideBlocks =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in OverrideBlocksItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.Key);
+                            sb.AppendItem(subItem.Value.FormKey);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.OverrideBlockRotations?.Overall ?? true)
+                && item.OverrideBlockRotations is {} OverrideBlockRotationsItem)
+            {
+                sb.AppendLine("OverrideBlockRotations =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in OverrideBlockRotationsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem.Key);
+                            sb.AppendItem(subItem.Value);
+                        }
+                    }
+                }
             }
             if ((printMask?.Worldspaces?.Overall ?? true)
                 && item.Worldspaces is {} WorldspacesItem)
@@ -1461,13 +1960,25 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.SurfacePatternStyle.Equals(rhs.SurfacePatternStyle)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.SurfaceBlocks) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.Blocks) ?? true))
             {
-                if (!lhs.SurfaceBlocks.SequenceEqualNullable(rhs.SurfaceBlocks)) return false;
+                if (!lhs.Blocks.SequenceEqualNullable(rhs.Blocks)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.GNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.MasterBlocks) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.GNAM, rhs.GNAM)) return false;
+                if (!lhs.MasterBlocks.SequenceEqualNullable(rhs.MasterBlocks)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.MasterBlockRotations) ?? true))
+            {
+                if (!lhs.MasterBlockRotations.SequenceEqualNullable(rhs.MasterBlockRotations)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.OverrideBlocks) ?? true))
+            {
+                if (!lhs.OverrideBlocks.SequenceEqualNullable(rhs.OverrideBlocks)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.OverrideBlockRotations) ?? true))
+            {
+                if (!lhs.OverrideBlockRotations.SequenceEqualNullable(rhs.OverrideBlockRotations)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.Worldspaces) ?? true))
             {
@@ -1503,11 +2014,11 @@ namespace Mutagen.Bethesda.Starfield
             var hash = new HashCode();
             hash.Add(item.Components);
             hash.Add(item.SurfacePatternStyle);
-            hash.Add(item.SurfaceBlocks);
-            if (item.GNAM is {} GNAMItem)
-            {
-                hash.Add(GNAMItem);
-            }
+            hash.Add(item.Blocks);
+            hash.Add(item.MasterBlocks);
+            hash.Add(item.MasterBlockRotations);
+            hash.Add(item.OverrideBlocks);
+            hash.Add(item.OverrideBlockRotations);
             hash.Add(item.Worldspaces);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1544,9 +2055,26 @@ namespace Mutagen.Bethesda.Starfield
                 yield return FormLinkInformation.Factory(item);
             }
             yield return FormLinkInformation.Factory(obj.SurfacePatternStyle);
-            foreach (var item in obj.SurfaceBlocks)
+            if (obj.Blocks is {} BlocksItem)
             {
-                yield return FormLinkInformation.Factory(item.Value);
+                foreach (var item in BlocksItem)
+                {
+                    yield return FormLinkInformation.Factory(item.Value);
+                }
+            }
+            if (obj.MasterBlocks is {} MasterBlocksItem)
+            {
+                foreach (var item in MasterBlocksItem)
+                {
+                    yield return FormLinkInformation.Factory(item.Value);
+                }
+            }
+            if (obj.OverrideBlocks is {} OverrideBlocksItem)
+            {
+                foreach (var item in OverrideBlocksItem)
+                {
+                    yield return FormLinkInformation.Factory(item.Value);
+                }
             }
             if (obj.Worldspaces is {} WorldspacesItem)
             {
@@ -1671,15 +2199,20 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.SurfacePatternStyle.SetTo(rhs.SurfacePatternStyle.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.SurfaceBlocks) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.Blocks) ?? true))
             {
-                errorMask?.PushIndex((int)SurfacePattern_FieldIndex.SurfaceBlocks);
+                errorMask?.PushIndex((int)SurfacePattern_FieldIndex.Blocks);
                 try
                 {
-                    item.SurfaceBlocks.SetTo(
-                        rhs.SurfaceBlocks
-                            .Select(b => new KeyValuePair<P2Int, IFormLinkGetter<ISurfaceBlockGetter>>(b.Key, (IFormLinkGetter<ISurfaceBlockGetter>)new FormLink<ISurfaceBlockGetter>(b.Value.FormKey)))
-                        , FormLink<ISurfaceBlockGetter>.Null);
+                    if ((rhs.Blocks != null))
+                    {
+                        item.Blocks = 
+                            Array2dCopyHelper.DeepCopy(rhs.Blocks, b => (IFormLinkGetter<ISurfaceBlockGetter>)new FormLink<ISurfaceBlockGetter>(b.Value.FormKey));
+                    }
+                    else
+                    {
+                        item.Blocks = null;
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1691,15 +2224,104 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.GNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.MasterBlocks) ?? true))
             {
-                if(rhs.GNAM is {} GNAMrhs)
+                errorMask?.PushIndex((int)SurfacePattern_FieldIndex.MasterBlocks);
+                try
                 {
-                    item.GNAM = GNAMrhs.ToArray();
+                    if ((rhs.MasterBlocks != null))
+                    {
+                        item.MasterBlocks = 
+                            Array2dCopyHelper.DeepCopy(rhs.MasterBlocks, b => (IFormLinkGetter<ISurfaceBlockGetter>)new FormLink<ISurfaceBlockGetter>(b.Value.FormKey));
+                    }
+                    else
+                    {
+                        item.MasterBlocks = null;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.GNAM = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.MasterBlockRotations) ?? true))
+            {
+                errorMask?.PushIndex((int)SurfacePattern_FieldIndex.MasterBlockRotations);
+                try
+                {
+                    if ((rhs.MasterBlockRotations != null))
+                    {
+                        item.MasterBlockRotations = 
+                            rhs.MasterBlockRotations.ShallowClone();
+                    }
+                    else
+                    {
+                        item.MasterBlockRotations = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.OverrideBlocks) ?? true))
+            {
+                errorMask?.PushIndex((int)SurfacePattern_FieldIndex.OverrideBlocks);
+                try
+                {
+                    if ((rhs.OverrideBlocks != null))
+                    {
+                        item.OverrideBlocks = 
+                            Array2dCopyHelper.DeepCopy(rhs.OverrideBlocks, b => (IFormLinkGetter<ISurfaceBlockGetter>)new FormLink<ISurfaceBlockGetter>(b.Value.FormKey));
+                    }
+                    else
+                    {
+                        item.OverrideBlocks = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.OverrideBlockRotations) ?? true))
+            {
+                errorMask?.PushIndex((int)SurfacePattern_FieldIndex.OverrideBlockRotations);
+                try
+                {
+                    if ((rhs.OverrideBlockRotations != null))
+                    {
+                        item.OverrideBlockRotations = 
+                            rhs.OverrideBlockRotations.ShallowClone();
+                    }
+                    else
+                    {
+                        item.OverrideBlockRotations = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)SurfacePattern_FieldIndex.Worldspaces) ?? true))
@@ -1915,7 +2537,17 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.CNAM));
             Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<IFormLinkGetter<ISurfaceBlockGetter>>.Instance.Write(
                 writer: writer,
-                items: item.SurfaceBlocks,
+                items: item.Blocks,
+                recordType: translationParams.ConvertToCustom(RecordTypes.BNAM),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISurfaceBlockGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<IFormLinkGetter<ISurfaceBlockGetter>>.Instance.Write(
+                writer: writer,
+                items: item.MasterBlocks,
                 recordType: translationParams.ConvertToCustom(RecordTypes.FNAM),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<ISurfaceBlockGetter> subItem, TypedWriteParams conv) =>
                 {
@@ -1923,10 +2555,26 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         item: subItem);
                 });
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<SByte>.Instance.Write(
                 writer: writer,
-                item: item.GNAM,
-                header: translationParams.ConvertToCustom(RecordTypes.GNAM));
+                items: item.MasterBlockRotations,
+                recordType: translationParams.ConvertToCustom(RecordTypes.GNAM),
+                transl: SByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
+            Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<IFormLinkGetter<ISurfaceBlockGetter>>.Instance.Write(
+                writer: writer,
+                items: item.OverrideBlocks,
+                recordType: translationParams.ConvertToCustom(RecordTypes.EFRM),
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISurfaceBlockGetter> subItem, TypedWriteParams conv) =>
+                {
+                    FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<SByte>.Instance.Write(
+                writer: writer,
+                items: item.OverrideBlockRotations,
+                recordType: translationParams.ConvertToCustom(RecordTypes.EORI),
+                transl: SByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IWorldspaceGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Worldspaces,
@@ -2021,21 +2669,60 @@ namespace Mutagen.Bethesda.Starfield
                     item.SurfacePatternStyle.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)SurfacePattern_FieldIndex.SurfacePatternStyle;
                 }
+                case RecordTypeInts.BNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Blocks = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<IFormLinkGetter<ISurfaceBlockGetter>>.Instance.Parse(
+                            reader: frame,
+                            size: SurfacePattern.BlocksFixedSize,
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        ;
+                    return (int)SurfacePattern_FieldIndex.Blocks;
+                }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SurfaceBlocks.SetTo(
+                    item.MasterBlocks = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<IFormLinkGetter<ISurfaceBlockGetter>>.Instance.Parse(
                             reader: frame,
-                            size: SurfacePattern.SurfaceBlocksFixedSize,
-                            transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return (int)SurfacePattern_FieldIndex.SurfaceBlocks;
+                            size: SurfacePattern.MasterBlocksFixedSize,
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        ;
+                    return (int)SurfacePattern_FieldIndex.MasterBlocks;
                 }
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.GNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)SurfacePattern_FieldIndex.GNAM;
+                    item.MasterBlockRotations = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<SByte>.Instance.Parse(
+                            reader: frame,
+                            size: SurfacePattern.MasterBlockRotationsFixedSize,
+                            transl: SByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
+                        ;
+                    return (int)SurfacePattern_FieldIndex.MasterBlockRotations;
+                }
+                case RecordTypeInts.EFRM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.OverrideBlocks = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<IFormLinkGetter<ISurfaceBlockGetter>>.Instance.Parse(
+                            reader: frame,
+                            size: SurfacePattern.OverrideBlocksFixedSize,
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        ;
+                    return (int)SurfacePattern_FieldIndex.OverrideBlocks;
+                }
+                case RecordTypeInts.EORI:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.OverrideBlockRotations = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.Array2dBinaryTranslation<SByte>.Instance.Parse(
+                            reader: frame,
+                            size: SurfacePattern.OverrideBlockRotationsFixedSize,
+                            transl: SByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
+                        ;
+                    return (int)SurfacePattern_FieldIndex.OverrideBlockRotations;
                 }
                 case RecordTypeInts.DNAM:
                 {
@@ -2112,14 +2799,11 @@ namespace Mutagen.Bethesda.Starfield
         private int? _SurfacePatternStyleLocation;
         public IFormLinkGetter<ISurfacePatternStyleGetter> SurfacePatternStyle => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISurfacePatternStyleGetter>(_package, _recordData, _SurfacePatternStyleLocation);
         #endregion
-        #region SurfaceBlocks
-        private static IReadOnlyArray2d<IFormLinkGetter<ISurfaceBlockGetter>> _SurfaceBlocksEmpty = new Array2d<IFormLinkGetter<ISurfaceBlockGetter>>(16, 16, FormLink<ISurfaceBlockGetter>.Null);
-        public IReadOnlyArray2d<IFormLinkGetter<ISurfaceBlockGetter>> SurfaceBlocks { get; private set; } = _SurfaceBlocksEmpty;
-        #endregion
-        #region GNAM
-        private int? _GNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? GNAM => _GNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _GNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
+        public IReadOnlyArray2d<IFormLinkGetter<ISurfaceBlockGetter>>? Blocks { get; private set; }
+        public IReadOnlyArray2d<IFormLinkGetter<ISurfaceBlockGetter>>? MasterBlocks { get; private set; }
+        public IReadOnlyArray2d<SByte>? MasterBlockRotations { get; private set; }
+        public IReadOnlyArray2d<IFormLinkGetter<ISurfaceBlockGetter>>? OverrideBlocks { get; private set; }
+        public IReadOnlyArray2d<SByte>? OverrideBlockRotations { get; private set; }
         public IReadOnlyList<IFormLinkGetter<IWorldspaceGetter>>? Worldspaces { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2204,21 +2888,60 @@ namespace Mutagen.Bethesda.Starfield
                     _SurfacePatternStyleLocation = (stream.Position - offset);
                     return (int)SurfacePattern_FieldIndex.SurfacePatternStyle;
                 }
-                case RecordTypeInts.FNAM:
+                case RecordTypeInts.BNAM:
                 {
                     var subMeta = stream.ReadSubrecordHeader();
-                    this.SurfaceBlocks = BinaryOverlayArray2d.Factory<IFormLinkGetter<ISurfaceBlockGetter>>(
+                    this.Blocks = BinaryOverlayArray2d.Factory<IFormLinkGetter<ISurfaceBlockGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subMeta.ContentLength),
                         package: _package,
                         itemLength: 4,
-                        size: SurfacePattern.SurfaceBlocksFixedSize,
+                        size: SurfacePattern.BlocksFixedSize,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ISurfaceBlockGetter>(p, s));
-                    return (int)SurfacePattern_FieldIndex.SurfaceBlocks;
+                    return (int)SurfacePattern_FieldIndex.Blocks;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    this.MasterBlocks = BinaryOverlayArray2d.Factory<IFormLinkGetter<ISurfaceBlockGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subMeta.ContentLength),
+                        package: _package,
+                        itemLength: 4,
+                        size: SurfacePattern.MasterBlocksFixedSize,
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ISurfaceBlockGetter>(p, s));
+                    return (int)SurfacePattern_FieldIndex.MasterBlocks;
                 }
                 case RecordTypeInts.GNAM:
                 {
-                    _GNAMLocation = (stream.Position - offset);
-                    return (int)SurfacePattern_FieldIndex.GNAM;
+                    var subMeta = stream.ReadSubrecordHeader();
+                    this.MasterBlockRotations = BinaryOverlayArray2d.Factory<SByte>(
+                        mem: stream.RemainingMemory.Slice(0, subMeta.ContentLength),
+                        package: _package,
+                        itemLength: 1,
+                        size: SurfacePattern.MasterBlockRotationsFixedSize,
+                        getter: (s, p) => (sbyte)s[0]);
+                    return (int)SurfacePattern_FieldIndex.MasterBlockRotations;
+                }
+                case RecordTypeInts.EFRM:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    this.OverrideBlocks = BinaryOverlayArray2d.Factory<IFormLinkGetter<ISurfaceBlockGetter>>(
+                        mem: stream.RemainingMemory.Slice(0, subMeta.ContentLength),
+                        package: _package,
+                        itemLength: 4,
+                        size: SurfacePattern.OverrideBlocksFixedSize,
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ISurfaceBlockGetter>(p, s));
+                    return (int)SurfacePattern_FieldIndex.OverrideBlocks;
+                }
+                case RecordTypeInts.EORI:
+                {
+                    var subMeta = stream.ReadSubrecordHeader();
+                    this.OverrideBlockRotations = BinaryOverlayArray2d.Factory<SByte>(
+                        mem: stream.RemainingMemory.Slice(0, subMeta.ContentLength),
+                        package: _package,
+                        itemLength: 1,
+                        size: SurfacePattern.OverrideBlockRotationsFixedSize,
+                        getter: (s, p) => (sbyte)s[0]);
+                    return (int)SurfacePattern_FieldIndex.OverrideBlockRotations;
                 }
                 case RecordTypeInts.DNAM:
                 {

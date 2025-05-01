@@ -64,8 +64,15 @@ namespace Mutagen.Bethesda.Starfield
         #region Rank
         public UInt32 Rank { get; set; } = default(UInt32);
         #endregion
-        #region Unknown
-        public UInt32 Unknown { get; set; } = default(UInt32);
+        #region CurveTable
+        private readonly IFormLink<ICurveTableGetter> _CurveTable = new FormLink<ICurveTableGetter>();
+        public IFormLink<ICurveTableGetter> CurveTable
+        {
+            get => _CurveTable;
+            set => _CurveTable.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ICurveTableGetter> IConstructibleRequiredPerkGetter.CurveTable => this.CurveTable;
         #endregion
 
         #region To String
@@ -108,17 +115,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Perk = initialValue;
                 this.Rank = initialValue;
-                this.Unknown = initialValue;
+                this.CurveTable = initialValue;
             }
 
             public Mask(
                 TItem Perk,
                 TItem Rank,
-                TItem Unknown)
+                TItem CurveTable)
             {
                 this.Perk = Perk;
                 this.Rank = Rank;
-                this.Unknown = Unknown;
+                this.CurveTable = CurveTable;
             }
 
             #pragma warning disable CS8618
@@ -132,7 +139,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public TItem Perk;
             public TItem Rank;
-            public TItem Unknown;
+            public TItem CurveTable;
             #endregion
 
             #region Equals
@@ -147,7 +154,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!object.Equals(this.Perk, rhs.Perk)) return false;
                 if (!object.Equals(this.Rank, rhs.Rank)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.CurveTable, rhs.CurveTable)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -155,7 +162,7 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.Perk);
                 hash.Add(this.Rank);
-                hash.Add(this.Unknown);
+                hash.Add(this.CurveTable);
                 return hash.ToHashCode();
             }
 
@@ -166,7 +173,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!eval(this.Perk)) return false;
                 if (!eval(this.Rank)) return false;
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.CurveTable)) return false;
                 return true;
             }
             #endregion
@@ -176,7 +183,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (eval(this.Perk)) return true;
                 if (eval(this.Rank)) return true;
-                if (eval(this.Unknown)) return true;
+                if (eval(this.CurveTable)) return true;
                 return false;
             }
             #endregion
@@ -193,7 +200,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 obj.Perk = eval(this.Perk);
                 obj.Rank = eval(this.Rank);
-                obj.Unknown = eval(this.Unknown);
+                obj.CurveTable = eval(this.CurveTable);
             }
             #endregion
 
@@ -220,9 +227,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Rank, "Rank");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.CurveTable ?? true)
                     {
-                        sb.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(CurveTable, "CurveTable");
                     }
                 }
             }
@@ -250,7 +257,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             public Exception? Perk;
             public Exception? Rank;
-            public Exception? Unknown;
+            public Exception? CurveTable;
             #endregion
 
             #region IErrorMask
@@ -263,8 +270,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Perk;
                     case ConstructibleRequiredPerk_FieldIndex.Rank:
                         return Rank;
-                    case ConstructibleRequiredPerk_FieldIndex.Unknown:
-                        return Unknown;
+                    case ConstructibleRequiredPerk_FieldIndex.CurveTable:
+                        return CurveTable;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -281,8 +288,8 @@ namespace Mutagen.Bethesda.Starfield
                     case ConstructibleRequiredPerk_FieldIndex.Rank:
                         this.Rank = ex;
                         break;
-                    case ConstructibleRequiredPerk_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case ConstructibleRequiredPerk_FieldIndex.CurveTable:
+                        this.CurveTable = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -300,8 +307,8 @@ namespace Mutagen.Bethesda.Starfield
                     case ConstructibleRequiredPerk_FieldIndex.Rank:
                         this.Rank = (Exception?)obj;
                         break;
-                    case ConstructibleRequiredPerk_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case ConstructibleRequiredPerk_FieldIndex.CurveTable:
+                        this.CurveTable = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -313,7 +320,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (Perk != null) return true;
                 if (Rank != null) return true;
-                if (Unknown != null) return true;
+                if (CurveTable != null) return true;
                 return false;
             }
             #endregion
@@ -346,7 +353,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Rank, "Rank");
                 }
                 {
-                    sb.AppendItem(Unknown, "Unknown");
+                    sb.AppendItem(CurveTable, "CurveTable");
                 }
             }
             #endregion
@@ -358,7 +365,7 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.Perk = this.Perk.Combine(rhs.Perk);
                 ret.Rank = this.Rank.Combine(rhs.Rank);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.CurveTable = this.CurveTable.Combine(rhs.CurveTable);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -384,7 +391,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool OnOverall;
             public bool Perk;
             public bool Rank;
-            public bool Unknown;
+            public bool CurveTable;
             #endregion
 
             #region Ctors
@@ -396,7 +403,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.OnOverall = onOverall;
                 this.Perk = defaultOn;
                 this.Rank = defaultOn;
-                this.Unknown = defaultOn;
+                this.CurveTable = defaultOn;
             }
 
             #endregion
@@ -414,7 +421,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 ret.Add((Perk, null));
                 ret.Add((Rank, null));
-                ret.Add((Unknown, null));
+                ret.Add((CurveTable, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -495,7 +502,7 @@ namespace Mutagen.Bethesda.Starfield
     {
         new IFormLink<IPerkGetter> Perk { get; set; }
         new UInt32 Rank { get; set; }
-        new UInt32 Unknown { get; set; }
+        new IFormLink<ICurveTableGetter> CurveTable { get; set; }
     }
 
     public partial interface IConstructibleRequiredPerkGetter :
@@ -513,7 +520,7 @@ namespace Mutagen.Bethesda.Starfield
         static ILoquiRegistration StaticRegistration => ConstructibleRequiredPerk_Registration.Instance;
         IFormLinkGetter<IPerkGetter> Perk { get; }
         UInt32 Rank { get; }
-        UInt32 Unknown { get; }
+        IFormLinkGetter<ICurveTableGetter> CurveTable { get; }
 
     }
 
@@ -685,7 +692,7 @@ namespace Mutagen.Bethesda.Starfield
     {
         Perk = 0,
         Rank = 1,
-        Unknown = 2,
+        CurveTable = 2,
     }
     #endregion
 
@@ -766,13 +773,14 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.Perk.Clear();
             item.Rank = default(UInt32);
-            item.Unknown = default(UInt32);
+            item.CurveTable.Clear();
         }
         
         #region Mutagen
         public void RemapLinks(IConstructibleRequiredPerk obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.Perk.Relink(mapping);
+            obj.CurveTable.Relink(mapping);
         }
         
         #endregion
@@ -819,7 +827,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ret.Perk = item.Perk.Equals(rhs.Perk);
             ret.Rank = item.Rank == rhs.Rank;
-            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.CurveTable = item.CurveTable.Equals(rhs.CurveTable);
         }
         
         public string Print(
@@ -872,9 +880,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Rank, "Rank");
             }
-            if (printMask?.Unknown ?? true)
+            if (printMask?.CurveTable ?? true)
             {
-                sb.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.CurveTable.FormKey, "CurveTable");
             }
         }
         
@@ -893,9 +901,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.Rank != rhs.Rank) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ConstructibleRequiredPerk_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleRequiredPerk_FieldIndex.CurveTable) ?? true))
             {
-                if (lhs.Unknown != rhs.Unknown) return false;
+                if (!lhs.CurveTable.Equals(rhs.CurveTable)) return false;
             }
             return true;
         }
@@ -905,7 +913,7 @@ namespace Mutagen.Bethesda.Starfield
             var hash = new HashCode();
             hash.Add(item.Perk);
             hash.Add(item.Rank);
-            hash.Add(item.Unknown);
+            hash.Add(item.CurveTable);
             return hash.ToHashCode();
         }
         
@@ -921,6 +929,7 @@ namespace Mutagen.Bethesda.Starfield
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IConstructibleRequiredPerkGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Perk);
+            yield return FormLinkInformation.Factory(obj.CurveTable);
             yield break;
         }
         
@@ -947,9 +956,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Rank = rhs.Rank;
             }
-            if ((copyMask?.GetShouldTranslate((int)ConstructibleRequiredPerk_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleRequiredPerk_FieldIndex.CurveTable) ?? true))
             {
-                item.Unknown = rhs.Unknown;
+                item.CurveTable.SetTo(rhs.CurveTable.FormKey);
             }
             DeepCopyInCustom(
                 item: item,
@@ -1063,7 +1072,9 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.Perk);
             writer.Write(item.Rank);
-            writer.Write(item.Unknown);
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.CurveTable);
         }
 
         public void Write(
@@ -1099,7 +1110,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             item.Perk.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Rank = frame.ReadUInt32();
-            item.Unknown = frame.ReadUInt32();
+            item.CurveTable.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }
@@ -1168,7 +1179,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public IFormLinkGetter<IPerkGetter> Perk => FormLinkBinaryTranslation.Instance.OverlayFactory<IPerkGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public UInt32 Rank => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
-        public UInt32 Unknown => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x8, 0x4));
+        public IFormLinkGetter<ICurveTableGetter> CurveTable => FormLinkBinaryTranslation.Instance.OverlayFactory<ICurveTableGetter>(_package, _structData.Span.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

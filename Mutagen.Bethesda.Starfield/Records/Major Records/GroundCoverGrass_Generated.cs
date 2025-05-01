@@ -61,10 +61,10 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IGrassGetter> IGroundCoverGrassGetter.Grass => this.Grass;
         #endregion
-        #region DNAM
-        public Int16? DNAM { get; set; }
+        #region OverrideDensity
+        public Int16? OverrideDensity { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int16? IGroundCoverGrassGetter.DNAM => this.DNAM;
+        Int16? IGroundCoverGrassGetter.OverrideDensity => this.OverrideDensity;
         #endregion
 
         #region To String
@@ -106,15 +106,15 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.Grass = initialValue;
-                this.DNAM = initialValue;
+                this.OverrideDensity = initialValue;
             }
 
             public Mask(
                 TItem Grass,
-                TItem DNAM)
+                TItem OverrideDensity)
             {
                 this.Grass = Grass;
-                this.DNAM = DNAM;
+                this.OverrideDensity = OverrideDensity;
             }
 
             #pragma warning disable CS8618
@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public TItem Grass;
-            public TItem DNAM;
+            public TItem OverrideDensity;
             #endregion
 
             #region Equals
@@ -141,14 +141,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Grass, rhs.Grass)) return false;
-                if (!object.Equals(this.DNAM, rhs.DNAM)) return false;
+                if (!object.Equals(this.OverrideDensity, rhs.OverrideDensity)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Grass);
-                hash.Add(this.DNAM);
+                hash.Add(this.OverrideDensity);
                 return hash.ToHashCode();
             }
 
@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Grass)) return false;
-                if (!eval(this.DNAM)) return false;
+                if (!eval(this.OverrideDensity)) return false;
                 return true;
             }
             #endregion
@@ -167,7 +167,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Grass)) return true;
-                if (eval(this.DNAM)) return true;
+                if (eval(this.OverrideDensity)) return true;
                 return false;
             }
             #endregion
@@ -183,7 +183,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Grass = eval(this.Grass);
-                obj.DNAM = eval(this.DNAM);
+                obj.OverrideDensity = eval(this.OverrideDensity);
             }
             #endregion
 
@@ -206,9 +206,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Grass, "Grass");
                     }
-                    if (printMask?.DNAM ?? true)
+                    if (printMask?.OverrideDensity ?? true)
                     {
-                        sb.AppendItem(DNAM, "DNAM");
+                        sb.AppendItem(OverrideDensity, "OverrideDensity");
                     }
                 }
             }
@@ -235,7 +235,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
             }
             public Exception? Grass;
-            public Exception? DNAM;
+            public Exception? OverrideDensity;
             #endregion
 
             #region IErrorMask
@@ -246,8 +246,8 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case GroundCoverGrass_FieldIndex.Grass:
                         return Grass;
-                    case GroundCoverGrass_FieldIndex.DNAM:
-                        return DNAM;
+                    case GroundCoverGrass_FieldIndex.OverrideDensity:
+                        return OverrideDensity;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -261,8 +261,8 @@ namespace Mutagen.Bethesda.Starfield
                     case GroundCoverGrass_FieldIndex.Grass:
                         this.Grass = ex;
                         break;
-                    case GroundCoverGrass_FieldIndex.DNAM:
-                        this.DNAM = ex;
+                    case GroundCoverGrass_FieldIndex.OverrideDensity:
+                        this.OverrideDensity = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -277,8 +277,8 @@ namespace Mutagen.Bethesda.Starfield
                     case GroundCoverGrass_FieldIndex.Grass:
                         this.Grass = (Exception?)obj;
                         break;
-                    case GroundCoverGrass_FieldIndex.DNAM:
-                        this.DNAM = (Exception?)obj;
+                    case GroundCoverGrass_FieldIndex.OverrideDensity:
+                        this.OverrideDensity = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -289,7 +289,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (Grass != null) return true;
-                if (DNAM != null) return true;
+                if (OverrideDensity != null) return true;
                 return false;
             }
             #endregion
@@ -319,7 +319,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Grass, "Grass");
                 }
                 {
-                    sb.AppendItem(DNAM, "DNAM");
+                    sb.AppendItem(OverrideDensity, "OverrideDensity");
                 }
             }
             #endregion
@@ -330,7 +330,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Grass = this.Grass.Combine(rhs.Grass);
-                ret.DNAM = this.DNAM.Combine(rhs.DNAM);
+                ret.OverrideDensity = this.OverrideDensity.Combine(rhs.OverrideDensity);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -355,7 +355,7 @@ namespace Mutagen.Bethesda.Starfield
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Grass;
-            public bool DNAM;
+            public bool OverrideDensity;
             #endregion
 
             #region Ctors
@@ -366,7 +366,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Grass = defaultOn;
-                this.DNAM = defaultOn;
+                this.OverrideDensity = defaultOn;
             }
 
             #endregion
@@ -383,7 +383,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Grass, null));
-                ret.Add((DNAM, null));
+                ret.Add((OverrideDensity, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -463,7 +463,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IGroundCoverGrass>
     {
         new IFormLinkNullable<IGrassGetter> Grass { get; set; }
-        new Int16? DNAM { get; set; }
+        new Int16? OverrideDensity { get; set; }
     }
 
     public partial interface IGroundCoverGrassGetter :
@@ -480,7 +480,7 @@ namespace Mutagen.Bethesda.Starfield
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => GroundCoverGrass_Registration.Instance;
         IFormLinkNullableGetter<IGrassGetter> Grass { get; }
-        Int16? DNAM { get; }
+        Int16? OverrideDensity { get; }
 
     }
 
@@ -651,7 +651,7 @@ namespace Mutagen.Bethesda.Starfield
     internal enum GroundCoverGrass_FieldIndex
     {
         Grass = 0,
-        DNAM = 1,
+        OverrideDensity = 1,
     }
     #endregion
 
@@ -739,7 +739,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Grass.Clear();
-            item.DNAM = default;
+            item.OverrideDensity = default;
         }
         
         #region Mutagen
@@ -791,7 +791,7 @@ namespace Mutagen.Bethesda.Starfield
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Grass = item.Grass.Equals(rhs.Grass);
-            ret.DNAM = item.DNAM == rhs.DNAM;
+            ret.OverrideDensity = item.OverrideDensity == rhs.OverrideDensity;
         }
         
         public string Print(
@@ -840,10 +840,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Grass.FormKeyNullable, "Grass");
             }
-            if ((printMask?.DNAM ?? true)
-                && item.DNAM is {} DNAMItem)
+            if ((printMask?.OverrideDensity ?? true)
+                && item.OverrideDensity is {} OverrideDensityItem)
             {
-                sb.AppendItem(DNAMItem, "DNAM");
+                sb.AppendItem(OverrideDensityItem, "OverrideDensity");
             }
         }
         
@@ -858,9 +858,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Grass.Equals(rhs.Grass)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)GroundCoverGrass_FieldIndex.DNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)GroundCoverGrass_FieldIndex.OverrideDensity) ?? true))
             {
-                if (lhs.DNAM != rhs.DNAM) return false;
+                if (lhs.OverrideDensity != rhs.OverrideDensity) return false;
             }
             return true;
         }
@@ -869,9 +869,9 @@ namespace Mutagen.Bethesda.Starfield
         {
             var hash = new HashCode();
             hash.Add(item.Grass);
-            if (item.DNAM is {} DNAMitem)
+            if (item.OverrideDensity is {} OverrideDensityitem)
             {
-                hash.Add(DNAMitem);
+                hash.Add(OverrideDensityitem);
             }
             return hash.ToHashCode();
         }
@@ -913,9 +913,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Grass.SetTo(rhs.Grass.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)GroundCoverGrass_FieldIndex.DNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)GroundCoverGrass_FieldIndex.OverrideDensity) ?? true))
             {
-                item.DNAM = rhs.DNAM;
+                item.OverrideDensity = rhs.OverrideDensity;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1032,7 +1032,7 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.GNAM));
             Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.DNAM,
+                item: item.OverrideDensity,
                 header: translationParams.ConvertToCustom(RecordTypes.DNAM));
         }
 
@@ -1085,10 +1085,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)GroundCoverGrass_FieldIndex.DNAM, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)GroundCoverGrass_FieldIndex.OverrideDensity, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DNAM = frame.ReadInt16();
-                    return (int)GroundCoverGrass_FieldIndex.DNAM;
+                    item.OverrideDensity = frame.ReadInt16();
+                    return (int)GroundCoverGrass_FieldIndex.OverrideDensity;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1163,9 +1163,9 @@ namespace Mutagen.Bethesda.Starfield
         private int? _GrassLocation;
         public IFormLinkNullableGetter<IGrassGetter> Grass => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGrassGetter>(_package, _recordData, _GrassLocation);
         #endregion
-        #region DNAM
-        private int? _DNAMLocation;
-        public Int16? DNAM => _DNAMLocation.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DNAMLocation.Value, _package.MetaData.Constants)) : default(Int16?);
+        #region OverrideDensity
+        private int? _OverrideDensityLocation;
+        public Int16? OverrideDensity => _OverrideDensityLocation.HasValue ? BinaryPrimitives.ReadInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OverrideDensityLocation.Value, _package.MetaData.Constants)) : default(Int16?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1238,9 +1238,9 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    if (lastParsed.ShortCircuit((int)GroundCoverGrass_FieldIndex.DNAM, translationParams)) return ParseResult.Stop;
-                    _DNAMLocation = (stream.Position - offset);
-                    return (int)GroundCoverGrass_FieldIndex.DNAM;
+                    if (lastParsed.ShortCircuit((int)GroundCoverGrass_FieldIndex.OverrideDensity, translationParams)) return ParseResult.Stop;
+                    _OverrideDensityLocation = (stream.Position - offset);
+                    return (int)GroundCoverGrass_FieldIndex.OverrideDensity;
                 }
                 default:
                     return ParseResult.Stop;

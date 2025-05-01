@@ -222,6 +222,9 @@ namespace Mutagen.Bethesda.Fallout4
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Destructible? _Destructible;
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         public Destructible? Destructible
         {
             get => _Destructible;
@@ -229,6 +232,10 @@ namespace Mutagen.Bethesda.Fallout4
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDestructibleGetter? IIngestibleGetter.Destructible => this.Destructible;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
+        #endregion
         #endregion
         #region Description
         public TranslatedString? Description { get; set; }
@@ -1435,6 +1442,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
         IHarvestTarget,
+        IHasDestructible,
         IHasIcons,
         IIngestibleGetter,
         IItem,
@@ -1477,6 +1485,9 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; }
         new IFormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> CraftingSound { get; set; }
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         new Destructible? Destructible { get; set; }
         new TranslatedString? Description { get; set; }
         new Single Weight { get; set; }
@@ -1509,6 +1520,7 @@ namespace Mutagen.Bethesda.Fallout4
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
         IHarvestTargetGetter,
+        IHasDestructibleGetter,
         IHasIconsGetter,
         IItemGetter,
         IKeywordedGetter<IKeywordGetter>,
@@ -1562,7 +1574,12 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound { get; }
         IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> CraftingSound { get; }
+        #region Destructible
+        /// <summary>
+        /// Aspects: IHasDestructibleGetter
+        /// </summary>
         IDestructibleGetter? Destructible { get; }
+        #endregion
         ITranslatedStringGetter? Description { get; }
         Single Weight { get; }
         UInt32 Value { get; }
@@ -3127,8 +3144,10 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Ingestible_FieldIndex.Name;
                 }
                 case RecordTypeInts.KSIZ:
@@ -3200,8 +3219,10 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
                         source: StringsSource.DL,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Ingestible_FieldIndex.Description;
                 }
                 case RecordTypeInts.DATA:
@@ -3233,8 +3254,10 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AddictionName = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Ingestible_FieldIndex.AddictionName;
                 }
                 case RecordTypeInts.EFID:
@@ -3320,7 +3343,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -3355,7 +3378,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IDestructibleGetter? Destructible { get; private set; }
         #region Description
         private int? _DescriptionLocation;
-        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
         #region Weight
         private int? _WeightLocation;
@@ -3389,7 +3412,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region AddictionName
         private int? _AddictionNameLocation;
-        public ITranslatedStringGetter? AddictionName => _AddictionNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AddictionNameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? AddictionName => _AddictionNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AddictionNameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = Array.Empty<IEffectGetter>();
         partial void CustomFactoryEnd(

@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.ExceptionServices;
 using Noggog;
 
 namespace Mutagen.Bethesda.Archives.Exceptions;
@@ -181,6 +183,164 @@ public class ArchiveException : Exception
         }
 
         return new ArchiveException(
+            archiveFilePath: archiveFilePath,
+            folderAccessed: folderAccessed,
+            fileAccessed: fileAccessed,
+            message: message,
+            innerException: ex);
+    }
+
+    #endregion
+
+    #region EnrichAndThrow
+    
+    [DoesNotReturn]
+    public static void EnrichWithFileAccessedAndThrow(Exception ex, string fileAccessed)
+    {
+        if (ex is ArchiveException archiveException)
+        {
+            archiveException.InternalFileAccessed = fileAccessed;
+            ExceptionDispatchInfo.Capture(archiveException).Throw();
+        }
+
+        throw new ArchiveException(
+            archiveFilePath: null,
+            folderAccessed: null,
+            fileAccessed: fileAccessed,
+            innerException: ex);
+    }
+
+    [DoesNotReturn]
+    public static void EnrichWithFileAccessedAndThrow(string message, Exception ex, string fileAccessed)
+    {
+        if (ex is ArchiveException archiveException)
+        {
+            archiveException.InternalFileAccessed = fileAccessed;
+            ExceptionDispatchInfo.Capture(archiveException).Throw();
+        }
+
+        throw new ArchiveException(
+            archiveFilePath: null,
+            folderAccessed: null,
+            fileAccessed: fileAccessed,
+            message: message,
+            innerException: ex);
+    }
+
+    [DoesNotReturn]
+    public static void EnrichWithFolderAccessedAndThrow(Exception ex, string folderAccessed)
+    {
+        if (ex is ArchiveException archiveException)
+        {
+            archiveException.InternalFolderAccessed = folderAccessed;
+            ExceptionDispatchInfo.Capture(archiveException).Throw();
+        }
+
+        throw new ArchiveException(
+            archiveFilePath: null,
+            folderAccessed: folderAccessed,
+            fileAccessed: null,
+            innerException: ex);
+    }
+
+    [DoesNotReturn]
+    public static void EnrichWithFolderAccessedAndThrow(string message, Exception ex, string folderAccessed)
+    {
+        if (ex is ArchiveException archiveException)
+        {
+            archiveException.InternalFolderAccessed = folderAccessed;
+            ExceptionDispatchInfo.Capture(archiveException).Throw();
+        }
+
+        throw new ArchiveException(
+            archiveFilePath: null,
+            folderAccessed: folderAccessed,
+            fileAccessed: null,
+            message: message,
+            innerException: ex);
+    }
+
+    [DoesNotReturn]
+    public static void EnrichWithArchivePathAndThrow(Exception ex, FilePath path)
+    {
+        if (ex is ArchiveException archiveException)
+        {
+            archiveException.ArchiveFilePath = path;
+            ExceptionDispatchInfo.Capture(archiveException).Throw();
+        }
+
+        throw new ArchiveException(
+            archiveFilePath: path,
+            folderAccessed: null,
+            fileAccessed: null,
+            innerException: ex);
+    }
+
+    [DoesNotReturn]
+    public static void EnrichWithArchivePathAndThrow(string message, Exception ex, FilePath path)
+    {
+        if (ex is ArchiveException archiveException)
+        {
+            archiveException.ArchiveFilePath = path;
+            ExceptionDispatchInfo.Capture(archiveException).Throw();
+        }
+
+        throw new ArchiveException(
+            archiveFilePath: path,
+            folderAccessed: null,
+            fileAccessed: null,
+            message: message,
+            innerException: ex);
+    }
+
+    [DoesNotReturn]
+    public static void EnrichAndThrow(Exception ex, FilePath? archiveFilePath, string? folderAccessed, string? fileAccessed)
+    {
+        if (ex is ArchiveException archiveException)
+        {
+            if (archiveFilePath != null)
+            {
+                archiveException.ArchiveFilePath = archiveFilePath;
+            }
+            if (folderAccessed != null)
+            {
+                archiveException.InternalFolderAccessed = folderAccessed;
+            }
+            if (fileAccessed != null)
+            {
+                archiveException.InternalFileAccessed = fileAccessed;
+            }
+            ExceptionDispatchInfo.Capture(archiveException).Throw();
+        }
+
+        throw new ArchiveException(
+            archiveFilePath: archiveFilePath,
+            folderAccessed: folderAccessed,
+            fileAccessed: fileAccessed,
+            innerException: ex);
+    }
+
+    [DoesNotReturn]
+    public static void EnrichAndThrow(string message, Exception ex, FilePath? archiveFilePath, string? folderAccessed, string? fileAccessed)
+    {
+        if (ex is ArchiveException archiveException)
+        {
+            if (archiveFilePath != null)
+            {
+                archiveException.ArchiveFilePath = archiveFilePath;
+            }
+            if (folderAccessed != null)
+            {
+                archiveException.InternalFolderAccessed = folderAccessed;
+            }
+            if (fileAccessed != null)
+            {
+                archiveException.InternalFileAccessed = fileAccessed;
+            }
+            ExceptionDispatchInfo.Capture(archiveException).Throw();
+        }
+
+        throw new ArchiveException(
             archiveFilePath: archiveFilePath,
             folderAccessed: folderAccessed,
             fileAccessed: fileAccessed,

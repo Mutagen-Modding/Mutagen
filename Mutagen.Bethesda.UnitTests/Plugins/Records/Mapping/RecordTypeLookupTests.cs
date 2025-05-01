@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Xunit;
@@ -12,12 +12,12 @@ public class RecordTypeLookupTests
     public void TypicalGetMajorRecordType()
     {
         RecordTypeLookup.GetMajorRecordType<IArmorGetter>()
-            .Should().Be(RecordTypes.ARMO);
+            .ShouldBe(RecordTypes.ARMO);
         RecordTypeLookup.GetMajorRecordType<IArmor>()
-            .Should().Be(RecordTypes.ARMO);
+            .ShouldBe(RecordTypes.ARMO);
         RecordTypeLookup.GetMajorRecordType<Armor>()
-            .Should().Be(RecordTypes.ARMO);
+            .ShouldBe(RecordTypes.ARMO);
         RecordTypeLookup.GetMajorRecordType<IArmorInternal>()
-            .Should().Be(RecordTypes.ARMO);
+            .ShouldBe(RecordTypes.ARMO);
     }
 }

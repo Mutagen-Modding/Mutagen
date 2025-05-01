@@ -56,33 +56,33 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<AmbienceSound>? _Sounds;
-        public ExtendedList<AmbienceSound>? Sounds
+        private ExtendedList<AmbientSoundEvent>? _Sounds;
+        public ExtendedList<AmbientSoundEvent>? Sounds
         {
             get => this._Sounds;
             set => this._Sounds = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IAmbienceSoundGetter>? IAmbienceSetGetter.Sounds => _Sounds;
+        IReadOnlyList<IAmbientSoundEventGetter>? IAmbienceSetGetter.Sounds => _Sounds;
         #endregion
 
         #endregion
-        #region ASMB
-        public Boolean? ASMB { get; set; }
+        #region MergeBehavior
+        public AmbienceSet.MergeBehaviorEnum? MergeBehavior { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Boolean? IAmbienceSetGetter.ASMB => this.ASMB;
+        AmbienceSet.MergeBehaviorEnum? IAmbienceSetGetter.MergeBehavior => this.MergeBehavior;
         #endregion
-        #region Walla
+        #region WallaExterior
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private SoundReference? _Walla;
-        public SoundReference? Walla
+        private SoundReference? _WallaExterior;
+        public SoundReference? WallaExterior
         {
-            get => _Walla;
-            set => _Walla = value;
+            get => _WallaExterior;
+            set => _WallaExterior = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISoundReferenceGetter? IAmbienceSetGetter.Walla => this.Walla;
+        ISoundReferenceGetter? IAmbienceSetGetter.WallaExterior => this.WallaExterior;
         #endregion
 
         #region To String
@@ -109,9 +109,9 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AmbienceSound.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AmbienceSound.Mask<TItem>?>>());
-                this.ASMB = initialValue;
-                this.Walla = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AmbientSoundEvent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AmbientSoundEvent.Mask<TItem>?>>());
+                this.MergeBehavior = initialValue;
+                this.WallaExterior = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -123,8 +123,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
                 TItem Sounds,
-                TItem ASMB,
-                TItem Walla)
+                TItem MergeBehavior,
+                TItem WallaExterior)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -134,9 +134,9 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AmbienceSound.Mask<TItem>?>>?>(Sounds, Enumerable.Empty<MaskItemIndexed<TItem, AmbienceSound.Mask<TItem>?>>());
-                this.ASMB = ASMB;
-                this.Walla = new MaskItem<TItem, SoundReference.Mask<TItem>?>(Walla, new SoundReference.Mask<TItem>(Walla));
+                this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AmbientSoundEvent.Mask<TItem>?>>?>(Sounds, Enumerable.Empty<MaskItemIndexed<TItem, AmbientSoundEvent.Mask<TItem>?>>());
+                this.MergeBehavior = MergeBehavior;
+                this.WallaExterior = new MaskItem<TItem, SoundReference.Mask<TItem>?>(WallaExterior, new SoundReference.Mask<TItem>(WallaExterior));
             }
 
             #pragma warning disable CS8618
@@ -148,9 +148,9 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AmbienceSound.Mask<TItem>?>>?>? Sounds;
-            public TItem ASMB;
-            public MaskItem<TItem, SoundReference.Mask<TItem>?>? Walla { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AmbientSoundEvent.Mask<TItem>?>>?>? Sounds;
+            public TItem MergeBehavior;
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? WallaExterior { get; set; }
             #endregion
 
             #region Equals
@@ -165,16 +165,16 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
-                if (!object.Equals(this.ASMB, rhs.ASMB)) return false;
-                if (!object.Equals(this.Walla, rhs.Walla)) return false;
+                if (!object.Equals(this.MergeBehavior, rhs.MergeBehavior)) return false;
+                if (!object.Equals(this.WallaExterior, rhs.WallaExterior)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Sounds);
-                hash.Add(this.ASMB);
-                hash.Add(this.Walla);
+                hash.Add(this.MergeBehavior);
+                hash.Add(this.WallaExterior);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -197,11 +197,11 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (!eval(this.ASMB)) return false;
-                if (Walla != null)
+                if (!eval(this.MergeBehavior)) return false;
+                if (WallaExterior != null)
                 {
-                    if (!eval(this.Walla.Overall)) return false;
-                    if (this.Walla.Specific != null && !this.Walla.Specific.All(eval)) return false;
+                    if (!eval(this.WallaExterior.Overall)) return false;
+                    if (this.WallaExterior.Specific != null && !this.WallaExterior.Specific.All(eval)) return false;
                 }
                 return true;
             }
@@ -223,11 +223,11 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (eval(this.ASMB)) return true;
-                if (Walla != null)
+                if (eval(this.MergeBehavior)) return true;
+                if (WallaExterior != null)
                 {
-                    if (eval(this.Walla.Overall)) return true;
-                    if (this.Walla.Specific != null && this.Walla.Specific.Any(eval)) return true;
+                    if (eval(this.WallaExterior.Overall)) return true;
+                    if (this.WallaExterior.Specific != null && this.WallaExterior.Specific.Any(eval)) return true;
                 }
                 return false;
             }
@@ -246,21 +246,21 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Sounds != null)
                 {
-                    obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AmbienceSound.Mask<R>?>>?>(eval(this.Sounds.Overall), Enumerable.Empty<MaskItemIndexed<R, AmbienceSound.Mask<R>?>>());
+                    obj.Sounds = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AmbientSoundEvent.Mask<R>?>>?>(eval(this.Sounds.Overall), Enumerable.Empty<MaskItemIndexed<R, AmbientSoundEvent.Mask<R>?>>());
                     if (Sounds.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, AmbienceSound.Mask<R>?>>();
+                        var l = new List<MaskItemIndexed<R, AmbientSoundEvent.Mask<R>?>>();
                         obj.Sounds.Specific = l;
                         foreach (var item in Sounds.Specific)
                         {
-                            MaskItemIndexed<R, AmbienceSound.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AmbienceSound.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, AmbientSoundEvent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AmbientSoundEvent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
                     }
                 }
-                obj.ASMB = eval(this.ASMB);
-                obj.Walla = this.Walla == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.Walla.Overall), this.Walla.Specific?.Translate(eval));
+                obj.MergeBehavior = eval(this.MergeBehavior);
+                obj.WallaExterior = this.WallaExterior == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.WallaExterior.Overall), this.WallaExterior.Specific?.Translate(eval));
             }
             #endregion
 
@@ -298,13 +298,13 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.ASMB ?? true)
+                    if (printMask?.MergeBehavior ?? true)
                     {
-                        sb.AppendItem(ASMB, "ASMB");
+                        sb.AppendItem(MergeBehavior, "MergeBehavior");
                     }
-                    if (printMask?.Walla?.Overall ?? true)
+                    if (printMask?.WallaExterior?.Overall ?? true)
                     {
-                        Walla?.Print(sb);
+                        WallaExterior?.Print(sb);
                     }
                 }
             }
@@ -317,9 +317,9 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AmbienceSound.ErrorMask?>>?>? Sounds;
-            public Exception? ASMB;
-            public MaskItem<Exception?, SoundReference.ErrorMask?>? Walla;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AmbientSoundEvent.ErrorMask?>>?>? Sounds;
+            public Exception? MergeBehavior;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? WallaExterior;
             #endregion
 
             #region IErrorMask
@@ -330,10 +330,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case AmbienceSet_FieldIndex.Sounds:
                         return Sounds;
-                    case AmbienceSet_FieldIndex.ASMB:
-                        return ASMB;
-                    case AmbienceSet_FieldIndex.Walla:
-                        return Walla;
+                    case AmbienceSet_FieldIndex.MergeBehavior:
+                        return MergeBehavior;
+                    case AmbienceSet_FieldIndex.WallaExterior:
+                        return WallaExterior;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -345,13 +345,13 @@ namespace Mutagen.Bethesda.Starfield
                 switch (enu)
                 {
                     case AmbienceSet_FieldIndex.Sounds:
-                        this.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AmbienceSound.ErrorMask?>>?>(ex, null);
+                        this.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AmbientSoundEvent.ErrorMask?>>?>(ex, null);
                         break;
-                    case AmbienceSet_FieldIndex.ASMB:
-                        this.ASMB = ex;
+                    case AmbienceSet_FieldIndex.MergeBehavior:
+                        this.MergeBehavior = ex;
                         break;
-                    case AmbienceSet_FieldIndex.Walla:
-                        this.Walla = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                    case AmbienceSet_FieldIndex.WallaExterior:
+                        this.WallaExterior = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -365,13 +365,13 @@ namespace Mutagen.Bethesda.Starfield
                 switch (enu)
                 {
                     case AmbienceSet_FieldIndex.Sounds:
-                        this.Sounds = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AmbienceSound.ErrorMask?>>?>)obj;
+                        this.Sounds = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AmbientSoundEvent.ErrorMask?>>?>)obj;
                         break;
-                    case AmbienceSet_FieldIndex.ASMB:
-                        this.ASMB = (Exception?)obj;
+                    case AmbienceSet_FieldIndex.MergeBehavior:
+                        this.MergeBehavior = (Exception?)obj;
                         break;
-                    case AmbienceSet_FieldIndex.Walla:
-                        this.Walla = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                    case AmbienceSet_FieldIndex.WallaExterior:
+                        this.WallaExterior = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -383,8 +383,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (Sounds != null) return true;
-                if (ASMB != null) return true;
-                if (Walla != null) return true;
+                if (MergeBehavior != null) return true;
+                if (WallaExterior != null) return true;
                 return false;
             }
             #endregion
@@ -430,9 +430,9 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 {
-                    sb.AppendItem(ASMB, "ASMB");
+                    sb.AppendItem(MergeBehavior, "MergeBehavior");
                 }
-                Walla?.Print(sb);
+                WallaExterior?.Print(sb);
             }
             #endregion
 
@@ -441,9 +441,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AmbienceSound.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), Noggog.ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
-                ret.ASMB = this.ASMB.Combine(rhs.ASMB);
-                ret.Walla = this.Walla.Combine(rhs.Walla, (l, r) => l.Combine(r));
+                ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AmbientSoundEvent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), Noggog.ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
+                ret.MergeBehavior = this.MergeBehavior.Combine(rhs.MergeBehavior);
+                ret.WallaExterior = this.WallaExterior.Combine(rhs.WallaExterior, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -466,9 +466,9 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
-            public AmbienceSound.TranslationMask? Sounds;
-            public bool ASMB;
-            public SoundReference.TranslationMask? Walla;
+            public AmbientSoundEvent.TranslationMask? Sounds;
+            public bool MergeBehavior;
+            public SoundReference.TranslationMask? WallaExterior;
             #endregion
 
             #region Ctors
@@ -477,7 +477,7 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.ASMB = defaultOn;
+                this.MergeBehavior = defaultOn;
             }
 
             #endregion
@@ -486,8 +486,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.GetCrystal(ret);
                 ret.Add((Sounds == null ? DefaultOn : !Sounds.GetCrystal().CopyNothing, Sounds?.GetCrystal()));
-                ret.Add((ASMB, null));
-                ret.Add((Walla != null ? Walla.OnOverall : DefaultOn, Walla?.GetCrystal()));
+                ret.Add((MergeBehavior, null));
+                ret.Add((WallaExterior != null ? WallaExterior.OnOverall : DefaultOn, WallaExterior?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -635,9 +635,9 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IAmbienceSetInternal>,
         IStarfieldMajorRecordInternal
     {
-        new ExtendedList<AmbienceSound>? Sounds { get; set; }
-        new Boolean? ASMB { get; set; }
-        new SoundReference? Walla { get; set; }
+        new ExtendedList<AmbientSoundEvent>? Sounds { get; set; }
+        new AmbienceSet.MergeBehaviorEnum? MergeBehavior { get; set; }
+        new SoundReference? WallaExterior { get; set; }
     }
 
     public partial interface IAmbienceSetInternal :
@@ -656,9 +656,9 @@ namespace Mutagen.Bethesda.Starfield
         IMapsToGetter<IAmbienceSetGetter>
     {
         static new ILoquiRegistration StaticRegistration => AmbienceSet_Registration.Instance;
-        IReadOnlyList<IAmbienceSoundGetter>? Sounds { get; }
-        Boolean? ASMB { get; }
-        ISoundReferenceGetter? Walla { get; }
+        IReadOnlyList<IAmbientSoundEventGetter>? Sounds { get; }
+        AmbienceSet.MergeBehaviorEnum? MergeBehavior { get; }
+        ISoundReferenceGetter? WallaExterior { get; }
 
     }
 
@@ -836,8 +836,8 @@ namespace Mutagen.Bethesda.Starfield
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
         Sounds = 7,
-        ASMB = 8,
-        Walla = 9,
+        MergeBehavior = 8,
+        WallaExterior = 9,
     }
     #endregion
 
@@ -932,8 +932,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Sounds = null;
-            item.ASMB = default;
-            item.Walla = null;
+            item.MergeBehavior = default;
+            item.WallaExterior = null;
             base.Clear(item);
         }
         
@@ -952,7 +952,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             base.RemapLinks(obj, mapping);
             obj.Sounds?.RemapLinks(mapping);
-            obj.Walla?.RemapLinks(mapping);
+            obj.WallaExterior?.RemapLinks(mapping);
         }
         
         #endregion
@@ -1024,10 +1024,10 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Sounds,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.ASMB = item.ASMB == rhs.ASMB;
-            ret.Walla = EqualsMaskHelper.EqualsHelper(
-                item.Walla,
-                rhs.Walla,
+            ret.MergeBehavior = item.MergeBehavior == rhs.MergeBehavior;
+            ret.WallaExterior = EqualsMaskHelper.EqualsHelper(
+                item.WallaExterior,
+                rhs.WallaExterior,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1094,15 +1094,15 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.ASMB ?? true)
-                && item.ASMB is {} ASMBItem)
+            if ((printMask?.MergeBehavior ?? true)
+                && item.MergeBehavior is {} MergeBehaviorItem)
             {
-                sb.AppendItem(ASMBItem, "ASMB");
+                sb.AppendItem(MergeBehaviorItem, "MergeBehavior");
             }
-            if ((printMask?.Walla?.Overall ?? true)
-                && item.Walla is {} WallaItem)
+            if ((printMask?.WallaExterior?.Overall ?? true)
+                && item.WallaExterior is {} WallaExteriorItem)
             {
-                WallaItem?.Print(sb, "Walla");
+                WallaExteriorItem?.Print(sb, "WallaExterior");
             }
         }
         
@@ -1156,19 +1156,19 @@ namespace Mutagen.Bethesda.Starfield
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)AmbienceSet_FieldIndex.Sounds) ?? true))
             {
-                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds, (l, r) => ((AmbienceSoundCommon)((IAmbienceSoundGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)AmbienceSet_FieldIndex.Sounds)))) return false;
+                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds, (l, r) => ((AmbientSoundEventCommon)((IAmbientSoundEventGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)AmbienceSet_FieldIndex.Sounds)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AmbienceSet_FieldIndex.ASMB) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AmbienceSet_FieldIndex.MergeBehavior) ?? true))
             {
-                if (lhs.ASMB != rhs.ASMB) return false;
+                if (lhs.MergeBehavior != rhs.MergeBehavior) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AmbienceSet_FieldIndex.Walla) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AmbienceSet_FieldIndex.WallaExterior) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.Walla, rhs.Walla, out var lhsWalla, out var rhsWalla, out var isWallaEqual))
+                if (EqualsMaskHelper.RefEquality(lhs.WallaExterior, rhs.WallaExterior, out var lhsWallaExterior, out var rhsWallaExterior, out var isWallaExteriorEqual))
                 {
-                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsWalla).CommonInstance()!).Equals(lhsWalla, rhsWalla, equalsMask?.GetSubCrystal((int)AmbienceSet_FieldIndex.Walla))) return false;
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsWallaExterior).CommonInstance()!).Equals(lhsWallaExterior, rhsWallaExterior, equalsMask?.GetSubCrystal((int)AmbienceSet_FieldIndex.WallaExterior))) return false;
                 }
-                else if (!isWallaEqual) return false;
+                else if (!isWallaExteriorEqual) return false;
             }
             return true;
         }
@@ -1199,13 +1199,13 @@ namespace Mutagen.Bethesda.Starfield
         {
             var hash = new HashCode();
             hash.Add(item.Sounds);
-            if (item.ASMB is {} ASMBitem)
+            if (item.MergeBehavior is {} MergeBehavioritem)
             {
-                hash.Add(ASMBitem);
+                hash.Add(MergeBehavioritem);
             }
-            if (item.Walla is {} Wallaitem)
+            if (item.WallaExterior is {} WallaExterioritem)
             {
-                hash.Add(Wallaitem);
+                hash.Add(WallaExterioritem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1243,9 +1243,9 @@ namespace Mutagen.Bethesda.Starfield
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Walla is {} WallaItems)
+            if (obj.WallaExterior is {} WallaExteriorItems)
             {
-                foreach (var item in WallaItems.EnumerateFormLinks())
+                foreach (var item in WallaExteriorItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1339,7 +1339,7 @@ namespace Mutagen.Bethesda.Starfield
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
                             })
-                            .ToExtendedList<AmbienceSound>();
+                            .ToExtendedList<AmbientSoundEvent>();
                     }
                     else
                     {
@@ -1356,24 +1356,24 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)AmbienceSet_FieldIndex.ASMB) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AmbienceSet_FieldIndex.MergeBehavior) ?? true))
             {
-                item.ASMB = rhs.ASMB;
+                item.MergeBehavior = rhs.MergeBehavior;
             }
-            if ((copyMask?.GetShouldTranslate((int)AmbienceSet_FieldIndex.Walla) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AmbienceSet_FieldIndex.WallaExterior) ?? true))
             {
-                errorMask?.PushIndex((int)AmbienceSet_FieldIndex.Walla);
+                errorMask?.PushIndex((int)AmbienceSet_FieldIndex.WallaExterior);
                 try
                 {
-                    if(rhs.Walla is {} rhsWalla)
+                    if(rhs.WallaExterior is {} rhsWallaExterior)
                     {
-                        item.Walla = rhsWalla.DeepCopy(
+                        item.WallaExterior = rhsWallaExterior.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)AmbienceSet_FieldIndex.Walla));
+                            copyMask?.GetSubCrystal((int)AmbienceSet_FieldIndex.WallaExterior));
                     }
                     else
                     {
-                        item.Walla = default;
+                        item.WallaExterior = default;
                     }
                 }
                 catch (Exception ex)
@@ -1555,29 +1555,30 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAmbienceSoundGetter>.Instance.WriteWithCounter(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAmbientSoundEventGetter>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Sounds,
                 counterType: RecordTypes.ASAS,
                 counterLength: 4,
-                transl: (MutagenWriter subWriter, IAmbienceSoundGetter subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, IAmbientSoundEventGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
-                    ((AmbienceSoundBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((AmbientSoundEventBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
                 });
-            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteNullable(
-                writer: writer,
-                item: item.ASMB,
+            EnumBinaryTranslation<AmbienceSet.MergeBehaviorEnum, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.MergeBehavior,
+                length: 1,
                 header: translationParams.ConvertToCustom(RecordTypes.ASMB));
-            if (item.Walla is {} WallaItem)
+            if (item.WallaExterior is {} WallaExteriorItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.WED0))
                 {
-                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)WallaItem).BinaryWriteTranslator).Write(
-                        item: WallaItem,
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)WallaExteriorItem).BinaryWriteTranslator).Write(
+                        item: WallaExteriorItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -1654,27 +1655,29 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ASAS:
                 {
                     item.Sounds = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AmbienceSound>.Instance.ParsePerItem(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AmbientSoundEvent>.Instance.ParsePerItem(
                             reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.ASAS,
-                            triggeringRecord: AmbienceSound_Registration.TriggerSpecs,
+                            triggeringRecord: AmbientSoundEvent_Registration.TriggerSpecs,
                             translationParams: translationParams,
-                            transl: AmbienceSound.TryCreateFromBinary)
-                        .CastExtendedList<AmbienceSound>();
+                            transl: AmbientSoundEvent.TryCreateFromBinary)
+                        .CastExtendedList<AmbientSoundEvent>();
                     return (int)AmbienceSet_FieldIndex.Sounds;
                 }
                 case RecordTypeInts.ASMB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ASMB = frame.ReadBoolean();
-                    return (int)AmbienceSet_FieldIndex.ASMB;
+                    item.MergeBehavior = EnumBinaryTranslation<AmbienceSet.MergeBehaviorEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)AmbienceSet_FieldIndex.MergeBehavior;
                 }
                 case RecordTypeInts.WED0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.Walla = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
-                    return (int)AmbienceSet_FieldIndex.Walla;
+                    item.WallaExterior = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)AmbienceSet_FieldIndex.WallaExterior;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1735,12 +1738,12 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IAmbienceSet);
 
 
-        public IReadOnlyList<IAmbienceSoundGetter>? Sounds { get; private set; }
-        #region ASMB
-        private int? _ASMBLocation;
-        public Boolean? ASMB => _ASMBLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ASMBLocation.Value, _package.MetaData.Constants)[0] >= 1 : default(Boolean?);
+        public IReadOnlyList<IAmbientSoundEventGetter>? Sounds { get; private set; }
+        #region MergeBehavior
+        private int? _MergeBehaviorLocation;
+        public AmbienceSet.MergeBehaviorEnum? MergeBehavior => _MergeBehaviorLocation.HasValue ? (AmbienceSet.MergeBehaviorEnum)HeaderTranslation.ExtractSubrecordMemory(_recordData, _MergeBehaviorLocation!.Value, _package.MetaData.Constants)[0] : default(AmbienceSet.MergeBehaviorEnum?);
         #endregion
-        public ISoundReferenceGetter? Walla { get; private set; }
+        public ISoundReferenceGetter? WallaExterior { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1813,30 +1816,30 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ASAE:
                 case RecordTypeInts.ASAS:
                 {
-                    this.Sounds = BinaryOverlayList.FactoryByCountPerItem<IAmbienceSoundGetter>(
+                    this.Sounds = BinaryOverlayList.FactoryByCountPerItem<IAmbientSoundEventGetter>(
                         stream: stream,
                         package: _package,
-                        itemLength: 0x49,
                         countLength: 4,
+                        trigger: AmbientSoundEvent_Registration.TriggerSpecs,
                         countType: RecordTypes.ASAS,
-                        trigger: RecordTypes.ASAE,
-                        getter: (s, p) => AmbienceSoundBinaryOverlay.AmbienceSoundFactory(s, p),
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => AmbientSoundEventBinaryOverlay.AmbientSoundEventFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)AmbienceSet_FieldIndex.Sounds;
                 }
                 case RecordTypeInts.ASMB:
                 {
-                    _ASMBLocation = (stream.Position - offset);
-                    return (int)AmbienceSet_FieldIndex.ASMB;
+                    _MergeBehaviorLocation = (stream.Position - offset);
+                    return (int)AmbienceSet_FieldIndex.MergeBehavior;
                 }
                 case RecordTypeInts.WED0:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
-                    this.Walla = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                    this.WallaExterior = SoundReferenceBinaryOverlay.SoundReferenceFactory(
                         stream: stream,
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());
-                    return (int)AmbienceSet_FieldIndex.Walla;
+                    return (int)AmbienceSet_FieldIndex.WallaExterior;
                 }
                 default:
                     return base.FillRecordType(

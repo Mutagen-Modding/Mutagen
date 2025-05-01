@@ -1,10 +1,11 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
+using Noggog.Testing.Extensions;
 using Noggog.Testing.IO;
 using NSubstitute;
 using Xunit;
@@ -19,7 +20,7 @@ public class CreationClubListingsProviderIntegrationTests
     public void CccNotUsed(
         CreationClubListingsProvider sut)
     {
-        sut.Get().Should().BeEmpty();
+        sut.Get().ShouldBeEmpty();
     }
 
     [Theory, MutagenAutoData]
@@ -52,7 +53,7 @@ ModB.esp"},
                 dataDirectoryInjection,
                 new CreationClubListingsPathInjection(cccPath),
                 new CreationClubRawListingsReader())
-            .Get().Should().Equal(
+            .Get().ShouldEqual(
                 new ModListing("ModA.esp", true, true),
                 new ModListing("ModB.esp", true, true));
     }
@@ -74,7 +75,7 @@ ModB.esp"},
                 dataDirectoryInjection,
                 new CreationClubListingsPathInjection(cccPath),
                 new CreationClubRawListingsReader())
-            .Get().Should().Equal(
+            .Get().ShouldEqual(
                 new ModListing("ModA.esp", true, true));   
     }
 }

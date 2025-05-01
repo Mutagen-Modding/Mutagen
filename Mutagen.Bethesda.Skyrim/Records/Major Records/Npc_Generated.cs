@@ -175,6 +175,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Destructible? _Destructible;
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         public Destructible? Destructible
         {
             get => _Destructible;
@@ -182,6 +185,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDestructibleGetter? INpcGetter.Destructible => this.Destructible;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
+        #endregion
         #endregion
         #region WornArmor
         private readonly IFormLinkNullable<IArmorGetter> _WornArmor = new FormLinkNullable<IArmorGetter>();
@@ -2943,6 +2950,7 @@ namespace Mutagen.Bethesda.Skyrim
         IAssetLinkContainer,
         IExplodeSpawn,
         IFormLinkContainer,
+        IHasDestructible,
         IHaveVirtualMachineAdapter,
         IKeyworded<IKeywordGetter>,
         ILockList,
@@ -2976,6 +2984,9 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLinkNullable<INpcSpawnGetter> Template { get; set; }
         new IFormLink<IRaceGetter> Race { get; set; }
         new ExtendedList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; set; }
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         new Destructible? Destructible { get; set; }
         new IFormLinkNullable<IArmorGetter> WornArmor { get; set; }
         new IFormLinkNullable<IArmorGetter> FarAwayModel { get; set; }
@@ -3039,6 +3050,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
+        IHasDestructibleGetter,
         IHaveVirtualMachineAdapterGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILockListGetter,
@@ -3076,7 +3088,12 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<INpcSpawnGetter> Template { get; }
         IFormLinkGetter<IRaceGetter> Race { get; }
         IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; }
+        #region Destructible
+        /// <summary>
+        /// Aspects: IHasDestructibleGetter
+        /// </summary>
         IDestructibleGetter? Destructible { get; }
+        #endregion
         IFormLinkNullableGetter<IArmorGetter> WornArmor { get; }
         IFormLinkNullableGetter<IArmorGetter> FarAwayModel { get; }
         IFormLinkNullableGetter<IRaceGetter> AttackRace { get; }
@@ -6045,8 +6062,10 @@ namespace Mutagen.Bethesda.Skyrim
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Npc_FieldIndex.Name;
                 }
                 case RecordTypeInts.SHRT:
@@ -6054,8 +6073,10 @@ namespace Mutagen.Bethesda.Skyrim
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ShortName = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Npc_FieldIndex.ShortName;
                 }
                 case RecordTypeInts.DATA:
@@ -6351,7 +6372,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -6363,7 +6384,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ShortName
         private int? _ShortNameLocation;
-        public ITranslatedStringGetter? ShortName => _ShortNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ShortNameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? ShortName => _ShortNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ShortNameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
         #region DataMarker
         public partial ParseResult DataMarkerCustomParse(

@@ -224,7 +224,8 @@ internal sealed class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKe
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich<T>(ex, key, edid: null);
+                RecordException.EnrichAndThrow<T>(ex, key, edid: null);
+                throw;
             }
         }
     }
@@ -259,7 +260,8 @@ internal sealed class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKe
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich<T>(ex, kv.Key, edid: null);
+                RecordException.EnrichAndThrow<T>(ex, kv.Key, edid: null);
+                throw;
             }
             yield return item;
         }

@@ -1,8 +1,9 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
+using Noggog.Testing.Extensions;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Binary.Translations.RecordSpanExtensionsTests;
@@ -14,8 +15,8 @@ public class ParseRepeatingSubrecord : RecordSpanExtensionTests
     {
         byte[] b = Array.Empty<byte>();
         RecordSpanExtensions.ParseRepeatingSubrecord(new ReadOnlyMemorySlice<byte>(b), GameConstants.Oblivion, RecordTypes.EDID, out var len)
-            .Should().BeEmpty();
-        len.Should().Be(0);
+            .ShouldBeEmpty();
+        len.ShouldBe(0);
     }
     
     [Fact]
@@ -24,18 +25,18 @@ public class ParseRepeatingSubrecord : RecordSpanExtensionTests
         var result = RecordSpanExtensions.ParseRepeatingSubrecord(
             Repeating(),
             GameConstants.Oblivion, RecordTypes.EDID, out var len);
-        result.Should().HaveCount(4);
-        result.Select(x => x.RecordType).Should().AllBeEquivalentTo(RecordTypes.EDID);
-        len.Should().Be(0x26);
+        result.ShouldHaveCount(4);
+        result.Select(x => x.RecordType).ShouldAllBe(x => x == RecordTypes.EDID);
+        len.ShouldBe(0x26);
     }
     
     [Fact]
     public void ParseRepeatingSubrecordOnNonMatching()
     {
-        var result = RecordSpanExtensions.ParseRepeatingSubrecord(
+        RecordSpanExtensions.ParseRepeatingSubrecord(
                 FnamStart(),
                 GameConstants.Oblivion, RecordTypes.EDID, out var len)
-            .Should().BeEmpty();
-        len.Should().Be(0);
+            .ShouldBeEmpty();
+        len.ShouldBe(0);
     }
 }

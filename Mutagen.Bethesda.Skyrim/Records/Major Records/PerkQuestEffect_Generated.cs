@@ -127,13 +127,17 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Rank,
                 TItem Priority,
                 TItem Conditions,
+                TItem ButtonLabel,
+                TItem Flags,
                 TItem Quest,
                 TItem Stage,
                 TItem Unknown)
             : base(
                 Rank: Rank,
                 Priority: Priority,
-                Conditions: Conditions)
+                Conditions: Conditions,
+                ButtonLabel: ButtonLabel,
+                Flags: Flags)
             {
                 this.Quest = Quest;
                 this.Stage = Stage;
@@ -658,9 +662,11 @@ namespace Mutagen.Bethesda.Skyrim
         Rank = 0,
         Priority = 1,
         Conditions = 2,
-        Quest = 3,
-        Stage = 4,
-        Unknown = 5,
+        ButtonLabel = 3,
+        Flags = 4,
+        Quest = 5,
+        Stage = 6,
+        Unknown = 7,
     }
     #endregion
 
@@ -673,7 +679,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(PerkQuestEffect.Mask<>);
 
@@ -893,6 +899,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case APerkEffect_FieldIndex.Priority:
                     return (PerkQuestEffect_FieldIndex)((int)index);
                 case APerkEffect_FieldIndex.Conditions:
+                    return (PerkQuestEffect_FieldIndex)((int)index);
+                case APerkEffect_FieldIndex.ButtonLabel:
+                    return (PerkQuestEffect_FieldIndex)((int)index);
+                case APerkEffect_FieldIndex.Flags:
                     return (PerkQuestEffect_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

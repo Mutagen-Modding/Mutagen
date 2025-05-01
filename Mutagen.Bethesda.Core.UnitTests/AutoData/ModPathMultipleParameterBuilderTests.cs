@@ -1,7 +1,8 @@
 ﻿using AutoFixture.Kernel;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Testing.AutoData;
+using Noggog.Testing.Extensions;
 using NSubstitute;
 using Xunit;
 
@@ -25,7 +26,7 @@ public class ModPathMultipleParameterBuilderTests
         {
             var param = method.GetParameters().First();
             var ret = sut.Create(param, context);
-            ret.Should().BeOfType<NoSpecimen>();
+            ret.ShouldBeOfType<NoSpecimen>();
         }
     }
         
@@ -63,7 +64,7 @@ public class ModPathMultipleParameterBuilderTests
         {
             var param = method.GetParameters().First();
             sut.Create(param, context)
-                .Should().BeOfType<NoSpecimen>();
+                .ShouldBeOfType<NoSpecimen>();
         }
     }
         

@@ -4,7 +4,7 @@
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
       <Float name="ChanceNone" recordType="LVLD" nullable="False" />
       <UInt8 name="MaxCount" recordType="LVLM" />
       <Enum name="Flags" recordType="LVLF" nullable="False" enumName="LeveledItem.Flag" byteLength="2" />

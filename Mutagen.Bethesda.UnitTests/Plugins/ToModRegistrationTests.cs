@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins;
@@ -9,7 +9,7 @@ public class ToModRegistrationTests
     public void Found()
     {
         var regis = GameCategory.Skyrim.ToModRegistration();
-        regis.Should().NotBeNull();
-        regis.FullName.Should().Contain("Skyrim");
+        regis.ShouldNotBeNull();
+        regis.FullName.ShouldContain("Skyrim");
     }
 }

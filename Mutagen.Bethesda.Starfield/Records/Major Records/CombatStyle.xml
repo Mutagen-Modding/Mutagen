@@ -4,107 +4,213 @@
     <Fields>
       <Data recordType="CSGD">
         <Fields>
-          <Float name="OffensiveMult" />
-          <Float name="DefensiveMult" />
-          <Float name="GroupOffensiveMult" />
-          <Float name="EquipmentScoreMultMelee" />
-          <Float name="EquipmentScoreMultMagic" />
-          <Float name="EquipmentScoreMultRanged" />
-          <Float name="EquipmentScoreMultShout" />
-          <Float name="EquipmentScoreMultUnarmed" />
-          <Float name="EquipmentScoreMultStaff" />
-          <Float name="AvoidThreatChance" />
-          <Float name="DodgeThreadChance" />
-          <Float name="EvadeThreatChance" />
-          <Float name="CSGDUnknownFloat1" unknown="true" />
-          <Float name="CSGDUnknownFloat2" unknown="true" />
-          <Float name="CSGDUnknownFloat3" unknown="true" />
+          <Percent name="OffensiveMult" />
+          <Percent name="DefensiveMult" />
+          <Percent name="GroupOffensiveMult" />
+          <Float name="EquipmentScoreMultMelee" min="0" max="10" />
+          <Float name="EquipmentScoreMultMagic" min="0" max="10" />
+          <Float name="EquipmentScoreMultRanged" min="0" max="10" />
+          <Float name="EquipmentScoreMultShout" min="0" max="10" />
+          <Float name="EquipmentScoreMultUnarmed" min="0" max="10" />
+          <Float name="EquipmentScoreMultStaff" min="0" max="10" />
+          <Percent name="AvoidThreatChance" />
+          <Percent name="DodgeThreadChance" />
+          <Percent name="EvadeThreatChance" />
+          <Float name="HealAllyDistance" min="0" max="100" />
+          <Float name="JumpCostMult" min="0" max="10" />
+          <Float name="TauntDelayMult" min="0" max="10" />
         </Fields>
       </Data>
       <Data recordType="CSME">
         <Fields>
-          <Float name="MeleeAttackStaggeredMult" />
-          <Float name="MeleePowerAttackStaggeredMult" />
-          <Float name="MeleePowerAttackBlockingMult" />
-          <Float name="MeleeBashMult" />
-          <Float name="MeleeBashRecoilMult" />
-          <Float name="MeleeBashAttackMult" />
-          <Float name="MeleeBashPowerAttackMult" />
-          <Float name="MeleeSpecialAttackMult" />
-          <Float name="MeleeBlockWhenStaggeredMult" />
-          <Float name="MeleeAttackWhenStaggeredMult" />
+          <Float name="MeleeAttackStaggeredMult" min="0" max="10" />
+          <Float name="MeleePowerAttackStaggeredMult" min="0" max="10" />
+          <Float name="MeleePowerAttackBlockingMult" min="0" max="10" />
+          <Float name="MeleeBashMult" min="0" max="10" />
+          <Float name="MeleeBashRecoilMult" min="0" max="10" />
+          <Float name="MeleeBashAttackMult" min="0" max="10" />
+          <Float name="MeleeBashPowerAttackMult" min="0" max="10" />
+          <Float name="MeleeSpecialAttackMult" min="0" max="10" />
+          <Float name="MeleeBlockWhenStaggeredMult" min="0" max="10" />
+          <Float name="MeleeAttackWhenStaggeredMult" min="0" max="10" />
         </Fields>
       </Data>
       <Data recordType="CSRA">
         <Fields>
-          <Float name="RangedAccuracyMult" />
-          <Float name="CSRAUnknownFloat1" unknown="true" />
-          <Float name="CSRAUnknownFloat2" unknown="true" />
-          <Float name="CSRAUnknownFloat3" unknown="true" />
-          <Float name="CSRAUnknownFloat4" unknown="true" />
-          <Float name="CSRAUnknownFloat5" unknown="true" />
+          <Percent name="RangedAccuracyMult" />
+          <Percent name="RangedThrowMult" />
+          <Percent name="RangedGrenadeAdvancedThrowingMult" />
+          <Percent name="RangedGrenadeFlashTargetMult" />
+          <Percent name="RangedGrenadeThrowAtGroupMult" />
+          <Percent name="RangedGrenadeCloseRangeAttackChanceMult" />
         </Fields>
       </Data>
       <Data recordType="CSCR">
         <Fields>
-          <Float name="CloseRangeDuelingCircleMult" />
-          <Float name="CloseRangeDuelingFallbackMult" />
-          <Float name="CloseRangeFlankDistance" />
-          <Float name="CloseRangeFlankingStalkTime" />
-          <Float name="CloseRangeChargeDistance" />
-          <Float name="CloseRangeChargingThrowProbability" />
-          <Float name="CloseRangeChargingSprintFastProbability" />
-          <Float name="CloseRangeChargingSideswipeProbability" />
-          <Float name="CloseRangeChargingDisengageProbability" />
+          <Percent name="CloseRangeDuelingCircleMult" />
+          <Percent name="CloseRangeDuelingFallbackMult" />
+          <Percent name="CloseRangeFlankDistance" />
+          <Percent name="CloseRangeFlankingStalkTime" />
+          <Percent name="CloseRangeChargeDistance" />
+          <Percent name="CloseRangeChargingThrowProbability" />
+          <Percent name="CloseRangeChargingSprintFastProbability" />
+          <Percent name="CloseRangeChargingSideswipeProbability" />
+          <Percent name="CloseRangeChargingDisengageProbability" />
           <UInt32 name="CloseRangeChargingThrowMaxTargets" />
-          <Float name="CloseRangeFlankingVariance" />
-          <Float name="CSCRUnknownFloat1" unknown="true" />
-          <Float name="CSCRUnknownFloat2" unknown="true" />
+          <Percent name="CloseRangeFlankingVariance" />
+          <Percent name="CloseRangeRetreatChance" />
+          <Percent name="CloseRangeRetreatDistanceMult" />
         </Fields>
       </Data>
       <Data recordType="CSLR">
         <Fields>
-          <Float name="LongRangeStrafeMult" />
-          <Float name="LongRangeAdjustRangeMult" />
-          <Float name="LongRangeCrouchMult" />
-          <Float name="LongRangeWaitMult" />
-          <Float name="LongRangeRangeMult" />
-          <Float name="CSLRUnknownFloat1" unknown="true" />
-          <Float name="CSLRUnknownFloat2" unknown="true" />
-          <Float name="CSLRUnknownFloat3" unknown="true" />
-          <Float name="CSLRUnknownFloat4" unknown="true" />
+          <Percent name="LongRangeStrafeMult" />
+          <Percent name="LongRangeAdjustRangeMult" />
+          <Percent name="LongRangeCrouchMult" />
+          <Percent name="LongRangeWaitMult" />
+          <Percent name="LongRangeRangeMult" />
+          <Percent name="LongRangeProvideSuppressiveFireMult" />
+          <Percent name="LongRangeRetreatChance" />
+          <Percent name="LongRangeRetreatHideTimeMult" />
+          <Percent name="LongRangeRetreatDistanceMult" />
         </Fields>
       </Data>
       <Data recordType="CSCV">
         <Fields>
-          <Float name="CoverSearchDistanceMult" />
-          <Float name="CSCVUnknownFloat1" unknown="true" />
+          <Percent name="CoverSearchDistanceMult" />
+          <Percent name="CoverSearchSuppressionSensitivity" />
         </Fields>
       </Data>
       <Data recordType="CSFL">
         <Fields>
-          <Float name="HoverChance" />
-          <Float name="DiveBombChance" />
-          <Float name="GroundAttackChance" />
-          <Float name="HoverTime" />
-          <Float name="GroundAttackTime" />
-          <Float name="PerchAttackChance" />
-          <Float name="PerchAttackTime" />
-          <Float name="FlyingAttackChance" />
+          <Percent name="FlightHoverChance" />
+          <Percent name="FlightDiveBombChance" />
+          <Percent name="FlightGroundAttackChance" />
+          <Percent name="FlightHoverTime" />
+          <Percent name="FlightGroundAttackTime" />
+          <Percent name="FlightPerchAttackChance" />
+          <Percent name="FlightPerchAttackTime" />
+          <Percent name="FlightFlyingAttackChance" />
         </Fields>
       </Data>
-      <ByteArray name="CSTN" recordType="CSTN" unknown="true" />
-      <ByteArray name="CSSG" recordType="CSSG" unknown="true" />
-      <ByteArray name="CSSM" recordType="CSSM" unknown="true" />
-      <ByteArray name="CSSR" recordType="CSSR" unknown="true" />
-      <ByteArray name="CSSA" recordType="CSSA" unknown="true" />
-      <ByteArray name="CSSD" recordType="CSSD" unknown="true" />
+      <Data recordType="CSTN">
+        <Fields>
+          <Float name="TunnelCostMult" min="0" max="10" />
+          <Percent name="TunnelChance" />
+          <Float name="TunnelMaxDistance" min="0" max="1000" />
+          <Float name="TunnelSpeedMult" min="0" max="10" />
+          <Float name="TunnelMinTime" min="0" max="30" />
+          <Float name="TunnelMaxTime" min="0" max="30" />
+          <Float name="TunnelMaximumTime" min="0" max="30" />
+          <Float name="TunnelCooldown" min="0" max="30" />
+        </Fields>
+      </Data>
+      <Data recordType="CSSG">
+        <Fields>
+          <Percent name="SpaceGeneralPilotSkill" />
+          <Percent name="SpaceGeneralAccuracy" />
+          <Percent name="SpaceGeneralTargetShield" />
+          <Float name="SpaceGeneralAdjustment" min="0" max="60" />
+          <Percent name="SpaceGeneralEngageManeuverChanceDirectAttack" />
+          <Percent name="SpaceGeneralEngageManeuverChancePass" />
+          <Percent name="SpaceGeneralEngageManeuverChanceLeadTurn" />
+          <Percent name="SpaceGeneralEngageManeuverChanceSlideTurn" />
+          <Percent name="SpaceGeneralEngageManeuverChanceBarrelRoll" />
+          <Percent name="SpaceGeneralEvadeManeuverChanceBreak" />
+          <Percent name="SpaceGeneralEvadeManeuverChanceScissors" />
+          <Percent name="SpaceGeneralEvadeManeuverChanceCut" />
+          <Percent name="SpaceGeneralEvadeManeuverChanceBoost" />
+          <Percent name="SpaceGeneralAcquireManeuverChanceSliceback" />
+          <Percent name="SpaceGeneralAcquireManeuverChanceStrafeTurn" />
+          <Percent name="SpaceGeneralAcquireManeuverChanceAcquire" />
+          <Percent name="SpaceGeneralAcquireManeuverChanceTurn" />
+          <Percent name="SpaceGeneralDisengageManeuverChance" />
+          <Float name="SpaceGeneralMissileSeekingStrength" min="0" max="10" />
+          <Float name="SpaceGeneralMinTimeBetweenBoosts" min="0" max="60" />
+          <Bool name="SpaceGeneralCombatStrafing" byteLength="1" />
+          <Bool name="SpaceGeneralRollsDuringBoost" byteLength="1" />
+          <Int16 name="UnknownCSSG" />
+          <RefDirect name="SpaceGeneralPowerWeighting" refName="CombatStylePowerWeighting" />
+        </Fields>
+      </Data>
+      <Data recordType="CSSM">
+        <Fields>
+          <RefDirect name="SpaceManeuverTypesMaxTime" refName="CombatStyleManeuverTiming" />
+          <RefDirect name="SpaceManeuverTypesReentryDelays" refName="CombatStyleManeuverTiming" />
+        </Fields>
+      </Data>
+      <Data recordType="CSSR">
+        <Fields>
+          <Percent name="SpaceRepairDamageThreshold" />
+          <Percent name="SpaceRepairFarawayDistance" />
+          <Percent name="SpaceRepairPowerToUse" />
+          <RefDirect name="SpaceRepairInClosePowerWeightingTables" refName="CombatStylePowerWeighting" />
+          <RefDirect name="SpaceRepairFarawayPowerWeightingTables" refName="CombatStylePowerWeighting" />
+        </Fields>
+      </Data>
+      <Data recordType="CSSA">
+        <Fields>
+          <Percent name="SpaceApproachingMinDistance" />
+          <RefDirect name="SpaceApproachingWeighting" refName="CombatStylePowerWeighting" />
+        </Fields>
+      </Data>
+      <Data recordType="CSSD">
+        <Fields>
+          <Float name="SpaceDetectionRating1" />
+          <Float name="SpaceDetectionRating2" />
+          <Float name="SpaceDetectionRating3" />
+        </Fields>
+      </Data>
       <Enum name="Flags" enumName="CombatStyle.Flag" recordType="DATA" />
       <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
-      <FormLink name="TNAM" refName="CombatStyle" recordType="TNAM" unknown="true" />
-      <List name="UNAM" recordType="UNAM" unknown="true" >
-        <FormLink refName="CombatStyle" />
-      </List>
+      <FormLink name="TemplateDefaultCombatStyle" refName="CombatStyle" recordType="TNAM" />
+      <RefDirect name="Templates" refName="CombatStyleTemplates" />
+    </Fields>
+  </Object>
+  <Object name="CombatStylePowerWeighting" objType="Subrecord" >
+    <Fields>
+      <Float name="Engines" min="0" max="10" />
+      <Float name="Shields" min="0" max="10" />
+      <Float name="Guns" min="0" max="10" />
+      <Float name="ShieldBasedGunsEM" min="0" max="10" />
+      <Float name="ShieldBasedGunsHull" min="0" max="10" />
+      <Float name="ShieldBasedGunsShield" min="0" max="10" />
+      <Float name="HullBasedGunsEM" min="0" max="10" />
+      <Float name="HullBasedGunsHull" min="0" max="10" />
+      <Float name="HullBasedGunsShield" min="0" max="10" />
+    </Fields>
+  </Object>
+  <Object name="CombatStyleManeuverTiming" objType="Subrecord" >
+    <Fields>
+      <Float name="Engage" min="0" max="600" />
+      <Float name="Evade" min="0" max="600" />
+      <Float name="Acquire" min="0" max="600" />
+      <Float name="Persue" min="0" max="600" />
+      <Float name="Disengage" min="0" max="600" />
+      <Float name="Surround" min="0" max="600" />
+      <Float name="Unknown" />
+      <Float name="BreakStalemate" min="0" max="600" />
+    </Fields>
+  </Object>
+  <Object name="CombatStyleTemplates" objType="Subrecord" recordType="UNAM" >
+    <Fields>
+      <FormLink name="OffsensiveDefensiveMults" refName="CombatStyle" />
+      <FormLink name="AvoidThreats" refName="CombatStyle" />
+      <FormLink name="EquipmentScoreMults" refName="CombatStyle" />
+      <FormLink name="Melee" refName="CombatStyle" />
+      <FormLink name="Ranged" refName="CombatStyle" />
+      <FormLink name="CloseRange" refName="CombatStyle" />
+      <FormLink name="LongRange" refName="CombatStyle" />
+      <FormLink name="Cover" refName="CombatStyle" />
+      <FormLink name="Flight" refName="CombatStyle" />
+      <FormLink name="Tunnel" refName="CombatStyle" />
+      <FormLink name="SpaceGeneral" refName="CombatStyle" />
+      <FormLink name="SpacePower" refName="CombatStyle" />
+      <FormLink name="SpaceRepair" refName="CombatStyle" />
+      <FormLink name="SpaceApproaching" refName="CombatStyle" />
+      <FormLink name="SpaceDetection" refName="CombatStyle" />
+      <FormLink name="Misc" refName="CombatStyle" />
+      <FormLink name="SpaceManeuverTypes" refName="CombatStyle" />
     </Fields>
   </Object>
 </Loqui>

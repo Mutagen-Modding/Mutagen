@@ -19,6 +19,7 @@ using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings.DI;
 using Noggog.IO;
+using Noggog.WorkEngine;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -28,10 +29,12 @@ public class PassthroughTestParams
     public PassthroughSettings PassthroughSettings { get; set; } = new();
     public GameRelease GameRelease { get; set; }
     public Target Target { get; set; } = new();
+    public required IWorkDropoff WorkDropoff { get; set; }
 }
 
 public abstract class PassthroughTest
 {
+    public readonly IWorkDropoff WorkDropoff;
     public string Nickname { get; }
     public ModPath FilePath { get; set; }
     public PassthroughSettings Settings { get; }
@@ -61,6 +64,7 @@ public abstract class PassthroughTest
 
     public PassthroughTest(PassthroughTestParams param, GameRelease release)
     {
+        WorkDropoff = param.WorkDropoff;
         var path = param.Target.Path;
         FilePath = path;
         GameRelease = release;
@@ -80,7 +84,7 @@ public abstract class PassthroughTest
 
         var test = new Test(
             $"Setup Processed Files",
-            parallel: Settings.ParallelProcessingSteps,
+            WorkDropoff,
             toDo: async (o) =>
             {
                 o.OnNext(Nickname);
@@ -312,7 +316,7 @@ public abstract class PassthroughTest
                 "Binary Normal Passthrough",
                 GameRelease,
                 Target,
-                parallel: Settings.ParallelProcessingSteps,
+                workDropoff: WorkDropoff,
                 toDo: async (o) =>
                 {
                     o.OnNext(FilePath.ToString());
@@ -346,13 +350,13 @@ public abstract class PassthroughTest
                 });
             processedTest.AddAsChild(passthrough);
             Test passthroughParallel = null;
-            if (Settings.ParallelWriting)
+            if (Settings.ParallelModTranslations)
             {
                 passthroughParallel = TestBattery.RunTest(
                     "Binary Normal Passthrough Parallel",
                     GameRelease,
                     Target,
-                    parallel: Settings.ParallelProcessingSteps,
+                    workDropoff: WorkDropoff,
                     toDo: async (o) =>
                     {
                         o.OnNext(FilePath.ToString());
@@ -397,7 +401,7 @@ public abstract class PassthroughTest
                     passthrough.AddAsChild(item);
                 }
 
-                if (Settings.ParallelWriting)
+                if (Settings.ParallelModTranslations)
                 {
                     foreach (var item in AssertStringsEqual(
                                  "Binary Normal Import Parallel Export",
@@ -418,7 +422,7 @@ public abstract class PassthroughTest
                 "Binary Overlay Passthrough",
                 GameRelease,
                 Target,
-                parallel: Settings.ParallelProcessingSteps,
+                workDropoff: WorkDropoff,
                 toDo: async (o) =>
                 {
                     o.OnNext(FilePath.ToString());
@@ -480,7 +484,7 @@ public abstract class PassthroughTest
                 "Copy In Passthrough",
                 GameRelease,
                 Target,
-                parallel: Settings.ParallelProcessingSteps,
+                workDropoff: WorkDropoff,
                 toDo: async (o) =>
                 {
                     o.OnNext(FilePath.ToString());
@@ -522,56 +526,82 @@ public abstract class PassthroughTest
 
     public Test TestImport()
     {
-        return TestBattery.RunTest("Test Import", GameRelease, Target, async (output) =>
-        {
-            await ImportBinary(FilePath.Path, StringsParams);
-        });
+        return TestBattery.RunTest(
+            "Test Import",
+            GameRelease,
+            Target,
+            async (output) =>
+            {
+                await ImportBinary(FilePath.Path,
+                    StringsParams);
+            },
+            workDropoff: WorkDropoff);
     }
 
     public Test TestEquality()
     {
-        return TestBattery.RunTest("Equals", GameRelease, Target, async (output) =>
-        {
-            var mod = await ImportBinaryOverlay(FilePath.Path, StringsParams);
-            var eqMask = mod.GetEqualsMask(mod);
-            if (!eqMask.All(b => b))
+        return TestBattery.RunTest(
+            "Equals",
+            GameRelease,
+            Target,
+            async (output) =>
             {
-                throw new Exception("Mod mask did not equal itself");
-            }
-            Console.WriteLine("Equals mask clean.");
-            if (!mod.Equals(mod))
-            {
-                throw new Exception("Mod did not equal itself");
-            }
-            Console.WriteLine("Direct equals matched.");
-        });
+                var mod = await ImportBinaryOverlay(FilePath.Path,
+                    StringsParams);
+                var eqMask = mod.GetEqualsMask(mod);
+                if (!eqMask.All(b => b))
+                {
+                    throw new Exception("Mod mask did not equal itself");
+                }
+                Console.WriteLine("Equals mask clean.");
+                if (!mod.Equals(mod))
+                {
+                    throw new Exception("Mod did not equal itself");
+                }
+                Console.WriteLine("Direct equals matched.");
+            },
+            workDropoff: WorkDropoff);
     }
 
     public Test TestPex()
     {
-        return TestBattery.RunTest("Pex", GameRelease, Target, async (output) =>
-        {
-            IEnumerable<FileName> bsas;
-            if (Implicits.Get(GameRelease).BaseMasters.Contains(FilePath.ModKey))
+        return TestBattery.RunTest(
+            "Pex",
+            GameRelease,
+            Target,
+            async (output) =>
             {
-                bsas = Archive.GetIniListings(GameRelease).ToList();
-            }
-            else
-            {
-                bsas = new FileName($"{FilePath.ModKey.Name}.{Archive.GetExtension(GameRelease)}").AsEnumerable();
-            }
-            foreach (var bsa in bsas)
-            {
-                var path = Path.Combine(Path.GetDirectoryName(FilePath)!, bsa.String);
-                if (!File.Exists(path)) continue;
-                var archive = Archive.CreateReader(GameRelease, path);
-                foreach (var file in archive.Files)
+                IEnumerable<FileName> bsas;
+                if (Implicits.Get(GameRelease)
+                    .BaseMasters.Contains(FilePath.ModKey))
                 {
-                    if (!Path.GetExtension(file.Path).Equals(".pex", StringComparison.OrdinalIgnoreCase)) continue;
-                    TestPex(GameRelease, file.AsStream());
+                    bsas = Archive.GetIniListings(GameRelease)
+                        .ToList();
                 }
-            }
-        });
+                else
+                {
+                    bsas = new FileName($"{FilePath.ModKey.Name}.{Archive.GetExtension(GameRelease)}").AsEnumerable();
+                }
+                foreach (var bsa in bsas)
+                {
+                    var path = Path.Combine(Path.GetDirectoryName(FilePath)!,
+                        bsa.String);
+                    if (!File.Exists(path))
+                        continue;
+                    var archive = Archive.CreateReader(GameRelease,
+                        path);
+                    foreach (var file in archive.Files)
+                    {
+                        if (!Path.GetExtension(file.Path)
+                                .Equals(".pex",
+                                    StringComparison.OrdinalIgnoreCase))
+                            continue;
+                        TestPex(GameRelease,
+                            file.AsStream());
+                    }
+                }
+            },
+            workDropoff: WorkDropoff);
     }
     
     public void TestPex(GameRelease release, Stream stream)
@@ -579,10 +609,15 @@ public abstract class PassthroughTest
         PexFile.CreateFromStream(stream, release.ToCategory());
     }
 
-    public static PassthroughTest Factory(TestingSettings settings, TargetGroup group, Target target)
+    public static PassthroughTest Factory(
+        TestingSettings settings,
+        TargetGroup group,
+        Target target,
+        IWorkDropoff workDropoff)
     {
         return Factory(new PassthroughTestParams()
         {
+            WorkDropoff = workDropoff,
             NicknameSuffix = group.NicknameSuffix,
             PassthroughSettings = settings.PassthroughSettings,
             Target = target,
@@ -682,7 +717,7 @@ public abstract class PassthroughTest
                         new FileStream(sourcePath, FileMode.Open),
                         pathToTest);
                 },
-                parallel: Settings.ParallelProcessingSteps);
+                workDropoff: WorkDropoff);
         }
     }
 

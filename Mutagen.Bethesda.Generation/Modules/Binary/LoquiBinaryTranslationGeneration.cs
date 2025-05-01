@@ -628,6 +628,10 @@ public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
             {
                 sb.AppendLine($"_{typeGen.Name}Type = type;");
             }
+            if (data.MarkerType.HasValue) 
+            { 
+                sb.AppendLine($"stream.ReadSubrecord(); // Skip record"); 
+            } 
             OverflowGenerationHelper.GenerateWrapperOverflowParse(sb, typeGen, data);
         }
         else

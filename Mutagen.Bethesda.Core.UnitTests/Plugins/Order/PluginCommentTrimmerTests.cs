@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Testing.AutoData;
@@ -15,7 +15,7 @@ public class PluginCommentTrimmerTests
     {
         sut.Trim("ModB.esp")
             .ToString()
-            .Should().Be("ModB.esp");
+            .ShouldBe("ModB.esp");
     }
     
     [Theory]
@@ -25,7 +25,7 @@ public class PluginCommentTrimmerTests
     {
         sut.Trim("*ModB.esp")
             .ToString()
-            .Should().Be("*ModB.esp");
+            .ShouldBe("*ModB.esp");
     }
     
     [Theory]
@@ -35,7 +35,7 @@ public class PluginCommentTrimmerTests
     {
         sut.Trim("#ModB.esp")
             .ToString()
-            .Should().Be("#ModB.esp");
+            .ShouldBe("#ModB.esp");
     }
 
     
@@ -46,7 +46,7 @@ public class PluginCommentTrimmerTests
     {
         sut.Trim("Mod#B.esp")
             .ToString()
-            .Should().Be("Mod#B.esp");
+            .ShouldBe("Mod#B.esp");
     }
 
     [Theory]
@@ -56,6 +56,6 @@ public class PluginCommentTrimmerTests
     {
         sut.Trim("ModB.esp#Hello")
             .ToString()
-            .Should().Be("ModB.esp");
+            .ShouldBe("ModB.esp");
     }
 }

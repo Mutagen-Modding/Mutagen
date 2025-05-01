@@ -143,7 +143,8 @@ public sealed class FormLinkBinaryTranslation
         }
         catch (Exception ex)
         {
-            throw SubrecordException.Enrich(ex, header);
+            SubrecordException.EnrichAndThrow(ex, header);
+            throw;
         }
     }
 

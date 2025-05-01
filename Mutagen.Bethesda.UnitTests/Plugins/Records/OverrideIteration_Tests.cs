@@ -1,9 +1,10 @@
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
 using Xunit;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Testing;
+using Noggog.Testing.Extensions;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records;
 
@@ -92,8 +93,8 @@ public class OverrideTests
         worldspace.TopCell = new Cell(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE);
         var placedObj2 = worldspace.TopCell.Persistent.AddReturn(new PlacedObject(mod.GetNextFormKey(), SkyrimRelease.SkyrimSE));
         var placedObjs = mod.EnumerateMajorRecordContexts<IPlacedObject, IPlacedObjectGetter>(linkCache: null!).ToList();
-        placedObjs.Should().HaveCount(2);
+        placedObjs.ShouldHaveCount(2);
         var placed = mod.EnumerateMajorRecordContexts<IPlaced, IPlacedGetter>(linkCache: null!).ToList();
-        placed.Should().HaveCount(2);
+        placed.ShouldHaveCount(2);
     }
 }

@@ -82,7 +82,7 @@ public sealed class GetArchiveIniListings : IGetArchiveIniListings
     {
         if (!_fileSystem.File.Exists(path))
         {
-            return Enumerable.Empty<FileName>();
+            return [];
         }
         return Get(_fileSystem.File.OpenRead(path.Path));
     }
@@ -94,9 +94,10 @@ public sealed class GetArchiveIniListings : IGetArchiveIniListings
         var parser = new FileIniDataParser(new IniDataParser(Config));
         var data = parser.ReadData(new StreamReader(iniStream));
         var basePath = data["Archive"];
-        var str1 = basePath["sResourceArchiveList"]?.Split(", ");
-        var str2 = basePath["sResourceArchiveList2"]?.Split(", ");
+        var str1 = basePath["sResourceArchiveList"]?.Split(',');
+        var str2 = basePath["sResourceArchiveList2"]?.Split(',');
         var ret = str1.EmptyIfNull().And(str2.EmptyIfNull())
+            .Select(x => x.Trim())
             .Select(x => new FileName(x))
             .ToList();
         return ret;

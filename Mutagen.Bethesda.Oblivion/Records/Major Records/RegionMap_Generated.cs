@@ -1070,7 +1070,8 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Map = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)RegionMap_FieldIndex.Map;
                 }
                 default:

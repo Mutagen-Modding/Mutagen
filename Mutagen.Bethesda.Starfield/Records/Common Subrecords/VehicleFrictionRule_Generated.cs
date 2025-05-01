@@ -1033,7 +1033,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             item.Rule = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthUInt8);
+                stringBinaryType: StringBinaryType.PrependLengthUInt8,
+                parseWhole: true);
             item.Friction = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 

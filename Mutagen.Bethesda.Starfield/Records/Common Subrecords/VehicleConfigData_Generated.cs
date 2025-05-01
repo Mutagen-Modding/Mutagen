@@ -8772,28 +8772,36 @@ namespace Mutagen.Bethesda.Starfield
         {
             item.NodeNamesSuspensionFrontLeft = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
+                parseWhole: true);
             item.NodeNamesSuspensionFrontRight = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
+                parseWhole: true);
             item.NodeNamesSuspensionRearLeft = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
+                parseWhole: true);
             item.NodeNamesSuspensionRearRight = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
+                parseWhole: true);
             item.NodeNamesWheelFrontLeft = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
+                parseWhole: true);
             item.NodeNamesWheelFrontRight = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
+                parseWhole: true);
             item.NodeNamesWheelRearLeft = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
+                parseWhole: true);
             item.NodeNamesWheelRearRight = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent);
+                stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
+                parseWhole: true);
             item.ChassisForwardAxis = frame.ReadUInt32();
             item.ChassisUpAxis = frame.ReadUInt32();
             item.ChassisVehicleMass = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);

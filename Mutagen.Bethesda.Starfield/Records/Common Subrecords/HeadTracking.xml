@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="HeadTracking" objType="Subrecord" markerType="HNAM" endMarkerType="HNAM" >
+    <Fields>
+      <List name="Aliases" recordType="HTID" >
+        <Int32 />
+      </List>
+      <Bool name="ForceRotate" recordType="FNAM" boolAsMarker="True" />
+      <Bool name="ForceRotateMustComplete" recordType="PNAM" boolAsMarker="True" />
+    </Fields>
+  </Object>
+</Loqui>

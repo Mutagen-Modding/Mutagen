@@ -61,11 +61,18 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkGetter<IItemGetter> IConstructibleObjectComponentGetter.Component => this.Component;
         #endregion
-        #region Count
-        public UInt32 Count { get; set; } = default(UInt32);
+        #region RequiredCount
+        public UInt32 RequiredCount { get; set; } = default(UInt32);
         #endregion
-        #region Unknown
-        public UInt32 Unknown { get; set; } = default(UInt32);
+        #region CurveTable
+        private readonly IFormLink<ICurveTableGetter> _CurveTable = new FormLink<ICurveTableGetter>();
+        public IFormLink<ICurveTableGetter> CurveTable
+        {
+            get => _CurveTable;
+            set => _CurveTable.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ICurveTableGetter> IConstructibleObjectComponentGetter.CurveTable => this.CurveTable;
         #endregion
 
         #region To String
@@ -107,18 +114,18 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.Component = initialValue;
-                this.Count = initialValue;
-                this.Unknown = initialValue;
+                this.RequiredCount = initialValue;
+                this.CurveTable = initialValue;
             }
 
             public Mask(
                 TItem Component,
-                TItem Count,
-                TItem Unknown)
+                TItem RequiredCount,
+                TItem CurveTable)
             {
                 this.Component = Component;
-                this.Count = Count;
-                this.Unknown = Unknown;
+                this.RequiredCount = RequiredCount;
+                this.CurveTable = CurveTable;
             }
 
             #pragma warning disable CS8618
@@ -131,8 +138,8 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public TItem Component;
-            public TItem Count;
-            public TItem Unknown;
+            public TItem RequiredCount;
+            public TItem CurveTable;
             #endregion
 
             #region Equals
@@ -146,16 +153,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Component, rhs.Component)) return false;
-                if (!object.Equals(this.Count, rhs.Count)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.RequiredCount, rhs.RequiredCount)) return false;
+                if (!object.Equals(this.CurveTable, rhs.CurveTable)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Component);
-                hash.Add(this.Count);
-                hash.Add(this.Unknown);
+                hash.Add(this.RequiredCount);
+                hash.Add(this.CurveTable);
                 return hash.ToHashCode();
             }
 
@@ -165,8 +172,8 @@ namespace Mutagen.Bethesda.Starfield
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Component)) return false;
-                if (!eval(this.Count)) return false;
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.RequiredCount)) return false;
+                if (!eval(this.CurveTable)) return false;
                 return true;
             }
             #endregion
@@ -175,8 +182,8 @@ namespace Mutagen.Bethesda.Starfield
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Component)) return true;
-                if (eval(this.Count)) return true;
-                if (eval(this.Unknown)) return true;
+                if (eval(this.RequiredCount)) return true;
+                if (eval(this.CurveTable)) return true;
                 return false;
             }
             #endregion
@@ -192,8 +199,8 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Component = eval(this.Component);
-                obj.Count = eval(this.Count);
-                obj.Unknown = eval(this.Unknown);
+                obj.RequiredCount = eval(this.RequiredCount);
+                obj.CurveTable = eval(this.CurveTable);
             }
             #endregion
 
@@ -216,13 +223,13 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Component, "Component");
                     }
-                    if (printMask?.Count ?? true)
+                    if (printMask?.RequiredCount ?? true)
                     {
-                        sb.AppendItem(Count, "Count");
+                        sb.AppendItem(RequiredCount, "RequiredCount");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.CurveTable ?? true)
                     {
-                        sb.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(CurveTable, "CurveTable");
                     }
                 }
             }
@@ -249,8 +256,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
             }
             public Exception? Component;
-            public Exception? Count;
-            public Exception? Unknown;
+            public Exception? RequiredCount;
+            public Exception? CurveTable;
             #endregion
 
             #region IErrorMask
@@ -261,10 +268,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case ConstructibleObjectComponent_FieldIndex.Component:
                         return Component;
-                    case ConstructibleObjectComponent_FieldIndex.Count:
-                        return Count;
-                    case ConstructibleObjectComponent_FieldIndex.Unknown:
-                        return Unknown;
+                    case ConstructibleObjectComponent_FieldIndex.RequiredCount:
+                        return RequiredCount;
+                    case ConstructibleObjectComponent_FieldIndex.CurveTable:
+                        return CurveTable;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -278,11 +285,11 @@ namespace Mutagen.Bethesda.Starfield
                     case ConstructibleObjectComponent_FieldIndex.Component:
                         this.Component = ex;
                         break;
-                    case ConstructibleObjectComponent_FieldIndex.Count:
-                        this.Count = ex;
+                    case ConstructibleObjectComponent_FieldIndex.RequiredCount:
+                        this.RequiredCount = ex;
                         break;
-                    case ConstructibleObjectComponent_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case ConstructibleObjectComponent_FieldIndex.CurveTable:
+                        this.CurveTable = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -297,11 +304,11 @@ namespace Mutagen.Bethesda.Starfield
                     case ConstructibleObjectComponent_FieldIndex.Component:
                         this.Component = (Exception?)obj;
                         break;
-                    case ConstructibleObjectComponent_FieldIndex.Count:
-                        this.Count = (Exception?)obj;
+                    case ConstructibleObjectComponent_FieldIndex.RequiredCount:
+                        this.RequiredCount = (Exception?)obj;
                         break;
-                    case ConstructibleObjectComponent_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case ConstructibleObjectComponent_FieldIndex.CurveTable:
+                        this.CurveTable = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -312,8 +319,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (Component != null) return true;
-                if (Count != null) return true;
-                if (Unknown != null) return true;
+                if (RequiredCount != null) return true;
+                if (CurveTable != null) return true;
                 return false;
             }
             #endregion
@@ -343,10 +350,10 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Component, "Component");
                 }
                 {
-                    sb.AppendItem(Count, "Count");
+                    sb.AppendItem(RequiredCount, "RequiredCount");
                 }
                 {
-                    sb.AppendItem(Unknown, "Unknown");
+                    sb.AppendItem(CurveTable, "CurveTable");
                 }
             }
             #endregion
@@ -357,8 +364,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Component = this.Component.Combine(rhs.Component);
-                ret.Count = this.Count.Combine(rhs.Count);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.RequiredCount = this.RequiredCount.Combine(rhs.RequiredCount);
+                ret.CurveTable = this.CurveTable.Combine(rhs.CurveTable);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -383,8 +390,8 @@ namespace Mutagen.Bethesda.Starfield
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Component;
-            public bool Count;
-            public bool Unknown;
+            public bool RequiredCount;
+            public bool CurveTable;
             #endregion
 
             #region Ctors
@@ -395,8 +402,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Component = defaultOn;
-                this.Count = defaultOn;
-                this.Unknown = defaultOn;
+                this.RequiredCount = defaultOn;
+                this.CurveTable = defaultOn;
             }
 
             #endregion
@@ -413,8 +420,8 @@ namespace Mutagen.Bethesda.Starfield
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Component, null));
-                ret.Add((Count, null));
-                ret.Add((Unknown, null));
+                ret.Add((RequiredCount, null));
+                ret.Add((CurveTable, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -494,8 +501,8 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IConstructibleObjectComponent>
     {
         new IFormLink<IItemGetter> Component { get; set; }
-        new UInt32 Count { get; set; }
-        new UInt32 Unknown { get; set; }
+        new UInt32 RequiredCount { get; set; }
+        new IFormLink<ICurveTableGetter> CurveTable { get; set; }
     }
 
     public partial interface IConstructibleObjectComponentGetter :
@@ -512,8 +519,8 @@ namespace Mutagen.Bethesda.Starfield
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => ConstructibleObjectComponent_Registration.Instance;
         IFormLinkGetter<IItemGetter> Component { get; }
-        UInt32 Count { get; }
-        UInt32 Unknown { get; }
+        UInt32 RequiredCount { get; }
+        IFormLinkGetter<ICurveTableGetter> CurveTable { get; }
 
     }
 
@@ -684,8 +691,8 @@ namespace Mutagen.Bethesda.Starfield
     internal enum ConstructibleObjectComponent_FieldIndex
     {
         Component = 0,
-        Count = 1,
-        Unknown = 2,
+        RequiredCount = 1,
+        CurveTable = 2,
     }
     #endregion
 
@@ -765,14 +772,15 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Component.Clear();
-            item.Count = default(UInt32);
-            item.Unknown = default(UInt32);
+            item.RequiredCount = default(UInt32);
+            item.CurveTable.Clear();
         }
         
         #region Mutagen
         public void RemapLinks(IConstructibleObjectComponent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.Component.Relink(mapping);
+            obj.CurveTable.Relink(mapping);
         }
         
         #endregion
@@ -818,8 +826,8 @@ namespace Mutagen.Bethesda.Starfield
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Component = item.Component.Equals(rhs.Component);
-            ret.Count = item.Count == rhs.Count;
-            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.RequiredCount = item.RequiredCount == rhs.RequiredCount;
+            ret.CurveTable = item.CurveTable.Equals(rhs.CurveTable);
         }
         
         public string Print(
@@ -868,13 +876,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Component.FormKey, "Component");
             }
-            if (printMask?.Count ?? true)
+            if (printMask?.RequiredCount ?? true)
             {
-                sb.AppendItem(item.Count, "Count");
+                sb.AppendItem(item.RequiredCount, "RequiredCount");
             }
-            if (printMask?.Unknown ?? true)
+            if (printMask?.CurveTable ?? true)
             {
-                sb.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.CurveTable.FormKey, "CurveTable");
             }
         }
         
@@ -889,13 +897,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Component.Equals(rhs.Component)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObjectComponent_FieldIndex.Count) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObjectComponent_FieldIndex.RequiredCount) ?? true))
             {
-                if (lhs.Count != rhs.Count) return false;
+                if (lhs.RequiredCount != rhs.RequiredCount) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObjectComponent_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObjectComponent_FieldIndex.CurveTable) ?? true))
             {
-                if (lhs.Unknown != rhs.Unknown) return false;
+                if (!lhs.CurveTable.Equals(rhs.CurveTable)) return false;
             }
             return true;
         }
@@ -904,8 +912,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             var hash = new HashCode();
             hash.Add(item.Component);
-            hash.Add(item.Count);
-            hash.Add(item.Unknown);
+            hash.Add(item.RequiredCount);
+            hash.Add(item.CurveTable);
             return hash.ToHashCode();
         }
         
@@ -921,6 +929,7 @@ namespace Mutagen.Bethesda.Starfield
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IConstructibleObjectComponentGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Component);
+            yield return FormLinkInformation.Factory(obj.CurveTable);
             yield break;
         }
         
@@ -943,13 +952,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Component.SetTo(rhs.Component.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)ConstructibleObjectComponent_FieldIndex.Count) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObjectComponent_FieldIndex.RequiredCount) ?? true))
             {
-                item.Count = rhs.Count;
+                item.RequiredCount = rhs.RequiredCount;
             }
-            if ((copyMask?.GetShouldTranslate((int)ConstructibleObjectComponent_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObjectComponent_FieldIndex.CurveTable) ?? true))
             {
-                item.Unknown = rhs.Unknown;
+                item.CurveTable.SetTo(rhs.CurveTable.FormKey);
             }
             DeepCopyInCustom(
                 item: item,
@@ -1062,8 +1071,10 @@ namespace Mutagen.Bethesda.Starfield
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Component);
-            writer.Write(item.Count);
-            writer.Write(item.Unknown);
+            writer.Write(item.RequiredCount);
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.CurveTable);
         }
 
         public void Write(
@@ -1098,8 +1109,8 @@ namespace Mutagen.Bethesda.Starfield
             MutagenFrame frame)
         {
             item.Component.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Count = frame.ReadUInt32();
-            item.Unknown = frame.ReadUInt32();
+            item.RequiredCount = frame.ReadUInt32();
+            item.CurveTable.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }
@@ -1167,8 +1178,8 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public IFormLinkGetter<IItemGetter> Component => FormLinkBinaryTranslation.Instance.OverlayFactory<IItemGetter>(_package, _structData.Span.Slice(0x0, 0x4));
-        public UInt32 Count => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
-        public UInt32 Unknown => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x8, 0x4));
+        public UInt32 RequiredCount => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
+        public IFormLinkGetter<ICurveTableGetter> CurveTable => FormLinkBinaryTranslation.Instance.OverlayFactory<ICurveTableGetter>(_package, _structData.Span.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

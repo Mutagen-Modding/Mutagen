@@ -3,20 +3,19 @@
   <Object name="AcousticSpace" recordType="ASPC" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <Float name="ODTY" recordType="ODTY" unknown="true" />
-      <Float name="ODRT" recordType="ODRT" unknown="true" />
-      <RefDirect name="ASLS" recordType="ASLS" unknown="true" refName="SoundReference" />
-      <RefDirect name="WED0" recordType="WED0" unknown="true" refName="SoundReference" />
-      <RefDirect name="WED1" recordType="WED1" unknown="true" refName="SoundReference" />
+      <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
+      <RefDirect name="LoopingSound" recordType="ASLS" refName="SoundReference" />
+      <RefDirect name="InteriorSound" recordType="WED0" refName="SoundReference" />
+      <RefDirect name="ExteriorSound" recordType="WED1" refName="SoundReference" />
       <FormLink name="AmbientSet" refName="AmbienceSet" recordType="AAMB" />
-      <FormLink name="Music" refName="MusicType" recordType="AMUS" />
+      <FormLink name="MusicType" refName="MusicType" recordType="AMUS" />
       <FormLink name="EnvironmentType" refName="ReverbParameters" recordType="BNAM" />
-      <Float name="AEAR" recordType="AEAR" unknown="true" />
-      <Float name="FLTV" recordType="FLTV" unknown="true" />
+      <Float name="ExteriorWeatherAttenuation" recordType="AEAR" nullable="false" />
+      <Float name="InteriorExteriorRatio" recordType="FLTV" />
       <Bool name="IsInterior" recordType="XTRI" byteLength="1" nullable="false" />
-      <Bool name="BOLV" recordType="BOLV" byteLength="1" />
-      <ByteArray name="DEVT" recordType="DEVT" />
-      <ByteArray name="ASDF" recordType="ASDF" />
+      <Bool name="AllowExterior" recordType="BOLV" byteLength="1" nullable="false" />
+      <Enum name="SoundDetectionLevel" recordType="DEVT" enumName="SoundLevel" byteLength="4" />
+      <Enum name="DisableFlags" recordType="ASDF" enumName="SoundLevel" byteLength="8" />
     </Fields>
     <LinkInterface>IBaseObject</LinkInterface>
   </Object>

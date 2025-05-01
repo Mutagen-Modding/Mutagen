@@ -147,7 +147,7 @@ public class RecordCompactionCompatibilityDetector : IRecordCompactionCompatibil
         {
             throw new FormIDCompactionOutOfBoundsException(
                 small: mod.IsSmallMaster,
-                Medium: mod.IsMediumMaster,
+                medium: mod.IsMediumMaster,
                 range: range,
                 outOfBounds: rec
             );

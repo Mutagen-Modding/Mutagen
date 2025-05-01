@@ -138,7 +138,8 @@ public static class IGroupMixIns
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, source.FormKey, group.ContainedRecordRegistration.ClassType, source.EditorID);
+            RecordException.EnrichAndThrow(ex, source.FormKey, group.ContainedRecordRegistration.ClassType, source.EditorID);
+            throw;
         }
     }
 
@@ -161,7 +162,8 @@ public static class IGroupMixIns
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich<TMajor>(ex, source.FormKey, source.EditorID);
+            RecordException.EnrichAndThrow<TMajor>(ex, source.FormKey, source.EditorID);
+            throw;
         }
     }
 
@@ -213,12 +215,17 @@ public static class IGroupMixIns
             {
                 throw new InvalidOperationException($"Duplicate did not return a record of the expected type {typeof(TMajor).Name}");
             }
+            if (edid != null)
+            {
+                dup.EditorID = edid;
+            }
             group.Add(newRec);
             return newRec;
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich<TMajor>(ex, source.FormKey, source.EditorID);
+            RecordException.EnrichAndThrow<TMajor>(ex, source.FormKey, source.EditorID);
+            throw;
         }
     }
 
@@ -250,12 +257,17 @@ public static class IGroupMixIns
         try
         {
             var newRec = source.Duplicate(formKey ?? group.SourceMod.GetNextFormKey(edid));
+            if (edid != null)
+            {
+                newRec.EditorID = edid;
+            }
             group.AddUntyped(newRec);
             return newRec;
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, source.FormKey, group.ContainedRecordRegistration.ClassType, source.EditorID);
+            RecordException.EnrichAndThrow(ex, source.FormKey, group.ContainedRecordRegistration.ClassType, source.EditorID);
+            throw;
         }
     }
 

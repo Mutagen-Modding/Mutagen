@@ -3,9 +3,9 @@
   <Object name="ActorValueModulation" recordType="AVMD" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
       <RefList name="Components" refName="AComponent" />
-      <Enum name="Type" enumName="ActorValueModulation.TypeEnum" byteLength="4" recordType="MNAM" nullable="False" />
-      <String name="YNAM" recordType="YNAM" />
-      <String name="Name" recordType="TNAM" nullable="False" />
+      <Enum name="Type" enumName="ActorValueModulation.GroupType" byteLength="4" recordType="MNAM" nullable="False" />
+      <String name="YNAM" recordType="YNAM" nullable="False" />
+      <String name="TNAM" recordType="TNAM" nullable="False" />
       <RefList name="Entries" refName="ActorValueModulationEntry" counterRecType="ITMC" />
       <Enum name="TextureType" enumName="ActorValueModulation.TextureTypeEnum" recordType="MODT" byteLength="4" />
       <FormLink name="Parent" refName="ActorValueModulation" recordType="AVMP" />
@@ -13,8 +13,8 @@
   </Object>
   <Object name="ActorValueModulationEntry" objType="Subrecord">
     <Fields>
-      <String name="LNAM" recordType="LNAM" nullable="False" />
-      <String name="VNAM" recordType="VNAM" />
+      <String name="Name" recordType="LNAM" nullable="False" />
+      <String name="Value" recordType="VNAM" />
       <Color name="Color" recordType="NNAM" binaryType="Alpha" />
     </Fields>
   </Object>

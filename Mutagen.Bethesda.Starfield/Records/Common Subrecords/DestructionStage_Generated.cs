@@ -1112,8 +1112,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.DMDL,
                 RecordTypes.DMDT,
                 RecordTypes.MOLM,
-                RecordTypes.DMDC,
-                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
@@ -1799,14 +1797,13 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SequenceName = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)DestructionStage_FieldIndex.SequenceName;
                 }
                 case RecordTypeInts.DMDL:
                 case RecordTypeInts.DMDT:
                 case RecordTypeInts.MOLM:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -2030,8 +2027,6 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DMDL:
                 case RecordTypeInts.DMDT:
                 case RecordTypeInts.MOLM:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:

@@ -1370,6 +1370,13 @@ namespace Mutagen.Bethesda.Starfield
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
+                case "IBiomeObjectPackInTarget":
+                case "IBiomeObjectPackInTargetGetter":
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
                 case "IPlaced":
                 case "IPlacedGetter":
                     foreach (var subItem in obj.SubBlocks)

@@ -57,10 +57,7 @@ namespace Mutagen.Bethesda.Starfield
         public UInt16 EndHour { get; set; } = default(UInt16);
         #endregion
         #region Radius
-        public UInt16 Radius { get; set; } = default(UInt16);
-        #endregion
-        #region Unknown
-        public UInt16 Unknown { get; set; } = default(UInt16);
+        public Single Radius { get; set; } = default(Single);
         #endregion
         #region BuysStolenItems
         public Boolean BuysStolenItems { get; set; } = default(Boolean);
@@ -71,8 +68,8 @@ namespace Mutagen.Bethesda.Starfield
         #region BuysNonStolenItems
         public Boolean BuysNonStolenItems { get; set; } = default(Boolean);
         #endregion
-        #region Unknown2
-        public Byte Unknown2 { get; set; } = default(Byte);
+        #region Unknown
+        public Byte Unknown { get; set; } = default(Byte);
         #endregion
 
         #region To String
@@ -116,31 +113,28 @@ namespace Mutagen.Bethesda.Starfield
                 this.StartHour = initialValue;
                 this.EndHour = initialValue;
                 this.Radius = initialValue;
-                this.Unknown = initialValue;
                 this.BuysStolenItems = initialValue;
                 this.BuySellEverythingNotInList = initialValue;
                 this.BuysNonStolenItems = initialValue;
-                this.Unknown2 = initialValue;
+                this.Unknown = initialValue;
             }
 
             public Mask(
                 TItem StartHour,
                 TItem EndHour,
                 TItem Radius,
-                TItem Unknown,
                 TItem BuysStolenItems,
                 TItem BuySellEverythingNotInList,
                 TItem BuysNonStolenItems,
-                TItem Unknown2)
+                TItem Unknown)
             {
                 this.StartHour = StartHour;
                 this.EndHour = EndHour;
                 this.Radius = Radius;
-                this.Unknown = Unknown;
                 this.BuysStolenItems = BuysStolenItems;
                 this.BuySellEverythingNotInList = BuySellEverythingNotInList;
                 this.BuysNonStolenItems = BuysNonStolenItems;
-                this.Unknown2 = Unknown2;
+                this.Unknown = Unknown;
             }
 
             #pragma warning disable CS8618
@@ -155,11 +149,10 @@ namespace Mutagen.Bethesda.Starfield
             public TItem StartHour;
             public TItem EndHour;
             public TItem Radius;
-            public TItem Unknown;
             public TItem BuysStolenItems;
             public TItem BuySellEverythingNotInList;
             public TItem BuysNonStolenItems;
-            public TItem Unknown2;
+            public TItem Unknown;
             #endregion
 
             #region Equals
@@ -175,11 +168,10 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.StartHour, rhs.StartHour)) return false;
                 if (!object.Equals(this.EndHour, rhs.EndHour)) return false;
                 if (!object.Equals(this.Radius, rhs.Radius)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.BuysStolenItems, rhs.BuysStolenItems)) return false;
                 if (!object.Equals(this.BuySellEverythingNotInList, rhs.BuySellEverythingNotInList)) return false;
                 if (!object.Equals(this.BuysNonStolenItems, rhs.BuysNonStolenItems)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -188,11 +180,10 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.StartHour);
                 hash.Add(this.EndHour);
                 hash.Add(this.Radius);
-                hash.Add(this.Unknown);
                 hash.Add(this.BuysStolenItems);
                 hash.Add(this.BuySellEverythingNotInList);
                 hash.Add(this.BuysNonStolenItems);
-                hash.Add(this.Unknown2);
+                hash.Add(this.Unknown);
                 return hash.ToHashCode();
             }
 
@@ -204,11 +195,10 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.StartHour)) return false;
                 if (!eval(this.EndHour)) return false;
                 if (!eval(this.Radius)) return false;
-                if (!eval(this.Unknown)) return false;
                 if (!eval(this.BuysStolenItems)) return false;
                 if (!eval(this.BuySellEverythingNotInList)) return false;
                 if (!eval(this.BuysNonStolenItems)) return false;
-                if (!eval(this.Unknown2)) return false;
+                if (!eval(this.Unknown)) return false;
                 return true;
             }
             #endregion
@@ -219,11 +209,10 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.StartHour)) return true;
                 if (eval(this.EndHour)) return true;
                 if (eval(this.Radius)) return true;
-                if (eval(this.Unknown)) return true;
                 if (eval(this.BuysStolenItems)) return true;
                 if (eval(this.BuySellEverythingNotInList)) return true;
                 if (eval(this.BuysNonStolenItems)) return true;
-                if (eval(this.Unknown2)) return true;
+                if (eval(this.Unknown)) return true;
                 return false;
             }
             #endregion
@@ -241,11 +230,10 @@ namespace Mutagen.Bethesda.Starfield
                 obj.StartHour = eval(this.StartHour);
                 obj.EndHour = eval(this.EndHour);
                 obj.Radius = eval(this.Radius);
-                obj.Unknown = eval(this.Unknown);
                 obj.BuysStolenItems = eval(this.BuysStolenItems);
                 obj.BuySellEverythingNotInList = eval(this.BuySellEverythingNotInList);
                 obj.BuysNonStolenItems = eval(this.BuysNonStolenItems);
-                obj.Unknown2 = eval(this.Unknown2);
+                obj.Unknown = eval(this.Unknown);
             }
             #endregion
 
@@ -276,10 +264,6 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Radius, "Radius");
                     }
-                    if (printMask?.Unknown ?? true)
-                    {
-                        sb.AppendItem(Unknown, "Unknown");
-                    }
                     if (printMask?.BuysStolenItems ?? true)
                     {
                         sb.AppendItem(BuysStolenItems, "BuysStolenItems");
@@ -292,9 +276,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(BuysNonStolenItems, "BuysNonStolenItems");
                     }
-                    if (printMask?.Unknown2 ?? true)
+                    if (printMask?.Unknown ?? true)
                     {
-                        sb.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                 }
             }
@@ -323,11 +307,10 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? StartHour;
             public Exception? EndHour;
             public Exception? Radius;
-            public Exception? Unknown;
             public Exception? BuysStolenItems;
             public Exception? BuySellEverythingNotInList;
             public Exception? BuysNonStolenItems;
-            public Exception? Unknown2;
+            public Exception? Unknown;
             #endregion
 
             #region IErrorMask
@@ -342,16 +325,14 @@ namespace Mutagen.Bethesda.Starfield
                         return EndHour;
                     case VendorValues_FieldIndex.Radius:
                         return Radius;
-                    case VendorValues_FieldIndex.Unknown:
-                        return Unknown;
                     case VendorValues_FieldIndex.BuysStolenItems:
                         return BuysStolenItems;
                     case VendorValues_FieldIndex.BuySellEverythingNotInList:
                         return BuySellEverythingNotInList;
                     case VendorValues_FieldIndex.BuysNonStolenItems:
                         return BuysNonStolenItems;
-                    case VendorValues_FieldIndex.Unknown2:
-                        return Unknown2;
+                    case VendorValues_FieldIndex.Unknown:
+                        return Unknown;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -371,9 +352,6 @@ namespace Mutagen.Bethesda.Starfield
                     case VendorValues_FieldIndex.Radius:
                         this.Radius = ex;
                         break;
-                    case VendorValues_FieldIndex.Unknown:
-                        this.Unknown = ex;
-                        break;
                     case VendorValues_FieldIndex.BuysStolenItems:
                         this.BuysStolenItems = ex;
                         break;
@@ -383,8 +361,8 @@ namespace Mutagen.Bethesda.Starfield
                     case VendorValues_FieldIndex.BuysNonStolenItems:
                         this.BuysNonStolenItems = ex;
                         break;
-                    case VendorValues_FieldIndex.Unknown2:
-                        this.Unknown2 = ex;
+                    case VendorValues_FieldIndex.Unknown:
+                        this.Unknown = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -405,9 +383,6 @@ namespace Mutagen.Bethesda.Starfield
                     case VendorValues_FieldIndex.Radius:
                         this.Radius = (Exception?)obj;
                         break;
-                    case VendorValues_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
-                        break;
                     case VendorValues_FieldIndex.BuysStolenItems:
                         this.BuysStolenItems = (Exception?)obj;
                         break;
@@ -417,8 +392,8 @@ namespace Mutagen.Bethesda.Starfield
                     case VendorValues_FieldIndex.BuysNonStolenItems:
                         this.BuysNonStolenItems = (Exception?)obj;
                         break;
-                    case VendorValues_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception?)obj;
+                    case VendorValues_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -431,11 +406,10 @@ namespace Mutagen.Bethesda.Starfield
                 if (StartHour != null) return true;
                 if (EndHour != null) return true;
                 if (Radius != null) return true;
-                if (Unknown != null) return true;
                 if (BuysStolenItems != null) return true;
                 if (BuySellEverythingNotInList != null) return true;
                 if (BuysNonStolenItems != null) return true;
-                if (Unknown2 != null) return true;
+                if (Unknown != null) return true;
                 return false;
             }
             #endregion
@@ -471,9 +445,6 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Radius, "Radius");
                 }
                 {
-                    sb.AppendItem(Unknown, "Unknown");
-                }
-                {
                     sb.AppendItem(BuysStolenItems, "BuysStolenItems");
                 }
                 {
@@ -483,7 +454,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(BuysNonStolenItems, "BuysNonStolenItems");
                 }
                 {
-                    sb.AppendItem(Unknown2, "Unknown2");
+                    sb.AppendItem(Unknown, "Unknown");
                 }
             }
             #endregion
@@ -496,11 +467,10 @@ namespace Mutagen.Bethesda.Starfield
                 ret.StartHour = this.StartHour.Combine(rhs.StartHour);
                 ret.EndHour = this.EndHour.Combine(rhs.EndHour);
                 ret.Radius = this.Radius.Combine(rhs.Radius);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.BuysStolenItems = this.BuysStolenItems.Combine(rhs.BuysStolenItems);
                 ret.BuySellEverythingNotInList = this.BuySellEverythingNotInList.Combine(rhs.BuySellEverythingNotInList);
                 ret.BuysNonStolenItems = this.BuysNonStolenItems.Combine(rhs.BuysNonStolenItems);
-                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -527,11 +497,10 @@ namespace Mutagen.Bethesda.Starfield
             public bool StartHour;
             public bool EndHour;
             public bool Radius;
-            public bool Unknown;
             public bool BuysStolenItems;
             public bool BuySellEverythingNotInList;
             public bool BuysNonStolenItems;
-            public bool Unknown2;
+            public bool Unknown;
             #endregion
 
             #region Ctors
@@ -544,11 +513,10 @@ namespace Mutagen.Bethesda.Starfield
                 this.StartHour = defaultOn;
                 this.EndHour = defaultOn;
                 this.Radius = defaultOn;
-                this.Unknown = defaultOn;
                 this.BuysStolenItems = defaultOn;
                 this.BuySellEverythingNotInList = defaultOn;
                 this.BuysNonStolenItems = defaultOn;
-                this.Unknown2 = defaultOn;
+                this.Unknown = defaultOn;
             }
 
             #endregion
@@ -567,11 +535,10 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((StartHour, null));
                 ret.Add((EndHour, null));
                 ret.Add((Radius, null));
-                ret.Add((Unknown, null));
                 ret.Add((BuysStolenItems, null));
                 ret.Add((BuySellEverythingNotInList, null));
                 ret.Add((BuysNonStolenItems, null));
-                ret.Add((Unknown2, null));
+                ret.Add((Unknown, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -646,12 +613,11 @@ namespace Mutagen.Bethesda.Starfield
     {
         new UInt16 StartHour { get; set; }
         new UInt16 EndHour { get; set; }
-        new UInt16 Radius { get; set; }
-        new UInt16 Unknown { get; set; }
+        new Single Radius { get; set; }
         new Boolean BuysStolenItems { get; set; }
         new Boolean BuySellEverythingNotInList { get; set; }
         new Boolean BuysNonStolenItems { get; set; }
-        new Byte Unknown2 { get; set; }
+        new Byte Unknown { get; set; }
     }
 
     public partial interface IVendorValuesGetter :
@@ -668,12 +634,11 @@ namespace Mutagen.Bethesda.Starfield
         static ILoquiRegistration StaticRegistration => VendorValues_Registration.Instance;
         UInt16 StartHour { get; }
         UInt16 EndHour { get; }
-        UInt16 Radius { get; }
-        UInt16 Unknown { get; }
+        Single Radius { get; }
         Boolean BuysStolenItems { get; }
         Boolean BuySellEverythingNotInList { get; }
         Boolean BuysNonStolenItems { get; }
-        Byte Unknown2 { get; }
+        Byte Unknown { get; }
 
     }
 
@@ -846,11 +811,10 @@ namespace Mutagen.Bethesda.Starfield
         StartHour = 0,
         EndHour = 1,
         Radius = 2,
-        Unknown = 3,
-        BuysStolenItems = 4,
-        BuySellEverythingNotInList = 5,
-        BuysNonStolenItems = 6,
-        Unknown2 = 7,
+        BuysStolenItems = 3,
+        BuySellEverythingNotInList = 4,
+        BuysNonStolenItems = 5,
+        Unknown = 6,
     }
     #endregion
 
@@ -861,9 +825,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(VendorValues.Mask<>);
 
@@ -938,12 +902,11 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.StartHour = default(UInt16);
             item.EndHour = default(UInt16);
-            item.Radius = default(UInt16);
-            item.Unknown = default(UInt16);
+            item.Radius = default(Single);
             item.BuysStolenItems = default(Boolean);
             item.BuySellEverythingNotInList = default(Boolean);
             item.BuysNonStolenItems = default(Boolean);
-            item.Unknown2 = default(Byte);
+            item.Unknown = default(Byte);
         }
         
         #region Mutagen
@@ -999,12 +962,11 @@ namespace Mutagen.Bethesda.Starfield
         {
             ret.StartHour = item.StartHour == rhs.StartHour;
             ret.EndHour = item.EndHour == rhs.EndHour;
-            ret.Radius = item.Radius == rhs.Radius;
-            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.Radius = item.Radius.EqualsWithin(rhs.Radius);
             ret.BuysStolenItems = item.BuysStolenItems == rhs.BuysStolenItems;
             ret.BuySellEverythingNotInList = item.BuySellEverythingNotInList == rhs.BuySellEverythingNotInList;
             ret.BuysNonStolenItems = item.BuysNonStolenItems == rhs.BuysNonStolenItems;
-            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
+            ret.Unknown = item.Unknown == rhs.Unknown;
         }
         
         public string Print(
@@ -1061,10 +1023,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Radius, "Radius");
             }
-            if (printMask?.Unknown ?? true)
-            {
-                sb.AppendItem(item.Unknown, "Unknown");
-            }
             if (printMask?.BuysStolenItems ?? true)
             {
                 sb.AppendItem(item.BuysStolenItems, "BuysStolenItems");
@@ -1077,9 +1035,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.BuysNonStolenItems, "BuysNonStolenItems");
             }
-            if (printMask?.Unknown2 ?? true)
+            if (printMask?.Unknown ?? true)
             {
-                sb.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendItem(item.Unknown, "Unknown");
             }
         }
         
@@ -1100,11 +1058,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)VendorValues_FieldIndex.Radius) ?? true))
             {
-                if (lhs.Radius != rhs.Radius) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)VendorValues_FieldIndex.Unknown) ?? true))
-            {
-                if (lhs.Unknown != rhs.Unknown) return false;
+                if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)VendorValues_FieldIndex.BuysStolenItems) ?? true))
             {
@@ -1118,9 +1072,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.BuysNonStolenItems != rhs.BuysNonStolenItems) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)VendorValues_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)VendorValues_FieldIndex.Unknown) ?? true))
             {
-                if (lhs.Unknown2 != rhs.Unknown2) return false;
+                if (lhs.Unknown != rhs.Unknown) return false;
             }
             return true;
         }
@@ -1131,11 +1085,10 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.StartHour);
             hash.Add(item.EndHour);
             hash.Add(item.Radius);
-            hash.Add(item.Unknown);
             hash.Add(item.BuysStolenItems);
             hash.Add(item.BuySellEverythingNotInList);
             hash.Add(item.BuysNonStolenItems);
-            hash.Add(item.Unknown2);
+            hash.Add(item.Unknown);
             return hash.ToHashCode();
         }
         
@@ -1180,10 +1133,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Radius = rhs.Radius;
             }
-            if ((copyMask?.GetShouldTranslate((int)VendorValues_FieldIndex.Unknown) ?? true))
-            {
-                item.Unknown = rhs.Unknown;
-            }
             if ((copyMask?.GetShouldTranslate((int)VendorValues_FieldIndex.BuysStolenItems) ?? true))
             {
                 item.BuysStolenItems = rhs.BuysStolenItems;
@@ -1196,9 +1145,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.BuysNonStolenItems = rhs.BuysNonStolenItems;
             }
-            if ((copyMask?.GetShouldTranslate((int)VendorValues_FieldIndex.Unknown2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)VendorValues_FieldIndex.Unknown) ?? true))
             {
-                item.Unknown2 = rhs.Unknown2;
+                item.Unknown = rhs.Unknown;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1310,12 +1259,13 @@ namespace Mutagen.Bethesda.Starfield
         {
             writer.Write(item.StartHour);
             writer.Write(item.EndHour);
-            writer.Write(item.Radius);
-            writer.Write(item.Unknown);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Radius);
             writer.Write(item.BuysStolenItems);
             writer.Write(item.BuySellEverythingNotInList);
             writer.Write(item.BuysNonStolenItems);
-            writer.Write(item.Unknown2);
+            writer.Write(item.Unknown);
         }
 
         public void Write(
@@ -1358,12 +1308,11 @@ namespace Mutagen.Bethesda.Starfield
         {
             item.StartHour = frame.ReadUInt16();
             item.EndHour = frame.ReadUInt16();
-            item.Radius = frame.ReadUInt16();
-            item.Unknown = frame.ReadUInt16();
+            item.Radius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.BuysStolenItems = frame.ReadBoolean();
             item.BuySellEverythingNotInList = frame.ReadBoolean();
             item.BuysNonStolenItems = frame.ReadBoolean();
-            item.Unknown2 = frame.ReadUInt8();
+            item.Unknown = frame.ReadUInt8();
         }
 
     }
@@ -1431,12 +1380,11 @@ namespace Mutagen.Bethesda.Starfield
 
         public UInt16 StartHour => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x0, 0x2));
         public UInt16 EndHour => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x2, 0x2));
-        public UInt16 Radius => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x4, 0x2));
-        public UInt16 Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x6, 0x2));
+        public Single Radius => _structData.Slice(0x4, 0x4).Float();
         public Boolean BuysStolenItems => _structData.Slice(0x8, 0x1)[0] >= 1;
         public Boolean BuySellEverythingNotInList => _structData.Slice(0x9, 0x1)[0] >= 1;
         public Boolean BuysNonStolenItems => _structData.Slice(0xA, 0x1)[0] >= 1;
-        public Byte Unknown2 => _structData.Span[0xB];
+        public Byte Unknown => _structData.Span[0xB];
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -1,7 +1,8 @@
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
+using Noggog.Testing.Extensions;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Skyrim;
@@ -15,7 +16,7 @@ public abstract class AModHeaderOverflowTests
     {
         var race = Get(new ModPath(ModKey.Null, TestDataPathing.HeaderOverflow));
         race.ModHeader.MasterReferences.Select(x => x.Master.ToString())
-            .Should().Equal("Dawnguard.esm");
+            .ShouldEqual("Dawnguard.esm");
     }
 }
 

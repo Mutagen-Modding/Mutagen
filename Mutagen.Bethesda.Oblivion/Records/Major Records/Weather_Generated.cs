@@ -2184,7 +2184,8 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TextureLowerLayer = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Weather_FieldIndex.TextureLowerLayer;
                 }
                 case RecordTypeInts.DNAM:
@@ -2192,7 +2193,8 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TextureUpperLayer = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Weather_FieldIndex.TextureUpperLayer;
                 }
                 case RecordTypeInts.MODL:

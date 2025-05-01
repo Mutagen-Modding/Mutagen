@@ -83,7 +83,7 @@ public static class OverrideMixIns
     {
         return modListings
             .Select(l => l.Mod)
-            .NotNull()
+            .WhereNotNull()
             .WinningOverrides<TMajor>(includeDeletedRecords: includeDeletedRecords);
     }
 
@@ -109,7 +109,7 @@ public static class OverrideMixIns
     {
         return modListings
             .Select(l => l.Mod)
-            .NotNull()
+            .WhereNotNull()
             .WinningOverrides(type, includeDeletedRecords: includeDeletedRecords);
     }
 
@@ -275,7 +275,7 @@ public static class OverrideMixIns
     {
         return modListings
             .Select(l => l.Mod)
-            .NotNull()
+            .WhereNotNull()
             .WinningContextOverrides<TMod, TModGetter, TSetter, TGetter>(linkCache, includeDeletedRecords: includeDeletedRecords);
     }
 
@@ -310,7 +310,7 @@ public static class OverrideMixIns
     {
         return modListings
             .Select(l => l.Mod)
-            .NotNull()
+            .WhereNotNull()
             .WinningContextOverrides<TMod, TModGetter>(linkCache, type, includeDeletedRecords: includeDeletedRecords);
     }
 
@@ -392,7 +392,8 @@ public static class OverrideMixIns
             foreach (var record in mod.EnumerateMajorRecordContexts(linkCache, type)
                          .Catch((e) =>
                          {
-                             throw RecordException.Enrich(e, mod.ModKey);
+                             RecordException.EnrichAndThrow(e, mod.ModKey);
+                             throw e;
                          }))
             {
                 if (!passedRecords.Add(record.Record.FormKey)) continue;
@@ -632,7 +633,8 @@ public static class OverrideMixIns
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich<TMajor>(ex, major.FormKey, major.EditorID);
+            RecordException.EnrichAndThrow<TMajor>(ex, major.FormKey, major.EditorID);
+            throw;
         }
     }
 
@@ -665,7 +667,8 @@ public static class OverrideMixIns
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich<TMajor>(ex, link.FormKey, edid: null);
+            RecordException.EnrichAndThrow<TMajor>(ex, link.FormKey, edid: null);
+            throw;
         }
     }
 

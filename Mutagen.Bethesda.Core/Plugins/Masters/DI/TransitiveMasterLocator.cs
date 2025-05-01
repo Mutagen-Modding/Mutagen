@@ -10,6 +10,8 @@ namespace Mutagen.Bethesda.Plugins.Masters.DI;
 public interface ITransitiveMasterLocator
 {
     IReadOnlyCollection<ModKey> GetAllMasters(
+        IReadOnlyCollection<ModKey> mods);
+    IReadOnlyCollection<ModKey> GetAllMasters(
         ModKey self,
         IEnumerable<ModKey> mods);
     IReadOnlyCollection<ModKey> GetAllMasters(
@@ -32,6 +34,14 @@ public class TransitiveMasterLocator : ITransitiveMasterLocator
         _fileSystem = fileSystem;
         _dataDirectoryProvider = dataDirectoryProvider;
         _gameReleaseContext = gameReleaseContext;
+    }
+    
+    public IReadOnlyCollection<ModKey> GetAllMasters(
+        IReadOnlyCollection<ModKey> mods)
+    {
+        return mods
+            .SelectMany(x => GetAllMasters(x, mods, alreadyLocatedMods: null))
+            .ToHashSet();
     }
     
     public IReadOnlyCollection<ModKey> GetAllMasters(

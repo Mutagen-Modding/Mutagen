@@ -68,15 +68,25 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
-        #region Quest
-        private readonly IFormLinkNullable<IQuestGetter> _Quest = new FormLinkNullable<IQuestGetter>();
-        public IFormLinkNullable<IQuestGetter> Quest
+        #region OwnerQuest
+        private readonly IFormLinkNullable<IQuestGetter> _OwnerQuest = new FormLinkNullable<IQuestGetter>();
+        public IFormLinkNullable<IQuestGetter> OwnerQuest
         {
-            get => _Quest;
-            set => _Quest.SetTo(value);
+            get => _OwnerQuest;
+            set => _OwnerQuest.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IQuestGetter> IConditionRecordGetter.Quest => this.Quest;
+        IFormLinkNullableGetter<IQuestGetter> IConditionRecordGetter.OwnerQuest => this.OwnerQuest;
+        #endregion
+        #region OwnerPackage
+        private readonly IFormLinkNullable<IPackageGetter> _OwnerPackage = new FormLinkNullable<IPackageGetter>();
+        public IFormLinkNullable<IPackageGetter> OwnerPackage
+        {
+            get => _OwnerPackage;
+            set => _OwnerPackage.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPackageGetter> IConditionRecordGetter.OwnerPackage => this.OwnerPackage;
         #endregion
 
         #region To String
@@ -104,7 +114,8 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.Quest = initialValue;
+                this.OwnerQuest = initialValue;
+                this.OwnerPackage = initialValue;
             }
 
             public Mask(
@@ -116,7 +127,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
                 TItem Conditions,
-                TItem Quest)
+                TItem OwnerQuest,
+                TItem OwnerPackage)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -127,7 +139,8 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.Quest = Quest;
+                this.OwnerQuest = OwnerQuest;
+                this.OwnerPackage = OwnerPackage;
             }
 
             #pragma warning disable CS8618
@@ -140,7 +153,8 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
-            public TItem Quest;
+            public TItem OwnerQuest;
+            public TItem OwnerPackage;
             #endregion
 
             #region Equals
@@ -155,14 +169,16 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
-                if (!object.Equals(this.Quest, rhs.Quest)) return false;
+                if (!object.Equals(this.OwnerQuest, rhs.OwnerQuest)) return false;
+                if (!object.Equals(this.OwnerPackage, rhs.OwnerPackage)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Conditions);
-                hash.Add(this.Quest);
+                hash.Add(this.OwnerQuest);
+                hash.Add(this.OwnerPackage);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -185,7 +201,8 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (!eval(this.Quest)) return false;
+                if (!eval(this.OwnerQuest)) return false;
+                if (!eval(this.OwnerPackage)) return false;
                 return true;
             }
             #endregion
@@ -206,7 +223,8 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (eval(this.Quest)) return true;
+                if (eval(this.OwnerQuest)) return true;
+                if (eval(this.OwnerPackage)) return true;
                 return false;
             }
             #endregion
@@ -237,7 +255,8 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                obj.Quest = eval(this.Quest);
+                obj.OwnerQuest = eval(this.OwnerQuest);
+                obj.OwnerPackage = eval(this.OwnerPackage);
             }
             #endregion
 
@@ -275,9 +294,13 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.Quest ?? true)
+                    if (printMask?.OwnerQuest ?? true)
                     {
-                        sb.AppendItem(Quest, "Quest");
+                        sb.AppendItem(OwnerQuest, "OwnerQuest");
+                    }
+                    if (printMask?.OwnerPackage ?? true)
+                    {
+                        sb.AppendItem(OwnerPackage, "OwnerPackage");
                     }
                 }
             }
@@ -291,7 +314,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
-            public Exception? Quest;
+            public Exception? OwnerQuest;
+            public Exception? OwnerPackage;
             #endregion
 
             #region IErrorMask
@@ -302,8 +326,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case ConditionRecord_FieldIndex.Conditions:
                         return Conditions;
-                    case ConditionRecord_FieldIndex.Quest:
-                        return Quest;
+                    case ConditionRecord_FieldIndex.OwnerQuest:
+                        return OwnerQuest;
+                    case ConditionRecord_FieldIndex.OwnerPackage:
+                        return OwnerPackage;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -317,8 +343,11 @@ namespace Mutagen.Bethesda.Starfield
                     case ConditionRecord_FieldIndex.Conditions:
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
                         break;
-                    case ConditionRecord_FieldIndex.Quest:
-                        this.Quest = ex;
+                    case ConditionRecord_FieldIndex.OwnerQuest:
+                        this.OwnerQuest = ex;
+                        break;
+                    case ConditionRecord_FieldIndex.OwnerPackage:
+                        this.OwnerPackage = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -334,8 +363,11 @@ namespace Mutagen.Bethesda.Starfield
                     case ConditionRecord_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
                         break;
-                    case ConditionRecord_FieldIndex.Quest:
-                        this.Quest = (Exception?)obj;
+                    case ConditionRecord_FieldIndex.OwnerQuest:
+                        this.OwnerQuest = (Exception?)obj;
+                        break;
+                    case ConditionRecord_FieldIndex.OwnerPackage:
+                        this.OwnerPackage = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -347,7 +379,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (Conditions != null) return true;
-                if (Quest != null) return true;
+                if (OwnerQuest != null) return true;
+                if (OwnerPackage != null) return true;
                 return false;
             }
             #endregion
@@ -393,7 +426,10 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 {
-                    sb.AppendItem(Quest, "Quest");
+                    sb.AppendItem(OwnerQuest, "OwnerQuest");
+                }
+                {
+                    sb.AppendItem(OwnerPackage, "OwnerPackage");
                 }
             }
             #endregion
@@ -404,7 +440,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-                ret.Quest = this.Quest.Combine(rhs.Quest);
+                ret.OwnerQuest = this.OwnerQuest.Combine(rhs.OwnerQuest);
+                ret.OwnerPackage = this.OwnerPackage.Combine(rhs.OwnerPackage);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -428,7 +465,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public Condition.TranslationMask? Conditions;
-            public bool Quest;
+            public bool OwnerQuest;
+            public bool OwnerPackage;
             #endregion
 
             #region Ctors
@@ -437,7 +475,8 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.Quest = defaultOn;
+                this.OwnerQuest = defaultOn;
+                this.OwnerPackage = defaultOn;
             }
 
             #endregion
@@ -446,7 +485,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.GetCrystal(ret);
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
-                ret.Add((Quest, null));
+                ret.Add((OwnerQuest, null));
+                ret.Add((OwnerPackage, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -595,7 +635,8 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordInternal
     {
         new ExtendedList<Condition> Conditions { get; }
-        new IFormLinkNullable<IQuestGetter> Quest { get; set; }
+        new IFormLinkNullable<IQuestGetter> OwnerQuest { get; set; }
+        new IFormLinkNullable<IPackageGetter> OwnerPackage { get; set; }
     }
 
     public partial interface IConditionRecordInternal :
@@ -615,7 +656,8 @@ namespace Mutagen.Bethesda.Starfield
     {
         static new ILoquiRegistration StaticRegistration => ConditionRecord_Registration.Instance;
         IReadOnlyList<IConditionGetter> Conditions { get; }
-        IFormLinkNullableGetter<IQuestGetter> Quest { get; }
+        IFormLinkNullableGetter<IQuestGetter> OwnerQuest { get; }
+        IFormLinkNullableGetter<IPackageGetter> OwnerPackage { get; }
 
     }
 
@@ -793,7 +835,8 @@ namespace Mutagen.Bethesda.Starfield
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
         Conditions = 7,
-        Quest = 8,
+        OwnerQuest = 8,
+        OwnerPackage = 9,
     }
     #endregion
 
@@ -804,9 +847,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(ConditionRecord.Mask<>);
 
@@ -843,7 +886,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.CITC,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2,
-                RecordTypes.QNAM);
+                RecordTypes.QNAM,
+                RecordTypes.PNAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -889,7 +933,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Conditions.Clear();
-            item.Quest.Clear();
+            item.OwnerQuest.Clear();
+            item.OwnerPackage.Clear();
             base.Clear(item);
         }
         
@@ -908,7 +953,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             base.RemapLinks(obj, mapping);
             obj.Conditions.RemapLinks(mapping);
-            obj.Quest.Relink(mapping);
+            obj.OwnerQuest.Relink(mapping);
+            obj.OwnerPackage.Relink(mapping);
         }
         
         #endregion
@@ -980,7 +1026,8 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.Quest = item.Quest.Equals(rhs.Quest);
+            ret.OwnerQuest = item.OwnerQuest.Equals(rhs.OwnerQuest);
+            ret.OwnerPackage = item.OwnerPackage.Equals(rhs.OwnerPackage);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1044,9 +1091,13 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if (printMask?.Quest ?? true)
+            if (printMask?.OwnerQuest ?? true)
             {
-                sb.AppendItem(item.Quest.FormKeyNullable, "Quest");
+                sb.AppendItem(item.OwnerQuest.FormKeyNullable, "OwnerQuest");
+            }
+            if (printMask?.OwnerPackage ?? true)
+            {
+                sb.AppendItem(item.OwnerPackage.FormKeyNullable, "OwnerPackage");
             }
         }
         
@@ -1102,9 +1153,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ConditionRecord_FieldIndex.Conditions)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ConditionRecord_FieldIndex.Quest) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConditionRecord_FieldIndex.OwnerQuest) ?? true))
             {
-                if (!lhs.Quest.Equals(rhs.Quest)) return false;
+                if (!lhs.OwnerQuest.Equals(rhs.OwnerQuest)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ConditionRecord_FieldIndex.OwnerPackage) ?? true))
+            {
+                if (!lhs.OwnerPackage.Equals(rhs.OwnerPackage)) return false;
             }
             return true;
         }
@@ -1135,7 +1190,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             var hash = new HashCode();
             hash.Add(item.Conditions);
-            hash.Add(item.Quest);
+            hash.Add(item.OwnerQuest);
+            hash.Add(item.OwnerPackage);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1169,9 +1225,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (FormLinkInformation.TryFactory(obj.Quest, out var QuestInfo))
+            if (FormLinkInformation.TryFactory(obj.OwnerQuest, out var OwnerQuestInfo))
             {
-                yield return QuestInfo;
+                yield return OwnerQuestInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.OwnerPackage, out var OwnerPackageInfo))
+            {
+                yield return OwnerPackageInfo;
             }
             yield break;
         }
@@ -1271,9 +1331,13 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)ConditionRecord_FieldIndex.Quest) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ConditionRecord_FieldIndex.OwnerQuest) ?? true))
             {
-                item.Quest.SetTo(rhs.Quest.FormKeyNullable);
+                item.OwnerQuest.SetTo(rhs.OwnerQuest.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConditionRecord_FieldIndex.OwnerPackage) ?? true))
+            {
+                item.OwnerPackage.SetTo(rhs.OwnerPackage.FormKeyNullable);
             }
             DeepCopyInCustom(
                 item: item,
@@ -1457,8 +1521,12 @@ namespace Mutagen.Bethesda.Starfield
                 });
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Quest,
+                item: item.OwnerQuest,
                 header: translationParams.ConvertToCustom(RecordTypes.QNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.OwnerPackage,
+                header: translationParams.ConvertToCustom(RecordTypes.PNAM));
         }
 
         public void Write(
@@ -1540,8 +1608,14 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.QNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)ConditionRecord_FieldIndex.Quest;
+                    item.OwnerQuest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ConditionRecord_FieldIndex.OwnerQuest;
+                }
+                case RecordTypeInts.PNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.OwnerPackage.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ConditionRecord_FieldIndex.OwnerPackage;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1603,9 +1677,13 @@ namespace Mutagen.Bethesda.Starfield
 
 
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
-        #region Quest
-        private int? _QuestLocation;
-        public IFormLinkNullableGetter<IQuestGetter> Quest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _QuestLocation);
+        #region OwnerQuest
+        private int? _OwnerQuestLocation;
+        public IFormLinkNullableGetter<IQuestGetter> OwnerQuest => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IQuestGetter>(_package, _recordData, _OwnerQuestLocation);
+        #endregion
+        #region OwnerPackage
+        private int? _OwnerPackageLocation;
+        public IFormLinkNullableGetter<IPackageGetter> OwnerPackage => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPackageGetter>(_package, _recordData, _OwnerPackageLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1693,8 +1771,13 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    _QuestLocation = (stream.Position - offset);
-                    return (int)ConditionRecord_FieldIndex.Quest;
+                    _OwnerQuestLocation = (stream.Position - offset);
+                    return (int)ConditionRecord_FieldIndex.OwnerQuest;
+                }
+                case RecordTypeInts.PNAM:
+                {
+                    _OwnerPackageLocation = (stream.Position - offset);
+                    return (int)ConditionRecord_FieldIndex.OwnerPackage;
                 }
                 default:
                     return base.FillRecordType(

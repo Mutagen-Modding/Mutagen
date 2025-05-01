@@ -1,5 +1,5 @@
 ﻿using System.IO.Abstractions;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.IO;
@@ -89,11 +89,11 @@ public class ModFilesMoverTests
             {
                 if (exist)
                 {
-                    _fileSystem.File.ReadAllText(s).Should().Be(content ?? Content);
+                    _fileSystem.File.ReadAllText(s).ShouldBe(content ?? Content);
                 }
                 else
                 {
-                    _fileSystem.File.Exists(s).Should().BeFalse();
+                    _fileSystem.File.Exists(s).ShouldBeFalse();
                 }
             });
         }
@@ -104,11 +104,11 @@ public class ModFilesMoverTests
             {
                 if (exist)
                 {
-                    _fileSystem.File.ReadAllText(s).Should().Be(content ?? Content);
+                    _fileSystem.File.ReadAllText(s).ShouldBe(content ?? Content);
                 }
                 else
                 {
-                    _fileSystem.File.Exists(s).Should().BeFalse();
+                    _fileSystem.File.Exists(s).ShouldBeFalse();
                 }
             });
         }
@@ -159,8 +159,8 @@ public class ModFilesMoverTests
     {
         ModPath modPath2 = Path.Combine(existingDirectoryPath2, modPath.ModKey.FileName);
         sut.Sut.MoveModTo(modPath, existingDirectoryPath2);
-        fileSystem.File.Exists(modPath).Should().BeFalse();
-        fileSystem.File.Exists(modPath2).Should().BeFalse();
+        fileSystem.File.Exists(modPath).ShouldBeFalse();
+        fileSystem.File.Exists(modPath2).ShouldBeFalse();
     }
     
     [Theory, MutagenModAutoData]
@@ -181,8 +181,8 @@ public class ModFilesMoverTests
             .Write();
         ModPath modPath2 = Path.Combine(existingDirectoryPath2, mod.ModKey.FileName);
         sut.Sut.MoveModTo(modPath, existingDirectoryPath2);
-        fileSystem.File.Exists(modPath).Should().BeFalse();
-        fileSystem.File.Exists(modPath2).Should().BeTrue();
+        fileSystem.File.Exists(modPath).ShouldBeFalse();
+        fileSystem.File.Exists(modPath2).ShouldBeTrue();
     }
 
     [Theory, MutagenModAutoData]
@@ -192,20 +192,20 @@ public class ModFilesMoverTests
         DirectoryPath existingDirectoryPath2,
         StructureUnderTest sut)
     {
-        fileSystem.File.Exists(fixture.ModPath).Should().BeTrue();
+        fileSystem.File.Exists(fixture.ModPath).ShouldBeTrue();
         ModPath modPath2 = Path.Combine(existingDirectoryPath2, fixture.ModKey.FileName);
         var stringsFolder2 = Path.Combine(existingDirectoryPath2, "Strings");
         
         sut.Sut.MoveModTo(fixture.ModPath, modPath2.Path.Directory!.Value);
         
-        fileSystem.File.Exists(fixture.ModPath).Should().BeFalse();
+        fileSystem.File.Exists(fixture.ModPath).ShouldBeFalse();
         fixture.AssertStrings(false);
         
-        fileSystem.File.Exists(modPath2).Should().BeTrue();
+        fileSystem.File.Exists(modPath2).ShouldBeTrue();
         fixture.StringPathCreators.ForEach(s =>
         {
             var f = s(stringsFolder2);
-            fileSystem.File.ReadAllText(f).Should().Be(fixture.Content);
+            fileSystem.File.ReadAllText(f).ShouldBe(fixture.Content);
         });
     }
 
@@ -220,14 +220,14 @@ public class ModFilesMoverTests
         
         sut.Sut.MoveModTo(fixture.ModPath, modPath2.Path.Directory!.Value);
         
-        fileSystem.File.Exists(fixture.ModPath).Should().BeFalse();
+        fileSystem.File.Exists(fixture.ModPath).ShouldBeFalse();
         fixture.AssertBsas(false);
         
-        fileSystem.File.Exists(modPath2).Should().BeTrue();
+        fileSystem.File.Exists(modPath2).ShouldBeTrue();
         fixture.BsaPathCreators.ForEach(s =>
         {
             var f = s(existingDirectoryPath2);
-            fileSystem.File.ReadAllText(f).Should().Be(fixture.Content);
+            fileSystem.File.ReadAllText(f).ShouldBe(fixture.Content);
         });
     }
 
@@ -257,12 +257,12 @@ public class ModFilesMoverTests
         
         ModPath modPath2 = Path.Combine(existingDirectoryPath2, modPath.ModKey.FileName);
         sut.Sut.MoveModTo(modPath, existingDirectoryPath2);
-        fileSystem.File.Exists(modPath).Should().BeFalse();
-        fileSystem.File.Exists(modPath2).Should().BeFalse();
-        fileSystem.File.Exists(otherModPath).Should().BeTrue();
-        fileSystem.File.Exists(otherStringsPath).Should().BeTrue();
-        fileSystem.File.Exists(otherBsaPath).Should().BeTrue();
-        fileSystem.File.Exists(otherBsaPath2).Should().BeTrue();
+        fileSystem.File.Exists(modPath).ShouldBeFalse();
+        fileSystem.File.Exists(modPath2).ShouldBeFalse();
+        fileSystem.File.Exists(otherModPath).ShouldBeTrue();
+        fileSystem.File.Exists(otherStringsPath).ShouldBeTrue();
+        fileSystem.File.Exists(otherBsaPath).ShouldBeTrue();
+        fileSystem.File.Exists(otherBsaPath2).ShouldBeTrue();
     }
     
     [Theory, MutagenModAutoData]
@@ -291,12 +291,12 @@ public class ModFilesMoverTests
         
         ModPath modPath2 = Path.Combine(existingDirectoryPath2, Fixture.ModPath.ModKey.FileName);
         sut.Sut.MoveModTo(Fixture.ModPath, existingDirectoryPath2);
-        fileSystem.File.Exists(Fixture.ModPath).Should().BeFalse();
-        fileSystem.File.Exists(modPath2).Should().BeTrue();
-        fileSystem.File.Exists(otherModPath).Should().BeTrue();
-        fileSystem.File.Exists(otherStringsPath).Should().BeTrue();
-        fileSystem.File.Exists(otherBsaPath).Should().BeTrue();
-        fileSystem.File.Exists(otherBsaPath2).Should().BeTrue();
+        fileSystem.File.Exists(Fixture.ModPath).ShouldBeFalse();
+        fileSystem.File.Exists(modPath2).ShouldBeTrue();
+        fileSystem.File.Exists(otherModPath).ShouldBeTrue();
+        fileSystem.File.Exists(otherStringsPath).ShouldBeTrue();
+        fileSystem.File.Exists(otherBsaPath).ShouldBeTrue();
+        fileSystem.File.Exists(otherBsaPath2).ShouldBeTrue();
     }
     
     [Theory, MutagenModAutoData]
@@ -322,18 +322,18 @@ public class ModFilesMoverTests
             bsaContent2);
         
         sut.Sut.MoveModTo(Fixture.ModPath, existingDirectoryPath2, overwrite: true);
-        fileSystem.File.Exists(Fixture.ModPath).Should().BeFalse();
+        fileSystem.File.Exists(Fixture.ModPath).ShouldBeFalse();
         Fixture.StringPaths.ForEach(f =>
         {
-            fileSystem.File.Exists(f).Should().BeFalse();
+            fileSystem.File.Exists(f).ShouldBeFalse();
         });
         Fixture.BsaPaths.ForEach(f =>
         {
-            fileSystem.File.Exists(f).Should().BeFalse();
+            fileSystem.File.Exists(f).ShouldBeFalse();
         });
-        fileSystem.File.ReadAllText(modPath2).Should().Be(Fixture.Content);
-        fileSystem.File.ReadAllText(stringsPath2).Should().Be(Fixture.Content);
-        fileSystem.File.ReadAllText(bsaPath2).Should().Be(Fixture.Content);
+        fileSystem.File.ReadAllText(modPath2).ShouldBe(Fixture.Content);
+        fileSystem.File.ReadAllText(stringsPath2).ShouldBe(Fixture.Content);
+        fileSystem.File.ReadAllText(bsaPath2).ShouldBe(Fixture.Content);
     }
     
     [Theory, MutagenModAutoData]
@@ -397,10 +397,10 @@ public class ModFilesMoverTests
             overwrite: true,
             categories: AssociatedModFileCategory.Archives
                         | AssociatedModFileCategory.Plugin);
-        fileSystem.File.Exists(fixture.ModPath).Should().Be(false);
+        fileSystem.File.Exists(fixture.ModPath).ShouldBe(false);
         fixture.AssertStrings(true);
         fixture.AssertBsas(false);
-        fileSystem.File.ReadAllText(fullSetup2.ModPath).Should().Be(fixture.Content);
+        fileSystem.File.ReadAllText(fullSetup2.ModPath).ShouldBe(fixture.Content);
         fullSetup2.AssertStrings(true);
         fullSetup2.AssertBsas(true, fixture.Content);
     }
@@ -417,10 +417,10 @@ public class ModFilesMoverTests
             overwrite: true,
             categories: AssociatedModFileCategory.RawStrings
                         | AssociatedModFileCategory.Plugin);
-        fileSystem.File.Exists(fixture.ModPath).Should().Be(false);
+        fileSystem.File.Exists(fixture.ModPath).ShouldBe(false);
         fixture.AssertStrings(false);
         fixture.AssertBsas(true);
-        fileSystem.File.ReadAllText(fullSetup2.ModPath).Should().Be(fixture.Content);
+        fileSystem.File.ReadAllText(fullSetup2.ModPath).ShouldBe(fixture.Content);
         fullSetup2.AssertStrings(true, fixture.Content);
         fullSetup2.AssertBsas(true);
     }
@@ -437,10 +437,10 @@ public class ModFilesMoverTests
             overwrite: true,
             categories: AssociatedModFileCategory.RawStrings
                         | AssociatedModFileCategory.Archives);
-        fileSystem.File.Exists(fixture.ModPath).Should().Be(true);
+        fileSystem.File.Exists(fixture.ModPath).ShouldBe(true);
         fixture.AssertStrings(false);
         fixture.AssertBsas(false);
-        fileSystem.File.ReadAllText(fullSetup2.ModPath).Should().Be(fullSetup2.Content);
+        fileSystem.File.ReadAllText(fullSetup2.ModPath).ShouldBe(fullSetup2.Content);
         fullSetup2.AssertStrings(true, fixture.Content);
         fullSetup2.AssertBsas(true, fixture.Content);
     }
@@ -458,8 +458,8 @@ public class ModFilesMoverTests
     {
         ModPath modPath2 = Path.Combine(existingDirectoryPath2, modPath.ModKey.FileName);
         sut.Sut.CopyModTo(modPath, existingDirectoryPath2);
-        fileSystem.File.Exists(modPath).Should().BeFalse();
-        fileSystem.File.Exists(modPath2).Should().BeFalse();
+        fileSystem.File.Exists(modPath).ShouldBeFalse();
+        fileSystem.File.Exists(modPath2).ShouldBeFalse();
     }
     
     [Theory, MutagenModAutoData]
@@ -480,8 +480,8 @@ public class ModFilesMoverTests
             .Write();
         ModPath modPath2 = Path.Combine(existingDirectoryPath2, mod.ModKey.FileName);
         sut.Sut.CopyModTo(modPath, existingDirectoryPath2);
-        fileSystem.File.Exists(modPath).Should().BeTrue();
-        fileSystem.File.Exists(modPath2).Should().BeTrue();
+        fileSystem.File.Exists(modPath).ShouldBeTrue();
+        fileSystem.File.Exists(modPath2).ShouldBeTrue();
     }
 
     [Theory, MutagenModAutoData]
@@ -491,20 +491,20 @@ public class ModFilesMoverTests
         DirectoryPath existingDirectoryPath2,
         StructureUnderTest sut)
     {
-        fileSystem.File.Exists(fixture.ModPath).Should().BeTrue();
+        fileSystem.File.Exists(fixture.ModPath).ShouldBeTrue();
         ModPath modPath2 = Path.Combine(existingDirectoryPath2, fixture.ModKey.FileName);
         var stringsFolder2 = Path.Combine(existingDirectoryPath2, "Strings");
         
         sut.Sut.CopyModTo(fixture.ModPath, modPath2.Path.Directory!.Value);
         
-        fileSystem.File.Exists(fixture.ModPath).Should().BeTrue();
+        fileSystem.File.Exists(fixture.ModPath).ShouldBeTrue();
         fixture.AssertStrings(true);
         
-        fileSystem.File.Exists(modPath2).Should().BeTrue();
+        fileSystem.File.Exists(modPath2).ShouldBeTrue();
         fixture.StringPathCreators.ForEach(s =>
         {
             var f = s(stringsFolder2);
-            fileSystem.File.ReadAllText(f).Should().Be(fixture.Content);
+            fileSystem.File.ReadAllText(f).ShouldBe(fixture.Content);
         });
     }
 
@@ -519,14 +519,14 @@ public class ModFilesMoverTests
         
         sut.Sut.CopyModTo(fixture.ModPath, modPath2.Path.Directory!.Value);
         
-        fileSystem.File.Exists(fixture.ModPath).Should().BeTrue();
+        fileSystem.File.Exists(fixture.ModPath).ShouldBeTrue();
         fixture.AssertBsas(true);
         
-        fileSystem.File.Exists(modPath2).Should().BeTrue();
+        fileSystem.File.Exists(modPath2).ShouldBeTrue();
         fixture.BsaPathCreators.ForEach(s =>
         {
             var f = s(existingDirectoryPath2);
-            fileSystem.File.ReadAllText(f).Should().Be(fixture.Content);
+            fileSystem.File.ReadAllText(f).ShouldBe(fixture.Content);
         });
     }
 
@@ -556,12 +556,12 @@ public class ModFilesMoverTests
         
         ModPath modPath2 = Path.Combine(existingDirectoryPath2, modPath.ModKey.FileName);
         sut.Sut.CopyModTo(modPath, existingDirectoryPath2);
-        fileSystem.File.Exists(modPath).Should().BeFalse();
-        fileSystem.File.Exists(modPath2).Should().BeFalse();
-        fileSystem.File.Exists(otherModPath).Should().BeTrue();
-        fileSystem.File.Exists(otherStringsPath).Should().BeTrue();
-        fileSystem.File.Exists(otherBsaPath).Should().BeTrue();
-        fileSystem.File.Exists(otherBsaPath2).Should().BeTrue();
+        fileSystem.File.Exists(modPath).ShouldBeFalse();
+        fileSystem.File.Exists(modPath2).ShouldBeFalse();
+        fileSystem.File.Exists(otherModPath).ShouldBeTrue();
+        fileSystem.File.Exists(otherStringsPath).ShouldBeTrue();
+        fileSystem.File.Exists(otherBsaPath).ShouldBeTrue();
+        fileSystem.File.Exists(otherBsaPath2).ShouldBeTrue();
     }
     
     [Theory, MutagenModAutoData]
@@ -590,12 +590,12 @@ public class ModFilesMoverTests
         
         ModPath modPath2 = Path.Combine(existingDirectoryPath2, Fixture.ModPath.ModKey.FileName);
         sut.Sut.CopyModTo(Fixture.ModPath, existingDirectoryPath2);
-        fileSystem.File.Exists(Fixture.ModPath).Should().BeTrue();
-        fileSystem.File.Exists(modPath2).Should().BeTrue();
-        fileSystem.File.Exists(otherModPath).Should().BeTrue();
-        fileSystem.File.Exists(otherStringsPath).Should().BeTrue();
-        fileSystem.File.Exists(otherBsaPath).Should().BeTrue();
-        fileSystem.File.Exists(otherBsaPath2).Should().BeTrue();
+        fileSystem.File.Exists(Fixture.ModPath).ShouldBeTrue();
+        fileSystem.File.Exists(modPath2).ShouldBeTrue();
+        fileSystem.File.Exists(otherModPath).ShouldBeTrue();
+        fileSystem.File.Exists(otherStringsPath).ShouldBeTrue();
+        fileSystem.File.Exists(otherBsaPath).ShouldBeTrue();
+        fileSystem.File.Exists(otherBsaPath2).ShouldBeTrue();
     }
     
     [Theory, MutagenModAutoData]
@@ -621,18 +621,18 @@ public class ModFilesMoverTests
             bsaContent2);
         
         sut.Sut.CopyModTo(Fixture.ModPath, existingDirectoryPath2, overwrite: true);
-        fileSystem.File.Exists(Fixture.ModPath).Should().BeTrue();
+        fileSystem.File.Exists(Fixture.ModPath).ShouldBeTrue();
         Fixture.StringPaths.ForEach(f =>
         {
-            fileSystem.File.Exists(f).Should().BeTrue();
+            fileSystem.File.Exists(f).ShouldBeTrue();
         });
         Fixture.BsaPaths.ForEach(f =>
         {
-            fileSystem.File.Exists(f).Should().BeTrue();
+            fileSystem.File.Exists(f).ShouldBeTrue();
         });
-        fileSystem.File.ReadAllText(modPath2).Should().Be(Fixture.Content);
-        fileSystem.File.ReadAllText(stringsPath2).Should().Be(Fixture.Content);
-        fileSystem.File.ReadAllText(bsaPath2).Should().Be(Fixture.Content);
+        fileSystem.File.ReadAllText(modPath2).ShouldBe(Fixture.Content);
+        fileSystem.File.ReadAllText(stringsPath2).ShouldBe(Fixture.Content);
+        fileSystem.File.ReadAllText(bsaPath2).ShouldBe(Fixture.Content);
     }
     
     [Theory, MutagenModAutoData]
@@ -696,10 +696,10 @@ public class ModFilesMoverTests
             overwrite: true,
             categories: AssociatedModFileCategory.Archives
                         | AssociatedModFileCategory.Plugin);
-        fileSystem.File.Exists(fixture.ModPath).Should().Be(true);
+        fileSystem.File.Exists(fixture.ModPath).ShouldBe(true);
         fixture.AssertStrings(true);
         fixture.AssertBsas(true);
-        fileSystem.File.ReadAllText(fullSetup2.ModPath).Should().Be(fixture.Content);
+        fileSystem.File.ReadAllText(fullSetup2.ModPath).ShouldBe(fixture.Content);
         fullSetup2.AssertStrings(true);
         fullSetup2.AssertBsas(true, fixture.Content);
     }
@@ -716,10 +716,10 @@ public class ModFilesMoverTests
             overwrite: true,
             categories: AssociatedModFileCategory.RawStrings
                         | AssociatedModFileCategory.Plugin);
-        fileSystem.File.Exists(fixture.ModPath).Should().Be(true);
+        fileSystem.File.Exists(fixture.ModPath).ShouldBe(true);
         fixture.AssertStrings(true);
         fixture.AssertBsas(true);
-        fileSystem.File.ReadAllText(fullSetup2.ModPath).Should().Be(fixture.Content);
+        fileSystem.File.ReadAllText(fullSetup2.ModPath).ShouldBe(fixture.Content);
         fullSetup2.AssertStrings(true, fixture.Content);
         fullSetup2.AssertBsas(true);
     }
@@ -736,10 +736,10 @@ public class ModFilesMoverTests
             overwrite: true,
             categories: AssociatedModFileCategory.RawStrings
                         | AssociatedModFileCategory.Archives);
-        fileSystem.File.Exists(fixture.ModPath).Should().Be(true);
+        fileSystem.File.Exists(fixture.ModPath).ShouldBe(true);
         fixture.AssertStrings(true);
         fixture.AssertBsas(true);
-        fileSystem.File.ReadAllText(fullSetup2.ModPath).Should().Be(fullSetup2.Content);
+        fileSystem.File.ReadAllText(fullSetup2.ModPath).ShouldBe(fullSetup2.Content);
         fullSetup2.AssertStrings(true, fixture.Content);
         fullSetup2.AssertBsas(true, fixture.Content);
     }

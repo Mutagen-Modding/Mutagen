@@ -44,7 +44,8 @@ public static class EnumBinaryTranslationExt
         }
         catch (Exception ex)
         {
-            throw SubrecordException.Enrich(ex, header);
+            SubrecordException.EnrichAndThrow(ex, header);
+            throw;
         }
     }
 
@@ -67,7 +68,8 @@ public static class EnumBinaryTranslationExt
         }
         catch (Exception ex)
         {
-            throw SubrecordException.Enrich(ex, header);
+            SubrecordException.EnrichAndThrow(ex, header);
+            throw;
         }
     }
 }

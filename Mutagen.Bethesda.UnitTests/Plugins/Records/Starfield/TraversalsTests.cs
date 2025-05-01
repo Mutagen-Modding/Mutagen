@@ -1,7 +1,8 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Testing;
+using Noggog.Testing.Extensions;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Starfield;
@@ -16,8 +17,8 @@ public class TraversalsTests
             GameRelease.Starfield);
         var obj = Cell.CreateFromBinary(
             overlayStream);
-        obj.Temporary.Should().HaveCount(2);
-        // obj.Traversals.Should().HaveCount(3);
+        obj.Temporary.ShouldHaveCount(2);
+        // obj.Traversals.ShouldHaveCount(3);
     }
     
     [Fact]
@@ -29,7 +30,7 @@ public class TraversalsTests
         var obj = CellBinaryOverlay.CellFactory(
             overlayStream,
             new BinaryOverlayFactoryPackage(overlayStream.MetaData));
-        obj.Temporary.Should().HaveCount(2);
-        // obj.Traversals.Should().HaveCount(3);
+        obj.Temporary.ShouldHaveCount(2);
+        // obj.Traversals.ShouldHaveCount(3);
     }
 }

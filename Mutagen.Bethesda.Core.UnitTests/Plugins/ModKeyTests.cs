@@ -1,5 +1,6 @@
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
+using Noggog.Testing.Extensions;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins;
@@ -148,14 +149,14 @@ public class ModKeyTests
     public void IsNullTypeDesync()
     {
         var modKey = new ModKey(string.Empty, ModType.Plugin);
-        modKey.IsNull.Should().BeTrue();
+        modKey.IsNull.ShouldBeTrue();
     }
 
     [Fact]
     public void NullEqualityDesync()
     {
         var modKey = new ModKey(string.Empty, ModType.Plugin);
-        modKey.Should().Be(ModKey.Null);
+        modKey.ShouldBe(ModKey.Null);
     }
 
     #region Comparers
@@ -269,7 +270,7 @@ public class ModKeyTests
         var arr = new ModKey[] { "ModA.esp", "ModB.esp", "modc.esp" };
         var toSort = new List<ModKey> { "ModC.esp", "ModA.esp" };
         toSort.Sort(ModKey.LoadOrderComparer(arr));
-        toSort.Should().Equal("ModA.esp", "ModC.esp");
+        toSort.ShouldEqual("ModA.esp", "ModC.esp");
     }
     
     [Fact]
@@ -278,7 +279,7 @@ public class ModKeyTests
         var arr = new ModKey[] { "ModA.esp", "ModB.esp", "ModC.esp" };
         var toSort = new List<ModKey> { "modc.esp", "ModA.esp" };
         toSort.Sort(ModKey.LoadOrderComparer(arr));
-        toSort.Should().Equal("ModA.esp", "modc.esp");
+        toSort.ShouldEqual("ModA.esp", "modc.esp");
     }
 
     #endregion

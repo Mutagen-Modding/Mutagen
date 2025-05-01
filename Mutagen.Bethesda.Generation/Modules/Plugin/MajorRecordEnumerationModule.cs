@@ -54,7 +54,7 @@ public class MajorRecordEnumerationModule : GenerationModule
     {
         if (await MajorRecordModule.HasMajorRecordsInTree(obj, includeBaseClass: false) == Case.No) return;
         var needsCatch = obj.GetObjectType() == ObjectType.Mod;
-        string catchLine = needsCatch ? ".Catch(e => throw RecordException.Enrich(e, obj.ModKey))" : string.Empty;
+        string catchLine = needsCatch ? ".Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey))" : string.Empty;
         string enderSemi = needsCatch ? string.Empty : ";";
         sb.AppendLine("[DebuggerStepThrough]");
         using (var args = sb.Function(

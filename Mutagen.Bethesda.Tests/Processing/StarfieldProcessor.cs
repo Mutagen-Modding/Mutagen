@@ -9,6 +9,7 @@ using Mutagen.Bethesda.Starfield.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
 using Noggog;
+using Noggog.WorkEngine;
 using APerkEntryPointEffect = Mutagen.Bethesda.Starfield.APerkEntryPointEffect;
 using ScriptBoolListProperty = Mutagen.Bethesda.Starfield.ScriptBoolListProperty;
 using ScriptBoolProperty = Mutagen.Bethesda.Starfield.ScriptBoolProperty;
@@ -28,8 +29,8 @@ public class StarfieldProcessor : Processor
 {
     public override bool StrictStrings => true;
 
-    public StarfieldProcessor(bool multithread, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup) 
-        : base(multithread, GameRelease.Starfield, masterFlagLookup)
+    public StarfieldProcessor(IWorkDropoff workDropoff, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup) 
+        : base(workDropoff, GameRelease.Starfield, masterFlagLookup)
     {
     }
     
@@ -50,7 +51,6 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.PHZD, ProcessHazards);
         AddDynamicProcessing(RecordTypes.NPC_, ProcessNpcs);
         AddDynamicProcessing(RecordTypes.LCTN, ProcessLocations);
-        AddDynamicProcessing(RecordTypes.WRLD, ProcessWorldspaces);
         AddDynamicProcessing(RecordTypes.PACK, ProcessPackages);
         AddDynamicProcessing(RecordTypes.STMP, ProcessSnapTemplates);
         AddDynamicProcessing(RecordTypes.FURN, ProcessFurniture);
@@ -63,9 +63,10 @@ public class StarfieldProcessor : Processor
         AddDynamicProcessing(RecordTypes.LVLI, ProcessLeveledItems);
         AddDynamicProcessing(RecordTypes.OMOD, ProcessOMOD);
         AddDynamicProcessing(RecordTypes.LIGH, ProcessLights);
+        AddDynamicProcessing(RecordTypes.PNDT, ProcessPlanets);
     }
 
-    protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
+    protected override IEnumerable<Func<Task>> ExtraJobs(Func<IMutagenReadStream> streamGetter)
     {
         foreach (var job in base.ExtraJobs(streamGetter))
         {
@@ -106,17 +107,20 @@ public class StarfieldProcessor : Processor
         }
     }
 
-    private void ProcessObjectPlacementDefaults(
+    private void ProcessObjectPaletteDefaults(
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
         foreach (var frame in majorFrame.FindEnumerateSubrecords(RecordTypes.OPDS))
         {
-            int offset = 0;
-            for (int i = 0; i < 20; i++)
-            {
-                ProcessZeroFloat(frame, fileOffset, ref offset);
-            }
+            int offset = 4;
+            ProcessZeroFloats(frame, fileOffset, ref offset, 3);
+            offset += 4;
+            ProcessZeroFloats(frame, fileOffset, ref offset, 2);
+            ProcessRotationFloats(frame, fileOffset, ref offset, 6);
+            ProcessZeroFloats(frame, fileOffset, ref offset, 4);
+            ProcessRotationFloat(frame, fileOffset, ref offset);
+            ProcessZeroFloats(frame, fileOffset, ref offset, 2);
         }
     }
 
@@ -280,7 +284,7 @@ public class StarfieldProcessor : Processor
         long fileOffset)
     {
         ProcessComponents(majorFrame, fileOffset);
-        ProcessObjectPlacementDefaults(majorFrame, fileOffset);
+        ProcessObjectPaletteDefaults(majorFrame, fileOffset);
         ProcessFEIndices(majorFrame, fileOffset);
     }
 
@@ -686,17 +690,6 @@ public class StarfieldProcessor : Processor
             }
         }
     }
-    
-    private void ProcessWorldspaces(
-        IMutagenReadStream stream,
-        MajorRecordFrame majorFrame,
-        long fileOffset)
-    {
-        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.XCLW))
-        {
-            ProcessZeroFloats(subRec, fileOffset);
-        }
-    }
 
     private void ProcessSnapTemplates(
         IMutagenReadStream stream,
@@ -769,7 +762,7 @@ public class StarfieldProcessor : Processor
                 int finalLoc;
                 if (recs[0] == null)
                 {
-                    finalLoc = recs.NotNull().Select(x => x.Location).Max();
+                    finalLoc = recs.WhereNotNull().Select(x => x.Location).Max();
                 }
                 else if (recs[0]!.Value.Location == 0)
                 {
@@ -782,7 +775,7 @@ public class StarfieldProcessor : Processor
                 else
                 {
                     finalLoc = recs
-                        .NotNull()
+                        .WhereNotNull()
                         .Select(x => x.Location)
                         .Where(i => i < recs[0]!.Value.Location)
                         .Max();
@@ -891,7 +884,7 @@ public class StarfieldProcessor : Processor
             int finalLoc;
             if (recs[0] == null)
             {
-                finalLoc = recs.NotNull().Select(x => x.Location).Max();
+                finalLoc = recs.WhereNotNull().Select(x => x.Location).Max();
             }
             else if (recs[0].Value.Location == 0)
             {
@@ -903,7 +896,7 @@ public class StarfieldProcessor : Processor
             else
             {
                 finalLoc = recs
-                    .NotNull()
+                    .WhereNotNull()
                     .Select(x => x.Location)
                     .Where(i => i < recs[0]!.Value.Location)
                     .Max();
@@ -1427,6 +1420,20 @@ public class StarfieldProcessor : Processor
             loc += 10;
             ProcessBool(dat2, fileOffset, ref loc, 2, 1);
             ProcessZeroFloats(dat2, fileOffset, ref loc, 4);
+        }
+    }
+
+    private void ProcessPlanets(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        foreach (var fnam in majorFrame.FindEnumerateSubrecords(RecordTypes.FNAM))
+        {
+            if (fnam.ContentLength > 4)
+            {
+                int offset = 8;
+                ProcessRotationFloatDiv(fnam, fileOffset, ref offset, 5.972E+24f);
+            }
         }
     }
 }

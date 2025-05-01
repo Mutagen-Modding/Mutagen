@@ -5,7 +5,7 @@ partial class CombatStyle
     [Flags]
     public enum MajorFlag
     {
-        AllowDualWeilding = 0x0008_0000
+        AllowDualWielding = 0x0008_0000
     }
 
     [Flags]
@@ -13,8 +13,11 @@ partial class CombatStyle
     {
         Dueling = 0x01,
         Flanking = 0x02,
-        AllowDualWeilding = 0x04,
+        AllowDualWielding = 0x04,
         Charging = 0x08,
         RetargetAnyNearbyMeleeTarget = 0x10,
+        PreferWalkingWhileStrafing = 0x20,
+        UseGroupCohesion = 0x40,
+        MaintainAttackFromCoverUntilSuppressed = 0x80,
     }
 }

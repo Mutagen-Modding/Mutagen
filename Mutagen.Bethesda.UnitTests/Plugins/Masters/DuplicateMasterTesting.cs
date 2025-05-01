@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
@@ -15,15 +15,15 @@ public class DuplicateMasterTesting
     {
         var mod = SkyrimMod.CreateFromBinaryOverlay(TestDataPathing.SkyrimDuplicateMasterListing,
             SkyrimRelease.SkyrimSE);
-        mod.Npcs.Count.Should().Be(4);
+        mod.Npcs.Count.ShouldBe(4);
         mod.Npcs.Records.First(n => n.EditorID == "Originating")
-            .FormKey.ModKey.FileName.String.Should().Be("DuplicateMasterListing.esp");
+            .FormKey.ModKey.FileName.String.ShouldBe("DuplicateMasterListing.esp");
         mod.Npcs.Records.First(n => n.EditorID == "MasterAFirst")
-            .FormKey.ModKey.FileName.String.Should().Be("MasterA.esm");
+            .FormKey.ModKey.FileName.String.ShouldBe("MasterA.esm");
         mod.Npcs.Records.First(n => n.EditorID == "MasterBFirst")
-            .FormKey.ModKey.FileName.String.Should().Be("MasterB.esm");
+            .FormKey.ModKey.FileName.String.ShouldBe("MasterB.esm");
         mod.Npcs.Records.First(n => n.EditorID == "MasterASecond")
-            .FormKey.ModKey.FileName.String.Should().Be("MasterA.esm");
+            .FormKey.ModKey.FileName.String.ShouldBe("MasterA.esm");
     }
     
     [Fact]
@@ -37,14 +37,14 @@ public class DuplicateMasterTesting
                 new KeyedMasterStyle(ModKey.FromFileName("MasterB.esm"), MasterStyle.Full),
                 new KeyedMasterStyle(ModKey.FromFileName("MasterA.esm"), MasterStyle.Full))
             .Construct();
-        mod.Npcs.Count.Should().Be(4);
+        mod.Npcs.Count.ShouldBe(4);
         mod.Npcs.Records.First(n => n.EditorID == "Originating")
-            .FormKey.ModKey.FileName.String.Should().Be("DuplicateMasterListing.esp");
+            .FormKey.ModKey.FileName.String.ShouldBe("DuplicateMasterListing.esp");
         mod.Npcs.Records.First(n => n.EditorID == "MasterAFirst")
-            .FormKey.ModKey.FileName.String.Should().Be("MasterA.esm");
+            .FormKey.ModKey.FileName.String.ShouldBe("MasterA.esm");
         mod.Npcs.Records.First(n => n.EditorID == "MasterBFirst")
-            .FormKey.ModKey.FileName.String.Should().Be("MasterB.esm");
+            .FormKey.ModKey.FileName.String.ShouldBe("MasterB.esm");
         mod.Npcs.Records.First(n => n.EditorID == "MasterASecond")
-            .FormKey.ModKey.FileName.String.Should().Be("MasterA.esm");
+            .FormKey.ModKey.FileName.String.ShouldBe("MasterA.esm");
     }
 }

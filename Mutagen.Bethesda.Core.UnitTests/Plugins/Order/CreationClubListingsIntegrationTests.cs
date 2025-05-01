@@ -2,7 +2,7 @@ using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using AutoFixture.Xunit2;
 using DynamicData;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order;
@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
+using Noggog.Testing.Extensions;
 using Noggog.Testing.FileSystem;
 using Xunit;
 
@@ -28,7 +29,7 @@ public class CreationClubListingsIntegrationTests
                 cccFilePath: missingPath,
                 dataPath: default,
                 fileSystem: fs);
-        a.Should().Throw<FileNotFoundException>();
+        a.ShouldThrow<FileNotFoundException>();
     }
 
     [Theory, MutagenAutoData]
@@ -49,8 +50,8 @@ public class CreationClubListingsIntegrationTests
                 dataPath: dataDir.Path,
                 fileSystem: fs)
             .ToList();
-        results.Should().HaveCount(1);
-        results[0].Should().Be(new ModListing(existingModPath.ModKey, enabled: true, existsOnDisk: true));
+        results.ShouldHaveCount(1);
+        results[0].ShouldBe(new ModListing(existingModPath.ModKey, enabled: true, existsOnDisk: true));
     }
 
     [Theory, MutagenAutoData]
@@ -78,7 +79,7 @@ public class CreationClubListingsIntegrationTests
             Assert.Equal(2, list.Count);
             Assert.Equal(TestConstants.PluginModKey, list.Items.ElementAt(0).ModKey);
             Assert.Equal(TestConstants.PluginModKey3, list.Items.ElementAt(1).ModKey);
-            err.Succeeded.Should().BeTrue();
+            err.Succeeded.ShouldBeTrue();
             fs.File.WriteAllLines(ccPath,
                 new string[]
                 {
@@ -91,13 +92,13 @@ public class CreationClubListingsIntegrationTests
             Assert.Equal(TestConstants.PluginModKey, list.Items.ElementAt(0).ModKey);
             Assert.Equal(TestConstants.PluginModKey2, list.Items.ElementAt(1).ModKey);
             Assert.Equal(TestConstants.PluginModKey3, list.Items.ElementAt(2).ModKey);
-            err.Succeeded.Should().BeTrue();
+            err.Succeeded.ShouldBeTrue();
             fs.File.Delete(thirdPath);
             modified.MarkDeleted(thirdPath);
             Assert.Equal(2, list.Count);
             Assert.Equal(TestConstants.PluginModKey, list.Items.ElementAt(0).ModKey);
             Assert.Equal(TestConstants.PluginModKey2, list.Items.ElementAt(1).ModKey);
-            err.Succeeded.Should().BeTrue();
+            err.Succeeded.ShouldBeTrue();
         }
     }
 }

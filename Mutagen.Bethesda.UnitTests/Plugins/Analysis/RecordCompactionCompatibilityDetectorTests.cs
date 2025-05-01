@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Analysis.DI;
@@ -19,13 +19,13 @@ public class RecordCompactionCompatibilityDetectorTests
         RecordCompactionCompatibilityDetector sut)
     {
         sut.IsSmallMasterCompatible(mod)
-            .Should().BeFalse();
+            .ShouldBeFalse();
         sut.IsMediumMasterCompatible(mod)
-            .Should().BeFalse();
+            .ShouldBeFalse();
         sut.CouldBeSmallMasterCompatible(mod)
-            .Should().BeFalse();
+            .ShouldBeFalse();
         sut.CouldBeMediumMasterCompatible(mod)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
     
     [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
@@ -34,9 +34,9 @@ public class RecordCompactionCompatibilityDetectorTests
         RecordCompactionCompatibilityDetector sut)
     {
         sut.IsSmallMasterCompatible(mod)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         sut.CouldBeSmallMasterCompatible(mod)
-            .Should().BeTrue();
+            .ShouldBeTrue();
     }
     
     [Theory, MutagenModAutoData(GameRelease.Starfield)]
@@ -45,9 +45,9 @@ public class RecordCompactionCompatibilityDetectorTests
         RecordCompactionCompatibilityDetector sut)
     {
         sut.IsMediumMasterCompatible(mod)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         sut.CouldBeMediumMasterCompatible(mod)
-            .Should().BeTrue();
+            .ShouldBeTrue();
     }
     
     [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
@@ -57,9 +57,9 @@ public class RecordCompactionCompatibilityDetectorTests
         RecordCompactionCompatibilityDetector sut)
     {
         sut.IsSmallMasterCompatible(mod)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         sut.CouldBeSmallMasterCompatible(mod)
-            .Should().BeTrue();
+            .ShouldBeTrue();
     }
     
     [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
@@ -71,9 +71,9 @@ public class RecordCompactionCompatibilityDetectorTests
         mod.Npcs.Add(n);
         mod.ModHeader.Stats.Version = 1.60f;
         sut.IsSmallMasterCompatible(mod)
-            .Should().BeFalse();
+            .ShouldBeFalse();
         sut.CouldBeSmallMasterCompatible(mod)
-            .Should().BeTrue();
+            .ShouldBeTrue();
     }
     
     [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
@@ -83,9 +83,9 @@ public class RecordCompactionCompatibilityDetectorTests
     {
         mod.Npcs.Add(new Npc(new FormKey(mod.ModKey, 0x801), SkyrimRelease.SkyrimSE));
         sut.IsSmallMasterCompatible(mod)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         sut.CouldBeSmallMasterCompatible(mod)
-            .Should().BeTrue();
+            .ShouldBeTrue();
     }
     
     [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
@@ -98,7 +98,7 @@ public class RecordCompactionCompatibilityDetectorTests
             mod.Npcs.AddNew();
         }
         sut.CouldBeSmallMasterCompatible(mod)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
     
     [Theory, MutagenModAutoData(GameRelease.Starfield)]
@@ -108,9 +108,9 @@ public class RecordCompactionCompatibilityDetectorTests
     {
         mod.Npcs.Add(new StarfieldNpc(new FormKey(mod.ModKey, 0x801), StarfieldRelease.Starfield));
         sut.IsMediumMasterCompatible(mod)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         sut.CouldBeSmallMasterCompatible(mod)
-            .Should().BeTrue();
+            .ShouldBeTrue();
     }
     
     [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
@@ -120,9 +120,9 @@ public class RecordCompactionCompatibilityDetectorTests
     {
         mod.Npcs.Add(new Npc(new FormKey(mod.ModKey, 0xFFFF), SkyrimRelease.SkyrimSE));
         sut.IsSmallMasterCompatible(mod)
-            .Should().BeFalse();
+            .ShouldBeFalse();
         sut.CouldBeSmallMasterCompatible(mod)
-            .Should().BeTrue();
+            .ShouldBeTrue();
     }
     
     [Theory, MutagenModAutoData(GameRelease.Starfield)]
@@ -132,9 +132,9 @@ public class RecordCompactionCompatibilityDetectorTests
     {
         mod.Npcs.Add(new StarfieldNpc(new FormKey(mod.ModKey, 0xFFFFF), StarfieldRelease.Starfield));
         sut.IsMediumMasterCompatible(mod)
-            .Should().BeFalse();
+            .ShouldBeFalse();
         sut.CouldBeSmallMasterCompatible(mod)
-            .Should().BeTrue();
+            .ShouldBeTrue();
     }
     
     [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
@@ -147,6 +147,6 @@ public class RecordCompactionCompatibilityDetectorTests
             mod.Npcs.AddNew();
         }
         sut.CouldBeMediumMasterCompatible(mod)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 }

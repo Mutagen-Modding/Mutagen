@@ -43,10 +43,10 @@
       <List name="LandscapeTextures" >
         <FormLink refName="LandscapeTexture" recordType="LNAM" />
       </List>
-      <List name="XCLWs" recordType="XCLW" >
-        <Float />
+      <List name="CellWaterHeightLocations" recordType="XCLW" >
+        <P2Int16 />
       </List>
-      <List name="WHGTs" recordType="WHGT" >
+      <List name="WaterHeights" recordType="WHGT" >
         <Float />
       </List>
       <ByteArray name="HNAM" recordType="HNAM" unknown="true" />

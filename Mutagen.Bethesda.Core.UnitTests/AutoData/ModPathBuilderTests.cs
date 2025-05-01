@@ -1,5 +1,5 @@
 ﻿using AutoFixture.Kernel;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Testing.AutoData;
@@ -54,9 +54,9 @@ public class ModPathBuilderTests
             
         var ret = sut.Create(typeof(ModPath), context);
             
-        ret.Should().BeOfType<ModPath>();
+        ret.ShouldBeOfType<ModPath>();
         var modPath = (ModPath)ret;
-        modPath.Path.IsUnderneath(directoryPath).Should().BeTrue();
+        modPath.Path.IsUnderneath(directoryPath).ShouldBeTrue();
     }
         
     [Theory, BasicAutoData]
@@ -73,8 +73,8 @@ public class ModPathBuilderTests
             
         var ret = sut.Create(typeof(ModPath), context);
             
-        ret.Should().BeOfType<ModPath>();
+        ret.ShouldBeOfType<ModPath>();
         var modPath = (ModPath)ret;
-        modPath.Path.Name.Should().Be(modPath.ModKey.FileName);
+        modPath.Path.Name.ShouldBe(modPath.ModKey.FileName);
     }
 }

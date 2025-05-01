@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Skyrim;
@@ -32,7 +32,7 @@ public class AssetTestsSkyrim
 		    { new AssetLink<SkyrimTextureAssetType>("Textures/44.png"), "Textures/dd.png" },
 	    });
 
-	    book.BookText.String.Should().Be("""
+	    book.BookText.String.ShouldBe("""
 		Some test text
 		abc <img src='img://Textures/aa.png'>  def
 		Textures/11.png

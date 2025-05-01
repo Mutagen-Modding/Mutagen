@@ -157,7 +157,8 @@ internal static class PluginUtilityTranslation
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, record);
+            RecordException.EnrichAndThrow(ex, record);
+            throw;
         }
     }
 
@@ -487,7 +488,7 @@ internal static class PluginUtilityTranslation
         IEnumerable<Stream> streams,
         byte[] bytes)
     {
-        SetGroupLength(bytes, (uint)streams.NotNull().Sum(i => i.Length));
+        SetGroupLength(bytes, (uint)streams.WhereNotNull().Sum(i => i.Length));
     }
 
     internal static void SkipPastAll(IBinaryReadStream stream, GameConstants meta, RecordType recordType)
@@ -610,7 +611,8 @@ internal static class PluginUtilityTranslation
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, item);
+            RecordException.EnrichAndThrow(ex, item);
+            throw;
         }
     }
 }

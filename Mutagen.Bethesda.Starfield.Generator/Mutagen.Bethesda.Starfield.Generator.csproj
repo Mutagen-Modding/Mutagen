@@ -13,16 +13,4 @@
         <ProjectReference Include="..\Mutagen.Bethesda.Generation\Mutagen.Bethesda.Generation.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Compile Update="Program.cs">
-        <CodeLanguage>cs</CodeLanguage>
-        <DefaultPackFolder>content</DefaultPackFolder>
-        <BuildAction>Compile</BuildAction>
-      </Compile>
-      <Compile Update="SkyrimGenerationConstructor.cs">
-        <CodeLanguage>cs</CodeLanguage>
-        <DefaultPackFolder>content</DefaultPackFolder>
-        <BuildAction>Compile</BuildAction>
-      </Compile>
-    </ItemGroup>
 </Project>

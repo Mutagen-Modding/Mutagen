@@ -953,8 +953,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.DMDL,
                 RecordTypes.DMDT,
                 RecordTypes.MOLM,
-                RecordTypes.DMDC,
-                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,

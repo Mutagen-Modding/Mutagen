@@ -1,10 +1,11 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.UnitTests.Plugins.Cache.Linking.Helpers;
+using Noggog.Testing.Extensions;
 using Xunit;
 
 #nullable disable
@@ -19,7 +20,7 @@ public partial class ALinkingTests
     {
         var package = TypicalLoadOrder().ToImmutableLinkCache();
         var formLink = new FormLink<INpcGetter>(UnusedFormKey);
-        formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc, INpcGetter>(package).Should().BeEmpty();
+        formLink.ResolveAllContexts<ISkyrimMod, ISkyrimModGetter, INpc, INpcGetter>(package).ShouldBeEmpty();
     }
 
     [Theory]
@@ -36,10 +37,10 @@ public partial class ALinkingTests
         var (style, package) = GetLinkCache(loadOrder, cacheType);
         var formLink = new FormLink<INpcGetter>(npc.FormKey);
         var resolved = contextRetriever.ResolveAllContexts<INpc, INpcGetter>(formLink, package).ToArray();
-        resolved.Should().HaveCount(1);
-        resolved.First().Record.Should().BeSameAs(npc);
-        resolved.First().ModKey.Should().Be(TestConstants.PluginModKey);
-        resolved.First().Parent.Should().BeNull();
+        resolved.ShouldHaveCount(1);
+        resolved.First().Record.ShouldBeSameAs(npc);
+        resolved.First().ModKey.ShouldBe(TestConstants.PluginModKey);
+        resolved.First().Parent.ShouldBeNull();
     }
 
     [Theory]
@@ -60,13 +61,13 @@ public partial class ALinkingTests
         var (style, package) = GetLinkCache(loadOrder, cacheType);
         var formLink = new FormLink<INpcGetter>(npc.FormKey);
         var resolved = contextRetriever.ResolveAllContexts<INpc, INpcGetter>(formLink, package).ToArray();
-        resolved.Should().HaveCount(2);
-        resolved.First().Record.Should().BeSameAs(npcOverride);
-        resolved.First().ModKey.Should().Be(TestConstants.PluginModKey3);
-        resolved.First().Parent.Should().BeNull();
-        resolved.Last().Record.Should().BeSameAs(npc);
-        resolved.Last().ModKey.Should().Be(TestConstants.PluginModKey);
-        resolved.Last().Parent.Should().BeNull();
+        resolved.ShouldHaveCount(2);
+        resolved.First().Record.ShouldBeSameAs(npcOverride);
+        resolved.First().ModKey.ShouldBe(TestConstants.PluginModKey3);
+        resolved.First().Parent.ShouldBeNull();
+        resolved.Last().Record.ShouldBeSameAs(npc);
+        resolved.Last().ModKey.ShouldBe(TestConstants.PluginModKey);
+        resolved.Last().Parent.ShouldBeNull();
     }
 
     [Theory]
@@ -88,13 +89,13 @@ public partial class ALinkingTests
         var formLink = new FormLink<INpcGetter>(npc.FormKey);
         var resolved = contextRetriever.ResolveAllContexts<INpc, INpcGetter>(formLink, package).ToArray();
         resolved = contextRetriever.ResolveAllContexts<INpc, INpcGetter>(formLink, package).ToArray();
-        resolved.Should().HaveCount(2);
-        resolved.First().Record.Should().BeSameAs(npcOverride);
-        resolved.First().ModKey.Should().Be(TestConstants.PluginModKey3);
-        resolved.First().Parent.Should().BeNull();
-        resolved.Last().Record.Should().BeSameAs(npc);
-        resolved.Last().ModKey.Should().Be(TestConstants.PluginModKey);
-        resolved.Last().Parent.Should().BeNull();
+        resolved.ShouldHaveCount(2);
+        resolved.First().Record.ShouldBeSameAs(npcOverride);
+        resolved.First().ModKey.ShouldBe(TestConstants.PluginModKey3);
+        resolved.First().Parent.ShouldBeNull();
+        resolved.Last().Record.ShouldBeSameAs(npc);
+        resolved.Last().ModKey.ShouldBe(TestConstants.PluginModKey);
+        resolved.Last().Parent.ShouldBeNull();
     }
 
     [Theory]
@@ -116,13 +117,13 @@ public partial class ALinkingTests
         var (style, package) = GetLinkCache(loadOrder, cacheType);
         var formLink = new FormLink<INpcGetter>(npc.FormKey);
         var resolved = contextRetriever.ResolveAllContexts<INpc, INpcGetter>(formLink, package).ToArray();
-        resolved.Should().HaveCount(2);
-        resolved.First().Record.Should().BeSameAs(npcOverride);
-        resolved.First().ModKey.Should().Be(TestConstants.PluginModKey3);
-        resolved.First().Parent.Should().BeNull();
-        resolved.Last().Record.Should().BeSameAs(npc);
-        resolved.Last().ModKey.Should().Be(TestConstants.PluginModKey);
-        resolved.Last().Parent.Should().BeNull();
+        resolved.ShouldHaveCount(2);
+        resolved.First().Record.ShouldBeSameAs(npcOverride);
+        resolved.First().ModKey.ShouldBe(TestConstants.PluginModKey3);
+        resolved.First().Parent.ShouldBeNull();
+        resolved.Last().Record.ShouldBeSameAs(npc);
+        resolved.Last().ModKey.ShouldBe(TestConstants.PluginModKey);
+        resolved.Last().Parent.ShouldBeNull();
     }
 
     [Theory]
@@ -144,18 +145,18 @@ public partial class ALinkingTests
         var (style, package) = GetLinkCache(loadOrder, cacheType);
         var formLink = new FormLink<INpcGetter>(npc.FormKey);
         var resolved = contextRetriever.ResolveAllContexts<INpc, INpcGetter>(formLink, package).ToArray();
-        resolved.Should().HaveCount(2);
-        resolved.First().Record.Should().BeSameAs(npcOverride);
-        resolved.First().ModKey.Should().Be(TestConstants.PluginModKey3);
-        resolved.First().Parent.Should().BeNull();
-        resolved.Last().Record.Should().BeSameAs(npc);
-        resolved.Last().ModKey.Should().Be(TestConstants.PluginModKey);
-        resolved.Last().Parent.Should().BeNull();
+        resolved.ShouldHaveCount(2);
+        resolved.First().Record.ShouldBeSameAs(npcOverride);
+        resolved.First().ModKey.ShouldBe(TestConstants.PluginModKey3);
+        resolved.First().Parent.ShouldBeNull();
+        resolved.Last().Record.ShouldBeSameAs(npc);
+        resolved.Last().ModKey.ShouldBe(TestConstants.PluginModKey);
+        resolved.Last().Parent.ShouldBeNull();
         formLink = new FormLink<INpcGetter>(unrelatedNpc.FormKey);
         resolved = contextRetriever.ResolveAllContexts<INpc, INpcGetter>(formLink, package).ToArray();
-        resolved.Should().HaveCount(1);
-        resolved.First().Record.Should().BeSameAs(unrelatedNpc);
-        resolved.First().ModKey.Should().Be(TestConstants.PluginModKey);
-        resolved.First().Parent.Should().BeNull();
+        resolved.ShouldHaveCount(1);
+        resolved.First().Record.ShouldBeSameAs(unrelatedNpc);
+        resolved.First().ModKey.ShouldBe(TestConstants.PluginModKey);
+        resolved.First().Parent.ShouldBeNull();
     }
 }

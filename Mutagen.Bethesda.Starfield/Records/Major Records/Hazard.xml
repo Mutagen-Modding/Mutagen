@@ -3,8 +3,8 @@
   <Object name="Hazard" recordType="HAZD" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <Float name="ODTY" recordType="ODTY" unknown="true" />
-      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
+      <UInt64 name="XALG" recordType="XALG" unknown="true" />
       <RefList name="Components" refName="AComponent" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />

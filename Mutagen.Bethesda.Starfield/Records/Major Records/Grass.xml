@@ -3,11 +3,29 @@
   <Object name="Grass" recordType="GRAS" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <Float name="ODTY" recordType="ODTY" unknown="true" />
-      <Float name="ODRT" recordType="ODRT" unknown="true" />
+      <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
+      <RefDirect name="ObjectPaletteDefaults" refName="ObjectPaletteDefaults" />
+      <UInt64 name="XALG" recordType="XALG" unknown="true" />
       <RefList name="Components" refName="AComponent" />
       <RefDirect name="Model" refName="Model" />
-      <ByteArray name="DNAM" recordType="DNAM" unknown="true" />
+      <Data name="Data" recordType="DNAM" >
+        <Fields>
+          <Float name="Contrast" min="0" max="100" />
+          <Float name="ClusterScale" min="0" max="10" />
+          <Percent name="HeightRange" />
+          <Percent name="ColorRange" />
+          <Float name="WindFrequency" />
+          <Float name="AboveWaterClamp" />
+          <Float name="BelowWaterClamp" />
+          <UInt8 name="MaxDensity" />
+          <UInt8 name="MinSlope" />
+          <UInt8 name="MaxSlope" />
+          <Enum name="Flags" enumName="Grass.Flag" byteLength="1" />
+          <Float name="Coverage" min="0" max="100" />
+          <Percent name="DirtinessMin" integerType="Byte" />
+          <Percent name="DirtinessMax" integerType="Byte" />
+        </Fields>
+      </Data>
     </Fields>
     <LinkInterface>IBaseObject</LinkInterface>
   </Object>

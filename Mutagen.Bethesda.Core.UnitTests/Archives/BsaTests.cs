@@ -1,8 +1,8 @@
-﻿using FluentAssertions;
-using Mutagen.Bethesda.Archives;
+﻿using Mutagen.Bethesda.Archives;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Strings.DI;
 using Noggog;
+using Shouldly;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Archives;
@@ -17,11 +17,11 @@ public class BsaTests
     {
         var archive = Archive.CreateReader(GameRelease.SkyrimSE, TestBsa);
         archive.TryGetFolder(SomeFolder, out var folder)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         if (folder == null) throw new NullReferenceException();
-        folder.Files.Should().HaveCount(1);
+        folder.Files.Count.ShouldBe(1);
         var expected = Path.Combine(SomeFolder, "someotherfile.txt");
-        folder.Files.First().Path.Should().Be(expected.ToLower());
+        folder.Files.First().Path.ShouldBe(expected.ToLower());
     }
         
     [Fact]
@@ -29,11 +29,11 @@ public class BsaTests
     {
         var archive = Archive.CreateReader(GameRelease.SkyrimSE, TestBsa);
         archive.TryGetFolder(SomeFolder, out var folder)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         if (folder == null) throw new NullReferenceException();
         var file = folder.Files.First();
         BinaryStringUtility.ProcessWholeToZString(file.GetBytes(), MutagenEncoding._1252)
-            .Should().Be("Found me");
+            .ShouldBe("Found me");
     }
         
     [Fact]
@@ -41,11 +41,11 @@ public class BsaTests
     {
         var archive = Archive.CreateReader(GameRelease.SkyrimSE, TestBsa);
         archive.TryGetFolder(SomeFolder, out var folder)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         if (folder == null) throw new NullReferenceException();
         var file = folder.Files.First();
         BinaryStringUtility.ProcessWholeToZString(file.GetSpan(), MutagenEncoding._1252)
-            .Should().Be("Found me");
+            .ShouldBe("Found me");
     }
         
     [Fact]
@@ -53,11 +53,11 @@ public class BsaTests
     {
         var archive = Archive.CreateReader(GameRelease.SkyrimSE, TestBsa);
         archive.TryGetFolder(SomeFolder, out var folder)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         if (folder == null) throw new NullReferenceException();
         var file = folder.Files.First();
         BinaryStringUtility.ProcessWholeToZString(file.GetMemorySlice(), MutagenEncoding._1252)
-            .Should().Be("Found me");
+            .ShouldBe("Found me");
     }
         
     [Fact]
@@ -65,15 +65,15 @@ public class BsaTests
     {
         var archive = Archive.CreateReader(GameRelease.SkyrimSE, TestBsa);
         archive.TryGetFolder(SomeFolder, out var folder)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         if (folder == null) throw new NullReferenceException();
         var file = folder.Files.First();
         var stream = file.AsStream();
         byte[] b = new byte[stream.Length];
-        stream.Remaining().Should().Be(8);
+        stream.Remaining().ShouldBe(8);
         stream.Read(b);
-        stream.Remaining().Should().Be(0);
+        stream.Remaining().ShouldBe(0);
         BinaryStringUtility.ProcessWholeToZString(b, MutagenEncoding._1252)
-            .Should().Be("Found me");
+            .ShouldBe("Found me");
     }
 }

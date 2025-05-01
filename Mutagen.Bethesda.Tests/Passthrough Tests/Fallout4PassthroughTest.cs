@@ -455,7 +455,7 @@ public class Fallout4PassthroughTest : PassthroughTest
         return Fallout4Mod.Create(GameRelease.ToFallout4Release())
             .FromPath(
                 new ModPath(ModKey, path.Path))
-            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .Parallel(parallel: Settings.ParallelModTranslations)
             .WithStringsParameters(stringsParams)
             .ThrowIfUnknownSubrecord()
             .Construct();
@@ -466,7 +466,7 @@ public class Fallout4PassthroughTest : PassthroughTest
         return Fallout4Mod.Create(GameRelease.ToFallout4Release())
             .FromPath(
                 new ModPath(ModKey, path.Path))
-            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .Parallel(parallel: Settings.ParallelModTranslations)
             .WithStringsParameters(stringsParams)
             .ThrowIfUnknownSubrecord()
             .Mutable()
@@ -483,5 +483,5 @@ public class Fallout4PassthroughTest : PassthroughTest
         return ret;
     }
 
-    protected override Processor ProcessorFactory() => new Fallout4Processor(Settings.ParallelProcessingSteps, MasterFlagsLookup);
+    protected override Processor ProcessorFactory() => new Fallout4Processor(WorkDropoff, MasterFlagsLookup);
 }

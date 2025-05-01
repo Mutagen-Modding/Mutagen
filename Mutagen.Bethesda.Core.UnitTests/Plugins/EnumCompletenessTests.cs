@@ -1,5 +1,5 @@
 using AutoFixture.Xunit2;
-using FluentAssertions;
+using Shouldly;
 using Loqui;
 using Mutagen.Bethesda.Archives.DI;
 using Mutagen.Bethesda.Environments.DI;
@@ -43,7 +43,7 @@ public class EnumCompletenessTests
         foreach (var release in Enums<GameRelease>.Values)
         {
             var cat = release.ToCategory();
-            cat.GetRelatedReleases().Should().Contain(release);
+            cat.GetRelatedReleases().ShouldContain(release);
         }
     }
 
@@ -52,7 +52,7 @@ public class EnumCompletenessTests
     {
         foreach (var release in Enums<GameRelease>.Values)
         {
-            Mutagen.Bethesda.Plugins.Implicits.Get(release).Should().NotBeNull();
+            Mutagen.Bethesda.Plugins.Implicits.Get(release).ShouldNotBeNull();
         }
     }
 
@@ -80,7 +80,7 @@ public class EnumCompletenessTests
         {
             gameReleaseContext.Release.Returns(release);
             Assert.Throws<FileNotFoundException>(() =>
-                sut.Create(path).Should().NotBeNull());
+                sut.Create(path).ShouldNotBeNull());
         }
     }
 
@@ -92,7 +92,7 @@ public class EnumCompletenessTests
         {
             foreach (var lang in Enums<Language>.Values)
             {
-                MutagenEncoding.GetEncoding(release, lang).Should().NotBeNull();
+                MutagenEncoding.GetEncoding(release, lang).ShouldNotBeNull();
             }
         }
     }
@@ -126,7 +126,7 @@ public class EnumCompletenessTests
         {
             try
             {
-                prov.GetGameFolder(release).Should().NotBeEmpty();
+                prov.GetGameFolder(release).ShouldNotBeEmpty();
             }
             catch (ArgumentException)
             {

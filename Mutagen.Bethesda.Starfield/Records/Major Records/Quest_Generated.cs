@@ -3306,6 +3306,189 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.QNAM,
                 RecordTypes.TNAM,
                 RecordTypes.DIAL,
+                RecordTypes.ACAC,
+                RecordTypes.ACYI,
+                RecordTypes.AGRE,
+                RecordTypes.ALIL,
+                RecordTypes.ALKL,
+                RecordTypes.ALTC,
+                RecordTypes.ALTN,
+                RecordTypes.ASKF,
+                RecordTypes.ASKG,
+                RecordTypes.ASNC,
+                RecordTypes.ASSA,
+                RecordTypes.ASSI,
+                RecordTypes.ATCK,
+                RecordTypes.AVTH,
+                RecordTypes.BAEX,
+                RecordTypes.BASH,
+                RecordTypes.BGST,
+                RecordTypes.BLED,
+                RecordTypes.BLHE,
+                RecordTypes.BLOC,
+                RecordTypes.BREA,
+                RecordTypes.BRIB,
+                RecordTypes.COLO,
+                RecordTypes.COTN,
+                RecordTypes.CRIL,
+                RecordTypes.CUST,
+                RecordTypes.DEOB,
+                RecordTypes.DETH,
+                RecordTypes.DFDA,
+                RecordTypes.ENBZ,
+                RecordTypes.ENKL,
+                RecordTypes.ENTE,
+                RecordTypes.EXBZ,
+                RecordTypes.FEXT,
+                RecordTypes.FIWE,
+                RecordTypes.FLAT,
+                RecordTypes.FLBK,
+                RecordTypes.FLEE,
+                RecordTypes.FRJT,
+                RecordTypes.FVDL,
+                RecordTypes.GBYE,
+                RecordTypes.GIFF,
+                RecordTypes.GREE,
+                RecordTypes.GRNT,
+                RecordTypes.HEAL,
+                RecordTypes.HELO,
+                RecordTypes.HIT_,
+                RecordTypes.IDAT,
+                RecordTypes.IDLE,
+                RecordTypes.IMNG,
+                RecordTypes.IMNU,
+                RecordTypes.IMPT,
+                RecordTypes.IMQU,
+                RecordTypes.INTI,
+                RecordTypes.JUMP,
+                RecordTypes.KNOO,
+                RecordTypes.LOIL,
+                RecordTypes.LOOB,
+                RecordTypes.LOTC,
+                RecordTypes.LOTN,
+                RecordTypes.LWBS,
+                RecordTypes.MCO2,
+                RecordTypes.MREF,
+                RecordTypes.MUNC,
+                RecordTypes.MURD,
+                RecordTypes.NOTA,
+                RecordTypes.NOTC,
+                RecordTypes.NOTI,
+                RecordTypes.NOTL,
+                RecordTypes.OBCO,
+                RecordTypes.ORAV,
+                RecordTypes.ORFB,
+                RecordTypes.ORFL,
+                RecordTypes.ORTC,
+                RecordTypes.OUTB,
+                RecordTypes.PAAC,
+                RecordTypes.PACO,
+                RecordTypes.PADR,
+                RecordTypes.PAFI,
+                RecordTypes.PAFU,
+                RecordTypes.PATR,
+                RecordTypes.PATT,
+                RecordTypes.PCPS,
+                RecordTypes.PCSH,
+                RecordTypes.PCSS,
+                RecordTypes.PFGT,
+                RecordTypes.PICC,
+                RecordTypes.PICN,
+                RecordTypes.PICT,
+                RecordTypes.PIRA,
+                RecordTypes.PIRN,
+                RecordTypes.POAT,
+                RecordTypes.PRJT,
+                RecordTypes.PURS,
+                RecordTypes.RANG,
+                RecordTypes.RCEX,
+                RecordTypes.RECH,
+                RecordTypes.REEX,
+                RecordTypes.REFU,
+                RecordTypes.RELA,
+                RecordTypes.RELE,
+                RecordTypes.REPA,
+                RecordTypes.RQST,
+                RecordTypes.RUMO,
+                RecordTypes.SCCH,
+                RecordTypes.SCDC,
+                RecordTypes.SCDI,
+                RecordTypes.SCEN,
+                RecordTypes.SCGC,
+                RecordTypes.SCJC,
+                RecordTypes.SCLS,
+                RecordTypes.SCRO,
+                RecordTypes.SCTI,
+                RecordTypes.SCUC,
+                RecordTypes.SEED,
+                RecordTypes.SEER,
+                RecordTypes.SEGD,
+                RecordTypes.SEGR,
+                RecordTypes.SERU,
+                RecordTypes.SESD,
+                RecordTypes.SESR,
+                RecordTypes.SETD,
+                RecordTypes.SETR,
+                RecordTypes.SEWD,
+                RecordTypes.SEWR,
+                RecordTypes.SGNC,
+                RecordTypes.SHOK,
+                RecordTypes.SHOW,
+                RecordTypes.SHRE,
+                RecordTypes.SHRP,
+                RecordTypes.SMUG,
+                RecordTypes.SRTW,
+                RecordTypes.SSEC,
+                RecordTypes.SSED,
+                RecordTypes.SSER,
+                RecordTypes.SSGD,
+                RecordTypes.SSGR,
+                RecordTypes.SSLC,
+                RecordTypes.SSSD,
+                RecordTypes.SSSZ,
+                RecordTypes.SSTD,
+                RecordTypes.SSTR,
+                RecordTypes.SSWD,
+                RecordTypes.SSWR,
+                RecordTypes.STAY,
+                RecordTypes.STEA,
+                RecordTypes.STEB,
+                RecordTypes.STFN,
+                RecordTypes.STOF,
+                RecordTypes.STTB,
+                RecordTypes.SWMW,
+                RecordTypes.TASF,
+                RecordTypes.TAUT,
+                RecordTypes.THGR,
+                RecordTypes.THRB,
+                RecordTypes.TITG,
+                RecordTypes.TRAD,
+                RecordTypes.TRAI,
+                RecordTypes.TRAN,
+                RecordTypes.TRAV,
+                RecordTypes.TRES,
+                RecordTypes.TREX,
+                RecordTypes.TRNV,
+                RecordTypes.USMG,
+                RecordTypes.VPAW,
+                RecordTypes.VPEB,
+                RecordTypes.VPEL,
+                RecordTypes.VPES,
+                RecordTypes.VPEV,
+                RecordTypes.VPEW,
+                RecordTypes.VPHC,
+                RecordTypes.VPKC,
+                RecordTypes.VPKW,
+                RecordTypes.VPLV,
+                RecordTypes.VPNM,
+                RecordTypes.VPSL,
+                RecordTypes.VPSS,
+                RecordTypes.VPTM,
+                RecordTypes.VPVC,
+                RecordTypes.WFPI,
+                RecordTypes.WTCR,
+                RecordTypes.YIEL,
+                RecordTypes.ZKEY,
                 RecordTypes.PNAM,
                 RecordTypes.BNAM,
                 RecordTypes.KNAM,
@@ -3317,18 +3500,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.TROT,
                 RecordTypes.NAM4,
                 RecordTypes.NAM9,
-                RecordTypes.STRV,
-                RecordTypes.VCLR,
-                RecordTypes.FLMV,
-                RecordTypes.FLAV,
-                RecordTypes.QUAL,
-                RecordTypes.DOFT,
-                RecordTypes.DPLT,
-                RecordTypes.OCOR,
-                RecordTypes.LVCR,
-                RecordTypes.ATAC,
-                RecordTypes.PLRL,
-                RecordTypes.XNAM,
                 RecordTypes.HNAM,
                 RecordTypes.RVSH,
                 RecordTypes.RNAM,
@@ -3341,9 +3512,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.INAM,
                 RecordTypes.COCT,
                 RecordTypes.NAM8,
-                RecordTypes.PERK,
                 RecordTypes.SCSP,
-                RecordTypes.SCEN,
+                RecordTypes.PERK,
                 RecordTypes.WNAM,
                 RecordTypes.SCQS,
                 RecordTypes.SPMV,
@@ -3351,6 +3521,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.SNOT,
                 RecordTypes.VNAM,
                 RecordTypes.BOLV,
+                RecordTypes.XNAM,
                 RecordTypes.SCPI,
                 RecordTypes.JNAM,
                 RecordTypes.SCPP,
@@ -6251,8 +6422,10 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Quest_FieldIndex.Name;
                 }
                 case RecordTypeInts.BFCB:
@@ -6330,7 +6503,8 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Filter = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Quest_FieldIndex.Filter;
                 }
                 case RecordTypeInts.NAM3:
@@ -6338,7 +6512,8 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Summary = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Quest_FieldIndex.Summary;
                 }
                 case RecordTypeInts.CTDA:
@@ -6398,7 +6573,8 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SwfFile = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Quest_FieldIndex.SwfFile;
                 }
                 case RecordTypeInts.QMTY:
@@ -6412,8 +6588,10 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MissionBoardDescription = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Quest_FieldIndex.MissionBoardDescription;
                 }
                 case RecordTypeInts.QMDT:
@@ -6446,7 +6624,8 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ScriptComment = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Quest_FieldIndex.ScriptComment;
                 }
                 case RecordTypeInts.XXXX:
@@ -6548,7 +6727,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -6633,7 +6812,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region MissionBoardDescription
         private int? _MissionBoardDescriptionLocation;
-        public ITranslatedStringGetter? MissionBoardDescription => _MissionBoardDescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MissionBoardDescriptionLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? MissionBoardDescription => _MissionBoardDescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _MissionBoardDescriptionLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
         public IReadOnlyList<IQuestMissionBoardPanelGetter> MissionBoardInfoPanels { get; private set; } = Array.Empty<IQuestMissionBoardPanelGetter>();
         #region Keywords

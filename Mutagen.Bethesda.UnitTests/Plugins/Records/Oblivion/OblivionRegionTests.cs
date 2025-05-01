@@ -1,7 +1,8 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Testing;
+using Noggog.Testing.Extensions;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Oblivion;
 
@@ -13,14 +14,14 @@ public class OblivionRegionTests : ASpecificCaseTest<Region, IRegionGetter>
     
     public override void TestItem(IRegionGetter item)
     {
-        item.Sounds.Should().NotBeNull();
-        item.Sounds!.Sounds.Should().BeEmpty();
-        item.Sounds!.MusicType.Should().Be(MusicType.Default);
-        item.MapName.Should().NotBeNull();
-        item.MapName!.Map.Should().Be("Frostcrag Spire");
-        item.Weather.Should().NotBeNull();
-        item.Weather!.Weathers.Should().HaveCount(1);
-        item.Weather!.Weathers![0].Weather.FormKey.Should().Be(FormKey.Factory("038EF1:OblivionRegion.esp"));
-        item.Weather!.Weathers![0].Chance.Should().Be(100);
+        item.Sounds.ShouldNotBeNull();
+        item.Sounds!.Sounds.ShouldBeEmpty();
+        item.Sounds!.MusicType.ShouldBe(MusicType.Default);
+        item.MapName.ShouldNotBeNull();
+        item.MapName!.Map.ShouldBe("Frostcrag Spire");
+        item.Weather.ShouldNotBeNull();
+        item.Weather!.Weathers.ShouldHaveCount(1);
+        item.Weather!.Weathers![0].Weather.FormKey.ShouldBe(FormKey.Factory("038EF1:OblivionRegion.esp"));
+        item.Weather!.Weathers![0].Chance.ShouldBe(100);
     }
 }

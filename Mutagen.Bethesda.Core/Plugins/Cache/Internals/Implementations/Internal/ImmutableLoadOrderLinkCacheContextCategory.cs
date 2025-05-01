@@ -165,7 +165,8 @@ internal sealed class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGette
                     }
                     catch (Exception e)
                     {
-                        throw RecordException.Enrich(e, mod.ModKey);
+                        RecordException.EnrichAndThrow(e, mod.ModKey);
+                        throw;
                     }
                 }
 
@@ -268,7 +269,8 @@ internal sealed class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGette
                         }
                         catch (Exception e)
                         {
-                            throw RecordException.Enrich(e, mod.ModKey);
+                            RecordException.EnrichAndThrow(e, mod.ModKey);
+                            throw;
                         }
                     }
 

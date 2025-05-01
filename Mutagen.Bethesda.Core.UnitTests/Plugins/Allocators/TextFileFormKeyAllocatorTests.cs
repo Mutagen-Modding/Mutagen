@@ -1,6 +1,6 @@
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Allocators;
 using Mutagen.Bethesda.Plugins.Records;
@@ -67,10 +67,10 @@ public class TextFileFormKeyAllocatorTests : IPersistentFormKeyAllocatorTests<Te
         var formID = allocator.GetNextFormKey(TestConstants.Edid1);
         Assert.Equal(mod.ModKey, formID.ModKey);
         Assert.Equal(formID.ID, TestConstants.Form1.ID);
-        formID.ModKey.Should().Be(mod.ModKey);
+        formID.ModKey.ShouldBe(mod.ModKey);
         formID = allocator.GetNextFormKey(TestConstants.Edid2);
         Assert.Equal(formID.ID, TestConstants.Form2.ID);
-        formID.ModKey.Should().Be(mod.ModKey);
+        formID.ModKey.ShouldBe(mod.ModKey);
     }
 
     [Theory, MutagenAutoData]

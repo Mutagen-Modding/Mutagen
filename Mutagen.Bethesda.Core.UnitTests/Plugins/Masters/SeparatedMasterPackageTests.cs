@@ -1,9 +1,10 @@
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Testing.AutoData;
+using Noggog.Testing.Extensions;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Masters;
@@ -31,15 +32,15 @@ public class SeparatedMasterPackageTests
 
         var package = SeparatedMasterPackage.NotSeparate(masterColl);
 
-        package.TryLookupModKey(originating, reference: true, out var style, out var index).Should().BeTrue();
-        index.Should().Be(2);
-        style.Should().Be(MasterStyle.Full);
-        package.TryLookupModKey(modA, reference: true, out var aStyle, out var aIndex).Should().BeTrue();
-        aIndex.Should().Be(0);
-        aStyle.Should().Be(MasterStyle.Full);
-        package.TryLookupModKey(modB, reference: true, out var bStyle, out var bIndex).Should().BeTrue();
-        bIndex.Should().Be(1);
-        bStyle.Should().Be(MasterStyle.Full);
+        package.TryLookupModKey(originating, reference: true, out var style, out var index).ShouldBeTrue();
+        index.ShouldEqual(2);
+        style.ShouldBe(MasterStyle.Full);
+        package.TryLookupModKey(modA, reference: true, out var aStyle, out var aIndex).ShouldBeTrue();
+        aIndex.ShouldEqual(0);
+        aStyle.ShouldBe(MasterStyle.Full);
+        package.TryLookupModKey(modB, reference: true, out var bStyle, out var bIndex).ShouldBeTrue();
+        bIndex.ShouldEqual(1);
+        bStyle.ShouldBe(MasterStyle.Full);
     }
     
     [Theory, MutagenAutoData]
@@ -63,9 +64,9 @@ public class SeparatedMasterPackageTests
 
         var package = SeparatedMasterPackage.NotSeparate(masterColl);
 
-        package.GetFormKey(new FormID(0x00123456), reference: true).Should().Be(new FormKey(modA, 0x123456));
-        package.GetFormKey(new FormID(0x01123456), reference: true).Should().Be(new FormKey(modB, 0x123456));
-        package.GetFormKey(new FormID(0x02123456), reference: true).Should().Be(new FormKey(originating, 0x123456));
+        package.GetFormKey(new FormID(0x00123456), reference: true).ShouldBe(new FormKey(modA, 0x123456));
+        package.GetFormKey(new FormID(0x01123456), reference: true).ShouldBe(new FormKey(modB, 0x123456));
+        package.GetFormKey(new FormID(0x02123456), reference: true).ShouldBe(new FormKey(originating, 0x123456));
     }
     
     [Theory, MutagenAutoData]
@@ -119,27 +120,27 @@ public class SeparatedMasterPackageTests
 
         var package = SeparatedMasterPackage.Separate(orig.ModKey, MasterStyle.Full, masterColl, lo);
 
-        package.TryLookupModKey(originating, reference: true, out var origStyle, out var origIndex).Should().BeTrue();
-        origIndex.Should().Be(2);
-        origStyle.Should().Be(MasterStyle.Full);
-        package.TryLookupModKey(modA, reference: true, out var aStyle, out var aIndex).Should().BeTrue();
-        aIndex.Should().Be(0);
-        aStyle.Should().Be(MasterStyle.Full);
-        package.TryLookupModKey(modB, reference: true, out var bStyle, out var bIndex).Should().BeTrue();
-        bIndex.Should().Be(1);
-        bStyle.Should().Be(MasterStyle.Full);
-        package.TryLookupModKey(lightA, reference: true, out var lightAStyle, out var lightAIndex).Should().BeTrue();
-        lightAIndex.Should().Be(0);
-        lightAStyle.Should().Be(MasterStyle.Small);
-        package.TryLookupModKey(lightB, reference: true, out var lightBStyle, out var lightBIndex).Should().BeTrue();
-        lightBIndex.Should().Be(1);
-        lightBStyle.Should().Be(MasterStyle.Small);
-        package.TryLookupModKey(mediumA, reference: true, out var mediumAStyle, out var mediumAIndex).Should().BeTrue();
-        mediumAIndex.Should().Be(0);
-        mediumAStyle.Should().Be(MasterStyle.Medium);
-        package.TryLookupModKey(mediumB, reference: true, out var mediumBStyle, out var mediumBIndex).Should().BeTrue();
-        mediumBIndex.Should().Be(1);
-        mediumBStyle.Should().Be(MasterStyle.Medium);
+        package.TryLookupModKey(originating, reference: true, out var origStyle, out var origIndex).ShouldBeTrue();
+        origIndex.ShouldEqual(2);
+        origStyle.ShouldBe(MasterStyle.Full);
+        package.TryLookupModKey(modA, reference: true, out var aStyle, out var aIndex).ShouldBeTrue();
+        aIndex.ShouldEqual(0);
+        aStyle.ShouldBe(MasterStyle.Full);
+        package.TryLookupModKey(modB, reference: true, out var bStyle, out var bIndex).ShouldBeTrue();
+        bIndex.ShouldEqual(1);
+        bStyle.ShouldBe(MasterStyle.Full);
+        package.TryLookupModKey(lightA, reference: true, out var lightAStyle, out var lightAIndex).ShouldBeTrue();
+        lightAIndex.ShouldEqual(0);
+        lightAStyle.ShouldBe(MasterStyle.Small);
+        package.TryLookupModKey(lightB, reference: true, out var lightBStyle, out var lightBIndex).ShouldBeTrue();
+        lightBIndex.ShouldEqual(1);
+        lightBStyle.ShouldBe(MasterStyle.Small);
+        package.TryLookupModKey(mediumA, reference: true, out var mediumAStyle, out var mediumAIndex).ShouldBeTrue();
+        mediumAIndex.ShouldEqual(0);
+        mediumAStyle.ShouldBe(MasterStyle.Medium);
+        package.TryLookupModKey(mediumB, reference: true, out var mediumBStyle, out var mediumBIndex).ShouldBeTrue();
+        mediumBIndex.ShouldEqual(1);
+        mediumBStyle.ShouldBe(MasterStyle.Medium);
     }
     
     [Theory, MutagenAutoData]
@@ -193,12 +194,12 @@ public class SeparatedMasterPackageTests
 
         var package = SeparatedMasterPackage.Separate(orig.ModKey, MasterStyle.Full, masterColl, lo);
 
-        package.GetFormKey(new FormID(0x00123456), reference: true).Should().Be(new FormKey(modA, 0x123456));
-        package.GetFormKey(new FormID(0xFE000123), reference: true).Should().Be(new FormKey(lightA, 0x123));
-        package.GetFormKey(new FormID(0xFD001234), reference: true).Should().Be(new FormKey(mediumA, 0x1234));
-        package.GetFormKey(new FormID(0x01123456), reference: true).Should().Be(new FormKey(modB, 0x123456));
-        package.GetFormKey(new FormID(0xFE001123), reference: true).Should().Be(new FormKey(lightB, 0x123));
-        package.GetFormKey(new FormID(0xFD011234), reference: true).Should().Be(new FormKey(mediumB, 0x1234));
-        package.GetFormKey(new FormID(0x02123456), reference: true).Should().Be(new FormKey(originating, 0x123456));
+        package.GetFormKey(new FormID(0x00123456), reference: true).ShouldBe(new FormKey(modA, 0x123456));
+        package.GetFormKey(new FormID(0xFE000123), reference: true).ShouldBe(new FormKey(lightA, 0x123));
+        package.GetFormKey(new FormID(0xFD001234), reference: true).ShouldBe(new FormKey(mediumA, 0x1234));
+        package.GetFormKey(new FormID(0x01123456), reference: true).ShouldBe(new FormKey(modB, 0x123456));
+        package.GetFormKey(new FormID(0xFE001123), reference: true).ShouldBe(new FormKey(lightB, 0x123));
+        package.GetFormKey(new FormID(0xFD011234), reference: true).ShouldBe(new FormKey(mediumB, 0x1234));
+        package.GetFormKey(new FormID(0x02123456), reference: true).ShouldBe(new FormKey(originating, 0x123456));
     }
 }

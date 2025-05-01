@@ -297,7 +297,8 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
                             new IniPathProvider(
                                 Release,
                                 new IniPathLookup(
-                                    gameDirectoryLookup))))),
+                                    gameDirectoryLookup))),
+                        new ArchiveNameFromModKeyProvider(Release))),
                 Release));
 
         return new GameEnvironmentState<TMod, TModGetter>(
@@ -582,7 +583,8 @@ public sealed record GameEnvironmentBuilder
                             new IniPathProvider(
                                 Release,
                                 new IniPathLookup(
-                                    gameDirectoryLookup))))),
+                                    gameDirectoryLookup))),
+                        new ArchiveNameFromModKeyProvider(Release))),
                 Release));
         
         return new GameEnvironmentState(

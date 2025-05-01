@@ -1,5 +1,5 @@
 ﻿using DynamicData;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order;
 using System.IO.Abstractions.TestingHelpers;
@@ -62,14 +62,13 @@ public class LiveLoadOrderIntegrationTests
             if (x.Failed) throw x.Exception ?? new Exception();
         });
         var list = live.AsObservableList();
-        list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
-        {
+        list.Items.Select(x => x.ModKey).ShouldBe([
             implicitKey,
             TestConstants.LightModKey,
             TestConstants.MasterModKey,
             TestConstants.MasterModKey2,
-            TestConstants.PluginModKey,
-        });
+            TestConstants.PluginModKey
+        ]);
 
         fs.File.WriteAllLines(pluginPath.Path,
             new string[]
@@ -82,13 +81,12 @@ public class LiveLoadOrderIntegrationTests
         watcher.MarkCreated(lightMaster2Path);
         fs.File.Delete(lightMasterPath);
         watcher.MarkDeleted(lightMasterPath);
-        list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
-        {
+        list.Items.Select(x => x.ModKey).ShouldBe([
             implicitKey,
             TestConstants.LightModKey2,
             TestConstants.MasterModKey,
-            TestConstants.PluginModKey,
-        });
+            TestConstants.PluginModKey
+        ]);
 
         fs.File.WriteAllLines(pluginPath.Path,
             new string[]
@@ -97,13 +95,12 @@ public class LiveLoadOrderIntegrationTests
                 $"*{TestConstants.MasterModKey2}",
             });
         watcher.MarkChanged(pluginPath.Path);
-        list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
-        {
+        list.Items.Select(x => x.ModKey).ShouldBe([
             implicitKey,
             TestConstants.LightModKey2,
             TestConstants.MasterModKey,
-            TestConstants.MasterModKey2,
-        });
+            TestConstants.MasterModKey2
+        ]);
 
         fs.File.WriteAllLines(pluginPath.Path,
             new string[]
@@ -115,26 +112,24 @@ public class LiveLoadOrderIntegrationTests
         watcher.MarkChanged(pluginPath.Path);
         fs.File.Delete(lightMaster2Path);
         watcher.MarkDeleted(lightMaster2Path);
-        list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
-        {
+        list.Items.Select(x => x.ModKey).ShouldBe([
             implicitKey,
             TestConstants.MasterModKey,
             TestConstants.MasterModKey2,
-            TestConstants.PluginModKey,
-        });
+            TestConstants.PluginModKey
+        ]);
 
         // Does not respect just data folder modification
         // Since ModListing doesn't specify whether data folder is present
         // Data folder is just used for Timestamp alignment for Oblivion
         fs.File.Delete(master2Path);
         watcher.MarkDeleted(master2Path);
-        list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
-        {
+        list.Items.Select(x => x.ModKey).ShouldBe([
             implicitKey,
             TestConstants.MasterModKey,
             TestConstants.MasterModKey2,
-            TestConstants.PluginModKey,
-        });
+            TestConstants.PluginModKey
+        ]);
     }
 
     [Theory, MutagenAutoData(ConfigureMembers: true)]
@@ -174,15 +169,14 @@ public class LiveLoadOrderIntegrationTests
             fileSystem: fs,
             timings: timings);
         var list = live.AsObservableList();
-        list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
-        {
+        list.Items.Select(x => x.ModKey).ShouldBe([
             implicitKey,
             TestConstants.LightModKey,
             TestConstants.MasterModKey,
             TestConstants.MasterModKey2,
             TestConstants.MasterModKey3,
-            TestConstants.PluginModKey,
-        });
+            TestConstants.PluginModKey
+        ]);
 
         // Remove
         fs.File.WriteAllLines(pluginPath.Path,
@@ -193,14 +187,13 @@ public class LiveLoadOrderIntegrationTests
                 $"*{TestConstants.PluginModKey}",
             });
         watcher.MarkChanged(pluginPath.Path);
-        list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
-        {
+        list.Items.Select(x => x.ModKey).ShouldBe([
             implicitKey,
             TestConstants.LightModKey,
             TestConstants.MasterModKey,
             TestConstants.MasterModKey3,
-            TestConstants.PluginModKey,
-        });
+            TestConstants.PluginModKey
+        ]);
 
         // Then readd
         fs.File.WriteAllLines(pluginPath.Path,
@@ -212,15 +205,14 @@ public class LiveLoadOrderIntegrationTests
                 $"*{TestConstants.PluginModKey}",
             });
         watcher.MarkChanged(pluginPath.Path);
-        list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
-        {
+        list.Items.Select(x => x.ModKey).ShouldBe([
             implicitKey,
             TestConstants.LightModKey,
             TestConstants.MasterModKey,
             TestConstants.MasterModKey2,
             TestConstants.MasterModKey3,
-            TestConstants.PluginModKey,
-        });
+            TestConstants.PluginModKey
+        ]);
     }
 
     // Vortex puts CC mods on the plugins file, as unactivated.  Seemingly to drive load order?
@@ -265,51 +257,47 @@ public class LiveLoadOrderIntegrationTests
             fileSystem: fs,
             timings: timings);
         var list = live.AsObservableList();
-        list.Items.Select(x => x.ModKey).Should().Equal(
+        list.Items.Select(x => x.ModKey).ShouldBe(
             implicitKeys.Concat(
-                new ModKey[]
-                {
-                    TestConstants.LightModKey,
+            [
+                TestConstants.LightModKey,
                     TestConstants.LightModKey2,
                     TestConstants.MasterModKey,
-                    TestConstants.PluginModKey,
-                }));
+                    TestConstants.PluginModKey
+            ]));
 
         fs.File.WriteAllLines(pluginPath.Path,
-            new string[]
-            {
-                $"*{TestConstants.MasterModKey}",
+        [
+            $"*{TestConstants.MasterModKey}",
                 $"*{TestConstants.PluginModKey}",
-                $"{TestConstants.LightModKey}",
-            });
+                $"{TestConstants.LightModKey}"
+        ]);
         watcher.MarkChanged(pluginPath.Path);
-        list.Items.Select(x => x.ModKey).Should().Equal(
+        list.Items.Select(x => x.ModKey).ShouldBe(
             implicitKeys.Concat(
-                new ModKey[] {
-                    TestConstants.LightModKey2,
+            [
+                TestConstants.LightModKey2,
                     TestConstants.LightModKey,
                     TestConstants.MasterModKey,
-                    TestConstants.PluginModKey,
-                }));
+                    TestConstants.PluginModKey
+            ]));
 
         fs.File.WriteAllLines(pluginPath.Path,
-            new string[]
-            {
-                $"*{TestConstants.MasterModKey}",
+        [
+            $"*{TestConstants.MasterModKey}",
                 $"*{TestConstants.PluginModKey}",
                 $"{TestConstants.LightModKey}",
-                $"{TestConstants.LightModKey2}",
-            });
+                $"{TestConstants.LightModKey2}"
+        ]);
         watcher.MarkChanged(pluginPath.Path);
-        list.Items.Select(x => x.ModKey).Should().Equal(
+        list.Items.Select(x => x.ModKey).ShouldBe(
             implicitKeys.Concat(
-                new ModKey[]
-                {
-                    TestConstants.LightModKey,
+            [
+                TestConstants.LightModKey,
                     TestConstants.LightModKey2,
                     TestConstants.MasterModKey,
-                    TestConstants.PluginModKey,
-                }));
+                    TestConstants.PluginModKey
+            ]));
     }
 
     [Theory, MutagenAutoData(ConfigureMembers: false)]
@@ -346,13 +334,12 @@ public class LiveLoadOrderIntegrationTests
             fileSystem: fs,
             timings: timings);
         var list = live.AsObservableList();
-        list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
-        {
+        list.Items.Select(x => x.ModKey).ShouldBe([
             TestConstants.Skyrim,
             TestConstants.LightModKey,
             TestConstants.PluginModKey,
             TestConstants.MasterModKey,
-            TestConstants.PluginModKey2,
-        });
+            TestConstants.PluginModKey2
+        ]);
     }
 }

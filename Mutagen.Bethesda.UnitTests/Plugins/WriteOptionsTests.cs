@@ -1,5 +1,5 @@
 using System.IO.Abstractions;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
@@ -11,6 +11,8 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.Testing.AutoData;
+using Noggog;
+using Noggog.Testing.Extensions;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins;
@@ -25,7 +27,7 @@ public class WriteOptionsTests
     {
         var nextId = mod.ModHeader.Stats.NextFormID;
         var npc = mod.Npcs.AddNew();
-        npc.FormKey.ID.Should().Be(nextId);
+        npc.FormKey.ID.ShouldBe(nextId);
         await mod.BeginWrite
             .ToPath(existingModPath)
             .WithNoLoadOrder()
@@ -36,7 +38,7 @@ public class WriteOptionsTests
             .FromPath(existingModPath)
             .WithFileSystem(fileSystem)
             .Construct();
-        reimport.ModHeader.Stats.NextFormID.Should().Be(nextId + 1);
+        reimport.ModHeader.Stats.NextFormID.ShouldBe(nextId + 1);
     }
 
     [Theory, MutagenModAutoData(GameRelease.Oblivion)]
@@ -48,7 +50,7 @@ public class WriteOptionsTests
         ModPath existingModPath)
     {
         var weap = mod.Weapons.AddNew(FormKey.Factory("123456:Skyrim.esm"));
-        mod.ModKey.Should().NotBe(existingModPath.ModKey);
+        mod.ModKey.ShouldNotBe(existingModPath.ModKey);
         npc.Race.SetTo(race);
         await mod.BeginWrite
             .ToPath(existingModPath)
@@ -63,14 +65,14 @@ public class WriteOptionsTests
             .WithFileSystem(fileSystem)
             .Construct();
         var reimportWeapon = reimport.Weapons.First();
-        reimportWeapon.FormKey.Should().Be(weap.FormKey);
+        reimportWeapon.FormKey.ShouldBe(weap.FormKey);
         var reimportNpc = reimport.Npcs.First();
-        reimportNpc.FormKey.ModKey.Should().Be(existingModPath.ModKey);
-        reimportNpc.FormKey.ID.Should().Be(npc.FormKey.ID);
+        reimportNpc.FormKey.ModKey.ShouldBe(existingModPath.ModKey);
+        reimportNpc.FormKey.ID.ShouldBe(npc.FormKey.ID);
         var reimportRace = reimport.Races.First();
-        reimportRace.FormKey.ModKey.Should().Be(existingModPath.ModKey);
-        reimportRace.FormKey.ID.Should().Be(race.FormKey.ID);
-        reimportNpc.Race.FormKey.Should().Be(reimportRace.FormKey);
+        reimportRace.FormKey.ModKey.ShouldBe(existingModPath.ModKey);
+        reimportRace.FormKey.ID.ShouldBe(race.FormKey.ID);
+        reimportNpc.Race.FormKey.ShouldBe(reimportRace.FormKey);
 
         // Check OnDisk FormIDs
         using var stream =
@@ -81,23 +83,23 @@ public class WriteOptionsTests
             if (group.ContainedRecordType == RecordTypes.NPC_)
             {
                 var recs = group.EnumerateMajorRecords().ToArray();
-                recs.Length.Should().Be(1);
-                recs[0].FormID.FullId.Should().Be(reimportNpc.FormKey.ID);
-                recs[0].FormID.FullMasterIndex.Should().Be(1);
+                recs.Length.ShouldBe(1);
+                recs[0].FormID.FullId.ShouldBe(reimportNpc.FormKey.ID);
+                recs[0].FormID.FullMasterIndex.ShouldEqual(1);
             }
             else if (group.ContainedRecordType == RecordTypes.WEAP)
             {
                 var recs = group.EnumerateMajorRecords().ToArray();
-                recs.Length.Should().Be(1);
-                recs[0].FormID.FullId.Should().Be(reimportWeapon.FormKey.ID);
-                recs[0].FormID.FullMasterIndex.Should().Be(0);
+                recs.Length.ShouldBe(1);
+                recs[0].FormID.FullId.ShouldBe(reimportWeapon.FormKey.ID);
+                recs[0].FormID.FullMasterIndex.ShouldEqual(0);
             }
             else if (group.ContainedRecordType == RecordTypes.RACE)
             {
                 var recs = group.EnumerateMajorRecords().ToArray();
-                recs.Length.Should().Be(1);
-                recs[0].FormID.FullId.Should().Be(reimportRace.FormKey.ID);
-                recs[0].FormID.FullMasterIndex.Should().Be(1);
+                recs.Length.ShouldBe(1);
+                recs[0].FormID.FullId.ShouldBe(reimportRace.FormKey.ID);
+                recs[0].FormID.FullMasterIndex.ShouldEqual(1);
             }
             else
             {
@@ -114,7 +116,7 @@ public class WriteOptionsTests
         SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE,
             forceUseLowerFormIDRanges: true);
         var npc = mod.Npcs.AddNew();
-        npc.FormKey.ID.Should().Be(0);
+        npc.FormKey.ID.ShouldEqual(0);
         await Assert.ThrowsAsync<LowerFormKeyRangeDisallowedException>(async () =>
         {
             await mod.BeginWrite
@@ -136,7 +138,7 @@ public class WriteOptionsTests
         SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE,
             forceUseLowerFormIDRanges: true);
         var npc = mod.Npcs.AddNew();
-        npc.FormKey.ID.Should().Be(0);
+        npc.FormKey.ID.ShouldEqual(0);
         await mod.BeginWrite
             .ToPath(existingModPath)
             .WithNoLoadOrder()
@@ -148,7 +150,7 @@ public class WriteOptionsTests
             .FromPath(existingModPath)
             .WithFileSystem(fileSystem)
             .Construct();
-        reimport.MasterReferences.Select(x => x.Master).Should().Equal(modKey);
+        reimport.MasterReferences.Select(x => x.Master).ShouldEqual(modKey);
     }
 
     [Theory, MutagenModAutoData(GameRelease.SkyrimSE)]
@@ -159,7 +161,7 @@ public class WriteOptionsTests
         SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE,
             forceUseLowerFormIDRanges: true);
         var npc = mod.Npcs.AddNew();
-        npc.FormKey.ID.Should().Be(0);
+        npc.FormKey.ID.ShouldEqual(0);
 
         var lo = new LoadOrder<ModListing>();
 
@@ -184,7 +186,7 @@ public class WriteOptionsTests
         SkyrimMod mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE,
             forceUseLowerFormIDRanges: true);
         var npc = mod.Npcs.AddNew();
-        npc.FormKey.ID.Should().Be(0);
+        npc.FormKey.ID.ShouldEqual(0);
 
         var lo = new LoadOrder<ModListing>()
         {
@@ -205,7 +207,7 @@ public class WriteOptionsTests
             .FromPath(existingModPath)
             .WithFileSystem(fileSystem)
             .Construct();
-        reimport.MasterReferences.Select(x => x.Master).Should().Equal(modKey);
+        reimport.MasterReferences.Select(x => x.Master).ShouldEqual(modKey);
     }
 
     [Theory, MutagenAutoData]
@@ -305,4 +307,27 @@ public class WriteOptionsTests
             .WithFileSystem(fileSystem)
             .WriteAsync();
     }
+    
+    [Theory, MutagenModAutoData(GameRelease.Oblivion)]
+    public async Task NoSyncOverridesRespected(
+        OblivionMod mod,
+        FormKey fk,
+        FormKey fk2,
+        FormKey fk3,
+        IFileSystem fileSystem,
+        DirectoryPath existingDir)
+    {
+        mod.Npcs.AddNew();
+        mod.Npcs.AddNew(fk);
+        mod.Npcs.AddNew(fk2);
+        mod.Npcs.AddNew(fk3);
+        await mod.BeginWrite
+            .ToPath(Path.Combine(existingDir, mod.ModKey.FileName))
+            .WithLoadOrderFromHeaderMasters()
+            .WithNoDataFolder()
+            .WithMastersListOrdering(MastersListOrderingOption.NoCheck)
+            .WithFileSystem(fileSystem)
+            .WriteAsync();
+    }
+
 }

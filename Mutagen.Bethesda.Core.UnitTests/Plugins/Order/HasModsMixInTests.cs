@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Testing;
 using Xunit;
@@ -12,7 +12,7 @@ public class HasModsMixInTests
     {
         Enumerable.Empty<ModListing>()
             .ModExists(TestConstants.LightModKey)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 
     [Fact]
@@ -26,16 +26,16 @@ public class HasModsMixInTests
         };
         listings
             .ModExists(TestConstants.LightModKey)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ModExists(TestConstants.LightModKey2)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ModExists(TestConstants.LightModKey3)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ModExists(TestConstants.LightModKey4)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 
     [Fact]
@@ -49,22 +49,22 @@ public class HasModsMixInTests
         };
         listings
             .ModExists(TestConstants.LightModKey, enabled: true)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ModExists(TestConstants.LightModKey, enabled: false)
-            .Should().BeFalse();
+            .ShouldBeFalse();
         listings
             .ModExists(TestConstants.LightModKey2, enabled: false)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ModExists(TestConstants.LightModKey2, enabled: true)
-            .Should().BeFalse();
+            .ShouldBeFalse();
         listings
             .ModExists(TestConstants.LightModKey3, enabled: true)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ModExists(TestConstants.LightModKey3, enabled: false)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 
     [Fact]
@@ -72,7 +72,7 @@ public class HasModsMixInTests
     {
         Enumerable.Empty<ModListing>()
             .ModsExist(TestConstants.LightModKey, TestConstants.LightModKey2)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 
     [Fact]
@@ -80,7 +80,7 @@ public class HasModsMixInTests
     {
         Enumerable.Empty<ModListing>()
             .ModsExist()
-            .Should().BeTrue();
+            .ShouldBeTrue();
     }
 
     [Fact]
@@ -94,16 +94,16 @@ public class HasModsMixInTests
         };
         listings
             .ModsExist(TestConstants.LightModKey)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ModsExist(TestConstants.LightModKey2)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ModsExist(TestConstants.LightModKey3)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ModsExist(TestConstants.LightModKey4)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 
     [Fact]
@@ -117,13 +117,13 @@ public class HasModsMixInTests
         };
         listings
             .ModsExist(TestConstants.LightModKey, TestConstants.LightModKey2, TestConstants.LightModKey3)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ModsExist(TestConstants.LightModKey, TestConstants.LightModKey2)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ModsExist(TestConstants.LightModKey, TestConstants.LightModKey2, TestConstants.LightModKey4)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 
     [Fact]
@@ -131,10 +131,10 @@ public class HasModsMixInTests
     {
         Enumerable.Empty<ModListing>()
             .ModsExist(true, TestConstants.LightModKey, TestConstants.LightModKey2)
-            .Should().BeFalse();
+            .ShouldBeFalse();
         Enumerable.Empty<ModListing>()
             .ModsExist(false, TestConstants.LightModKey, TestConstants.LightModKey2)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 
     [Fact]
@@ -142,10 +142,10 @@ public class HasModsMixInTests
     {
         Enumerable.Empty<ModListing>()
             .ModsExist(true)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         Enumerable.Empty<ModListing>()
             .ModsExist(false)
-            .Should().BeTrue();
+            .ShouldBeTrue();
     }
 
     [Fact]
@@ -159,28 +159,28 @@ public class HasModsMixInTests
         };
         listings
             .ModsExist(true, TestConstants.LightModKey)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ModsExist(false, TestConstants.LightModKey)
-            .Should().BeFalse();
+            .ShouldBeFalse();
         listings
             .ModsExist(false, TestConstants.LightModKey2)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ModsExist(true, TestConstants.LightModKey2)
-            .Should().BeFalse();
+            .ShouldBeFalse();
         listings
             .ModsExist(true, TestConstants.LightModKey3)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ModsExist(false, TestConstants.LightModKey3)
-            .Should().BeFalse();
+            .ShouldBeFalse();
         listings
             .ModsExist(true, TestConstants.LightModKey4)
-            .Should().BeFalse();
+            .ShouldBeFalse();
         listings
             .ModsExist(false, TestConstants.LightModKey4)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 
     [Fact]
@@ -194,16 +194,16 @@ public class HasModsMixInTests
         };
         listings
             .ModsExist(TestConstants.LightModKey)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ModsExist(TestConstants.LightModKey2)
-            .Should().BeFalse();
+            .ShouldBeFalse();
         listings
             .ModsExist(TestConstants.LightModKey3)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ModsExist(TestConstants.LightModKey4)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 
     [Fact]
@@ -219,19 +219,19 @@ public class HasModsMixInTests
             .ModsExist(
                 true,
                 TestConstants.LightModKey, TestConstants.LightModKey3)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ModsExist(false, TestConstants.LightModKey2)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         listings
             .ModsExist(
                 true,
                 TestConstants.LightModKey, TestConstants.LightModKey2, TestConstants.LightModKey3)
-            .Should().BeFalse();
+            .ShouldBeFalse();
         listings
             .ModsExist(
                 true,
                 TestConstants.LightModKey, TestConstants.LightModKey2, TestConstants.LightModKey4)
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 }

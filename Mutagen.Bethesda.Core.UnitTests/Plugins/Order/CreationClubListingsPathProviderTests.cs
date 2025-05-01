@@ -1,5 +1,5 @@
 ﻿using AutoFixture.Xunit2;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Testing.AutoData;
@@ -18,7 +18,7 @@ public class CreationClubListingsPathProviderTests
     {
         enabledProvider.Used.Returns(false);
         sut.Path
-            .Should().BeNull();
+            .ShouldBeNull();
     }
 
     [Theory, MutagenAutoData]
@@ -33,7 +33,7 @@ public class CreationClubListingsPathProviderTests
         {
             gameCategoryContext.Category.Returns(category);
             sut.Path
-                .Should().Be(new FilePath(Path.Combine(gameDir.Path!, $"{category}.ccc")));
+                .ShouldBe(new FilePath(Path.Combine(gameDir.Path!, $"{category}.ccc")));
         }
     }
 }

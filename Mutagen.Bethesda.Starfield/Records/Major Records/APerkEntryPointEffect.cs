@@ -300,26 +300,3 @@ partial class APerkEntryPointEffect
         ReplacementProjectile = 9,
     }
 }
-
-partial class APerkEntryPointEffectBinaryCreateTranslation
-{
-    public static partial ParseResult FillBinaryFunctionParametersCustom(MutagenFrame frame, IAPerkEntryPointEffect item, PreviousParse lastParsed)
-    {
-        return lastParsed;
-    }
-}
-
-partial class APerkEntryPointEffectBinaryWriteTranslation
-{
-    public static partial void WriteBinaryFunctionParametersCustom(MutagenWriter writer, IAPerkEntryPointEffectGetter item)
-    {
-    }
-}
-
-partial class APerkEntryPointEffectBinaryOverlay
-{
-    public partial ParseResult FunctionParametersCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
-    {
-        return lastParsed;
-    }
-}

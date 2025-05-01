@@ -97,10 +97,8 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
         #endregion
         #endregion
-        #region ODTY
-        public Single? ODTY { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? ILeveledBaseFormGetter.ODTY => this.ODTY;
+        #region DirtinessScale
+        public Percent DirtinessScale { get; set; } = default(Percent);
         #endregion
         #region ChanceNone
         public Single ChanceNone { get; set; } = default(Single);
@@ -196,7 +194,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
-                this.ODTY = initialValue;
+                this.DirtinessScale = initialValue;
                 this.ChanceNone = initialValue;
                 this.MaxCount = initialValue;
                 this.Flags = initialValue;
@@ -216,7 +214,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
-                TItem ODTY,
+                TItem DirtinessScale,
                 TItem ChanceNone,
                 TItem MaxCount,
                 TItem Flags,
@@ -235,7 +233,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
-                this.ODTY = ODTY;
+                this.DirtinessScale = DirtinessScale;
                 this.ChanceNone = ChanceNone;
                 this.MaxCount = MaxCount;
                 this.Flags = Flags;
@@ -256,7 +254,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
-            public TItem ODTY;
+            public TItem DirtinessScale;
             public TItem ChanceNone;
             public TItem MaxCount;
             public TItem Flags;
@@ -279,7 +277,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
-                if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
+                if (!object.Equals(this.DirtinessScale, rhs.DirtinessScale)) return false;
                 if (!object.Equals(this.ChanceNone, rhs.ChanceNone)) return false;
                 if (!object.Equals(this.MaxCount, rhs.MaxCount)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
@@ -294,7 +292,7 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.ObjectBounds);
-                hash.Add(this.ODTY);
+                hash.Add(this.DirtinessScale);
                 hash.Add(this.ChanceNone);
                 hash.Add(this.MaxCount);
                 hash.Add(this.Flags);
@@ -322,7 +320,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.ObjectBounds.Overall)) return false;
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
-                if (!eval(this.ODTY)) return false;
+                if (!eval(this.DirtinessScale)) return false;
                 if (!eval(this.ChanceNone)) return false;
                 if (!eval(this.MaxCount)) return false;
                 if (!eval(this.Flags)) return false;
@@ -374,7 +372,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.ObjectBounds.Overall)) return true;
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
-                if (eval(this.ODTY)) return true;
+                if (eval(this.DirtinessScale)) return true;
                 if (eval(this.ChanceNone)) return true;
                 if (eval(this.MaxCount)) return true;
                 if (eval(this.Flags)) return true;
@@ -425,7 +423,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
-                obj.ODTY = eval(this.ODTY);
+                obj.DirtinessScale = eval(this.DirtinessScale);
                 obj.ChanceNone = eval(this.ChanceNone);
                 obj.MaxCount = eval(this.MaxCount);
                 obj.Flags = eval(this.Flags);
@@ -487,9 +485,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         ObjectBounds?.Print(sb);
                     }
-                    if (printMask?.ODTY ?? true)
+                    if (printMask?.DirtinessScale ?? true)
                     {
-                        sb.AppendItem(ODTY, "ODTY");
+                        sb.AppendItem(DirtinessScale, "DirtinessScale");
                     }
                     if (printMask?.ChanceNone ?? true)
                     {
@@ -562,7 +560,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
-            public Exception? ODTY;
+            public Exception? DirtinessScale;
             public Exception? ChanceNone;
             public Exception? MaxCount;
             public Exception? Flags;
@@ -582,8 +580,8 @@ namespace Mutagen.Bethesda.Starfield
                         return VirtualMachineAdapter;
                     case LeveledBaseForm_FieldIndex.ObjectBounds:
                         return ObjectBounds;
-                    case LeveledBaseForm_FieldIndex.ODTY:
-                        return ODTY;
+                    case LeveledBaseForm_FieldIndex.DirtinessScale:
+                        return DirtinessScale;
                     case LeveledBaseForm_FieldIndex.ChanceNone:
                         return ChanceNone;
                     case LeveledBaseForm_FieldIndex.MaxCount:
@@ -614,8 +612,8 @@ namespace Mutagen.Bethesda.Starfield
                     case LeveledBaseForm_FieldIndex.ObjectBounds:
                         this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
                         break;
-                    case LeveledBaseForm_FieldIndex.ODTY:
-                        this.ODTY = ex;
+                    case LeveledBaseForm_FieldIndex.DirtinessScale:
+                        this.DirtinessScale = ex;
                         break;
                     case LeveledBaseForm_FieldIndex.ChanceNone:
                         this.ChanceNone = ex;
@@ -655,8 +653,8 @@ namespace Mutagen.Bethesda.Starfield
                     case LeveledBaseForm_FieldIndex.ObjectBounds:
                         this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
                         break;
-                    case LeveledBaseForm_FieldIndex.ODTY:
-                        this.ODTY = (Exception?)obj;
+                    case LeveledBaseForm_FieldIndex.DirtinessScale:
+                        this.DirtinessScale = (Exception?)obj;
                         break;
                     case LeveledBaseForm_FieldIndex.ChanceNone:
                         this.ChanceNone = (Exception?)obj;
@@ -690,7 +688,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (VirtualMachineAdapter != null) return true;
                 if (ObjectBounds != null) return true;
-                if (ODTY != null) return true;
+                if (DirtinessScale != null) return true;
                 if (ChanceNone != null) return true;
                 if (MaxCount != null) return true;
                 if (Flags != null) return true;
@@ -727,7 +725,7 @@ namespace Mutagen.Bethesda.Starfield
                 VirtualMachineAdapter?.Print(sb);
                 ObjectBounds?.Print(sb);
                 {
-                    sb.AppendItem(ODTY, "ODTY");
+                    sb.AppendItem(DirtinessScale, "DirtinessScale");
                 }
                 {
                     sb.AppendItem(ChanceNone, "ChanceNone");
@@ -788,7 +786,7 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
-                ret.ODTY = this.ODTY.Combine(rhs.ODTY);
+                ret.DirtinessScale = this.DirtinessScale.Combine(rhs.DirtinessScale);
                 ret.ChanceNone = this.ChanceNone.Combine(rhs.ChanceNone);
                 ret.MaxCount = this.MaxCount.Combine(rhs.MaxCount);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
@@ -820,7 +818,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public ObjectBounds.TranslationMask? ObjectBounds;
-            public bool ODTY;
+            public bool DirtinessScale;
             public bool ChanceNone;
             public bool MaxCount;
             public bool Flags;
@@ -836,7 +834,7 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.ODTY = defaultOn;
+                this.DirtinessScale = defaultOn;
                 this.ChanceNone = defaultOn;
                 this.MaxCount = defaultOn;
                 this.Flags = defaultOn;
@@ -850,7 +848,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
-                ret.Add((ODTY, null));
+                ret.Add((DirtinessScale, null));
                 ret.Add((ChanceNone, null));
                 ret.Add((MaxCount, null));
                 ret.Add((Flags, null));
@@ -1024,7 +1022,7 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: IObjectBounded
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
-        new Single? ODTY { get; set; }
+        new Percent DirtinessScale { get; set; }
         new Single ChanceNone { get; set; }
         new Byte? MaxCount { get; set; }
         new LeveledItem.Flag Flags { get; set; }
@@ -1072,7 +1070,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
-        Single? ODTY { get; }
+        Percent DirtinessScale { get; }
         Single ChanceNone { get; }
         Byte? MaxCount { get; }
         LeveledItem.Flag Flags { get; }
@@ -1263,7 +1261,7 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         VirtualMachineAdapter = 7,
         ObjectBounds = 8,
-        ODTY = 9,
+        DirtinessScale = 9,
         ChanceNone = 10,
         MaxCount = 11,
         Flags = 12,
@@ -1333,8 +1331,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MODL,
                 RecordTypes.MODT,
                 RecordTypes.MOLM,
-                RecordTypes.DMDC,
-                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
@@ -1385,7 +1381,7 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.VirtualMachineAdapter = null;
             item.ObjectBounds.Clear();
-            item.ODTY = default;
+            item.DirtinessScale = default(Percent);
             item.ChanceNone = default(Single);
             item.MaxCount = default;
             item.Flags = default(LeveledItem.Flag);
@@ -1514,7 +1510,7 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
-            ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
+            ret.DirtinessScale = item.DirtinessScale.Equals(rhs.DirtinessScale);
             ret.ChanceNone = item.ChanceNone.EqualsWithin(rhs.ChanceNone);
             ret.MaxCount = item.MaxCount == rhs.MaxCount;
             ret.Flags = item.Flags == rhs.Flags;
@@ -1590,10 +1586,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ObjectBounds?.Print(sb, "ObjectBounds");
             }
-            if ((printMask?.ODTY ?? true)
-                && item.ODTY is {} ODTYItem)
+            if (printMask?.DirtinessScale ?? true)
             {
-                sb.AppendItem(ODTYItem, "ODTY");
+                sb.AppendItem(item.DirtinessScale, "DirtinessScale");
             }
             if (printMask?.ChanceNone ?? true)
             {
@@ -1712,9 +1707,9 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LeveledBaseForm_FieldIndex.ODTY) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledBaseForm_FieldIndex.DirtinessScale) ?? true))
             {
-                if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
+                if (!lhs.DirtinessScale.Equals(rhs.DirtinessScale)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)LeveledBaseForm_FieldIndex.ChanceNone) ?? true))
             {
@@ -1781,10 +1776,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(VirtualMachineAdapteritem);
             }
             hash.Add(item.ObjectBounds);
-            if (item.ODTY is {} ODTYitem)
-            {
-                hash.Add(ODTYitem);
-            }
+            hash.Add(item.DirtinessScale);
             hash.Add(item.ChanceNone);
             if (item.MaxCount is {} MaxCountitem)
             {
@@ -1994,9 +1986,9 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)LeveledBaseForm_FieldIndex.ODTY) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LeveledBaseForm_FieldIndex.DirtinessScale) ?? true))
             {
-                item.ODTY = rhs.ODTY;
+                item.DirtinessScale = rhs.DirtinessScale;
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledBaseForm_FieldIndex.ChanceNone) ?? true))
             {
@@ -2277,9 +2269,10 @@ namespace Mutagen.Bethesda.Starfield
                 item: ObjectBoundsItem,
                 writer: writer,
                 translationParams: translationParams);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            PercentBinaryTranslation.Write(
                 writer: writer,
-                item: item.ODTY,
+                item: item.DirtinessScale,
+                integerType: FloatIntegerType.UInt,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
@@ -2412,8 +2405,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ODTY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)LeveledBaseForm_FieldIndex.ODTY;
+                    item.DirtinessScale = PercentBinaryTranslation.Parse(
+                        reader: frame,
+                        integerType: FloatIntegerType.UInt);
+                    return (int)LeveledBaseForm_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.LVLD:
                 {
@@ -2468,8 +2463,6 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -2556,9 +2549,9 @@ namespace Mutagen.Bethesda.Starfield
         private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
-        #region ODTY
-        private int? _ODTYLocation;
-        public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region DirtinessScale
+        private int? _DirtinessScaleLocation;
+        public Percent DirtinessScale => _DirtinessScaleLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DirtinessScaleLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt) : default(Percent);
         #endregion
         #region ChanceNone
         private int? _ChanceNoneLocation;
@@ -2665,8 +2658,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ODTY:
                 {
-                    _ODTYLocation = (stream.Position - offset);
-                    return (int)LeveledBaseForm_FieldIndex.ODTY;
+                    _DirtinessScaleLocation = (stream.Position - offset);
+                    return (int)LeveledBaseForm_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.LVLD:
                 {
@@ -2720,8 +2713,6 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:

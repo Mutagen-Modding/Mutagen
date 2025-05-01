@@ -1653,15 +1653,18 @@ namespace Mutagen.Bethesda.Starfield
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.UnknownString1 = StringBinaryTranslation.Instance.Parse(
                         reader: dataFrame,
-                        stringBinaryType: StringBinaryType.PrependLength);
+                        stringBinaryType: StringBinaryType.PrependLength,
+                        parseWhole: true);
                     if (dataFrame.Remaining < 1) return null;
                     item.UnknownByte = dataFrame.ReadUInt8();
                     item.UnknownString2 = StringBinaryTranslation.Instance.Parse(
                         reader: dataFrame,
-                        stringBinaryType: StringBinaryType.PrependLength);
+                        stringBinaryType: StringBinaryType.PrependLength,
+                        parseWhole: true);
                     item.UnknownString3 = StringBinaryTranslation.Instance.Parse(
                         reader: dataFrame,
-                        stringBinaryType: StringBinaryType.PrependLength);
+                        stringBinaryType: StringBinaryType.PrependLength,
+                        parseWhole: true);
                     item.UnknownInts.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Int32>.Instance.Parse(
                             amount: checked((int)frame.ReadUInt32()),

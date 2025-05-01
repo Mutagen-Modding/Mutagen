@@ -12,7 +12,7 @@
         <Fields>
           <UInt8 name="Percentage" />
           <AssetLink name="ModelFilename" binaryType="NullTerminate" assetType="StarfieldModel" />
-          <Enum name="Flags" enumName="DebrisModel.Flag" byteLength="1" />
+          <Bool name="HasCollision" byteLength="1" />
         </Fields>
       </Data>
       <ByteArray name="TextureFileHashes" recordType="MODT" />

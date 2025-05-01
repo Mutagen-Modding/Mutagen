@@ -1,5 +1,5 @@
 using System.IO.Abstractions;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Skyrim;
@@ -242,7 +242,7 @@ public class WriteTests
     {
         npc.Name = npcName;
         mod.UsingLocalization = true;
-        mod.ModKey.Should().NotBe(modPath.ModKey);
+        mod.ModKey.ShouldNotBe(modPath.ModKey);
         await mod.BeginWrite
             .ToPath(modPath)
             .WithNoLoadOrder()
@@ -250,7 +250,7 @@ public class WriteTests
             .WithFileSystem(fileSystem)
             .WriteAsync();
         var stringsPath = Path.Combine(modPath.Path.Directory, "Strings");
-        fileSystem.Directory.Exists(stringsPath).Should().BeTrue();
+        fileSystem.Directory.Exists(stringsPath).ShouldBeTrue();
         fileSystem.File.Exists(Path.Combine(stringsPath, $"{modPath.ModKey}_English.STRINGS"));
         fileSystem.File.Exists(Path.Combine(stringsPath, $"{modPath.ModKey}_English.DLSTRINGS"));
         fileSystem.File.Exists(Path.Combine(stringsPath, $"{modPath.ModKey}_English.ILSTRINGS"));

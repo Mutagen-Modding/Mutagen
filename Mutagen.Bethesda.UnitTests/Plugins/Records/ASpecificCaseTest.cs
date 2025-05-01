@@ -1,5 +1,5 @@
 ﻿using System.IO.Abstractions;
-using FluentAssertions;
+using Shouldly;
 using Loqui;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -46,7 +46,7 @@ public abstract class ASpecificCaseTest<TSetter, TGetter>
 
             var origBytes = File.ReadAllBytes(Path);
             var newBytes = fileSystem.File.ReadAllBytes(somePath);
-            newBytes.Should().Equal(origBytes);
+            newBytes.ShouldBe(origBytes);
         }
     }
 
@@ -77,7 +77,7 @@ public abstract class ASpecificCaseTest<TSetter, TGetter>
 
             var origBytes = File.ReadAllBytes(Path);
             var newBytes = fileSystem.File.ReadAllBytes(somePath);
-            newBytes.Should().Equal(origBytes);
+            newBytes.ShouldBe(origBytes);
         }
     }
 }

@@ -2,7 +2,6 @@ namespace Mutagen.Bethesda.Fallout4;
 
 public partial class InstanceNamingRule
 {
-    [Flags]
     public enum PropertyTarget
     {
         Enchantments = 0x0,

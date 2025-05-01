@@ -29,5 +29,7 @@ partial class CameraShot
         StartAtTimeZero = 0x20,
         DoNotResetLocationSpring = 0x40,
         DoNotResetTargetSpring = 0x80,
+        SelectableSceneCamera = 0x100,
+        FreeCamera = 0x200,
     }
 }

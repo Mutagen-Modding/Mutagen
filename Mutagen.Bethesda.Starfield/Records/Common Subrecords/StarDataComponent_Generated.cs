@@ -1483,10 +1483,12 @@ namespace Mutagen.Bethesda.Starfield
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.CatalogueId = StringBinaryTranslation.Instance.Parse(
                         reader: dataFrame,
-                        stringBinaryType: StringBinaryType.PrependLength);
+                        stringBinaryType: StringBinaryType.PrependLength,
+                        parseWhole: true);
                     item.SpectralClass = StringBinaryTranslation.Instance.Parse(
                         reader: dataFrame,
-                        stringBinaryType: StringBinaryType.PrependLength);
+                        stringBinaryType: StringBinaryType.PrependLength,
+                        parseWhole: true);
                     if (dataFrame.Remaining < 4) return null;
                     item.Magnitude = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;

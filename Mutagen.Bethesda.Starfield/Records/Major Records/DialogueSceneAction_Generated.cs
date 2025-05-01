@@ -75,9 +75,9 @@ namespace Mutagen.Bethesda.Starfield
         Single? IDialogueSceneActionGetter.LoopingMin => this.LoopingMin;
         #endregion
         #region HNAM
-        public HnamHnam HNAM { get; set; } = new HnamHnam();
+        public HeadTracking HNAM { get; set; } = new HeadTracking();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IHnamHnamGetter IDialogueSceneActionGetter.HNAM => HNAM;
+        IHeadTrackingGetter IDialogueSceneActionGetter.HNAM => HNAM;
         #endregion
         #region DialogueSubtype
         private readonly IFormLinkNullable<IKeywordGetter> _DialogueSubtype = new FormLinkNullable<IKeywordGetter>();
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Topic = initialValue;
                 this.LoopingMax = initialValue;
                 this.LoopingMin = initialValue;
-                this.HNAM = new MaskItem<TItem, HnamHnam.Mask<TItem>?>(initialValue, new HnamHnam.Mask<TItem>(initialValue));
+                this.HNAM = new MaskItem<TItem, HeadTracking.Mask<TItem>?>(initialValue, new HeadTracking.Mask<TItem>(initialValue));
                 this.DialogueSubtype = initialValue;
                 this.WED0 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
             }
@@ -175,7 +175,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Topic = Topic;
                 this.LoopingMax = LoopingMax;
                 this.LoopingMin = LoopingMin;
-                this.HNAM = new MaskItem<TItem, HnamHnam.Mask<TItem>?>(HNAM, new HnamHnam.Mask<TItem>(HNAM));
+                this.HNAM = new MaskItem<TItem, HeadTracking.Mask<TItem>?>(HNAM, new HeadTracking.Mask<TItem>(HNAM));
                 this.DialogueSubtype = DialogueSubtype;
                 this.WED0 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(WED0, new SoundReference.Mask<TItem>(WED0));
             }
@@ -192,7 +192,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Topic;
             public TItem LoopingMax;
             public TItem LoopingMin;
-            public MaskItem<TItem, HnamHnam.Mask<TItem>?>? HNAM { get; set; }
+            public MaskItem<TItem, HeadTracking.Mask<TItem>?>? HNAM { get; set; }
             public TItem DialogueSubtype;
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? WED0 { get; set; }
             #endregion
@@ -289,7 +289,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Topic = eval(this.Topic);
                 obj.LoopingMax = eval(this.LoopingMax);
                 obj.LoopingMin = eval(this.LoopingMin);
-                obj.HNAM = this.HNAM == null ? null : new MaskItem<R, HnamHnam.Mask<R>?>(eval(this.HNAM.Overall), this.HNAM.Specific?.Translate(eval));
+                obj.HNAM = this.HNAM == null ? null : new MaskItem<R, HeadTracking.Mask<R>?>(eval(this.HNAM.Overall), this.HNAM.Specific?.Translate(eval));
                 obj.DialogueSubtype = eval(this.DialogueSubtype);
                 obj.WED0 = this.WED0 == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.WED0.Overall), this.WED0.Specific?.Translate(eval));
             }
@@ -348,7 +348,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Topic;
             public Exception? LoopingMax;
             public Exception? LoopingMin;
-            public MaskItem<Exception?, HnamHnam.ErrorMask?>? HNAM;
+            public MaskItem<Exception?, HeadTracking.ErrorMask?>? HNAM;
             public Exception? DialogueSubtype;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? WED0;
             #endregion
@@ -391,7 +391,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.LoopingMin = ex;
                         break;
                     case DialogueSceneAction_FieldIndex.HNAM:
-                        this.HNAM = new MaskItem<Exception?, HnamHnam.ErrorMask?>(ex, null);
+                        this.HNAM = new MaskItem<Exception?, HeadTracking.ErrorMask?>(ex, null);
                         break;
                     case DialogueSceneAction_FieldIndex.DialogueSubtype:
                         this.DialogueSubtype = ex;
@@ -420,7 +420,7 @@ namespace Mutagen.Bethesda.Starfield
                         this.LoopingMin = (Exception?)obj;
                         break;
                     case DialogueSceneAction_FieldIndex.HNAM:
-                        this.HNAM = (MaskItem<Exception?, HnamHnam.ErrorMask?>?)obj;
+                        this.HNAM = (MaskItem<Exception?, HeadTracking.ErrorMask?>?)obj;
                         break;
                     case DialogueSceneAction_FieldIndex.DialogueSubtype:
                         this.DialogueSubtype = (Exception?)obj;
@@ -522,7 +522,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Topic;
             public bool LoopingMax;
             public bool LoopingMin;
-            public HnamHnam.TranslationMask? HNAM;
+            public HeadTracking.TranslationMask? HNAM;
             public bool DialogueSubtype;
             public SoundReference.TranslationMask? WED0;
             #endregion
@@ -631,7 +631,7 @@ namespace Mutagen.Bethesda.Starfield
         new IFormLinkNullable<IDialogTopicGetter> Topic { get; set; }
         new Single? LoopingMax { get; set; }
         new Single? LoopingMin { get; set; }
-        new HnamHnam HNAM { get; set; }
+        new HeadTracking HNAM { get; set; }
         new IFormLinkNullable<IKeywordGetter> DialogueSubtype { get; set; }
         new SoundReference? WED0 { get; set; }
     }
@@ -647,7 +647,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<IDialogTopicGetter> Topic { get; }
         Single? LoopingMax { get; }
         Single? LoopingMin { get; }
-        IHnamHnamGetter HNAM { get; }
+        IHeadTrackingGetter HNAM { get; }
         IFormLinkNullableGetter<IKeywordGetter> DialogueSubtype { get; }
         ISoundReferenceGetter? WED0 { get; }
 
@@ -1113,7 +1113,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (EqualsMaskHelper.RefEquality(lhs.HNAM, rhs.HNAM, out var lhsHNAM, out var rhsHNAM, out var isHNAMEqual))
                 {
-                    if (!((HnamHnamCommon)((IHnamHnamGetter)lhsHNAM).CommonInstance()!).Equals(lhsHNAM, rhsHNAM, equalsMask?.GetSubCrystal((int)DialogueSceneAction_FieldIndex.HNAM))) return false;
+                    if (!((HeadTrackingCommon)((IHeadTrackingGetter)lhsHNAM).CommonInstance()!).Equals(lhsHNAM, rhsHNAM, equalsMask?.GetSubCrystal((int)DialogueSceneAction_FieldIndex.HNAM))) return false;
                 }
                 else if (!isHNAMEqual) return false;
             }
@@ -1426,7 +1426,7 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.LoopingMin,
                 header: translationParams.ConvertToCustom(RecordTypes.DMIN));
             var HNAMItem = item.HNAM;
-            ((HnamHnamBinaryWriteTranslation)((IBinaryItem)HNAMItem).BinaryWriteTranslator).Write(
+            ((HeadTrackingBinaryWriteTranslation)((IBinaryItem)HNAMItem).BinaryWriteTranslator).Write(
                 item: HNAMItem,
                 writer: writer,
                 translationParams: translationParams);
@@ -1517,7 +1517,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    item.HNAM = Mutagen.Bethesda.Starfield.HnamHnam.CreateFromBinary(
+                    item.HNAM = Mutagen.Bethesda.Starfield.HeadTracking.CreateFromBinary(
                         frame: frame,
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)DialogueSceneAction_FieldIndex.HNAM;
@@ -1604,8 +1604,8 @@ namespace Mutagen.Bethesda.Starfield
         public Single? LoopingMin => _LoopingMinLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _LoopingMinLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region HNAM
-        private IHnamHnamGetter? _HNAM;
-        public IHnamHnamGetter HNAM => _HNAM ?? new HnamHnam();
+        private IHeadTrackingGetter? _HNAM;
+        public IHeadTrackingGetter HNAM => _HNAM ?? new HeadTracking();
         #endregion
         #region DialogueSubtype
         private int? _DialogueSubtypeLocation;
@@ -1692,7 +1692,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    this._HNAM = HnamHnamBinaryOverlay.HnamHnamFactory(
+                    this._HNAM = HeadTrackingBinaryOverlay.HeadTrackingFactory(
                         stream: stream,
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());

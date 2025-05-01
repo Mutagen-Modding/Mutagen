@@ -4,6 +4,9 @@ using Mutagen.Bethesda.Plugins.Implicit.DI;
 
 namespace Mutagen.Bethesda.Plugins.Order.DI;
 
+/// <summary>
+/// Provides listings that are assumed to be part of a load order even if they aren't explicitly listed
+/// </summary>
 public interface IImplicitListingsProvider : IListingsProvider
 {
     new IEnumerable<IModListingGetter> Get();

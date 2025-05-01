@@ -1116,7 +1116,8 @@ namespace Mutagen.Bethesda.Skyrim
         {
             item.Name = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
-                stringBinaryType: StringBinaryType.PrependLength);
+                stringBinaryType: StringBinaryType.PrependLength,
+                parseWhole: true);
             item.NewTexture.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Index = frame.ReadInt32();
         }

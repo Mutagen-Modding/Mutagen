@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Pex;
 using Noggog;
 using Xunit;
@@ -54,7 +54,7 @@ public class PexTests
         Assert.True(File.Exists(outputFile));
 
         var outputPex = PexFile.CreateFromFile(outputFile, gameCategory);
-        inputPex.Equals(outputPex).Should().BeTrue();
+        inputPex.Equals(outputPex).ShouldBeTrue();
     }
 
     [Fact]
@@ -118,9 +118,9 @@ public class PexTests
         pex.WritePexFile(outPath, GameCategory.Skyrim);
 
         var pex2 = PexFile.CreateFromFile(outPath, GameCategory.Skyrim);
-        pex2.DebugInfo.Should().NotBeNull();
-        pex2.DebugInfo!.Functions.Should().HaveCount(pex.DebugInfo!.Functions.Count);
-        pex2.DebugInfo!.Functions[^1].FunctionName.Should().Be(functionToAdd.FunctionName);
+        pex2.DebugInfo.ShouldNotBeNull();
+        pex2.DebugInfo!.Functions.Count.ShouldBe(pex.DebugInfo!.Functions.Count);
+        pex2.DebugInfo!.Functions[^1].FunctionName.ShouldBe(functionToAdd.FunctionName);
     }
 
     [Fact]
@@ -139,7 +139,7 @@ public class PexTests
         pex.WritePexFile(outPath, GameCategory.Skyrim);
 
         var pex2 = PexFile.CreateFromFile(outPath, GameCategory.Skyrim);
-        pex2.DebugInfo.Should().NotBeNull();
-        pex2.Objects[0].HasFlag(pex2, flagToAdd).Should().BeTrue();
+        pex2.DebugInfo.ShouldNotBeNull();
+        pex2.Objects[0].HasFlag(pex2, flagToAdd).ShouldBeTrue();
     }
 }

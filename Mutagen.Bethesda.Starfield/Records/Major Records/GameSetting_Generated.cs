@@ -57,15 +57,9 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region XALG
+        public UInt64? XALG { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _XALG;
-        public MemorySlice<Byte>? XALG
-        {
-            get => this._XALG;
-            set => this._XALG = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IGameSettingGetter.XALG => this.XALG;
+        UInt64? IGameSettingGetter.XALG => this.XALG;
         #endregion
 
         #region To String
@@ -460,7 +454,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IGameSettingInternal>,
         IStarfieldMajorRecordInternal
     {
-        new MemorySlice<Byte>? XALG { get; set; }
+        new UInt64? XALG { get; set; }
     }
 
     public partial interface IGameSettingInternal :
@@ -479,7 +473,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObject<IGameSettingGetter>
     {
         static new ILoquiRegistration StaticRegistration => GameSetting_Registration.Instance;
-        ReadOnlyMemorySlice<Byte>? XALG { get; }
+        UInt64? XALG { get; }
 
     }
 
@@ -832,7 +826,7 @@ namespace Mutagen.Bethesda.Starfield
             GameSetting.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.XALG = MemorySliceExt.SequenceEqual(item.XALG, rhs.XALG);
+            ret.XALG = item.XALG == rhs.XALG;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -885,7 +879,7 @@ namespace Mutagen.Bethesda.Starfield
             if ((printMask?.XALG ?? true)
                 && item.XALG is {} XALGItem)
             {
-                sb.AppendLine($"XALG => {SpanExt.ToHexString(XALGItem)}");
+                sb.AppendItem(XALGItem, "XALG");
             }
         }
         
@@ -939,7 +933,7 @@ namespace Mutagen.Bethesda.Starfield
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)GameSetting_FieldIndex.XALG) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.XALG, rhs.XALG)) return false;
+                if (lhs.XALG != rhs.XALG) return false;
             }
             return true;
         }
@@ -969,9 +963,9 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IGameSettingGetter item)
         {
             var hash = new HashCode();
-            if (item.XALG is {} XALGItem)
+            if (item.XALG is {} XALGitem)
             {
-                hash.Add(XALGItem);
+                hash.Add(XALGitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1076,14 +1070,7 @@ namespace Mutagen.Bethesda.Starfield
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)GameSetting_FieldIndex.XALG) ?? true))
             {
-                if(rhs.XALG is {} XALGrhs)
-                {
-                    item.XALG = XALGrhs.ToArray();
-                }
-                else
-                {
-                    item.XALG = default;
-                }
+                item.XALG = rhs.XALG;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1254,7 +1241,7 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            UInt64BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.XALG,
                 header: translationParams.ConvertToCustom(RecordTypes.XALG));
@@ -1323,7 +1310,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XALG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XALG = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.XALG = frame.ReadUInt64();
                     return (int)GameSetting_FieldIndex.XALG;
                 }
                 default:
@@ -1384,7 +1371,7 @@ namespace Mutagen.Bethesda.Starfield
 
         #region XALG
         private int? _XALGLocation;
-        public ReadOnlyMemorySlice<Byte>? XALG => _XALGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public UInt64? XALG => _XALGLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants)) : default(UInt64?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

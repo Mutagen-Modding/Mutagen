@@ -1,5 +1,5 @@
 ﻿using System.Runtime.InteropServices;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Xunit;
@@ -16,8 +16,8 @@ public class AssetLinkPathingTests
     {
         var path = @$"{absPrefix}{Path.Combine("Skyrim", "Data", "Meshes", "Clutter", "MyMesh.nif")}";
         var link = new AssetLink<TestAssetType>(path);
-        link.DataRelativePath.Should().Be(DataPath);
-        link.GivenPath.Should().Be(path);
+        link.DataRelativePath.ShouldBe(DataPath);
+        link.GivenPath.ShouldBe(path);
     }
 
     [Fact]
@@ -25,8 +25,8 @@ public class AssetLinkPathingTests
     {
         var path = Path.Combine("Data", "Meshes", "Clutter", "MyMesh.nif");
         var link = new AssetLink<TestAssetType>(path);
-        link.DataRelativePath.Should().Be(DataPath);
-        link.GivenPath.Should().Be(path);
+        link.DataRelativePath.ShouldBe(DataPath);
+        link.GivenPath.ShouldBe(path);
     }
 
     [Fact]
@@ -34,8 +34,8 @@ public class AssetLinkPathingTests
     {
         var path = $"{Path.Combine("Meshes", "Clutter", "MyMesh.nif")}";
         var link = new AssetLink<TestAssetType>(path);
-        link.DataRelativePath.Should().Be(DataPath);
-        link.GivenPath.Should().Be(path);
+        link.DataRelativePath.ShouldBe(DataPath);
+        link.GivenPath.ShouldBe(path);
     }
 
     [Fact]
@@ -43,8 +43,8 @@ public class AssetLinkPathingTests
     {
         var path = $"{Path.DirectorySeparatorChar}{Path.Combine("Data", "Meshes", "Clutter", "MyMesh.nif")}";
         var link = new AssetLink<TestAssetType>(path);
-        link.DataRelativePath.Should().Be(DataPath);
-        link.GivenPath.Should().Be(path);
+        link.DataRelativePath.ShouldBe(DataPath);
+        link.GivenPath.ShouldBe(path);
     }
 
     [Fact]
@@ -62,8 +62,8 @@ public class AssetLinkPathingTests
     {
         var path = Path.Combine("Clutter", "MyMesh.nif");
         var link = new AssetLink<TestAssetType>(path);
-        link.DataRelativePath.Should().Be(DataPath);
-        link.GivenPath.Should().Be(path);
+        link.DataRelativePath.ShouldBe(DataPath);
+        link.GivenPath.ShouldBe(path);
     }
 
     [Fact]
@@ -71,7 +71,7 @@ public class AssetLinkPathingTests
     {
         var path = $".{Path.DirectorySeparatorChar}{Path.Combine("Data", "Meshes", "Clutter", "MyMesh.nif")}";
         var link = new AssetLink<TestAssetType>(path);
-        link.DataRelativePath.Should().Be(DataPath);
-        link.GivenPath.Should().Be(path);
+        link.DataRelativePath.ShouldBe(DataPath);
+        link.GivenPath.ShouldBe(path);
     }
 }

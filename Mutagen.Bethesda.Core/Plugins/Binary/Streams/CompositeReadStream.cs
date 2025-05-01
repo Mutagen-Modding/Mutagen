@@ -37,7 +37,7 @@ public sealed class CompositeReadStream : Stream
     {
         if (trimNulls)
         {
-            _subStreams = streams.NotNull().ToArray();
+            _subStreams = streams.WhereNotNull().ToArray();
         }
         else
         {

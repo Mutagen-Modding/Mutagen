@@ -1,7 +1,8 @@
 ﻿using System.Text;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
+using Noggog.Testing.Extensions;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order;
@@ -34,7 +35,7 @@ public class PluginListingsParserTests
 ModB.esp
 *ModC.esp"))
             .ToList();
-        result.Should().Equal(
+        result.ShouldEqual(
             new LoadOrderListing("ModA.esm", true),
             new LoadOrderListing("ModB.esp", false),
             new LoadOrderListing("ModC.esp", true));
@@ -51,7 +52,7 @@ ModB.esp
 #ModB.esp
 *ModC.esp"))
             .ToList();
-        result.Should().Equal(
+        result.ShouldEqual(
             new LoadOrderListing("ModA.esm", true),
             new LoadOrderListing("#ModB.esp", false),
             new LoadOrderListing("ModC.esp", true));
@@ -68,7 +69,7 @@ ModB.esp
 ModB.esp#Hello
 *ModC.esp"))
             .ToList();
-        result.Should().Equal(
+        result.ShouldEqual(
             new LoadOrderListing("ModA.esm", true),
             new LoadOrderListing("ModB.esp", false),
             new LoadOrderListing("ModC.esp", true));
@@ -82,13 +83,18 @@ ModB.esp#Hello
             new LoadOrderListingParser(
                 new HasEnabledMarkersInjection(true)));
 
-        parser.Invoking(p => p.Parse(GetStream(
-@"*ModA.esm
+        Should.Throw<InvalidDataException>(
+                () =>
+            {
+                parser.Parse(GetStream(
+"""
+*ModA.esm
 ModB.esp
-*Malformed"))
-            .ToList())
-            .Should()
-            .Throw<InvalidDataException>()
-            .WithMessage("Load order file had malformed entry at line 3: \"*Malformed\"");
+*Malformed
+"""))
+                    .ToList();
+            })
+            .Message
+            .ShouldBe("Load order file had malformed entry at line 3: \"*Malformed\"");
     }
 }

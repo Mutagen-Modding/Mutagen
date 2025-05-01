@@ -5,16 +5,27 @@ partial class Furniture
     [Flags]
     public enum MajorFlag
     {
-        HasContainer = 0x0000_0004,
-        IsPerch = 0x0000_0080,
-        HasDistantLod = 0x0000_8000,
-        RandomAnimStart = 0x0001_0000,
-        IsMarker = 0x0080_0000,
-        PowerArmor = 0x0200_0000,
-        MustExitToTalk = 0x1000_0000,
-        ChildCanUse = 0x2000_0000
+        HeadingMarker = 0x4,
+        NonOccluder = 0x10,
+        NeverFades = 0x40,
+        IsTemplate = 0x80,
+        MustUpdateAnims = 0x100,
+        HiddenFromLocalMap = 0x200,
+        HeadtrackMarker = 0x400,
+        UsedasPlatform = 0x800,
+        PackInUseOnly = 0x2000,
+        RandomAnimStart = 0x10000,
+        Dangerous = 0x20000,
+        IgnoreObjectInteraction = 0x100000,
+        IsMarker = 0x800000,
+        Obstacle = 0x2000000,
+        NavmeshFilter = 0x4000000,
+        NavmeshBoundingBox = 0x8000000,
+        NavmeshOnlyCut = 0x10000000,
+        NavmeshIgnoreErosion = 0x20000000,
+        NavmeshGround = 0x40000000,
     }
-
+    
     [Flags]
     public enum Flag
     {

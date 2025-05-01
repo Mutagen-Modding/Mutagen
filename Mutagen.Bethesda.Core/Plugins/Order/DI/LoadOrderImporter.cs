@@ -80,7 +80,8 @@ public sealed class LoadOrderImporter<TMod> : ILoadOrderImporter<TMod>
                 }
                 catch (Exception ex)
                 {
-                    throw RecordException.Enrich(ex, listing.ModKey);
+                    RecordException.EnrichAndThrow(ex, listing.ModKey);
+                    throw;
                 }
             });
             return new LoadOrder<IModListing<TMod>>(results
@@ -154,7 +155,7 @@ public sealed class LoadOrderImporter : ILoadOrderImporter
                         if (!_fileSystem.File.Exists(modPath)) return null;
                         return _keyedMasterStyleReader.ReadFrom(modPath);
                     })
-                    .NotNull())
+                    .WhereNotNull())
             };
         }
         try
@@ -174,7 +175,8 @@ public sealed class LoadOrderImporter : ILoadOrderImporter
                 }
                 catch (Exception ex)
                 {
-                    throw RecordException.Enrich(ex, listing.ModKey);
+                    RecordException.EnrichAndThrow(ex, listing.ModKey);
+                    throw;
                 }
             });
             return new LoadOrder<IModListing<IModGetter>>(results

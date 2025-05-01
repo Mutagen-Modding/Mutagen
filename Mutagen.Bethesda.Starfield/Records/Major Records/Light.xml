@@ -5,10 +5,10 @@
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Float name="ODTY" recordType="ODTY" unknown="true" nullable="False" />
-      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <RefDirect name="ObjectPaletteDefaults" refName="ObjectPaletteDefaults" />
       <RefDirect name="Transforms" refName="Transforms" />
       <FormLink name="DefaultLayer" refName="Layer" recordType="DEFL" />
-      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <UInt64 name="XALG" recordType="XALG" unknown="true" />
       <RefList name="Components" refName="AComponent" />
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Destructible" refName="Destructible" />
@@ -53,7 +53,8 @@
       <Float name="VolumetricLightIntensityScale" recordType="FVLD" />
     </Fields>
     <LinkInterface>IEmittance</LinkInterface>
-    <LinkInterface>IBaseObject</LinkInterface>d
+    <LinkInterface>IBaseObject</LinkInterface>
+    <LinkInterface>IResearchResourceTarget</LinkInterface>
   </Object>
   <Object name="LightBarndoors" objType="Subrecord" recordType="FLBD" >
     <Fields>

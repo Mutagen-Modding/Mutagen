@@ -161,6 +161,14 @@ public interface IBinaryModdedWriteBuilderLoadOrderChoice
     /// </summary>
     /// <param name="loadOrder">Load order to reference</param>
     /// <returns>Builder object to continue customization</returns>
+    public IBinaryModdedWriteBuilderDataFolderChoice WithLoadOrder(
+        ILoadOrderGetter<ModKey> loadOrder);
+
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
     public IBinaryModdedWriteBuilder WithLoadOrder(
         IEnumerable<IModMasterStyledGetter> loadOrder);
 
@@ -277,6 +285,18 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
         });
     }
     IBinaryModdedWriteBuilder IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(ILoadOrderGetter<IModMasterStyledGetter> loadOrder) => WithLoadOrder(loadOrder);
+
+    /// <summary>
+    /// Writes the mod with given load order as reference
+    /// </summary>
+    /// <param name="loadOrder">Load order to reference</param>
+    /// <returns>Builder object to continue customization</returns>
+    public BinaryModdedWriteBuilderDataFolderChoice<TModGetter> WithLoadOrder(
+        ILoadOrderGetter<ModKey> loadOrder)
+    {
+        return WithLoadOrder(loadOrder.ListedOrder);
+    }
+    IBinaryModdedWriteBuilderDataFolderChoice IBinaryModdedWriteBuilderLoadOrderChoice.WithLoadOrder(ILoadOrderGetter<ModKey> loadOrder) => WithLoadOrder(loadOrder);
     
     /// <summary>
     /// Writes the mod with given load order as reference
@@ -478,7 +498,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                     
                     return p._param with
                     {
-                        MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
+                        MastersListOrdering = p._param.MastersListOrdering ?? new MastersListOrderingByLoadOrder(lo),
                         LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
                     };
                 }
@@ -495,7 +515,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                         MasterFlagsLookup = lo
                             .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
                             .ResolveExistingMods(),
-                        MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
+                        MastersListOrdering = p._param.MastersListOrdering ?? new MastersListOrderingByLoadOrder(lo),
                         LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
                     };
                 }
@@ -568,7 +588,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                 {
                     MasterFlagsLookup = loadOrder
                         .Where(x => !alreadyKnownMasters.Contains(x.ModKey)),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
+                    MastersListOrdering = p._param.MastersListOrdering ?? new MastersListOrderingByLoadOrder(loadOrder),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
                 };
             }
@@ -615,7 +635,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                     MasterFlagsLookup = loadOrder
                         .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
                         .ResolveExistingMods(disposeItems: false),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
+                    MastersListOrdering = p._param.MastersListOrdering ?? new MastersListOrderingByLoadOrder(loadOrder),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
                 };
             }
@@ -639,7 +659,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                 {
                     MasterFlagsLookup = loadOrder
                         .Where(x => !alreadyKnownMasters.Contains(x.ModKey)),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
+                    MastersListOrdering = p._param.MastersListOrdering ?? new MastersListOrderingByLoadOrder(loadOrder),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
                 };
             }
@@ -691,7 +711,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                     MasterFlagsLookup = lo
                         .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
                         .ResolveExistingMods(disposeItems: false),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo)
+                    MastersListOrdering = p._param.MastersListOrdering ?? new MastersListOrderingByLoadOrder(lo)
                 };
             }
         });
@@ -718,7 +738,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                     MasterFlagsLookup = lo
                         .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
                         .ResolveExistingMods(disposeItems: false),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
+                    MastersListOrdering = p._param.MastersListOrdering ?? new MastersListOrderingByLoadOrder(lo),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
                 };
             }
@@ -752,7 +772,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                     MasterFlagsLookup = lo
                         .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
                         .ResolveExistingMods(disposeItems: false),
-                    MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
+                    MastersListOrdering = p._param.MastersListOrdering ?? new MastersListOrderingByLoadOrder(lo),
                     LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
                 };
             }

@@ -153,14 +153,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region ObjectEffect
-        private readonly IFormLinkNullable<IEffectRecordGetter> _ObjectEffect = new FormLinkNullable<IEffectRecordGetter>();
-        public IFormLinkNullable<IEffectRecordGetter> ObjectEffect
+        private readonly IFormLinkNullable<IObjectEffectGetter> _ObjectEffect = new FormLinkNullable<IObjectEffectGetter>();
+        public IFormLinkNullable<IObjectEffectGetter> ObjectEffect
         {
             get => _ObjectEffect;
             set => _ObjectEffect.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IEffectRecordGetter> IExplosionGetter.ObjectEffect => this.ObjectEffect;
+        IFormLinkNullableGetter<IObjectEffectGetter> IExplosionGetter.ObjectEffect => this.ObjectEffect;
         #endregion
         #region ImageSpaceModifier
         private readonly IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpaceModifier = new FormLinkNullable<IImageSpaceAdapterGetter>();
@@ -1332,7 +1332,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new IFormLinkNullable<IEffectRecordGetter> ObjectEffect { get; set; }
+        new IFormLinkNullable<IObjectEffectGetter> ObjectEffect { get; set; }
         new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; }
         new IFormLink<ILightGetter> Light { get; set; }
         new IFormLink<ISoundDescriptorGetter> Sound1 { get; set; }
@@ -1400,7 +1400,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
-        IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect { get; }
+        IFormLinkNullableGetter<IObjectEffectGetter> ObjectEffect { get; }
         IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
         IFormLinkGetter<ILightGetter> Light { get; }
         IFormLinkGetter<ISoundDescriptorGetter> Sound1 { get; }
@@ -2870,8 +2870,10 @@ namespace Mutagen.Bethesda.Skyrim
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Explosion_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
@@ -3022,7 +3024,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -3035,7 +3037,7 @@ namespace Mutagen.Bethesda.Skyrim
         public IModelGetter? Model { get; private set; }
         #region ObjectEffect
         private int? _ObjectEffectLocation;
-        public IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEffectRecordGetter>(_package, _recordData, _ObjectEffectLocation);
+        public IFormLinkNullableGetter<IObjectEffectGetter> ObjectEffect => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IObjectEffectGetter>(_package, _recordData, _ObjectEffectLocation);
         #endregion
         #region ImageSpaceModifier
         private int? _ImageSpaceModifierLocation;

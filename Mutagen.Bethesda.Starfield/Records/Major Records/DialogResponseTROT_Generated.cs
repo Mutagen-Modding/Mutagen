@@ -51,18 +51,18 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region UnknownVoiceType
-        private readonly IFormLink<IVoiceTypeGetter> _UnknownVoiceType = new FormLink<IVoiceTypeGetter>();
-        public IFormLink<IVoiceTypeGetter> UnknownVoiceType
+        #region VoiceType
+        private readonly IFormLink<IVoiceTypeGetter> _VoiceType = new FormLink<IVoiceTypeGetter>();
+        public IFormLink<IVoiceTypeGetter> VoiceType
         {
-            get => _UnknownVoiceType;
-            set => _UnknownVoiceType.SetTo(value);
+            get => _VoiceType;
+            set => _VoiceType.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IVoiceTypeGetter> IDialogResponseTROTGetter.UnknownVoiceType => this.UnknownVoiceType;
+        IFormLinkGetter<IVoiceTypeGetter> IDialogResponseTROTGetter.VoiceType => this.VoiceType;
         #endregion
-        #region UnknownFloat
-        public Single UnknownFloat { get; set; } = default(Single);
+        #region EmotionOut
+        public Single EmotionOut { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -103,16 +103,16 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.UnknownVoiceType = initialValue;
-                this.UnknownFloat = initialValue;
+                this.VoiceType = initialValue;
+                this.EmotionOut = initialValue;
             }
 
             public Mask(
-                TItem UnknownVoiceType,
-                TItem UnknownFloat)
+                TItem VoiceType,
+                TItem EmotionOut)
             {
-                this.UnknownVoiceType = UnknownVoiceType;
-                this.UnknownFloat = UnknownFloat;
+                this.VoiceType = VoiceType;
+                this.EmotionOut = EmotionOut;
             }
 
             #pragma warning disable CS8618
@@ -124,8 +124,8 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem UnknownVoiceType;
-            public TItem UnknownFloat;
+            public TItem VoiceType;
+            public TItem EmotionOut;
             #endregion
 
             #region Equals
@@ -138,15 +138,15 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.UnknownVoiceType, rhs.UnknownVoiceType)) return false;
-                if (!object.Equals(this.UnknownFloat, rhs.UnknownFloat)) return false;
+                if (!object.Equals(this.VoiceType, rhs.VoiceType)) return false;
+                if (!object.Equals(this.EmotionOut, rhs.EmotionOut)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.UnknownVoiceType);
-                hash.Add(this.UnknownFloat);
+                hash.Add(this.VoiceType);
+                hash.Add(this.EmotionOut);
                 return hash.ToHashCode();
             }
 
@@ -155,8 +155,8 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.UnknownVoiceType)) return false;
-                if (!eval(this.UnknownFloat)) return false;
+                if (!eval(this.VoiceType)) return false;
+                if (!eval(this.EmotionOut)) return false;
                 return true;
             }
             #endregion
@@ -164,8 +164,8 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.UnknownVoiceType)) return true;
-                if (eval(this.UnknownFloat)) return true;
+                if (eval(this.VoiceType)) return true;
+                if (eval(this.EmotionOut)) return true;
                 return false;
             }
             #endregion
@@ -180,8 +180,8 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.UnknownVoiceType = eval(this.UnknownVoiceType);
-                obj.UnknownFloat = eval(this.UnknownFloat);
+                obj.VoiceType = eval(this.VoiceType);
+                obj.EmotionOut = eval(this.EmotionOut);
             }
             #endregion
 
@@ -200,13 +200,13 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(DialogResponseTROT.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.UnknownVoiceType ?? true)
+                    if (printMask?.VoiceType ?? true)
                     {
-                        sb.AppendItem(UnknownVoiceType, "UnknownVoiceType");
+                        sb.AppendItem(VoiceType, "VoiceType");
                     }
-                    if (printMask?.UnknownFloat ?? true)
+                    if (printMask?.EmotionOut ?? true)
                     {
-                        sb.AppendItem(UnknownFloat, "UnknownFloat");
+                        sb.AppendItem(EmotionOut, "EmotionOut");
                     }
                 }
             }
@@ -232,8 +232,8 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? UnknownVoiceType;
-            public Exception? UnknownFloat;
+            public Exception? VoiceType;
+            public Exception? EmotionOut;
             #endregion
 
             #region IErrorMask
@@ -242,10 +242,10 @@ namespace Mutagen.Bethesda.Starfield
                 DialogResponseTROT_FieldIndex enu = (DialogResponseTROT_FieldIndex)index;
                 switch (enu)
                 {
-                    case DialogResponseTROT_FieldIndex.UnknownVoiceType:
-                        return UnknownVoiceType;
-                    case DialogResponseTROT_FieldIndex.UnknownFloat:
-                        return UnknownFloat;
+                    case DialogResponseTROT_FieldIndex.VoiceType:
+                        return VoiceType;
+                    case DialogResponseTROT_FieldIndex.EmotionOut:
+                        return EmotionOut;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -256,11 +256,11 @@ namespace Mutagen.Bethesda.Starfield
                 DialogResponseTROT_FieldIndex enu = (DialogResponseTROT_FieldIndex)index;
                 switch (enu)
                 {
-                    case DialogResponseTROT_FieldIndex.UnknownVoiceType:
-                        this.UnknownVoiceType = ex;
+                    case DialogResponseTROT_FieldIndex.VoiceType:
+                        this.VoiceType = ex;
                         break;
-                    case DialogResponseTROT_FieldIndex.UnknownFloat:
-                        this.UnknownFloat = ex;
+                    case DialogResponseTROT_FieldIndex.EmotionOut:
+                        this.EmotionOut = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -272,11 +272,11 @@ namespace Mutagen.Bethesda.Starfield
                 DialogResponseTROT_FieldIndex enu = (DialogResponseTROT_FieldIndex)index;
                 switch (enu)
                 {
-                    case DialogResponseTROT_FieldIndex.UnknownVoiceType:
-                        this.UnknownVoiceType = (Exception?)obj;
+                    case DialogResponseTROT_FieldIndex.VoiceType:
+                        this.VoiceType = (Exception?)obj;
                         break;
-                    case DialogResponseTROT_FieldIndex.UnknownFloat:
-                        this.UnknownFloat = (Exception?)obj;
+                    case DialogResponseTROT_FieldIndex.EmotionOut:
+                        this.EmotionOut = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -286,8 +286,8 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (UnknownVoiceType != null) return true;
-                if (UnknownFloat != null) return true;
+                if (VoiceType != null) return true;
+                if (EmotionOut != null) return true;
                 return false;
             }
             #endregion
@@ -314,10 +314,10 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(UnknownVoiceType, "UnknownVoiceType");
+                    sb.AppendItem(VoiceType, "VoiceType");
                 }
                 {
-                    sb.AppendItem(UnknownFloat, "UnknownFloat");
+                    sb.AppendItem(EmotionOut, "EmotionOut");
                 }
             }
             #endregion
@@ -327,8 +327,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.UnknownVoiceType = this.UnknownVoiceType.Combine(rhs.UnknownVoiceType);
-                ret.UnknownFloat = this.UnknownFloat.Combine(rhs.UnknownFloat);
+                ret.VoiceType = this.VoiceType.Combine(rhs.VoiceType);
+                ret.EmotionOut = this.EmotionOut.Combine(rhs.EmotionOut);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -352,8 +352,8 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool UnknownVoiceType;
-            public bool UnknownFloat;
+            public bool VoiceType;
+            public bool EmotionOut;
             #endregion
 
             #region Ctors
@@ -363,8 +363,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.UnknownVoiceType = defaultOn;
-                this.UnknownFloat = defaultOn;
+                this.VoiceType = defaultOn;
+                this.EmotionOut = defaultOn;
             }
 
             #endregion
@@ -380,8 +380,8 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((UnknownVoiceType, null));
-                ret.Add((UnknownFloat, null));
+                ret.Add((VoiceType, null));
+                ret.Add((EmotionOut, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -460,8 +460,8 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkContainer,
         ILoquiObjectSetter<IDialogResponseTROT>
     {
-        new IFormLink<IVoiceTypeGetter> UnknownVoiceType { get; set; }
-        new Single UnknownFloat { get; set; }
+        new IFormLink<IVoiceTypeGetter> VoiceType { get; set; }
+        new Single EmotionOut { get; set; }
     }
 
     public partial interface IDialogResponseTROTGetter :
@@ -477,8 +477,8 @@ namespace Mutagen.Bethesda.Starfield
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => DialogResponseTROT_Registration.Instance;
-        IFormLinkGetter<IVoiceTypeGetter> UnknownVoiceType { get; }
-        Single UnknownFloat { get; }
+        IFormLinkGetter<IVoiceTypeGetter> VoiceType { get; }
+        Single EmotionOut { get; }
 
     }
 
@@ -648,8 +648,8 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum DialogResponseTROT_FieldIndex
     {
-        UnknownVoiceType = 0,
-        UnknownFloat = 1,
+        VoiceType = 0,
+        EmotionOut = 1,
     }
     #endregion
 
@@ -735,14 +735,14 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IDialogResponseTROT item)
         {
             ClearPartial();
-            item.UnknownVoiceType.Clear();
-            item.UnknownFloat = default(Single);
+            item.VoiceType.Clear();
+            item.EmotionOut = default(Single);
         }
         
         #region Mutagen
         public void RemapLinks(IDialogResponseTROT obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.UnknownVoiceType.Relink(mapping);
+            obj.VoiceType.Relink(mapping);
         }
         
         #endregion
@@ -791,8 +791,8 @@ namespace Mutagen.Bethesda.Starfield
             DialogResponseTROT.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.UnknownVoiceType = item.UnknownVoiceType.Equals(rhs.UnknownVoiceType);
-            ret.UnknownFloat = item.UnknownFloat.EqualsWithin(rhs.UnknownFloat);
+            ret.VoiceType = item.VoiceType.Equals(rhs.VoiceType);
+            ret.EmotionOut = item.EmotionOut.EqualsWithin(rhs.EmotionOut);
         }
         
         public string Print(
@@ -837,13 +837,13 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             DialogResponseTROT.Mask<bool>? printMask = null)
         {
-            if (printMask?.UnknownVoiceType ?? true)
+            if (printMask?.VoiceType ?? true)
             {
-                sb.AppendItem(item.UnknownVoiceType.FormKey, "UnknownVoiceType");
+                sb.AppendItem(item.VoiceType.FormKey, "VoiceType");
             }
-            if (printMask?.UnknownFloat ?? true)
+            if (printMask?.EmotionOut ?? true)
             {
-                sb.AppendItem(item.UnknownFloat, "UnknownFloat");
+                sb.AppendItem(item.EmotionOut, "EmotionOut");
             }
         }
         
@@ -854,13 +854,13 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponseTROT_FieldIndex.UnknownVoiceType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponseTROT_FieldIndex.VoiceType) ?? true))
             {
-                if (!lhs.UnknownVoiceType.Equals(rhs.UnknownVoiceType)) return false;
+                if (!lhs.VoiceType.Equals(rhs.VoiceType)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponseTROT_FieldIndex.UnknownFloat) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponseTROT_FieldIndex.EmotionOut) ?? true))
             {
-                if (!lhs.UnknownFloat.EqualsWithin(rhs.UnknownFloat)) return false;
+                if (!lhs.EmotionOut.EqualsWithin(rhs.EmotionOut)) return false;
             }
             return true;
         }
@@ -868,8 +868,8 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IDialogResponseTROTGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.UnknownVoiceType);
-            hash.Add(item.UnknownFloat);
+            hash.Add(item.VoiceType);
+            hash.Add(item.EmotionOut);
             return hash.ToHashCode();
         }
         
@@ -884,7 +884,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDialogResponseTROTGetter obj)
         {
-            yield return FormLinkInformation.Factory(obj.UnknownVoiceType);
+            yield return FormLinkInformation.Factory(obj.VoiceType);
             yield break;
         }
         
@@ -903,13 +903,13 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)DialogResponseTROT_FieldIndex.UnknownVoiceType) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DialogResponseTROT_FieldIndex.VoiceType) ?? true))
             {
-                item.UnknownVoiceType.SetTo(rhs.UnknownVoiceType.FormKey);
+                item.VoiceType.SetTo(rhs.VoiceType.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponseTROT_FieldIndex.UnknownFloat) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DialogResponseTROT_FieldIndex.EmotionOut) ?? true))
             {
-                item.UnknownFloat = rhs.UnknownFloat;
+                item.EmotionOut = rhs.EmotionOut;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1021,10 +1021,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.UnknownVoiceType);
+                item: item.VoiceType);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.UnknownFloat);
+                item: item.EmotionOut);
         }
 
         public void Write(
@@ -1065,8 +1065,8 @@ namespace Mutagen.Bethesda.Starfield
             IDialogResponseTROT item,
             MutagenFrame frame)
         {
-            item.UnknownVoiceType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.UnknownFloat = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.VoiceType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.EmotionOut = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -1133,8 +1133,8 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IVoiceTypeGetter> UnknownVoiceType => FormLinkBinaryTranslation.Instance.OverlayFactory<IVoiceTypeGetter>(_package, _structData.Span.Slice(0x0, 0x4));
-        public Single UnknownFloat => _structData.Slice(0x4, 0x4).Float();
+        public IFormLinkGetter<IVoiceTypeGetter> VoiceType => FormLinkBinaryTranslation.Instance.OverlayFactory<IVoiceTypeGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public Single EmotionOut => _structData.Slice(0x4, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

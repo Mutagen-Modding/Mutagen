@@ -61,8 +61,8 @@ namespace Mutagen.Bethesda.Starfield
         public AssetLink<StarfieldModelAssetType> ModelFilename { get; set; } = new AssetLink<StarfieldModelAssetType>();
         AssetLinkGetter<StarfieldModelAssetType> IDebrisModelGetter.ModelFilename => this.ModelFilename;
         #endregion
-        #region Flags
-        public DebrisModel.Flag Flags { get; set; } = default(DebrisModel.Flag);
+        #region HasCollision
+        public Boolean HasCollision { get; set; } = default(Boolean);
         #endregion
         #region TextureFileHashes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -116,19 +116,19 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Percentage = initialValue;
                 this.ModelFilename = initialValue;
-                this.Flags = initialValue;
+                this.HasCollision = initialValue;
                 this.TextureFileHashes = initialValue;
             }
 
             public Mask(
                 TItem Percentage,
                 TItem ModelFilename,
-                TItem Flags,
+                TItem HasCollision,
                 TItem TextureFileHashes)
             {
                 this.Percentage = Percentage;
                 this.ModelFilename = ModelFilename;
-                this.Flags = Flags;
+                this.HasCollision = HasCollision;
                 this.TextureFileHashes = TextureFileHashes;
             }
 
@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public TItem Percentage;
             public TItem ModelFilename;
-            public TItem Flags;
+            public TItem HasCollision;
             public TItem TextureFileHashes;
             #endregion
 
@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!object.Equals(this.Percentage, rhs.Percentage)) return false;
                 if (!object.Equals(this.ModelFilename, rhs.ModelFilename)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.HasCollision, rhs.HasCollision)) return false;
                 if (!object.Equals(this.TextureFileHashes, rhs.TextureFileHashes)) return false;
                 return true;
             }
@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.Percentage);
                 hash.Add(this.ModelFilename);
-                hash.Add(this.Flags);
+                hash.Add(this.HasCollision);
                 hash.Add(this.TextureFileHashes);
                 return hash.ToHashCode();
             }
@@ -180,7 +180,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!eval(this.Percentage)) return false;
                 if (!eval(this.ModelFilename)) return false;
-                if (!eval(this.Flags)) return false;
+                if (!eval(this.HasCollision)) return false;
                 if (!eval(this.TextureFileHashes)) return false;
                 return true;
             }
@@ -191,7 +191,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (eval(this.Percentage)) return true;
                 if (eval(this.ModelFilename)) return true;
-                if (eval(this.Flags)) return true;
+                if (eval(this.HasCollision)) return true;
                 if (eval(this.TextureFileHashes)) return true;
                 return false;
             }
@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 obj.Percentage = eval(this.Percentage);
                 obj.ModelFilename = eval(this.ModelFilename);
-                obj.Flags = eval(this.Flags);
+                obj.HasCollision = eval(this.HasCollision);
                 obj.TextureFileHashes = eval(this.TextureFileHashes);
             }
             #endregion
@@ -237,9 +237,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(ModelFilename, "ModelFilename");
                     }
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.HasCollision ?? true)
                     {
-                        sb.AppendItem(Flags, "Flags");
+                        sb.AppendItem(HasCollision, "HasCollision");
                     }
                     if (printMask?.TextureFileHashes ?? true)
                     {
@@ -271,7 +271,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             public Exception? Percentage;
             public Exception? ModelFilename;
-            public Exception? Flags;
+            public Exception? HasCollision;
             public Exception? TextureFileHashes;
             #endregion
 
@@ -285,8 +285,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Percentage;
                     case DebrisModel_FieldIndex.ModelFilename:
                         return ModelFilename;
-                    case DebrisModel_FieldIndex.Flags:
-                        return Flags;
+                    case DebrisModel_FieldIndex.HasCollision:
+                        return HasCollision;
                     case DebrisModel_FieldIndex.TextureFileHashes:
                         return TextureFileHashes;
                     default:
@@ -305,8 +305,8 @@ namespace Mutagen.Bethesda.Starfield
                     case DebrisModel_FieldIndex.ModelFilename:
                         this.ModelFilename = ex;
                         break;
-                    case DebrisModel_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case DebrisModel_FieldIndex.HasCollision:
+                        this.HasCollision = ex;
                         break;
                     case DebrisModel_FieldIndex.TextureFileHashes:
                         this.TextureFileHashes = ex;
@@ -327,8 +327,8 @@ namespace Mutagen.Bethesda.Starfield
                     case DebrisModel_FieldIndex.ModelFilename:
                         this.ModelFilename = (Exception?)obj;
                         break;
-                    case DebrisModel_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case DebrisModel_FieldIndex.HasCollision:
+                        this.HasCollision = (Exception?)obj;
                         break;
                     case DebrisModel_FieldIndex.TextureFileHashes:
                         this.TextureFileHashes = (Exception?)obj;
@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (Percentage != null) return true;
                 if (ModelFilename != null) return true;
-                if (Flags != null) return true;
+                if (HasCollision != null) return true;
                 if (TextureFileHashes != null) return true;
                 return false;
             }
@@ -377,7 +377,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(ModelFilename, "ModelFilename");
                 }
                 {
-                    sb.AppendItem(Flags, "Flags");
+                    sb.AppendItem(HasCollision, "HasCollision");
                 }
                 {
                     sb.AppendItem(TextureFileHashes, "TextureFileHashes");
@@ -392,7 +392,7 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.Percentage = this.Percentage.Combine(rhs.Percentage);
                 ret.ModelFilename = this.ModelFilename.Combine(rhs.ModelFilename);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.HasCollision = this.HasCollision.Combine(rhs.HasCollision);
                 ret.TextureFileHashes = this.TextureFileHashes.Combine(rhs.TextureFileHashes);
                 return ret;
             }
@@ -419,7 +419,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool OnOverall;
             public bool Percentage;
             public bool ModelFilename;
-            public bool Flags;
+            public bool HasCollision;
             public bool TextureFileHashes;
             #endregion
 
@@ -432,7 +432,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.OnOverall = onOverall;
                 this.Percentage = defaultOn;
                 this.ModelFilename = defaultOn;
-                this.Flags = defaultOn;
+                this.HasCollision = defaultOn;
                 this.TextureFileHashes = defaultOn;
             }
 
@@ -451,7 +451,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 ret.Add((Percentage, null));
                 ret.Add((ModelFilename, null));
-                ret.Add((Flags, null));
+                ret.Add((HasCollision, null));
                 ret.Add((TextureFileHashes, null));
             }
 
@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Starfield
     {
         new Byte Percentage { get; set; }
         new AssetLink<StarfieldModelAssetType> ModelFilename { get; set; }
-        new DebrisModel.Flag Flags { get; set; }
+        new Boolean HasCollision { get; set; }
         new MemorySlice<Byte>? TextureFileHashes { get; set; }
     }
 
@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Starfield
         static ILoquiRegistration StaticRegistration => DebrisModel_Registration.Instance;
         Byte Percentage { get; }
         AssetLinkGetter<StarfieldModelAssetType> ModelFilename { get; }
-        DebrisModel.Flag Flags { get; }
+        Boolean HasCollision { get; }
         ReadOnlyMemorySlice<Byte>? TextureFileHashes { get; }
 
     }
@@ -727,7 +727,7 @@ namespace Mutagen.Bethesda.Starfield
     {
         Percentage = 0,
         ModelFilename = 1,
-        Flags = 2,
+        HasCollision = 2,
         TextureFileHashes = 3,
     }
     #endregion
@@ -821,7 +821,7 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.Percentage = default(Byte);
             item.ModelFilename.SetToNull();
-            item.Flags = default(DebrisModel.Flag);
+            item.HasCollision = default(Boolean);
             item.TextureFileHashes = default;
         }
         
@@ -892,7 +892,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ret.Percentage = item.Percentage == rhs.Percentage;
             ret.ModelFilename = object.Equals(item.ModelFilename, rhs.ModelFilename);
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.HasCollision = item.HasCollision == rhs.HasCollision;
             ret.TextureFileHashes = MemorySliceExt.SequenceEqual(item.TextureFileHashes, rhs.TextureFileHashes);
         }
         
@@ -946,9 +946,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.ModelFilename, "ModelFilename");
             }
-            if (printMask?.Flags ?? true)
+            if (printMask?.HasCollision ?? true)
             {
-                sb.AppendItem(item.Flags, "Flags");
+                sb.AppendItem(item.HasCollision, "HasCollision");
             }
             if ((printMask?.TextureFileHashes ?? true)
                 && item.TextureFileHashes is {} TextureFileHashesItem)
@@ -972,9 +972,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!object.Equals(lhs.ModelFilename, rhs.ModelFilename)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.Flags) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.HasCollision) ?? true))
             {
-                if (lhs.Flags != rhs.Flags) return false;
+                if (lhs.HasCollision != rhs.HasCollision) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.TextureFileHashes) ?? true))
             {
@@ -988,7 +988,7 @@ namespace Mutagen.Bethesda.Starfield
             var hash = new HashCode();
             hash.Add(item.Percentage);
             hash.Add(item.ModelFilename);
-            hash.Add(item.Flags);
+            hash.Add(item.HasCollision);
             if (item.TextureFileHashes is {} TextureFileHashesItem)
             {
                 hash.Add(TextureFileHashesItem);
@@ -1039,9 +1039,9 @@ namespace Mutagen.Bethesda.Starfield
                 item.Percentage = rhs.Percentage;
             }
             item.ModelFilename.GivenPath = rhs.ModelFilename.GivenPath;
-            if ((copyMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.HasCollision) ?? true))
             {
-                item.Flags = rhs.Flags;
+                item.HasCollision = rhs.HasCollision;
             }
             if ((copyMask?.GetShouldTranslate((int)DebrisModel_FieldIndex.TextureFileHashes) ?? true))
             {
@@ -1170,10 +1170,7 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     item: item.ModelFilename.GivenPath,
                     binaryType: StringBinaryType.NullTerminate);
-                EnumBinaryTranslation<DebrisModel.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer,
-                    item.Flags,
-                    length: 1);
+                writer.Write(item.HasCollision);
             }
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
@@ -1223,7 +1220,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.DATA:
                 {
-                    if (lastParsed.ShortCircuit((int)DebrisModel_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DebrisModel_FieldIndex.HasCollision, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 1) return null;
@@ -1233,10 +1230,8 @@ namespace Mutagen.Bethesda.Starfield
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: false);
                     if (dataFrame.Remaining < 1) return null;
-                    item.Flags = EnumBinaryTranslation<DebrisModel.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: dataFrame,
-                        length: 1);
-                    return (int)DebrisModel_FieldIndex.Flags;
+                    item.HasCollision = dataFrame.ReadBoolean();
+                    return (int)DebrisModel_FieldIndex.HasCollision;
                 }
                 case RecordTypeInts.MODT:
                 {
@@ -1323,10 +1318,10 @@ namespace Mutagen.Bethesda.Starfield
         public AssetLinkGetter<StarfieldModelAssetType> ModelFilename { get; private set; } = null!;
         protected int ModelFilenameEndingPos;
         #endregion
-        #region Flags
-        private int _FlagsLocation => ModelFilenameEndingPos;
-        private bool _Flags_IsSet => _DATALocation.HasValue;
-        public DebrisModel.Flag Flags => _Flags_IsSet ? (DebrisModel.Flag)_recordData.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        #region HasCollision
+        private int _HasCollisionLocation => ModelFilenameEndingPos;
+        private bool _HasCollision_IsSet => _DATALocation.HasValue;
+        public Boolean HasCollision => _HasCollision_IsSet ? _recordData.Slice(_HasCollisionLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
         #region TextureFileHashes
         private int? _TextureFileHashesLocation;
@@ -1399,9 +1394,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.DATA:
                 {
-                    if (lastParsed.ShortCircuit((int)DebrisModel_FieldIndex.Flags, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)DebrisModel_FieldIndex.HasCollision, translationParams)) return ParseResult.Stop;
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)DebrisModel_FieldIndex.Flags;
+                    return (int)DebrisModel_FieldIndex.HasCollision;
                 }
                 case RecordTypeInts.MODT:
                 {

@@ -42,3 +42,9 @@ This example snippet would print all the unique Weapon EditorIDs from the load o
 Mutagen can be added to your C# project via NuGet, under the package name `Mutagen.Bethesda`.  Search for it in Visual Studio, or find it [here](https://www.nuget.org/packages/Mutagen.Bethesda/).
 
 If you're unfamiliar with setting up C# projects in general, a good place to start might be creating a simple [Synthesis patcher](https://mutagen-modding.github.io/Synthesis/devs/Create-a-Patcher/), and be sure to ask questions on our [Discord](https://discord.gg/53KMEsW).
+
+# Contributors
+
+Huge thanks to everyone for spending their time helping Mutagen grow! 🍄
+
+<img src="https://contributors-img.web.app/image?repo=Mutagen-Modding/Mutagen" alt="Contributors"/>

@@ -54,7 +54,7 @@ partial class AObjectModification
             }
 
             var strLen = BinaryPrimitives.ReadInt32LittleEndian(data.Content.Slice(10));
-            var dataName = StringBinaryTranslation.Instance.Parse(data.Content.Slice(14, strLen), frame.MetaData.Encodings.NonTranslated);
+            var dataName = StringBinaryTranslation.Instance.Parse(data.Content.Slice(14, strLen), frame.MetaData.Encodings.NonTranslated, parseWhole: true);
             switch (dataName)
             {
                 case Weapon.ObjectModificationName:
@@ -77,10 +77,11 @@ partial class AObjectModification
         }
         catch (Exception e)
         {
-            throw RecordException.Enrich(
+            RecordException.EnrichAndThrow(
                 e,
                 FormKey.Factory(frame.MetaData.MasterReferences, majorMeta.FormID, reference: false),
                 typeof(AObjectModification));
+            throw;
         }
     }
 }
@@ -96,7 +97,7 @@ partial class AObjectModificationBinaryCreateTranslation
         var includeCount = frame.ReadInt32();
         var propertyCount = frame.ReadInt32();
         item.Unknown = frame.ReadUInt16();
-        var dataName = StringBinaryTranslation.Instance.Parse(frame, StringBinaryType.PrependLengthWithNullIfContent);
+        var dataName = StringBinaryTranslation.Instance.Parse(frame, StringBinaryType.PrependLengthWithNullIfContent, parseWhole: true);
         item.Unknown2 = frame.ReadUInt16();
         item.AttachPoint.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         item.AttachParentSlots.SetTo(
@@ -373,7 +374,7 @@ partial class AObjectModificationBinaryOverlay
         }
         
         var strLen = BinaryPrimitives.ReadInt32LittleEndian(data.Content.Slice(10));
-        var dataName = StringBinaryTranslation.Instance.Parse(data.Content.Slice(14, strLen), stream.MetaData.Encodings.NonTranslated);
+        var dataName = StringBinaryTranslation.Instance.Parse(data.Content.Slice(14, strLen), stream.MetaData.Encodings.NonTranslated, parseWhole: true);
         switch (dataName)
         {
             case Weapon.ObjectModificationName:

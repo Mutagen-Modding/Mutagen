@@ -1,8 +1,9 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Testing.AutoData;
+using Noggog.Testing.Extensions;
 using NSubstitute;
 using Xunit;
 
@@ -37,7 +38,7 @@ public class LoadOrderListingsProviderTests
                 cccProv)
             .Get()
             .Select(x => (ILoadOrderListingGetter)new LoadOrderListing(x.ModKey, x.Enabled, x.GhostSuffix))
-            .Should().Equal(orderRet);
+            .ShouldBe(orderRet);
         cccProv.Received().Get(false);
         orderListings.Received()
             .Order(
@@ -74,7 +75,7 @@ public class LoadOrderListingsProviderTests
                 cccProv)
             .Get()
             .Select(x => (ILoadOrderListingGetter)new LoadOrderListing(x.ModKey, x.Enabled, x.GhostSuffix))
-            .Should().Equal(orderRet);
+            .ShouldBe(orderRet);
         cccProv.Received().Get(false);
         orderListings.Received()
             .Order(

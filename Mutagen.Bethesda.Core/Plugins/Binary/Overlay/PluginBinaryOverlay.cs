@@ -159,7 +159,8 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, FormKey.Factory(stream.MetaData.MasterReferences, majorMeta.FormID, reference: false), ((ILoquiObject)this).Registration.ClassType, edid: null);
+                RecordException.EnrichAndThrow(ex, FormKey.Factory(stream.MetaData.MasterReferences, majorMeta.FormID, reference: false), ((ILoquiObject)this).Registration.ClassType, edid: null);
+                throw;
             }
         }
     }
@@ -251,7 +252,8 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
             catch (Exception e)
                 when (lastParsedType != null)
             {
-                throw SubrecordException.Enrich(e, lastParsedType.Value);
+                SubrecordException.EnrichAndThrow(e, lastParsedType.Value);
+                throw;
             }
         }
     }
@@ -275,7 +277,8 @@ internal abstract class PluginBinaryOverlay : ILoquiObject
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, majorReference);
+            RecordException.EnrichAndThrow(ex, majorReference);
+            throw;
         }
     }
 

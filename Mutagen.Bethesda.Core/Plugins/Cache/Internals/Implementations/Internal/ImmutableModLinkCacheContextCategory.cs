@@ -215,7 +215,8 @@ internal sealed class ImmutableModLinkCacheContextCategory<TMod, TModGetter, TKe
         }
         catch (Exception e)
         {
-            throw RecordException.Enrich(e, _parent._sourceMod.ModKey);
+            RecordException.EnrichAndThrow(e, _parent._sourceMod.ModKey);
+            throw;
         }
     }
 }

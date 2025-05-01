@@ -169,6 +169,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Destructible? _Destructible;
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         public Destructible? Destructible
         {
             get => _Destructible;
@@ -176,6 +179,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDestructibleGetter? IContainerGetter.Destructible => this.Destructible;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
+        #endregion
         #endregion
         #region Flags
         public Container.Flag Flags { get; set; } = default(Container.Flag);
@@ -987,6 +994,7 @@ namespace Mutagen.Bethesda.Skyrim
         IContainerGetter,
         IExplodeSpawn,
         IFormLinkContainer,
+        IHasDestructible,
         IHaveVirtualMachineAdapter,
         ILoquiObjectSetter<IContainerInternal>,
         IModeled,
@@ -1018,6 +1026,9 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new Model? Model { get; set; }
         new ExtendedList<ContainerEntry>? Items { get; set; }
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         new Destructible? Destructible { get; set; }
         new Container.Flag Flags { get; set; }
         new Single Weight { get; set; }
@@ -1043,6 +1054,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
+        IHasDestructibleGetter,
         IHaveVirtualMachineAdapterGetter,
         ILoquiObject<IContainerGetter>,
         IMapsToGetter<IContainerGetter>,
@@ -1083,7 +1095,12 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? Model { get; }
         #endregion
         IReadOnlyList<IContainerEntryGetter>? Items { get; }
+        #region Destructible
+        /// <summary>
+        /// Aspects: IHasDestructibleGetter
+        /// </summary>
         IDestructibleGetter? Destructible { get; }
+        #endregion
         Container.Flag Flags { get; }
         Single Weight { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> OpenSound { get; }
@@ -2447,8 +2464,10 @@ namespace Mutagen.Bethesda.Skyrim
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Container_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
@@ -2584,7 +2603,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;

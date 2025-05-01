@@ -3,8 +3,7 @@
   <Object name="SnapTemplateNode" recordType="STND" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <Float name="ODTY" recordType="ODTY" unknown="true" />
-      <Float name="ODRT" recordType="ODRT" unknown="true" />
+      <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
       <RefList name="Components" refName="AComponent" />
       <RefDirect name="Model" refName="Model" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">

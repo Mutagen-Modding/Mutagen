@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -151,9 +151,9 @@ public class StringsLookupOverlayTests
             StringsFileFormat.Normal,
             new MutagenEncodingProvider()
                 .GetEncoding(GameRelease.SkyrimSE, Language.French));
-        overlay.Count.Should().Be(1);
+        overlay.Count.ShouldBe(1);
         overlay.TryLookup(1, out var str)
-            .Should().BeTrue();
-        str.Should().Be(FrenchString);
+            .ShouldBeTrue();
+        str.ShouldBe(FrenchString);
     }
 }

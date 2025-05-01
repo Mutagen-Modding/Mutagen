@@ -19,7 +19,7 @@ partial class AVirtualMachineAdapterBinaryCreateTranslation
 
     public static ScriptEntry ReadEntry(MutagenFrame frame, ushort objectFormat)
     {
-        var scriptName = StringBinaryTranslation.Instance.Parse(frame, stringBinaryType: StringBinaryType.PrependLengthUShort);
+        var scriptName = StringBinaryTranslation.Instance.Parse(frame, stringBinaryType: StringBinaryType.PrependLengthUShort, parseWhole: true);
         var entry = new ScriptEntry()
         {
             Name = scriptName,
@@ -37,7 +37,7 @@ partial class AVirtualMachineAdapterBinaryCreateTranslation
 
     public static ScriptProperty ParseProperty(MutagenFrame frame, ushort objectFormat)
     {
-        var name = StringBinaryTranslation.Instance.Parse(frame, stringBinaryType: StringBinaryType.PrependLengthUShort);
+        var name = StringBinaryTranslation.Instance.Parse(frame, stringBinaryType: StringBinaryType.PrependLengthUShort, parseWhole: true);
         var type = (ScriptProperty.Type)frame.ReadUInt8();
         var flags = (ScriptProperty.Flag)frame.ReadUInt8();
         ScriptProperty prop = type switch

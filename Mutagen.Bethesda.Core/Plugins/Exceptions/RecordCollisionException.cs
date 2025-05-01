@@ -10,14 +10,10 @@ public class RecordCollisionException : Exception
         ModKey modKey,
         FormKey formKey,
         Type type)
+        : base($"Two records with the same FormKey {formKey} existed in the same Group<{type.Name}> within the mod {modKey}")
     {
         ModKey = modKey;
         GroupType = type;
         FormKey = formKey;
-    }
-
-    public override string ToString()
-    {
-        return $"{nameof(RecordCollisionException)}: Two records with the same FormKey {FormKey} existed in the same Group<{GroupType?.Name}> within the mod {ModKey}";
     }
 }

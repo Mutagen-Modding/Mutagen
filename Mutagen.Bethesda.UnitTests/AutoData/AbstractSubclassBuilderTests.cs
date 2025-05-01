@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing.AutoData;
 using Xunit;
@@ -11,6 +11,6 @@ public class AbstractSubclassBuilderTests
     [MutagenModAutoData]
     public void Typical(ANpcLevel npcLevel)
     {
-        npcLevel.GetType().Should().Be(typeof(NpcLevel));
+        npcLevel.GetType().ShouldBe(typeof(NpcLevel));
     }
 }

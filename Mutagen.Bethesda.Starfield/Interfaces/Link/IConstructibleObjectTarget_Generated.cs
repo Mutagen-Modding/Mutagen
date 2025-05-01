@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Starfield
 {
     /// <summary>
-    /// Implemented by: [AObjectModification]
+    /// Implemented by: [ActionRecord, Activator, Ammunition, Armor, Book, Container, FormList, Furniture, GenericBaseForm, Ingestible, LeveledItem, MiscItem, MoveableStatic, Npc, AObjectModification, PackIn, Static, Terminal, Weapon]
     /// </summary>
     public partial interface IConstructibleObjectTarget :
         IConstructibleObjectTargetGetter,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [AObjectModification]
+    /// Implemented by: [ActionRecord, Activator, Ammunition, Armor, Book, Container, FormList, Furniture, GenericBaseForm, Ingestible, LeveledItem, MiscItem, MoveableStatic, Npc, AObjectModification, PackIn, Static, Terminal, Weapon]
     /// </summary>
     public partial interface IConstructibleObjectTargetGetter : IStarfieldMajorRecordGetter
     {

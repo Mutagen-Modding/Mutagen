@@ -1829,7 +1829,8 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Icon = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Tree_FieldIndex.Icon;
                 }
                 case RecordTypeInts.SNAM:

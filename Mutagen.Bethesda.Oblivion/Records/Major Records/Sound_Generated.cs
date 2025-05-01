@@ -1422,7 +1422,8 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.File = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Sound_FieldIndex.File;
                 }
                 case RecordTypeInts.SNDD:

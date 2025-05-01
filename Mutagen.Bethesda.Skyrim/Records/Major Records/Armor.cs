@@ -14,7 +14,7 @@ public partial class Armor
         Shield = 0x0000_0040
     }
     
-    IFormLinkNullableGetter<IEffectRecordGetter> IEnchantableGetter.ObjectEffect => this.ObjectEffect;
+    IFormLinkNullableGetter<IObjectEffectGetter> IEnchantableGetter.ObjectEffect => this.ObjectEffect;
 }
 
 partial class ArmorBinaryCreateTranslation

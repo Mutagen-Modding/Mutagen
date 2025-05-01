@@ -1004,6 +1004,10 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.CITC,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2,
+                RecordTypes.EPFT,
+                RecordTypes.EPFB,
+                RecordTypes.EPF2,
+                RecordTypes.EPF3,
                 RecordTypes.ATAF,
                 RecordTypes.FULL,
                 RecordTypes.DNAM,
@@ -1617,8 +1621,10 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
                         source: StringsSource.DL,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)PerkRank_FieldIndex.Description;
                 }
                 default:
@@ -1707,7 +1713,7 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IActivityGetter>? Activities { get; private set; }
         #region Description
         private int? _DescriptionLocation;
-        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : TranslatedString.Empty;
+        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData, eager: false) : TranslatedString.Empty;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

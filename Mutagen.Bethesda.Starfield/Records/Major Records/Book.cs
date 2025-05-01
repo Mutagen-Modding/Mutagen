@@ -14,6 +14,14 @@ public partial class Book
     {
         CantBeTaken = 0x02
     }
+    
+    public enum DataSlateTypeEnum
+    {
+        None,
+        Text,
+        Image,
+        Audio
+    }
 }
 
 partial class BookBinaryCreateTranslation

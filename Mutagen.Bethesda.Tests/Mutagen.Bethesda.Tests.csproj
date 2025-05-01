@@ -8,7 +8,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" />
-    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="Shouldly" />
     <PackageReference Include="Loqui" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="Noggog.CSharpExt" />

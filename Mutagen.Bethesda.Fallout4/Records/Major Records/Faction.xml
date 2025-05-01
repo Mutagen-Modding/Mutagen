@@ -60,7 +60,7 @@
           <String translated="Normal" />
         </Fields>
       </Gendered>
-      <String name="InsigniaUnused" recordType="INAM" />
+      <String name="Insignia" recordType="INAM" />
     </Fields>
   </Object>
 </Loqui>

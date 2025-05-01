@@ -1698,7 +1698,8 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Author = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)OblivionModHeader_FieldIndex.Author;
                 }
                 case RecordTypeInts.SNAM:
@@ -1706,7 +1707,8 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)OblivionModHeader_FieldIndex.Description;
                 }
                 case RecordTypeInts.MAST:

@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Xunit;
@@ -10,12 +10,12 @@ public class MajorRecordTypePrinterTests
     [Fact]
     public void GameSpecificDirect()
     {
-        MajorRecordPrinter<AcousticSpace>.TypeString.Should().Be("Skyrim.AcousticSpace");
+        MajorRecordPrinter<AcousticSpace>.TypeString.ShouldBe("Skyrim.AcousticSpace");
     }
 
     [Fact]
     public void GameSpecificGetter()
     {
-        MajorRecordPrinter<IAcousticSpace>.TypeString.Should().Be("Skyrim.IAcousticSpace");
+        MajorRecordPrinter<IAcousticSpace>.TypeString.ShouldBe("Skyrim.IAcousticSpace");
     }
 }

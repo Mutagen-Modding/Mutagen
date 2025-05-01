@@ -47,8 +47,10 @@ public record DataFolderLocations
                 return Fallout4;
             case GameRelease.Starfield:
                 return Starfield;
+            case GameRelease.SkyrimVR:
+                return SkyrimVR;
             default:
-                throw new NotImplementedException();
+                return string.Empty;
         }
     }
 
@@ -86,8 +88,7 @@ public record PassthroughSettings
     public bool TestBinaryOverlay { get; set; }
     public bool TestImport { get; set; }
     public bool TestCopyIn { get; set; }
-    public bool ParallelWriting { get; set; }
-    public bool ParallelProcessingSteps { get; set; }
+    public bool ParallelModTranslations { get; set; }
     public bool ThrowOnUnknown { get; set; } = true;
 
     public bool HasAnyToRun => TestNormal

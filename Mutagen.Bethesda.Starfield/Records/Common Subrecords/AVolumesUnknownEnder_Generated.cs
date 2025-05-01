@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Starfield
 {
     #region Class
     /// <summary>
-    /// Implemented by: [VolumesUnknownEnderSingle, VolumesUnknownEnderDouble, VolumesUnknownEnderTrio]
+    /// Implemented by: [VolumesUnknownEnderSingle, VolumesUnknownEnderDouble, VolumesUnknownEnderTrio, VolumesUnknownEnderEmpty]
     /// </summary>
     public abstract partial class AVolumesUnknownEnder :
         IAVolumesUnknownEnder,
@@ -348,7 +348,7 @@ namespace Mutagen.Bethesda.Starfield
 
     #region Interface
     /// <summary>
-    /// Implemented by: [VolumesUnknownEnderSingle, VolumesUnknownEnderDouble, VolumesUnknownEnderTrio]
+    /// Implemented by: [VolumesUnknownEnderSingle, VolumesUnknownEnderDouble, VolumesUnknownEnderTrio, VolumesUnknownEnderEmpty]
     /// </summary>
     public partial interface IAVolumesUnknownEnder :
         IAVolumesUnknownEnderGetter,
@@ -357,7 +357,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [VolumesUnknownEnderSingle, VolumesUnknownEnderDouble, VolumesUnknownEnderTrio]
+    /// Implemented by: [VolumesUnknownEnderSingle, VolumesUnknownEnderDouble, VolumesUnknownEnderTrio, VolumesUnknownEnderEmpty]
     /// </summary>
     public partial interface IAVolumesUnknownEnderGetter :
         ILoquiObject,

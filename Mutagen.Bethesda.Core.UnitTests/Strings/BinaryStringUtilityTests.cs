@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
@@ -14,7 +14,7 @@ public class BinaryStringUtilityTests
     {
         var ret = new MutagenEncodingProvider().GetEncoding(GameRelease.SkyrimSE, Language.French)
             .GetString(File.ReadAllBytes(TestDataPathing.FrenchSeString));
-        ret.Should().Be("Livre de sort - Paralysie générale");
+        ret.ShouldBe("Livre de sort - Paralysie générale");
     }
 
     [Fact]
@@ -22,27 +22,27 @@ public class BinaryStringUtilityTests
     {
         var ret = new MutagenEncodingProvider().GetEncoding(GameRelease.SkyrimLE, Language.Russian)
             .GetString(File.ReadAllBytes(TestDataPathing.RussianLeString));
-        ret.Should().Be("Распорядок Гая Марона");
+        ret.ShouldBe("Распорядок Гая Марона");
     }
 
     [Fact]
     public void ParsePrependedStringTypical()
     {
         BinaryStringUtility.ParsePrependedString(File.ReadAllBytes(TestDataPathing.PrependedString), 2, MutagenEncoding._1252)
-            .Should().Be("HelloWorld");
+            .ShouldBe("HelloWorld");
     }
 
     [Fact]
     public void ParsePrependedStringZeroLength()
     {
         BinaryStringUtility.ParsePrependedString(File.ReadAllBytes(TestDataPathing.ZeroContentPrependedString), 2, MutagenEncoding._1252)
-            .Should().Be("");
+            .ShouldBe("");
     }
 
     [Fact]
     public void ProcessNullTerminationOnEmpty()
     {
         var span = BinaryStringUtility.ProcessNullTermination(Array.Empty<byte>().AsSpan());
-        span.Length.Should().Be(0);
+        span.Length.ShouldBe(0);
     }
 }

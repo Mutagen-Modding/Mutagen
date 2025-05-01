@@ -69,7 +69,7 @@ partial class NoteBinaryCreateTranslation
                 switch (item.Data)
                 {
                     case NoteProgram prog:
-                        prog.File = StringBinaryTranslation.Instance.Parse(frame, StringBinaryType.NullTerminate);
+                        prog.File = StringBinaryTranslation.Instance.Parse(frame, StringBinaryType.NullTerminate, parseWhole: true);
                         break;
                     case NoteVoice _:
                     case NoteTerminal _:
@@ -169,7 +169,7 @@ partial class NoteBinaryOverlay
                     var prog = new NoteProgram();
                     if (_dataContentLocation.HasValue)
                     {
-                        prog.File = StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _dataContentLocation.Value, _package.MetaData.Constants), _package.MetaData.Encodings.NonTranslated);
+                        prog.File = StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _dataContentLocation.Value, _package.MetaData.Constants), _package.MetaData.Encodings.NonTranslated, parseWhole: true);
                     }
                     return prog;
                 case Note.Types.Terminal:

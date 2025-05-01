@@ -53,6 +53,17 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
+        #region REFL
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _REFL;
+        public MemorySlice<Byte>? REFL
+        {
+            get => this._REFL;
+            set => this._REFL = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IFormFolderKeywordListGetter.REFL => this.REFL;
+        #endregion
 
         #region To String
 
@@ -78,6 +89,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.REFL = initialValue;
             }
 
             public Mask(
@@ -87,7 +99,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem StarfieldMajorRecordFlags)
+                TItem StarfieldMajorRecordFlags,
+                TItem REFL)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -97,6 +110,7 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
+                this.REFL = REFL;
             }
 
             #pragma warning disable CS8618
@@ -105,6 +119,10 @@ namespace Mutagen.Bethesda.Starfield
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem REFL;
             #endregion
 
             #region Equals
@@ -118,11 +136,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.REFL, rhs.REFL)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.REFL);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -133,6 +153,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.REFL)) return false;
                 return true;
             }
             #endregion
@@ -141,6 +162,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.REFL)) return true;
                 return false;
             }
             #endregion
@@ -156,6 +178,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.REFL = eval(this.REFL);
             }
             #endregion
 
@@ -174,6 +197,10 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(FormFolderKeywordList.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.REFL ?? true)
+                    {
+                        sb.AppendItem(REFL, "REFL");
+                    }
                 }
             }
             #endregion
@@ -184,12 +211,18 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? REFL;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 FormFolderKeywordList_FieldIndex enu = (FormFolderKeywordList_FieldIndex)index;
                 switch (enu)
                 {
+                    case FormFolderKeywordList_FieldIndex.REFL:
+                        return REFL;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -200,6 +233,9 @@ namespace Mutagen.Bethesda.Starfield
                 FormFolderKeywordList_FieldIndex enu = (FormFolderKeywordList_FieldIndex)index;
                 switch (enu)
                 {
+                    case FormFolderKeywordList_FieldIndex.REFL:
+                        this.REFL = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -211,6 +247,9 @@ namespace Mutagen.Bethesda.Starfield
                 FormFolderKeywordList_FieldIndex enu = (FormFolderKeywordList_FieldIndex)index;
                 switch (enu)
                 {
+                    case FormFolderKeywordList_FieldIndex.REFL:
+                        this.REFL = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -220,6 +259,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (REFL != null) return true;
                 return false;
             }
             #endregion
@@ -246,6 +286,9 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(REFL, "REFL");
+                }
             }
             #endregion
 
@@ -254,6 +297,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.REFL = this.REFL.Combine(rhs.REFL);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -275,15 +319,26 @@ namespace Mutagen.Bethesda.Starfield
             StarfieldMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool REFL;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.REFL = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((REFL, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -427,6 +482,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IFormFolderKeywordListInternal>,
         IStarfieldMajorRecordInternal
     {
+        new MemorySlice<Byte>? REFL { get; set; }
     }
 
     public partial interface IFormFolderKeywordListInternal :
@@ -444,6 +500,7 @@ namespace Mutagen.Bethesda.Starfield
         IMapsToGetter<IFormFolderKeywordListGetter>
     {
         static new ILoquiRegistration StaticRegistration => FormFolderKeywordList_Registration.Instance;
+        ReadOnlyMemorySlice<Byte>? REFL { get; }
 
     }
 
@@ -620,6 +677,7 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
+        REFL = 7,
     }
     #endregion
 
@@ -630,9 +688,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(FormFolderKeywordList.Mask<>);
 
@@ -662,8 +720,13 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.FFKW);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.FFKW);
+            var all = RecordCollection.Factory(
+                RecordTypes.FFKW,
+                RecordTypes.REFL);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(FormFolderKeywordListBinaryWriteTranslation);
         #region Interface
@@ -705,6 +768,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IFormFolderKeywordListInternal item)
         {
             ClearPartial();
+            item.REFL = default;
             base.Clear(item);
         }
         
@@ -789,6 +853,7 @@ namespace Mutagen.Bethesda.Starfield
             FormFolderKeywordList.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.REFL = MemorySliceExt.SequenceEqual(item.REFL, rhs.REFL);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -838,6 +903,11 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if ((printMask?.REFL ?? true)
+                && item.REFL is {} REFLItem)
+            {
+                sb.AppendLine($"REFL => {SpanExt.ToHexString(REFLItem)}");
+            }
         }
         
         public static FormFolderKeywordList_FieldIndex ConvertFieldIndex(StarfieldMajorRecord_FieldIndex index)
@@ -888,6 +958,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)FormFolderKeywordList_FieldIndex.REFL) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.REFL, rhs.REFL)) return false;
+            }
             return true;
         }
         
@@ -916,6 +990,10 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IFormFolderKeywordListGetter item)
         {
             var hash = new HashCode();
+            if (item.REFL is {} REFLItem)
+            {
+                hash.Add(REFLItem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1019,6 +1097,17 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)FormFolderKeywordList_FieldIndex.REFL) ?? true))
+            {
+                if(rhs.REFL is {} REFLrhs)
+                {
+                    item.REFL = REFLrhs.ToArray();
+                }
+                else
+                {
+                    item.REFL = default;
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -1179,6 +1268,21 @@ namespace Mutagen.Bethesda.Starfield
     {
         public new static readonly FormFolderKeywordListBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            IFormFolderKeywordListGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.REFL,
+                header: translationParams.ConvertToCustom(RecordTypes.REFL));
+        }
+
         public void Write(
             MutagenWriter writer,
             IFormFolderKeywordListGetter item,
@@ -1233,6 +1337,36 @@ namespace Mutagen.Bethesda.Starfield
         public new static readonly FormFolderKeywordListBinaryCreateTranslation Instance = new FormFolderKeywordListBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.FFKW;
+        public static ParseResult FillBinaryRecordTypes(
+            IFormFolderKeywordListInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.REFL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.REFL = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)FormFolderKeywordList_FieldIndex.REFL;
+                }
+                default:
+                    return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1279,6 +1413,10 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IFormFolderKeywordList);
 
 
+        #region REFL
+        private int? _REFLLocation;
+        public ReadOnlyMemorySlice<Byte>? REFL => _REFLLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _REFLLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1336,6 +1474,34 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.REFL:
+                {
+                    _REFLLocation = (stream.Position - offset);
+                    return (int)FormFolderKeywordList_FieldIndex.REFL;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

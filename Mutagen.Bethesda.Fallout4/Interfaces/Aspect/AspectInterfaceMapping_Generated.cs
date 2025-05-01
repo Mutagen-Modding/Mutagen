@@ -20,6 +20,16 @@ namespace Mutagen.Bethesda.Fallout4
         public Fallout4AspectInterfaceMapping()
         {
             var dict = new Dictionary<Type, InterfaceMappingResult>();
+            dict[typeof(IEnchantable)] = new InterfaceMappingResult(
+                true,
+                new ILoquiRegistration[]
+                {
+                    Weapon_Registration.Instance,
+                },
+                new InterfaceMappingTypes(
+                    Setter: typeof(IEnchantable),
+                    Getter: typeof(IEnchantableGetter)));
+            dict[typeof(IEnchantableGetter)] = dict[typeof(IEnchantable)] with { Setter = false };
             dict[typeof(IHarvestable)] = new InterfaceMappingResult(
                 true,
                 new ILoquiRegistration[]
@@ -30,6 +40,33 @@ namespace Mutagen.Bethesda.Fallout4
                     Setter: typeof(IHarvestable),
                     Getter: typeof(IHarvestableGetter)));
             dict[typeof(IHarvestableGetter)] = dict[typeof(IHarvestable)] with { Setter = false };
+            dict[typeof(IHasDestructible)] = new InterfaceMappingResult(
+                true,
+                new ILoquiRegistration[]
+                {
+                    Activator_Registration.Instance,
+                    Ammunition_Registration.Instance,
+                    Armor_Registration.Instance,
+                    Book_Registration.Instance,
+                    Container_Registration.Instance,
+                    Door_Registration.Instance,
+                    Flora_Registration.Instance,
+                    Furniture_Registration.Instance,
+                    Ingestible_Registration.Instance,
+                    Ingredient_Registration.Instance,
+                    Key_Registration.Instance,
+                    Light_Registration.Instance,
+                    MiscItem_Registration.Instance,
+                    MovableStatic_Registration.Instance,
+                    Npc_Registration.Instance,
+                    Projectile_Registration.Instance,
+                    TalkingActivator_Registration.Instance,
+                    Weapon_Registration.Instance,
+                },
+                new InterfaceMappingTypes(
+                    Setter: typeof(IHasDestructible),
+                    Getter: typeof(IHasDestructibleGetter)));
+            dict[typeof(IHasDestructibleGetter)] = dict[typeof(IHasDestructible)] with { Setter = false };
             dict[typeof(IHasIcons)] = new InterfaceMappingResult(
                 true,
                 new ILoquiRegistration[]

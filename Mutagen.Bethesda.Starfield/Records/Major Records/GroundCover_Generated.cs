@@ -98,10 +98,10 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
-        #region YNAM
-        public Single? YNAM { get; set; }
+        #region PaintedMaterialThreshold
+        public Single? PaintedMaterialThreshold { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IGroundCoverGetter.YNAM => this.YNAM;
+        Single? IGroundCoverGetter.PaintedMaterialThreshold => this.PaintedMaterialThreshold;
         #endregion
 
         #region To String
@@ -131,7 +131,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Grasses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, GroundCoverGrass.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, GroundCoverGrass.Mask<TItem>?>>());
                 this.LandscapeTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.YNAM = initialValue;
+                this.PaintedMaterialThreshold = initialValue;
             }
 
             public Mask(
@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Components,
                 TItem Grasses,
                 TItem LandscapeTextures,
-                TItem YNAM)
+                TItem PaintedMaterialThreshold)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Grasses = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, GroundCoverGrass.Mask<TItem>?>>?>(Grasses, Enumerable.Empty<MaskItemIndexed<TItem, GroundCoverGrass.Mask<TItem>?>>());
                 this.LandscapeTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LandscapeTextures, Enumerable.Empty<(int Index, TItem Value)>());
-                this.YNAM = YNAM;
+                this.PaintedMaterialThreshold = PaintedMaterialThreshold;
             }
 
             #pragma warning disable CS8618
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, GroundCoverGrass.Mask<TItem>?>>?>? Grasses;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? LandscapeTextures;
-            public TItem YNAM;
+            public TItem PaintedMaterialThreshold;
             #endregion
 
             #region Equals
@@ -190,7 +190,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
                 if (!object.Equals(this.LandscapeTextures, rhs.LandscapeTextures)) return false;
-                if (!object.Equals(this.YNAM, rhs.YNAM)) return false;
+                if (!object.Equals(this.PaintedMaterialThreshold, rhs.PaintedMaterialThreshold)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Components);
                 hash.Add(this.Grasses);
                 hash.Add(this.LandscapeTextures);
-                hash.Add(this.YNAM);
+                hash.Add(this.PaintedMaterialThreshold);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -245,7 +245,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (!eval(this.YNAM)) return false;
+                if (!eval(this.PaintedMaterialThreshold)) return false;
                 return true;
             }
             #endregion
@@ -289,7 +289,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (eval(this.YNAM)) return true;
+                if (eval(this.PaintedMaterialThreshold)) return true;
                 return false;
             }
             #endregion
@@ -349,7 +349,7 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                obj.YNAM = eval(this.YNAM);
+                obj.PaintedMaterialThreshold = eval(this.PaintedMaterialThreshold);
             }
             #endregion
 
@@ -427,9 +427,9 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.YNAM ?? true)
+                    if (printMask?.PaintedMaterialThreshold ?? true)
                     {
-                        sb.AppendItem(YNAM, "YNAM");
+                        sb.AppendItem(PaintedMaterialThreshold, "PaintedMaterialThreshold");
                     }
                 }
             }
@@ -445,7 +445,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, GroundCoverGrass.ErrorMask?>>?>? Grasses;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? LandscapeTextures;
-            public Exception? YNAM;
+            public Exception? PaintedMaterialThreshold;
             #endregion
 
             #region IErrorMask
@@ -460,8 +460,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Grasses;
                     case GroundCover_FieldIndex.LandscapeTextures:
                         return LandscapeTextures;
-                    case GroundCover_FieldIndex.YNAM:
-                        return YNAM;
+                    case GroundCover_FieldIndex.PaintedMaterialThreshold:
+                        return PaintedMaterialThreshold;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -481,8 +481,8 @@ namespace Mutagen.Bethesda.Starfield
                     case GroundCover_FieldIndex.LandscapeTextures:
                         this.LandscapeTextures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case GroundCover_FieldIndex.YNAM:
-                        this.YNAM = ex;
+                    case GroundCover_FieldIndex.PaintedMaterialThreshold:
+                        this.PaintedMaterialThreshold = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -504,8 +504,8 @@ namespace Mutagen.Bethesda.Starfield
                     case GroundCover_FieldIndex.LandscapeTextures:
                         this.LandscapeTextures = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case GroundCover_FieldIndex.YNAM:
-                        this.YNAM = (Exception?)obj;
+                    case GroundCover_FieldIndex.PaintedMaterialThreshold:
+                        this.PaintedMaterialThreshold = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Components != null) return true;
                 if (Grasses != null) return true;
                 if (LandscapeTextures != null) return true;
-                if (YNAM != null) return true;
+                if (PaintedMaterialThreshold != null) return true;
                 return false;
             }
             #endregion
@@ -603,7 +603,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 {
-                    sb.AppendItem(YNAM, "YNAM");
+                    sb.AppendItem(PaintedMaterialThreshold, "PaintedMaterialThreshold");
                 }
             }
             #endregion
@@ -616,7 +616,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Grasses = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, GroundCoverGrass.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Grasses?.Overall, rhs.Grasses?.Overall), Noggog.ExceptionExt.Combine(this.Grasses?.Specific, rhs.Grasses?.Specific));
                 ret.LandscapeTextures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LandscapeTextures?.Overall, rhs.LandscapeTextures?.Overall), Noggog.ExceptionExt.Combine(this.LandscapeTextures?.Specific, rhs.LandscapeTextures?.Specific));
-                ret.YNAM = this.YNAM.Combine(rhs.YNAM);
+                ret.PaintedMaterialThreshold = this.PaintedMaterialThreshold.Combine(rhs.PaintedMaterialThreshold);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -642,7 +642,7 @@ namespace Mutagen.Bethesda.Starfield
             public AComponent.TranslationMask? Components;
             public GroundCoverGrass.TranslationMask? Grasses;
             public bool LandscapeTextures;
-            public bool YNAM;
+            public bool PaintedMaterialThreshold;
             #endregion
 
             #region Ctors
@@ -652,7 +652,7 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.LandscapeTextures = defaultOn;
-                this.YNAM = defaultOn;
+                this.PaintedMaterialThreshold = defaultOn;
             }
 
             #endregion
@@ -663,7 +663,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((Grasses == null ? DefaultOn : !Grasses.GetCrystal().CopyNothing, Grasses?.GetCrystal()));
                 ret.Add((LandscapeTextures, null));
-                ret.Add((YNAM, null));
+                ret.Add((PaintedMaterialThreshold, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -819,7 +819,7 @@ namespace Mutagen.Bethesda.Starfield
         new ExtendedList<AComponent> Components { get; }
         new ExtendedList<GroundCoverGrass> Grasses { get; }
         new ExtendedList<IFormLinkGetter<ILandscapeTextureGetter>> LandscapeTextures { get; }
-        new Single? YNAM { get; set; }
+        new Single? PaintedMaterialThreshold { get; set; }
     }
 
     public partial interface IGroundCoverInternal :
@@ -842,7 +842,7 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IAComponentGetter> Components { get; }
         IReadOnlyList<IGroundCoverGrassGetter> Grasses { get; }
         IReadOnlyList<IFormLinkGetter<ILandscapeTextureGetter>> LandscapeTextures { get; }
-        Single? YNAM { get; }
+        Single? PaintedMaterialThreshold { get; }
 
     }
 
@@ -1022,7 +1022,7 @@ namespace Mutagen.Bethesda.Starfield
         Components = 7,
         Grasses = 8,
         LandscapeTextures = 9,
-        YNAM = 10,
+        PaintedMaterialThreshold = 10,
     }
     #endregion
 
@@ -1121,7 +1121,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Components.Clear();
             item.Grasses.Clear();
             item.LandscapeTextures.Clear();
-            item.YNAM = default;
+            item.PaintedMaterialThreshold = default;
             base.Clear(item);
         }
         
@@ -1245,7 +1245,7 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.LandscapeTextures,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.YNAM = item.YNAM.EqualsWithin(rhs.YNAM);
+            ret.PaintedMaterialThreshold = item.PaintedMaterialThreshold.EqualsWithin(rhs.PaintedMaterialThreshold);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1337,10 +1337,10 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.YNAM ?? true)
-                && item.YNAM is {} YNAMItem)
+            if ((printMask?.PaintedMaterialThreshold ?? true)
+                && item.PaintedMaterialThreshold is {} PaintedMaterialThresholdItem)
             {
-                sb.AppendItem(YNAMItem, "YNAM");
+                sb.AppendItem(PaintedMaterialThresholdItem, "PaintedMaterialThreshold");
             }
         }
         
@@ -1404,9 +1404,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.LandscapeTextures.SequenceEqualNullable(rhs.LandscapeTextures)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)GroundCover_FieldIndex.YNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)GroundCover_FieldIndex.PaintedMaterialThreshold) ?? true))
             {
-                if (!lhs.YNAM.EqualsWithin(rhs.YNAM)) return false;
+                if (!lhs.PaintedMaterialThreshold.EqualsWithin(rhs.PaintedMaterialThreshold)) return false;
             }
             return true;
         }
@@ -1439,9 +1439,9 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Components);
             hash.Add(item.Grasses);
             hash.Add(item.LandscapeTextures);
-            if (item.YNAM is {} YNAMitem)
+            if (item.PaintedMaterialThreshold is {} PaintedMaterialThresholditem)
             {
-                hash.Add(YNAMitem);
+                hash.Add(PaintedMaterialThresholditem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1640,9 +1640,9 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)GroundCover_FieldIndex.YNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)GroundCover_FieldIndex.PaintedMaterialThreshold) ?? true))
             {
-                item.YNAM = rhs.YNAM;
+                item.PaintedMaterialThreshold = rhs.PaintedMaterialThreshold;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1847,7 +1847,7 @@ namespace Mutagen.Bethesda.Starfield
                 });
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.YNAM,
+                item: item.PaintedMaterialThreshold,
                 header: translationParams.ConvertToCustom(RecordTypes.YNAM));
         }
 
@@ -1950,8 +1950,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.YNAM = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)GroundCover_FieldIndex.YNAM;
+                    item.PaintedMaterialThreshold = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)GroundCover_FieldIndex.PaintedMaterialThreshold;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2016,9 +2016,9 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         public IReadOnlyList<IGroundCoverGrassGetter> Grasses { get; private set; } = Array.Empty<IGroundCoverGrassGetter>();
         public IReadOnlyList<IFormLinkGetter<ILandscapeTextureGetter>> LandscapeTextures { get; private set; } = Array.Empty<IFormLinkGetter<ILandscapeTextureGetter>>();
-        #region YNAM
-        private int? _YNAMLocation;
-        public Single? YNAM => _YNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _YNAMLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region PaintedMaterialThreshold
+        private int? _PaintedMaterialThresholdLocation;
+        public Single? PaintedMaterialThreshold => _PaintedMaterialThresholdLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PaintedMaterialThresholdLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2124,8 +2124,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.YNAM:
                 {
-                    _YNAMLocation = (stream.Position - offset);
-                    return (int)GroundCover_FieldIndex.YNAM;
+                    _PaintedMaterialThresholdLocation = (stream.Position - offset);
+                    return (int)GroundCover_FieldIndex.PaintedMaterialThreshold;
                 }
                 default:
                     return base.FillRecordType(

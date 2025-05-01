@@ -143,14 +143,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region ObjectEffect
-        private readonly IFormLinkNullable<IEffectRecordGetter> _ObjectEffect = new FormLinkNullable<IEffectRecordGetter>();
-        public IFormLinkNullable<IEffectRecordGetter> ObjectEffect
+        private readonly IFormLinkNullable<IObjectEffectGetter> _ObjectEffect = new FormLinkNullable<IObjectEffectGetter>();
+        public IFormLinkNullable<IObjectEffectGetter> ObjectEffect
         {
             get => _ObjectEffect;
             set => _ObjectEffect.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IEffectRecordGetter> IArmorGetter.ObjectEffect => this.ObjectEffect;
+        IFormLinkNullableGetter<IObjectEffectGetter> IArmorGetter.ObjectEffect => this.ObjectEffect;
         #endregion
         #region WorldModel
         public IGenderedItem<ArmorModel?>? WorldModel { get; set; }
@@ -170,6 +170,9 @@ namespace Mutagen.Bethesda.Fallout4
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Destructible? _Destructible;
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         public Destructible? Destructible
         {
             get => _Destructible;
@@ -177,6 +180,10 @@ namespace Mutagen.Bethesda.Fallout4
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDestructibleGetter? IArmorGetter.Destructible => this.Destructible;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
+        #endregion
         #endregion
         #region PickUpSound
         private readonly IFormLinkNullable<ISoundDescriptorGetter> _PickUpSound = new FormLinkNullable<ISoundDescriptorGetter>();
@@ -1996,6 +2003,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainer,
         IFurnitureAssociation,
         IHarvestTarget,
+        IHasDestructible,
         IHaveVirtualMachineAdapter,
         IItem,
         IKeyworded<IKeywordGetter>,
@@ -2024,9 +2032,12 @@ namespace Mutagen.Bethesda.Fallout4
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
-        new IFormLinkNullable<IEffectRecordGetter> ObjectEffect { get; set; }
+        new IFormLinkNullable<IObjectEffectGetter> ObjectEffect { get; set; }
         new IGenderedItem<ArmorModel?>? WorldModel { get; set; }
         new BipedBodyTemplate? BipedBodyTemplate { get; set; }
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         new Destructible? Destructible { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; set; }
@@ -2077,6 +2088,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainerGetter,
         IFurnitureAssociationGetter,
         IHarvestTargetGetter,
+        IHasDestructibleGetter,
         IHaveVirtualMachineAdapterGetter,
         IItemGetter,
         IKeywordedGetter<IKeywordGetter>,
@@ -2113,10 +2125,15 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion
-        IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect { get; }
+        IFormLinkNullableGetter<IObjectEffectGetter> ObjectEffect { get; }
         IGenderedItemGetter<IArmorModelGetter?>? WorldModel { get; }
         IBipedBodyTemplateGetter? BipedBodyTemplate { get; }
+        #region Destructible
+        /// <summary>
+        /// Aspects: IHasDestructibleGetter
+        /// </summary>
         IDestructibleGetter? Destructible { get; }
+        #endregion
         IFormLinkNullableGetter<ISoundDescriptorGetter> PickUpSound { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound { get; }
         IFormLinkNullableGetter<IEquipTypeGetter> EquipmentType { get; }
@@ -3228,7 +3245,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             if (obj.WorldModel is {} WorldModelItem)
             {
-                foreach (var item in WorldModelItem.NotNull().SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in WorldModelItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -4139,8 +4156,10 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Armor_FieldIndex.Name;
                 }
                 case RecordTypeInts.EITM:
@@ -4236,8 +4255,10 @@ namespace Mutagen.Bethesda.Fallout4
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
                         source: StringsSource.DL,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Armor_FieldIndex.Description;
                 }
                 case RecordTypeInts.INRD:
@@ -4404,7 +4425,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;
@@ -4416,7 +4437,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region ObjectEffect
         private int? _ObjectEffectLocation;
-        public IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEffectRecordGetter>(_package, _recordData, _ObjectEffectLocation);
+        public IFormLinkNullableGetter<IObjectEffectGetter> ObjectEffect => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IObjectEffectGetter>(_package, _recordData, _ObjectEffectLocation);
         #endregion
         #region WorldModel
         private IGenderedItemGetter<IArmorModelGetter?>? _WorldModelOverlay;
@@ -4457,7 +4478,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
         #region InstanceNaming
         private int? _InstanceNamingLocation;

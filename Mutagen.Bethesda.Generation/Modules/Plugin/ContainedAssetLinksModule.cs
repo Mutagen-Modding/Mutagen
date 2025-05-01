@@ -241,7 +241,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                         && await HasLinks(contLoqui, includeBaseClass: true) != Case.No)
                     {
                         string filterNulls =
-                            cont is GenderedType && ((GenderedType)cont).ItemNullable ? ".NotNull()" : null;
+                            cont is GenderedType && ((GenderedType)cont).ItemNullable ? ".WhereNotNull()" : null;
                         var linktype = await HasLinks(contLoqui, includeBaseClass: true);
                         if (linktype != Case.No)
                         {
@@ -269,9 +269,9 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                     else if (cont.SubTypeGeneration is AssetLinkType assetLinkType)
                     {
                         string filterNulls =
-                            cont is GenderedType && ((GenderedType)cont).ItemNullable ? ".NotNull()" : null;
+                            cont is GenderedType && ((GenderedType)cont).ItemNullable ? ".WhereNotNull()" : null;
                         subFg.AppendLine(
-                            $"foreach (var item in {access}{filterNulls}{(assetLinkType.Nullable ? ".NotNull()" : null)})");
+                            $"foreach (var item in {access}{filterNulls}{(assetLinkType.Nullable ? ".WhereNotNull()" : null)})");
                     }
                     else
                     {
@@ -548,7 +548,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                 if (cont.SubTypeGeneration is LoquiType contLoqui
                     && await HasLinks(contLoqui, includeBaseClass: true) != Case.No)
                 {
-                    string filterNulls = cont is GenderedType && ((GenderedType)cont).ItemNullable ? ".NotNull()" : null;
+                    string filterNulls = cont is GenderedType && ((GenderedType)cont).ItemNullable ? ".WhereNotNull()" : null;
                     var linktype = await HasLinks(contLoqui, includeBaseClass: true);
                     if (linktype != Case.No)
                     {
@@ -665,7 +665,7 @@ public class ContainedAssetLinksModule : AContainedLinksModule<AssetLinkType>
                 {
                     string filterNulls =
                         assetLinkType.IsNullable || (cont is GenderedType && ((GenderedType)cont).ItemNullable)
-                            ? ".NotNull()"
+                            ? ".WhereNotNull()"
                             : null;
                     subFg.AppendLine($"foreach (var item in {access}{filterNulls})");
                 }

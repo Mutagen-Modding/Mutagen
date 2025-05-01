@@ -220,7 +220,7 @@ public class SkyrimPassthroughTest : PassthroughTest
         return SkyrimMod.Create(GameRelease.ToSkyrimRelease())
             .FromPath(
                 new ModPath(ModKey, path.Path))
-            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .Parallel(parallel: Settings.ParallelModTranslations)
             .WithStringsParameters(stringsParams)
             .ThrowIfUnknownSubrecord()
             .Construct();
@@ -231,7 +231,7 @@ public class SkyrimPassthroughTest : PassthroughTest
         return SkyrimMod.Create(GameRelease.ToSkyrimRelease())
             .FromPath(
                 new ModPath(ModKey, path.Path))
-            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .Parallel(parallel: Settings.ParallelModTranslations)
             .WithStringsParameters(stringsParams)
             .ThrowIfUnknownSubrecord()
             .Mutable()
@@ -246,5 +246,5 @@ public class SkyrimPassthroughTest : PassthroughTest
         return ret;
     }
 
-    protected override Processor ProcessorFactory() => new SkyrimProcessor(Settings.ParallelProcessingSteps, GameRelease, MasterFlagsLookup);
+    protected override Processor ProcessorFactory() => new SkyrimProcessor(WorkDropoff, GameRelease, MasterFlagsLookup);
 }

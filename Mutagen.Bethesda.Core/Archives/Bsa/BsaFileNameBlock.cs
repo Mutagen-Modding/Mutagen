@@ -36,8 +36,9 @@ class BsaFileNameBlock
                 catch (Exception e)
                     when (bsa.FilePath != null)
                 {
-                    throw ArchiveException.EnrichWithArchivePath("Strings section was not able to be read", e,
+                    ArchiveException.EnrichWithArchivePathAndThrow("Strings section was not able to be read", e,
                         bsa.FilePath.Value);
+                    throw;
                 }
             });
     }

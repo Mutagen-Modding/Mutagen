@@ -55,259 +55,366 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #region OffensiveMult
-        public Single OffensiveMult { get; set; } = default(Single);
+        public Percent OffensiveMult { get; set; } = default(Percent);
         #endregion
         #region DefensiveMult
-        public Single DefensiveMult { get; set; } = default(Single);
+        public Percent DefensiveMult { get; set; } = default(Percent);
         #endregion
         #region GroupOffensiveMult
-        public Single GroupOffensiveMult { get; set; } = default(Single);
+        public Percent GroupOffensiveMult { get; set; } = default(Percent);
         #endregion
         #region EquipmentScoreMultMelee
         public Single EquipmentScoreMultMelee { get; set; } = default(Single);
+        public static RangeFloat EquipmentScoreMultMelee_Range = new RangeFloat(0f, 10f);
         #endregion
         #region EquipmentScoreMultMagic
         public Single EquipmentScoreMultMagic { get; set; } = default(Single);
+        public static RangeFloat EquipmentScoreMultMagic_Range = new RangeFloat(0f, 10f);
         #endregion
         #region EquipmentScoreMultRanged
         public Single EquipmentScoreMultRanged { get; set; } = default(Single);
+        public static RangeFloat EquipmentScoreMultRanged_Range = new RangeFloat(0f, 10f);
         #endregion
         #region EquipmentScoreMultShout
         public Single EquipmentScoreMultShout { get; set; } = default(Single);
+        public static RangeFloat EquipmentScoreMultShout_Range = new RangeFloat(0f, 10f);
         #endregion
         #region EquipmentScoreMultUnarmed
         public Single EquipmentScoreMultUnarmed { get; set; } = default(Single);
+        public static RangeFloat EquipmentScoreMultUnarmed_Range = new RangeFloat(0f, 10f);
         #endregion
         #region EquipmentScoreMultStaff
         public Single EquipmentScoreMultStaff { get; set; } = default(Single);
+        public static RangeFloat EquipmentScoreMultStaff_Range = new RangeFloat(0f, 10f);
         #endregion
         #region AvoidThreatChance
-        public Single AvoidThreatChance { get; set; } = default(Single);
+        public Percent AvoidThreatChance { get; set; } = default(Percent);
         #endregion
         #region DodgeThreadChance
-        public Single DodgeThreadChance { get; set; } = default(Single);
+        public Percent DodgeThreadChance { get; set; } = default(Percent);
         #endregion
         #region EvadeThreatChance
-        public Single EvadeThreatChance { get; set; } = default(Single);
+        public Percent EvadeThreatChance { get; set; } = default(Percent);
         #endregion
-        #region CSGDUnknownFloat1
-        public Single CSGDUnknownFloat1 { get; set; } = default(Single);
+        #region HealAllyDistance
+        public Single HealAllyDistance { get; set; } = default(Single);
+        public static RangeFloat HealAllyDistance_Range = new RangeFloat(0f, 100f);
         #endregion
-        #region CSGDUnknownFloat2
-        public Single CSGDUnknownFloat2 { get; set; } = default(Single);
+        #region JumpCostMult
+        public Single JumpCostMult { get; set; } = default(Single);
+        public static RangeFloat JumpCostMult_Range = new RangeFloat(0f, 10f);
         #endregion
-        #region CSGDUnknownFloat3
-        public Single CSGDUnknownFloat3 { get; set; } = default(Single);
+        #region TauntDelayMult
+        public Single TauntDelayMult { get; set; } = default(Single);
+        public static RangeFloat TauntDelayMult_Range = new RangeFloat(0f, 10f);
         #endregion
         #region MeleeAttackStaggeredMult
         public Single MeleeAttackStaggeredMult { get; set; } = default(Single);
+        public static RangeFloat MeleeAttackStaggeredMult_Range = new RangeFloat(0f, 10f);
         #endregion
         #region MeleePowerAttackStaggeredMult
         public Single MeleePowerAttackStaggeredMult { get; set; } = default(Single);
+        public static RangeFloat MeleePowerAttackStaggeredMult_Range = new RangeFloat(0f, 10f);
         #endregion
         #region MeleePowerAttackBlockingMult
         public Single MeleePowerAttackBlockingMult { get; set; } = default(Single);
+        public static RangeFloat MeleePowerAttackBlockingMult_Range = new RangeFloat(0f, 10f);
         #endregion
         #region MeleeBashMult
         public Single MeleeBashMult { get; set; } = default(Single);
+        public static RangeFloat MeleeBashMult_Range = new RangeFloat(0f, 10f);
         #endregion
         #region MeleeBashRecoilMult
         public Single MeleeBashRecoilMult { get; set; } = default(Single);
+        public static RangeFloat MeleeBashRecoilMult_Range = new RangeFloat(0f, 10f);
         #endregion
         #region MeleeBashAttackMult
         public Single MeleeBashAttackMult { get; set; } = default(Single);
+        public static RangeFloat MeleeBashAttackMult_Range = new RangeFloat(0f, 10f);
         #endregion
         #region MeleeBashPowerAttackMult
         public Single MeleeBashPowerAttackMult { get; set; } = default(Single);
+        public static RangeFloat MeleeBashPowerAttackMult_Range = new RangeFloat(0f, 10f);
         #endregion
         #region MeleeSpecialAttackMult
         public Single MeleeSpecialAttackMult { get; set; } = default(Single);
+        public static RangeFloat MeleeSpecialAttackMult_Range = new RangeFloat(0f, 10f);
         #endregion
         #region MeleeBlockWhenStaggeredMult
         public Single MeleeBlockWhenStaggeredMult { get; set; } = default(Single);
+        public static RangeFloat MeleeBlockWhenStaggeredMult_Range = new RangeFloat(0f, 10f);
         #endregion
         #region MeleeAttackWhenStaggeredMult
         public Single MeleeAttackWhenStaggeredMult { get; set; } = default(Single);
+        public static RangeFloat MeleeAttackWhenStaggeredMult_Range = new RangeFloat(0f, 10f);
         #endregion
         #region RangedAccuracyMult
-        public Single RangedAccuracyMult { get; set; } = default(Single);
+        public Percent RangedAccuracyMult { get; set; } = default(Percent);
         #endregion
-        #region CSRAUnknownFloat1
-        public Single CSRAUnknownFloat1 { get; set; } = default(Single);
+        #region RangedThrowMult
+        public Percent RangedThrowMult { get; set; } = default(Percent);
         #endregion
-        #region CSRAUnknownFloat2
-        public Single CSRAUnknownFloat2 { get; set; } = default(Single);
+        #region RangedGrenadeAdvancedThrowingMult
+        public Percent RangedGrenadeAdvancedThrowingMult { get; set; } = default(Percent);
         #endregion
-        #region CSRAUnknownFloat3
-        public Single CSRAUnknownFloat3 { get; set; } = default(Single);
+        #region RangedGrenadeFlashTargetMult
+        public Percent RangedGrenadeFlashTargetMult { get; set; } = default(Percent);
         #endregion
-        #region CSRAUnknownFloat4
-        public Single CSRAUnknownFloat4 { get; set; } = default(Single);
+        #region RangedGrenadeThrowAtGroupMult
+        public Percent RangedGrenadeThrowAtGroupMult { get; set; } = default(Percent);
         #endregion
-        #region CSRAUnknownFloat5
-        public Single CSRAUnknownFloat5 { get; set; } = default(Single);
+        #region RangedGrenadeCloseRangeAttackChanceMult
+        public Percent RangedGrenadeCloseRangeAttackChanceMult { get; set; } = default(Percent);
         #endregion
         #region CloseRangeDuelingCircleMult
-        public Single CloseRangeDuelingCircleMult { get; set; } = default(Single);
+        public Percent CloseRangeDuelingCircleMult { get; set; } = default(Percent);
         #endregion
         #region CloseRangeDuelingFallbackMult
-        public Single CloseRangeDuelingFallbackMult { get; set; } = default(Single);
+        public Percent CloseRangeDuelingFallbackMult { get; set; } = default(Percent);
         #endregion
         #region CloseRangeFlankDistance
-        public Single CloseRangeFlankDistance { get; set; } = default(Single);
+        public Percent CloseRangeFlankDistance { get; set; } = default(Percent);
         #endregion
         #region CloseRangeFlankingStalkTime
-        public Single CloseRangeFlankingStalkTime { get; set; } = default(Single);
+        public Percent CloseRangeFlankingStalkTime { get; set; } = default(Percent);
         #endregion
         #region CloseRangeChargeDistance
-        public Single CloseRangeChargeDistance { get; set; } = default(Single);
+        public Percent CloseRangeChargeDistance { get; set; } = default(Percent);
         #endregion
         #region CloseRangeChargingThrowProbability
-        public Single CloseRangeChargingThrowProbability { get; set; } = default(Single);
+        public Percent CloseRangeChargingThrowProbability { get; set; } = default(Percent);
         #endregion
         #region CloseRangeChargingSprintFastProbability
-        public Single CloseRangeChargingSprintFastProbability { get; set; } = default(Single);
+        public Percent CloseRangeChargingSprintFastProbability { get; set; } = default(Percent);
         #endregion
         #region CloseRangeChargingSideswipeProbability
-        public Single CloseRangeChargingSideswipeProbability { get; set; } = default(Single);
+        public Percent CloseRangeChargingSideswipeProbability { get; set; } = default(Percent);
         #endregion
         #region CloseRangeChargingDisengageProbability
-        public Single CloseRangeChargingDisengageProbability { get; set; } = default(Single);
+        public Percent CloseRangeChargingDisengageProbability { get; set; } = default(Percent);
         #endregion
         #region CloseRangeChargingThrowMaxTargets
         public UInt32 CloseRangeChargingThrowMaxTargets { get; set; } = default(UInt32);
         #endregion
         #region CloseRangeFlankingVariance
-        public Single CloseRangeFlankingVariance { get; set; } = default(Single);
+        public Percent CloseRangeFlankingVariance { get; set; } = default(Percent);
         #endregion
-        #region CSCRUnknownFloat1
-        public Single CSCRUnknownFloat1 { get; set; } = default(Single);
+        #region CloseRangeRetreatChance
+        public Percent CloseRangeRetreatChance { get; set; } = default(Percent);
         #endregion
-        #region CSCRUnknownFloat2
-        public Single CSCRUnknownFloat2 { get; set; } = default(Single);
+        #region CloseRangeRetreatDistanceMult
+        public Percent CloseRangeRetreatDistanceMult { get; set; } = default(Percent);
         #endregion
         #region LongRangeStrafeMult
-        public Single LongRangeStrafeMult { get; set; } = default(Single);
+        public Percent LongRangeStrafeMult { get; set; } = default(Percent);
         #endregion
         #region LongRangeAdjustRangeMult
-        public Single LongRangeAdjustRangeMult { get; set; } = default(Single);
+        public Percent LongRangeAdjustRangeMult { get; set; } = default(Percent);
         #endregion
         #region LongRangeCrouchMult
-        public Single LongRangeCrouchMult { get; set; } = default(Single);
+        public Percent LongRangeCrouchMult { get; set; } = default(Percent);
         #endregion
         #region LongRangeWaitMult
-        public Single LongRangeWaitMult { get; set; } = default(Single);
+        public Percent LongRangeWaitMult { get; set; } = default(Percent);
         #endregion
         #region LongRangeRangeMult
-        public Single LongRangeRangeMult { get; set; } = default(Single);
+        public Percent LongRangeRangeMult { get; set; } = default(Percent);
         #endregion
-        #region CSLRUnknownFloat1
-        public Single CSLRUnknownFloat1 { get; set; } = default(Single);
+        #region LongRangeProvideSuppressiveFireMult
+        public Percent LongRangeProvideSuppressiveFireMult { get; set; } = default(Percent);
         #endregion
-        #region CSLRUnknownFloat2
-        public Single CSLRUnknownFloat2 { get; set; } = default(Single);
+        #region LongRangeRetreatChance
+        public Percent LongRangeRetreatChance { get; set; } = default(Percent);
         #endregion
-        #region CSLRUnknownFloat3
-        public Single CSLRUnknownFloat3 { get; set; } = default(Single);
+        #region LongRangeRetreatHideTimeMult
+        public Percent LongRangeRetreatHideTimeMult { get; set; } = default(Percent);
         #endregion
-        #region CSLRUnknownFloat4
-        public Single CSLRUnknownFloat4 { get; set; } = default(Single);
+        #region LongRangeRetreatDistanceMult
+        public Percent LongRangeRetreatDistanceMult { get; set; } = default(Percent);
         #endregion
         #region CoverSearchDistanceMult
-        public Single CoverSearchDistanceMult { get; set; } = default(Single);
+        public Percent CoverSearchDistanceMult { get; set; } = default(Percent);
         #endregion
-        #region CSCVUnknownFloat1
-        public Single CSCVUnknownFloat1 { get; set; } = default(Single);
+        #region CoverSearchSuppressionSensitivity
+        public Percent CoverSearchSuppressionSensitivity { get; set; } = default(Percent);
         #endregion
-        #region HoverChance
-        public Single HoverChance { get; set; } = default(Single);
+        #region FlightHoverChance
+        public Percent FlightHoverChance { get; set; } = default(Percent);
         #endregion
-        #region DiveBombChance
-        public Single DiveBombChance { get; set; } = default(Single);
+        #region FlightDiveBombChance
+        public Percent FlightDiveBombChance { get; set; } = default(Percent);
         #endregion
-        #region GroundAttackChance
-        public Single GroundAttackChance { get; set; } = default(Single);
+        #region FlightGroundAttackChance
+        public Percent FlightGroundAttackChance { get; set; } = default(Percent);
         #endregion
-        #region HoverTime
-        public Single HoverTime { get; set; } = default(Single);
+        #region FlightHoverTime
+        public Percent FlightHoverTime { get; set; } = default(Percent);
         #endregion
-        #region GroundAttackTime
-        public Single GroundAttackTime { get; set; } = default(Single);
+        #region FlightGroundAttackTime
+        public Percent FlightGroundAttackTime { get; set; } = default(Percent);
         #endregion
-        #region PerchAttackChance
-        public Single PerchAttackChance { get; set; } = default(Single);
+        #region FlightPerchAttackChance
+        public Percent FlightPerchAttackChance { get; set; } = default(Percent);
         #endregion
-        #region PerchAttackTime
-        public Single PerchAttackTime { get; set; } = default(Single);
+        #region FlightPerchAttackTime
+        public Percent FlightPerchAttackTime { get; set; } = default(Percent);
         #endregion
-        #region FlyingAttackChance
-        public Single FlyingAttackChance { get; set; } = default(Single);
+        #region FlightFlyingAttackChance
+        public Percent FlightFlyingAttackChance { get; set; } = default(Percent);
         #endregion
-        #region CSTN
+        #region TunnelCostMult
+        public Single TunnelCostMult { get; set; } = default(Single);
+        public static RangeFloat TunnelCostMult_Range = new RangeFloat(0f, 10f);
+        #endregion
+        #region TunnelChance
+        public Percent TunnelChance { get; set; } = default(Percent);
+        #endregion
+        #region TunnelMaxDistance
+        public Single TunnelMaxDistance { get; set; } = default(Single);
+        public static RangeFloat TunnelMaxDistance_Range = new RangeFloat(0f, 1000f);
+        #endregion
+        #region TunnelSpeedMult
+        public Single TunnelSpeedMult { get; set; } = default(Single);
+        public static RangeFloat TunnelSpeedMult_Range = new RangeFloat(0f, 10f);
+        #endregion
+        #region TunnelMinTime
+        public Single TunnelMinTime { get; set; } = default(Single);
+        public static RangeFloat TunnelMinTime_Range = new RangeFloat(0f, 30f);
+        #endregion
+        #region TunnelMaxTime
+        public Single TunnelMaxTime { get; set; } = default(Single);
+        public static RangeFloat TunnelMaxTime_Range = new RangeFloat(0f, 30f);
+        #endregion
+        #region TunnelMaximumTime
+        public Single TunnelMaximumTime { get; set; } = default(Single);
+        public static RangeFloat TunnelMaximumTime_Range = new RangeFloat(0f, 30f);
+        #endregion
+        #region TunnelCooldown
+        public Single TunnelCooldown { get; set; } = default(Single);
+        public static RangeFloat TunnelCooldown_Range = new RangeFloat(0f, 30f);
+        #endregion
+        #region SpaceGeneralPilotSkill
+        public Percent SpaceGeneralPilotSkill { get; set; } = default(Percent);
+        #endregion
+        #region SpaceGeneralAccuracy
+        public Percent SpaceGeneralAccuracy { get; set; } = default(Percent);
+        #endregion
+        #region SpaceGeneralTargetShield
+        public Percent SpaceGeneralTargetShield { get; set; } = default(Percent);
+        #endregion
+        #region SpaceGeneralAdjustment
+        public Single SpaceGeneralAdjustment { get; set; } = default(Single);
+        public static RangeFloat SpaceGeneralAdjustment_Range = new RangeFloat(0f, 60f);
+        #endregion
+        #region SpaceGeneralEngageManeuverChanceDirectAttack
+        public Percent SpaceGeneralEngageManeuverChanceDirectAttack { get; set; } = default(Percent);
+        #endregion
+        #region SpaceGeneralEngageManeuverChancePass
+        public Percent SpaceGeneralEngageManeuverChancePass { get; set; } = default(Percent);
+        #endregion
+        #region SpaceGeneralEngageManeuverChanceLeadTurn
+        public Percent SpaceGeneralEngageManeuverChanceLeadTurn { get; set; } = default(Percent);
+        #endregion
+        #region SpaceGeneralEngageManeuverChanceSlideTurn
+        public Percent SpaceGeneralEngageManeuverChanceSlideTurn { get; set; } = default(Percent);
+        #endregion
+        #region SpaceGeneralEngageManeuverChanceBarrelRoll
+        public Percent SpaceGeneralEngageManeuverChanceBarrelRoll { get; set; } = default(Percent);
+        #endregion
+        #region SpaceGeneralEvadeManeuverChanceBreak
+        public Percent SpaceGeneralEvadeManeuverChanceBreak { get; set; } = default(Percent);
+        #endregion
+        #region SpaceGeneralEvadeManeuverChanceScissors
+        public Percent SpaceGeneralEvadeManeuverChanceScissors { get; set; } = default(Percent);
+        #endregion
+        #region SpaceGeneralEvadeManeuverChanceCut
+        public Percent SpaceGeneralEvadeManeuverChanceCut { get; set; } = default(Percent);
+        #endregion
+        #region SpaceGeneralEvadeManeuverChanceBoost
+        public Percent SpaceGeneralEvadeManeuverChanceBoost { get; set; } = default(Percent);
+        #endregion
+        #region SpaceGeneralAcquireManeuverChanceSliceback
+        public Percent SpaceGeneralAcquireManeuverChanceSliceback { get; set; } = default(Percent);
+        #endregion
+        #region SpaceGeneralAcquireManeuverChanceStrafeTurn
+        public Percent SpaceGeneralAcquireManeuverChanceStrafeTurn { get; set; } = default(Percent);
+        #endregion
+        #region SpaceGeneralAcquireManeuverChanceAcquire
+        public Percent SpaceGeneralAcquireManeuverChanceAcquire { get; set; } = default(Percent);
+        #endregion
+        #region SpaceGeneralAcquireManeuverChanceTurn
+        public Percent SpaceGeneralAcquireManeuverChanceTurn { get; set; } = default(Percent);
+        #endregion
+        #region SpaceGeneralDisengageManeuverChance
+        public Percent SpaceGeneralDisengageManeuverChance { get; set; } = default(Percent);
+        #endregion
+        #region SpaceGeneralMissileSeekingStrength
+        public Single SpaceGeneralMissileSeekingStrength { get; set; } = default(Single);
+        public static RangeFloat SpaceGeneralMissileSeekingStrength_Range = new RangeFloat(0f, 10f);
+        #endregion
+        #region SpaceGeneralMinTimeBetweenBoosts
+        public Single SpaceGeneralMinTimeBetweenBoosts { get; set; } = default(Single);
+        public static RangeFloat SpaceGeneralMinTimeBetweenBoosts_Range = new RangeFloat(0f, 60f);
+        #endregion
+        #region SpaceGeneralCombatStrafing
+        public Boolean SpaceGeneralCombatStrafing { get; set; } = default(Boolean);
+        #endregion
+        #region SpaceGeneralRollsDuringBoost
+        public Boolean SpaceGeneralRollsDuringBoost { get; set; } = default(Boolean);
+        #endregion
+        #region UnknownCSSG
+        public Int16 UnknownCSSG { get; set; } = default(Int16);
+        #endregion
+        #region SpaceGeneralPowerWeighting
+        public CombatStylePowerWeighting SpaceGeneralPowerWeighting { get; set; } = new CombatStylePowerWeighting();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _CSTN;
-        public MemorySlice<Byte>? CSTN
-        {
-            get => this._CSTN;
-            set => this._CSTN = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ICombatStyleGetter.CSTN => this.CSTN;
+        ICombatStylePowerWeightingGetter ICombatStyleGetter.SpaceGeneralPowerWeighting => SpaceGeneralPowerWeighting;
         #endregion
-        #region CSSG
+        #region SpaceManeuverTypesMaxTime
+        public CombatStyleManeuverTiming SpaceManeuverTypesMaxTime { get; set; } = new CombatStyleManeuverTiming();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _CSSG;
-        public MemorySlice<Byte>? CSSG
-        {
-            get => this._CSSG;
-            set => this._CSSG = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ICombatStyleGetter.CSSG => this.CSSG;
+        ICombatStyleManeuverTimingGetter ICombatStyleGetter.SpaceManeuverTypesMaxTime => SpaceManeuverTypesMaxTime;
         #endregion
-        #region CSSM
+        #region SpaceManeuverTypesReentryDelays
+        public CombatStyleManeuverTiming SpaceManeuverTypesReentryDelays { get; set; } = new CombatStyleManeuverTiming();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _CSSM;
-        public MemorySlice<Byte>? CSSM
-        {
-            get => this._CSSM;
-            set => this._CSSM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ICombatStyleGetter.CSSM => this.CSSM;
+        ICombatStyleManeuverTimingGetter ICombatStyleGetter.SpaceManeuverTypesReentryDelays => SpaceManeuverTypesReentryDelays;
         #endregion
-        #region CSSR
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _CSSR;
-        public MemorySlice<Byte>? CSSR
-        {
-            get => this._CSSR;
-            set => this._CSSR = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ICombatStyleGetter.CSSR => this.CSSR;
+        #region SpaceRepairDamageThreshold
+        public Percent SpaceRepairDamageThreshold { get; set; } = default(Percent);
         #endregion
-        #region CSSA
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _CSSA;
-        public MemorySlice<Byte>? CSSA
-        {
-            get => this._CSSA;
-            set => this._CSSA = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ICombatStyleGetter.CSSA => this.CSSA;
+        #region SpaceRepairFarawayDistance
+        public Percent SpaceRepairFarawayDistance { get; set; } = default(Percent);
         #endregion
-        #region CSSD
+        #region SpaceRepairPowerToUse
+        public Percent SpaceRepairPowerToUse { get; set; } = default(Percent);
+        #endregion
+        #region SpaceRepairInClosePowerWeightingTables
+        public CombatStylePowerWeighting SpaceRepairInClosePowerWeightingTables { get; set; } = new CombatStylePowerWeighting();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _CSSD;
-        public MemorySlice<Byte>? CSSD
-        {
-            get => this._CSSD;
-            set => this._CSSD = value;
-        }
+        ICombatStylePowerWeightingGetter ICombatStyleGetter.SpaceRepairInClosePowerWeightingTables => SpaceRepairInClosePowerWeightingTables;
+        #endregion
+        #region SpaceRepairFarawayPowerWeightingTables
+        public CombatStylePowerWeighting SpaceRepairFarawayPowerWeightingTables { get; set; } = new CombatStylePowerWeighting();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ICombatStyleGetter.CSSD => this.CSSD;
+        ICombatStylePowerWeightingGetter ICombatStyleGetter.SpaceRepairFarawayPowerWeightingTables => SpaceRepairFarawayPowerWeightingTables;
+        #endregion
+        #region SpaceApproachingMinDistance
+        public Percent SpaceApproachingMinDistance { get; set; } = default(Percent);
+        #endregion
+        #region SpaceApproachingWeighting
+        public CombatStylePowerWeighting SpaceApproachingWeighting { get; set; } = new CombatStylePowerWeighting();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ICombatStylePowerWeightingGetter ICombatStyleGetter.SpaceApproachingWeighting => SpaceApproachingWeighting;
+        #endregion
+        #region SpaceDetectionRating1
+        public Single SpaceDetectionRating1 { get; set; } = default(Single);
+        #endregion
+        #region SpaceDetectionRating2
+        public Single SpaceDetectionRating2 { get; set; } = default(Single);
+        #endregion
+        #region SpaceDetectionRating3
+        public Single SpaceDetectionRating3 { get; set; } = default(Single);
         #endregion
         #region Flags
         public CombatStyle.Flag? Flags { get; set; }
@@ -325,29 +432,26 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte>? ICombatStyleGetter.FNAM => this.FNAM;
         #endregion
-        #region TNAM
-        private readonly IFormLinkNullable<ICombatStyleGetter> _TNAM = new FormLinkNullable<ICombatStyleGetter>();
-        public IFormLinkNullable<ICombatStyleGetter> TNAM
+        #region TemplateDefaultCombatStyle
+        private readonly IFormLinkNullable<ICombatStyleGetter> _TemplateDefaultCombatStyle = new FormLinkNullable<ICombatStyleGetter>();
+        public IFormLinkNullable<ICombatStyleGetter> TemplateDefaultCombatStyle
         {
-            get => _TNAM;
-            set => _TNAM.SetTo(value);
+            get => _TemplateDefaultCombatStyle;
+            set => _TemplateDefaultCombatStyle.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ICombatStyleGetter> ICombatStyleGetter.TNAM => this.TNAM;
+        IFormLinkNullableGetter<ICombatStyleGetter> ICombatStyleGetter.TemplateDefaultCombatStyle => this.TemplateDefaultCombatStyle;
         #endregion
-        #region UNAM
+        #region Templates
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<ICombatStyleGetter>>? _UNAM;
-        public ExtendedList<IFormLinkGetter<ICombatStyleGetter>>? UNAM
+        private CombatStyleTemplates? _Templates;
+        public CombatStyleTemplates? Templates
         {
-            get => this._UNAM;
-            set => this._UNAM = value;
+            get => _Templates;
+            set => _Templates = value;
         }
-        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<ICombatStyleGetter>>? ICombatStyleGetter.UNAM => _UNAM;
-        #endregion
-
+        ICombatStyleTemplatesGetter? ICombatStyleGetter.Templates => this.Templates;
         #endregion
 
         #region To String
@@ -386,9 +490,9 @@ namespace Mutagen.Bethesda.Starfield
                 this.AvoidThreatChance = initialValue;
                 this.DodgeThreadChance = initialValue;
                 this.EvadeThreatChance = initialValue;
-                this.CSGDUnknownFloat1 = initialValue;
-                this.CSGDUnknownFloat2 = initialValue;
-                this.CSGDUnknownFloat3 = initialValue;
+                this.HealAllyDistance = initialValue;
+                this.JumpCostMult = initialValue;
+                this.TauntDelayMult = initialValue;
                 this.MeleeAttackStaggeredMult = initialValue;
                 this.MeleePowerAttackStaggeredMult = initialValue;
                 this.MeleePowerAttackBlockingMult = initialValue;
@@ -400,11 +504,11 @@ namespace Mutagen.Bethesda.Starfield
                 this.MeleeBlockWhenStaggeredMult = initialValue;
                 this.MeleeAttackWhenStaggeredMult = initialValue;
                 this.RangedAccuracyMult = initialValue;
-                this.CSRAUnknownFloat1 = initialValue;
-                this.CSRAUnknownFloat2 = initialValue;
-                this.CSRAUnknownFloat3 = initialValue;
-                this.CSRAUnknownFloat4 = initialValue;
-                this.CSRAUnknownFloat5 = initialValue;
+                this.RangedThrowMult = initialValue;
+                this.RangedGrenadeAdvancedThrowingMult = initialValue;
+                this.RangedGrenadeFlashTargetMult = initialValue;
+                this.RangedGrenadeThrowAtGroupMult = initialValue;
+                this.RangedGrenadeCloseRangeAttackChanceMult = initialValue;
                 this.CloseRangeDuelingCircleMult = initialValue;
                 this.CloseRangeDuelingFallbackMult = initialValue;
                 this.CloseRangeFlankDistance = initialValue;
@@ -416,37 +520,75 @@ namespace Mutagen.Bethesda.Starfield
                 this.CloseRangeChargingDisengageProbability = initialValue;
                 this.CloseRangeChargingThrowMaxTargets = initialValue;
                 this.CloseRangeFlankingVariance = initialValue;
-                this.CSCRUnknownFloat1 = initialValue;
-                this.CSCRUnknownFloat2 = initialValue;
+                this.CloseRangeRetreatChance = initialValue;
+                this.CloseRangeRetreatDistanceMult = initialValue;
                 this.LongRangeStrafeMult = initialValue;
                 this.LongRangeAdjustRangeMult = initialValue;
                 this.LongRangeCrouchMult = initialValue;
                 this.LongRangeWaitMult = initialValue;
                 this.LongRangeRangeMult = initialValue;
-                this.CSLRUnknownFloat1 = initialValue;
-                this.CSLRUnknownFloat2 = initialValue;
-                this.CSLRUnknownFloat3 = initialValue;
-                this.CSLRUnknownFloat4 = initialValue;
+                this.LongRangeProvideSuppressiveFireMult = initialValue;
+                this.LongRangeRetreatChance = initialValue;
+                this.LongRangeRetreatHideTimeMult = initialValue;
+                this.LongRangeRetreatDistanceMult = initialValue;
                 this.CoverSearchDistanceMult = initialValue;
-                this.CSCVUnknownFloat1 = initialValue;
-                this.HoverChance = initialValue;
-                this.DiveBombChance = initialValue;
-                this.GroundAttackChance = initialValue;
-                this.HoverTime = initialValue;
-                this.GroundAttackTime = initialValue;
-                this.PerchAttackChance = initialValue;
-                this.PerchAttackTime = initialValue;
-                this.FlyingAttackChance = initialValue;
-                this.CSTN = initialValue;
-                this.CSSG = initialValue;
-                this.CSSM = initialValue;
-                this.CSSR = initialValue;
-                this.CSSA = initialValue;
-                this.CSSD = initialValue;
+                this.CoverSearchSuppressionSensitivity = initialValue;
+                this.FlightHoverChance = initialValue;
+                this.FlightDiveBombChance = initialValue;
+                this.FlightGroundAttackChance = initialValue;
+                this.FlightHoverTime = initialValue;
+                this.FlightGroundAttackTime = initialValue;
+                this.FlightPerchAttackChance = initialValue;
+                this.FlightPerchAttackTime = initialValue;
+                this.FlightFlyingAttackChance = initialValue;
+                this.TunnelCostMult = initialValue;
+                this.TunnelChance = initialValue;
+                this.TunnelMaxDistance = initialValue;
+                this.TunnelSpeedMult = initialValue;
+                this.TunnelMinTime = initialValue;
+                this.TunnelMaxTime = initialValue;
+                this.TunnelMaximumTime = initialValue;
+                this.TunnelCooldown = initialValue;
+                this.SpaceGeneralPilotSkill = initialValue;
+                this.SpaceGeneralAccuracy = initialValue;
+                this.SpaceGeneralTargetShield = initialValue;
+                this.SpaceGeneralAdjustment = initialValue;
+                this.SpaceGeneralEngageManeuverChanceDirectAttack = initialValue;
+                this.SpaceGeneralEngageManeuverChancePass = initialValue;
+                this.SpaceGeneralEngageManeuverChanceLeadTurn = initialValue;
+                this.SpaceGeneralEngageManeuverChanceSlideTurn = initialValue;
+                this.SpaceGeneralEngageManeuverChanceBarrelRoll = initialValue;
+                this.SpaceGeneralEvadeManeuverChanceBreak = initialValue;
+                this.SpaceGeneralEvadeManeuverChanceScissors = initialValue;
+                this.SpaceGeneralEvadeManeuverChanceCut = initialValue;
+                this.SpaceGeneralEvadeManeuverChanceBoost = initialValue;
+                this.SpaceGeneralAcquireManeuverChanceSliceback = initialValue;
+                this.SpaceGeneralAcquireManeuverChanceStrafeTurn = initialValue;
+                this.SpaceGeneralAcquireManeuverChanceAcquire = initialValue;
+                this.SpaceGeneralAcquireManeuverChanceTurn = initialValue;
+                this.SpaceGeneralDisengageManeuverChance = initialValue;
+                this.SpaceGeneralMissileSeekingStrength = initialValue;
+                this.SpaceGeneralMinTimeBetweenBoosts = initialValue;
+                this.SpaceGeneralCombatStrafing = initialValue;
+                this.SpaceGeneralRollsDuringBoost = initialValue;
+                this.UnknownCSSG = initialValue;
+                this.SpaceGeneralPowerWeighting = new MaskItem<TItem, CombatStylePowerWeighting.Mask<TItem>?>(initialValue, new CombatStylePowerWeighting.Mask<TItem>(initialValue));
+                this.SpaceManeuverTypesMaxTime = new MaskItem<TItem, CombatStyleManeuverTiming.Mask<TItem>?>(initialValue, new CombatStyleManeuverTiming.Mask<TItem>(initialValue));
+                this.SpaceManeuverTypesReentryDelays = new MaskItem<TItem, CombatStyleManeuverTiming.Mask<TItem>?>(initialValue, new CombatStyleManeuverTiming.Mask<TItem>(initialValue));
+                this.SpaceRepairDamageThreshold = initialValue;
+                this.SpaceRepairFarawayDistance = initialValue;
+                this.SpaceRepairPowerToUse = initialValue;
+                this.SpaceRepairInClosePowerWeightingTables = new MaskItem<TItem, CombatStylePowerWeighting.Mask<TItem>?>(initialValue, new CombatStylePowerWeighting.Mask<TItem>(initialValue));
+                this.SpaceRepairFarawayPowerWeightingTables = new MaskItem<TItem, CombatStylePowerWeighting.Mask<TItem>?>(initialValue, new CombatStylePowerWeighting.Mask<TItem>(initialValue));
+                this.SpaceApproachingMinDistance = initialValue;
+                this.SpaceApproachingWeighting = new MaskItem<TItem, CombatStylePowerWeighting.Mask<TItem>?>(initialValue, new CombatStylePowerWeighting.Mask<TItem>(initialValue));
+                this.SpaceDetectionRating1 = initialValue;
+                this.SpaceDetectionRating2 = initialValue;
+                this.SpaceDetectionRating3 = initialValue;
                 this.Flags = initialValue;
                 this.FNAM = initialValue;
-                this.TNAM = initialValue;
-                this.UNAM = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.TemplateDefaultCombatStyle = initialValue;
+                this.Templates = new MaskItem<TItem, CombatStyleTemplates.Mask<TItem>?>(initialValue, new CombatStyleTemplates.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -469,9 +611,9 @@ namespace Mutagen.Bethesda.Starfield
                 TItem AvoidThreatChance,
                 TItem DodgeThreadChance,
                 TItem EvadeThreatChance,
-                TItem CSGDUnknownFloat1,
-                TItem CSGDUnknownFloat2,
-                TItem CSGDUnknownFloat3,
+                TItem HealAllyDistance,
+                TItem JumpCostMult,
+                TItem TauntDelayMult,
                 TItem MeleeAttackStaggeredMult,
                 TItem MeleePowerAttackStaggeredMult,
                 TItem MeleePowerAttackBlockingMult,
@@ -483,11 +625,11 @@ namespace Mutagen.Bethesda.Starfield
                 TItem MeleeBlockWhenStaggeredMult,
                 TItem MeleeAttackWhenStaggeredMult,
                 TItem RangedAccuracyMult,
-                TItem CSRAUnknownFloat1,
-                TItem CSRAUnknownFloat2,
-                TItem CSRAUnknownFloat3,
-                TItem CSRAUnknownFloat4,
-                TItem CSRAUnknownFloat5,
+                TItem RangedThrowMult,
+                TItem RangedGrenadeAdvancedThrowingMult,
+                TItem RangedGrenadeFlashTargetMult,
+                TItem RangedGrenadeThrowAtGroupMult,
+                TItem RangedGrenadeCloseRangeAttackChanceMult,
                 TItem CloseRangeDuelingCircleMult,
                 TItem CloseRangeDuelingFallbackMult,
                 TItem CloseRangeFlankDistance,
@@ -499,37 +641,75 @@ namespace Mutagen.Bethesda.Starfield
                 TItem CloseRangeChargingDisengageProbability,
                 TItem CloseRangeChargingThrowMaxTargets,
                 TItem CloseRangeFlankingVariance,
-                TItem CSCRUnknownFloat1,
-                TItem CSCRUnknownFloat2,
+                TItem CloseRangeRetreatChance,
+                TItem CloseRangeRetreatDistanceMult,
                 TItem LongRangeStrafeMult,
                 TItem LongRangeAdjustRangeMult,
                 TItem LongRangeCrouchMult,
                 TItem LongRangeWaitMult,
                 TItem LongRangeRangeMult,
-                TItem CSLRUnknownFloat1,
-                TItem CSLRUnknownFloat2,
-                TItem CSLRUnknownFloat3,
-                TItem CSLRUnknownFloat4,
+                TItem LongRangeProvideSuppressiveFireMult,
+                TItem LongRangeRetreatChance,
+                TItem LongRangeRetreatHideTimeMult,
+                TItem LongRangeRetreatDistanceMult,
                 TItem CoverSearchDistanceMult,
-                TItem CSCVUnknownFloat1,
-                TItem HoverChance,
-                TItem DiveBombChance,
-                TItem GroundAttackChance,
-                TItem HoverTime,
-                TItem GroundAttackTime,
-                TItem PerchAttackChance,
-                TItem PerchAttackTime,
-                TItem FlyingAttackChance,
-                TItem CSTN,
-                TItem CSSG,
-                TItem CSSM,
-                TItem CSSR,
-                TItem CSSA,
-                TItem CSSD,
+                TItem CoverSearchSuppressionSensitivity,
+                TItem FlightHoverChance,
+                TItem FlightDiveBombChance,
+                TItem FlightGroundAttackChance,
+                TItem FlightHoverTime,
+                TItem FlightGroundAttackTime,
+                TItem FlightPerchAttackChance,
+                TItem FlightPerchAttackTime,
+                TItem FlightFlyingAttackChance,
+                TItem TunnelCostMult,
+                TItem TunnelChance,
+                TItem TunnelMaxDistance,
+                TItem TunnelSpeedMult,
+                TItem TunnelMinTime,
+                TItem TunnelMaxTime,
+                TItem TunnelMaximumTime,
+                TItem TunnelCooldown,
+                TItem SpaceGeneralPilotSkill,
+                TItem SpaceGeneralAccuracy,
+                TItem SpaceGeneralTargetShield,
+                TItem SpaceGeneralAdjustment,
+                TItem SpaceGeneralEngageManeuverChanceDirectAttack,
+                TItem SpaceGeneralEngageManeuverChancePass,
+                TItem SpaceGeneralEngageManeuverChanceLeadTurn,
+                TItem SpaceGeneralEngageManeuverChanceSlideTurn,
+                TItem SpaceGeneralEngageManeuverChanceBarrelRoll,
+                TItem SpaceGeneralEvadeManeuverChanceBreak,
+                TItem SpaceGeneralEvadeManeuverChanceScissors,
+                TItem SpaceGeneralEvadeManeuverChanceCut,
+                TItem SpaceGeneralEvadeManeuverChanceBoost,
+                TItem SpaceGeneralAcquireManeuverChanceSliceback,
+                TItem SpaceGeneralAcquireManeuverChanceStrafeTurn,
+                TItem SpaceGeneralAcquireManeuverChanceAcquire,
+                TItem SpaceGeneralAcquireManeuverChanceTurn,
+                TItem SpaceGeneralDisengageManeuverChance,
+                TItem SpaceGeneralMissileSeekingStrength,
+                TItem SpaceGeneralMinTimeBetweenBoosts,
+                TItem SpaceGeneralCombatStrafing,
+                TItem SpaceGeneralRollsDuringBoost,
+                TItem UnknownCSSG,
+                TItem SpaceGeneralPowerWeighting,
+                TItem SpaceManeuverTypesMaxTime,
+                TItem SpaceManeuverTypesReentryDelays,
+                TItem SpaceRepairDamageThreshold,
+                TItem SpaceRepairFarawayDistance,
+                TItem SpaceRepairPowerToUse,
+                TItem SpaceRepairInClosePowerWeightingTables,
+                TItem SpaceRepairFarawayPowerWeightingTables,
+                TItem SpaceApproachingMinDistance,
+                TItem SpaceApproachingWeighting,
+                TItem SpaceDetectionRating1,
+                TItem SpaceDetectionRating2,
+                TItem SpaceDetectionRating3,
                 TItem Flags,
                 TItem FNAM,
-                TItem TNAM,
-                TItem UNAM)
+                TItem TemplateDefaultCombatStyle,
+                TItem Templates)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -551,9 +731,9 @@ namespace Mutagen.Bethesda.Starfield
                 this.AvoidThreatChance = AvoidThreatChance;
                 this.DodgeThreadChance = DodgeThreadChance;
                 this.EvadeThreatChance = EvadeThreatChance;
-                this.CSGDUnknownFloat1 = CSGDUnknownFloat1;
-                this.CSGDUnknownFloat2 = CSGDUnknownFloat2;
-                this.CSGDUnknownFloat3 = CSGDUnknownFloat3;
+                this.HealAllyDistance = HealAllyDistance;
+                this.JumpCostMult = JumpCostMult;
+                this.TauntDelayMult = TauntDelayMult;
                 this.MeleeAttackStaggeredMult = MeleeAttackStaggeredMult;
                 this.MeleePowerAttackStaggeredMult = MeleePowerAttackStaggeredMult;
                 this.MeleePowerAttackBlockingMult = MeleePowerAttackBlockingMult;
@@ -565,11 +745,11 @@ namespace Mutagen.Bethesda.Starfield
                 this.MeleeBlockWhenStaggeredMult = MeleeBlockWhenStaggeredMult;
                 this.MeleeAttackWhenStaggeredMult = MeleeAttackWhenStaggeredMult;
                 this.RangedAccuracyMult = RangedAccuracyMult;
-                this.CSRAUnknownFloat1 = CSRAUnknownFloat1;
-                this.CSRAUnknownFloat2 = CSRAUnknownFloat2;
-                this.CSRAUnknownFloat3 = CSRAUnknownFloat3;
-                this.CSRAUnknownFloat4 = CSRAUnknownFloat4;
-                this.CSRAUnknownFloat5 = CSRAUnknownFloat5;
+                this.RangedThrowMult = RangedThrowMult;
+                this.RangedGrenadeAdvancedThrowingMult = RangedGrenadeAdvancedThrowingMult;
+                this.RangedGrenadeFlashTargetMult = RangedGrenadeFlashTargetMult;
+                this.RangedGrenadeThrowAtGroupMult = RangedGrenadeThrowAtGroupMult;
+                this.RangedGrenadeCloseRangeAttackChanceMult = RangedGrenadeCloseRangeAttackChanceMult;
                 this.CloseRangeDuelingCircleMult = CloseRangeDuelingCircleMult;
                 this.CloseRangeDuelingFallbackMult = CloseRangeDuelingFallbackMult;
                 this.CloseRangeFlankDistance = CloseRangeFlankDistance;
@@ -581,37 +761,75 @@ namespace Mutagen.Bethesda.Starfield
                 this.CloseRangeChargingDisengageProbability = CloseRangeChargingDisengageProbability;
                 this.CloseRangeChargingThrowMaxTargets = CloseRangeChargingThrowMaxTargets;
                 this.CloseRangeFlankingVariance = CloseRangeFlankingVariance;
-                this.CSCRUnknownFloat1 = CSCRUnknownFloat1;
-                this.CSCRUnknownFloat2 = CSCRUnknownFloat2;
+                this.CloseRangeRetreatChance = CloseRangeRetreatChance;
+                this.CloseRangeRetreatDistanceMult = CloseRangeRetreatDistanceMult;
                 this.LongRangeStrafeMult = LongRangeStrafeMult;
                 this.LongRangeAdjustRangeMult = LongRangeAdjustRangeMult;
                 this.LongRangeCrouchMult = LongRangeCrouchMult;
                 this.LongRangeWaitMult = LongRangeWaitMult;
                 this.LongRangeRangeMult = LongRangeRangeMult;
-                this.CSLRUnknownFloat1 = CSLRUnknownFloat1;
-                this.CSLRUnknownFloat2 = CSLRUnknownFloat2;
-                this.CSLRUnknownFloat3 = CSLRUnknownFloat3;
-                this.CSLRUnknownFloat4 = CSLRUnknownFloat4;
+                this.LongRangeProvideSuppressiveFireMult = LongRangeProvideSuppressiveFireMult;
+                this.LongRangeRetreatChance = LongRangeRetreatChance;
+                this.LongRangeRetreatHideTimeMult = LongRangeRetreatHideTimeMult;
+                this.LongRangeRetreatDistanceMult = LongRangeRetreatDistanceMult;
                 this.CoverSearchDistanceMult = CoverSearchDistanceMult;
-                this.CSCVUnknownFloat1 = CSCVUnknownFloat1;
-                this.HoverChance = HoverChance;
-                this.DiveBombChance = DiveBombChance;
-                this.GroundAttackChance = GroundAttackChance;
-                this.HoverTime = HoverTime;
-                this.GroundAttackTime = GroundAttackTime;
-                this.PerchAttackChance = PerchAttackChance;
-                this.PerchAttackTime = PerchAttackTime;
-                this.FlyingAttackChance = FlyingAttackChance;
-                this.CSTN = CSTN;
-                this.CSSG = CSSG;
-                this.CSSM = CSSM;
-                this.CSSR = CSSR;
-                this.CSSA = CSSA;
-                this.CSSD = CSSD;
+                this.CoverSearchSuppressionSensitivity = CoverSearchSuppressionSensitivity;
+                this.FlightHoverChance = FlightHoverChance;
+                this.FlightDiveBombChance = FlightDiveBombChance;
+                this.FlightGroundAttackChance = FlightGroundAttackChance;
+                this.FlightHoverTime = FlightHoverTime;
+                this.FlightGroundAttackTime = FlightGroundAttackTime;
+                this.FlightPerchAttackChance = FlightPerchAttackChance;
+                this.FlightPerchAttackTime = FlightPerchAttackTime;
+                this.FlightFlyingAttackChance = FlightFlyingAttackChance;
+                this.TunnelCostMult = TunnelCostMult;
+                this.TunnelChance = TunnelChance;
+                this.TunnelMaxDistance = TunnelMaxDistance;
+                this.TunnelSpeedMult = TunnelSpeedMult;
+                this.TunnelMinTime = TunnelMinTime;
+                this.TunnelMaxTime = TunnelMaxTime;
+                this.TunnelMaximumTime = TunnelMaximumTime;
+                this.TunnelCooldown = TunnelCooldown;
+                this.SpaceGeneralPilotSkill = SpaceGeneralPilotSkill;
+                this.SpaceGeneralAccuracy = SpaceGeneralAccuracy;
+                this.SpaceGeneralTargetShield = SpaceGeneralTargetShield;
+                this.SpaceGeneralAdjustment = SpaceGeneralAdjustment;
+                this.SpaceGeneralEngageManeuverChanceDirectAttack = SpaceGeneralEngageManeuverChanceDirectAttack;
+                this.SpaceGeneralEngageManeuverChancePass = SpaceGeneralEngageManeuverChancePass;
+                this.SpaceGeneralEngageManeuverChanceLeadTurn = SpaceGeneralEngageManeuverChanceLeadTurn;
+                this.SpaceGeneralEngageManeuverChanceSlideTurn = SpaceGeneralEngageManeuverChanceSlideTurn;
+                this.SpaceGeneralEngageManeuverChanceBarrelRoll = SpaceGeneralEngageManeuverChanceBarrelRoll;
+                this.SpaceGeneralEvadeManeuverChanceBreak = SpaceGeneralEvadeManeuverChanceBreak;
+                this.SpaceGeneralEvadeManeuverChanceScissors = SpaceGeneralEvadeManeuverChanceScissors;
+                this.SpaceGeneralEvadeManeuverChanceCut = SpaceGeneralEvadeManeuverChanceCut;
+                this.SpaceGeneralEvadeManeuverChanceBoost = SpaceGeneralEvadeManeuverChanceBoost;
+                this.SpaceGeneralAcquireManeuverChanceSliceback = SpaceGeneralAcquireManeuverChanceSliceback;
+                this.SpaceGeneralAcquireManeuverChanceStrafeTurn = SpaceGeneralAcquireManeuverChanceStrafeTurn;
+                this.SpaceGeneralAcquireManeuverChanceAcquire = SpaceGeneralAcquireManeuverChanceAcquire;
+                this.SpaceGeneralAcquireManeuverChanceTurn = SpaceGeneralAcquireManeuverChanceTurn;
+                this.SpaceGeneralDisengageManeuverChance = SpaceGeneralDisengageManeuverChance;
+                this.SpaceGeneralMissileSeekingStrength = SpaceGeneralMissileSeekingStrength;
+                this.SpaceGeneralMinTimeBetweenBoosts = SpaceGeneralMinTimeBetweenBoosts;
+                this.SpaceGeneralCombatStrafing = SpaceGeneralCombatStrafing;
+                this.SpaceGeneralRollsDuringBoost = SpaceGeneralRollsDuringBoost;
+                this.UnknownCSSG = UnknownCSSG;
+                this.SpaceGeneralPowerWeighting = new MaskItem<TItem, CombatStylePowerWeighting.Mask<TItem>?>(SpaceGeneralPowerWeighting, new CombatStylePowerWeighting.Mask<TItem>(SpaceGeneralPowerWeighting));
+                this.SpaceManeuverTypesMaxTime = new MaskItem<TItem, CombatStyleManeuverTiming.Mask<TItem>?>(SpaceManeuverTypesMaxTime, new CombatStyleManeuverTiming.Mask<TItem>(SpaceManeuverTypesMaxTime));
+                this.SpaceManeuverTypesReentryDelays = new MaskItem<TItem, CombatStyleManeuverTiming.Mask<TItem>?>(SpaceManeuverTypesReentryDelays, new CombatStyleManeuverTiming.Mask<TItem>(SpaceManeuverTypesReentryDelays));
+                this.SpaceRepairDamageThreshold = SpaceRepairDamageThreshold;
+                this.SpaceRepairFarawayDistance = SpaceRepairFarawayDistance;
+                this.SpaceRepairPowerToUse = SpaceRepairPowerToUse;
+                this.SpaceRepairInClosePowerWeightingTables = new MaskItem<TItem, CombatStylePowerWeighting.Mask<TItem>?>(SpaceRepairInClosePowerWeightingTables, new CombatStylePowerWeighting.Mask<TItem>(SpaceRepairInClosePowerWeightingTables));
+                this.SpaceRepairFarawayPowerWeightingTables = new MaskItem<TItem, CombatStylePowerWeighting.Mask<TItem>?>(SpaceRepairFarawayPowerWeightingTables, new CombatStylePowerWeighting.Mask<TItem>(SpaceRepairFarawayPowerWeightingTables));
+                this.SpaceApproachingMinDistance = SpaceApproachingMinDistance;
+                this.SpaceApproachingWeighting = new MaskItem<TItem, CombatStylePowerWeighting.Mask<TItem>?>(SpaceApproachingWeighting, new CombatStylePowerWeighting.Mask<TItem>(SpaceApproachingWeighting));
+                this.SpaceDetectionRating1 = SpaceDetectionRating1;
+                this.SpaceDetectionRating2 = SpaceDetectionRating2;
+                this.SpaceDetectionRating3 = SpaceDetectionRating3;
                 this.Flags = Flags;
                 this.FNAM = FNAM;
-                this.TNAM = TNAM;
-                this.UNAM = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(UNAM, Enumerable.Empty<(int Index, TItem Value)>());
+                this.TemplateDefaultCombatStyle = TemplateDefaultCombatStyle;
+                this.Templates = new MaskItem<TItem, CombatStyleTemplates.Mask<TItem>?>(Templates, new CombatStyleTemplates.Mask<TItem>(Templates));
             }
 
             #pragma warning disable CS8618
@@ -635,9 +853,9 @@ namespace Mutagen.Bethesda.Starfield
             public TItem AvoidThreatChance;
             public TItem DodgeThreadChance;
             public TItem EvadeThreatChance;
-            public TItem CSGDUnknownFloat1;
-            public TItem CSGDUnknownFloat2;
-            public TItem CSGDUnknownFloat3;
+            public TItem HealAllyDistance;
+            public TItem JumpCostMult;
+            public TItem TauntDelayMult;
             public TItem MeleeAttackStaggeredMult;
             public TItem MeleePowerAttackStaggeredMult;
             public TItem MeleePowerAttackBlockingMult;
@@ -649,11 +867,11 @@ namespace Mutagen.Bethesda.Starfield
             public TItem MeleeBlockWhenStaggeredMult;
             public TItem MeleeAttackWhenStaggeredMult;
             public TItem RangedAccuracyMult;
-            public TItem CSRAUnknownFloat1;
-            public TItem CSRAUnknownFloat2;
-            public TItem CSRAUnknownFloat3;
-            public TItem CSRAUnknownFloat4;
-            public TItem CSRAUnknownFloat5;
+            public TItem RangedThrowMult;
+            public TItem RangedGrenadeAdvancedThrowingMult;
+            public TItem RangedGrenadeFlashTargetMult;
+            public TItem RangedGrenadeThrowAtGroupMult;
+            public TItem RangedGrenadeCloseRangeAttackChanceMult;
             public TItem CloseRangeDuelingCircleMult;
             public TItem CloseRangeDuelingFallbackMult;
             public TItem CloseRangeFlankDistance;
@@ -665,37 +883,75 @@ namespace Mutagen.Bethesda.Starfield
             public TItem CloseRangeChargingDisengageProbability;
             public TItem CloseRangeChargingThrowMaxTargets;
             public TItem CloseRangeFlankingVariance;
-            public TItem CSCRUnknownFloat1;
-            public TItem CSCRUnknownFloat2;
+            public TItem CloseRangeRetreatChance;
+            public TItem CloseRangeRetreatDistanceMult;
             public TItem LongRangeStrafeMult;
             public TItem LongRangeAdjustRangeMult;
             public TItem LongRangeCrouchMult;
             public TItem LongRangeWaitMult;
             public TItem LongRangeRangeMult;
-            public TItem CSLRUnknownFloat1;
-            public TItem CSLRUnknownFloat2;
-            public TItem CSLRUnknownFloat3;
-            public TItem CSLRUnknownFloat4;
+            public TItem LongRangeProvideSuppressiveFireMult;
+            public TItem LongRangeRetreatChance;
+            public TItem LongRangeRetreatHideTimeMult;
+            public TItem LongRangeRetreatDistanceMult;
             public TItem CoverSearchDistanceMult;
-            public TItem CSCVUnknownFloat1;
-            public TItem HoverChance;
-            public TItem DiveBombChance;
-            public TItem GroundAttackChance;
-            public TItem HoverTime;
-            public TItem GroundAttackTime;
-            public TItem PerchAttackChance;
-            public TItem PerchAttackTime;
-            public TItem FlyingAttackChance;
-            public TItem CSTN;
-            public TItem CSSG;
-            public TItem CSSM;
-            public TItem CSSR;
-            public TItem CSSA;
-            public TItem CSSD;
+            public TItem CoverSearchSuppressionSensitivity;
+            public TItem FlightHoverChance;
+            public TItem FlightDiveBombChance;
+            public TItem FlightGroundAttackChance;
+            public TItem FlightHoverTime;
+            public TItem FlightGroundAttackTime;
+            public TItem FlightPerchAttackChance;
+            public TItem FlightPerchAttackTime;
+            public TItem FlightFlyingAttackChance;
+            public TItem TunnelCostMult;
+            public TItem TunnelChance;
+            public TItem TunnelMaxDistance;
+            public TItem TunnelSpeedMult;
+            public TItem TunnelMinTime;
+            public TItem TunnelMaxTime;
+            public TItem TunnelMaximumTime;
+            public TItem TunnelCooldown;
+            public TItem SpaceGeneralPilotSkill;
+            public TItem SpaceGeneralAccuracy;
+            public TItem SpaceGeneralTargetShield;
+            public TItem SpaceGeneralAdjustment;
+            public TItem SpaceGeneralEngageManeuverChanceDirectAttack;
+            public TItem SpaceGeneralEngageManeuverChancePass;
+            public TItem SpaceGeneralEngageManeuverChanceLeadTurn;
+            public TItem SpaceGeneralEngageManeuverChanceSlideTurn;
+            public TItem SpaceGeneralEngageManeuverChanceBarrelRoll;
+            public TItem SpaceGeneralEvadeManeuverChanceBreak;
+            public TItem SpaceGeneralEvadeManeuverChanceScissors;
+            public TItem SpaceGeneralEvadeManeuverChanceCut;
+            public TItem SpaceGeneralEvadeManeuverChanceBoost;
+            public TItem SpaceGeneralAcquireManeuverChanceSliceback;
+            public TItem SpaceGeneralAcquireManeuverChanceStrafeTurn;
+            public TItem SpaceGeneralAcquireManeuverChanceAcquire;
+            public TItem SpaceGeneralAcquireManeuverChanceTurn;
+            public TItem SpaceGeneralDisengageManeuverChance;
+            public TItem SpaceGeneralMissileSeekingStrength;
+            public TItem SpaceGeneralMinTimeBetweenBoosts;
+            public TItem SpaceGeneralCombatStrafing;
+            public TItem SpaceGeneralRollsDuringBoost;
+            public TItem UnknownCSSG;
+            public MaskItem<TItem, CombatStylePowerWeighting.Mask<TItem>?>? SpaceGeneralPowerWeighting { get; set; }
+            public MaskItem<TItem, CombatStyleManeuverTiming.Mask<TItem>?>? SpaceManeuverTypesMaxTime { get; set; }
+            public MaskItem<TItem, CombatStyleManeuverTiming.Mask<TItem>?>? SpaceManeuverTypesReentryDelays { get; set; }
+            public TItem SpaceRepairDamageThreshold;
+            public TItem SpaceRepairFarawayDistance;
+            public TItem SpaceRepairPowerToUse;
+            public MaskItem<TItem, CombatStylePowerWeighting.Mask<TItem>?>? SpaceRepairInClosePowerWeightingTables { get; set; }
+            public MaskItem<TItem, CombatStylePowerWeighting.Mask<TItem>?>? SpaceRepairFarawayPowerWeightingTables { get; set; }
+            public TItem SpaceApproachingMinDistance;
+            public MaskItem<TItem, CombatStylePowerWeighting.Mask<TItem>?>? SpaceApproachingWeighting { get; set; }
+            public TItem SpaceDetectionRating1;
+            public TItem SpaceDetectionRating2;
+            public TItem SpaceDetectionRating3;
             public TItem Flags;
             public TItem FNAM;
-            public TItem TNAM;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? UNAM;
+            public TItem TemplateDefaultCombatStyle;
+            public MaskItem<TItem, CombatStyleTemplates.Mask<TItem>?>? Templates { get; set; }
             #endregion
 
             #region Equals
@@ -721,9 +977,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.AvoidThreatChance, rhs.AvoidThreatChance)) return false;
                 if (!object.Equals(this.DodgeThreadChance, rhs.DodgeThreadChance)) return false;
                 if (!object.Equals(this.EvadeThreatChance, rhs.EvadeThreatChance)) return false;
-                if (!object.Equals(this.CSGDUnknownFloat1, rhs.CSGDUnknownFloat1)) return false;
-                if (!object.Equals(this.CSGDUnknownFloat2, rhs.CSGDUnknownFloat2)) return false;
-                if (!object.Equals(this.CSGDUnknownFloat3, rhs.CSGDUnknownFloat3)) return false;
+                if (!object.Equals(this.HealAllyDistance, rhs.HealAllyDistance)) return false;
+                if (!object.Equals(this.JumpCostMult, rhs.JumpCostMult)) return false;
+                if (!object.Equals(this.TauntDelayMult, rhs.TauntDelayMult)) return false;
                 if (!object.Equals(this.MeleeAttackStaggeredMult, rhs.MeleeAttackStaggeredMult)) return false;
                 if (!object.Equals(this.MeleePowerAttackStaggeredMult, rhs.MeleePowerAttackStaggeredMult)) return false;
                 if (!object.Equals(this.MeleePowerAttackBlockingMult, rhs.MeleePowerAttackBlockingMult)) return false;
@@ -735,11 +991,11 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.MeleeBlockWhenStaggeredMult, rhs.MeleeBlockWhenStaggeredMult)) return false;
                 if (!object.Equals(this.MeleeAttackWhenStaggeredMult, rhs.MeleeAttackWhenStaggeredMult)) return false;
                 if (!object.Equals(this.RangedAccuracyMult, rhs.RangedAccuracyMult)) return false;
-                if (!object.Equals(this.CSRAUnknownFloat1, rhs.CSRAUnknownFloat1)) return false;
-                if (!object.Equals(this.CSRAUnknownFloat2, rhs.CSRAUnknownFloat2)) return false;
-                if (!object.Equals(this.CSRAUnknownFloat3, rhs.CSRAUnknownFloat3)) return false;
-                if (!object.Equals(this.CSRAUnknownFloat4, rhs.CSRAUnknownFloat4)) return false;
-                if (!object.Equals(this.CSRAUnknownFloat5, rhs.CSRAUnknownFloat5)) return false;
+                if (!object.Equals(this.RangedThrowMult, rhs.RangedThrowMult)) return false;
+                if (!object.Equals(this.RangedGrenadeAdvancedThrowingMult, rhs.RangedGrenadeAdvancedThrowingMult)) return false;
+                if (!object.Equals(this.RangedGrenadeFlashTargetMult, rhs.RangedGrenadeFlashTargetMult)) return false;
+                if (!object.Equals(this.RangedGrenadeThrowAtGroupMult, rhs.RangedGrenadeThrowAtGroupMult)) return false;
+                if (!object.Equals(this.RangedGrenadeCloseRangeAttackChanceMult, rhs.RangedGrenadeCloseRangeAttackChanceMult)) return false;
                 if (!object.Equals(this.CloseRangeDuelingCircleMult, rhs.CloseRangeDuelingCircleMult)) return false;
                 if (!object.Equals(this.CloseRangeDuelingFallbackMult, rhs.CloseRangeDuelingFallbackMult)) return false;
                 if (!object.Equals(this.CloseRangeFlankDistance, rhs.CloseRangeFlankDistance)) return false;
@@ -751,37 +1007,75 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.CloseRangeChargingDisengageProbability, rhs.CloseRangeChargingDisengageProbability)) return false;
                 if (!object.Equals(this.CloseRangeChargingThrowMaxTargets, rhs.CloseRangeChargingThrowMaxTargets)) return false;
                 if (!object.Equals(this.CloseRangeFlankingVariance, rhs.CloseRangeFlankingVariance)) return false;
-                if (!object.Equals(this.CSCRUnknownFloat1, rhs.CSCRUnknownFloat1)) return false;
-                if (!object.Equals(this.CSCRUnknownFloat2, rhs.CSCRUnknownFloat2)) return false;
+                if (!object.Equals(this.CloseRangeRetreatChance, rhs.CloseRangeRetreatChance)) return false;
+                if (!object.Equals(this.CloseRangeRetreatDistanceMult, rhs.CloseRangeRetreatDistanceMult)) return false;
                 if (!object.Equals(this.LongRangeStrafeMult, rhs.LongRangeStrafeMult)) return false;
                 if (!object.Equals(this.LongRangeAdjustRangeMult, rhs.LongRangeAdjustRangeMult)) return false;
                 if (!object.Equals(this.LongRangeCrouchMult, rhs.LongRangeCrouchMult)) return false;
                 if (!object.Equals(this.LongRangeWaitMult, rhs.LongRangeWaitMult)) return false;
                 if (!object.Equals(this.LongRangeRangeMult, rhs.LongRangeRangeMult)) return false;
-                if (!object.Equals(this.CSLRUnknownFloat1, rhs.CSLRUnknownFloat1)) return false;
-                if (!object.Equals(this.CSLRUnknownFloat2, rhs.CSLRUnknownFloat2)) return false;
-                if (!object.Equals(this.CSLRUnknownFloat3, rhs.CSLRUnknownFloat3)) return false;
-                if (!object.Equals(this.CSLRUnknownFloat4, rhs.CSLRUnknownFloat4)) return false;
+                if (!object.Equals(this.LongRangeProvideSuppressiveFireMult, rhs.LongRangeProvideSuppressiveFireMult)) return false;
+                if (!object.Equals(this.LongRangeRetreatChance, rhs.LongRangeRetreatChance)) return false;
+                if (!object.Equals(this.LongRangeRetreatHideTimeMult, rhs.LongRangeRetreatHideTimeMult)) return false;
+                if (!object.Equals(this.LongRangeRetreatDistanceMult, rhs.LongRangeRetreatDistanceMult)) return false;
                 if (!object.Equals(this.CoverSearchDistanceMult, rhs.CoverSearchDistanceMult)) return false;
-                if (!object.Equals(this.CSCVUnknownFloat1, rhs.CSCVUnknownFloat1)) return false;
-                if (!object.Equals(this.HoverChance, rhs.HoverChance)) return false;
-                if (!object.Equals(this.DiveBombChance, rhs.DiveBombChance)) return false;
-                if (!object.Equals(this.GroundAttackChance, rhs.GroundAttackChance)) return false;
-                if (!object.Equals(this.HoverTime, rhs.HoverTime)) return false;
-                if (!object.Equals(this.GroundAttackTime, rhs.GroundAttackTime)) return false;
-                if (!object.Equals(this.PerchAttackChance, rhs.PerchAttackChance)) return false;
-                if (!object.Equals(this.PerchAttackTime, rhs.PerchAttackTime)) return false;
-                if (!object.Equals(this.FlyingAttackChance, rhs.FlyingAttackChance)) return false;
-                if (!object.Equals(this.CSTN, rhs.CSTN)) return false;
-                if (!object.Equals(this.CSSG, rhs.CSSG)) return false;
-                if (!object.Equals(this.CSSM, rhs.CSSM)) return false;
-                if (!object.Equals(this.CSSR, rhs.CSSR)) return false;
-                if (!object.Equals(this.CSSA, rhs.CSSA)) return false;
-                if (!object.Equals(this.CSSD, rhs.CSSD)) return false;
+                if (!object.Equals(this.CoverSearchSuppressionSensitivity, rhs.CoverSearchSuppressionSensitivity)) return false;
+                if (!object.Equals(this.FlightHoverChance, rhs.FlightHoverChance)) return false;
+                if (!object.Equals(this.FlightDiveBombChance, rhs.FlightDiveBombChance)) return false;
+                if (!object.Equals(this.FlightGroundAttackChance, rhs.FlightGroundAttackChance)) return false;
+                if (!object.Equals(this.FlightHoverTime, rhs.FlightHoverTime)) return false;
+                if (!object.Equals(this.FlightGroundAttackTime, rhs.FlightGroundAttackTime)) return false;
+                if (!object.Equals(this.FlightPerchAttackChance, rhs.FlightPerchAttackChance)) return false;
+                if (!object.Equals(this.FlightPerchAttackTime, rhs.FlightPerchAttackTime)) return false;
+                if (!object.Equals(this.FlightFlyingAttackChance, rhs.FlightFlyingAttackChance)) return false;
+                if (!object.Equals(this.TunnelCostMult, rhs.TunnelCostMult)) return false;
+                if (!object.Equals(this.TunnelChance, rhs.TunnelChance)) return false;
+                if (!object.Equals(this.TunnelMaxDistance, rhs.TunnelMaxDistance)) return false;
+                if (!object.Equals(this.TunnelSpeedMult, rhs.TunnelSpeedMult)) return false;
+                if (!object.Equals(this.TunnelMinTime, rhs.TunnelMinTime)) return false;
+                if (!object.Equals(this.TunnelMaxTime, rhs.TunnelMaxTime)) return false;
+                if (!object.Equals(this.TunnelMaximumTime, rhs.TunnelMaximumTime)) return false;
+                if (!object.Equals(this.TunnelCooldown, rhs.TunnelCooldown)) return false;
+                if (!object.Equals(this.SpaceGeneralPilotSkill, rhs.SpaceGeneralPilotSkill)) return false;
+                if (!object.Equals(this.SpaceGeneralAccuracy, rhs.SpaceGeneralAccuracy)) return false;
+                if (!object.Equals(this.SpaceGeneralTargetShield, rhs.SpaceGeneralTargetShield)) return false;
+                if (!object.Equals(this.SpaceGeneralAdjustment, rhs.SpaceGeneralAdjustment)) return false;
+                if (!object.Equals(this.SpaceGeneralEngageManeuverChanceDirectAttack, rhs.SpaceGeneralEngageManeuverChanceDirectAttack)) return false;
+                if (!object.Equals(this.SpaceGeneralEngageManeuverChancePass, rhs.SpaceGeneralEngageManeuverChancePass)) return false;
+                if (!object.Equals(this.SpaceGeneralEngageManeuverChanceLeadTurn, rhs.SpaceGeneralEngageManeuverChanceLeadTurn)) return false;
+                if (!object.Equals(this.SpaceGeneralEngageManeuverChanceSlideTurn, rhs.SpaceGeneralEngageManeuverChanceSlideTurn)) return false;
+                if (!object.Equals(this.SpaceGeneralEngageManeuverChanceBarrelRoll, rhs.SpaceGeneralEngageManeuverChanceBarrelRoll)) return false;
+                if (!object.Equals(this.SpaceGeneralEvadeManeuverChanceBreak, rhs.SpaceGeneralEvadeManeuverChanceBreak)) return false;
+                if (!object.Equals(this.SpaceGeneralEvadeManeuverChanceScissors, rhs.SpaceGeneralEvadeManeuverChanceScissors)) return false;
+                if (!object.Equals(this.SpaceGeneralEvadeManeuverChanceCut, rhs.SpaceGeneralEvadeManeuverChanceCut)) return false;
+                if (!object.Equals(this.SpaceGeneralEvadeManeuverChanceBoost, rhs.SpaceGeneralEvadeManeuverChanceBoost)) return false;
+                if (!object.Equals(this.SpaceGeneralAcquireManeuverChanceSliceback, rhs.SpaceGeneralAcquireManeuverChanceSliceback)) return false;
+                if (!object.Equals(this.SpaceGeneralAcquireManeuverChanceStrafeTurn, rhs.SpaceGeneralAcquireManeuverChanceStrafeTurn)) return false;
+                if (!object.Equals(this.SpaceGeneralAcquireManeuverChanceAcquire, rhs.SpaceGeneralAcquireManeuverChanceAcquire)) return false;
+                if (!object.Equals(this.SpaceGeneralAcquireManeuverChanceTurn, rhs.SpaceGeneralAcquireManeuverChanceTurn)) return false;
+                if (!object.Equals(this.SpaceGeneralDisengageManeuverChance, rhs.SpaceGeneralDisengageManeuverChance)) return false;
+                if (!object.Equals(this.SpaceGeneralMissileSeekingStrength, rhs.SpaceGeneralMissileSeekingStrength)) return false;
+                if (!object.Equals(this.SpaceGeneralMinTimeBetweenBoosts, rhs.SpaceGeneralMinTimeBetweenBoosts)) return false;
+                if (!object.Equals(this.SpaceGeneralCombatStrafing, rhs.SpaceGeneralCombatStrafing)) return false;
+                if (!object.Equals(this.SpaceGeneralRollsDuringBoost, rhs.SpaceGeneralRollsDuringBoost)) return false;
+                if (!object.Equals(this.UnknownCSSG, rhs.UnknownCSSG)) return false;
+                if (!object.Equals(this.SpaceGeneralPowerWeighting, rhs.SpaceGeneralPowerWeighting)) return false;
+                if (!object.Equals(this.SpaceManeuverTypesMaxTime, rhs.SpaceManeuverTypesMaxTime)) return false;
+                if (!object.Equals(this.SpaceManeuverTypesReentryDelays, rhs.SpaceManeuverTypesReentryDelays)) return false;
+                if (!object.Equals(this.SpaceRepairDamageThreshold, rhs.SpaceRepairDamageThreshold)) return false;
+                if (!object.Equals(this.SpaceRepairFarawayDistance, rhs.SpaceRepairFarawayDistance)) return false;
+                if (!object.Equals(this.SpaceRepairPowerToUse, rhs.SpaceRepairPowerToUse)) return false;
+                if (!object.Equals(this.SpaceRepairInClosePowerWeightingTables, rhs.SpaceRepairInClosePowerWeightingTables)) return false;
+                if (!object.Equals(this.SpaceRepairFarawayPowerWeightingTables, rhs.SpaceRepairFarawayPowerWeightingTables)) return false;
+                if (!object.Equals(this.SpaceApproachingMinDistance, rhs.SpaceApproachingMinDistance)) return false;
+                if (!object.Equals(this.SpaceApproachingWeighting, rhs.SpaceApproachingWeighting)) return false;
+                if (!object.Equals(this.SpaceDetectionRating1, rhs.SpaceDetectionRating1)) return false;
+                if (!object.Equals(this.SpaceDetectionRating2, rhs.SpaceDetectionRating2)) return false;
+                if (!object.Equals(this.SpaceDetectionRating3, rhs.SpaceDetectionRating3)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.FNAM, rhs.FNAM)) return false;
-                if (!object.Equals(this.TNAM, rhs.TNAM)) return false;
-                if (!object.Equals(this.UNAM, rhs.UNAM)) return false;
+                if (!object.Equals(this.TemplateDefaultCombatStyle, rhs.TemplateDefaultCombatStyle)) return false;
+                if (!object.Equals(this.Templates, rhs.Templates)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -799,9 +1093,9 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.AvoidThreatChance);
                 hash.Add(this.DodgeThreadChance);
                 hash.Add(this.EvadeThreatChance);
-                hash.Add(this.CSGDUnknownFloat1);
-                hash.Add(this.CSGDUnknownFloat2);
-                hash.Add(this.CSGDUnknownFloat3);
+                hash.Add(this.HealAllyDistance);
+                hash.Add(this.JumpCostMult);
+                hash.Add(this.TauntDelayMult);
                 hash.Add(this.MeleeAttackStaggeredMult);
                 hash.Add(this.MeleePowerAttackStaggeredMult);
                 hash.Add(this.MeleePowerAttackBlockingMult);
@@ -813,11 +1107,11 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.MeleeBlockWhenStaggeredMult);
                 hash.Add(this.MeleeAttackWhenStaggeredMult);
                 hash.Add(this.RangedAccuracyMult);
-                hash.Add(this.CSRAUnknownFloat1);
-                hash.Add(this.CSRAUnknownFloat2);
-                hash.Add(this.CSRAUnknownFloat3);
-                hash.Add(this.CSRAUnknownFloat4);
-                hash.Add(this.CSRAUnknownFloat5);
+                hash.Add(this.RangedThrowMult);
+                hash.Add(this.RangedGrenadeAdvancedThrowingMult);
+                hash.Add(this.RangedGrenadeFlashTargetMult);
+                hash.Add(this.RangedGrenadeThrowAtGroupMult);
+                hash.Add(this.RangedGrenadeCloseRangeAttackChanceMult);
                 hash.Add(this.CloseRangeDuelingCircleMult);
                 hash.Add(this.CloseRangeDuelingFallbackMult);
                 hash.Add(this.CloseRangeFlankDistance);
@@ -829,37 +1123,75 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.CloseRangeChargingDisengageProbability);
                 hash.Add(this.CloseRangeChargingThrowMaxTargets);
                 hash.Add(this.CloseRangeFlankingVariance);
-                hash.Add(this.CSCRUnknownFloat1);
-                hash.Add(this.CSCRUnknownFloat2);
+                hash.Add(this.CloseRangeRetreatChance);
+                hash.Add(this.CloseRangeRetreatDistanceMult);
                 hash.Add(this.LongRangeStrafeMult);
                 hash.Add(this.LongRangeAdjustRangeMult);
                 hash.Add(this.LongRangeCrouchMult);
                 hash.Add(this.LongRangeWaitMult);
                 hash.Add(this.LongRangeRangeMult);
-                hash.Add(this.CSLRUnknownFloat1);
-                hash.Add(this.CSLRUnknownFloat2);
-                hash.Add(this.CSLRUnknownFloat3);
-                hash.Add(this.CSLRUnknownFloat4);
+                hash.Add(this.LongRangeProvideSuppressiveFireMult);
+                hash.Add(this.LongRangeRetreatChance);
+                hash.Add(this.LongRangeRetreatHideTimeMult);
+                hash.Add(this.LongRangeRetreatDistanceMult);
                 hash.Add(this.CoverSearchDistanceMult);
-                hash.Add(this.CSCVUnknownFloat1);
-                hash.Add(this.HoverChance);
-                hash.Add(this.DiveBombChance);
-                hash.Add(this.GroundAttackChance);
-                hash.Add(this.HoverTime);
-                hash.Add(this.GroundAttackTime);
-                hash.Add(this.PerchAttackChance);
-                hash.Add(this.PerchAttackTime);
-                hash.Add(this.FlyingAttackChance);
-                hash.Add(this.CSTN);
-                hash.Add(this.CSSG);
-                hash.Add(this.CSSM);
-                hash.Add(this.CSSR);
-                hash.Add(this.CSSA);
-                hash.Add(this.CSSD);
+                hash.Add(this.CoverSearchSuppressionSensitivity);
+                hash.Add(this.FlightHoverChance);
+                hash.Add(this.FlightDiveBombChance);
+                hash.Add(this.FlightGroundAttackChance);
+                hash.Add(this.FlightHoverTime);
+                hash.Add(this.FlightGroundAttackTime);
+                hash.Add(this.FlightPerchAttackChance);
+                hash.Add(this.FlightPerchAttackTime);
+                hash.Add(this.FlightFlyingAttackChance);
+                hash.Add(this.TunnelCostMult);
+                hash.Add(this.TunnelChance);
+                hash.Add(this.TunnelMaxDistance);
+                hash.Add(this.TunnelSpeedMult);
+                hash.Add(this.TunnelMinTime);
+                hash.Add(this.TunnelMaxTime);
+                hash.Add(this.TunnelMaximumTime);
+                hash.Add(this.TunnelCooldown);
+                hash.Add(this.SpaceGeneralPilotSkill);
+                hash.Add(this.SpaceGeneralAccuracy);
+                hash.Add(this.SpaceGeneralTargetShield);
+                hash.Add(this.SpaceGeneralAdjustment);
+                hash.Add(this.SpaceGeneralEngageManeuverChanceDirectAttack);
+                hash.Add(this.SpaceGeneralEngageManeuverChancePass);
+                hash.Add(this.SpaceGeneralEngageManeuverChanceLeadTurn);
+                hash.Add(this.SpaceGeneralEngageManeuverChanceSlideTurn);
+                hash.Add(this.SpaceGeneralEngageManeuverChanceBarrelRoll);
+                hash.Add(this.SpaceGeneralEvadeManeuverChanceBreak);
+                hash.Add(this.SpaceGeneralEvadeManeuverChanceScissors);
+                hash.Add(this.SpaceGeneralEvadeManeuverChanceCut);
+                hash.Add(this.SpaceGeneralEvadeManeuverChanceBoost);
+                hash.Add(this.SpaceGeneralAcquireManeuverChanceSliceback);
+                hash.Add(this.SpaceGeneralAcquireManeuverChanceStrafeTurn);
+                hash.Add(this.SpaceGeneralAcquireManeuverChanceAcquire);
+                hash.Add(this.SpaceGeneralAcquireManeuverChanceTurn);
+                hash.Add(this.SpaceGeneralDisengageManeuverChance);
+                hash.Add(this.SpaceGeneralMissileSeekingStrength);
+                hash.Add(this.SpaceGeneralMinTimeBetweenBoosts);
+                hash.Add(this.SpaceGeneralCombatStrafing);
+                hash.Add(this.SpaceGeneralRollsDuringBoost);
+                hash.Add(this.UnknownCSSG);
+                hash.Add(this.SpaceGeneralPowerWeighting);
+                hash.Add(this.SpaceManeuverTypesMaxTime);
+                hash.Add(this.SpaceManeuverTypesReentryDelays);
+                hash.Add(this.SpaceRepairDamageThreshold);
+                hash.Add(this.SpaceRepairFarawayDistance);
+                hash.Add(this.SpaceRepairPowerToUse);
+                hash.Add(this.SpaceRepairInClosePowerWeightingTables);
+                hash.Add(this.SpaceRepairFarawayPowerWeightingTables);
+                hash.Add(this.SpaceApproachingMinDistance);
+                hash.Add(this.SpaceApproachingWeighting);
+                hash.Add(this.SpaceDetectionRating1);
+                hash.Add(this.SpaceDetectionRating2);
+                hash.Add(this.SpaceDetectionRating3);
                 hash.Add(this.Flags);
                 hash.Add(this.FNAM);
-                hash.Add(this.TNAM);
-                hash.Add(this.UNAM);
+                hash.Add(this.TemplateDefaultCombatStyle);
+                hash.Add(this.Templates);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -882,9 +1214,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.AvoidThreatChance)) return false;
                 if (!eval(this.DodgeThreadChance)) return false;
                 if (!eval(this.EvadeThreatChance)) return false;
-                if (!eval(this.CSGDUnknownFloat1)) return false;
-                if (!eval(this.CSGDUnknownFloat2)) return false;
-                if (!eval(this.CSGDUnknownFloat3)) return false;
+                if (!eval(this.HealAllyDistance)) return false;
+                if (!eval(this.JumpCostMult)) return false;
+                if (!eval(this.TauntDelayMult)) return false;
                 if (!eval(this.MeleeAttackStaggeredMult)) return false;
                 if (!eval(this.MeleePowerAttackStaggeredMult)) return false;
                 if (!eval(this.MeleePowerAttackBlockingMult)) return false;
@@ -896,11 +1228,11 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.MeleeBlockWhenStaggeredMult)) return false;
                 if (!eval(this.MeleeAttackWhenStaggeredMult)) return false;
                 if (!eval(this.RangedAccuracyMult)) return false;
-                if (!eval(this.CSRAUnknownFloat1)) return false;
-                if (!eval(this.CSRAUnknownFloat2)) return false;
-                if (!eval(this.CSRAUnknownFloat3)) return false;
-                if (!eval(this.CSRAUnknownFloat4)) return false;
-                if (!eval(this.CSRAUnknownFloat5)) return false;
+                if (!eval(this.RangedThrowMult)) return false;
+                if (!eval(this.RangedGrenadeAdvancedThrowingMult)) return false;
+                if (!eval(this.RangedGrenadeFlashTargetMult)) return false;
+                if (!eval(this.RangedGrenadeThrowAtGroupMult)) return false;
+                if (!eval(this.RangedGrenadeCloseRangeAttackChanceMult)) return false;
                 if (!eval(this.CloseRangeDuelingCircleMult)) return false;
                 if (!eval(this.CloseRangeDuelingFallbackMult)) return false;
                 if (!eval(this.CloseRangeFlankDistance)) return false;
@@ -912,46 +1244,102 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.CloseRangeChargingDisengageProbability)) return false;
                 if (!eval(this.CloseRangeChargingThrowMaxTargets)) return false;
                 if (!eval(this.CloseRangeFlankingVariance)) return false;
-                if (!eval(this.CSCRUnknownFloat1)) return false;
-                if (!eval(this.CSCRUnknownFloat2)) return false;
+                if (!eval(this.CloseRangeRetreatChance)) return false;
+                if (!eval(this.CloseRangeRetreatDistanceMult)) return false;
                 if (!eval(this.LongRangeStrafeMult)) return false;
                 if (!eval(this.LongRangeAdjustRangeMult)) return false;
                 if (!eval(this.LongRangeCrouchMult)) return false;
                 if (!eval(this.LongRangeWaitMult)) return false;
                 if (!eval(this.LongRangeRangeMult)) return false;
-                if (!eval(this.CSLRUnknownFloat1)) return false;
-                if (!eval(this.CSLRUnknownFloat2)) return false;
-                if (!eval(this.CSLRUnknownFloat3)) return false;
-                if (!eval(this.CSLRUnknownFloat4)) return false;
+                if (!eval(this.LongRangeProvideSuppressiveFireMult)) return false;
+                if (!eval(this.LongRangeRetreatChance)) return false;
+                if (!eval(this.LongRangeRetreatHideTimeMult)) return false;
+                if (!eval(this.LongRangeRetreatDistanceMult)) return false;
                 if (!eval(this.CoverSearchDistanceMult)) return false;
-                if (!eval(this.CSCVUnknownFloat1)) return false;
-                if (!eval(this.HoverChance)) return false;
-                if (!eval(this.DiveBombChance)) return false;
-                if (!eval(this.GroundAttackChance)) return false;
-                if (!eval(this.HoverTime)) return false;
-                if (!eval(this.GroundAttackTime)) return false;
-                if (!eval(this.PerchAttackChance)) return false;
-                if (!eval(this.PerchAttackTime)) return false;
-                if (!eval(this.FlyingAttackChance)) return false;
-                if (!eval(this.CSTN)) return false;
-                if (!eval(this.CSSG)) return false;
-                if (!eval(this.CSSM)) return false;
-                if (!eval(this.CSSR)) return false;
-                if (!eval(this.CSSA)) return false;
-                if (!eval(this.CSSD)) return false;
+                if (!eval(this.CoverSearchSuppressionSensitivity)) return false;
+                if (!eval(this.FlightHoverChance)) return false;
+                if (!eval(this.FlightDiveBombChance)) return false;
+                if (!eval(this.FlightGroundAttackChance)) return false;
+                if (!eval(this.FlightHoverTime)) return false;
+                if (!eval(this.FlightGroundAttackTime)) return false;
+                if (!eval(this.FlightPerchAttackChance)) return false;
+                if (!eval(this.FlightPerchAttackTime)) return false;
+                if (!eval(this.FlightFlyingAttackChance)) return false;
+                if (!eval(this.TunnelCostMult)) return false;
+                if (!eval(this.TunnelChance)) return false;
+                if (!eval(this.TunnelMaxDistance)) return false;
+                if (!eval(this.TunnelSpeedMult)) return false;
+                if (!eval(this.TunnelMinTime)) return false;
+                if (!eval(this.TunnelMaxTime)) return false;
+                if (!eval(this.TunnelMaximumTime)) return false;
+                if (!eval(this.TunnelCooldown)) return false;
+                if (!eval(this.SpaceGeneralPilotSkill)) return false;
+                if (!eval(this.SpaceGeneralAccuracy)) return false;
+                if (!eval(this.SpaceGeneralTargetShield)) return false;
+                if (!eval(this.SpaceGeneralAdjustment)) return false;
+                if (!eval(this.SpaceGeneralEngageManeuverChanceDirectAttack)) return false;
+                if (!eval(this.SpaceGeneralEngageManeuverChancePass)) return false;
+                if (!eval(this.SpaceGeneralEngageManeuverChanceLeadTurn)) return false;
+                if (!eval(this.SpaceGeneralEngageManeuverChanceSlideTurn)) return false;
+                if (!eval(this.SpaceGeneralEngageManeuverChanceBarrelRoll)) return false;
+                if (!eval(this.SpaceGeneralEvadeManeuverChanceBreak)) return false;
+                if (!eval(this.SpaceGeneralEvadeManeuverChanceScissors)) return false;
+                if (!eval(this.SpaceGeneralEvadeManeuverChanceCut)) return false;
+                if (!eval(this.SpaceGeneralEvadeManeuverChanceBoost)) return false;
+                if (!eval(this.SpaceGeneralAcquireManeuverChanceSliceback)) return false;
+                if (!eval(this.SpaceGeneralAcquireManeuverChanceStrafeTurn)) return false;
+                if (!eval(this.SpaceGeneralAcquireManeuverChanceAcquire)) return false;
+                if (!eval(this.SpaceGeneralAcquireManeuverChanceTurn)) return false;
+                if (!eval(this.SpaceGeneralDisengageManeuverChance)) return false;
+                if (!eval(this.SpaceGeneralMissileSeekingStrength)) return false;
+                if (!eval(this.SpaceGeneralMinTimeBetweenBoosts)) return false;
+                if (!eval(this.SpaceGeneralCombatStrafing)) return false;
+                if (!eval(this.SpaceGeneralRollsDuringBoost)) return false;
+                if (!eval(this.UnknownCSSG)) return false;
+                if (SpaceGeneralPowerWeighting != null)
+                {
+                    if (!eval(this.SpaceGeneralPowerWeighting.Overall)) return false;
+                    if (this.SpaceGeneralPowerWeighting.Specific != null && !this.SpaceGeneralPowerWeighting.Specific.All(eval)) return false;
+                }
+                if (SpaceManeuverTypesMaxTime != null)
+                {
+                    if (!eval(this.SpaceManeuverTypesMaxTime.Overall)) return false;
+                    if (this.SpaceManeuverTypesMaxTime.Specific != null && !this.SpaceManeuverTypesMaxTime.Specific.All(eval)) return false;
+                }
+                if (SpaceManeuverTypesReentryDelays != null)
+                {
+                    if (!eval(this.SpaceManeuverTypesReentryDelays.Overall)) return false;
+                    if (this.SpaceManeuverTypesReentryDelays.Specific != null && !this.SpaceManeuverTypesReentryDelays.Specific.All(eval)) return false;
+                }
+                if (!eval(this.SpaceRepairDamageThreshold)) return false;
+                if (!eval(this.SpaceRepairFarawayDistance)) return false;
+                if (!eval(this.SpaceRepairPowerToUse)) return false;
+                if (SpaceRepairInClosePowerWeightingTables != null)
+                {
+                    if (!eval(this.SpaceRepairInClosePowerWeightingTables.Overall)) return false;
+                    if (this.SpaceRepairInClosePowerWeightingTables.Specific != null && !this.SpaceRepairInClosePowerWeightingTables.Specific.All(eval)) return false;
+                }
+                if (SpaceRepairFarawayPowerWeightingTables != null)
+                {
+                    if (!eval(this.SpaceRepairFarawayPowerWeightingTables.Overall)) return false;
+                    if (this.SpaceRepairFarawayPowerWeightingTables.Specific != null && !this.SpaceRepairFarawayPowerWeightingTables.Specific.All(eval)) return false;
+                }
+                if (!eval(this.SpaceApproachingMinDistance)) return false;
+                if (SpaceApproachingWeighting != null)
+                {
+                    if (!eval(this.SpaceApproachingWeighting.Overall)) return false;
+                    if (this.SpaceApproachingWeighting.Specific != null && !this.SpaceApproachingWeighting.Specific.All(eval)) return false;
+                }
+                if (!eval(this.SpaceDetectionRating1)) return false;
+                if (!eval(this.SpaceDetectionRating2)) return false;
+                if (!eval(this.SpaceDetectionRating3)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.FNAM)) return false;
-                if (!eval(this.TNAM)) return false;
-                if (this.UNAM != null)
+                if (!eval(this.TemplateDefaultCombatStyle)) return false;
+                if (Templates != null)
                 {
-                    if (!eval(this.UNAM.Overall)) return false;
-                    if (this.UNAM.Specific != null)
-                    {
-                        foreach (var item in this.UNAM.Specific)
-                        {
-                            if (!eval(item.Value)) return false;
-                        }
-                    }
+                    if (!eval(this.Templates.Overall)) return false;
+                    if (this.Templates.Specific != null && !this.Templates.Specific.All(eval)) return false;
                 }
                 return true;
             }
@@ -973,9 +1361,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.AvoidThreatChance)) return true;
                 if (eval(this.DodgeThreadChance)) return true;
                 if (eval(this.EvadeThreatChance)) return true;
-                if (eval(this.CSGDUnknownFloat1)) return true;
-                if (eval(this.CSGDUnknownFloat2)) return true;
-                if (eval(this.CSGDUnknownFloat3)) return true;
+                if (eval(this.HealAllyDistance)) return true;
+                if (eval(this.JumpCostMult)) return true;
+                if (eval(this.TauntDelayMult)) return true;
                 if (eval(this.MeleeAttackStaggeredMult)) return true;
                 if (eval(this.MeleePowerAttackStaggeredMult)) return true;
                 if (eval(this.MeleePowerAttackBlockingMult)) return true;
@@ -987,11 +1375,11 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.MeleeBlockWhenStaggeredMult)) return true;
                 if (eval(this.MeleeAttackWhenStaggeredMult)) return true;
                 if (eval(this.RangedAccuracyMult)) return true;
-                if (eval(this.CSRAUnknownFloat1)) return true;
-                if (eval(this.CSRAUnknownFloat2)) return true;
-                if (eval(this.CSRAUnknownFloat3)) return true;
-                if (eval(this.CSRAUnknownFloat4)) return true;
-                if (eval(this.CSRAUnknownFloat5)) return true;
+                if (eval(this.RangedThrowMult)) return true;
+                if (eval(this.RangedGrenadeAdvancedThrowingMult)) return true;
+                if (eval(this.RangedGrenadeFlashTargetMult)) return true;
+                if (eval(this.RangedGrenadeThrowAtGroupMult)) return true;
+                if (eval(this.RangedGrenadeCloseRangeAttackChanceMult)) return true;
                 if (eval(this.CloseRangeDuelingCircleMult)) return true;
                 if (eval(this.CloseRangeDuelingFallbackMult)) return true;
                 if (eval(this.CloseRangeFlankDistance)) return true;
@@ -1003,46 +1391,102 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.CloseRangeChargingDisengageProbability)) return true;
                 if (eval(this.CloseRangeChargingThrowMaxTargets)) return true;
                 if (eval(this.CloseRangeFlankingVariance)) return true;
-                if (eval(this.CSCRUnknownFloat1)) return true;
-                if (eval(this.CSCRUnknownFloat2)) return true;
+                if (eval(this.CloseRangeRetreatChance)) return true;
+                if (eval(this.CloseRangeRetreatDistanceMult)) return true;
                 if (eval(this.LongRangeStrafeMult)) return true;
                 if (eval(this.LongRangeAdjustRangeMult)) return true;
                 if (eval(this.LongRangeCrouchMult)) return true;
                 if (eval(this.LongRangeWaitMult)) return true;
                 if (eval(this.LongRangeRangeMult)) return true;
-                if (eval(this.CSLRUnknownFloat1)) return true;
-                if (eval(this.CSLRUnknownFloat2)) return true;
-                if (eval(this.CSLRUnknownFloat3)) return true;
-                if (eval(this.CSLRUnknownFloat4)) return true;
+                if (eval(this.LongRangeProvideSuppressiveFireMult)) return true;
+                if (eval(this.LongRangeRetreatChance)) return true;
+                if (eval(this.LongRangeRetreatHideTimeMult)) return true;
+                if (eval(this.LongRangeRetreatDistanceMult)) return true;
                 if (eval(this.CoverSearchDistanceMult)) return true;
-                if (eval(this.CSCVUnknownFloat1)) return true;
-                if (eval(this.HoverChance)) return true;
-                if (eval(this.DiveBombChance)) return true;
-                if (eval(this.GroundAttackChance)) return true;
-                if (eval(this.HoverTime)) return true;
-                if (eval(this.GroundAttackTime)) return true;
-                if (eval(this.PerchAttackChance)) return true;
-                if (eval(this.PerchAttackTime)) return true;
-                if (eval(this.FlyingAttackChance)) return true;
-                if (eval(this.CSTN)) return true;
-                if (eval(this.CSSG)) return true;
-                if (eval(this.CSSM)) return true;
-                if (eval(this.CSSR)) return true;
-                if (eval(this.CSSA)) return true;
-                if (eval(this.CSSD)) return true;
+                if (eval(this.CoverSearchSuppressionSensitivity)) return true;
+                if (eval(this.FlightHoverChance)) return true;
+                if (eval(this.FlightDiveBombChance)) return true;
+                if (eval(this.FlightGroundAttackChance)) return true;
+                if (eval(this.FlightHoverTime)) return true;
+                if (eval(this.FlightGroundAttackTime)) return true;
+                if (eval(this.FlightPerchAttackChance)) return true;
+                if (eval(this.FlightPerchAttackTime)) return true;
+                if (eval(this.FlightFlyingAttackChance)) return true;
+                if (eval(this.TunnelCostMult)) return true;
+                if (eval(this.TunnelChance)) return true;
+                if (eval(this.TunnelMaxDistance)) return true;
+                if (eval(this.TunnelSpeedMult)) return true;
+                if (eval(this.TunnelMinTime)) return true;
+                if (eval(this.TunnelMaxTime)) return true;
+                if (eval(this.TunnelMaximumTime)) return true;
+                if (eval(this.TunnelCooldown)) return true;
+                if (eval(this.SpaceGeneralPilotSkill)) return true;
+                if (eval(this.SpaceGeneralAccuracy)) return true;
+                if (eval(this.SpaceGeneralTargetShield)) return true;
+                if (eval(this.SpaceGeneralAdjustment)) return true;
+                if (eval(this.SpaceGeneralEngageManeuverChanceDirectAttack)) return true;
+                if (eval(this.SpaceGeneralEngageManeuverChancePass)) return true;
+                if (eval(this.SpaceGeneralEngageManeuverChanceLeadTurn)) return true;
+                if (eval(this.SpaceGeneralEngageManeuverChanceSlideTurn)) return true;
+                if (eval(this.SpaceGeneralEngageManeuverChanceBarrelRoll)) return true;
+                if (eval(this.SpaceGeneralEvadeManeuverChanceBreak)) return true;
+                if (eval(this.SpaceGeneralEvadeManeuverChanceScissors)) return true;
+                if (eval(this.SpaceGeneralEvadeManeuverChanceCut)) return true;
+                if (eval(this.SpaceGeneralEvadeManeuverChanceBoost)) return true;
+                if (eval(this.SpaceGeneralAcquireManeuverChanceSliceback)) return true;
+                if (eval(this.SpaceGeneralAcquireManeuverChanceStrafeTurn)) return true;
+                if (eval(this.SpaceGeneralAcquireManeuverChanceAcquire)) return true;
+                if (eval(this.SpaceGeneralAcquireManeuverChanceTurn)) return true;
+                if (eval(this.SpaceGeneralDisengageManeuverChance)) return true;
+                if (eval(this.SpaceGeneralMissileSeekingStrength)) return true;
+                if (eval(this.SpaceGeneralMinTimeBetweenBoosts)) return true;
+                if (eval(this.SpaceGeneralCombatStrafing)) return true;
+                if (eval(this.SpaceGeneralRollsDuringBoost)) return true;
+                if (eval(this.UnknownCSSG)) return true;
+                if (SpaceGeneralPowerWeighting != null)
+                {
+                    if (eval(this.SpaceGeneralPowerWeighting.Overall)) return true;
+                    if (this.SpaceGeneralPowerWeighting.Specific != null && this.SpaceGeneralPowerWeighting.Specific.Any(eval)) return true;
+                }
+                if (SpaceManeuverTypesMaxTime != null)
+                {
+                    if (eval(this.SpaceManeuverTypesMaxTime.Overall)) return true;
+                    if (this.SpaceManeuverTypesMaxTime.Specific != null && this.SpaceManeuverTypesMaxTime.Specific.Any(eval)) return true;
+                }
+                if (SpaceManeuverTypesReentryDelays != null)
+                {
+                    if (eval(this.SpaceManeuverTypesReentryDelays.Overall)) return true;
+                    if (this.SpaceManeuverTypesReentryDelays.Specific != null && this.SpaceManeuverTypesReentryDelays.Specific.Any(eval)) return true;
+                }
+                if (eval(this.SpaceRepairDamageThreshold)) return true;
+                if (eval(this.SpaceRepairFarawayDistance)) return true;
+                if (eval(this.SpaceRepairPowerToUse)) return true;
+                if (SpaceRepairInClosePowerWeightingTables != null)
+                {
+                    if (eval(this.SpaceRepairInClosePowerWeightingTables.Overall)) return true;
+                    if (this.SpaceRepairInClosePowerWeightingTables.Specific != null && this.SpaceRepairInClosePowerWeightingTables.Specific.Any(eval)) return true;
+                }
+                if (SpaceRepairFarawayPowerWeightingTables != null)
+                {
+                    if (eval(this.SpaceRepairFarawayPowerWeightingTables.Overall)) return true;
+                    if (this.SpaceRepairFarawayPowerWeightingTables.Specific != null && this.SpaceRepairFarawayPowerWeightingTables.Specific.Any(eval)) return true;
+                }
+                if (eval(this.SpaceApproachingMinDistance)) return true;
+                if (SpaceApproachingWeighting != null)
+                {
+                    if (eval(this.SpaceApproachingWeighting.Overall)) return true;
+                    if (this.SpaceApproachingWeighting.Specific != null && this.SpaceApproachingWeighting.Specific.Any(eval)) return true;
+                }
+                if (eval(this.SpaceDetectionRating1)) return true;
+                if (eval(this.SpaceDetectionRating2)) return true;
+                if (eval(this.SpaceDetectionRating3)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.FNAM)) return true;
-                if (eval(this.TNAM)) return true;
-                if (this.UNAM != null)
+                if (eval(this.TemplateDefaultCombatStyle)) return true;
+                if (Templates != null)
                 {
-                    if (eval(this.UNAM.Overall)) return true;
-                    if (this.UNAM.Specific != null)
-                    {
-                        foreach (var item in this.UNAM.Specific)
-                        {
-                            if (!eval(item.Value)) return false;
-                        }
-                    }
+                    if (eval(this.Templates.Overall)) return true;
+                    if (this.Templates.Specific != null && this.Templates.Specific.Any(eval)) return true;
                 }
                 return false;
             }
@@ -1071,9 +1515,9 @@ namespace Mutagen.Bethesda.Starfield
                 obj.AvoidThreatChance = eval(this.AvoidThreatChance);
                 obj.DodgeThreadChance = eval(this.DodgeThreadChance);
                 obj.EvadeThreatChance = eval(this.EvadeThreatChance);
-                obj.CSGDUnknownFloat1 = eval(this.CSGDUnknownFloat1);
-                obj.CSGDUnknownFloat2 = eval(this.CSGDUnknownFloat2);
-                obj.CSGDUnknownFloat3 = eval(this.CSGDUnknownFloat3);
+                obj.HealAllyDistance = eval(this.HealAllyDistance);
+                obj.JumpCostMult = eval(this.JumpCostMult);
+                obj.TauntDelayMult = eval(this.TauntDelayMult);
                 obj.MeleeAttackStaggeredMult = eval(this.MeleeAttackStaggeredMult);
                 obj.MeleePowerAttackStaggeredMult = eval(this.MeleePowerAttackStaggeredMult);
                 obj.MeleePowerAttackBlockingMult = eval(this.MeleePowerAttackBlockingMult);
@@ -1085,11 +1529,11 @@ namespace Mutagen.Bethesda.Starfield
                 obj.MeleeBlockWhenStaggeredMult = eval(this.MeleeBlockWhenStaggeredMult);
                 obj.MeleeAttackWhenStaggeredMult = eval(this.MeleeAttackWhenStaggeredMult);
                 obj.RangedAccuracyMult = eval(this.RangedAccuracyMult);
-                obj.CSRAUnknownFloat1 = eval(this.CSRAUnknownFloat1);
-                obj.CSRAUnknownFloat2 = eval(this.CSRAUnknownFloat2);
-                obj.CSRAUnknownFloat3 = eval(this.CSRAUnknownFloat3);
-                obj.CSRAUnknownFloat4 = eval(this.CSRAUnknownFloat4);
-                obj.CSRAUnknownFloat5 = eval(this.CSRAUnknownFloat5);
+                obj.RangedThrowMult = eval(this.RangedThrowMult);
+                obj.RangedGrenadeAdvancedThrowingMult = eval(this.RangedGrenadeAdvancedThrowingMult);
+                obj.RangedGrenadeFlashTargetMult = eval(this.RangedGrenadeFlashTargetMult);
+                obj.RangedGrenadeThrowAtGroupMult = eval(this.RangedGrenadeThrowAtGroupMult);
+                obj.RangedGrenadeCloseRangeAttackChanceMult = eval(this.RangedGrenadeCloseRangeAttackChanceMult);
                 obj.CloseRangeDuelingCircleMult = eval(this.CloseRangeDuelingCircleMult);
                 obj.CloseRangeDuelingFallbackMult = eval(this.CloseRangeDuelingFallbackMult);
                 obj.CloseRangeFlankDistance = eval(this.CloseRangeFlankDistance);
@@ -1101,50 +1545,75 @@ namespace Mutagen.Bethesda.Starfield
                 obj.CloseRangeChargingDisengageProbability = eval(this.CloseRangeChargingDisengageProbability);
                 obj.CloseRangeChargingThrowMaxTargets = eval(this.CloseRangeChargingThrowMaxTargets);
                 obj.CloseRangeFlankingVariance = eval(this.CloseRangeFlankingVariance);
-                obj.CSCRUnknownFloat1 = eval(this.CSCRUnknownFloat1);
-                obj.CSCRUnknownFloat2 = eval(this.CSCRUnknownFloat2);
+                obj.CloseRangeRetreatChance = eval(this.CloseRangeRetreatChance);
+                obj.CloseRangeRetreatDistanceMult = eval(this.CloseRangeRetreatDistanceMult);
                 obj.LongRangeStrafeMult = eval(this.LongRangeStrafeMult);
                 obj.LongRangeAdjustRangeMult = eval(this.LongRangeAdjustRangeMult);
                 obj.LongRangeCrouchMult = eval(this.LongRangeCrouchMult);
                 obj.LongRangeWaitMult = eval(this.LongRangeWaitMult);
                 obj.LongRangeRangeMult = eval(this.LongRangeRangeMult);
-                obj.CSLRUnknownFloat1 = eval(this.CSLRUnknownFloat1);
-                obj.CSLRUnknownFloat2 = eval(this.CSLRUnknownFloat2);
-                obj.CSLRUnknownFloat3 = eval(this.CSLRUnknownFloat3);
-                obj.CSLRUnknownFloat4 = eval(this.CSLRUnknownFloat4);
+                obj.LongRangeProvideSuppressiveFireMult = eval(this.LongRangeProvideSuppressiveFireMult);
+                obj.LongRangeRetreatChance = eval(this.LongRangeRetreatChance);
+                obj.LongRangeRetreatHideTimeMult = eval(this.LongRangeRetreatHideTimeMult);
+                obj.LongRangeRetreatDistanceMult = eval(this.LongRangeRetreatDistanceMult);
                 obj.CoverSearchDistanceMult = eval(this.CoverSearchDistanceMult);
-                obj.CSCVUnknownFloat1 = eval(this.CSCVUnknownFloat1);
-                obj.HoverChance = eval(this.HoverChance);
-                obj.DiveBombChance = eval(this.DiveBombChance);
-                obj.GroundAttackChance = eval(this.GroundAttackChance);
-                obj.HoverTime = eval(this.HoverTime);
-                obj.GroundAttackTime = eval(this.GroundAttackTime);
-                obj.PerchAttackChance = eval(this.PerchAttackChance);
-                obj.PerchAttackTime = eval(this.PerchAttackTime);
-                obj.FlyingAttackChance = eval(this.FlyingAttackChance);
-                obj.CSTN = eval(this.CSTN);
-                obj.CSSG = eval(this.CSSG);
-                obj.CSSM = eval(this.CSSM);
-                obj.CSSR = eval(this.CSSR);
-                obj.CSSA = eval(this.CSSA);
-                obj.CSSD = eval(this.CSSD);
+                obj.CoverSearchSuppressionSensitivity = eval(this.CoverSearchSuppressionSensitivity);
+                obj.FlightHoverChance = eval(this.FlightHoverChance);
+                obj.FlightDiveBombChance = eval(this.FlightDiveBombChance);
+                obj.FlightGroundAttackChance = eval(this.FlightGroundAttackChance);
+                obj.FlightHoverTime = eval(this.FlightHoverTime);
+                obj.FlightGroundAttackTime = eval(this.FlightGroundAttackTime);
+                obj.FlightPerchAttackChance = eval(this.FlightPerchAttackChance);
+                obj.FlightPerchAttackTime = eval(this.FlightPerchAttackTime);
+                obj.FlightFlyingAttackChance = eval(this.FlightFlyingAttackChance);
+                obj.TunnelCostMult = eval(this.TunnelCostMult);
+                obj.TunnelChance = eval(this.TunnelChance);
+                obj.TunnelMaxDistance = eval(this.TunnelMaxDistance);
+                obj.TunnelSpeedMult = eval(this.TunnelSpeedMult);
+                obj.TunnelMinTime = eval(this.TunnelMinTime);
+                obj.TunnelMaxTime = eval(this.TunnelMaxTime);
+                obj.TunnelMaximumTime = eval(this.TunnelMaximumTime);
+                obj.TunnelCooldown = eval(this.TunnelCooldown);
+                obj.SpaceGeneralPilotSkill = eval(this.SpaceGeneralPilotSkill);
+                obj.SpaceGeneralAccuracy = eval(this.SpaceGeneralAccuracy);
+                obj.SpaceGeneralTargetShield = eval(this.SpaceGeneralTargetShield);
+                obj.SpaceGeneralAdjustment = eval(this.SpaceGeneralAdjustment);
+                obj.SpaceGeneralEngageManeuverChanceDirectAttack = eval(this.SpaceGeneralEngageManeuverChanceDirectAttack);
+                obj.SpaceGeneralEngageManeuverChancePass = eval(this.SpaceGeneralEngageManeuverChancePass);
+                obj.SpaceGeneralEngageManeuverChanceLeadTurn = eval(this.SpaceGeneralEngageManeuverChanceLeadTurn);
+                obj.SpaceGeneralEngageManeuverChanceSlideTurn = eval(this.SpaceGeneralEngageManeuverChanceSlideTurn);
+                obj.SpaceGeneralEngageManeuverChanceBarrelRoll = eval(this.SpaceGeneralEngageManeuverChanceBarrelRoll);
+                obj.SpaceGeneralEvadeManeuverChanceBreak = eval(this.SpaceGeneralEvadeManeuverChanceBreak);
+                obj.SpaceGeneralEvadeManeuverChanceScissors = eval(this.SpaceGeneralEvadeManeuverChanceScissors);
+                obj.SpaceGeneralEvadeManeuverChanceCut = eval(this.SpaceGeneralEvadeManeuverChanceCut);
+                obj.SpaceGeneralEvadeManeuverChanceBoost = eval(this.SpaceGeneralEvadeManeuverChanceBoost);
+                obj.SpaceGeneralAcquireManeuverChanceSliceback = eval(this.SpaceGeneralAcquireManeuverChanceSliceback);
+                obj.SpaceGeneralAcquireManeuverChanceStrafeTurn = eval(this.SpaceGeneralAcquireManeuverChanceStrafeTurn);
+                obj.SpaceGeneralAcquireManeuverChanceAcquire = eval(this.SpaceGeneralAcquireManeuverChanceAcquire);
+                obj.SpaceGeneralAcquireManeuverChanceTurn = eval(this.SpaceGeneralAcquireManeuverChanceTurn);
+                obj.SpaceGeneralDisengageManeuverChance = eval(this.SpaceGeneralDisengageManeuverChance);
+                obj.SpaceGeneralMissileSeekingStrength = eval(this.SpaceGeneralMissileSeekingStrength);
+                obj.SpaceGeneralMinTimeBetweenBoosts = eval(this.SpaceGeneralMinTimeBetweenBoosts);
+                obj.SpaceGeneralCombatStrafing = eval(this.SpaceGeneralCombatStrafing);
+                obj.SpaceGeneralRollsDuringBoost = eval(this.SpaceGeneralRollsDuringBoost);
+                obj.UnknownCSSG = eval(this.UnknownCSSG);
+                obj.SpaceGeneralPowerWeighting = this.SpaceGeneralPowerWeighting == null ? null : new MaskItem<R, CombatStylePowerWeighting.Mask<R>?>(eval(this.SpaceGeneralPowerWeighting.Overall), this.SpaceGeneralPowerWeighting.Specific?.Translate(eval));
+                obj.SpaceManeuverTypesMaxTime = this.SpaceManeuverTypesMaxTime == null ? null : new MaskItem<R, CombatStyleManeuverTiming.Mask<R>?>(eval(this.SpaceManeuverTypesMaxTime.Overall), this.SpaceManeuverTypesMaxTime.Specific?.Translate(eval));
+                obj.SpaceManeuverTypesReentryDelays = this.SpaceManeuverTypesReentryDelays == null ? null : new MaskItem<R, CombatStyleManeuverTiming.Mask<R>?>(eval(this.SpaceManeuverTypesReentryDelays.Overall), this.SpaceManeuverTypesReentryDelays.Specific?.Translate(eval));
+                obj.SpaceRepairDamageThreshold = eval(this.SpaceRepairDamageThreshold);
+                obj.SpaceRepairFarawayDistance = eval(this.SpaceRepairFarawayDistance);
+                obj.SpaceRepairPowerToUse = eval(this.SpaceRepairPowerToUse);
+                obj.SpaceRepairInClosePowerWeightingTables = this.SpaceRepairInClosePowerWeightingTables == null ? null : new MaskItem<R, CombatStylePowerWeighting.Mask<R>?>(eval(this.SpaceRepairInClosePowerWeightingTables.Overall), this.SpaceRepairInClosePowerWeightingTables.Specific?.Translate(eval));
+                obj.SpaceRepairFarawayPowerWeightingTables = this.SpaceRepairFarawayPowerWeightingTables == null ? null : new MaskItem<R, CombatStylePowerWeighting.Mask<R>?>(eval(this.SpaceRepairFarawayPowerWeightingTables.Overall), this.SpaceRepairFarawayPowerWeightingTables.Specific?.Translate(eval));
+                obj.SpaceApproachingMinDistance = eval(this.SpaceApproachingMinDistance);
+                obj.SpaceApproachingWeighting = this.SpaceApproachingWeighting == null ? null : new MaskItem<R, CombatStylePowerWeighting.Mask<R>?>(eval(this.SpaceApproachingWeighting.Overall), this.SpaceApproachingWeighting.Specific?.Translate(eval));
+                obj.SpaceDetectionRating1 = eval(this.SpaceDetectionRating1);
+                obj.SpaceDetectionRating2 = eval(this.SpaceDetectionRating2);
+                obj.SpaceDetectionRating3 = eval(this.SpaceDetectionRating3);
                 obj.Flags = eval(this.Flags);
                 obj.FNAM = eval(this.FNAM);
-                obj.TNAM = eval(this.TNAM);
-                if (UNAM != null)
-                {
-                    obj.UNAM = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.UNAM.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (UNAM.Specific != null)
-                    {
-                        var l = new List<(int Index, R Item)>();
-                        obj.UNAM.Specific = l;
-                        foreach (var item in UNAM.Specific)
-                        {
-                            R mask = eval(item.Value);
-                            l.Add((item.Index, mask));
-                        }
-                    }
-                }
+                obj.TemplateDefaultCombatStyle = eval(this.TemplateDefaultCombatStyle);
+                obj.Templates = this.Templates == null ? null : new MaskItem<R, CombatStyleTemplates.Mask<R>?>(eval(this.Templates.Overall), this.Templates.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1211,17 +1680,17 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(EvadeThreatChance, "EvadeThreatChance");
                     }
-                    if (printMask?.CSGDUnknownFloat1 ?? true)
+                    if (printMask?.HealAllyDistance ?? true)
                     {
-                        sb.AppendItem(CSGDUnknownFloat1, "CSGDUnknownFloat1");
+                        sb.AppendItem(HealAllyDistance, "HealAllyDistance");
                     }
-                    if (printMask?.CSGDUnknownFloat2 ?? true)
+                    if (printMask?.JumpCostMult ?? true)
                     {
-                        sb.AppendItem(CSGDUnknownFloat2, "CSGDUnknownFloat2");
+                        sb.AppendItem(JumpCostMult, "JumpCostMult");
                     }
-                    if (printMask?.CSGDUnknownFloat3 ?? true)
+                    if (printMask?.TauntDelayMult ?? true)
                     {
-                        sb.AppendItem(CSGDUnknownFloat3, "CSGDUnknownFloat3");
+                        sb.AppendItem(TauntDelayMult, "TauntDelayMult");
                     }
                     if (printMask?.MeleeAttackStaggeredMult ?? true)
                     {
@@ -1267,25 +1736,25 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(RangedAccuracyMult, "RangedAccuracyMult");
                     }
-                    if (printMask?.CSRAUnknownFloat1 ?? true)
+                    if (printMask?.RangedThrowMult ?? true)
                     {
-                        sb.AppendItem(CSRAUnknownFloat1, "CSRAUnknownFloat1");
+                        sb.AppendItem(RangedThrowMult, "RangedThrowMult");
                     }
-                    if (printMask?.CSRAUnknownFloat2 ?? true)
+                    if (printMask?.RangedGrenadeAdvancedThrowingMult ?? true)
                     {
-                        sb.AppendItem(CSRAUnknownFloat2, "CSRAUnknownFloat2");
+                        sb.AppendItem(RangedGrenadeAdvancedThrowingMult, "RangedGrenadeAdvancedThrowingMult");
                     }
-                    if (printMask?.CSRAUnknownFloat3 ?? true)
+                    if (printMask?.RangedGrenadeFlashTargetMult ?? true)
                     {
-                        sb.AppendItem(CSRAUnknownFloat3, "CSRAUnknownFloat3");
+                        sb.AppendItem(RangedGrenadeFlashTargetMult, "RangedGrenadeFlashTargetMult");
                     }
-                    if (printMask?.CSRAUnknownFloat4 ?? true)
+                    if (printMask?.RangedGrenadeThrowAtGroupMult ?? true)
                     {
-                        sb.AppendItem(CSRAUnknownFloat4, "CSRAUnknownFloat4");
+                        sb.AppendItem(RangedGrenadeThrowAtGroupMult, "RangedGrenadeThrowAtGroupMult");
                     }
-                    if (printMask?.CSRAUnknownFloat5 ?? true)
+                    if (printMask?.RangedGrenadeCloseRangeAttackChanceMult ?? true)
                     {
-                        sb.AppendItem(CSRAUnknownFloat5, "CSRAUnknownFloat5");
+                        sb.AppendItem(RangedGrenadeCloseRangeAttackChanceMult, "RangedGrenadeCloseRangeAttackChanceMult");
                     }
                     if (printMask?.CloseRangeDuelingCircleMult ?? true)
                     {
@@ -1331,13 +1800,13 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(CloseRangeFlankingVariance, "CloseRangeFlankingVariance");
                     }
-                    if (printMask?.CSCRUnknownFloat1 ?? true)
+                    if (printMask?.CloseRangeRetreatChance ?? true)
                     {
-                        sb.AppendItem(CSCRUnknownFloat1, "CSCRUnknownFloat1");
+                        sb.AppendItem(CloseRangeRetreatChance, "CloseRangeRetreatChance");
                     }
-                    if (printMask?.CSCRUnknownFloat2 ?? true)
+                    if (printMask?.CloseRangeRetreatDistanceMult ?? true)
                     {
-                        sb.AppendItem(CSCRUnknownFloat2, "CSCRUnknownFloat2");
+                        sb.AppendItem(CloseRangeRetreatDistanceMult, "CloseRangeRetreatDistanceMult");
                     }
                     if (printMask?.LongRangeStrafeMult ?? true)
                     {
@@ -1359,85 +1828,237 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(LongRangeRangeMult, "LongRangeRangeMult");
                     }
-                    if (printMask?.CSLRUnknownFloat1 ?? true)
+                    if (printMask?.LongRangeProvideSuppressiveFireMult ?? true)
                     {
-                        sb.AppendItem(CSLRUnknownFloat1, "CSLRUnknownFloat1");
+                        sb.AppendItem(LongRangeProvideSuppressiveFireMult, "LongRangeProvideSuppressiveFireMult");
                     }
-                    if (printMask?.CSLRUnknownFloat2 ?? true)
+                    if (printMask?.LongRangeRetreatChance ?? true)
                     {
-                        sb.AppendItem(CSLRUnknownFloat2, "CSLRUnknownFloat2");
+                        sb.AppendItem(LongRangeRetreatChance, "LongRangeRetreatChance");
                     }
-                    if (printMask?.CSLRUnknownFloat3 ?? true)
+                    if (printMask?.LongRangeRetreatHideTimeMult ?? true)
                     {
-                        sb.AppendItem(CSLRUnknownFloat3, "CSLRUnknownFloat3");
+                        sb.AppendItem(LongRangeRetreatHideTimeMult, "LongRangeRetreatHideTimeMult");
                     }
-                    if (printMask?.CSLRUnknownFloat4 ?? true)
+                    if (printMask?.LongRangeRetreatDistanceMult ?? true)
                     {
-                        sb.AppendItem(CSLRUnknownFloat4, "CSLRUnknownFloat4");
+                        sb.AppendItem(LongRangeRetreatDistanceMult, "LongRangeRetreatDistanceMult");
                     }
                     if (printMask?.CoverSearchDistanceMult ?? true)
                     {
                         sb.AppendItem(CoverSearchDistanceMult, "CoverSearchDistanceMult");
                     }
-                    if (printMask?.CSCVUnknownFloat1 ?? true)
+                    if (printMask?.CoverSearchSuppressionSensitivity ?? true)
                     {
-                        sb.AppendItem(CSCVUnknownFloat1, "CSCVUnknownFloat1");
+                        sb.AppendItem(CoverSearchSuppressionSensitivity, "CoverSearchSuppressionSensitivity");
                     }
-                    if (printMask?.HoverChance ?? true)
+                    if (printMask?.FlightHoverChance ?? true)
                     {
-                        sb.AppendItem(HoverChance, "HoverChance");
+                        sb.AppendItem(FlightHoverChance, "FlightHoverChance");
                     }
-                    if (printMask?.DiveBombChance ?? true)
+                    if (printMask?.FlightDiveBombChance ?? true)
                     {
-                        sb.AppendItem(DiveBombChance, "DiveBombChance");
+                        sb.AppendItem(FlightDiveBombChance, "FlightDiveBombChance");
                     }
-                    if (printMask?.GroundAttackChance ?? true)
+                    if (printMask?.FlightGroundAttackChance ?? true)
                     {
-                        sb.AppendItem(GroundAttackChance, "GroundAttackChance");
+                        sb.AppendItem(FlightGroundAttackChance, "FlightGroundAttackChance");
                     }
-                    if (printMask?.HoverTime ?? true)
+                    if (printMask?.FlightHoverTime ?? true)
                     {
-                        sb.AppendItem(HoverTime, "HoverTime");
+                        sb.AppendItem(FlightHoverTime, "FlightHoverTime");
                     }
-                    if (printMask?.GroundAttackTime ?? true)
+                    if (printMask?.FlightGroundAttackTime ?? true)
                     {
-                        sb.AppendItem(GroundAttackTime, "GroundAttackTime");
+                        sb.AppendItem(FlightGroundAttackTime, "FlightGroundAttackTime");
                     }
-                    if (printMask?.PerchAttackChance ?? true)
+                    if (printMask?.FlightPerchAttackChance ?? true)
                     {
-                        sb.AppendItem(PerchAttackChance, "PerchAttackChance");
+                        sb.AppendItem(FlightPerchAttackChance, "FlightPerchAttackChance");
                     }
-                    if (printMask?.PerchAttackTime ?? true)
+                    if (printMask?.FlightPerchAttackTime ?? true)
                     {
-                        sb.AppendItem(PerchAttackTime, "PerchAttackTime");
+                        sb.AppendItem(FlightPerchAttackTime, "FlightPerchAttackTime");
                     }
-                    if (printMask?.FlyingAttackChance ?? true)
+                    if (printMask?.FlightFlyingAttackChance ?? true)
                     {
-                        sb.AppendItem(FlyingAttackChance, "FlyingAttackChance");
+                        sb.AppendItem(FlightFlyingAttackChance, "FlightFlyingAttackChance");
                     }
-                    if (printMask?.CSTN ?? true)
+                    if (printMask?.TunnelCostMult ?? true)
                     {
-                        sb.AppendItem(CSTN, "CSTN");
+                        sb.AppendItem(TunnelCostMult, "TunnelCostMult");
                     }
-                    if (printMask?.CSSG ?? true)
+                    if (printMask?.TunnelChance ?? true)
                     {
-                        sb.AppendItem(CSSG, "CSSG");
+                        sb.AppendItem(TunnelChance, "TunnelChance");
                     }
-                    if (printMask?.CSSM ?? true)
+                    if (printMask?.TunnelMaxDistance ?? true)
                     {
-                        sb.AppendItem(CSSM, "CSSM");
+                        sb.AppendItem(TunnelMaxDistance, "TunnelMaxDistance");
                     }
-                    if (printMask?.CSSR ?? true)
+                    if (printMask?.TunnelSpeedMult ?? true)
                     {
-                        sb.AppendItem(CSSR, "CSSR");
+                        sb.AppendItem(TunnelSpeedMult, "TunnelSpeedMult");
                     }
-                    if (printMask?.CSSA ?? true)
+                    if (printMask?.TunnelMinTime ?? true)
                     {
-                        sb.AppendItem(CSSA, "CSSA");
+                        sb.AppendItem(TunnelMinTime, "TunnelMinTime");
                     }
-                    if (printMask?.CSSD ?? true)
+                    if (printMask?.TunnelMaxTime ?? true)
                     {
-                        sb.AppendItem(CSSD, "CSSD");
+                        sb.AppendItem(TunnelMaxTime, "TunnelMaxTime");
+                    }
+                    if (printMask?.TunnelMaximumTime ?? true)
+                    {
+                        sb.AppendItem(TunnelMaximumTime, "TunnelMaximumTime");
+                    }
+                    if (printMask?.TunnelCooldown ?? true)
+                    {
+                        sb.AppendItem(TunnelCooldown, "TunnelCooldown");
+                    }
+                    if (printMask?.SpaceGeneralPilotSkill ?? true)
+                    {
+                        sb.AppendItem(SpaceGeneralPilotSkill, "SpaceGeneralPilotSkill");
+                    }
+                    if (printMask?.SpaceGeneralAccuracy ?? true)
+                    {
+                        sb.AppendItem(SpaceGeneralAccuracy, "SpaceGeneralAccuracy");
+                    }
+                    if (printMask?.SpaceGeneralTargetShield ?? true)
+                    {
+                        sb.AppendItem(SpaceGeneralTargetShield, "SpaceGeneralTargetShield");
+                    }
+                    if (printMask?.SpaceGeneralAdjustment ?? true)
+                    {
+                        sb.AppendItem(SpaceGeneralAdjustment, "SpaceGeneralAdjustment");
+                    }
+                    if (printMask?.SpaceGeneralEngageManeuverChanceDirectAttack ?? true)
+                    {
+                        sb.AppendItem(SpaceGeneralEngageManeuverChanceDirectAttack, "SpaceGeneralEngageManeuverChanceDirectAttack");
+                    }
+                    if (printMask?.SpaceGeneralEngageManeuverChancePass ?? true)
+                    {
+                        sb.AppendItem(SpaceGeneralEngageManeuverChancePass, "SpaceGeneralEngageManeuverChancePass");
+                    }
+                    if (printMask?.SpaceGeneralEngageManeuverChanceLeadTurn ?? true)
+                    {
+                        sb.AppendItem(SpaceGeneralEngageManeuverChanceLeadTurn, "SpaceGeneralEngageManeuverChanceLeadTurn");
+                    }
+                    if (printMask?.SpaceGeneralEngageManeuverChanceSlideTurn ?? true)
+                    {
+                        sb.AppendItem(SpaceGeneralEngageManeuverChanceSlideTurn, "SpaceGeneralEngageManeuverChanceSlideTurn");
+                    }
+                    if (printMask?.SpaceGeneralEngageManeuverChanceBarrelRoll ?? true)
+                    {
+                        sb.AppendItem(SpaceGeneralEngageManeuverChanceBarrelRoll, "SpaceGeneralEngageManeuverChanceBarrelRoll");
+                    }
+                    if (printMask?.SpaceGeneralEvadeManeuverChanceBreak ?? true)
+                    {
+                        sb.AppendItem(SpaceGeneralEvadeManeuverChanceBreak, "SpaceGeneralEvadeManeuverChanceBreak");
+                    }
+                    if (printMask?.SpaceGeneralEvadeManeuverChanceScissors ?? true)
+                    {
+                        sb.AppendItem(SpaceGeneralEvadeManeuverChanceScissors, "SpaceGeneralEvadeManeuverChanceScissors");
+                    }
+                    if (printMask?.SpaceGeneralEvadeManeuverChanceCut ?? true)
+                    {
+                        sb.AppendItem(SpaceGeneralEvadeManeuverChanceCut, "SpaceGeneralEvadeManeuverChanceCut");
+                    }
+                    if (printMask?.SpaceGeneralEvadeManeuverChanceBoost ?? true)
+                    {
+                        sb.AppendItem(SpaceGeneralEvadeManeuverChanceBoost, "SpaceGeneralEvadeManeuverChanceBoost");
+                    }
+                    if (printMask?.SpaceGeneralAcquireManeuverChanceSliceback ?? true)
+                    {
+                        sb.AppendItem(SpaceGeneralAcquireManeuverChanceSliceback, "SpaceGeneralAcquireManeuverChanceSliceback");
+                    }
+                    if (printMask?.SpaceGeneralAcquireManeuverChanceStrafeTurn ?? true)
+                    {
+                        sb.AppendItem(SpaceGeneralAcquireManeuverChanceStrafeTurn, "SpaceGeneralAcquireManeuverChanceStrafeTurn");
+                    }
+                    if (printMask?.SpaceGeneralAcquireManeuverChanceAcquire ?? true)
+                    {
+                        sb.AppendItem(SpaceGeneralAcquireManeuverChanceAcquire, "SpaceGeneralAcquireManeuverChanceAcquire");
+                    }
+                    if (printMask?.SpaceGeneralAcquireManeuverChanceTurn ?? true)
+                    {
+                        sb.AppendItem(SpaceGeneralAcquireManeuverChanceTurn, "SpaceGeneralAcquireManeuverChanceTurn");
+                    }
+                    if (printMask?.SpaceGeneralDisengageManeuverChance ?? true)
+                    {
+                        sb.AppendItem(SpaceGeneralDisengageManeuverChance, "SpaceGeneralDisengageManeuverChance");
+                    }
+                    if (printMask?.SpaceGeneralMissileSeekingStrength ?? true)
+                    {
+                        sb.AppendItem(SpaceGeneralMissileSeekingStrength, "SpaceGeneralMissileSeekingStrength");
+                    }
+                    if (printMask?.SpaceGeneralMinTimeBetweenBoosts ?? true)
+                    {
+                        sb.AppendItem(SpaceGeneralMinTimeBetweenBoosts, "SpaceGeneralMinTimeBetweenBoosts");
+                    }
+                    if (printMask?.SpaceGeneralCombatStrafing ?? true)
+                    {
+                        sb.AppendItem(SpaceGeneralCombatStrafing, "SpaceGeneralCombatStrafing");
+                    }
+                    if (printMask?.SpaceGeneralRollsDuringBoost ?? true)
+                    {
+                        sb.AppendItem(SpaceGeneralRollsDuringBoost, "SpaceGeneralRollsDuringBoost");
+                    }
+                    if (printMask?.UnknownCSSG ?? true)
+                    {
+                        sb.AppendItem(UnknownCSSG, "UnknownCSSG");
+                    }
+                    if (printMask?.SpaceGeneralPowerWeighting?.Overall ?? true)
+                    {
+                        SpaceGeneralPowerWeighting?.Print(sb);
+                    }
+                    if (printMask?.SpaceManeuverTypesMaxTime?.Overall ?? true)
+                    {
+                        SpaceManeuverTypesMaxTime?.Print(sb);
+                    }
+                    if (printMask?.SpaceManeuverTypesReentryDelays?.Overall ?? true)
+                    {
+                        SpaceManeuverTypesReentryDelays?.Print(sb);
+                    }
+                    if (printMask?.SpaceRepairDamageThreshold ?? true)
+                    {
+                        sb.AppendItem(SpaceRepairDamageThreshold, "SpaceRepairDamageThreshold");
+                    }
+                    if (printMask?.SpaceRepairFarawayDistance ?? true)
+                    {
+                        sb.AppendItem(SpaceRepairFarawayDistance, "SpaceRepairFarawayDistance");
+                    }
+                    if (printMask?.SpaceRepairPowerToUse ?? true)
+                    {
+                        sb.AppendItem(SpaceRepairPowerToUse, "SpaceRepairPowerToUse");
+                    }
+                    if (printMask?.SpaceRepairInClosePowerWeightingTables?.Overall ?? true)
+                    {
+                        SpaceRepairInClosePowerWeightingTables?.Print(sb);
+                    }
+                    if (printMask?.SpaceRepairFarawayPowerWeightingTables?.Overall ?? true)
+                    {
+                        SpaceRepairFarawayPowerWeightingTables?.Print(sb);
+                    }
+                    if (printMask?.SpaceApproachingMinDistance ?? true)
+                    {
+                        sb.AppendItem(SpaceApproachingMinDistance, "SpaceApproachingMinDistance");
+                    }
+                    if (printMask?.SpaceApproachingWeighting?.Overall ?? true)
+                    {
+                        SpaceApproachingWeighting?.Print(sb);
+                    }
+                    if (printMask?.SpaceDetectionRating1 ?? true)
+                    {
+                        sb.AppendItem(SpaceDetectionRating1, "SpaceDetectionRating1");
+                    }
+                    if (printMask?.SpaceDetectionRating2 ?? true)
+                    {
+                        sb.AppendItem(SpaceDetectionRating2, "SpaceDetectionRating2");
+                    }
+                    if (printMask?.SpaceDetectionRating3 ?? true)
+                    {
+                        sb.AppendItem(SpaceDetectionRating3, "SpaceDetectionRating3");
                     }
                     if (printMask?.Flags ?? true)
                     {
@@ -1447,30 +2068,13 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(FNAM, "FNAM");
                     }
-                    if (printMask?.TNAM ?? true)
+                    if (printMask?.TemplateDefaultCombatStyle ?? true)
                     {
-                        sb.AppendItem(TNAM, "TNAM");
+                        sb.AppendItem(TemplateDefaultCombatStyle, "TemplateDefaultCombatStyle");
                     }
-                    if ((printMask?.UNAM?.Overall ?? true)
-                        && UNAM is {} UNAMItem)
+                    if (printMask?.Templates?.Overall ?? true)
                     {
-                        sb.AppendLine("UNAM =>");
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(UNAMItem.Overall);
-                            if (UNAMItem.Specific != null)
-                            {
-                                foreach (var subItem in UNAMItem.Specific)
-                                {
-                                    using (sb.Brace())
-                                    {
-                                        {
-                                            sb.AppendItem(subItem);
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        Templates?.Print(sb);
                     }
                 }
             }
@@ -1495,9 +2099,9 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? AvoidThreatChance;
             public Exception? DodgeThreadChance;
             public Exception? EvadeThreatChance;
-            public Exception? CSGDUnknownFloat1;
-            public Exception? CSGDUnknownFloat2;
-            public Exception? CSGDUnknownFloat3;
+            public Exception? HealAllyDistance;
+            public Exception? JumpCostMult;
+            public Exception? TauntDelayMult;
             public Exception? MeleeAttackStaggeredMult;
             public Exception? MeleePowerAttackStaggeredMult;
             public Exception? MeleePowerAttackBlockingMult;
@@ -1509,11 +2113,11 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? MeleeBlockWhenStaggeredMult;
             public Exception? MeleeAttackWhenStaggeredMult;
             public Exception? RangedAccuracyMult;
-            public Exception? CSRAUnknownFloat1;
-            public Exception? CSRAUnknownFloat2;
-            public Exception? CSRAUnknownFloat3;
-            public Exception? CSRAUnknownFloat4;
-            public Exception? CSRAUnknownFloat5;
+            public Exception? RangedThrowMult;
+            public Exception? RangedGrenadeAdvancedThrowingMult;
+            public Exception? RangedGrenadeFlashTargetMult;
+            public Exception? RangedGrenadeThrowAtGroupMult;
+            public Exception? RangedGrenadeCloseRangeAttackChanceMult;
             public Exception? CloseRangeDuelingCircleMult;
             public Exception? CloseRangeDuelingFallbackMult;
             public Exception? CloseRangeFlankDistance;
@@ -1525,37 +2129,75 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? CloseRangeChargingDisengageProbability;
             public Exception? CloseRangeChargingThrowMaxTargets;
             public Exception? CloseRangeFlankingVariance;
-            public Exception? CSCRUnknownFloat1;
-            public Exception? CSCRUnknownFloat2;
+            public Exception? CloseRangeRetreatChance;
+            public Exception? CloseRangeRetreatDistanceMult;
             public Exception? LongRangeStrafeMult;
             public Exception? LongRangeAdjustRangeMult;
             public Exception? LongRangeCrouchMult;
             public Exception? LongRangeWaitMult;
             public Exception? LongRangeRangeMult;
-            public Exception? CSLRUnknownFloat1;
-            public Exception? CSLRUnknownFloat2;
-            public Exception? CSLRUnknownFloat3;
-            public Exception? CSLRUnknownFloat4;
+            public Exception? LongRangeProvideSuppressiveFireMult;
+            public Exception? LongRangeRetreatChance;
+            public Exception? LongRangeRetreatHideTimeMult;
+            public Exception? LongRangeRetreatDistanceMult;
             public Exception? CoverSearchDistanceMult;
-            public Exception? CSCVUnknownFloat1;
-            public Exception? HoverChance;
-            public Exception? DiveBombChance;
-            public Exception? GroundAttackChance;
-            public Exception? HoverTime;
-            public Exception? GroundAttackTime;
-            public Exception? PerchAttackChance;
-            public Exception? PerchAttackTime;
-            public Exception? FlyingAttackChance;
-            public Exception? CSTN;
-            public Exception? CSSG;
-            public Exception? CSSM;
-            public Exception? CSSR;
-            public Exception? CSSA;
-            public Exception? CSSD;
+            public Exception? CoverSearchSuppressionSensitivity;
+            public Exception? FlightHoverChance;
+            public Exception? FlightDiveBombChance;
+            public Exception? FlightGroundAttackChance;
+            public Exception? FlightHoverTime;
+            public Exception? FlightGroundAttackTime;
+            public Exception? FlightPerchAttackChance;
+            public Exception? FlightPerchAttackTime;
+            public Exception? FlightFlyingAttackChance;
+            public Exception? TunnelCostMult;
+            public Exception? TunnelChance;
+            public Exception? TunnelMaxDistance;
+            public Exception? TunnelSpeedMult;
+            public Exception? TunnelMinTime;
+            public Exception? TunnelMaxTime;
+            public Exception? TunnelMaximumTime;
+            public Exception? TunnelCooldown;
+            public Exception? SpaceGeneralPilotSkill;
+            public Exception? SpaceGeneralAccuracy;
+            public Exception? SpaceGeneralTargetShield;
+            public Exception? SpaceGeneralAdjustment;
+            public Exception? SpaceGeneralEngageManeuverChanceDirectAttack;
+            public Exception? SpaceGeneralEngageManeuverChancePass;
+            public Exception? SpaceGeneralEngageManeuverChanceLeadTurn;
+            public Exception? SpaceGeneralEngageManeuverChanceSlideTurn;
+            public Exception? SpaceGeneralEngageManeuverChanceBarrelRoll;
+            public Exception? SpaceGeneralEvadeManeuverChanceBreak;
+            public Exception? SpaceGeneralEvadeManeuverChanceScissors;
+            public Exception? SpaceGeneralEvadeManeuverChanceCut;
+            public Exception? SpaceGeneralEvadeManeuverChanceBoost;
+            public Exception? SpaceGeneralAcquireManeuverChanceSliceback;
+            public Exception? SpaceGeneralAcquireManeuverChanceStrafeTurn;
+            public Exception? SpaceGeneralAcquireManeuverChanceAcquire;
+            public Exception? SpaceGeneralAcquireManeuverChanceTurn;
+            public Exception? SpaceGeneralDisengageManeuverChance;
+            public Exception? SpaceGeneralMissileSeekingStrength;
+            public Exception? SpaceGeneralMinTimeBetweenBoosts;
+            public Exception? SpaceGeneralCombatStrafing;
+            public Exception? SpaceGeneralRollsDuringBoost;
+            public Exception? UnknownCSSG;
+            public MaskItem<Exception?, CombatStylePowerWeighting.ErrorMask?>? SpaceGeneralPowerWeighting;
+            public MaskItem<Exception?, CombatStyleManeuverTiming.ErrorMask?>? SpaceManeuverTypesMaxTime;
+            public MaskItem<Exception?, CombatStyleManeuverTiming.ErrorMask?>? SpaceManeuverTypesReentryDelays;
+            public Exception? SpaceRepairDamageThreshold;
+            public Exception? SpaceRepairFarawayDistance;
+            public Exception? SpaceRepairPowerToUse;
+            public MaskItem<Exception?, CombatStylePowerWeighting.ErrorMask?>? SpaceRepairInClosePowerWeightingTables;
+            public MaskItem<Exception?, CombatStylePowerWeighting.ErrorMask?>? SpaceRepairFarawayPowerWeightingTables;
+            public Exception? SpaceApproachingMinDistance;
+            public MaskItem<Exception?, CombatStylePowerWeighting.ErrorMask?>? SpaceApproachingWeighting;
+            public Exception? SpaceDetectionRating1;
+            public Exception? SpaceDetectionRating2;
+            public Exception? SpaceDetectionRating3;
             public Exception? Flags;
             public Exception? FNAM;
-            public Exception? TNAM;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? UNAM;
+            public Exception? TemplateDefaultCombatStyle;
+            public MaskItem<Exception?, CombatStyleTemplates.ErrorMask?>? Templates;
             #endregion
 
             #region IErrorMask
@@ -1588,12 +2230,12 @@ namespace Mutagen.Bethesda.Starfield
                         return DodgeThreadChance;
                     case CombatStyle_FieldIndex.EvadeThreatChance:
                         return EvadeThreatChance;
-                    case CombatStyle_FieldIndex.CSGDUnknownFloat1:
-                        return CSGDUnknownFloat1;
-                    case CombatStyle_FieldIndex.CSGDUnknownFloat2:
-                        return CSGDUnknownFloat2;
-                    case CombatStyle_FieldIndex.CSGDUnknownFloat3:
-                        return CSGDUnknownFloat3;
+                    case CombatStyle_FieldIndex.HealAllyDistance:
+                        return HealAllyDistance;
+                    case CombatStyle_FieldIndex.JumpCostMult:
+                        return JumpCostMult;
+                    case CombatStyle_FieldIndex.TauntDelayMult:
+                        return TauntDelayMult;
                     case CombatStyle_FieldIndex.MeleeAttackStaggeredMult:
                         return MeleeAttackStaggeredMult;
                     case CombatStyle_FieldIndex.MeleePowerAttackStaggeredMult:
@@ -1616,16 +2258,16 @@ namespace Mutagen.Bethesda.Starfield
                         return MeleeAttackWhenStaggeredMult;
                     case CombatStyle_FieldIndex.RangedAccuracyMult:
                         return RangedAccuracyMult;
-                    case CombatStyle_FieldIndex.CSRAUnknownFloat1:
-                        return CSRAUnknownFloat1;
-                    case CombatStyle_FieldIndex.CSRAUnknownFloat2:
-                        return CSRAUnknownFloat2;
-                    case CombatStyle_FieldIndex.CSRAUnknownFloat3:
-                        return CSRAUnknownFloat3;
-                    case CombatStyle_FieldIndex.CSRAUnknownFloat4:
-                        return CSRAUnknownFloat4;
-                    case CombatStyle_FieldIndex.CSRAUnknownFloat5:
-                        return CSRAUnknownFloat5;
+                    case CombatStyle_FieldIndex.RangedThrowMult:
+                        return RangedThrowMult;
+                    case CombatStyle_FieldIndex.RangedGrenadeAdvancedThrowingMult:
+                        return RangedGrenadeAdvancedThrowingMult;
+                    case CombatStyle_FieldIndex.RangedGrenadeFlashTargetMult:
+                        return RangedGrenadeFlashTargetMult;
+                    case CombatStyle_FieldIndex.RangedGrenadeThrowAtGroupMult:
+                        return RangedGrenadeThrowAtGroupMult;
+                    case CombatStyle_FieldIndex.RangedGrenadeCloseRangeAttackChanceMult:
+                        return RangedGrenadeCloseRangeAttackChanceMult;
                     case CombatStyle_FieldIndex.CloseRangeDuelingCircleMult:
                         return CloseRangeDuelingCircleMult;
                     case CombatStyle_FieldIndex.CloseRangeDuelingFallbackMult:
@@ -1648,10 +2290,10 @@ namespace Mutagen.Bethesda.Starfield
                         return CloseRangeChargingThrowMaxTargets;
                     case CombatStyle_FieldIndex.CloseRangeFlankingVariance:
                         return CloseRangeFlankingVariance;
-                    case CombatStyle_FieldIndex.CSCRUnknownFloat1:
-                        return CSCRUnknownFloat1;
-                    case CombatStyle_FieldIndex.CSCRUnknownFloat2:
-                        return CSCRUnknownFloat2;
+                    case CombatStyle_FieldIndex.CloseRangeRetreatChance:
+                        return CloseRangeRetreatChance;
+                    case CombatStyle_FieldIndex.CloseRangeRetreatDistanceMult:
+                        return CloseRangeRetreatDistanceMult;
                     case CombatStyle_FieldIndex.LongRangeStrafeMult:
                         return LongRangeStrafeMult;
                     case CombatStyle_FieldIndex.LongRangeAdjustRangeMult:
@@ -1662,54 +2304,130 @@ namespace Mutagen.Bethesda.Starfield
                         return LongRangeWaitMult;
                     case CombatStyle_FieldIndex.LongRangeRangeMult:
                         return LongRangeRangeMult;
-                    case CombatStyle_FieldIndex.CSLRUnknownFloat1:
-                        return CSLRUnknownFloat1;
-                    case CombatStyle_FieldIndex.CSLRUnknownFloat2:
-                        return CSLRUnknownFloat2;
-                    case CombatStyle_FieldIndex.CSLRUnknownFloat3:
-                        return CSLRUnknownFloat3;
-                    case CombatStyle_FieldIndex.CSLRUnknownFloat4:
-                        return CSLRUnknownFloat4;
+                    case CombatStyle_FieldIndex.LongRangeProvideSuppressiveFireMult:
+                        return LongRangeProvideSuppressiveFireMult;
+                    case CombatStyle_FieldIndex.LongRangeRetreatChance:
+                        return LongRangeRetreatChance;
+                    case CombatStyle_FieldIndex.LongRangeRetreatHideTimeMult:
+                        return LongRangeRetreatHideTimeMult;
+                    case CombatStyle_FieldIndex.LongRangeRetreatDistanceMult:
+                        return LongRangeRetreatDistanceMult;
                     case CombatStyle_FieldIndex.CoverSearchDistanceMult:
                         return CoverSearchDistanceMult;
-                    case CombatStyle_FieldIndex.CSCVUnknownFloat1:
-                        return CSCVUnknownFloat1;
-                    case CombatStyle_FieldIndex.HoverChance:
-                        return HoverChance;
-                    case CombatStyle_FieldIndex.DiveBombChance:
-                        return DiveBombChance;
-                    case CombatStyle_FieldIndex.GroundAttackChance:
-                        return GroundAttackChance;
-                    case CombatStyle_FieldIndex.HoverTime:
-                        return HoverTime;
-                    case CombatStyle_FieldIndex.GroundAttackTime:
-                        return GroundAttackTime;
-                    case CombatStyle_FieldIndex.PerchAttackChance:
-                        return PerchAttackChance;
-                    case CombatStyle_FieldIndex.PerchAttackTime:
-                        return PerchAttackTime;
-                    case CombatStyle_FieldIndex.FlyingAttackChance:
-                        return FlyingAttackChance;
-                    case CombatStyle_FieldIndex.CSTN:
-                        return CSTN;
-                    case CombatStyle_FieldIndex.CSSG:
-                        return CSSG;
-                    case CombatStyle_FieldIndex.CSSM:
-                        return CSSM;
-                    case CombatStyle_FieldIndex.CSSR:
-                        return CSSR;
-                    case CombatStyle_FieldIndex.CSSA:
-                        return CSSA;
-                    case CombatStyle_FieldIndex.CSSD:
-                        return CSSD;
+                    case CombatStyle_FieldIndex.CoverSearchSuppressionSensitivity:
+                        return CoverSearchSuppressionSensitivity;
+                    case CombatStyle_FieldIndex.FlightHoverChance:
+                        return FlightHoverChance;
+                    case CombatStyle_FieldIndex.FlightDiveBombChance:
+                        return FlightDiveBombChance;
+                    case CombatStyle_FieldIndex.FlightGroundAttackChance:
+                        return FlightGroundAttackChance;
+                    case CombatStyle_FieldIndex.FlightHoverTime:
+                        return FlightHoverTime;
+                    case CombatStyle_FieldIndex.FlightGroundAttackTime:
+                        return FlightGroundAttackTime;
+                    case CombatStyle_FieldIndex.FlightPerchAttackChance:
+                        return FlightPerchAttackChance;
+                    case CombatStyle_FieldIndex.FlightPerchAttackTime:
+                        return FlightPerchAttackTime;
+                    case CombatStyle_FieldIndex.FlightFlyingAttackChance:
+                        return FlightFlyingAttackChance;
+                    case CombatStyle_FieldIndex.TunnelCostMult:
+                        return TunnelCostMult;
+                    case CombatStyle_FieldIndex.TunnelChance:
+                        return TunnelChance;
+                    case CombatStyle_FieldIndex.TunnelMaxDistance:
+                        return TunnelMaxDistance;
+                    case CombatStyle_FieldIndex.TunnelSpeedMult:
+                        return TunnelSpeedMult;
+                    case CombatStyle_FieldIndex.TunnelMinTime:
+                        return TunnelMinTime;
+                    case CombatStyle_FieldIndex.TunnelMaxTime:
+                        return TunnelMaxTime;
+                    case CombatStyle_FieldIndex.TunnelMaximumTime:
+                        return TunnelMaximumTime;
+                    case CombatStyle_FieldIndex.TunnelCooldown:
+                        return TunnelCooldown;
+                    case CombatStyle_FieldIndex.SpaceGeneralPilotSkill:
+                        return SpaceGeneralPilotSkill;
+                    case CombatStyle_FieldIndex.SpaceGeneralAccuracy:
+                        return SpaceGeneralAccuracy;
+                    case CombatStyle_FieldIndex.SpaceGeneralTargetShield:
+                        return SpaceGeneralTargetShield;
+                    case CombatStyle_FieldIndex.SpaceGeneralAdjustment:
+                        return SpaceGeneralAdjustment;
+                    case CombatStyle_FieldIndex.SpaceGeneralEngageManeuverChanceDirectAttack:
+                        return SpaceGeneralEngageManeuverChanceDirectAttack;
+                    case CombatStyle_FieldIndex.SpaceGeneralEngageManeuverChancePass:
+                        return SpaceGeneralEngageManeuverChancePass;
+                    case CombatStyle_FieldIndex.SpaceGeneralEngageManeuverChanceLeadTurn:
+                        return SpaceGeneralEngageManeuverChanceLeadTurn;
+                    case CombatStyle_FieldIndex.SpaceGeneralEngageManeuverChanceSlideTurn:
+                        return SpaceGeneralEngageManeuverChanceSlideTurn;
+                    case CombatStyle_FieldIndex.SpaceGeneralEngageManeuverChanceBarrelRoll:
+                        return SpaceGeneralEngageManeuverChanceBarrelRoll;
+                    case CombatStyle_FieldIndex.SpaceGeneralEvadeManeuverChanceBreak:
+                        return SpaceGeneralEvadeManeuverChanceBreak;
+                    case CombatStyle_FieldIndex.SpaceGeneralEvadeManeuverChanceScissors:
+                        return SpaceGeneralEvadeManeuverChanceScissors;
+                    case CombatStyle_FieldIndex.SpaceGeneralEvadeManeuverChanceCut:
+                        return SpaceGeneralEvadeManeuverChanceCut;
+                    case CombatStyle_FieldIndex.SpaceGeneralEvadeManeuverChanceBoost:
+                        return SpaceGeneralEvadeManeuverChanceBoost;
+                    case CombatStyle_FieldIndex.SpaceGeneralAcquireManeuverChanceSliceback:
+                        return SpaceGeneralAcquireManeuverChanceSliceback;
+                    case CombatStyle_FieldIndex.SpaceGeneralAcquireManeuverChanceStrafeTurn:
+                        return SpaceGeneralAcquireManeuverChanceStrafeTurn;
+                    case CombatStyle_FieldIndex.SpaceGeneralAcquireManeuverChanceAcquire:
+                        return SpaceGeneralAcquireManeuverChanceAcquire;
+                    case CombatStyle_FieldIndex.SpaceGeneralAcquireManeuverChanceTurn:
+                        return SpaceGeneralAcquireManeuverChanceTurn;
+                    case CombatStyle_FieldIndex.SpaceGeneralDisengageManeuverChance:
+                        return SpaceGeneralDisengageManeuverChance;
+                    case CombatStyle_FieldIndex.SpaceGeneralMissileSeekingStrength:
+                        return SpaceGeneralMissileSeekingStrength;
+                    case CombatStyle_FieldIndex.SpaceGeneralMinTimeBetweenBoosts:
+                        return SpaceGeneralMinTimeBetweenBoosts;
+                    case CombatStyle_FieldIndex.SpaceGeneralCombatStrafing:
+                        return SpaceGeneralCombatStrafing;
+                    case CombatStyle_FieldIndex.SpaceGeneralRollsDuringBoost:
+                        return SpaceGeneralRollsDuringBoost;
+                    case CombatStyle_FieldIndex.UnknownCSSG:
+                        return UnknownCSSG;
+                    case CombatStyle_FieldIndex.SpaceGeneralPowerWeighting:
+                        return SpaceGeneralPowerWeighting;
+                    case CombatStyle_FieldIndex.SpaceManeuverTypesMaxTime:
+                        return SpaceManeuverTypesMaxTime;
+                    case CombatStyle_FieldIndex.SpaceManeuverTypesReentryDelays:
+                        return SpaceManeuverTypesReentryDelays;
+                    case CombatStyle_FieldIndex.SpaceRepairDamageThreshold:
+                        return SpaceRepairDamageThreshold;
+                    case CombatStyle_FieldIndex.SpaceRepairFarawayDistance:
+                        return SpaceRepairFarawayDistance;
+                    case CombatStyle_FieldIndex.SpaceRepairPowerToUse:
+                        return SpaceRepairPowerToUse;
+                    case CombatStyle_FieldIndex.SpaceRepairInClosePowerWeightingTables:
+                        return SpaceRepairInClosePowerWeightingTables;
+                    case CombatStyle_FieldIndex.SpaceRepairFarawayPowerWeightingTables:
+                        return SpaceRepairFarawayPowerWeightingTables;
+                    case CombatStyle_FieldIndex.SpaceApproachingMinDistance:
+                        return SpaceApproachingMinDistance;
+                    case CombatStyle_FieldIndex.SpaceApproachingWeighting:
+                        return SpaceApproachingWeighting;
+                    case CombatStyle_FieldIndex.SpaceDetectionRating1:
+                        return SpaceDetectionRating1;
+                    case CombatStyle_FieldIndex.SpaceDetectionRating2:
+                        return SpaceDetectionRating2;
+                    case CombatStyle_FieldIndex.SpaceDetectionRating3:
+                        return SpaceDetectionRating3;
                     case CombatStyle_FieldIndex.Flags:
                         return Flags;
                     case CombatStyle_FieldIndex.FNAM:
                         return FNAM;
-                    case CombatStyle_FieldIndex.TNAM:
-                        return TNAM;
-                    case CombatStyle_FieldIndex.UNAM:
-                        return UNAM;
+                    case CombatStyle_FieldIndex.TemplateDefaultCombatStyle:
+                        return TemplateDefaultCombatStyle;
+                    case CombatStyle_FieldIndex.Templates:
+                        return Templates;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1756,14 +2474,14 @@ namespace Mutagen.Bethesda.Starfield
                     case CombatStyle_FieldIndex.EvadeThreatChance:
                         this.EvadeThreatChance = ex;
                         break;
-                    case CombatStyle_FieldIndex.CSGDUnknownFloat1:
-                        this.CSGDUnknownFloat1 = ex;
+                    case CombatStyle_FieldIndex.HealAllyDistance:
+                        this.HealAllyDistance = ex;
                         break;
-                    case CombatStyle_FieldIndex.CSGDUnknownFloat2:
-                        this.CSGDUnknownFloat2 = ex;
+                    case CombatStyle_FieldIndex.JumpCostMult:
+                        this.JumpCostMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.CSGDUnknownFloat3:
-                        this.CSGDUnknownFloat3 = ex;
+                    case CombatStyle_FieldIndex.TauntDelayMult:
+                        this.TauntDelayMult = ex;
                         break;
                     case CombatStyle_FieldIndex.MeleeAttackStaggeredMult:
                         this.MeleeAttackStaggeredMult = ex;
@@ -1798,20 +2516,20 @@ namespace Mutagen.Bethesda.Starfield
                     case CombatStyle_FieldIndex.RangedAccuracyMult:
                         this.RangedAccuracyMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.CSRAUnknownFloat1:
-                        this.CSRAUnknownFloat1 = ex;
+                    case CombatStyle_FieldIndex.RangedThrowMult:
+                        this.RangedThrowMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.CSRAUnknownFloat2:
-                        this.CSRAUnknownFloat2 = ex;
+                    case CombatStyle_FieldIndex.RangedGrenadeAdvancedThrowingMult:
+                        this.RangedGrenadeAdvancedThrowingMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.CSRAUnknownFloat3:
-                        this.CSRAUnknownFloat3 = ex;
+                    case CombatStyle_FieldIndex.RangedGrenadeFlashTargetMult:
+                        this.RangedGrenadeFlashTargetMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.CSRAUnknownFloat4:
-                        this.CSRAUnknownFloat4 = ex;
+                    case CombatStyle_FieldIndex.RangedGrenadeThrowAtGroupMult:
+                        this.RangedGrenadeThrowAtGroupMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.CSRAUnknownFloat5:
-                        this.CSRAUnknownFloat5 = ex;
+                    case CombatStyle_FieldIndex.RangedGrenadeCloseRangeAttackChanceMult:
+                        this.RangedGrenadeCloseRangeAttackChanceMult = ex;
                         break;
                     case CombatStyle_FieldIndex.CloseRangeDuelingCircleMult:
                         this.CloseRangeDuelingCircleMult = ex;
@@ -1846,11 +2564,11 @@ namespace Mutagen.Bethesda.Starfield
                     case CombatStyle_FieldIndex.CloseRangeFlankingVariance:
                         this.CloseRangeFlankingVariance = ex;
                         break;
-                    case CombatStyle_FieldIndex.CSCRUnknownFloat1:
-                        this.CSCRUnknownFloat1 = ex;
+                    case CombatStyle_FieldIndex.CloseRangeRetreatChance:
+                        this.CloseRangeRetreatChance = ex;
                         break;
-                    case CombatStyle_FieldIndex.CSCRUnknownFloat2:
-                        this.CSCRUnknownFloat2 = ex;
+                    case CombatStyle_FieldIndex.CloseRangeRetreatDistanceMult:
+                        this.CloseRangeRetreatDistanceMult = ex;
                         break;
                     case CombatStyle_FieldIndex.LongRangeStrafeMult:
                         this.LongRangeStrafeMult = ex;
@@ -1867,65 +2585,179 @@ namespace Mutagen.Bethesda.Starfield
                     case CombatStyle_FieldIndex.LongRangeRangeMult:
                         this.LongRangeRangeMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.CSLRUnknownFloat1:
-                        this.CSLRUnknownFloat1 = ex;
+                    case CombatStyle_FieldIndex.LongRangeProvideSuppressiveFireMult:
+                        this.LongRangeProvideSuppressiveFireMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.CSLRUnknownFloat2:
-                        this.CSLRUnknownFloat2 = ex;
+                    case CombatStyle_FieldIndex.LongRangeRetreatChance:
+                        this.LongRangeRetreatChance = ex;
                         break;
-                    case CombatStyle_FieldIndex.CSLRUnknownFloat3:
-                        this.CSLRUnknownFloat3 = ex;
+                    case CombatStyle_FieldIndex.LongRangeRetreatHideTimeMult:
+                        this.LongRangeRetreatHideTimeMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.CSLRUnknownFloat4:
-                        this.CSLRUnknownFloat4 = ex;
+                    case CombatStyle_FieldIndex.LongRangeRetreatDistanceMult:
+                        this.LongRangeRetreatDistanceMult = ex;
                         break;
                     case CombatStyle_FieldIndex.CoverSearchDistanceMult:
                         this.CoverSearchDistanceMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.CSCVUnknownFloat1:
-                        this.CSCVUnknownFloat1 = ex;
+                    case CombatStyle_FieldIndex.CoverSearchSuppressionSensitivity:
+                        this.CoverSearchSuppressionSensitivity = ex;
                         break;
-                    case CombatStyle_FieldIndex.HoverChance:
-                        this.HoverChance = ex;
+                    case CombatStyle_FieldIndex.FlightHoverChance:
+                        this.FlightHoverChance = ex;
                         break;
-                    case CombatStyle_FieldIndex.DiveBombChance:
-                        this.DiveBombChance = ex;
+                    case CombatStyle_FieldIndex.FlightDiveBombChance:
+                        this.FlightDiveBombChance = ex;
                         break;
-                    case CombatStyle_FieldIndex.GroundAttackChance:
-                        this.GroundAttackChance = ex;
+                    case CombatStyle_FieldIndex.FlightGroundAttackChance:
+                        this.FlightGroundAttackChance = ex;
                         break;
-                    case CombatStyle_FieldIndex.HoverTime:
-                        this.HoverTime = ex;
+                    case CombatStyle_FieldIndex.FlightHoverTime:
+                        this.FlightHoverTime = ex;
                         break;
-                    case CombatStyle_FieldIndex.GroundAttackTime:
-                        this.GroundAttackTime = ex;
+                    case CombatStyle_FieldIndex.FlightGroundAttackTime:
+                        this.FlightGroundAttackTime = ex;
                         break;
-                    case CombatStyle_FieldIndex.PerchAttackChance:
-                        this.PerchAttackChance = ex;
+                    case CombatStyle_FieldIndex.FlightPerchAttackChance:
+                        this.FlightPerchAttackChance = ex;
                         break;
-                    case CombatStyle_FieldIndex.PerchAttackTime:
-                        this.PerchAttackTime = ex;
+                    case CombatStyle_FieldIndex.FlightPerchAttackTime:
+                        this.FlightPerchAttackTime = ex;
                         break;
-                    case CombatStyle_FieldIndex.FlyingAttackChance:
-                        this.FlyingAttackChance = ex;
+                    case CombatStyle_FieldIndex.FlightFlyingAttackChance:
+                        this.FlightFlyingAttackChance = ex;
                         break;
-                    case CombatStyle_FieldIndex.CSTN:
-                        this.CSTN = ex;
+                    case CombatStyle_FieldIndex.TunnelCostMult:
+                        this.TunnelCostMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.CSSG:
-                        this.CSSG = ex;
+                    case CombatStyle_FieldIndex.TunnelChance:
+                        this.TunnelChance = ex;
                         break;
-                    case CombatStyle_FieldIndex.CSSM:
-                        this.CSSM = ex;
+                    case CombatStyle_FieldIndex.TunnelMaxDistance:
+                        this.TunnelMaxDistance = ex;
                         break;
-                    case CombatStyle_FieldIndex.CSSR:
-                        this.CSSR = ex;
+                    case CombatStyle_FieldIndex.TunnelSpeedMult:
+                        this.TunnelSpeedMult = ex;
                         break;
-                    case CombatStyle_FieldIndex.CSSA:
-                        this.CSSA = ex;
+                    case CombatStyle_FieldIndex.TunnelMinTime:
+                        this.TunnelMinTime = ex;
                         break;
-                    case CombatStyle_FieldIndex.CSSD:
-                        this.CSSD = ex;
+                    case CombatStyle_FieldIndex.TunnelMaxTime:
+                        this.TunnelMaxTime = ex;
+                        break;
+                    case CombatStyle_FieldIndex.TunnelMaximumTime:
+                        this.TunnelMaximumTime = ex;
+                        break;
+                    case CombatStyle_FieldIndex.TunnelCooldown:
+                        this.TunnelCooldown = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralPilotSkill:
+                        this.SpaceGeneralPilotSkill = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralAccuracy:
+                        this.SpaceGeneralAccuracy = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralTargetShield:
+                        this.SpaceGeneralTargetShield = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralAdjustment:
+                        this.SpaceGeneralAdjustment = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralEngageManeuverChanceDirectAttack:
+                        this.SpaceGeneralEngageManeuverChanceDirectAttack = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralEngageManeuverChancePass:
+                        this.SpaceGeneralEngageManeuverChancePass = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralEngageManeuverChanceLeadTurn:
+                        this.SpaceGeneralEngageManeuverChanceLeadTurn = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralEngageManeuverChanceSlideTurn:
+                        this.SpaceGeneralEngageManeuverChanceSlideTurn = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralEngageManeuverChanceBarrelRoll:
+                        this.SpaceGeneralEngageManeuverChanceBarrelRoll = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralEvadeManeuverChanceBreak:
+                        this.SpaceGeneralEvadeManeuverChanceBreak = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralEvadeManeuverChanceScissors:
+                        this.SpaceGeneralEvadeManeuverChanceScissors = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralEvadeManeuverChanceCut:
+                        this.SpaceGeneralEvadeManeuverChanceCut = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralEvadeManeuverChanceBoost:
+                        this.SpaceGeneralEvadeManeuverChanceBoost = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralAcquireManeuverChanceSliceback:
+                        this.SpaceGeneralAcquireManeuverChanceSliceback = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralAcquireManeuverChanceStrafeTurn:
+                        this.SpaceGeneralAcquireManeuverChanceStrafeTurn = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralAcquireManeuverChanceAcquire:
+                        this.SpaceGeneralAcquireManeuverChanceAcquire = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralAcquireManeuverChanceTurn:
+                        this.SpaceGeneralAcquireManeuverChanceTurn = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralDisengageManeuverChance:
+                        this.SpaceGeneralDisengageManeuverChance = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralMissileSeekingStrength:
+                        this.SpaceGeneralMissileSeekingStrength = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralMinTimeBetweenBoosts:
+                        this.SpaceGeneralMinTimeBetweenBoosts = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralCombatStrafing:
+                        this.SpaceGeneralCombatStrafing = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralRollsDuringBoost:
+                        this.SpaceGeneralRollsDuringBoost = ex;
+                        break;
+                    case CombatStyle_FieldIndex.UnknownCSSG:
+                        this.UnknownCSSG = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralPowerWeighting:
+                        this.SpaceGeneralPowerWeighting = new MaskItem<Exception?, CombatStylePowerWeighting.ErrorMask?>(ex, null);
+                        break;
+                    case CombatStyle_FieldIndex.SpaceManeuverTypesMaxTime:
+                        this.SpaceManeuverTypesMaxTime = new MaskItem<Exception?, CombatStyleManeuverTiming.ErrorMask?>(ex, null);
+                        break;
+                    case CombatStyle_FieldIndex.SpaceManeuverTypesReentryDelays:
+                        this.SpaceManeuverTypesReentryDelays = new MaskItem<Exception?, CombatStyleManeuverTiming.ErrorMask?>(ex, null);
+                        break;
+                    case CombatStyle_FieldIndex.SpaceRepairDamageThreshold:
+                        this.SpaceRepairDamageThreshold = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceRepairFarawayDistance:
+                        this.SpaceRepairFarawayDistance = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceRepairPowerToUse:
+                        this.SpaceRepairPowerToUse = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceRepairInClosePowerWeightingTables:
+                        this.SpaceRepairInClosePowerWeightingTables = new MaskItem<Exception?, CombatStylePowerWeighting.ErrorMask?>(ex, null);
+                        break;
+                    case CombatStyle_FieldIndex.SpaceRepairFarawayPowerWeightingTables:
+                        this.SpaceRepairFarawayPowerWeightingTables = new MaskItem<Exception?, CombatStylePowerWeighting.ErrorMask?>(ex, null);
+                        break;
+                    case CombatStyle_FieldIndex.SpaceApproachingMinDistance:
+                        this.SpaceApproachingMinDistance = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceApproachingWeighting:
+                        this.SpaceApproachingWeighting = new MaskItem<Exception?, CombatStylePowerWeighting.ErrorMask?>(ex, null);
+                        break;
+                    case CombatStyle_FieldIndex.SpaceDetectionRating1:
+                        this.SpaceDetectionRating1 = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceDetectionRating2:
+                        this.SpaceDetectionRating2 = ex;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceDetectionRating3:
+                        this.SpaceDetectionRating3 = ex;
                         break;
                     case CombatStyle_FieldIndex.Flags:
                         this.Flags = ex;
@@ -1933,11 +2765,11 @@ namespace Mutagen.Bethesda.Starfield
                     case CombatStyle_FieldIndex.FNAM:
                         this.FNAM = ex;
                         break;
-                    case CombatStyle_FieldIndex.TNAM:
-                        this.TNAM = ex;
+                    case CombatStyle_FieldIndex.TemplateDefaultCombatStyle:
+                        this.TemplateDefaultCombatStyle = ex;
                         break;
-                    case CombatStyle_FieldIndex.UNAM:
-                        this.UNAM = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case CombatStyle_FieldIndex.Templates:
+                        this.Templates = new MaskItem<Exception?, CombatStyleTemplates.ErrorMask?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1986,14 +2818,14 @@ namespace Mutagen.Bethesda.Starfield
                     case CombatStyle_FieldIndex.EvadeThreatChance:
                         this.EvadeThreatChance = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CSGDUnknownFloat1:
-                        this.CSGDUnknownFloat1 = (Exception?)obj;
+                    case CombatStyle_FieldIndex.HealAllyDistance:
+                        this.HealAllyDistance = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CSGDUnknownFloat2:
-                        this.CSGDUnknownFloat2 = (Exception?)obj;
+                    case CombatStyle_FieldIndex.JumpCostMult:
+                        this.JumpCostMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CSGDUnknownFloat3:
-                        this.CSGDUnknownFloat3 = (Exception?)obj;
+                    case CombatStyle_FieldIndex.TauntDelayMult:
+                        this.TauntDelayMult = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.MeleeAttackStaggeredMult:
                         this.MeleeAttackStaggeredMult = (Exception?)obj;
@@ -2028,20 +2860,20 @@ namespace Mutagen.Bethesda.Starfield
                     case CombatStyle_FieldIndex.RangedAccuracyMult:
                         this.RangedAccuracyMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CSRAUnknownFloat1:
-                        this.CSRAUnknownFloat1 = (Exception?)obj;
+                    case CombatStyle_FieldIndex.RangedThrowMult:
+                        this.RangedThrowMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CSRAUnknownFloat2:
-                        this.CSRAUnknownFloat2 = (Exception?)obj;
+                    case CombatStyle_FieldIndex.RangedGrenadeAdvancedThrowingMult:
+                        this.RangedGrenadeAdvancedThrowingMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CSRAUnknownFloat3:
-                        this.CSRAUnknownFloat3 = (Exception?)obj;
+                    case CombatStyle_FieldIndex.RangedGrenadeFlashTargetMult:
+                        this.RangedGrenadeFlashTargetMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CSRAUnknownFloat4:
-                        this.CSRAUnknownFloat4 = (Exception?)obj;
+                    case CombatStyle_FieldIndex.RangedGrenadeThrowAtGroupMult:
+                        this.RangedGrenadeThrowAtGroupMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CSRAUnknownFloat5:
-                        this.CSRAUnknownFloat5 = (Exception?)obj;
+                    case CombatStyle_FieldIndex.RangedGrenadeCloseRangeAttackChanceMult:
+                        this.RangedGrenadeCloseRangeAttackChanceMult = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.CloseRangeDuelingCircleMult:
                         this.CloseRangeDuelingCircleMult = (Exception?)obj;
@@ -2076,11 +2908,11 @@ namespace Mutagen.Bethesda.Starfield
                     case CombatStyle_FieldIndex.CloseRangeFlankingVariance:
                         this.CloseRangeFlankingVariance = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CSCRUnknownFloat1:
-                        this.CSCRUnknownFloat1 = (Exception?)obj;
+                    case CombatStyle_FieldIndex.CloseRangeRetreatChance:
+                        this.CloseRangeRetreatChance = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CSCRUnknownFloat2:
-                        this.CSCRUnknownFloat2 = (Exception?)obj;
+                    case CombatStyle_FieldIndex.CloseRangeRetreatDistanceMult:
+                        this.CloseRangeRetreatDistanceMult = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.LongRangeStrafeMult:
                         this.LongRangeStrafeMult = (Exception?)obj;
@@ -2097,65 +2929,179 @@ namespace Mutagen.Bethesda.Starfield
                     case CombatStyle_FieldIndex.LongRangeRangeMult:
                         this.LongRangeRangeMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CSLRUnknownFloat1:
-                        this.CSLRUnknownFloat1 = (Exception?)obj;
+                    case CombatStyle_FieldIndex.LongRangeProvideSuppressiveFireMult:
+                        this.LongRangeProvideSuppressiveFireMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CSLRUnknownFloat2:
-                        this.CSLRUnknownFloat2 = (Exception?)obj;
+                    case CombatStyle_FieldIndex.LongRangeRetreatChance:
+                        this.LongRangeRetreatChance = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CSLRUnknownFloat3:
-                        this.CSLRUnknownFloat3 = (Exception?)obj;
+                    case CombatStyle_FieldIndex.LongRangeRetreatHideTimeMult:
+                        this.LongRangeRetreatHideTimeMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CSLRUnknownFloat4:
-                        this.CSLRUnknownFloat4 = (Exception?)obj;
+                    case CombatStyle_FieldIndex.LongRangeRetreatDistanceMult:
+                        this.LongRangeRetreatDistanceMult = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.CoverSearchDistanceMult:
                         this.CoverSearchDistanceMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CSCVUnknownFloat1:
-                        this.CSCVUnknownFloat1 = (Exception?)obj;
+                    case CombatStyle_FieldIndex.CoverSearchSuppressionSensitivity:
+                        this.CoverSearchSuppressionSensitivity = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.HoverChance:
-                        this.HoverChance = (Exception?)obj;
+                    case CombatStyle_FieldIndex.FlightHoverChance:
+                        this.FlightHoverChance = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.DiveBombChance:
-                        this.DiveBombChance = (Exception?)obj;
+                    case CombatStyle_FieldIndex.FlightDiveBombChance:
+                        this.FlightDiveBombChance = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.GroundAttackChance:
-                        this.GroundAttackChance = (Exception?)obj;
+                    case CombatStyle_FieldIndex.FlightGroundAttackChance:
+                        this.FlightGroundAttackChance = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.HoverTime:
-                        this.HoverTime = (Exception?)obj;
+                    case CombatStyle_FieldIndex.FlightHoverTime:
+                        this.FlightHoverTime = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.GroundAttackTime:
-                        this.GroundAttackTime = (Exception?)obj;
+                    case CombatStyle_FieldIndex.FlightGroundAttackTime:
+                        this.FlightGroundAttackTime = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.PerchAttackChance:
-                        this.PerchAttackChance = (Exception?)obj;
+                    case CombatStyle_FieldIndex.FlightPerchAttackChance:
+                        this.FlightPerchAttackChance = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.PerchAttackTime:
-                        this.PerchAttackTime = (Exception?)obj;
+                    case CombatStyle_FieldIndex.FlightPerchAttackTime:
+                        this.FlightPerchAttackTime = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.FlyingAttackChance:
-                        this.FlyingAttackChance = (Exception?)obj;
+                    case CombatStyle_FieldIndex.FlightFlyingAttackChance:
+                        this.FlightFlyingAttackChance = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CSTN:
-                        this.CSTN = (Exception?)obj;
+                    case CombatStyle_FieldIndex.TunnelCostMult:
+                        this.TunnelCostMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CSSG:
-                        this.CSSG = (Exception?)obj;
+                    case CombatStyle_FieldIndex.TunnelChance:
+                        this.TunnelChance = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CSSM:
-                        this.CSSM = (Exception?)obj;
+                    case CombatStyle_FieldIndex.TunnelMaxDistance:
+                        this.TunnelMaxDistance = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CSSR:
-                        this.CSSR = (Exception?)obj;
+                    case CombatStyle_FieldIndex.TunnelSpeedMult:
+                        this.TunnelSpeedMult = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CSSA:
-                        this.CSSA = (Exception?)obj;
+                    case CombatStyle_FieldIndex.TunnelMinTime:
+                        this.TunnelMinTime = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.CSSD:
-                        this.CSSD = (Exception?)obj;
+                    case CombatStyle_FieldIndex.TunnelMaxTime:
+                        this.TunnelMaxTime = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.TunnelMaximumTime:
+                        this.TunnelMaximumTime = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.TunnelCooldown:
+                        this.TunnelCooldown = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralPilotSkill:
+                        this.SpaceGeneralPilotSkill = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralAccuracy:
+                        this.SpaceGeneralAccuracy = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralTargetShield:
+                        this.SpaceGeneralTargetShield = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralAdjustment:
+                        this.SpaceGeneralAdjustment = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralEngageManeuverChanceDirectAttack:
+                        this.SpaceGeneralEngageManeuverChanceDirectAttack = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralEngageManeuverChancePass:
+                        this.SpaceGeneralEngageManeuverChancePass = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralEngageManeuverChanceLeadTurn:
+                        this.SpaceGeneralEngageManeuverChanceLeadTurn = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralEngageManeuverChanceSlideTurn:
+                        this.SpaceGeneralEngageManeuverChanceSlideTurn = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralEngageManeuverChanceBarrelRoll:
+                        this.SpaceGeneralEngageManeuverChanceBarrelRoll = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralEvadeManeuverChanceBreak:
+                        this.SpaceGeneralEvadeManeuverChanceBreak = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralEvadeManeuverChanceScissors:
+                        this.SpaceGeneralEvadeManeuverChanceScissors = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralEvadeManeuverChanceCut:
+                        this.SpaceGeneralEvadeManeuverChanceCut = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralEvadeManeuverChanceBoost:
+                        this.SpaceGeneralEvadeManeuverChanceBoost = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralAcquireManeuverChanceSliceback:
+                        this.SpaceGeneralAcquireManeuverChanceSliceback = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralAcquireManeuverChanceStrafeTurn:
+                        this.SpaceGeneralAcquireManeuverChanceStrafeTurn = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralAcquireManeuverChanceAcquire:
+                        this.SpaceGeneralAcquireManeuverChanceAcquire = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralAcquireManeuverChanceTurn:
+                        this.SpaceGeneralAcquireManeuverChanceTurn = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralDisengageManeuverChance:
+                        this.SpaceGeneralDisengageManeuverChance = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralMissileSeekingStrength:
+                        this.SpaceGeneralMissileSeekingStrength = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralMinTimeBetweenBoosts:
+                        this.SpaceGeneralMinTimeBetweenBoosts = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralCombatStrafing:
+                        this.SpaceGeneralCombatStrafing = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralRollsDuringBoost:
+                        this.SpaceGeneralRollsDuringBoost = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.UnknownCSSG:
+                        this.UnknownCSSG = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceGeneralPowerWeighting:
+                        this.SpaceGeneralPowerWeighting = (MaskItem<Exception?, CombatStylePowerWeighting.ErrorMask?>?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceManeuverTypesMaxTime:
+                        this.SpaceManeuverTypesMaxTime = (MaskItem<Exception?, CombatStyleManeuverTiming.ErrorMask?>?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceManeuverTypesReentryDelays:
+                        this.SpaceManeuverTypesReentryDelays = (MaskItem<Exception?, CombatStyleManeuverTiming.ErrorMask?>?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceRepairDamageThreshold:
+                        this.SpaceRepairDamageThreshold = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceRepairFarawayDistance:
+                        this.SpaceRepairFarawayDistance = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceRepairPowerToUse:
+                        this.SpaceRepairPowerToUse = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceRepairInClosePowerWeightingTables:
+                        this.SpaceRepairInClosePowerWeightingTables = (MaskItem<Exception?, CombatStylePowerWeighting.ErrorMask?>?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceRepairFarawayPowerWeightingTables:
+                        this.SpaceRepairFarawayPowerWeightingTables = (MaskItem<Exception?, CombatStylePowerWeighting.ErrorMask?>?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceApproachingMinDistance:
+                        this.SpaceApproachingMinDistance = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceApproachingWeighting:
+                        this.SpaceApproachingWeighting = (MaskItem<Exception?, CombatStylePowerWeighting.ErrorMask?>?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceDetectionRating1:
+                        this.SpaceDetectionRating1 = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceDetectionRating2:
+                        this.SpaceDetectionRating2 = (Exception?)obj;
+                        break;
+                    case CombatStyle_FieldIndex.SpaceDetectionRating3:
+                        this.SpaceDetectionRating3 = (Exception?)obj;
                         break;
                     case CombatStyle_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
@@ -2163,11 +3109,11 @@ namespace Mutagen.Bethesda.Starfield
                     case CombatStyle_FieldIndex.FNAM:
                         this.FNAM = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.TNAM:
-                        this.TNAM = (Exception?)obj;
+                    case CombatStyle_FieldIndex.TemplateDefaultCombatStyle:
+                        this.TemplateDefaultCombatStyle = (Exception?)obj;
                         break;
-                    case CombatStyle_FieldIndex.UNAM:
-                        this.UNAM = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case CombatStyle_FieldIndex.Templates:
+                        this.Templates = (MaskItem<Exception?, CombatStyleTemplates.ErrorMask?>?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -2190,9 +3136,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (AvoidThreatChance != null) return true;
                 if (DodgeThreadChance != null) return true;
                 if (EvadeThreatChance != null) return true;
-                if (CSGDUnknownFloat1 != null) return true;
-                if (CSGDUnknownFloat2 != null) return true;
-                if (CSGDUnknownFloat3 != null) return true;
+                if (HealAllyDistance != null) return true;
+                if (JumpCostMult != null) return true;
+                if (TauntDelayMult != null) return true;
                 if (MeleeAttackStaggeredMult != null) return true;
                 if (MeleePowerAttackStaggeredMult != null) return true;
                 if (MeleePowerAttackBlockingMult != null) return true;
@@ -2204,11 +3150,11 @@ namespace Mutagen.Bethesda.Starfield
                 if (MeleeBlockWhenStaggeredMult != null) return true;
                 if (MeleeAttackWhenStaggeredMult != null) return true;
                 if (RangedAccuracyMult != null) return true;
-                if (CSRAUnknownFloat1 != null) return true;
-                if (CSRAUnknownFloat2 != null) return true;
-                if (CSRAUnknownFloat3 != null) return true;
-                if (CSRAUnknownFloat4 != null) return true;
-                if (CSRAUnknownFloat5 != null) return true;
+                if (RangedThrowMult != null) return true;
+                if (RangedGrenadeAdvancedThrowingMult != null) return true;
+                if (RangedGrenadeFlashTargetMult != null) return true;
+                if (RangedGrenadeThrowAtGroupMult != null) return true;
+                if (RangedGrenadeCloseRangeAttackChanceMult != null) return true;
                 if (CloseRangeDuelingCircleMult != null) return true;
                 if (CloseRangeDuelingFallbackMult != null) return true;
                 if (CloseRangeFlankDistance != null) return true;
@@ -2220,37 +3166,75 @@ namespace Mutagen.Bethesda.Starfield
                 if (CloseRangeChargingDisengageProbability != null) return true;
                 if (CloseRangeChargingThrowMaxTargets != null) return true;
                 if (CloseRangeFlankingVariance != null) return true;
-                if (CSCRUnknownFloat1 != null) return true;
-                if (CSCRUnknownFloat2 != null) return true;
+                if (CloseRangeRetreatChance != null) return true;
+                if (CloseRangeRetreatDistanceMult != null) return true;
                 if (LongRangeStrafeMult != null) return true;
                 if (LongRangeAdjustRangeMult != null) return true;
                 if (LongRangeCrouchMult != null) return true;
                 if (LongRangeWaitMult != null) return true;
                 if (LongRangeRangeMult != null) return true;
-                if (CSLRUnknownFloat1 != null) return true;
-                if (CSLRUnknownFloat2 != null) return true;
-                if (CSLRUnknownFloat3 != null) return true;
-                if (CSLRUnknownFloat4 != null) return true;
+                if (LongRangeProvideSuppressiveFireMult != null) return true;
+                if (LongRangeRetreatChance != null) return true;
+                if (LongRangeRetreatHideTimeMult != null) return true;
+                if (LongRangeRetreatDistanceMult != null) return true;
                 if (CoverSearchDistanceMult != null) return true;
-                if (CSCVUnknownFloat1 != null) return true;
-                if (HoverChance != null) return true;
-                if (DiveBombChance != null) return true;
-                if (GroundAttackChance != null) return true;
-                if (HoverTime != null) return true;
-                if (GroundAttackTime != null) return true;
-                if (PerchAttackChance != null) return true;
-                if (PerchAttackTime != null) return true;
-                if (FlyingAttackChance != null) return true;
-                if (CSTN != null) return true;
-                if (CSSG != null) return true;
-                if (CSSM != null) return true;
-                if (CSSR != null) return true;
-                if (CSSA != null) return true;
-                if (CSSD != null) return true;
+                if (CoverSearchSuppressionSensitivity != null) return true;
+                if (FlightHoverChance != null) return true;
+                if (FlightDiveBombChance != null) return true;
+                if (FlightGroundAttackChance != null) return true;
+                if (FlightHoverTime != null) return true;
+                if (FlightGroundAttackTime != null) return true;
+                if (FlightPerchAttackChance != null) return true;
+                if (FlightPerchAttackTime != null) return true;
+                if (FlightFlyingAttackChance != null) return true;
+                if (TunnelCostMult != null) return true;
+                if (TunnelChance != null) return true;
+                if (TunnelMaxDistance != null) return true;
+                if (TunnelSpeedMult != null) return true;
+                if (TunnelMinTime != null) return true;
+                if (TunnelMaxTime != null) return true;
+                if (TunnelMaximumTime != null) return true;
+                if (TunnelCooldown != null) return true;
+                if (SpaceGeneralPilotSkill != null) return true;
+                if (SpaceGeneralAccuracy != null) return true;
+                if (SpaceGeneralTargetShield != null) return true;
+                if (SpaceGeneralAdjustment != null) return true;
+                if (SpaceGeneralEngageManeuverChanceDirectAttack != null) return true;
+                if (SpaceGeneralEngageManeuverChancePass != null) return true;
+                if (SpaceGeneralEngageManeuverChanceLeadTurn != null) return true;
+                if (SpaceGeneralEngageManeuverChanceSlideTurn != null) return true;
+                if (SpaceGeneralEngageManeuverChanceBarrelRoll != null) return true;
+                if (SpaceGeneralEvadeManeuverChanceBreak != null) return true;
+                if (SpaceGeneralEvadeManeuverChanceScissors != null) return true;
+                if (SpaceGeneralEvadeManeuverChanceCut != null) return true;
+                if (SpaceGeneralEvadeManeuverChanceBoost != null) return true;
+                if (SpaceGeneralAcquireManeuverChanceSliceback != null) return true;
+                if (SpaceGeneralAcquireManeuverChanceStrafeTurn != null) return true;
+                if (SpaceGeneralAcquireManeuverChanceAcquire != null) return true;
+                if (SpaceGeneralAcquireManeuverChanceTurn != null) return true;
+                if (SpaceGeneralDisengageManeuverChance != null) return true;
+                if (SpaceGeneralMissileSeekingStrength != null) return true;
+                if (SpaceGeneralMinTimeBetweenBoosts != null) return true;
+                if (SpaceGeneralCombatStrafing != null) return true;
+                if (SpaceGeneralRollsDuringBoost != null) return true;
+                if (UnknownCSSG != null) return true;
+                if (SpaceGeneralPowerWeighting != null) return true;
+                if (SpaceManeuverTypesMaxTime != null) return true;
+                if (SpaceManeuverTypesReentryDelays != null) return true;
+                if (SpaceRepairDamageThreshold != null) return true;
+                if (SpaceRepairFarawayDistance != null) return true;
+                if (SpaceRepairPowerToUse != null) return true;
+                if (SpaceRepairInClosePowerWeightingTables != null) return true;
+                if (SpaceRepairFarawayPowerWeightingTables != null) return true;
+                if (SpaceApproachingMinDistance != null) return true;
+                if (SpaceApproachingWeighting != null) return true;
+                if (SpaceDetectionRating1 != null) return true;
+                if (SpaceDetectionRating2 != null) return true;
+                if (SpaceDetectionRating3 != null) return true;
                 if (Flags != null) return true;
                 if (FNAM != null) return true;
-                if (TNAM != null) return true;
-                if (UNAM != null) return true;
+                if (TemplateDefaultCombatStyle != null) return true;
+                if (Templates != null) return true;
                 return false;
             }
             #endregion
@@ -2314,13 +3298,13 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(EvadeThreatChance, "EvadeThreatChance");
                 }
                 {
-                    sb.AppendItem(CSGDUnknownFloat1, "CSGDUnknownFloat1");
+                    sb.AppendItem(HealAllyDistance, "HealAllyDistance");
                 }
                 {
-                    sb.AppendItem(CSGDUnknownFloat2, "CSGDUnknownFloat2");
+                    sb.AppendItem(JumpCostMult, "JumpCostMult");
                 }
                 {
-                    sb.AppendItem(CSGDUnknownFloat3, "CSGDUnknownFloat3");
+                    sb.AppendItem(TauntDelayMult, "TauntDelayMult");
                 }
                 {
                     sb.AppendItem(MeleeAttackStaggeredMult, "MeleeAttackStaggeredMult");
@@ -2356,19 +3340,19 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(RangedAccuracyMult, "RangedAccuracyMult");
                 }
                 {
-                    sb.AppendItem(CSRAUnknownFloat1, "CSRAUnknownFloat1");
+                    sb.AppendItem(RangedThrowMult, "RangedThrowMult");
                 }
                 {
-                    sb.AppendItem(CSRAUnknownFloat2, "CSRAUnknownFloat2");
+                    sb.AppendItem(RangedGrenadeAdvancedThrowingMult, "RangedGrenadeAdvancedThrowingMult");
                 }
                 {
-                    sb.AppendItem(CSRAUnknownFloat3, "CSRAUnknownFloat3");
+                    sb.AppendItem(RangedGrenadeFlashTargetMult, "RangedGrenadeFlashTargetMult");
                 }
                 {
-                    sb.AppendItem(CSRAUnknownFloat4, "CSRAUnknownFloat4");
+                    sb.AppendItem(RangedGrenadeThrowAtGroupMult, "RangedGrenadeThrowAtGroupMult");
                 }
                 {
-                    sb.AppendItem(CSRAUnknownFloat5, "CSRAUnknownFloat5");
+                    sb.AppendItem(RangedGrenadeCloseRangeAttackChanceMult, "RangedGrenadeCloseRangeAttackChanceMult");
                 }
                 {
                     sb.AppendItem(CloseRangeDuelingCircleMult, "CloseRangeDuelingCircleMult");
@@ -2404,10 +3388,10 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(CloseRangeFlankingVariance, "CloseRangeFlankingVariance");
                 }
                 {
-                    sb.AppendItem(CSCRUnknownFloat1, "CSCRUnknownFloat1");
+                    sb.AppendItem(CloseRangeRetreatChance, "CloseRangeRetreatChance");
                 }
                 {
-                    sb.AppendItem(CSCRUnknownFloat2, "CSCRUnknownFloat2");
+                    sb.AppendItem(CloseRangeRetreatDistanceMult, "CloseRangeRetreatDistanceMult");
                 }
                 {
                     sb.AppendItem(LongRangeStrafeMult, "LongRangeStrafeMult");
@@ -2425,64 +3409,166 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(LongRangeRangeMult, "LongRangeRangeMult");
                 }
                 {
-                    sb.AppendItem(CSLRUnknownFloat1, "CSLRUnknownFloat1");
+                    sb.AppendItem(LongRangeProvideSuppressiveFireMult, "LongRangeProvideSuppressiveFireMult");
                 }
                 {
-                    sb.AppendItem(CSLRUnknownFloat2, "CSLRUnknownFloat2");
+                    sb.AppendItem(LongRangeRetreatChance, "LongRangeRetreatChance");
                 }
                 {
-                    sb.AppendItem(CSLRUnknownFloat3, "CSLRUnknownFloat3");
+                    sb.AppendItem(LongRangeRetreatHideTimeMult, "LongRangeRetreatHideTimeMult");
                 }
                 {
-                    sb.AppendItem(CSLRUnknownFloat4, "CSLRUnknownFloat4");
+                    sb.AppendItem(LongRangeRetreatDistanceMult, "LongRangeRetreatDistanceMult");
                 }
                 {
                     sb.AppendItem(CoverSearchDistanceMult, "CoverSearchDistanceMult");
                 }
                 {
-                    sb.AppendItem(CSCVUnknownFloat1, "CSCVUnknownFloat1");
+                    sb.AppendItem(CoverSearchSuppressionSensitivity, "CoverSearchSuppressionSensitivity");
                 }
                 {
-                    sb.AppendItem(HoverChance, "HoverChance");
+                    sb.AppendItem(FlightHoverChance, "FlightHoverChance");
                 }
                 {
-                    sb.AppendItem(DiveBombChance, "DiveBombChance");
+                    sb.AppendItem(FlightDiveBombChance, "FlightDiveBombChance");
                 }
                 {
-                    sb.AppendItem(GroundAttackChance, "GroundAttackChance");
+                    sb.AppendItem(FlightGroundAttackChance, "FlightGroundAttackChance");
                 }
                 {
-                    sb.AppendItem(HoverTime, "HoverTime");
+                    sb.AppendItem(FlightHoverTime, "FlightHoverTime");
                 }
                 {
-                    sb.AppendItem(GroundAttackTime, "GroundAttackTime");
+                    sb.AppendItem(FlightGroundAttackTime, "FlightGroundAttackTime");
                 }
                 {
-                    sb.AppendItem(PerchAttackChance, "PerchAttackChance");
+                    sb.AppendItem(FlightPerchAttackChance, "FlightPerchAttackChance");
                 }
                 {
-                    sb.AppendItem(PerchAttackTime, "PerchAttackTime");
+                    sb.AppendItem(FlightPerchAttackTime, "FlightPerchAttackTime");
                 }
                 {
-                    sb.AppendItem(FlyingAttackChance, "FlyingAttackChance");
+                    sb.AppendItem(FlightFlyingAttackChance, "FlightFlyingAttackChance");
                 }
                 {
-                    sb.AppendItem(CSTN, "CSTN");
+                    sb.AppendItem(TunnelCostMult, "TunnelCostMult");
                 }
                 {
-                    sb.AppendItem(CSSG, "CSSG");
+                    sb.AppendItem(TunnelChance, "TunnelChance");
                 }
                 {
-                    sb.AppendItem(CSSM, "CSSM");
+                    sb.AppendItem(TunnelMaxDistance, "TunnelMaxDistance");
                 }
                 {
-                    sb.AppendItem(CSSR, "CSSR");
+                    sb.AppendItem(TunnelSpeedMult, "TunnelSpeedMult");
                 }
                 {
-                    sb.AppendItem(CSSA, "CSSA");
+                    sb.AppendItem(TunnelMinTime, "TunnelMinTime");
                 }
                 {
-                    sb.AppendItem(CSSD, "CSSD");
+                    sb.AppendItem(TunnelMaxTime, "TunnelMaxTime");
+                }
+                {
+                    sb.AppendItem(TunnelMaximumTime, "TunnelMaximumTime");
+                }
+                {
+                    sb.AppendItem(TunnelCooldown, "TunnelCooldown");
+                }
+                {
+                    sb.AppendItem(SpaceGeneralPilotSkill, "SpaceGeneralPilotSkill");
+                }
+                {
+                    sb.AppendItem(SpaceGeneralAccuracy, "SpaceGeneralAccuracy");
+                }
+                {
+                    sb.AppendItem(SpaceGeneralTargetShield, "SpaceGeneralTargetShield");
+                }
+                {
+                    sb.AppendItem(SpaceGeneralAdjustment, "SpaceGeneralAdjustment");
+                }
+                {
+                    sb.AppendItem(SpaceGeneralEngageManeuverChanceDirectAttack, "SpaceGeneralEngageManeuverChanceDirectAttack");
+                }
+                {
+                    sb.AppendItem(SpaceGeneralEngageManeuverChancePass, "SpaceGeneralEngageManeuverChancePass");
+                }
+                {
+                    sb.AppendItem(SpaceGeneralEngageManeuverChanceLeadTurn, "SpaceGeneralEngageManeuverChanceLeadTurn");
+                }
+                {
+                    sb.AppendItem(SpaceGeneralEngageManeuverChanceSlideTurn, "SpaceGeneralEngageManeuverChanceSlideTurn");
+                }
+                {
+                    sb.AppendItem(SpaceGeneralEngageManeuverChanceBarrelRoll, "SpaceGeneralEngageManeuverChanceBarrelRoll");
+                }
+                {
+                    sb.AppendItem(SpaceGeneralEvadeManeuverChanceBreak, "SpaceGeneralEvadeManeuverChanceBreak");
+                }
+                {
+                    sb.AppendItem(SpaceGeneralEvadeManeuverChanceScissors, "SpaceGeneralEvadeManeuverChanceScissors");
+                }
+                {
+                    sb.AppendItem(SpaceGeneralEvadeManeuverChanceCut, "SpaceGeneralEvadeManeuverChanceCut");
+                }
+                {
+                    sb.AppendItem(SpaceGeneralEvadeManeuverChanceBoost, "SpaceGeneralEvadeManeuverChanceBoost");
+                }
+                {
+                    sb.AppendItem(SpaceGeneralAcquireManeuverChanceSliceback, "SpaceGeneralAcquireManeuverChanceSliceback");
+                }
+                {
+                    sb.AppendItem(SpaceGeneralAcquireManeuverChanceStrafeTurn, "SpaceGeneralAcquireManeuverChanceStrafeTurn");
+                }
+                {
+                    sb.AppendItem(SpaceGeneralAcquireManeuverChanceAcquire, "SpaceGeneralAcquireManeuverChanceAcquire");
+                }
+                {
+                    sb.AppendItem(SpaceGeneralAcquireManeuverChanceTurn, "SpaceGeneralAcquireManeuverChanceTurn");
+                }
+                {
+                    sb.AppendItem(SpaceGeneralDisengageManeuverChance, "SpaceGeneralDisengageManeuverChance");
+                }
+                {
+                    sb.AppendItem(SpaceGeneralMissileSeekingStrength, "SpaceGeneralMissileSeekingStrength");
+                }
+                {
+                    sb.AppendItem(SpaceGeneralMinTimeBetweenBoosts, "SpaceGeneralMinTimeBetweenBoosts");
+                }
+                {
+                    sb.AppendItem(SpaceGeneralCombatStrafing, "SpaceGeneralCombatStrafing");
+                }
+                {
+                    sb.AppendItem(SpaceGeneralRollsDuringBoost, "SpaceGeneralRollsDuringBoost");
+                }
+                {
+                    sb.AppendItem(UnknownCSSG, "UnknownCSSG");
+                }
+                SpaceGeneralPowerWeighting?.Print(sb);
+                SpaceManeuverTypesMaxTime?.Print(sb);
+                SpaceManeuverTypesReentryDelays?.Print(sb);
+                {
+                    sb.AppendItem(SpaceRepairDamageThreshold, "SpaceRepairDamageThreshold");
+                }
+                {
+                    sb.AppendItem(SpaceRepairFarawayDistance, "SpaceRepairFarawayDistance");
+                }
+                {
+                    sb.AppendItem(SpaceRepairPowerToUse, "SpaceRepairPowerToUse");
+                }
+                SpaceRepairInClosePowerWeightingTables?.Print(sb);
+                SpaceRepairFarawayPowerWeightingTables?.Print(sb);
+                {
+                    sb.AppendItem(SpaceApproachingMinDistance, "SpaceApproachingMinDistance");
+                }
+                SpaceApproachingWeighting?.Print(sb);
+                {
+                    sb.AppendItem(SpaceDetectionRating1, "SpaceDetectionRating1");
+                }
+                {
+                    sb.AppendItem(SpaceDetectionRating2, "SpaceDetectionRating2");
+                }
+                {
+                    sb.AppendItem(SpaceDetectionRating3, "SpaceDetectionRating3");
                 }
                 {
                     sb.AppendItem(Flags, "Flags");
@@ -2491,28 +3577,9 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(FNAM, "FNAM");
                 }
                 {
-                    sb.AppendItem(TNAM, "TNAM");
+                    sb.AppendItem(TemplateDefaultCombatStyle, "TemplateDefaultCombatStyle");
                 }
-                if (UNAM is {} UNAMItem)
-                {
-                    sb.AppendLine("UNAM =>");
-                    using (sb.Brace())
-                    {
-                        sb.AppendItem(UNAMItem.Overall);
-                        if (UNAMItem.Specific != null)
-                        {
-                            foreach (var subItem in UNAMItem.Specific)
-                            {
-                                using (sb.Brace())
-                                {
-                                    {
-                                        sb.AppendItem(subItem);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                Templates?.Print(sb);
             }
             #endregion
 
@@ -2533,9 +3600,9 @@ namespace Mutagen.Bethesda.Starfield
                 ret.AvoidThreatChance = this.AvoidThreatChance.Combine(rhs.AvoidThreatChance);
                 ret.DodgeThreadChance = this.DodgeThreadChance.Combine(rhs.DodgeThreadChance);
                 ret.EvadeThreatChance = this.EvadeThreatChance.Combine(rhs.EvadeThreatChance);
-                ret.CSGDUnknownFloat1 = this.CSGDUnknownFloat1.Combine(rhs.CSGDUnknownFloat1);
-                ret.CSGDUnknownFloat2 = this.CSGDUnknownFloat2.Combine(rhs.CSGDUnknownFloat2);
-                ret.CSGDUnknownFloat3 = this.CSGDUnknownFloat3.Combine(rhs.CSGDUnknownFloat3);
+                ret.HealAllyDistance = this.HealAllyDistance.Combine(rhs.HealAllyDistance);
+                ret.JumpCostMult = this.JumpCostMult.Combine(rhs.JumpCostMult);
+                ret.TauntDelayMult = this.TauntDelayMult.Combine(rhs.TauntDelayMult);
                 ret.MeleeAttackStaggeredMult = this.MeleeAttackStaggeredMult.Combine(rhs.MeleeAttackStaggeredMult);
                 ret.MeleePowerAttackStaggeredMult = this.MeleePowerAttackStaggeredMult.Combine(rhs.MeleePowerAttackStaggeredMult);
                 ret.MeleePowerAttackBlockingMult = this.MeleePowerAttackBlockingMult.Combine(rhs.MeleePowerAttackBlockingMult);
@@ -2547,11 +3614,11 @@ namespace Mutagen.Bethesda.Starfield
                 ret.MeleeBlockWhenStaggeredMult = this.MeleeBlockWhenStaggeredMult.Combine(rhs.MeleeBlockWhenStaggeredMult);
                 ret.MeleeAttackWhenStaggeredMult = this.MeleeAttackWhenStaggeredMult.Combine(rhs.MeleeAttackWhenStaggeredMult);
                 ret.RangedAccuracyMult = this.RangedAccuracyMult.Combine(rhs.RangedAccuracyMult);
-                ret.CSRAUnknownFloat1 = this.CSRAUnknownFloat1.Combine(rhs.CSRAUnknownFloat1);
-                ret.CSRAUnknownFloat2 = this.CSRAUnknownFloat2.Combine(rhs.CSRAUnknownFloat2);
-                ret.CSRAUnknownFloat3 = this.CSRAUnknownFloat3.Combine(rhs.CSRAUnknownFloat3);
-                ret.CSRAUnknownFloat4 = this.CSRAUnknownFloat4.Combine(rhs.CSRAUnknownFloat4);
-                ret.CSRAUnknownFloat5 = this.CSRAUnknownFloat5.Combine(rhs.CSRAUnknownFloat5);
+                ret.RangedThrowMult = this.RangedThrowMult.Combine(rhs.RangedThrowMult);
+                ret.RangedGrenadeAdvancedThrowingMult = this.RangedGrenadeAdvancedThrowingMult.Combine(rhs.RangedGrenadeAdvancedThrowingMult);
+                ret.RangedGrenadeFlashTargetMult = this.RangedGrenadeFlashTargetMult.Combine(rhs.RangedGrenadeFlashTargetMult);
+                ret.RangedGrenadeThrowAtGroupMult = this.RangedGrenadeThrowAtGroupMult.Combine(rhs.RangedGrenadeThrowAtGroupMult);
+                ret.RangedGrenadeCloseRangeAttackChanceMult = this.RangedGrenadeCloseRangeAttackChanceMult.Combine(rhs.RangedGrenadeCloseRangeAttackChanceMult);
                 ret.CloseRangeDuelingCircleMult = this.CloseRangeDuelingCircleMult.Combine(rhs.CloseRangeDuelingCircleMult);
                 ret.CloseRangeDuelingFallbackMult = this.CloseRangeDuelingFallbackMult.Combine(rhs.CloseRangeDuelingFallbackMult);
                 ret.CloseRangeFlankDistance = this.CloseRangeFlankDistance.Combine(rhs.CloseRangeFlankDistance);
@@ -2563,37 +3630,75 @@ namespace Mutagen.Bethesda.Starfield
                 ret.CloseRangeChargingDisengageProbability = this.CloseRangeChargingDisengageProbability.Combine(rhs.CloseRangeChargingDisengageProbability);
                 ret.CloseRangeChargingThrowMaxTargets = this.CloseRangeChargingThrowMaxTargets.Combine(rhs.CloseRangeChargingThrowMaxTargets);
                 ret.CloseRangeFlankingVariance = this.CloseRangeFlankingVariance.Combine(rhs.CloseRangeFlankingVariance);
-                ret.CSCRUnknownFloat1 = this.CSCRUnknownFloat1.Combine(rhs.CSCRUnknownFloat1);
-                ret.CSCRUnknownFloat2 = this.CSCRUnknownFloat2.Combine(rhs.CSCRUnknownFloat2);
+                ret.CloseRangeRetreatChance = this.CloseRangeRetreatChance.Combine(rhs.CloseRangeRetreatChance);
+                ret.CloseRangeRetreatDistanceMult = this.CloseRangeRetreatDistanceMult.Combine(rhs.CloseRangeRetreatDistanceMult);
                 ret.LongRangeStrafeMult = this.LongRangeStrafeMult.Combine(rhs.LongRangeStrafeMult);
                 ret.LongRangeAdjustRangeMult = this.LongRangeAdjustRangeMult.Combine(rhs.LongRangeAdjustRangeMult);
                 ret.LongRangeCrouchMult = this.LongRangeCrouchMult.Combine(rhs.LongRangeCrouchMult);
                 ret.LongRangeWaitMult = this.LongRangeWaitMult.Combine(rhs.LongRangeWaitMult);
                 ret.LongRangeRangeMult = this.LongRangeRangeMult.Combine(rhs.LongRangeRangeMult);
-                ret.CSLRUnknownFloat1 = this.CSLRUnknownFloat1.Combine(rhs.CSLRUnknownFloat1);
-                ret.CSLRUnknownFloat2 = this.CSLRUnknownFloat2.Combine(rhs.CSLRUnknownFloat2);
-                ret.CSLRUnknownFloat3 = this.CSLRUnknownFloat3.Combine(rhs.CSLRUnknownFloat3);
-                ret.CSLRUnknownFloat4 = this.CSLRUnknownFloat4.Combine(rhs.CSLRUnknownFloat4);
+                ret.LongRangeProvideSuppressiveFireMult = this.LongRangeProvideSuppressiveFireMult.Combine(rhs.LongRangeProvideSuppressiveFireMult);
+                ret.LongRangeRetreatChance = this.LongRangeRetreatChance.Combine(rhs.LongRangeRetreatChance);
+                ret.LongRangeRetreatHideTimeMult = this.LongRangeRetreatHideTimeMult.Combine(rhs.LongRangeRetreatHideTimeMult);
+                ret.LongRangeRetreatDistanceMult = this.LongRangeRetreatDistanceMult.Combine(rhs.LongRangeRetreatDistanceMult);
                 ret.CoverSearchDistanceMult = this.CoverSearchDistanceMult.Combine(rhs.CoverSearchDistanceMult);
-                ret.CSCVUnknownFloat1 = this.CSCVUnknownFloat1.Combine(rhs.CSCVUnknownFloat1);
-                ret.HoverChance = this.HoverChance.Combine(rhs.HoverChance);
-                ret.DiveBombChance = this.DiveBombChance.Combine(rhs.DiveBombChance);
-                ret.GroundAttackChance = this.GroundAttackChance.Combine(rhs.GroundAttackChance);
-                ret.HoverTime = this.HoverTime.Combine(rhs.HoverTime);
-                ret.GroundAttackTime = this.GroundAttackTime.Combine(rhs.GroundAttackTime);
-                ret.PerchAttackChance = this.PerchAttackChance.Combine(rhs.PerchAttackChance);
-                ret.PerchAttackTime = this.PerchAttackTime.Combine(rhs.PerchAttackTime);
-                ret.FlyingAttackChance = this.FlyingAttackChance.Combine(rhs.FlyingAttackChance);
-                ret.CSTN = this.CSTN.Combine(rhs.CSTN);
-                ret.CSSG = this.CSSG.Combine(rhs.CSSG);
-                ret.CSSM = this.CSSM.Combine(rhs.CSSM);
-                ret.CSSR = this.CSSR.Combine(rhs.CSSR);
-                ret.CSSA = this.CSSA.Combine(rhs.CSSA);
-                ret.CSSD = this.CSSD.Combine(rhs.CSSD);
+                ret.CoverSearchSuppressionSensitivity = this.CoverSearchSuppressionSensitivity.Combine(rhs.CoverSearchSuppressionSensitivity);
+                ret.FlightHoverChance = this.FlightHoverChance.Combine(rhs.FlightHoverChance);
+                ret.FlightDiveBombChance = this.FlightDiveBombChance.Combine(rhs.FlightDiveBombChance);
+                ret.FlightGroundAttackChance = this.FlightGroundAttackChance.Combine(rhs.FlightGroundAttackChance);
+                ret.FlightHoverTime = this.FlightHoverTime.Combine(rhs.FlightHoverTime);
+                ret.FlightGroundAttackTime = this.FlightGroundAttackTime.Combine(rhs.FlightGroundAttackTime);
+                ret.FlightPerchAttackChance = this.FlightPerchAttackChance.Combine(rhs.FlightPerchAttackChance);
+                ret.FlightPerchAttackTime = this.FlightPerchAttackTime.Combine(rhs.FlightPerchAttackTime);
+                ret.FlightFlyingAttackChance = this.FlightFlyingAttackChance.Combine(rhs.FlightFlyingAttackChance);
+                ret.TunnelCostMult = this.TunnelCostMult.Combine(rhs.TunnelCostMult);
+                ret.TunnelChance = this.TunnelChance.Combine(rhs.TunnelChance);
+                ret.TunnelMaxDistance = this.TunnelMaxDistance.Combine(rhs.TunnelMaxDistance);
+                ret.TunnelSpeedMult = this.TunnelSpeedMult.Combine(rhs.TunnelSpeedMult);
+                ret.TunnelMinTime = this.TunnelMinTime.Combine(rhs.TunnelMinTime);
+                ret.TunnelMaxTime = this.TunnelMaxTime.Combine(rhs.TunnelMaxTime);
+                ret.TunnelMaximumTime = this.TunnelMaximumTime.Combine(rhs.TunnelMaximumTime);
+                ret.TunnelCooldown = this.TunnelCooldown.Combine(rhs.TunnelCooldown);
+                ret.SpaceGeneralPilotSkill = this.SpaceGeneralPilotSkill.Combine(rhs.SpaceGeneralPilotSkill);
+                ret.SpaceGeneralAccuracy = this.SpaceGeneralAccuracy.Combine(rhs.SpaceGeneralAccuracy);
+                ret.SpaceGeneralTargetShield = this.SpaceGeneralTargetShield.Combine(rhs.SpaceGeneralTargetShield);
+                ret.SpaceGeneralAdjustment = this.SpaceGeneralAdjustment.Combine(rhs.SpaceGeneralAdjustment);
+                ret.SpaceGeneralEngageManeuverChanceDirectAttack = this.SpaceGeneralEngageManeuverChanceDirectAttack.Combine(rhs.SpaceGeneralEngageManeuverChanceDirectAttack);
+                ret.SpaceGeneralEngageManeuverChancePass = this.SpaceGeneralEngageManeuverChancePass.Combine(rhs.SpaceGeneralEngageManeuverChancePass);
+                ret.SpaceGeneralEngageManeuverChanceLeadTurn = this.SpaceGeneralEngageManeuverChanceLeadTurn.Combine(rhs.SpaceGeneralEngageManeuverChanceLeadTurn);
+                ret.SpaceGeneralEngageManeuverChanceSlideTurn = this.SpaceGeneralEngageManeuverChanceSlideTurn.Combine(rhs.SpaceGeneralEngageManeuverChanceSlideTurn);
+                ret.SpaceGeneralEngageManeuverChanceBarrelRoll = this.SpaceGeneralEngageManeuverChanceBarrelRoll.Combine(rhs.SpaceGeneralEngageManeuverChanceBarrelRoll);
+                ret.SpaceGeneralEvadeManeuverChanceBreak = this.SpaceGeneralEvadeManeuverChanceBreak.Combine(rhs.SpaceGeneralEvadeManeuverChanceBreak);
+                ret.SpaceGeneralEvadeManeuverChanceScissors = this.SpaceGeneralEvadeManeuverChanceScissors.Combine(rhs.SpaceGeneralEvadeManeuverChanceScissors);
+                ret.SpaceGeneralEvadeManeuverChanceCut = this.SpaceGeneralEvadeManeuverChanceCut.Combine(rhs.SpaceGeneralEvadeManeuverChanceCut);
+                ret.SpaceGeneralEvadeManeuverChanceBoost = this.SpaceGeneralEvadeManeuverChanceBoost.Combine(rhs.SpaceGeneralEvadeManeuverChanceBoost);
+                ret.SpaceGeneralAcquireManeuverChanceSliceback = this.SpaceGeneralAcquireManeuverChanceSliceback.Combine(rhs.SpaceGeneralAcquireManeuverChanceSliceback);
+                ret.SpaceGeneralAcquireManeuverChanceStrafeTurn = this.SpaceGeneralAcquireManeuverChanceStrafeTurn.Combine(rhs.SpaceGeneralAcquireManeuverChanceStrafeTurn);
+                ret.SpaceGeneralAcquireManeuverChanceAcquire = this.SpaceGeneralAcquireManeuverChanceAcquire.Combine(rhs.SpaceGeneralAcquireManeuverChanceAcquire);
+                ret.SpaceGeneralAcquireManeuverChanceTurn = this.SpaceGeneralAcquireManeuverChanceTurn.Combine(rhs.SpaceGeneralAcquireManeuverChanceTurn);
+                ret.SpaceGeneralDisengageManeuverChance = this.SpaceGeneralDisengageManeuverChance.Combine(rhs.SpaceGeneralDisengageManeuverChance);
+                ret.SpaceGeneralMissileSeekingStrength = this.SpaceGeneralMissileSeekingStrength.Combine(rhs.SpaceGeneralMissileSeekingStrength);
+                ret.SpaceGeneralMinTimeBetweenBoosts = this.SpaceGeneralMinTimeBetweenBoosts.Combine(rhs.SpaceGeneralMinTimeBetweenBoosts);
+                ret.SpaceGeneralCombatStrafing = this.SpaceGeneralCombatStrafing.Combine(rhs.SpaceGeneralCombatStrafing);
+                ret.SpaceGeneralRollsDuringBoost = this.SpaceGeneralRollsDuringBoost.Combine(rhs.SpaceGeneralRollsDuringBoost);
+                ret.UnknownCSSG = this.UnknownCSSG.Combine(rhs.UnknownCSSG);
+                ret.SpaceGeneralPowerWeighting = this.SpaceGeneralPowerWeighting.Combine(rhs.SpaceGeneralPowerWeighting, (l, r) => l.Combine(r));
+                ret.SpaceManeuverTypesMaxTime = this.SpaceManeuverTypesMaxTime.Combine(rhs.SpaceManeuverTypesMaxTime, (l, r) => l.Combine(r));
+                ret.SpaceManeuverTypesReentryDelays = this.SpaceManeuverTypesReentryDelays.Combine(rhs.SpaceManeuverTypesReentryDelays, (l, r) => l.Combine(r));
+                ret.SpaceRepairDamageThreshold = this.SpaceRepairDamageThreshold.Combine(rhs.SpaceRepairDamageThreshold);
+                ret.SpaceRepairFarawayDistance = this.SpaceRepairFarawayDistance.Combine(rhs.SpaceRepairFarawayDistance);
+                ret.SpaceRepairPowerToUse = this.SpaceRepairPowerToUse.Combine(rhs.SpaceRepairPowerToUse);
+                ret.SpaceRepairInClosePowerWeightingTables = this.SpaceRepairInClosePowerWeightingTables.Combine(rhs.SpaceRepairInClosePowerWeightingTables, (l, r) => l.Combine(r));
+                ret.SpaceRepairFarawayPowerWeightingTables = this.SpaceRepairFarawayPowerWeightingTables.Combine(rhs.SpaceRepairFarawayPowerWeightingTables, (l, r) => l.Combine(r));
+                ret.SpaceApproachingMinDistance = this.SpaceApproachingMinDistance.Combine(rhs.SpaceApproachingMinDistance);
+                ret.SpaceApproachingWeighting = this.SpaceApproachingWeighting.Combine(rhs.SpaceApproachingWeighting, (l, r) => l.Combine(r));
+                ret.SpaceDetectionRating1 = this.SpaceDetectionRating1.Combine(rhs.SpaceDetectionRating1);
+                ret.SpaceDetectionRating2 = this.SpaceDetectionRating2.Combine(rhs.SpaceDetectionRating2);
+                ret.SpaceDetectionRating3 = this.SpaceDetectionRating3.Combine(rhs.SpaceDetectionRating3);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.FNAM = this.FNAM.Combine(rhs.FNAM);
-                ret.TNAM = this.TNAM.Combine(rhs.TNAM);
-                ret.UNAM = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.UNAM?.Overall, rhs.UNAM?.Overall), Noggog.ExceptionExt.Combine(this.UNAM?.Specific, rhs.UNAM?.Specific));
+                ret.TemplateDefaultCombatStyle = this.TemplateDefaultCombatStyle.Combine(rhs.TemplateDefaultCombatStyle);
+                ret.Templates = this.Templates.Combine(rhs.Templates, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2628,9 +3733,9 @@ namespace Mutagen.Bethesda.Starfield
             public bool AvoidThreatChance;
             public bool DodgeThreadChance;
             public bool EvadeThreatChance;
-            public bool CSGDUnknownFloat1;
-            public bool CSGDUnknownFloat2;
-            public bool CSGDUnknownFloat3;
+            public bool HealAllyDistance;
+            public bool JumpCostMult;
+            public bool TauntDelayMult;
             public bool MeleeAttackStaggeredMult;
             public bool MeleePowerAttackStaggeredMult;
             public bool MeleePowerAttackBlockingMult;
@@ -2642,11 +3747,11 @@ namespace Mutagen.Bethesda.Starfield
             public bool MeleeBlockWhenStaggeredMult;
             public bool MeleeAttackWhenStaggeredMult;
             public bool RangedAccuracyMult;
-            public bool CSRAUnknownFloat1;
-            public bool CSRAUnknownFloat2;
-            public bool CSRAUnknownFloat3;
-            public bool CSRAUnknownFloat4;
-            public bool CSRAUnknownFloat5;
+            public bool RangedThrowMult;
+            public bool RangedGrenadeAdvancedThrowingMult;
+            public bool RangedGrenadeFlashTargetMult;
+            public bool RangedGrenadeThrowAtGroupMult;
+            public bool RangedGrenadeCloseRangeAttackChanceMult;
             public bool CloseRangeDuelingCircleMult;
             public bool CloseRangeDuelingFallbackMult;
             public bool CloseRangeFlankDistance;
@@ -2658,37 +3763,75 @@ namespace Mutagen.Bethesda.Starfield
             public bool CloseRangeChargingDisengageProbability;
             public bool CloseRangeChargingThrowMaxTargets;
             public bool CloseRangeFlankingVariance;
-            public bool CSCRUnknownFloat1;
-            public bool CSCRUnknownFloat2;
+            public bool CloseRangeRetreatChance;
+            public bool CloseRangeRetreatDistanceMult;
             public bool LongRangeStrafeMult;
             public bool LongRangeAdjustRangeMult;
             public bool LongRangeCrouchMult;
             public bool LongRangeWaitMult;
             public bool LongRangeRangeMult;
-            public bool CSLRUnknownFloat1;
-            public bool CSLRUnknownFloat2;
-            public bool CSLRUnknownFloat3;
-            public bool CSLRUnknownFloat4;
+            public bool LongRangeProvideSuppressiveFireMult;
+            public bool LongRangeRetreatChance;
+            public bool LongRangeRetreatHideTimeMult;
+            public bool LongRangeRetreatDistanceMult;
             public bool CoverSearchDistanceMult;
-            public bool CSCVUnknownFloat1;
-            public bool HoverChance;
-            public bool DiveBombChance;
-            public bool GroundAttackChance;
-            public bool HoverTime;
-            public bool GroundAttackTime;
-            public bool PerchAttackChance;
-            public bool PerchAttackTime;
-            public bool FlyingAttackChance;
-            public bool CSTN;
-            public bool CSSG;
-            public bool CSSM;
-            public bool CSSR;
-            public bool CSSA;
-            public bool CSSD;
+            public bool CoverSearchSuppressionSensitivity;
+            public bool FlightHoverChance;
+            public bool FlightDiveBombChance;
+            public bool FlightGroundAttackChance;
+            public bool FlightHoverTime;
+            public bool FlightGroundAttackTime;
+            public bool FlightPerchAttackChance;
+            public bool FlightPerchAttackTime;
+            public bool FlightFlyingAttackChance;
+            public bool TunnelCostMult;
+            public bool TunnelChance;
+            public bool TunnelMaxDistance;
+            public bool TunnelSpeedMult;
+            public bool TunnelMinTime;
+            public bool TunnelMaxTime;
+            public bool TunnelMaximumTime;
+            public bool TunnelCooldown;
+            public bool SpaceGeneralPilotSkill;
+            public bool SpaceGeneralAccuracy;
+            public bool SpaceGeneralTargetShield;
+            public bool SpaceGeneralAdjustment;
+            public bool SpaceGeneralEngageManeuverChanceDirectAttack;
+            public bool SpaceGeneralEngageManeuverChancePass;
+            public bool SpaceGeneralEngageManeuverChanceLeadTurn;
+            public bool SpaceGeneralEngageManeuverChanceSlideTurn;
+            public bool SpaceGeneralEngageManeuverChanceBarrelRoll;
+            public bool SpaceGeneralEvadeManeuverChanceBreak;
+            public bool SpaceGeneralEvadeManeuverChanceScissors;
+            public bool SpaceGeneralEvadeManeuverChanceCut;
+            public bool SpaceGeneralEvadeManeuverChanceBoost;
+            public bool SpaceGeneralAcquireManeuverChanceSliceback;
+            public bool SpaceGeneralAcquireManeuverChanceStrafeTurn;
+            public bool SpaceGeneralAcquireManeuverChanceAcquire;
+            public bool SpaceGeneralAcquireManeuverChanceTurn;
+            public bool SpaceGeneralDisengageManeuverChance;
+            public bool SpaceGeneralMissileSeekingStrength;
+            public bool SpaceGeneralMinTimeBetweenBoosts;
+            public bool SpaceGeneralCombatStrafing;
+            public bool SpaceGeneralRollsDuringBoost;
+            public bool UnknownCSSG;
+            public CombatStylePowerWeighting.TranslationMask? SpaceGeneralPowerWeighting;
+            public CombatStyleManeuverTiming.TranslationMask? SpaceManeuverTypesMaxTime;
+            public CombatStyleManeuverTiming.TranslationMask? SpaceManeuverTypesReentryDelays;
+            public bool SpaceRepairDamageThreshold;
+            public bool SpaceRepairFarawayDistance;
+            public bool SpaceRepairPowerToUse;
+            public CombatStylePowerWeighting.TranslationMask? SpaceRepairInClosePowerWeightingTables;
+            public CombatStylePowerWeighting.TranslationMask? SpaceRepairFarawayPowerWeightingTables;
+            public bool SpaceApproachingMinDistance;
+            public CombatStylePowerWeighting.TranslationMask? SpaceApproachingWeighting;
+            public bool SpaceDetectionRating1;
+            public bool SpaceDetectionRating2;
+            public bool SpaceDetectionRating3;
             public bool Flags;
             public bool FNAM;
-            public bool TNAM;
-            public bool UNAM;
+            public bool TemplateDefaultCombatStyle;
+            public CombatStyleTemplates.TranslationMask? Templates;
             #endregion
 
             #region Ctors
@@ -2709,9 +3852,9 @@ namespace Mutagen.Bethesda.Starfield
                 this.AvoidThreatChance = defaultOn;
                 this.DodgeThreadChance = defaultOn;
                 this.EvadeThreatChance = defaultOn;
-                this.CSGDUnknownFloat1 = defaultOn;
-                this.CSGDUnknownFloat2 = defaultOn;
-                this.CSGDUnknownFloat3 = defaultOn;
+                this.HealAllyDistance = defaultOn;
+                this.JumpCostMult = defaultOn;
+                this.TauntDelayMult = defaultOn;
                 this.MeleeAttackStaggeredMult = defaultOn;
                 this.MeleePowerAttackStaggeredMult = defaultOn;
                 this.MeleePowerAttackBlockingMult = defaultOn;
@@ -2723,11 +3866,11 @@ namespace Mutagen.Bethesda.Starfield
                 this.MeleeBlockWhenStaggeredMult = defaultOn;
                 this.MeleeAttackWhenStaggeredMult = defaultOn;
                 this.RangedAccuracyMult = defaultOn;
-                this.CSRAUnknownFloat1 = defaultOn;
-                this.CSRAUnknownFloat2 = defaultOn;
-                this.CSRAUnknownFloat3 = defaultOn;
-                this.CSRAUnknownFloat4 = defaultOn;
-                this.CSRAUnknownFloat5 = defaultOn;
+                this.RangedThrowMult = defaultOn;
+                this.RangedGrenadeAdvancedThrowingMult = defaultOn;
+                this.RangedGrenadeFlashTargetMult = defaultOn;
+                this.RangedGrenadeThrowAtGroupMult = defaultOn;
+                this.RangedGrenadeCloseRangeAttackChanceMult = defaultOn;
                 this.CloseRangeDuelingCircleMult = defaultOn;
                 this.CloseRangeDuelingFallbackMult = defaultOn;
                 this.CloseRangeFlankDistance = defaultOn;
@@ -2739,37 +3882,68 @@ namespace Mutagen.Bethesda.Starfield
                 this.CloseRangeChargingDisengageProbability = defaultOn;
                 this.CloseRangeChargingThrowMaxTargets = defaultOn;
                 this.CloseRangeFlankingVariance = defaultOn;
-                this.CSCRUnknownFloat1 = defaultOn;
-                this.CSCRUnknownFloat2 = defaultOn;
+                this.CloseRangeRetreatChance = defaultOn;
+                this.CloseRangeRetreatDistanceMult = defaultOn;
                 this.LongRangeStrafeMult = defaultOn;
                 this.LongRangeAdjustRangeMult = defaultOn;
                 this.LongRangeCrouchMult = defaultOn;
                 this.LongRangeWaitMult = defaultOn;
                 this.LongRangeRangeMult = defaultOn;
-                this.CSLRUnknownFloat1 = defaultOn;
-                this.CSLRUnknownFloat2 = defaultOn;
-                this.CSLRUnknownFloat3 = defaultOn;
-                this.CSLRUnknownFloat4 = defaultOn;
+                this.LongRangeProvideSuppressiveFireMult = defaultOn;
+                this.LongRangeRetreatChance = defaultOn;
+                this.LongRangeRetreatHideTimeMult = defaultOn;
+                this.LongRangeRetreatDistanceMult = defaultOn;
                 this.CoverSearchDistanceMult = defaultOn;
-                this.CSCVUnknownFloat1 = defaultOn;
-                this.HoverChance = defaultOn;
-                this.DiveBombChance = defaultOn;
-                this.GroundAttackChance = defaultOn;
-                this.HoverTime = defaultOn;
-                this.GroundAttackTime = defaultOn;
-                this.PerchAttackChance = defaultOn;
-                this.PerchAttackTime = defaultOn;
-                this.FlyingAttackChance = defaultOn;
-                this.CSTN = defaultOn;
-                this.CSSG = defaultOn;
-                this.CSSM = defaultOn;
-                this.CSSR = defaultOn;
-                this.CSSA = defaultOn;
-                this.CSSD = defaultOn;
+                this.CoverSearchSuppressionSensitivity = defaultOn;
+                this.FlightHoverChance = defaultOn;
+                this.FlightDiveBombChance = defaultOn;
+                this.FlightGroundAttackChance = defaultOn;
+                this.FlightHoverTime = defaultOn;
+                this.FlightGroundAttackTime = defaultOn;
+                this.FlightPerchAttackChance = defaultOn;
+                this.FlightPerchAttackTime = defaultOn;
+                this.FlightFlyingAttackChance = defaultOn;
+                this.TunnelCostMult = defaultOn;
+                this.TunnelChance = defaultOn;
+                this.TunnelMaxDistance = defaultOn;
+                this.TunnelSpeedMult = defaultOn;
+                this.TunnelMinTime = defaultOn;
+                this.TunnelMaxTime = defaultOn;
+                this.TunnelMaximumTime = defaultOn;
+                this.TunnelCooldown = defaultOn;
+                this.SpaceGeneralPilotSkill = defaultOn;
+                this.SpaceGeneralAccuracy = defaultOn;
+                this.SpaceGeneralTargetShield = defaultOn;
+                this.SpaceGeneralAdjustment = defaultOn;
+                this.SpaceGeneralEngageManeuverChanceDirectAttack = defaultOn;
+                this.SpaceGeneralEngageManeuverChancePass = defaultOn;
+                this.SpaceGeneralEngageManeuverChanceLeadTurn = defaultOn;
+                this.SpaceGeneralEngageManeuverChanceSlideTurn = defaultOn;
+                this.SpaceGeneralEngageManeuverChanceBarrelRoll = defaultOn;
+                this.SpaceGeneralEvadeManeuverChanceBreak = defaultOn;
+                this.SpaceGeneralEvadeManeuverChanceScissors = defaultOn;
+                this.SpaceGeneralEvadeManeuverChanceCut = defaultOn;
+                this.SpaceGeneralEvadeManeuverChanceBoost = defaultOn;
+                this.SpaceGeneralAcquireManeuverChanceSliceback = defaultOn;
+                this.SpaceGeneralAcquireManeuverChanceStrafeTurn = defaultOn;
+                this.SpaceGeneralAcquireManeuverChanceAcquire = defaultOn;
+                this.SpaceGeneralAcquireManeuverChanceTurn = defaultOn;
+                this.SpaceGeneralDisengageManeuverChance = defaultOn;
+                this.SpaceGeneralMissileSeekingStrength = defaultOn;
+                this.SpaceGeneralMinTimeBetweenBoosts = defaultOn;
+                this.SpaceGeneralCombatStrafing = defaultOn;
+                this.SpaceGeneralRollsDuringBoost = defaultOn;
+                this.UnknownCSSG = defaultOn;
+                this.SpaceRepairDamageThreshold = defaultOn;
+                this.SpaceRepairFarawayDistance = defaultOn;
+                this.SpaceRepairPowerToUse = defaultOn;
+                this.SpaceApproachingMinDistance = defaultOn;
+                this.SpaceDetectionRating1 = defaultOn;
+                this.SpaceDetectionRating2 = defaultOn;
+                this.SpaceDetectionRating3 = defaultOn;
                 this.Flags = defaultOn;
                 this.FNAM = defaultOn;
-                this.TNAM = defaultOn;
-                this.UNAM = defaultOn;
+                this.TemplateDefaultCombatStyle = defaultOn;
             }
 
             #endregion
@@ -2789,9 +3963,9 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((AvoidThreatChance, null));
                 ret.Add((DodgeThreadChance, null));
                 ret.Add((EvadeThreatChance, null));
-                ret.Add((CSGDUnknownFloat1, null));
-                ret.Add((CSGDUnknownFloat2, null));
-                ret.Add((CSGDUnknownFloat3, null));
+                ret.Add((HealAllyDistance, null));
+                ret.Add((JumpCostMult, null));
+                ret.Add((TauntDelayMult, null));
                 ret.Add((MeleeAttackStaggeredMult, null));
                 ret.Add((MeleePowerAttackStaggeredMult, null));
                 ret.Add((MeleePowerAttackBlockingMult, null));
@@ -2803,11 +3977,11 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((MeleeBlockWhenStaggeredMult, null));
                 ret.Add((MeleeAttackWhenStaggeredMult, null));
                 ret.Add((RangedAccuracyMult, null));
-                ret.Add((CSRAUnknownFloat1, null));
-                ret.Add((CSRAUnknownFloat2, null));
-                ret.Add((CSRAUnknownFloat3, null));
-                ret.Add((CSRAUnknownFloat4, null));
-                ret.Add((CSRAUnknownFloat5, null));
+                ret.Add((RangedThrowMult, null));
+                ret.Add((RangedGrenadeAdvancedThrowingMult, null));
+                ret.Add((RangedGrenadeFlashTargetMult, null));
+                ret.Add((RangedGrenadeThrowAtGroupMult, null));
+                ret.Add((RangedGrenadeCloseRangeAttackChanceMult, null));
                 ret.Add((CloseRangeDuelingCircleMult, null));
                 ret.Add((CloseRangeDuelingFallbackMult, null));
                 ret.Add((CloseRangeFlankDistance, null));
@@ -2819,37 +3993,75 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((CloseRangeChargingDisengageProbability, null));
                 ret.Add((CloseRangeChargingThrowMaxTargets, null));
                 ret.Add((CloseRangeFlankingVariance, null));
-                ret.Add((CSCRUnknownFloat1, null));
-                ret.Add((CSCRUnknownFloat2, null));
+                ret.Add((CloseRangeRetreatChance, null));
+                ret.Add((CloseRangeRetreatDistanceMult, null));
                 ret.Add((LongRangeStrafeMult, null));
                 ret.Add((LongRangeAdjustRangeMult, null));
                 ret.Add((LongRangeCrouchMult, null));
                 ret.Add((LongRangeWaitMult, null));
                 ret.Add((LongRangeRangeMult, null));
-                ret.Add((CSLRUnknownFloat1, null));
-                ret.Add((CSLRUnknownFloat2, null));
-                ret.Add((CSLRUnknownFloat3, null));
-                ret.Add((CSLRUnknownFloat4, null));
+                ret.Add((LongRangeProvideSuppressiveFireMult, null));
+                ret.Add((LongRangeRetreatChance, null));
+                ret.Add((LongRangeRetreatHideTimeMult, null));
+                ret.Add((LongRangeRetreatDistanceMult, null));
                 ret.Add((CoverSearchDistanceMult, null));
-                ret.Add((CSCVUnknownFloat1, null));
-                ret.Add((HoverChance, null));
-                ret.Add((DiveBombChance, null));
-                ret.Add((GroundAttackChance, null));
-                ret.Add((HoverTime, null));
-                ret.Add((GroundAttackTime, null));
-                ret.Add((PerchAttackChance, null));
-                ret.Add((PerchAttackTime, null));
-                ret.Add((FlyingAttackChance, null));
-                ret.Add((CSTN, null));
-                ret.Add((CSSG, null));
-                ret.Add((CSSM, null));
-                ret.Add((CSSR, null));
-                ret.Add((CSSA, null));
-                ret.Add((CSSD, null));
+                ret.Add((CoverSearchSuppressionSensitivity, null));
+                ret.Add((FlightHoverChance, null));
+                ret.Add((FlightDiveBombChance, null));
+                ret.Add((FlightGroundAttackChance, null));
+                ret.Add((FlightHoverTime, null));
+                ret.Add((FlightGroundAttackTime, null));
+                ret.Add((FlightPerchAttackChance, null));
+                ret.Add((FlightPerchAttackTime, null));
+                ret.Add((FlightFlyingAttackChance, null));
+                ret.Add((TunnelCostMult, null));
+                ret.Add((TunnelChance, null));
+                ret.Add((TunnelMaxDistance, null));
+                ret.Add((TunnelSpeedMult, null));
+                ret.Add((TunnelMinTime, null));
+                ret.Add((TunnelMaxTime, null));
+                ret.Add((TunnelMaximumTime, null));
+                ret.Add((TunnelCooldown, null));
+                ret.Add((SpaceGeneralPilotSkill, null));
+                ret.Add((SpaceGeneralAccuracy, null));
+                ret.Add((SpaceGeneralTargetShield, null));
+                ret.Add((SpaceGeneralAdjustment, null));
+                ret.Add((SpaceGeneralEngageManeuverChanceDirectAttack, null));
+                ret.Add((SpaceGeneralEngageManeuverChancePass, null));
+                ret.Add((SpaceGeneralEngageManeuverChanceLeadTurn, null));
+                ret.Add((SpaceGeneralEngageManeuverChanceSlideTurn, null));
+                ret.Add((SpaceGeneralEngageManeuverChanceBarrelRoll, null));
+                ret.Add((SpaceGeneralEvadeManeuverChanceBreak, null));
+                ret.Add((SpaceGeneralEvadeManeuverChanceScissors, null));
+                ret.Add((SpaceGeneralEvadeManeuverChanceCut, null));
+                ret.Add((SpaceGeneralEvadeManeuverChanceBoost, null));
+                ret.Add((SpaceGeneralAcquireManeuverChanceSliceback, null));
+                ret.Add((SpaceGeneralAcquireManeuverChanceStrafeTurn, null));
+                ret.Add((SpaceGeneralAcquireManeuverChanceAcquire, null));
+                ret.Add((SpaceGeneralAcquireManeuverChanceTurn, null));
+                ret.Add((SpaceGeneralDisengageManeuverChance, null));
+                ret.Add((SpaceGeneralMissileSeekingStrength, null));
+                ret.Add((SpaceGeneralMinTimeBetweenBoosts, null));
+                ret.Add((SpaceGeneralCombatStrafing, null));
+                ret.Add((SpaceGeneralRollsDuringBoost, null));
+                ret.Add((UnknownCSSG, null));
+                ret.Add((SpaceGeneralPowerWeighting != null ? SpaceGeneralPowerWeighting.OnOverall : DefaultOn, SpaceGeneralPowerWeighting?.GetCrystal()));
+                ret.Add((SpaceManeuverTypesMaxTime != null ? SpaceManeuverTypesMaxTime.OnOverall : DefaultOn, SpaceManeuverTypesMaxTime?.GetCrystal()));
+                ret.Add((SpaceManeuverTypesReentryDelays != null ? SpaceManeuverTypesReentryDelays.OnOverall : DefaultOn, SpaceManeuverTypesReentryDelays?.GetCrystal()));
+                ret.Add((SpaceRepairDamageThreshold, null));
+                ret.Add((SpaceRepairFarawayDistance, null));
+                ret.Add((SpaceRepairPowerToUse, null));
+                ret.Add((SpaceRepairInClosePowerWeightingTables != null ? SpaceRepairInClosePowerWeightingTables.OnOverall : DefaultOn, SpaceRepairInClosePowerWeightingTables?.GetCrystal()));
+                ret.Add((SpaceRepairFarawayPowerWeightingTables != null ? SpaceRepairFarawayPowerWeightingTables.OnOverall : DefaultOn, SpaceRepairFarawayPowerWeightingTables?.GetCrystal()));
+                ret.Add((SpaceApproachingMinDistance, null));
+                ret.Add((SpaceApproachingWeighting != null ? SpaceApproachingWeighting.OnOverall : DefaultOn, SpaceApproachingWeighting?.GetCrystal()));
+                ret.Add((SpaceDetectionRating1, null));
+                ret.Add((SpaceDetectionRating2, null));
+                ret.Add((SpaceDetectionRating3, null));
                 ret.Add((Flags, null));
                 ret.Add((FNAM, null));
-                ret.Add((TNAM, null));
-                ret.Add((UNAM, null));
+                ret.Add((TemplateDefaultCombatStyle, null));
+                ret.Add((Templates != null ? Templates.OnOverall : DefaultOn, Templates?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -3002,21 +4214,21 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<ICombatStyleInternal>,
         IStarfieldMajorRecordInternal
     {
-        new Single OffensiveMult { get; set; }
-        new Single DefensiveMult { get; set; }
-        new Single GroupOffensiveMult { get; set; }
+        new Percent OffensiveMult { get; set; }
+        new Percent DefensiveMult { get; set; }
+        new Percent GroupOffensiveMult { get; set; }
         new Single EquipmentScoreMultMelee { get; set; }
         new Single EquipmentScoreMultMagic { get; set; }
         new Single EquipmentScoreMultRanged { get; set; }
         new Single EquipmentScoreMultShout { get; set; }
         new Single EquipmentScoreMultUnarmed { get; set; }
         new Single EquipmentScoreMultStaff { get; set; }
-        new Single AvoidThreatChance { get; set; }
-        new Single DodgeThreadChance { get; set; }
-        new Single EvadeThreatChance { get; set; }
-        new Single CSGDUnknownFloat1 { get; set; }
-        new Single CSGDUnknownFloat2 { get; set; }
-        new Single CSGDUnknownFloat3 { get; set; }
+        new Percent AvoidThreatChance { get; set; }
+        new Percent DodgeThreadChance { get; set; }
+        new Percent EvadeThreatChance { get; set; }
+        new Single HealAllyDistance { get; set; }
+        new Single JumpCostMult { get; set; }
+        new Single TauntDelayMult { get; set; }
         new Single MeleeAttackStaggeredMult { get; set; }
         new Single MeleePowerAttackStaggeredMult { get; set; }
         new Single MeleePowerAttackBlockingMult { get; set; }
@@ -3027,54 +4239,92 @@ namespace Mutagen.Bethesda.Starfield
         new Single MeleeSpecialAttackMult { get; set; }
         new Single MeleeBlockWhenStaggeredMult { get; set; }
         new Single MeleeAttackWhenStaggeredMult { get; set; }
-        new Single RangedAccuracyMult { get; set; }
-        new Single CSRAUnknownFloat1 { get; set; }
-        new Single CSRAUnknownFloat2 { get; set; }
-        new Single CSRAUnknownFloat3 { get; set; }
-        new Single CSRAUnknownFloat4 { get; set; }
-        new Single CSRAUnknownFloat5 { get; set; }
-        new Single CloseRangeDuelingCircleMult { get; set; }
-        new Single CloseRangeDuelingFallbackMult { get; set; }
-        new Single CloseRangeFlankDistance { get; set; }
-        new Single CloseRangeFlankingStalkTime { get; set; }
-        new Single CloseRangeChargeDistance { get; set; }
-        new Single CloseRangeChargingThrowProbability { get; set; }
-        new Single CloseRangeChargingSprintFastProbability { get; set; }
-        new Single CloseRangeChargingSideswipeProbability { get; set; }
-        new Single CloseRangeChargingDisengageProbability { get; set; }
+        new Percent RangedAccuracyMult { get; set; }
+        new Percent RangedThrowMult { get; set; }
+        new Percent RangedGrenadeAdvancedThrowingMult { get; set; }
+        new Percent RangedGrenadeFlashTargetMult { get; set; }
+        new Percent RangedGrenadeThrowAtGroupMult { get; set; }
+        new Percent RangedGrenadeCloseRangeAttackChanceMult { get; set; }
+        new Percent CloseRangeDuelingCircleMult { get; set; }
+        new Percent CloseRangeDuelingFallbackMult { get; set; }
+        new Percent CloseRangeFlankDistance { get; set; }
+        new Percent CloseRangeFlankingStalkTime { get; set; }
+        new Percent CloseRangeChargeDistance { get; set; }
+        new Percent CloseRangeChargingThrowProbability { get; set; }
+        new Percent CloseRangeChargingSprintFastProbability { get; set; }
+        new Percent CloseRangeChargingSideswipeProbability { get; set; }
+        new Percent CloseRangeChargingDisengageProbability { get; set; }
         new UInt32 CloseRangeChargingThrowMaxTargets { get; set; }
-        new Single CloseRangeFlankingVariance { get; set; }
-        new Single CSCRUnknownFloat1 { get; set; }
-        new Single CSCRUnknownFloat2 { get; set; }
-        new Single LongRangeStrafeMult { get; set; }
-        new Single LongRangeAdjustRangeMult { get; set; }
-        new Single LongRangeCrouchMult { get; set; }
-        new Single LongRangeWaitMult { get; set; }
-        new Single LongRangeRangeMult { get; set; }
-        new Single CSLRUnknownFloat1 { get; set; }
-        new Single CSLRUnknownFloat2 { get; set; }
-        new Single CSLRUnknownFloat3 { get; set; }
-        new Single CSLRUnknownFloat4 { get; set; }
-        new Single CoverSearchDistanceMult { get; set; }
-        new Single CSCVUnknownFloat1 { get; set; }
-        new Single HoverChance { get; set; }
-        new Single DiveBombChance { get; set; }
-        new Single GroundAttackChance { get; set; }
-        new Single HoverTime { get; set; }
-        new Single GroundAttackTime { get; set; }
-        new Single PerchAttackChance { get; set; }
-        new Single PerchAttackTime { get; set; }
-        new Single FlyingAttackChance { get; set; }
-        new MemorySlice<Byte>? CSTN { get; set; }
-        new MemorySlice<Byte>? CSSG { get; set; }
-        new MemorySlice<Byte>? CSSM { get; set; }
-        new MemorySlice<Byte>? CSSR { get; set; }
-        new MemorySlice<Byte>? CSSA { get; set; }
-        new MemorySlice<Byte>? CSSD { get; set; }
+        new Percent CloseRangeFlankingVariance { get; set; }
+        new Percent CloseRangeRetreatChance { get; set; }
+        new Percent CloseRangeRetreatDistanceMult { get; set; }
+        new Percent LongRangeStrafeMult { get; set; }
+        new Percent LongRangeAdjustRangeMult { get; set; }
+        new Percent LongRangeCrouchMult { get; set; }
+        new Percent LongRangeWaitMult { get; set; }
+        new Percent LongRangeRangeMult { get; set; }
+        new Percent LongRangeProvideSuppressiveFireMult { get; set; }
+        new Percent LongRangeRetreatChance { get; set; }
+        new Percent LongRangeRetreatHideTimeMult { get; set; }
+        new Percent LongRangeRetreatDistanceMult { get; set; }
+        new Percent CoverSearchDistanceMult { get; set; }
+        new Percent CoverSearchSuppressionSensitivity { get; set; }
+        new Percent FlightHoverChance { get; set; }
+        new Percent FlightDiveBombChance { get; set; }
+        new Percent FlightGroundAttackChance { get; set; }
+        new Percent FlightHoverTime { get; set; }
+        new Percent FlightGroundAttackTime { get; set; }
+        new Percent FlightPerchAttackChance { get; set; }
+        new Percent FlightPerchAttackTime { get; set; }
+        new Percent FlightFlyingAttackChance { get; set; }
+        new Single TunnelCostMult { get; set; }
+        new Percent TunnelChance { get; set; }
+        new Single TunnelMaxDistance { get; set; }
+        new Single TunnelSpeedMult { get; set; }
+        new Single TunnelMinTime { get; set; }
+        new Single TunnelMaxTime { get; set; }
+        new Single TunnelMaximumTime { get; set; }
+        new Single TunnelCooldown { get; set; }
+        new Percent SpaceGeneralPilotSkill { get; set; }
+        new Percent SpaceGeneralAccuracy { get; set; }
+        new Percent SpaceGeneralTargetShield { get; set; }
+        new Single SpaceGeneralAdjustment { get; set; }
+        new Percent SpaceGeneralEngageManeuverChanceDirectAttack { get; set; }
+        new Percent SpaceGeneralEngageManeuverChancePass { get; set; }
+        new Percent SpaceGeneralEngageManeuverChanceLeadTurn { get; set; }
+        new Percent SpaceGeneralEngageManeuverChanceSlideTurn { get; set; }
+        new Percent SpaceGeneralEngageManeuverChanceBarrelRoll { get; set; }
+        new Percent SpaceGeneralEvadeManeuverChanceBreak { get; set; }
+        new Percent SpaceGeneralEvadeManeuverChanceScissors { get; set; }
+        new Percent SpaceGeneralEvadeManeuverChanceCut { get; set; }
+        new Percent SpaceGeneralEvadeManeuverChanceBoost { get; set; }
+        new Percent SpaceGeneralAcquireManeuverChanceSliceback { get; set; }
+        new Percent SpaceGeneralAcquireManeuverChanceStrafeTurn { get; set; }
+        new Percent SpaceGeneralAcquireManeuverChanceAcquire { get; set; }
+        new Percent SpaceGeneralAcquireManeuverChanceTurn { get; set; }
+        new Percent SpaceGeneralDisengageManeuverChance { get; set; }
+        new Single SpaceGeneralMissileSeekingStrength { get; set; }
+        new Single SpaceGeneralMinTimeBetweenBoosts { get; set; }
+        new Boolean SpaceGeneralCombatStrafing { get; set; }
+        new Boolean SpaceGeneralRollsDuringBoost { get; set; }
+        new Int16 UnknownCSSG { get; set; }
+        new CombatStylePowerWeighting SpaceGeneralPowerWeighting { get; set; }
+        new CombatStyleManeuverTiming SpaceManeuverTypesMaxTime { get; set; }
+        new CombatStyleManeuverTiming SpaceManeuverTypesReentryDelays { get; set; }
+        new Percent SpaceRepairDamageThreshold { get; set; }
+        new Percent SpaceRepairFarawayDistance { get; set; }
+        new Percent SpaceRepairPowerToUse { get; set; }
+        new CombatStylePowerWeighting SpaceRepairInClosePowerWeightingTables { get; set; }
+        new CombatStylePowerWeighting SpaceRepairFarawayPowerWeightingTables { get; set; }
+        new Percent SpaceApproachingMinDistance { get; set; }
+        new CombatStylePowerWeighting SpaceApproachingWeighting { get; set; }
+        new Single SpaceDetectionRating1 { get; set; }
+        new Single SpaceDetectionRating2 { get; set; }
+        new Single SpaceDetectionRating3 { get; set; }
         new CombatStyle.Flag? Flags { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
-        new IFormLinkNullable<ICombatStyleGetter> TNAM { get; set; }
-        new ExtendedList<IFormLinkGetter<ICombatStyleGetter>>? UNAM { get; set; }
+        new IFormLinkNullable<ICombatStyleGetter> TemplateDefaultCombatStyle { get; set; }
+        new CombatStyleTemplates? Templates { get; set; }
         #region Mutagen
         new CombatStyle.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -3097,21 +4347,21 @@ namespace Mutagen.Bethesda.Starfield
         IMapsToGetter<ICombatStyleGetter>
     {
         static new ILoquiRegistration StaticRegistration => CombatStyle_Registration.Instance;
-        Single OffensiveMult { get; }
-        Single DefensiveMult { get; }
-        Single GroupOffensiveMult { get; }
+        Percent OffensiveMult { get; }
+        Percent DefensiveMult { get; }
+        Percent GroupOffensiveMult { get; }
         Single EquipmentScoreMultMelee { get; }
         Single EquipmentScoreMultMagic { get; }
         Single EquipmentScoreMultRanged { get; }
         Single EquipmentScoreMultShout { get; }
         Single EquipmentScoreMultUnarmed { get; }
         Single EquipmentScoreMultStaff { get; }
-        Single AvoidThreatChance { get; }
-        Single DodgeThreadChance { get; }
-        Single EvadeThreatChance { get; }
-        Single CSGDUnknownFloat1 { get; }
-        Single CSGDUnknownFloat2 { get; }
-        Single CSGDUnknownFloat3 { get; }
+        Percent AvoidThreatChance { get; }
+        Percent DodgeThreadChance { get; }
+        Percent EvadeThreatChance { get; }
+        Single HealAllyDistance { get; }
+        Single JumpCostMult { get; }
+        Single TauntDelayMult { get; }
         Single MeleeAttackStaggeredMult { get; }
         Single MeleePowerAttackStaggeredMult { get; }
         Single MeleePowerAttackBlockingMult { get; }
@@ -3122,54 +4372,92 @@ namespace Mutagen.Bethesda.Starfield
         Single MeleeSpecialAttackMult { get; }
         Single MeleeBlockWhenStaggeredMult { get; }
         Single MeleeAttackWhenStaggeredMult { get; }
-        Single RangedAccuracyMult { get; }
-        Single CSRAUnknownFloat1 { get; }
-        Single CSRAUnknownFloat2 { get; }
-        Single CSRAUnknownFloat3 { get; }
-        Single CSRAUnknownFloat4 { get; }
-        Single CSRAUnknownFloat5 { get; }
-        Single CloseRangeDuelingCircleMult { get; }
-        Single CloseRangeDuelingFallbackMult { get; }
-        Single CloseRangeFlankDistance { get; }
-        Single CloseRangeFlankingStalkTime { get; }
-        Single CloseRangeChargeDistance { get; }
-        Single CloseRangeChargingThrowProbability { get; }
-        Single CloseRangeChargingSprintFastProbability { get; }
-        Single CloseRangeChargingSideswipeProbability { get; }
-        Single CloseRangeChargingDisengageProbability { get; }
+        Percent RangedAccuracyMult { get; }
+        Percent RangedThrowMult { get; }
+        Percent RangedGrenadeAdvancedThrowingMult { get; }
+        Percent RangedGrenadeFlashTargetMult { get; }
+        Percent RangedGrenadeThrowAtGroupMult { get; }
+        Percent RangedGrenadeCloseRangeAttackChanceMult { get; }
+        Percent CloseRangeDuelingCircleMult { get; }
+        Percent CloseRangeDuelingFallbackMult { get; }
+        Percent CloseRangeFlankDistance { get; }
+        Percent CloseRangeFlankingStalkTime { get; }
+        Percent CloseRangeChargeDistance { get; }
+        Percent CloseRangeChargingThrowProbability { get; }
+        Percent CloseRangeChargingSprintFastProbability { get; }
+        Percent CloseRangeChargingSideswipeProbability { get; }
+        Percent CloseRangeChargingDisengageProbability { get; }
         UInt32 CloseRangeChargingThrowMaxTargets { get; }
-        Single CloseRangeFlankingVariance { get; }
-        Single CSCRUnknownFloat1 { get; }
-        Single CSCRUnknownFloat2 { get; }
-        Single LongRangeStrafeMult { get; }
-        Single LongRangeAdjustRangeMult { get; }
-        Single LongRangeCrouchMult { get; }
-        Single LongRangeWaitMult { get; }
-        Single LongRangeRangeMult { get; }
-        Single CSLRUnknownFloat1 { get; }
-        Single CSLRUnknownFloat2 { get; }
-        Single CSLRUnknownFloat3 { get; }
-        Single CSLRUnknownFloat4 { get; }
-        Single CoverSearchDistanceMult { get; }
-        Single CSCVUnknownFloat1 { get; }
-        Single HoverChance { get; }
-        Single DiveBombChance { get; }
-        Single GroundAttackChance { get; }
-        Single HoverTime { get; }
-        Single GroundAttackTime { get; }
-        Single PerchAttackChance { get; }
-        Single PerchAttackTime { get; }
-        Single FlyingAttackChance { get; }
-        ReadOnlyMemorySlice<Byte>? CSTN { get; }
-        ReadOnlyMemorySlice<Byte>? CSSG { get; }
-        ReadOnlyMemorySlice<Byte>? CSSM { get; }
-        ReadOnlyMemorySlice<Byte>? CSSR { get; }
-        ReadOnlyMemorySlice<Byte>? CSSA { get; }
-        ReadOnlyMemorySlice<Byte>? CSSD { get; }
+        Percent CloseRangeFlankingVariance { get; }
+        Percent CloseRangeRetreatChance { get; }
+        Percent CloseRangeRetreatDistanceMult { get; }
+        Percent LongRangeStrafeMult { get; }
+        Percent LongRangeAdjustRangeMult { get; }
+        Percent LongRangeCrouchMult { get; }
+        Percent LongRangeWaitMult { get; }
+        Percent LongRangeRangeMult { get; }
+        Percent LongRangeProvideSuppressiveFireMult { get; }
+        Percent LongRangeRetreatChance { get; }
+        Percent LongRangeRetreatHideTimeMult { get; }
+        Percent LongRangeRetreatDistanceMult { get; }
+        Percent CoverSearchDistanceMult { get; }
+        Percent CoverSearchSuppressionSensitivity { get; }
+        Percent FlightHoverChance { get; }
+        Percent FlightDiveBombChance { get; }
+        Percent FlightGroundAttackChance { get; }
+        Percent FlightHoverTime { get; }
+        Percent FlightGroundAttackTime { get; }
+        Percent FlightPerchAttackChance { get; }
+        Percent FlightPerchAttackTime { get; }
+        Percent FlightFlyingAttackChance { get; }
+        Single TunnelCostMult { get; }
+        Percent TunnelChance { get; }
+        Single TunnelMaxDistance { get; }
+        Single TunnelSpeedMult { get; }
+        Single TunnelMinTime { get; }
+        Single TunnelMaxTime { get; }
+        Single TunnelMaximumTime { get; }
+        Single TunnelCooldown { get; }
+        Percent SpaceGeneralPilotSkill { get; }
+        Percent SpaceGeneralAccuracy { get; }
+        Percent SpaceGeneralTargetShield { get; }
+        Single SpaceGeneralAdjustment { get; }
+        Percent SpaceGeneralEngageManeuverChanceDirectAttack { get; }
+        Percent SpaceGeneralEngageManeuverChancePass { get; }
+        Percent SpaceGeneralEngageManeuverChanceLeadTurn { get; }
+        Percent SpaceGeneralEngageManeuverChanceSlideTurn { get; }
+        Percent SpaceGeneralEngageManeuverChanceBarrelRoll { get; }
+        Percent SpaceGeneralEvadeManeuverChanceBreak { get; }
+        Percent SpaceGeneralEvadeManeuverChanceScissors { get; }
+        Percent SpaceGeneralEvadeManeuverChanceCut { get; }
+        Percent SpaceGeneralEvadeManeuverChanceBoost { get; }
+        Percent SpaceGeneralAcquireManeuverChanceSliceback { get; }
+        Percent SpaceGeneralAcquireManeuverChanceStrafeTurn { get; }
+        Percent SpaceGeneralAcquireManeuverChanceAcquire { get; }
+        Percent SpaceGeneralAcquireManeuverChanceTurn { get; }
+        Percent SpaceGeneralDisengageManeuverChance { get; }
+        Single SpaceGeneralMissileSeekingStrength { get; }
+        Single SpaceGeneralMinTimeBetweenBoosts { get; }
+        Boolean SpaceGeneralCombatStrafing { get; }
+        Boolean SpaceGeneralRollsDuringBoost { get; }
+        Int16 UnknownCSSG { get; }
+        ICombatStylePowerWeightingGetter SpaceGeneralPowerWeighting { get; }
+        ICombatStyleManeuverTimingGetter SpaceManeuverTypesMaxTime { get; }
+        ICombatStyleManeuverTimingGetter SpaceManeuverTypesReentryDelays { get; }
+        Percent SpaceRepairDamageThreshold { get; }
+        Percent SpaceRepairFarawayDistance { get; }
+        Percent SpaceRepairPowerToUse { get; }
+        ICombatStylePowerWeightingGetter SpaceRepairInClosePowerWeightingTables { get; }
+        ICombatStylePowerWeightingGetter SpaceRepairFarawayPowerWeightingTables { get; }
+        Percent SpaceApproachingMinDistance { get; }
+        ICombatStylePowerWeightingGetter SpaceApproachingWeighting { get; }
+        Single SpaceDetectionRating1 { get; }
+        Single SpaceDetectionRating2 { get; }
+        Single SpaceDetectionRating3 { get; }
         CombatStyle.Flag? Flags { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
-        IFormLinkNullableGetter<ICombatStyleGetter> TNAM { get; }
-        IReadOnlyList<IFormLinkGetter<ICombatStyleGetter>>? UNAM { get; }
+        IFormLinkNullableGetter<ICombatStyleGetter> TemplateDefaultCombatStyle { get; }
+        ICombatStyleTemplatesGetter? Templates { get; }
 
         #region Mutagen
         CombatStyle.MajorFlag MajorFlags { get; }
@@ -3362,9 +4650,9 @@ namespace Mutagen.Bethesda.Starfield
         AvoidThreatChance = 16,
         DodgeThreadChance = 17,
         EvadeThreatChance = 18,
-        CSGDUnknownFloat1 = 19,
-        CSGDUnknownFloat2 = 20,
-        CSGDUnknownFloat3 = 21,
+        HealAllyDistance = 19,
+        JumpCostMult = 20,
+        TauntDelayMult = 21,
         MeleeAttackStaggeredMult = 22,
         MeleePowerAttackStaggeredMult = 23,
         MeleePowerAttackBlockingMult = 24,
@@ -3376,11 +4664,11 @@ namespace Mutagen.Bethesda.Starfield
         MeleeBlockWhenStaggeredMult = 30,
         MeleeAttackWhenStaggeredMult = 31,
         RangedAccuracyMult = 32,
-        CSRAUnknownFloat1 = 33,
-        CSRAUnknownFloat2 = 34,
-        CSRAUnknownFloat3 = 35,
-        CSRAUnknownFloat4 = 36,
-        CSRAUnknownFloat5 = 37,
+        RangedThrowMult = 33,
+        RangedGrenadeAdvancedThrowingMult = 34,
+        RangedGrenadeFlashTargetMult = 35,
+        RangedGrenadeThrowAtGroupMult = 36,
+        RangedGrenadeCloseRangeAttackChanceMult = 37,
         CloseRangeDuelingCircleMult = 38,
         CloseRangeDuelingFallbackMult = 39,
         CloseRangeFlankDistance = 40,
@@ -3392,37 +4680,75 @@ namespace Mutagen.Bethesda.Starfield
         CloseRangeChargingDisengageProbability = 46,
         CloseRangeChargingThrowMaxTargets = 47,
         CloseRangeFlankingVariance = 48,
-        CSCRUnknownFloat1 = 49,
-        CSCRUnknownFloat2 = 50,
+        CloseRangeRetreatChance = 49,
+        CloseRangeRetreatDistanceMult = 50,
         LongRangeStrafeMult = 51,
         LongRangeAdjustRangeMult = 52,
         LongRangeCrouchMult = 53,
         LongRangeWaitMult = 54,
         LongRangeRangeMult = 55,
-        CSLRUnknownFloat1 = 56,
-        CSLRUnknownFloat2 = 57,
-        CSLRUnknownFloat3 = 58,
-        CSLRUnknownFloat4 = 59,
+        LongRangeProvideSuppressiveFireMult = 56,
+        LongRangeRetreatChance = 57,
+        LongRangeRetreatHideTimeMult = 58,
+        LongRangeRetreatDistanceMult = 59,
         CoverSearchDistanceMult = 60,
-        CSCVUnknownFloat1 = 61,
-        HoverChance = 62,
-        DiveBombChance = 63,
-        GroundAttackChance = 64,
-        HoverTime = 65,
-        GroundAttackTime = 66,
-        PerchAttackChance = 67,
-        PerchAttackTime = 68,
-        FlyingAttackChance = 69,
-        CSTN = 70,
-        CSSG = 71,
-        CSSM = 72,
-        CSSR = 73,
-        CSSA = 74,
-        CSSD = 75,
-        Flags = 76,
-        FNAM = 77,
-        TNAM = 78,
-        UNAM = 79,
+        CoverSearchSuppressionSensitivity = 61,
+        FlightHoverChance = 62,
+        FlightDiveBombChance = 63,
+        FlightGroundAttackChance = 64,
+        FlightHoverTime = 65,
+        FlightGroundAttackTime = 66,
+        FlightPerchAttackChance = 67,
+        FlightPerchAttackTime = 68,
+        FlightFlyingAttackChance = 69,
+        TunnelCostMult = 70,
+        TunnelChance = 71,
+        TunnelMaxDistance = 72,
+        TunnelSpeedMult = 73,
+        TunnelMinTime = 74,
+        TunnelMaxTime = 75,
+        TunnelMaximumTime = 76,
+        TunnelCooldown = 77,
+        SpaceGeneralPilotSkill = 78,
+        SpaceGeneralAccuracy = 79,
+        SpaceGeneralTargetShield = 80,
+        SpaceGeneralAdjustment = 81,
+        SpaceGeneralEngageManeuverChanceDirectAttack = 82,
+        SpaceGeneralEngageManeuverChancePass = 83,
+        SpaceGeneralEngageManeuverChanceLeadTurn = 84,
+        SpaceGeneralEngageManeuverChanceSlideTurn = 85,
+        SpaceGeneralEngageManeuverChanceBarrelRoll = 86,
+        SpaceGeneralEvadeManeuverChanceBreak = 87,
+        SpaceGeneralEvadeManeuverChanceScissors = 88,
+        SpaceGeneralEvadeManeuverChanceCut = 89,
+        SpaceGeneralEvadeManeuverChanceBoost = 90,
+        SpaceGeneralAcquireManeuverChanceSliceback = 91,
+        SpaceGeneralAcquireManeuverChanceStrafeTurn = 92,
+        SpaceGeneralAcquireManeuverChanceAcquire = 93,
+        SpaceGeneralAcquireManeuverChanceTurn = 94,
+        SpaceGeneralDisengageManeuverChance = 95,
+        SpaceGeneralMissileSeekingStrength = 96,
+        SpaceGeneralMinTimeBetweenBoosts = 97,
+        SpaceGeneralCombatStrafing = 98,
+        SpaceGeneralRollsDuringBoost = 99,
+        UnknownCSSG = 100,
+        SpaceGeneralPowerWeighting = 101,
+        SpaceManeuverTypesMaxTime = 102,
+        SpaceManeuverTypesReentryDelays = 103,
+        SpaceRepairDamageThreshold = 104,
+        SpaceRepairFarawayDistance = 105,
+        SpaceRepairPowerToUse = 106,
+        SpaceRepairInClosePowerWeightingTables = 107,
+        SpaceRepairFarawayPowerWeightingTables = 108,
+        SpaceApproachingMinDistance = 109,
+        SpaceApproachingWeighting = 110,
+        SpaceDetectionRating1 = 111,
+        SpaceDetectionRating2 = 112,
+        SpaceDetectionRating3 = 113,
+        Flags = 114,
+        FNAM = 115,
+        TemplateDefaultCombatStyle = 116,
+        Templates = 117,
     }
     #endregion
 
@@ -3433,9 +4759,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 73;
+        public const ushort AdditionalFieldCount = 111;
 
-        public const ushort FieldCount = 80;
+        public const ushort FieldCount = 118;
 
         public static readonly Type MaskType = typeof(CombatStyle.Mask<>);
 
@@ -3529,21 +4855,21 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ICombatStyleInternal item)
         {
             ClearPartial();
-            item.OffensiveMult = default(Single);
-            item.DefensiveMult = default(Single);
-            item.GroupOffensiveMult = default(Single);
+            item.OffensiveMult = default(Percent);
+            item.DefensiveMult = default(Percent);
+            item.GroupOffensiveMult = default(Percent);
             item.EquipmentScoreMultMelee = default(Single);
             item.EquipmentScoreMultMagic = default(Single);
             item.EquipmentScoreMultRanged = default(Single);
             item.EquipmentScoreMultShout = default(Single);
             item.EquipmentScoreMultUnarmed = default(Single);
             item.EquipmentScoreMultStaff = default(Single);
-            item.AvoidThreatChance = default(Single);
-            item.DodgeThreadChance = default(Single);
-            item.EvadeThreatChance = default(Single);
-            item.CSGDUnknownFloat1 = default(Single);
-            item.CSGDUnknownFloat2 = default(Single);
-            item.CSGDUnknownFloat3 = default(Single);
+            item.AvoidThreatChance = default(Percent);
+            item.DodgeThreadChance = default(Percent);
+            item.EvadeThreatChance = default(Percent);
+            item.HealAllyDistance = default(Single);
+            item.JumpCostMult = default(Single);
+            item.TauntDelayMult = default(Single);
             item.MeleeAttackStaggeredMult = default(Single);
             item.MeleePowerAttackStaggeredMult = default(Single);
             item.MeleePowerAttackBlockingMult = default(Single);
@@ -3554,54 +4880,92 @@ namespace Mutagen.Bethesda.Starfield
             item.MeleeSpecialAttackMult = default(Single);
             item.MeleeBlockWhenStaggeredMult = default(Single);
             item.MeleeAttackWhenStaggeredMult = default(Single);
-            item.RangedAccuracyMult = default(Single);
-            item.CSRAUnknownFloat1 = default(Single);
-            item.CSRAUnknownFloat2 = default(Single);
-            item.CSRAUnknownFloat3 = default(Single);
-            item.CSRAUnknownFloat4 = default(Single);
-            item.CSRAUnknownFloat5 = default(Single);
-            item.CloseRangeDuelingCircleMult = default(Single);
-            item.CloseRangeDuelingFallbackMult = default(Single);
-            item.CloseRangeFlankDistance = default(Single);
-            item.CloseRangeFlankingStalkTime = default(Single);
-            item.CloseRangeChargeDistance = default(Single);
-            item.CloseRangeChargingThrowProbability = default(Single);
-            item.CloseRangeChargingSprintFastProbability = default(Single);
-            item.CloseRangeChargingSideswipeProbability = default(Single);
-            item.CloseRangeChargingDisengageProbability = default(Single);
+            item.RangedAccuracyMult = default(Percent);
+            item.RangedThrowMult = default(Percent);
+            item.RangedGrenadeAdvancedThrowingMult = default(Percent);
+            item.RangedGrenadeFlashTargetMult = default(Percent);
+            item.RangedGrenadeThrowAtGroupMult = default(Percent);
+            item.RangedGrenadeCloseRangeAttackChanceMult = default(Percent);
+            item.CloseRangeDuelingCircleMult = default(Percent);
+            item.CloseRangeDuelingFallbackMult = default(Percent);
+            item.CloseRangeFlankDistance = default(Percent);
+            item.CloseRangeFlankingStalkTime = default(Percent);
+            item.CloseRangeChargeDistance = default(Percent);
+            item.CloseRangeChargingThrowProbability = default(Percent);
+            item.CloseRangeChargingSprintFastProbability = default(Percent);
+            item.CloseRangeChargingSideswipeProbability = default(Percent);
+            item.CloseRangeChargingDisengageProbability = default(Percent);
             item.CloseRangeChargingThrowMaxTargets = default(UInt32);
-            item.CloseRangeFlankingVariance = default(Single);
-            item.CSCRUnknownFloat1 = default(Single);
-            item.CSCRUnknownFloat2 = default(Single);
-            item.LongRangeStrafeMult = default(Single);
-            item.LongRangeAdjustRangeMult = default(Single);
-            item.LongRangeCrouchMult = default(Single);
-            item.LongRangeWaitMult = default(Single);
-            item.LongRangeRangeMult = default(Single);
-            item.CSLRUnknownFloat1 = default(Single);
-            item.CSLRUnknownFloat2 = default(Single);
-            item.CSLRUnknownFloat3 = default(Single);
-            item.CSLRUnknownFloat4 = default(Single);
-            item.CoverSearchDistanceMult = default(Single);
-            item.CSCVUnknownFloat1 = default(Single);
-            item.HoverChance = default(Single);
-            item.DiveBombChance = default(Single);
-            item.GroundAttackChance = default(Single);
-            item.HoverTime = default(Single);
-            item.GroundAttackTime = default(Single);
-            item.PerchAttackChance = default(Single);
-            item.PerchAttackTime = default(Single);
-            item.FlyingAttackChance = default(Single);
-            item.CSTN = default;
-            item.CSSG = default;
-            item.CSSM = default;
-            item.CSSR = default;
-            item.CSSA = default;
-            item.CSSD = default;
+            item.CloseRangeFlankingVariance = default(Percent);
+            item.CloseRangeRetreatChance = default(Percent);
+            item.CloseRangeRetreatDistanceMult = default(Percent);
+            item.LongRangeStrafeMult = default(Percent);
+            item.LongRangeAdjustRangeMult = default(Percent);
+            item.LongRangeCrouchMult = default(Percent);
+            item.LongRangeWaitMult = default(Percent);
+            item.LongRangeRangeMult = default(Percent);
+            item.LongRangeProvideSuppressiveFireMult = default(Percent);
+            item.LongRangeRetreatChance = default(Percent);
+            item.LongRangeRetreatHideTimeMult = default(Percent);
+            item.LongRangeRetreatDistanceMult = default(Percent);
+            item.CoverSearchDistanceMult = default(Percent);
+            item.CoverSearchSuppressionSensitivity = default(Percent);
+            item.FlightHoverChance = default(Percent);
+            item.FlightDiveBombChance = default(Percent);
+            item.FlightGroundAttackChance = default(Percent);
+            item.FlightHoverTime = default(Percent);
+            item.FlightGroundAttackTime = default(Percent);
+            item.FlightPerchAttackChance = default(Percent);
+            item.FlightPerchAttackTime = default(Percent);
+            item.FlightFlyingAttackChance = default(Percent);
+            item.TunnelCostMult = default(Single);
+            item.TunnelChance = default(Percent);
+            item.TunnelMaxDistance = default(Single);
+            item.TunnelSpeedMult = default(Single);
+            item.TunnelMinTime = default(Single);
+            item.TunnelMaxTime = default(Single);
+            item.TunnelMaximumTime = default(Single);
+            item.TunnelCooldown = default(Single);
+            item.SpaceGeneralPilotSkill = default(Percent);
+            item.SpaceGeneralAccuracy = default(Percent);
+            item.SpaceGeneralTargetShield = default(Percent);
+            item.SpaceGeneralAdjustment = default(Single);
+            item.SpaceGeneralEngageManeuverChanceDirectAttack = default(Percent);
+            item.SpaceGeneralEngageManeuverChancePass = default(Percent);
+            item.SpaceGeneralEngageManeuverChanceLeadTurn = default(Percent);
+            item.SpaceGeneralEngageManeuverChanceSlideTurn = default(Percent);
+            item.SpaceGeneralEngageManeuverChanceBarrelRoll = default(Percent);
+            item.SpaceGeneralEvadeManeuverChanceBreak = default(Percent);
+            item.SpaceGeneralEvadeManeuverChanceScissors = default(Percent);
+            item.SpaceGeneralEvadeManeuverChanceCut = default(Percent);
+            item.SpaceGeneralEvadeManeuverChanceBoost = default(Percent);
+            item.SpaceGeneralAcquireManeuverChanceSliceback = default(Percent);
+            item.SpaceGeneralAcquireManeuverChanceStrafeTurn = default(Percent);
+            item.SpaceGeneralAcquireManeuverChanceAcquire = default(Percent);
+            item.SpaceGeneralAcquireManeuverChanceTurn = default(Percent);
+            item.SpaceGeneralDisengageManeuverChance = default(Percent);
+            item.SpaceGeneralMissileSeekingStrength = default(Single);
+            item.SpaceGeneralMinTimeBetweenBoosts = default(Single);
+            item.SpaceGeneralCombatStrafing = default(Boolean);
+            item.SpaceGeneralRollsDuringBoost = default(Boolean);
+            item.UnknownCSSG = default(Int16);
+            item.SpaceGeneralPowerWeighting.Clear();
+            item.SpaceManeuverTypesMaxTime.Clear();
+            item.SpaceManeuverTypesReentryDelays.Clear();
+            item.SpaceRepairDamageThreshold = default(Percent);
+            item.SpaceRepairFarawayDistance = default(Percent);
+            item.SpaceRepairPowerToUse = default(Percent);
+            item.SpaceRepairInClosePowerWeightingTables.Clear();
+            item.SpaceRepairFarawayPowerWeightingTables.Clear();
+            item.SpaceApproachingMinDistance = default(Percent);
+            item.SpaceApproachingWeighting.Clear();
+            item.SpaceDetectionRating1 = default(Single);
+            item.SpaceDetectionRating2 = default(Single);
+            item.SpaceDetectionRating3 = default(Single);
             item.Flags = default;
             item.FNAM = default;
-            item.TNAM.Clear();
-            item.UNAM = null;
+            item.TemplateDefaultCombatStyle.Clear();
+            item.Templates = null;
             base.Clear(item);
         }
         
@@ -3619,8 +4983,8 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ICombatStyle obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.TNAM.Relink(mapping);
-            obj.UNAM?.RemapLinks(mapping);
+            obj.TemplateDefaultCombatStyle.Relink(mapping);
+            obj.Templates?.RemapLinks(mapping);
         }
         
         #endregion
@@ -3688,21 +5052,21 @@ namespace Mutagen.Bethesda.Starfield
             CombatStyle.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.OffensiveMult = item.OffensiveMult.EqualsWithin(rhs.OffensiveMult);
-            ret.DefensiveMult = item.DefensiveMult.EqualsWithin(rhs.DefensiveMult);
-            ret.GroupOffensiveMult = item.GroupOffensiveMult.EqualsWithin(rhs.GroupOffensiveMult);
+            ret.OffensiveMult = item.OffensiveMult.Equals(rhs.OffensiveMult);
+            ret.DefensiveMult = item.DefensiveMult.Equals(rhs.DefensiveMult);
+            ret.GroupOffensiveMult = item.GroupOffensiveMult.Equals(rhs.GroupOffensiveMult);
             ret.EquipmentScoreMultMelee = item.EquipmentScoreMultMelee.EqualsWithin(rhs.EquipmentScoreMultMelee);
             ret.EquipmentScoreMultMagic = item.EquipmentScoreMultMagic.EqualsWithin(rhs.EquipmentScoreMultMagic);
             ret.EquipmentScoreMultRanged = item.EquipmentScoreMultRanged.EqualsWithin(rhs.EquipmentScoreMultRanged);
             ret.EquipmentScoreMultShout = item.EquipmentScoreMultShout.EqualsWithin(rhs.EquipmentScoreMultShout);
             ret.EquipmentScoreMultUnarmed = item.EquipmentScoreMultUnarmed.EqualsWithin(rhs.EquipmentScoreMultUnarmed);
             ret.EquipmentScoreMultStaff = item.EquipmentScoreMultStaff.EqualsWithin(rhs.EquipmentScoreMultStaff);
-            ret.AvoidThreatChance = item.AvoidThreatChance.EqualsWithin(rhs.AvoidThreatChance);
-            ret.DodgeThreadChance = item.DodgeThreadChance.EqualsWithin(rhs.DodgeThreadChance);
-            ret.EvadeThreatChance = item.EvadeThreatChance.EqualsWithin(rhs.EvadeThreatChance);
-            ret.CSGDUnknownFloat1 = item.CSGDUnknownFloat1.EqualsWithin(rhs.CSGDUnknownFloat1);
-            ret.CSGDUnknownFloat2 = item.CSGDUnknownFloat2.EqualsWithin(rhs.CSGDUnknownFloat2);
-            ret.CSGDUnknownFloat3 = item.CSGDUnknownFloat3.EqualsWithin(rhs.CSGDUnknownFloat3);
+            ret.AvoidThreatChance = item.AvoidThreatChance.Equals(rhs.AvoidThreatChance);
+            ret.DodgeThreadChance = item.DodgeThreadChance.Equals(rhs.DodgeThreadChance);
+            ret.EvadeThreatChance = item.EvadeThreatChance.Equals(rhs.EvadeThreatChance);
+            ret.HealAllyDistance = item.HealAllyDistance.EqualsWithin(rhs.HealAllyDistance);
+            ret.JumpCostMult = item.JumpCostMult.EqualsWithin(rhs.JumpCostMult);
+            ret.TauntDelayMult = item.TauntDelayMult.EqualsWithin(rhs.TauntDelayMult);
             ret.MeleeAttackStaggeredMult = item.MeleeAttackStaggeredMult.EqualsWithin(rhs.MeleeAttackStaggeredMult);
             ret.MeleePowerAttackStaggeredMult = item.MeleePowerAttackStaggeredMult.EqualsWithin(rhs.MeleePowerAttackStaggeredMult);
             ret.MeleePowerAttackBlockingMult = item.MeleePowerAttackBlockingMult.EqualsWithin(rhs.MeleePowerAttackBlockingMult);
@@ -3713,56 +5077,95 @@ namespace Mutagen.Bethesda.Starfield
             ret.MeleeSpecialAttackMult = item.MeleeSpecialAttackMult.EqualsWithin(rhs.MeleeSpecialAttackMult);
             ret.MeleeBlockWhenStaggeredMult = item.MeleeBlockWhenStaggeredMult.EqualsWithin(rhs.MeleeBlockWhenStaggeredMult);
             ret.MeleeAttackWhenStaggeredMult = item.MeleeAttackWhenStaggeredMult.EqualsWithin(rhs.MeleeAttackWhenStaggeredMult);
-            ret.RangedAccuracyMult = item.RangedAccuracyMult.EqualsWithin(rhs.RangedAccuracyMult);
-            ret.CSRAUnknownFloat1 = item.CSRAUnknownFloat1.EqualsWithin(rhs.CSRAUnknownFloat1);
-            ret.CSRAUnknownFloat2 = item.CSRAUnknownFloat2.EqualsWithin(rhs.CSRAUnknownFloat2);
-            ret.CSRAUnknownFloat3 = item.CSRAUnknownFloat3.EqualsWithin(rhs.CSRAUnknownFloat3);
-            ret.CSRAUnknownFloat4 = item.CSRAUnknownFloat4.EqualsWithin(rhs.CSRAUnknownFloat4);
-            ret.CSRAUnknownFloat5 = item.CSRAUnknownFloat5.EqualsWithin(rhs.CSRAUnknownFloat5);
-            ret.CloseRangeDuelingCircleMult = item.CloseRangeDuelingCircleMult.EqualsWithin(rhs.CloseRangeDuelingCircleMult);
-            ret.CloseRangeDuelingFallbackMult = item.CloseRangeDuelingFallbackMult.EqualsWithin(rhs.CloseRangeDuelingFallbackMult);
-            ret.CloseRangeFlankDistance = item.CloseRangeFlankDistance.EqualsWithin(rhs.CloseRangeFlankDistance);
-            ret.CloseRangeFlankingStalkTime = item.CloseRangeFlankingStalkTime.EqualsWithin(rhs.CloseRangeFlankingStalkTime);
-            ret.CloseRangeChargeDistance = item.CloseRangeChargeDistance.EqualsWithin(rhs.CloseRangeChargeDistance);
-            ret.CloseRangeChargingThrowProbability = item.CloseRangeChargingThrowProbability.EqualsWithin(rhs.CloseRangeChargingThrowProbability);
-            ret.CloseRangeChargingSprintFastProbability = item.CloseRangeChargingSprintFastProbability.EqualsWithin(rhs.CloseRangeChargingSprintFastProbability);
-            ret.CloseRangeChargingSideswipeProbability = item.CloseRangeChargingSideswipeProbability.EqualsWithin(rhs.CloseRangeChargingSideswipeProbability);
-            ret.CloseRangeChargingDisengageProbability = item.CloseRangeChargingDisengageProbability.EqualsWithin(rhs.CloseRangeChargingDisengageProbability);
+            ret.RangedAccuracyMult = item.RangedAccuracyMult.Equals(rhs.RangedAccuracyMult);
+            ret.RangedThrowMult = item.RangedThrowMult.Equals(rhs.RangedThrowMult);
+            ret.RangedGrenadeAdvancedThrowingMult = item.RangedGrenadeAdvancedThrowingMult.Equals(rhs.RangedGrenadeAdvancedThrowingMult);
+            ret.RangedGrenadeFlashTargetMult = item.RangedGrenadeFlashTargetMult.Equals(rhs.RangedGrenadeFlashTargetMult);
+            ret.RangedGrenadeThrowAtGroupMult = item.RangedGrenadeThrowAtGroupMult.Equals(rhs.RangedGrenadeThrowAtGroupMult);
+            ret.RangedGrenadeCloseRangeAttackChanceMult = item.RangedGrenadeCloseRangeAttackChanceMult.Equals(rhs.RangedGrenadeCloseRangeAttackChanceMult);
+            ret.CloseRangeDuelingCircleMult = item.CloseRangeDuelingCircleMult.Equals(rhs.CloseRangeDuelingCircleMult);
+            ret.CloseRangeDuelingFallbackMult = item.CloseRangeDuelingFallbackMult.Equals(rhs.CloseRangeDuelingFallbackMult);
+            ret.CloseRangeFlankDistance = item.CloseRangeFlankDistance.Equals(rhs.CloseRangeFlankDistance);
+            ret.CloseRangeFlankingStalkTime = item.CloseRangeFlankingStalkTime.Equals(rhs.CloseRangeFlankingStalkTime);
+            ret.CloseRangeChargeDistance = item.CloseRangeChargeDistance.Equals(rhs.CloseRangeChargeDistance);
+            ret.CloseRangeChargingThrowProbability = item.CloseRangeChargingThrowProbability.Equals(rhs.CloseRangeChargingThrowProbability);
+            ret.CloseRangeChargingSprintFastProbability = item.CloseRangeChargingSprintFastProbability.Equals(rhs.CloseRangeChargingSprintFastProbability);
+            ret.CloseRangeChargingSideswipeProbability = item.CloseRangeChargingSideswipeProbability.Equals(rhs.CloseRangeChargingSideswipeProbability);
+            ret.CloseRangeChargingDisengageProbability = item.CloseRangeChargingDisengageProbability.Equals(rhs.CloseRangeChargingDisengageProbability);
             ret.CloseRangeChargingThrowMaxTargets = item.CloseRangeChargingThrowMaxTargets == rhs.CloseRangeChargingThrowMaxTargets;
-            ret.CloseRangeFlankingVariance = item.CloseRangeFlankingVariance.EqualsWithin(rhs.CloseRangeFlankingVariance);
-            ret.CSCRUnknownFloat1 = item.CSCRUnknownFloat1.EqualsWithin(rhs.CSCRUnknownFloat1);
-            ret.CSCRUnknownFloat2 = item.CSCRUnknownFloat2.EqualsWithin(rhs.CSCRUnknownFloat2);
-            ret.LongRangeStrafeMult = item.LongRangeStrafeMult.EqualsWithin(rhs.LongRangeStrafeMult);
-            ret.LongRangeAdjustRangeMult = item.LongRangeAdjustRangeMult.EqualsWithin(rhs.LongRangeAdjustRangeMult);
-            ret.LongRangeCrouchMult = item.LongRangeCrouchMult.EqualsWithin(rhs.LongRangeCrouchMult);
-            ret.LongRangeWaitMult = item.LongRangeWaitMult.EqualsWithin(rhs.LongRangeWaitMult);
-            ret.LongRangeRangeMult = item.LongRangeRangeMult.EqualsWithin(rhs.LongRangeRangeMult);
-            ret.CSLRUnknownFloat1 = item.CSLRUnknownFloat1.EqualsWithin(rhs.CSLRUnknownFloat1);
-            ret.CSLRUnknownFloat2 = item.CSLRUnknownFloat2.EqualsWithin(rhs.CSLRUnknownFloat2);
-            ret.CSLRUnknownFloat3 = item.CSLRUnknownFloat3.EqualsWithin(rhs.CSLRUnknownFloat3);
-            ret.CSLRUnknownFloat4 = item.CSLRUnknownFloat4.EqualsWithin(rhs.CSLRUnknownFloat4);
-            ret.CoverSearchDistanceMult = item.CoverSearchDistanceMult.EqualsWithin(rhs.CoverSearchDistanceMult);
-            ret.CSCVUnknownFloat1 = item.CSCVUnknownFloat1.EqualsWithin(rhs.CSCVUnknownFloat1);
-            ret.HoverChance = item.HoverChance.EqualsWithin(rhs.HoverChance);
-            ret.DiveBombChance = item.DiveBombChance.EqualsWithin(rhs.DiveBombChance);
-            ret.GroundAttackChance = item.GroundAttackChance.EqualsWithin(rhs.GroundAttackChance);
-            ret.HoverTime = item.HoverTime.EqualsWithin(rhs.HoverTime);
-            ret.GroundAttackTime = item.GroundAttackTime.EqualsWithin(rhs.GroundAttackTime);
-            ret.PerchAttackChance = item.PerchAttackChance.EqualsWithin(rhs.PerchAttackChance);
-            ret.PerchAttackTime = item.PerchAttackTime.EqualsWithin(rhs.PerchAttackTime);
-            ret.FlyingAttackChance = item.FlyingAttackChance.EqualsWithin(rhs.FlyingAttackChance);
-            ret.CSTN = MemorySliceExt.SequenceEqual(item.CSTN, rhs.CSTN);
-            ret.CSSG = MemorySliceExt.SequenceEqual(item.CSSG, rhs.CSSG);
-            ret.CSSM = MemorySliceExt.SequenceEqual(item.CSSM, rhs.CSSM);
-            ret.CSSR = MemorySliceExt.SequenceEqual(item.CSSR, rhs.CSSR);
-            ret.CSSA = MemorySliceExt.SequenceEqual(item.CSSA, rhs.CSSA);
-            ret.CSSD = MemorySliceExt.SequenceEqual(item.CSSD, rhs.CSSD);
+            ret.CloseRangeFlankingVariance = item.CloseRangeFlankingVariance.Equals(rhs.CloseRangeFlankingVariance);
+            ret.CloseRangeRetreatChance = item.CloseRangeRetreatChance.Equals(rhs.CloseRangeRetreatChance);
+            ret.CloseRangeRetreatDistanceMult = item.CloseRangeRetreatDistanceMult.Equals(rhs.CloseRangeRetreatDistanceMult);
+            ret.LongRangeStrafeMult = item.LongRangeStrafeMult.Equals(rhs.LongRangeStrafeMult);
+            ret.LongRangeAdjustRangeMult = item.LongRangeAdjustRangeMult.Equals(rhs.LongRangeAdjustRangeMult);
+            ret.LongRangeCrouchMult = item.LongRangeCrouchMult.Equals(rhs.LongRangeCrouchMult);
+            ret.LongRangeWaitMult = item.LongRangeWaitMult.Equals(rhs.LongRangeWaitMult);
+            ret.LongRangeRangeMult = item.LongRangeRangeMult.Equals(rhs.LongRangeRangeMult);
+            ret.LongRangeProvideSuppressiveFireMult = item.LongRangeProvideSuppressiveFireMult.Equals(rhs.LongRangeProvideSuppressiveFireMult);
+            ret.LongRangeRetreatChance = item.LongRangeRetreatChance.Equals(rhs.LongRangeRetreatChance);
+            ret.LongRangeRetreatHideTimeMult = item.LongRangeRetreatHideTimeMult.Equals(rhs.LongRangeRetreatHideTimeMult);
+            ret.LongRangeRetreatDistanceMult = item.LongRangeRetreatDistanceMult.Equals(rhs.LongRangeRetreatDistanceMult);
+            ret.CoverSearchDistanceMult = item.CoverSearchDistanceMult.Equals(rhs.CoverSearchDistanceMult);
+            ret.CoverSearchSuppressionSensitivity = item.CoverSearchSuppressionSensitivity.Equals(rhs.CoverSearchSuppressionSensitivity);
+            ret.FlightHoverChance = item.FlightHoverChance.Equals(rhs.FlightHoverChance);
+            ret.FlightDiveBombChance = item.FlightDiveBombChance.Equals(rhs.FlightDiveBombChance);
+            ret.FlightGroundAttackChance = item.FlightGroundAttackChance.Equals(rhs.FlightGroundAttackChance);
+            ret.FlightHoverTime = item.FlightHoverTime.Equals(rhs.FlightHoverTime);
+            ret.FlightGroundAttackTime = item.FlightGroundAttackTime.Equals(rhs.FlightGroundAttackTime);
+            ret.FlightPerchAttackChance = item.FlightPerchAttackChance.Equals(rhs.FlightPerchAttackChance);
+            ret.FlightPerchAttackTime = item.FlightPerchAttackTime.Equals(rhs.FlightPerchAttackTime);
+            ret.FlightFlyingAttackChance = item.FlightFlyingAttackChance.Equals(rhs.FlightFlyingAttackChance);
+            ret.TunnelCostMult = item.TunnelCostMult.EqualsWithin(rhs.TunnelCostMult);
+            ret.TunnelChance = item.TunnelChance.Equals(rhs.TunnelChance);
+            ret.TunnelMaxDistance = item.TunnelMaxDistance.EqualsWithin(rhs.TunnelMaxDistance);
+            ret.TunnelSpeedMult = item.TunnelSpeedMult.EqualsWithin(rhs.TunnelSpeedMult);
+            ret.TunnelMinTime = item.TunnelMinTime.EqualsWithin(rhs.TunnelMinTime);
+            ret.TunnelMaxTime = item.TunnelMaxTime.EqualsWithin(rhs.TunnelMaxTime);
+            ret.TunnelMaximumTime = item.TunnelMaximumTime.EqualsWithin(rhs.TunnelMaximumTime);
+            ret.TunnelCooldown = item.TunnelCooldown.EqualsWithin(rhs.TunnelCooldown);
+            ret.SpaceGeneralPilotSkill = item.SpaceGeneralPilotSkill.Equals(rhs.SpaceGeneralPilotSkill);
+            ret.SpaceGeneralAccuracy = item.SpaceGeneralAccuracy.Equals(rhs.SpaceGeneralAccuracy);
+            ret.SpaceGeneralTargetShield = item.SpaceGeneralTargetShield.Equals(rhs.SpaceGeneralTargetShield);
+            ret.SpaceGeneralAdjustment = item.SpaceGeneralAdjustment.EqualsWithin(rhs.SpaceGeneralAdjustment);
+            ret.SpaceGeneralEngageManeuverChanceDirectAttack = item.SpaceGeneralEngageManeuverChanceDirectAttack.Equals(rhs.SpaceGeneralEngageManeuverChanceDirectAttack);
+            ret.SpaceGeneralEngageManeuverChancePass = item.SpaceGeneralEngageManeuverChancePass.Equals(rhs.SpaceGeneralEngageManeuverChancePass);
+            ret.SpaceGeneralEngageManeuverChanceLeadTurn = item.SpaceGeneralEngageManeuverChanceLeadTurn.Equals(rhs.SpaceGeneralEngageManeuverChanceLeadTurn);
+            ret.SpaceGeneralEngageManeuverChanceSlideTurn = item.SpaceGeneralEngageManeuverChanceSlideTurn.Equals(rhs.SpaceGeneralEngageManeuverChanceSlideTurn);
+            ret.SpaceGeneralEngageManeuverChanceBarrelRoll = item.SpaceGeneralEngageManeuverChanceBarrelRoll.Equals(rhs.SpaceGeneralEngageManeuverChanceBarrelRoll);
+            ret.SpaceGeneralEvadeManeuverChanceBreak = item.SpaceGeneralEvadeManeuverChanceBreak.Equals(rhs.SpaceGeneralEvadeManeuverChanceBreak);
+            ret.SpaceGeneralEvadeManeuverChanceScissors = item.SpaceGeneralEvadeManeuverChanceScissors.Equals(rhs.SpaceGeneralEvadeManeuverChanceScissors);
+            ret.SpaceGeneralEvadeManeuverChanceCut = item.SpaceGeneralEvadeManeuverChanceCut.Equals(rhs.SpaceGeneralEvadeManeuverChanceCut);
+            ret.SpaceGeneralEvadeManeuverChanceBoost = item.SpaceGeneralEvadeManeuverChanceBoost.Equals(rhs.SpaceGeneralEvadeManeuverChanceBoost);
+            ret.SpaceGeneralAcquireManeuverChanceSliceback = item.SpaceGeneralAcquireManeuverChanceSliceback.Equals(rhs.SpaceGeneralAcquireManeuverChanceSliceback);
+            ret.SpaceGeneralAcquireManeuverChanceStrafeTurn = item.SpaceGeneralAcquireManeuverChanceStrafeTurn.Equals(rhs.SpaceGeneralAcquireManeuverChanceStrafeTurn);
+            ret.SpaceGeneralAcquireManeuverChanceAcquire = item.SpaceGeneralAcquireManeuverChanceAcquire.Equals(rhs.SpaceGeneralAcquireManeuverChanceAcquire);
+            ret.SpaceGeneralAcquireManeuverChanceTurn = item.SpaceGeneralAcquireManeuverChanceTurn.Equals(rhs.SpaceGeneralAcquireManeuverChanceTurn);
+            ret.SpaceGeneralDisengageManeuverChance = item.SpaceGeneralDisengageManeuverChance.Equals(rhs.SpaceGeneralDisengageManeuverChance);
+            ret.SpaceGeneralMissileSeekingStrength = item.SpaceGeneralMissileSeekingStrength.EqualsWithin(rhs.SpaceGeneralMissileSeekingStrength);
+            ret.SpaceGeneralMinTimeBetweenBoosts = item.SpaceGeneralMinTimeBetweenBoosts.EqualsWithin(rhs.SpaceGeneralMinTimeBetweenBoosts);
+            ret.SpaceGeneralCombatStrafing = item.SpaceGeneralCombatStrafing == rhs.SpaceGeneralCombatStrafing;
+            ret.SpaceGeneralRollsDuringBoost = item.SpaceGeneralRollsDuringBoost == rhs.SpaceGeneralRollsDuringBoost;
+            ret.UnknownCSSG = item.UnknownCSSG == rhs.UnknownCSSG;
+            ret.SpaceGeneralPowerWeighting = MaskItemExt.Factory(item.SpaceGeneralPowerWeighting.GetEqualsMask(rhs.SpaceGeneralPowerWeighting, include), include);
+            ret.SpaceManeuverTypesMaxTime = MaskItemExt.Factory(item.SpaceManeuverTypesMaxTime.GetEqualsMask(rhs.SpaceManeuverTypesMaxTime, include), include);
+            ret.SpaceManeuverTypesReentryDelays = MaskItemExt.Factory(item.SpaceManeuverTypesReentryDelays.GetEqualsMask(rhs.SpaceManeuverTypesReentryDelays, include), include);
+            ret.SpaceRepairDamageThreshold = item.SpaceRepairDamageThreshold.Equals(rhs.SpaceRepairDamageThreshold);
+            ret.SpaceRepairFarawayDistance = item.SpaceRepairFarawayDistance.Equals(rhs.SpaceRepairFarawayDistance);
+            ret.SpaceRepairPowerToUse = item.SpaceRepairPowerToUse.Equals(rhs.SpaceRepairPowerToUse);
+            ret.SpaceRepairInClosePowerWeightingTables = MaskItemExt.Factory(item.SpaceRepairInClosePowerWeightingTables.GetEqualsMask(rhs.SpaceRepairInClosePowerWeightingTables, include), include);
+            ret.SpaceRepairFarawayPowerWeightingTables = MaskItemExt.Factory(item.SpaceRepairFarawayPowerWeightingTables.GetEqualsMask(rhs.SpaceRepairFarawayPowerWeightingTables, include), include);
+            ret.SpaceApproachingMinDistance = item.SpaceApproachingMinDistance.Equals(rhs.SpaceApproachingMinDistance);
+            ret.SpaceApproachingWeighting = MaskItemExt.Factory(item.SpaceApproachingWeighting.GetEqualsMask(rhs.SpaceApproachingWeighting, include), include);
+            ret.SpaceDetectionRating1 = item.SpaceDetectionRating1.EqualsWithin(rhs.SpaceDetectionRating1);
+            ret.SpaceDetectionRating2 = item.SpaceDetectionRating2.EqualsWithin(rhs.SpaceDetectionRating2);
+            ret.SpaceDetectionRating3 = item.SpaceDetectionRating3.EqualsWithin(rhs.SpaceDetectionRating3);
             ret.Flags = item.Flags == rhs.Flags;
             ret.FNAM = MemorySliceExt.SequenceEqual(item.FNAM, rhs.FNAM);
-            ret.TNAM = item.TNAM.Equals(rhs.TNAM);
-            ret.UNAM = item.UNAM.CollectionEqualsHelper(
-                rhs.UNAM,
-                (l, r) => object.Equals(l, r),
+            ret.TemplateDefaultCombatStyle = item.TemplateDefaultCombatStyle.Equals(rhs.TemplateDefaultCombatStyle);
+            ret.Templates = EqualsMaskHelper.EqualsHelper(
+                item.Templates,
+                rhs.Templates,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -3861,17 +5264,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.EvadeThreatChance, "EvadeThreatChance");
             }
-            if (printMask?.CSGDUnknownFloat1 ?? true)
+            if (printMask?.HealAllyDistance ?? true)
             {
-                sb.AppendItem(item.CSGDUnknownFloat1, "CSGDUnknownFloat1");
+                sb.AppendItem(item.HealAllyDistance, "HealAllyDistance");
             }
-            if (printMask?.CSGDUnknownFloat2 ?? true)
+            if (printMask?.JumpCostMult ?? true)
             {
-                sb.AppendItem(item.CSGDUnknownFloat2, "CSGDUnknownFloat2");
+                sb.AppendItem(item.JumpCostMult, "JumpCostMult");
             }
-            if (printMask?.CSGDUnknownFloat3 ?? true)
+            if (printMask?.TauntDelayMult ?? true)
             {
-                sb.AppendItem(item.CSGDUnknownFloat3, "CSGDUnknownFloat3");
+                sb.AppendItem(item.TauntDelayMult, "TauntDelayMult");
             }
             if (printMask?.MeleeAttackStaggeredMult ?? true)
             {
@@ -3917,25 +5320,25 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.RangedAccuracyMult, "RangedAccuracyMult");
             }
-            if (printMask?.CSRAUnknownFloat1 ?? true)
+            if (printMask?.RangedThrowMult ?? true)
             {
-                sb.AppendItem(item.CSRAUnknownFloat1, "CSRAUnknownFloat1");
+                sb.AppendItem(item.RangedThrowMult, "RangedThrowMult");
             }
-            if (printMask?.CSRAUnknownFloat2 ?? true)
+            if (printMask?.RangedGrenadeAdvancedThrowingMult ?? true)
             {
-                sb.AppendItem(item.CSRAUnknownFloat2, "CSRAUnknownFloat2");
+                sb.AppendItem(item.RangedGrenadeAdvancedThrowingMult, "RangedGrenadeAdvancedThrowingMult");
             }
-            if (printMask?.CSRAUnknownFloat3 ?? true)
+            if (printMask?.RangedGrenadeFlashTargetMult ?? true)
             {
-                sb.AppendItem(item.CSRAUnknownFloat3, "CSRAUnknownFloat3");
+                sb.AppendItem(item.RangedGrenadeFlashTargetMult, "RangedGrenadeFlashTargetMult");
             }
-            if (printMask?.CSRAUnknownFloat4 ?? true)
+            if (printMask?.RangedGrenadeThrowAtGroupMult ?? true)
             {
-                sb.AppendItem(item.CSRAUnknownFloat4, "CSRAUnknownFloat4");
+                sb.AppendItem(item.RangedGrenadeThrowAtGroupMult, "RangedGrenadeThrowAtGroupMult");
             }
-            if (printMask?.CSRAUnknownFloat5 ?? true)
+            if (printMask?.RangedGrenadeCloseRangeAttackChanceMult ?? true)
             {
-                sb.AppendItem(item.CSRAUnknownFloat5, "CSRAUnknownFloat5");
+                sb.AppendItem(item.RangedGrenadeCloseRangeAttackChanceMult, "RangedGrenadeCloseRangeAttackChanceMult");
             }
             if (printMask?.CloseRangeDuelingCircleMult ?? true)
             {
@@ -3981,13 +5384,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.CloseRangeFlankingVariance, "CloseRangeFlankingVariance");
             }
-            if (printMask?.CSCRUnknownFloat1 ?? true)
+            if (printMask?.CloseRangeRetreatChance ?? true)
             {
-                sb.AppendItem(item.CSCRUnknownFloat1, "CSCRUnknownFloat1");
+                sb.AppendItem(item.CloseRangeRetreatChance, "CloseRangeRetreatChance");
             }
-            if (printMask?.CSCRUnknownFloat2 ?? true)
+            if (printMask?.CloseRangeRetreatDistanceMult ?? true)
             {
-                sb.AppendItem(item.CSCRUnknownFloat2, "CSCRUnknownFloat2");
+                sb.AppendItem(item.CloseRangeRetreatDistanceMult, "CloseRangeRetreatDistanceMult");
             }
             if (printMask?.LongRangeStrafeMult ?? true)
             {
@@ -4009,91 +5412,237 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.LongRangeRangeMult, "LongRangeRangeMult");
             }
-            if (printMask?.CSLRUnknownFloat1 ?? true)
+            if (printMask?.LongRangeProvideSuppressiveFireMult ?? true)
             {
-                sb.AppendItem(item.CSLRUnknownFloat1, "CSLRUnknownFloat1");
+                sb.AppendItem(item.LongRangeProvideSuppressiveFireMult, "LongRangeProvideSuppressiveFireMult");
             }
-            if (printMask?.CSLRUnknownFloat2 ?? true)
+            if (printMask?.LongRangeRetreatChance ?? true)
             {
-                sb.AppendItem(item.CSLRUnknownFloat2, "CSLRUnknownFloat2");
+                sb.AppendItem(item.LongRangeRetreatChance, "LongRangeRetreatChance");
             }
-            if (printMask?.CSLRUnknownFloat3 ?? true)
+            if (printMask?.LongRangeRetreatHideTimeMult ?? true)
             {
-                sb.AppendItem(item.CSLRUnknownFloat3, "CSLRUnknownFloat3");
+                sb.AppendItem(item.LongRangeRetreatHideTimeMult, "LongRangeRetreatHideTimeMult");
             }
-            if (printMask?.CSLRUnknownFloat4 ?? true)
+            if (printMask?.LongRangeRetreatDistanceMult ?? true)
             {
-                sb.AppendItem(item.CSLRUnknownFloat4, "CSLRUnknownFloat4");
+                sb.AppendItem(item.LongRangeRetreatDistanceMult, "LongRangeRetreatDistanceMult");
             }
             if (printMask?.CoverSearchDistanceMult ?? true)
             {
                 sb.AppendItem(item.CoverSearchDistanceMult, "CoverSearchDistanceMult");
             }
-            if (printMask?.CSCVUnknownFloat1 ?? true)
+            if (printMask?.CoverSearchSuppressionSensitivity ?? true)
             {
-                sb.AppendItem(item.CSCVUnknownFloat1, "CSCVUnknownFloat1");
+                sb.AppendItem(item.CoverSearchSuppressionSensitivity, "CoverSearchSuppressionSensitivity");
             }
-            if (printMask?.HoverChance ?? true)
+            if (printMask?.FlightHoverChance ?? true)
             {
-                sb.AppendItem(item.HoverChance, "HoverChance");
+                sb.AppendItem(item.FlightHoverChance, "FlightHoverChance");
             }
-            if (printMask?.DiveBombChance ?? true)
+            if (printMask?.FlightDiveBombChance ?? true)
             {
-                sb.AppendItem(item.DiveBombChance, "DiveBombChance");
+                sb.AppendItem(item.FlightDiveBombChance, "FlightDiveBombChance");
             }
-            if (printMask?.GroundAttackChance ?? true)
+            if (printMask?.FlightGroundAttackChance ?? true)
             {
-                sb.AppendItem(item.GroundAttackChance, "GroundAttackChance");
+                sb.AppendItem(item.FlightGroundAttackChance, "FlightGroundAttackChance");
             }
-            if (printMask?.HoverTime ?? true)
+            if (printMask?.FlightHoverTime ?? true)
             {
-                sb.AppendItem(item.HoverTime, "HoverTime");
+                sb.AppendItem(item.FlightHoverTime, "FlightHoverTime");
             }
-            if (printMask?.GroundAttackTime ?? true)
+            if (printMask?.FlightGroundAttackTime ?? true)
             {
-                sb.AppendItem(item.GroundAttackTime, "GroundAttackTime");
+                sb.AppendItem(item.FlightGroundAttackTime, "FlightGroundAttackTime");
             }
-            if (printMask?.PerchAttackChance ?? true)
+            if (printMask?.FlightPerchAttackChance ?? true)
             {
-                sb.AppendItem(item.PerchAttackChance, "PerchAttackChance");
+                sb.AppendItem(item.FlightPerchAttackChance, "FlightPerchAttackChance");
             }
-            if (printMask?.PerchAttackTime ?? true)
+            if (printMask?.FlightPerchAttackTime ?? true)
             {
-                sb.AppendItem(item.PerchAttackTime, "PerchAttackTime");
+                sb.AppendItem(item.FlightPerchAttackTime, "FlightPerchAttackTime");
             }
-            if (printMask?.FlyingAttackChance ?? true)
+            if (printMask?.FlightFlyingAttackChance ?? true)
             {
-                sb.AppendItem(item.FlyingAttackChance, "FlyingAttackChance");
+                sb.AppendItem(item.FlightFlyingAttackChance, "FlightFlyingAttackChance");
             }
-            if ((printMask?.CSTN ?? true)
-                && item.CSTN is {} CSTNItem)
+            if (printMask?.TunnelCostMult ?? true)
             {
-                sb.AppendLine($"CSTN => {SpanExt.ToHexString(CSTNItem)}");
+                sb.AppendItem(item.TunnelCostMult, "TunnelCostMult");
             }
-            if ((printMask?.CSSG ?? true)
-                && item.CSSG is {} CSSGItem)
+            if (printMask?.TunnelChance ?? true)
             {
-                sb.AppendLine($"CSSG => {SpanExt.ToHexString(CSSGItem)}");
+                sb.AppendItem(item.TunnelChance, "TunnelChance");
             }
-            if ((printMask?.CSSM ?? true)
-                && item.CSSM is {} CSSMItem)
+            if (printMask?.TunnelMaxDistance ?? true)
             {
-                sb.AppendLine($"CSSM => {SpanExt.ToHexString(CSSMItem)}");
+                sb.AppendItem(item.TunnelMaxDistance, "TunnelMaxDistance");
             }
-            if ((printMask?.CSSR ?? true)
-                && item.CSSR is {} CSSRItem)
+            if (printMask?.TunnelSpeedMult ?? true)
             {
-                sb.AppendLine($"CSSR => {SpanExt.ToHexString(CSSRItem)}");
+                sb.AppendItem(item.TunnelSpeedMult, "TunnelSpeedMult");
             }
-            if ((printMask?.CSSA ?? true)
-                && item.CSSA is {} CSSAItem)
+            if (printMask?.TunnelMinTime ?? true)
             {
-                sb.AppendLine($"CSSA => {SpanExt.ToHexString(CSSAItem)}");
+                sb.AppendItem(item.TunnelMinTime, "TunnelMinTime");
             }
-            if ((printMask?.CSSD ?? true)
-                && item.CSSD is {} CSSDItem)
+            if (printMask?.TunnelMaxTime ?? true)
             {
-                sb.AppendLine($"CSSD => {SpanExt.ToHexString(CSSDItem)}");
+                sb.AppendItem(item.TunnelMaxTime, "TunnelMaxTime");
+            }
+            if (printMask?.TunnelMaximumTime ?? true)
+            {
+                sb.AppendItem(item.TunnelMaximumTime, "TunnelMaximumTime");
+            }
+            if (printMask?.TunnelCooldown ?? true)
+            {
+                sb.AppendItem(item.TunnelCooldown, "TunnelCooldown");
+            }
+            if (printMask?.SpaceGeneralPilotSkill ?? true)
+            {
+                sb.AppendItem(item.SpaceGeneralPilotSkill, "SpaceGeneralPilotSkill");
+            }
+            if (printMask?.SpaceGeneralAccuracy ?? true)
+            {
+                sb.AppendItem(item.SpaceGeneralAccuracy, "SpaceGeneralAccuracy");
+            }
+            if (printMask?.SpaceGeneralTargetShield ?? true)
+            {
+                sb.AppendItem(item.SpaceGeneralTargetShield, "SpaceGeneralTargetShield");
+            }
+            if (printMask?.SpaceGeneralAdjustment ?? true)
+            {
+                sb.AppendItem(item.SpaceGeneralAdjustment, "SpaceGeneralAdjustment");
+            }
+            if (printMask?.SpaceGeneralEngageManeuverChanceDirectAttack ?? true)
+            {
+                sb.AppendItem(item.SpaceGeneralEngageManeuverChanceDirectAttack, "SpaceGeneralEngageManeuverChanceDirectAttack");
+            }
+            if (printMask?.SpaceGeneralEngageManeuverChancePass ?? true)
+            {
+                sb.AppendItem(item.SpaceGeneralEngageManeuverChancePass, "SpaceGeneralEngageManeuverChancePass");
+            }
+            if (printMask?.SpaceGeneralEngageManeuverChanceLeadTurn ?? true)
+            {
+                sb.AppendItem(item.SpaceGeneralEngageManeuverChanceLeadTurn, "SpaceGeneralEngageManeuverChanceLeadTurn");
+            }
+            if (printMask?.SpaceGeneralEngageManeuverChanceSlideTurn ?? true)
+            {
+                sb.AppendItem(item.SpaceGeneralEngageManeuverChanceSlideTurn, "SpaceGeneralEngageManeuverChanceSlideTurn");
+            }
+            if (printMask?.SpaceGeneralEngageManeuverChanceBarrelRoll ?? true)
+            {
+                sb.AppendItem(item.SpaceGeneralEngageManeuverChanceBarrelRoll, "SpaceGeneralEngageManeuverChanceBarrelRoll");
+            }
+            if (printMask?.SpaceGeneralEvadeManeuverChanceBreak ?? true)
+            {
+                sb.AppendItem(item.SpaceGeneralEvadeManeuverChanceBreak, "SpaceGeneralEvadeManeuverChanceBreak");
+            }
+            if (printMask?.SpaceGeneralEvadeManeuverChanceScissors ?? true)
+            {
+                sb.AppendItem(item.SpaceGeneralEvadeManeuverChanceScissors, "SpaceGeneralEvadeManeuverChanceScissors");
+            }
+            if (printMask?.SpaceGeneralEvadeManeuverChanceCut ?? true)
+            {
+                sb.AppendItem(item.SpaceGeneralEvadeManeuverChanceCut, "SpaceGeneralEvadeManeuverChanceCut");
+            }
+            if (printMask?.SpaceGeneralEvadeManeuverChanceBoost ?? true)
+            {
+                sb.AppendItem(item.SpaceGeneralEvadeManeuverChanceBoost, "SpaceGeneralEvadeManeuverChanceBoost");
+            }
+            if (printMask?.SpaceGeneralAcquireManeuverChanceSliceback ?? true)
+            {
+                sb.AppendItem(item.SpaceGeneralAcquireManeuverChanceSliceback, "SpaceGeneralAcquireManeuverChanceSliceback");
+            }
+            if (printMask?.SpaceGeneralAcquireManeuverChanceStrafeTurn ?? true)
+            {
+                sb.AppendItem(item.SpaceGeneralAcquireManeuverChanceStrafeTurn, "SpaceGeneralAcquireManeuverChanceStrafeTurn");
+            }
+            if (printMask?.SpaceGeneralAcquireManeuverChanceAcquire ?? true)
+            {
+                sb.AppendItem(item.SpaceGeneralAcquireManeuverChanceAcquire, "SpaceGeneralAcquireManeuverChanceAcquire");
+            }
+            if (printMask?.SpaceGeneralAcquireManeuverChanceTurn ?? true)
+            {
+                sb.AppendItem(item.SpaceGeneralAcquireManeuverChanceTurn, "SpaceGeneralAcquireManeuverChanceTurn");
+            }
+            if (printMask?.SpaceGeneralDisengageManeuverChance ?? true)
+            {
+                sb.AppendItem(item.SpaceGeneralDisengageManeuverChance, "SpaceGeneralDisengageManeuverChance");
+            }
+            if (printMask?.SpaceGeneralMissileSeekingStrength ?? true)
+            {
+                sb.AppendItem(item.SpaceGeneralMissileSeekingStrength, "SpaceGeneralMissileSeekingStrength");
+            }
+            if (printMask?.SpaceGeneralMinTimeBetweenBoosts ?? true)
+            {
+                sb.AppendItem(item.SpaceGeneralMinTimeBetweenBoosts, "SpaceGeneralMinTimeBetweenBoosts");
+            }
+            if (printMask?.SpaceGeneralCombatStrafing ?? true)
+            {
+                sb.AppendItem(item.SpaceGeneralCombatStrafing, "SpaceGeneralCombatStrafing");
+            }
+            if (printMask?.SpaceGeneralRollsDuringBoost ?? true)
+            {
+                sb.AppendItem(item.SpaceGeneralRollsDuringBoost, "SpaceGeneralRollsDuringBoost");
+            }
+            if (printMask?.UnknownCSSG ?? true)
+            {
+                sb.AppendItem(item.UnknownCSSG, "UnknownCSSG");
+            }
+            if (printMask?.SpaceGeneralPowerWeighting?.Overall ?? true)
+            {
+                item.SpaceGeneralPowerWeighting?.Print(sb, "SpaceGeneralPowerWeighting");
+            }
+            if (printMask?.SpaceManeuverTypesMaxTime?.Overall ?? true)
+            {
+                item.SpaceManeuverTypesMaxTime?.Print(sb, "SpaceManeuverTypesMaxTime");
+            }
+            if (printMask?.SpaceManeuverTypesReentryDelays?.Overall ?? true)
+            {
+                item.SpaceManeuverTypesReentryDelays?.Print(sb, "SpaceManeuverTypesReentryDelays");
+            }
+            if (printMask?.SpaceRepairDamageThreshold ?? true)
+            {
+                sb.AppendItem(item.SpaceRepairDamageThreshold, "SpaceRepairDamageThreshold");
+            }
+            if (printMask?.SpaceRepairFarawayDistance ?? true)
+            {
+                sb.AppendItem(item.SpaceRepairFarawayDistance, "SpaceRepairFarawayDistance");
+            }
+            if (printMask?.SpaceRepairPowerToUse ?? true)
+            {
+                sb.AppendItem(item.SpaceRepairPowerToUse, "SpaceRepairPowerToUse");
+            }
+            if (printMask?.SpaceRepairInClosePowerWeightingTables?.Overall ?? true)
+            {
+                item.SpaceRepairInClosePowerWeightingTables?.Print(sb, "SpaceRepairInClosePowerWeightingTables");
+            }
+            if (printMask?.SpaceRepairFarawayPowerWeightingTables?.Overall ?? true)
+            {
+                item.SpaceRepairFarawayPowerWeightingTables?.Print(sb, "SpaceRepairFarawayPowerWeightingTables");
+            }
+            if (printMask?.SpaceApproachingMinDistance ?? true)
+            {
+                sb.AppendItem(item.SpaceApproachingMinDistance, "SpaceApproachingMinDistance");
+            }
+            if (printMask?.SpaceApproachingWeighting?.Overall ?? true)
+            {
+                item.SpaceApproachingWeighting?.Print(sb, "SpaceApproachingWeighting");
+            }
+            if (printMask?.SpaceDetectionRating1 ?? true)
+            {
+                sb.AppendItem(item.SpaceDetectionRating1, "SpaceDetectionRating1");
+            }
+            if (printMask?.SpaceDetectionRating2 ?? true)
+            {
+                sb.AppendItem(item.SpaceDetectionRating2, "SpaceDetectionRating2");
+            }
+            if (printMask?.SpaceDetectionRating3 ?? true)
+            {
+                sb.AppendItem(item.SpaceDetectionRating3, "SpaceDetectionRating3");
             }
             if ((printMask?.Flags ?? true)
                 && item.Flags is {} FlagsItem)
@@ -4105,24 +5654,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
             }
-            if (printMask?.TNAM ?? true)
+            if (printMask?.TemplateDefaultCombatStyle ?? true)
             {
-                sb.AppendItem(item.TNAM.FormKeyNullable, "TNAM");
+                sb.AppendItem(item.TemplateDefaultCombatStyle.FormKeyNullable, "TemplateDefaultCombatStyle");
             }
-            if ((printMask?.UNAM?.Overall ?? true)
-                && item.UNAM is {} UNAMItem)
+            if ((printMask?.Templates?.Overall ?? true)
+                && item.Templates is {} TemplatesItem)
             {
-                sb.AppendLine("UNAM =>");
-                using (sb.Brace())
-                {
-                    foreach (var subItem in UNAMItem)
-                    {
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(subItem.FormKey);
-                        }
-                    }
-                }
+                TemplatesItem?.Print(sb, "Templates");
             }
         }
         
@@ -4176,15 +5715,15 @@ namespace Mutagen.Bethesda.Starfield
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.OffensiveMult) ?? true))
             {
-                if (!lhs.OffensiveMult.EqualsWithin(rhs.OffensiveMult)) return false;
+                if (!lhs.OffensiveMult.Equals(rhs.OffensiveMult)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DefensiveMult) ?? true))
             {
-                if (!lhs.DefensiveMult.EqualsWithin(rhs.DefensiveMult)) return false;
+                if (!lhs.DefensiveMult.Equals(rhs.DefensiveMult)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.GroupOffensiveMult) ?? true))
             {
-                if (!lhs.GroupOffensiveMult.EqualsWithin(rhs.GroupOffensiveMult)) return false;
+                if (!lhs.GroupOffensiveMult.Equals(rhs.GroupOffensiveMult)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultMelee) ?? true))
             {
@@ -4212,27 +5751,27 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.AvoidThreatChance) ?? true))
             {
-                if (!lhs.AvoidThreatChance.EqualsWithin(rhs.AvoidThreatChance)) return false;
+                if (!lhs.AvoidThreatChance.Equals(rhs.AvoidThreatChance)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DodgeThreadChance) ?? true))
             {
-                if (!lhs.DodgeThreadChance.EqualsWithin(rhs.DodgeThreadChance)) return false;
+                if (!lhs.DodgeThreadChance.Equals(rhs.DodgeThreadChance)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.EvadeThreatChance) ?? true))
             {
-                if (!lhs.EvadeThreatChance.EqualsWithin(rhs.EvadeThreatChance)) return false;
+                if (!lhs.EvadeThreatChance.Equals(rhs.EvadeThreatChance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSGDUnknownFloat1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HealAllyDistance) ?? true))
             {
-                if (!lhs.CSGDUnknownFloat1.EqualsWithin(rhs.CSGDUnknownFloat1)) return false;
+                if (!lhs.HealAllyDistance.EqualsWithin(rhs.HealAllyDistance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSGDUnknownFloat2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.JumpCostMult) ?? true))
             {
-                if (!lhs.CSGDUnknownFloat2.EqualsWithin(rhs.CSGDUnknownFloat2)) return false;
+                if (!lhs.JumpCostMult.EqualsWithin(rhs.JumpCostMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSGDUnknownFloat3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.TauntDelayMult) ?? true))
             {
-                if (!lhs.CSGDUnknownFloat3.EqualsWithin(rhs.CSGDUnknownFloat3)) return false;
+                if (!lhs.TauntDelayMult.EqualsWithin(rhs.TauntDelayMult)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeAttackStaggeredMult) ?? true))
             {
@@ -4276,63 +5815,63 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangedAccuracyMult) ?? true))
             {
-                if (!lhs.RangedAccuracyMult.EqualsWithin(rhs.RangedAccuracyMult)) return false;
+                if (!lhs.RangedAccuracyMult.Equals(rhs.RangedAccuracyMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSRAUnknownFloat1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangedThrowMult) ?? true))
             {
-                if (!lhs.CSRAUnknownFloat1.EqualsWithin(rhs.CSRAUnknownFloat1)) return false;
+                if (!lhs.RangedThrowMult.Equals(rhs.RangedThrowMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSRAUnknownFloat2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangedGrenadeAdvancedThrowingMult) ?? true))
             {
-                if (!lhs.CSRAUnknownFloat2.EqualsWithin(rhs.CSRAUnknownFloat2)) return false;
+                if (!lhs.RangedGrenadeAdvancedThrowingMult.Equals(rhs.RangedGrenadeAdvancedThrowingMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSRAUnknownFloat3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangedGrenadeFlashTargetMult) ?? true))
             {
-                if (!lhs.CSRAUnknownFloat3.EqualsWithin(rhs.CSRAUnknownFloat3)) return false;
+                if (!lhs.RangedGrenadeFlashTargetMult.Equals(rhs.RangedGrenadeFlashTargetMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSRAUnknownFloat4) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangedGrenadeThrowAtGroupMult) ?? true))
             {
-                if (!lhs.CSRAUnknownFloat4.EqualsWithin(rhs.CSRAUnknownFloat4)) return false;
+                if (!lhs.RangedGrenadeThrowAtGroupMult.Equals(rhs.RangedGrenadeThrowAtGroupMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSRAUnknownFloat5) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangedGrenadeCloseRangeAttackChanceMult) ?? true))
             {
-                if (!lhs.CSRAUnknownFloat5.EqualsWithin(rhs.CSRAUnknownFloat5)) return false;
+                if (!lhs.RangedGrenadeCloseRangeAttackChanceMult.Equals(rhs.RangedGrenadeCloseRangeAttackChanceMult)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeDuelingCircleMult) ?? true))
             {
-                if (!lhs.CloseRangeDuelingCircleMult.EqualsWithin(rhs.CloseRangeDuelingCircleMult)) return false;
+                if (!lhs.CloseRangeDuelingCircleMult.Equals(rhs.CloseRangeDuelingCircleMult)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeDuelingFallbackMult) ?? true))
             {
-                if (!lhs.CloseRangeDuelingFallbackMult.EqualsWithin(rhs.CloseRangeDuelingFallbackMult)) return false;
+                if (!lhs.CloseRangeDuelingFallbackMult.Equals(rhs.CloseRangeDuelingFallbackMult)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeFlankDistance) ?? true))
             {
-                if (!lhs.CloseRangeFlankDistance.EqualsWithin(rhs.CloseRangeFlankDistance)) return false;
+                if (!lhs.CloseRangeFlankDistance.Equals(rhs.CloseRangeFlankDistance)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeFlankingStalkTime) ?? true))
             {
-                if (!lhs.CloseRangeFlankingStalkTime.EqualsWithin(rhs.CloseRangeFlankingStalkTime)) return false;
+                if (!lhs.CloseRangeFlankingStalkTime.Equals(rhs.CloseRangeFlankingStalkTime)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargeDistance) ?? true))
             {
-                if (!lhs.CloseRangeChargeDistance.EqualsWithin(rhs.CloseRangeChargeDistance)) return false;
+                if (!lhs.CloseRangeChargeDistance.Equals(rhs.CloseRangeChargeDistance)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargingThrowProbability) ?? true))
             {
-                if (!lhs.CloseRangeChargingThrowProbability.EqualsWithin(rhs.CloseRangeChargingThrowProbability)) return false;
+                if (!lhs.CloseRangeChargingThrowProbability.Equals(rhs.CloseRangeChargingThrowProbability)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargingSprintFastProbability) ?? true))
             {
-                if (!lhs.CloseRangeChargingSprintFastProbability.EqualsWithin(rhs.CloseRangeChargingSprintFastProbability)) return false;
+                if (!lhs.CloseRangeChargingSprintFastProbability.Equals(rhs.CloseRangeChargingSprintFastProbability)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargingSideswipeProbability) ?? true))
             {
-                if (!lhs.CloseRangeChargingSideswipeProbability.EqualsWithin(rhs.CloseRangeChargingSideswipeProbability)) return false;
+                if (!lhs.CloseRangeChargingSideswipeProbability.Equals(rhs.CloseRangeChargingSideswipeProbability)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargingDisengageProbability) ?? true))
             {
-                if (!lhs.CloseRangeChargingDisengageProbability.EqualsWithin(rhs.CloseRangeChargingDisengageProbability)) return false;
+                if (!lhs.CloseRangeChargingDisengageProbability.Equals(rhs.CloseRangeChargingDisengageProbability)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeChargingThrowMaxTargets) ?? true))
             {
@@ -4340,115 +5879,291 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeFlankingVariance) ?? true))
             {
-                if (!lhs.CloseRangeFlankingVariance.EqualsWithin(rhs.CloseRangeFlankingVariance)) return false;
+                if (!lhs.CloseRangeFlankingVariance.Equals(rhs.CloseRangeFlankingVariance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSCRUnknownFloat1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeRetreatChance) ?? true))
             {
-                if (!lhs.CSCRUnknownFloat1.EqualsWithin(rhs.CSCRUnknownFloat1)) return false;
+                if (!lhs.CloseRangeRetreatChance.Equals(rhs.CloseRangeRetreatChance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSCRUnknownFloat2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeRetreatDistanceMult) ?? true))
             {
-                if (!lhs.CSCRUnknownFloat2.EqualsWithin(rhs.CSCRUnknownFloat2)) return false;
+                if (!lhs.CloseRangeRetreatDistanceMult.Equals(rhs.CloseRangeRetreatDistanceMult)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeStrafeMult) ?? true))
             {
-                if (!lhs.LongRangeStrafeMult.EqualsWithin(rhs.LongRangeStrafeMult)) return false;
+                if (!lhs.LongRangeStrafeMult.Equals(rhs.LongRangeStrafeMult)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeAdjustRangeMult) ?? true))
             {
-                if (!lhs.LongRangeAdjustRangeMult.EqualsWithin(rhs.LongRangeAdjustRangeMult)) return false;
+                if (!lhs.LongRangeAdjustRangeMult.Equals(rhs.LongRangeAdjustRangeMult)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeCrouchMult) ?? true))
             {
-                if (!lhs.LongRangeCrouchMult.EqualsWithin(rhs.LongRangeCrouchMult)) return false;
+                if (!lhs.LongRangeCrouchMult.Equals(rhs.LongRangeCrouchMult)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeWaitMult) ?? true))
             {
-                if (!lhs.LongRangeWaitMult.EqualsWithin(rhs.LongRangeWaitMult)) return false;
+                if (!lhs.LongRangeWaitMult.Equals(rhs.LongRangeWaitMult)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeRangeMult) ?? true))
             {
-                if (!lhs.LongRangeRangeMult.EqualsWithin(rhs.LongRangeRangeMult)) return false;
+                if (!lhs.LongRangeRangeMult.Equals(rhs.LongRangeRangeMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSLRUnknownFloat1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeProvideSuppressiveFireMult) ?? true))
             {
-                if (!lhs.CSLRUnknownFloat1.EqualsWithin(rhs.CSLRUnknownFloat1)) return false;
+                if (!lhs.LongRangeProvideSuppressiveFireMult.Equals(rhs.LongRangeProvideSuppressiveFireMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSLRUnknownFloat2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeRetreatChance) ?? true))
             {
-                if (!lhs.CSLRUnknownFloat2.EqualsWithin(rhs.CSLRUnknownFloat2)) return false;
+                if (!lhs.LongRangeRetreatChance.Equals(rhs.LongRangeRetreatChance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSLRUnknownFloat3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeRetreatHideTimeMult) ?? true))
             {
-                if (!lhs.CSLRUnknownFloat3.EqualsWithin(rhs.CSLRUnknownFloat3)) return false;
+                if (!lhs.LongRangeRetreatHideTimeMult.Equals(rhs.LongRangeRetreatHideTimeMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSLRUnknownFloat4) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeRetreatDistanceMult) ?? true))
             {
-                if (!lhs.CSLRUnknownFloat4.EqualsWithin(rhs.CSLRUnknownFloat4)) return false;
+                if (!lhs.LongRangeRetreatDistanceMult.Equals(rhs.LongRangeRetreatDistanceMult)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CoverSearchDistanceMult) ?? true))
             {
-                if (!lhs.CoverSearchDistanceMult.EqualsWithin(rhs.CoverSearchDistanceMult)) return false;
+                if (!lhs.CoverSearchDistanceMult.Equals(rhs.CoverSearchDistanceMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSCVUnknownFloat1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CoverSearchSuppressionSensitivity) ?? true))
             {
-                if (!lhs.CSCVUnknownFloat1.EqualsWithin(rhs.CSCVUnknownFloat1)) return false;
+                if (!lhs.CoverSearchSuppressionSensitivity.Equals(rhs.CoverSearchSuppressionSensitivity)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HoverChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.FlightHoverChance) ?? true))
             {
-                if (!lhs.HoverChance.EqualsWithin(rhs.HoverChance)) return false;
+                if (!lhs.FlightHoverChance.Equals(rhs.FlightHoverChance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DiveBombChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.FlightDiveBombChance) ?? true))
             {
-                if (!lhs.DiveBombChance.EqualsWithin(rhs.DiveBombChance)) return false;
+                if (!lhs.FlightDiveBombChance.Equals(rhs.FlightDiveBombChance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.GroundAttackChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.FlightGroundAttackChance) ?? true))
             {
-                if (!lhs.GroundAttackChance.EqualsWithin(rhs.GroundAttackChance)) return false;
+                if (!lhs.FlightGroundAttackChance.Equals(rhs.FlightGroundAttackChance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HoverTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.FlightHoverTime) ?? true))
             {
-                if (!lhs.HoverTime.EqualsWithin(rhs.HoverTime)) return false;
+                if (!lhs.FlightHoverTime.Equals(rhs.FlightHoverTime)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.GroundAttackTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.FlightGroundAttackTime) ?? true))
             {
-                if (!lhs.GroundAttackTime.EqualsWithin(rhs.GroundAttackTime)) return false;
+                if (!lhs.FlightGroundAttackTime.Equals(rhs.FlightGroundAttackTime)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PerchAttackChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.FlightPerchAttackChance) ?? true))
             {
-                if (!lhs.PerchAttackChance.EqualsWithin(rhs.PerchAttackChance)) return false;
+                if (!lhs.FlightPerchAttackChance.Equals(rhs.FlightPerchAttackChance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PerchAttackTime) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.FlightPerchAttackTime) ?? true))
             {
-                if (!lhs.PerchAttackTime.EqualsWithin(rhs.PerchAttackTime)) return false;
+                if (!lhs.FlightPerchAttackTime.Equals(rhs.FlightPerchAttackTime)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.FlyingAttackChance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.FlightFlyingAttackChance) ?? true))
             {
-                if (!lhs.FlyingAttackChance.EqualsWithin(rhs.FlyingAttackChance)) return false;
+                if (!lhs.FlightFlyingAttackChance.Equals(rhs.FlightFlyingAttackChance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSTN) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.TunnelCostMult) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.CSTN, rhs.CSTN)) return false;
+                if (!lhs.TunnelCostMult.EqualsWithin(rhs.TunnelCostMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSSG) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.TunnelChance) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.CSSG, rhs.CSSG)) return false;
+                if (!lhs.TunnelChance.Equals(rhs.TunnelChance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSSM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.TunnelMaxDistance) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.CSSM, rhs.CSSM)) return false;
+                if (!lhs.TunnelMaxDistance.EqualsWithin(rhs.TunnelMaxDistance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSSR) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.TunnelSpeedMult) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.CSSR, rhs.CSSR)) return false;
+                if (!lhs.TunnelSpeedMult.EqualsWithin(rhs.TunnelSpeedMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSSA) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.TunnelMinTime) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.CSSA, rhs.CSSA)) return false;
+                if (!lhs.TunnelMinTime.EqualsWithin(rhs.TunnelMinTime)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSSD) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.TunnelMaxTime) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.CSSD, rhs.CSSD)) return false;
+                if (!lhs.TunnelMaxTime.EqualsWithin(rhs.TunnelMaxTime)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.TunnelMaximumTime) ?? true))
+            {
+                if (!lhs.TunnelMaximumTime.EqualsWithin(rhs.TunnelMaximumTime)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.TunnelCooldown) ?? true))
+            {
+                if (!lhs.TunnelCooldown.EqualsWithin(rhs.TunnelCooldown)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralPilotSkill) ?? true))
+            {
+                if (!lhs.SpaceGeneralPilotSkill.Equals(rhs.SpaceGeneralPilotSkill)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralAccuracy) ?? true))
+            {
+                if (!lhs.SpaceGeneralAccuracy.Equals(rhs.SpaceGeneralAccuracy)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralTargetShield) ?? true))
+            {
+                if (!lhs.SpaceGeneralTargetShield.Equals(rhs.SpaceGeneralTargetShield)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralAdjustment) ?? true))
+            {
+                if (!lhs.SpaceGeneralAdjustment.EqualsWithin(rhs.SpaceGeneralAdjustment)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralEngageManeuverChanceDirectAttack) ?? true))
+            {
+                if (!lhs.SpaceGeneralEngageManeuverChanceDirectAttack.Equals(rhs.SpaceGeneralEngageManeuverChanceDirectAttack)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralEngageManeuverChancePass) ?? true))
+            {
+                if (!lhs.SpaceGeneralEngageManeuverChancePass.Equals(rhs.SpaceGeneralEngageManeuverChancePass)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralEngageManeuverChanceLeadTurn) ?? true))
+            {
+                if (!lhs.SpaceGeneralEngageManeuverChanceLeadTurn.Equals(rhs.SpaceGeneralEngageManeuverChanceLeadTurn)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralEngageManeuverChanceSlideTurn) ?? true))
+            {
+                if (!lhs.SpaceGeneralEngageManeuverChanceSlideTurn.Equals(rhs.SpaceGeneralEngageManeuverChanceSlideTurn)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralEngageManeuverChanceBarrelRoll) ?? true))
+            {
+                if (!lhs.SpaceGeneralEngageManeuverChanceBarrelRoll.Equals(rhs.SpaceGeneralEngageManeuverChanceBarrelRoll)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralEvadeManeuverChanceBreak) ?? true))
+            {
+                if (!lhs.SpaceGeneralEvadeManeuverChanceBreak.Equals(rhs.SpaceGeneralEvadeManeuverChanceBreak)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralEvadeManeuverChanceScissors) ?? true))
+            {
+                if (!lhs.SpaceGeneralEvadeManeuverChanceScissors.Equals(rhs.SpaceGeneralEvadeManeuverChanceScissors)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralEvadeManeuverChanceCut) ?? true))
+            {
+                if (!lhs.SpaceGeneralEvadeManeuverChanceCut.Equals(rhs.SpaceGeneralEvadeManeuverChanceCut)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralEvadeManeuverChanceBoost) ?? true))
+            {
+                if (!lhs.SpaceGeneralEvadeManeuverChanceBoost.Equals(rhs.SpaceGeneralEvadeManeuverChanceBoost)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralAcquireManeuverChanceSliceback) ?? true))
+            {
+                if (!lhs.SpaceGeneralAcquireManeuverChanceSliceback.Equals(rhs.SpaceGeneralAcquireManeuverChanceSliceback)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralAcquireManeuverChanceStrafeTurn) ?? true))
+            {
+                if (!lhs.SpaceGeneralAcquireManeuverChanceStrafeTurn.Equals(rhs.SpaceGeneralAcquireManeuverChanceStrafeTurn)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralAcquireManeuverChanceAcquire) ?? true))
+            {
+                if (!lhs.SpaceGeneralAcquireManeuverChanceAcquire.Equals(rhs.SpaceGeneralAcquireManeuverChanceAcquire)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralAcquireManeuverChanceTurn) ?? true))
+            {
+                if (!lhs.SpaceGeneralAcquireManeuverChanceTurn.Equals(rhs.SpaceGeneralAcquireManeuverChanceTurn)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralDisengageManeuverChance) ?? true))
+            {
+                if (!lhs.SpaceGeneralDisengageManeuverChance.Equals(rhs.SpaceGeneralDisengageManeuverChance)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralMissileSeekingStrength) ?? true))
+            {
+                if (!lhs.SpaceGeneralMissileSeekingStrength.EqualsWithin(rhs.SpaceGeneralMissileSeekingStrength)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralMinTimeBetweenBoosts) ?? true))
+            {
+                if (!lhs.SpaceGeneralMinTimeBetweenBoosts.EqualsWithin(rhs.SpaceGeneralMinTimeBetweenBoosts)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralCombatStrafing) ?? true))
+            {
+                if (lhs.SpaceGeneralCombatStrafing != rhs.SpaceGeneralCombatStrafing) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralRollsDuringBoost) ?? true))
+            {
+                if (lhs.SpaceGeneralRollsDuringBoost != rhs.SpaceGeneralRollsDuringBoost) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.UnknownCSSG) ?? true))
+            {
+                if (lhs.UnknownCSSG != rhs.UnknownCSSG) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralPowerWeighting) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.SpaceGeneralPowerWeighting, rhs.SpaceGeneralPowerWeighting, out var lhsSpaceGeneralPowerWeighting, out var rhsSpaceGeneralPowerWeighting, out var isSpaceGeneralPowerWeightingEqual))
+                {
+                    if (!((CombatStylePowerWeightingCommon)((ICombatStylePowerWeightingGetter)lhsSpaceGeneralPowerWeighting).CommonInstance()!).Equals(lhsSpaceGeneralPowerWeighting, rhsSpaceGeneralPowerWeighting, equalsMask?.GetSubCrystal((int)CombatStyle_FieldIndex.SpaceGeneralPowerWeighting))) return false;
+                }
+                else if (!isSpaceGeneralPowerWeightingEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceManeuverTypesMaxTime) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.SpaceManeuverTypesMaxTime, rhs.SpaceManeuverTypesMaxTime, out var lhsSpaceManeuverTypesMaxTime, out var rhsSpaceManeuverTypesMaxTime, out var isSpaceManeuverTypesMaxTimeEqual))
+                {
+                    if (!((CombatStyleManeuverTimingCommon)((ICombatStyleManeuverTimingGetter)lhsSpaceManeuverTypesMaxTime).CommonInstance()!).Equals(lhsSpaceManeuverTypesMaxTime, rhsSpaceManeuverTypesMaxTime, equalsMask?.GetSubCrystal((int)CombatStyle_FieldIndex.SpaceManeuverTypesMaxTime))) return false;
+                }
+                else if (!isSpaceManeuverTypesMaxTimeEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceManeuverTypesReentryDelays) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.SpaceManeuverTypesReentryDelays, rhs.SpaceManeuverTypesReentryDelays, out var lhsSpaceManeuverTypesReentryDelays, out var rhsSpaceManeuverTypesReentryDelays, out var isSpaceManeuverTypesReentryDelaysEqual))
+                {
+                    if (!((CombatStyleManeuverTimingCommon)((ICombatStyleManeuverTimingGetter)lhsSpaceManeuverTypesReentryDelays).CommonInstance()!).Equals(lhsSpaceManeuverTypesReentryDelays, rhsSpaceManeuverTypesReentryDelays, equalsMask?.GetSubCrystal((int)CombatStyle_FieldIndex.SpaceManeuverTypesReentryDelays))) return false;
+                }
+                else if (!isSpaceManeuverTypesReentryDelaysEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceRepairDamageThreshold) ?? true))
+            {
+                if (!lhs.SpaceRepairDamageThreshold.Equals(rhs.SpaceRepairDamageThreshold)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceRepairFarawayDistance) ?? true))
+            {
+                if (!lhs.SpaceRepairFarawayDistance.Equals(rhs.SpaceRepairFarawayDistance)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceRepairPowerToUse) ?? true))
+            {
+                if (!lhs.SpaceRepairPowerToUse.Equals(rhs.SpaceRepairPowerToUse)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceRepairInClosePowerWeightingTables) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.SpaceRepairInClosePowerWeightingTables, rhs.SpaceRepairInClosePowerWeightingTables, out var lhsSpaceRepairInClosePowerWeightingTables, out var rhsSpaceRepairInClosePowerWeightingTables, out var isSpaceRepairInClosePowerWeightingTablesEqual))
+                {
+                    if (!((CombatStylePowerWeightingCommon)((ICombatStylePowerWeightingGetter)lhsSpaceRepairInClosePowerWeightingTables).CommonInstance()!).Equals(lhsSpaceRepairInClosePowerWeightingTables, rhsSpaceRepairInClosePowerWeightingTables, equalsMask?.GetSubCrystal((int)CombatStyle_FieldIndex.SpaceRepairInClosePowerWeightingTables))) return false;
+                }
+                else if (!isSpaceRepairInClosePowerWeightingTablesEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceRepairFarawayPowerWeightingTables) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.SpaceRepairFarawayPowerWeightingTables, rhs.SpaceRepairFarawayPowerWeightingTables, out var lhsSpaceRepairFarawayPowerWeightingTables, out var rhsSpaceRepairFarawayPowerWeightingTables, out var isSpaceRepairFarawayPowerWeightingTablesEqual))
+                {
+                    if (!((CombatStylePowerWeightingCommon)((ICombatStylePowerWeightingGetter)lhsSpaceRepairFarawayPowerWeightingTables).CommonInstance()!).Equals(lhsSpaceRepairFarawayPowerWeightingTables, rhsSpaceRepairFarawayPowerWeightingTables, equalsMask?.GetSubCrystal((int)CombatStyle_FieldIndex.SpaceRepairFarawayPowerWeightingTables))) return false;
+                }
+                else if (!isSpaceRepairFarawayPowerWeightingTablesEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceApproachingMinDistance) ?? true))
+            {
+                if (!lhs.SpaceApproachingMinDistance.Equals(rhs.SpaceApproachingMinDistance)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceApproachingWeighting) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.SpaceApproachingWeighting, rhs.SpaceApproachingWeighting, out var lhsSpaceApproachingWeighting, out var rhsSpaceApproachingWeighting, out var isSpaceApproachingWeightingEqual))
+                {
+                    if (!((CombatStylePowerWeightingCommon)((ICombatStylePowerWeightingGetter)lhsSpaceApproachingWeighting).CommonInstance()!).Equals(lhsSpaceApproachingWeighting, rhsSpaceApproachingWeighting, equalsMask?.GetSubCrystal((int)CombatStyle_FieldIndex.SpaceApproachingWeighting))) return false;
+                }
+                else if (!isSpaceApproachingWeightingEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceDetectionRating1) ?? true))
+            {
+                if (!lhs.SpaceDetectionRating1.EqualsWithin(rhs.SpaceDetectionRating1)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceDetectionRating2) ?? true))
+            {
+                if (!lhs.SpaceDetectionRating2.EqualsWithin(rhs.SpaceDetectionRating2)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceDetectionRating3) ?? true))
+            {
+                if (!lhs.SpaceDetectionRating3.EqualsWithin(rhs.SpaceDetectionRating3)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Flags) ?? true))
             {
@@ -4458,13 +6173,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.FNAM, rhs.FNAM)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.TNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.TemplateDefaultCombatStyle) ?? true))
             {
-                if (!lhs.TNAM.Equals(rhs.TNAM)) return false;
+                if (!lhs.TemplateDefaultCombatStyle.Equals(rhs.TemplateDefaultCombatStyle)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.UNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Templates) ?? true))
             {
-                if (!lhs.UNAM.SequenceEqualNullable(rhs.UNAM)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Templates, rhs.Templates, out var lhsTemplates, out var rhsTemplates, out var isTemplatesEqual))
+                {
+                    if (!((CombatStyleTemplatesCommon)((ICombatStyleTemplatesGetter)lhsTemplates).CommonInstance()!).Equals(lhsTemplates, rhsTemplates, equalsMask?.GetSubCrystal((int)CombatStyle_FieldIndex.Templates))) return false;
+                }
+                else if (!isTemplatesEqual) return false;
             }
             return true;
         }
@@ -4506,9 +6225,9 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.AvoidThreatChance);
             hash.Add(item.DodgeThreadChance);
             hash.Add(item.EvadeThreatChance);
-            hash.Add(item.CSGDUnknownFloat1);
-            hash.Add(item.CSGDUnknownFloat2);
-            hash.Add(item.CSGDUnknownFloat3);
+            hash.Add(item.HealAllyDistance);
+            hash.Add(item.JumpCostMult);
+            hash.Add(item.TauntDelayMult);
             hash.Add(item.MeleeAttackStaggeredMult);
             hash.Add(item.MeleePowerAttackStaggeredMult);
             hash.Add(item.MeleePowerAttackBlockingMult);
@@ -4520,11 +6239,11 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.MeleeBlockWhenStaggeredMult);
             hash.Add(item.MeleeAttackWhenStaggeredMult);
             hash.Add(item.RangedAccuracyMult);
-            hash.Add(item.CSRAUnknownFloat1);
-            hash.Add(item.CSRAUnknownFloat2);
-            hash.Add(item.CSRAUnknownFloat3);
-            hash.Add(item.CSRAUnknownFloat4);
-            hash.Add(item.CSRAUnknownFloat5);
+            hash.Add(item.RangedThrowMult);
+            hash.Add(item.RangedGrenadeAdvancedThrowingMult);
+            hash.Add(item.RangedGrenadeFlashTargetMult);
+            hash.Add(item.RangedGrenadeThrowAtGroupMult);
+            hash.Add(item.RangedGrenadeCloseRangeAttackChanceMult);
             hash.Add(item.CloseRangeDuelingCircleMult);
             hash.Add(item.CloseRangeDuelingFallbackMult);
             hash.Add(item.CloseRangeFlankDistance);
@@ -4536,51 +6255,71 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.CloseRangeChargingDisengageProbability);
             hash.Add(item.CloseRangeChargingThrowMaxTargets);
             hash.Add(item.CloseRangeFlankingVariance);
-            hash.Add(item.CSCRUnknownFloat1);
-            hash.Add(item.CSCRUnknownFloat2);
+            hash.Add(item.CloseRangeRetreatChance);
+            hash.Add(item.CloseRangeRetreatDistanceMult);
             hash.Add(item.LongRangeStrafeMult);
             hash.Add(item.LongRangeAdjustRangeMult);
             hash.Add(item.LongRangeCrouchMult);
             hash.Add(item.LongRangeWaitMult);
             hash.Add(item.LongRangeRangeMult);
-            hash.Add(item.CSLRUnknownFloat1);
-            hash.Add(item.CSLRUnknownFloat2);
-            hash.Add(item.CSLRUnknownFloat3);
-            hash.Add(item.CSLRUnknownFloat4);
+            hash.Add(item.LongRangeProvideSuppressiveFireMult);
+            hash.Add(item.LongRangeRetreatChance);
+            hash.Add(item.LongRangeRetreatHideTimeMult);
+            hash.Add(item.LongRangeRetreatDistanceMult);
             hash.Add(item.CoverSearchDistanceMult);
-            hash.Add(item.CSCVUnknownFloat1);
-            hash.Add(item.HoverChance);
-            hash.Add(item.DiveBombChance);
-            hash.Add(item.GroundAttackChance);
-            hash.Add(item.HoverTime);
-            hash.Add(item.GroundAttackTime);
-            hash.Add(item.PerchAttackChance);
-            hash.Add(item.PerchAttackTime);
-            hash.Add(item.FlyingAttackChance);
-            if (item.CSTN is {} CSTNItem)
-            {
-                hash.Add(CSTNItem);
-            }
-            if (item.CSSG is {} CSSGItem)
-            {
-                hash.Add(CSSGItem);
-            }
-            if (item.CSSM is {} CSSMItem)
-            {
-                hash.Add(CSSMItem);
-            }
-            if (item.CSSR is {} CSSRItem)
-            {
-                hash.Add(CSSRItem);
-            }
-            if (item.CSSA is {} CSSAItem)
-            {
-                hash.Add(CSSAItem);
-            }
-            if (item.CSSD is {} CSSDItem)
-            {
-                hash.Add(CSSDItem);
-            }
+            hash.Add(item.CoverSearchSuppressionSensitivity);
+            hash.Add(item.FlightHoverChance);
+            hash.Add(item.FlightDiveBombChance);
+            hash.Add(item.FlightGroundAttackChance);
+            hash.Add(item.FlightHoverTime);
+            hash.Add(item.FlightGroundAttackTime);
+            hash.Add(item.FlightPerchAttackChance);
+            hash.Add(item.FlightPerchAttackTime);
+            hash.Add(item.FlightFlyingAttackChance);
+            hash.Add(item.TunnelCostMult);
+            hash.Add(item.TunnelChance);
+            hash.Add(item.TunnelMaxDistance);
+            hash.Add(item.TunnelSpeedMult);
+            hash.Add(item.TunnelMinTime);
+            hash.Add(item.TunnelMaxTime);
+            hash.Add(item.TunnelMaximumTime);
+            hash.Add(item.TunnelCooldown);
+            hash.Add(item.SpaceGeneralPilotSkill);
+            hash.Add(item.SpaceGeneralAccuracy);
+            hash.Add(item.SpaceGeneralTargetShield);
+            hash.Add(item.SpaceGeneralAdjustment);
+            hash.Add(item.SpaceGeneralEngageManeuverChanceDirectAttack);
+            hash.Add(item.SpaceGeneralEngageManeuverChancePass);
+            hash.Add(item.SpaceGeneralEngageManeuverChanceLeadTurn);
+            hash.Add(item.SpaceGeneralEngageManeuverChanceSlideTurn);
+            hash.Add(item.SpaceGeneralEngageManeuverChanceBarrelRoll);
+            hash.Add(item.SpaceGeneralEvadeManeuverChanceBreak);
+            hash.Add(item.SpaceGeneralEvadeManeuverChanceScissors);
+            hash.Add(item.SpaceGeneralEvadeManeuverChanceCut);
+            hash.Add(item.SpaceGeneralEvadeManeuverChanceBoost);
+            hash.Add(item.SpaceGeneralAcquireManeuverChanceSliceback);
+            hash.Add(item.SpaceGeneralAcquireManeuverChanceStrafeTurn);
+            hash.Add(item.SpaceGeneralAcquireManeuverChanceAcquire);
+            hash.Add(item.SpaceGeneralAcquireManeuverChanceTurn);
+            hash.Add(item.SpaceGeneralDisengageManeuverChance);
+            hash.Add(item.SpaceGeneralMissileSeekingStrength);
+            hash.Add(item.SpaceGeneralMinTimeBetweenBoosts);
+            hash.Add(item.SpaceGeneralCombatStrafing);
+            hash.Add(item.SpaceGeneralRollsDuringBoost);
+            hash.Add(item.UnknownCSSG);
+            hash.Add(item.SpaceGeneralPowerWeighting);
+            hash.Add(item.SpaceManeuverTypesMaxTime);
+            hash.Add(item.SpaceManeuverTypesReentryDelays);
+            hash.Add(item.SpaceRepairDamageThreshold);
+            hash.Add(item.SpaceRepairFarawayDistance);
+            hash.Add(item.SpaceRepairPowerToUse);
+            hash.Add(item.SpaceRepairInClosePowerWeightingTables);
+            hash.Add(item.SpaceRepairFarawayPowerWeightingTables);
+            hash.Add(item.SpaceApproachingMinDistance);
+            hash.Add(item.SpaceApproachingWeighting);
+            hash.Add(item.SpaceDetectionRating1);
+            hash.Add(item.SpaceDetectionRating2);
+            hash.Add(item.SpaceDetectionRating3);
             if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
@@ -4589,8 +6328,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(FNAMItem);
             }
-            hash.Add(item.TNAM);
-            hash.Add(item.UNAM);
+            hash.Add(item.TemplateDefaultCombatStyle);
+            if (item.Templates is {} Templatesitem)
+            {
+                hash.Add(Templatesitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -4620,15 +6362,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            if (FormLinkInformation.TryFactory(obj.TNAM, out var TNAMInfo))
+            if (FormLinkInformation.TryFactory(obj.TemplateDefaultCombatStyle, out var TemplateDefaultCombatStyleInfo))
             {
-                yield return TNAMInfo;
+                yield return TemplateDefaultCombatStyleInfo;
             }
-            if (obj.UNAM is {} UNAMItem)
+            if (obj.Templates is {} TemplatesItems)
             {
-                foreach (var item in UNAMItem)
+                foreach (var item in TemplatesItems.EnumerateFormLinks())
                 {
-                    yield return FormLinkInformation.Factory(item);
+                    yield return item;
                 }
             }
             yield break;
@@ -4753,17 +6495,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.EvadeThreatChance = rhs.EvadeThreatChance;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSGDUnknownFloat1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HealAllyDistance) ?? true))
             {
-                item.CSGDUnknownFloat1 = rhs.CSGDUnknownFloat1;
+                item.HealAllyDistance = rhs.HealAllyDistance;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSGDUnknownFloat2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.JumpCostMult) ?? true))
             {
-                item.CSGDUnknownFloat2 = rhs.CSGDUnknownFloat2;
+                item.JumpCostMult = rhs.JumpCostMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSGDUnknownFloat3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.TauntDelayMult) ?? true))
             {
-                item.CSGDUnknownFloat3 = rhs.CSGDUnknownFloat3;
+                item.TauntDelayMult = rhs.TauntDelayMult;
             }
             if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.MeleeAttackStaggeredMult) ?? true))
             {
@@ -4809,25 +6551,25 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.RangedAccuracyMult = rhs.RangedAccuracyMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSRAUnknownFloat1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangedThrowMult) ?? true))
             {
-                item.CSRAUnknownFloat1 = rhs.CSRAUnknownFloat1;
+                item.RangedThrowMult = rhs.RangedThrowMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSRAUnknownFloat2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangedGrenadeAdvancedThrowingMult) ?? true))
             {
-                item.CSRAUnknownFloat2 = rhs.CSRAUnknownFloat2;
+                item.RangedGrenadeAdvancedThrowingMult = rhs.RangedGrenadeAdvancedThrowingMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSRAUnknownFloat3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangedGrenadeFlashTargetMult) ?? true))
             {
-                item.CSRAUnknownFloat3 = rhs.CSRAUnknownFloat3;
+                item.RangedGrenadeFlashTargetMult = rhs.RangedGrenadeFlashTargetMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSRAUnknownFloat4) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangedGrenadeThrowAtGroupMult) ?? true))
             {
-                item.CSRAUnknownFloat4 = rhs.CSRAUnknownFloat4;
+                item.RangedGrenadeThrowAtGroupMult = rhs.RangedGrenadeThrowAtGroupMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSRAUnknownFloat5) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.RangedGrenadeCloseRangeAttackChanceMult) ?? true))
             {
-                item.CSRAUnknownFloat5 = rhs.CSRAUnknownFloat5;
+                item.RangedGrenadeCloseRangeAttackChanceMult = rhs.RangedGrenadeCloseRangeAttackChanceMult;
             }
             if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeDuelingCircleMult) ?? true))
             {
@@ -4873,13 +6615,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.CloseRangeFlankingVariance = rhs.CloseRangeFlankingVariance;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSCRUnknownFloat1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeRetreatChance) ?? true))
             {
-                item.CSCRUnknownFloat1 = rhs.CSCRUnknownFloat1;
+                item.CloseRangeRetreatChance = rhs.CloseRangeRetreatChance;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSCRUnknownFloat2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRangeRetreatDistanceMult) ?? true))
             {
-                item.CSCRUnknownFloat2 = rhs.CSCRUnknownFloat2;
+                item.CloseRangeRetreatDistanceMult = rhs.CloseRangeRetreatDistanceMult;
             }
             if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeStrafeMult) ?? true))
             {
@@ -4901,127 +6643,345 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.LongRangeRangeMult = rhs.LongRangeRangeMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSLRUnknownFloat1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeProvideSuppressiveFireMult) ?? true))
             {
-                item.CSLRUnknownFloat1 = rhs.CSLRUnknownFloat1;
+                item.LongRangeProvideSuppressiveFireMult = rhs.LongRangeProvideSuppressiveFireMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSLRUnknownFloat2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeRetreatChance) ?? true))
             {
-                item.CSLRUnknownFloat2 = rhs.CSLRUnknownFloat2;
+                item.LongRangeRetreatChance = rhs.LongRangeRetreatChance;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSLRUnknownFloat3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeRetreatHideTimeMult) ?? true))
             {
-                item.CSLRUnknownFloat3 = rhs.CSLRUnknownFloat3;
+                item.LongRangeRetreatHideTimeMult = rhs.LongRangeRetreatHideTimeMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSLRUnknownFloat4) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeRetreatDistanceMult) ?? true))
             {
-                item.CSLRUnknownFloat4 = rhs.CSLRUnknownFloat4;
+                item.LongRangeRetreatDistanceMult = rhs.LongRangeRetreatDistanceMult;
             }
             if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CoverSearchDistanceMult) ?? true))
             {
                 item.CoverSearchDistanceMult = rhs.CoverSearchDistanceMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSCVUnknownFloat1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CoverSearchSuppressionSensitivity) ?? true))
             {
-                item.CSCVUnknownFloat1 = rhs.CSCVUnknownFloat1;
+                item.CoverSearchSuppressionSensitivity = rhs.CoverSearchSuppressionSensitivity;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HoverChance) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.FlightHoverChance) ?? true))
             {
-                item.HoverChance = rhs.HoverChance;
+                item.FlightHoverChance = rhs.FlightHoverChance;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.DiveBombChance) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.FlightDiveBombChance) ?? true))
             {
-                item.DiveBombChance = rhs.DiveBombChance;
+                item.FlightDiveBombChance = rhs.FlightDiveBombChance;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.GroundAttackChance) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.FlightGroundAttackChance) ?? true))
             {
-                item.GroundAttackChance = rhs.GroundAttackChance;
+                item.FlightGroundAttackChance = rhs.FlightGroundAttackChance;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.HoverTime) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.FlightHoverTime) ?? true))
             {
-                item.HoverTime = rhs.HoverTime;
+                item.FlightHoverTime = rhs.FlightHoverTime;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.GroundAttackTime) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.FlightGroundAttackTime) ?? true))
             {
-                item.GroundAttackTime = rhs.GroundAttackTime;
+                item.FlightGroundAttackTime = rhs.FlightGroundAttackTime;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PerchAttackChance) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.FlightPerchAttackChance) ?? true))
             {
-                item.PerchAttackChance = rhs.PerchAttackChance;
+                item.FlightPerchAttackChance = rhs.FlightPerchAttackChance;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.PerchAttackTime) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.FlightPerchAttackTime) ?? true))
             {
-                item.PerchAttackTime = rhs.PerchAttackTime;
+                item.FlightPerchAttackTime = rhs.FlightPerchAttackTime;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.FlyingAttackChance) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.FlightFlyingAttackChance) ?? true))
             {
-                item.FlyingAttackChance = rhs.FlyingAttackChance;
+                item.FlightFlyingAttackChance = rhs.FlightFlyingAttackChance;
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSTN) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.TunnelCostMult) ?? true))
             {
-                if(rhs.CSTN is {} CSTNrhs)
+                item.TunnelCostMult = rhs.TunnelCostMult;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.TunnelChance) ?? true))
+            {
+                item.TunnelChance = rhs.TunnelChance;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.TunnelMaxDistance) ?? true))
+            {
+                item.TunnelMaxDistance = rhs.TunnelMaxDistance;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.TunnelSpeedMult) ?? true))
+            {
+                item.TunnelSpeedMult = rhs.TunnelSpeedMult;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.TunnelMinTime) ?? true))
+            {
+                item.TunnelMinTime = rhs.TunnelMinTime;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.TunnelMaxTime) ?? true))
+            {
+                item.TunnelMaxTime = rhs.TunnelMaxTime;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.TunnelMaximumTime) ?? true))
+            {
+                item.TunnelMaximumTime = rhs.TunnelMaximumTime;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.TunnelCooldown) ?? true))
+            {
+                item.TunnelCooldown = rhs.TunnelCooldown;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralPilotSkill) ?? true))
+            {
+                item.SpaceGeneralPilotSkill = rhs.SpaceGeneralPilotSkill;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralAccuracy) ?? true))
+            {
+                item.SpaceGeneralAccuracy = rhs.SpaceGeneralAccuracy;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralTargetShield) ?? true))
+            {
+                item.SpaceGeneralTargetShield = rhs.SpaceGeneralTargetShield;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralAdjustment) ?? true))
+            {
+                item.SpaceGeneralAdjustment = rhs.SpaceGeneralAdjustment;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralEngageManeuverChanceDirectAttack) ?? true))
+            {
+                item.SpaceGeneralEngageManeuverChanceDirectAttack = rhs.SpaceGeneralEngageManeuverChanceDirectAttack;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralEngageManeuverChancePass) ?? true))
+            {
+                item.SpaceGeneralEngageManeuverChancePass = rhs.SpaceGeneralEngageManeuverChancePass;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralEngageManeuverChanceLeadTurn) ?? true))
+            {
+                item.SpaceGeneralEngageManeuverChanceLeadTurn = rhs.SpaceGeneralEngageManeuverChanceLeadTurn;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralEngageManeuverChanceSlideTurn) ?? true))
+            {
+                item.SpaceGeneralEngageManeuverChanceSlideTurn = rhs.SpaceGeneralEngageManeuverChanceSlideTurn;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralEngageManeuverChanceBarrelRoll) ?? true))
+            {
+                item.SpaceGeneralEngageManeuverChanceBarrelRoll = rhs.SpaceGeneralEngageManeuverChanceBarrelRoll;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralEvadeManeuverChanceBreak) ?? true))
+            {
+                item.SpaceGeneralEvadeManeuverChanceBreak = rhs.SpaceGeneralEvadeManeuverChanceBreak;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralEvadeManeuverChanceScissors) ?? true))
+            {
+                item.SpaceGeneralEvadeManeuverChanceScissors = rhs.SpaceGeneralEvadeManeuverChanceScissors;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralEvadeManeuverChanceCut) ?? true))
+            {
+                item.SpaceGeneralEvadeManeuverChanceCut = rhs.SpaceGeneralEvadeManeuverChanceCut;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralEvadeManeuverChanceBoost) ?? true))
+            {
+                item.SpaceGeneralEvadeManeuverChanceBoost = rhs.SpaceGeneralEvadeManeuverChanceBoost;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralAcquireManeuverChanceSliceback) ?? true))
+            {
+                item.SpaceGeneralAcquireManeuverChanceSliceback = rhs.SpaceGeneralAcquireManeuverChanceSliceback;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralAcquireManeuverChanceStrafeTurn) ?? true))
+            {
+                item.SpaceGeneralAcquireManeuverChanceStrafeTurn = rhs.SpaceGeneralAcquireManeuverChanceStrafeTurn;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralAcquireManeuverChanceAcquire) ?? true))
+            {
+                item.SpaceGeneralAcquireManeuverChanceAcquire = rhs.SpaceGeneralAcquireManeuverChanceAcquire;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralAcquireManeuverChanceTurn) ?? true))
+            {
+                item.SpaceGeneralAcquireManeuverChanceTurn = rhs.SpaceGeneralAcquireManeuverChanceTurn;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralDisengageManeuverChance) ?? true))
+            {
+                item.SpaceGeneralDisengageManeuverChance = rhs.SpaceGeneralDisengageManeuverChance;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralMissileSeekingStrength) ?? true))
+            {
+                item.SpaceGeneralMissileSeekingStrength = rhs.SpaceGeneralMissileSeekingStrength;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralMinTimeBetweenBoosts) ?? true))
+            {
+                item.SpaceGeneralMinTimeBetweenBoosts = rhs.SpaceGeneralMinTimeBetweenBoosts;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralCombatStrafing) ?? true))
+            {
+                item.SpaceGeneralCombatStrafing = rhs.SpaceGeneralCombatStrafing;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralRollsDuringBoost) ?? true))
+            {
+                item.SpaceGeneralRollsDuringBoost = rhs.SpaceGeneralRollsDuringBoost;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.UnknownCSSG) ?? true))
+            {
+                item.UnknownCSSG = rhs.UnknownCSSG;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralPowerWeighting) ?? true))
+            {
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.SpaceGeneralPowerWeighting);
+                try
                 {
-                    item.CSTN = CSTNrhs.ToArray();
+                    if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceGeneralPowerWeighting) ?? true))
+                    {
+                        item.SpaceGeneralPowerWeighting = rhs.SpaceGeneralPowerWeighting.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)CombatStyle_FieldIndex.SpaceGeneralPowerWeighting),
+                            errorMask: errorMask);
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.CSTN = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSSG) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceManeuverTypesMaxTime) ?? true))
             {
-                if(rhs.CSSG is {} CSSGrhs)
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.SpaceManeuverTypesMaxTime);
+                try
                 {
-                    item.CSSG = CSSGrhs.ToArray();
+                    if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceManeuverTypesMaxTime) ?? true))
+                    {
+                        item.SpaceManeuverTypesMaxTime = rhs.SpaceManeuverTypesMaxTime.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)CombatStyle_FieldIndex.SpaceManeuverTypesMaxTime),
+                            errorMask: errorMask);
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.CSSG = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSSM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceManeuverTypesReentryDelays) ?? true))
             {
-                if(rhs.CSSM is {} CSSMrhs)
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.SpaceManeuverTypesReentryDelays);
+                try
                 {
-                    item.CSSM = CSSMrhs.ToArray();
+                    if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceManeuverTypesReentryDelays) ?? true))
+                    {
+                        item.SpaceManeuverTypesReentryDelays = rhs.SpaceManeuverTypesReentryDelays.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)CombatStyle_FieldIndex.SpaceManeuverTypesReentryDelays),
+                            errorMask: errorMask);
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.CSSM = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSSR) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceRepairDamageThreshold) ?? true))
             {
-                if(rhs.CSSR is {} CSSRrhs)
+                item.SpaceRepairDamageThreshold = rhs.SpaceRepairDamageThreshold;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceRepairFarawayDistance) ?? true))
+            {
+                item.SpaceRepairFarawayDistance = rhs.SpaceRepairFarawayDistance;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceRepairPowerToUse) ?? true))
+            {
+                item.SpaceRepairPowerToUse = rhs.SpaceRepairPowerToUse;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceRepairInClosePowerWeightingTables) ?? true))
+            {
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.SpaceRepairInClosePowerWeightingTables);
+                try
                 {
-                    item.CSSR = CSSRrhs.ToArray();
+                    if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceRepairInClosePowerWeightingTables) ?? true))
+                    {
+                        item.SpaceRepairInClosePowerWeightingTables = rhs.SpaceRepairInClosePowerWeightingTables.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)CombatStyle_FieldIndex.SpaceRepairInClosePowerWeightingTables),
+                            errorMask: errorMask);
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.CSSR = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSSA) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceRepairFarawayPowerWeightingTables) ?? true))
             {
-                if(rhs.CSSA is {} CSSArhs)
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.SpaceRepairFarawayPowerWeightingTables);
+                try
                 {
-                    item.CSSA = CSSArhs.ToArray();
+                    if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceRepairFarawayPowerWeightingTables) ?? true))
+                    {
+                        item.SpaceRepairFarawayPowerWeightingTables = rhs.SpaceRepairFarawayPowerWeightingTables.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)CombatStyle_FieldIndex.SpaceRepairFarawayPowerWeightingTables),
+                            errorMask: errorMask);
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.CSSA = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSSD) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceApproachingMinDistance) ?? true))
             {
-                if(rhs.CSSD is {} CSSDrhs)
+                item.SpaceApproachingMinDistance = rhs.SpaceApproachingMinDistance;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceApproachingWeighting) ?? true))
+            {
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.SpaceApproachingWeighting);
+                try
                 {
-                    item.CSSD = CSSDrhs.ToArray();
+                    if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceApproachingWeighting) ?? true))
+                    {
+                        item.SpaceApproachingWeighting = rhs.SpaceApproachingWeighting.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)CombatStyle_FieldIndex.SpaceApproachingWeighting),
+                            errorMask: errorMask);
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.CSSD = default;
+                    errorMask.ReportException(ex);
                 }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceDetectionRating1) ?? true))
+            {
+                item.SpaceDetectionRating1 = rhs.SpaceDetectionRating1;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceDetectionRating2) ?? true))
+            {
+                item.SpaceDetectionRating2 = rhs.SpaceDetectionRating2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.SpaceDetectionRating3) ?? true))
+            {
+                item.SpaceDetectionRating3 = rhs.SpaceDetectionRating3;
             }
             if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Flags) ?? true))
             {
@@ -5038,25 +6998,24 @@ namespace Mutagen.Bethesda.Starfield
                     item.FNAM = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.TNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.TemplateDefaultCombatStyle) ?? true))
             {
-                item.TNAM.SetTo(rhs.TNAM.FormKeyNullable);
+                item.TemplateDefaultCombatStyle.SetTo(rhs.TemplateDefaultCombatStyle.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.UNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CombatStyle_FieldIndex.Templates) ?? true))
             {
-                errorMask?.PushIndex((int)CombatStyle_FieldIndex.UNAM);
+                errorMask?.PushIndex((int)CombatStyle_FieldIndex.Templates);
                 try
                 {
-                    if ((rhs.UNAM != null))
+                    if(rhs.Templates is {} rhsTemplates)
                     {
-                        item.UNAM = 
-                            rhs.UNAM
-                                .Select(b => (IFormLinkGetter<ICombatStyleGetter>)new FormLink<ICombatStyleGetter>(b.FormKey))
-                            .ToExtendedList<IFormLinkGetter<ICombatStyleGetter>>();
+                        item.Templates = rhsTemplates.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)CombatStyle_FieldIndex.Templates));
                     }
                     else
                     {
-                        item.UNAM = null;
+                        item.Templates = default;
                     }
                 }
                 catch (Exception ex)
@@ -5240,15 +7199,18 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.CSGD)))
             {
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.OffensiveMult);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.OffensiveMult,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.DefensiveMult);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.DefensiveMult,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.GroupOffensiveMult);
+                    item: item.GroupOffensiveMult,
+                    integerType: FloatIntegerType.UInt);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.EquipmentScoreMultMelee);
@@ -5267,24 +7229,27 @@ namespace Mutagen.Bethesda.Starfield
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.EquipmentScoreMultStaff);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.AvoidThreatChance,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.DodgeThreadChance,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.EvadeThreatChance,
+                    integerType: FloatIntegerType.UInt);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.AvoidThreatChance);
+                    item: item.HealAllyDistance);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.DodgeThreadChance);
+                    item: item.JumpCostMult);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.EvadeThreatChance);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.CSGDUnknownFloat1);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.CSGDUnknownFloat2);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.CSGDUnknownFloat3);
+                    item: item.TauntDelayMult);
             }
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.CSME)))
             {
@@ -5321,155 +7286,346 @@ namespace Mutagen.Bethesda.Starfield
             }
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.CSRA)))
             {
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.RangedAccuracyMult);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.RangedAccuracyMult,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.CSRAUnknownFloat1);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.RangedThrowMult,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.CSRAUnknownFloat2);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.RangedGrenadeAdvancedThrowingMult,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.CSRAUnknownFloat3);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.RangedGrenadeFlashTargetMult,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.CSRAUnknownFloat4);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.RangedGrenadeThrowAtGroupMult,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.CSRAUnknownFloat5);
+                    item: item.RangedGrenadeCloseRangeAttackChanceMult,
+                    integerType: FloatIntegerType.UInt);
             }
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.CSCR)))
             {
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.CloseRangeDuelingCircleMult);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.CloseRangeDuelingCircleMult,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.CloseRangeDuelingFallbackMult);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.CloseRangeDuelingFallbackMult,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.CloseRangeFlankDistance);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.CloseRangeFlankDistance,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.CloseRangeFlankingStalkTime);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.CloseRangeFlankingStalkTime,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.CloseRangeChargeDistance);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.CloseRangeChargeDistance,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.CloseRangeChargingThrowProbability);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.CloseRangeChargingThrowProbability,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.CloseRangeChargingSprintFastProbability);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.CloseRangeChargingSprintFastProbability,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.CloseRangeChargingSideswipeProbability);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.CloseRangeChargingSideswipeProbability,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.CloseRangeChargingDisengageProbability);
+                    item: item.CloseRangeChargingDisengageProbability,
+                    integerType: FloatIntegerType.UInt);
                 writer.Write(item.CloseRangeChargingThrowMaxTargets);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.CloseRangeFlankingVariance);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.CloseRangeFlankingVariance,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.CSCRUnknownFloat1);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.CloseRangeRetreatChance,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.CSCRUnknownFloat2);
+                    item: item.CloseRangeRetreatDistanceMult,
+                    integerType: FloatIntegerType.UInt);
             }
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.CSLR)))
             {
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.LongRangeStrafeMult);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.LongRangeStrafeMult,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.LongRangeAdjustRangeMult);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.LongRangeAdjustRangeMult,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.LongRangeCrouchMult);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.LongRangeCrouchMult,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.LongRangeWaitMult);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.LongRangeWaitMult,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.LongRangeRangeMult);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.LongRangeRangeMult,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.CSLRUnknownFloat1);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.LongRangeProvideSuppressiveFireMult,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.CSLRUnknownFloat2);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.LongRangeRetreatChance,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.CSLRUnknownFloat3);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.LongRangeRetreatHideTimeMult,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.CSLRUnknownFloat4);
+                    item: item.LongRangeRetreatDistanceMult,
+                    integerType: FloatIntegerType.UInt);
             }
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.CSCV)))
             {
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.CoverSearchDistanceMult);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.CoverSearchDistanceMult,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.CSCVUnknownFloat1);
+                    item: item.CoverSearchSuppressionSensitivity,
+                    integerType: FloatIntegerType.UInt);
             }
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.CSFL)))
             {
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.HoverChance);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.FlightHoverChance,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.DiveBombChance);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.FlightDiveBombChance,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.GroundAttackChance);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.FlightGroundAttackChance,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.HoverTime);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.FlightHoverTime,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.GroundAttackTime);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.FlightGroundAttackTime,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.PerchAttackChance);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.FlightPerchAttackChance,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.PerchAttackTime);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    item: item.FlightPerchAttackTime,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
                     writer: writer,
-                    item: item.FlyingAttackChance);
+                    item: item.FlightFlyingAttackChance,
+                    integerType: FloatIntegerType.UInt);
             }
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.CSTN,
-                header: translationParams.ConvertToCustom(RecordTypes.CSTN));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.CSSG,
-                header: translationParams.ConvertToCustom(RecordTypes.CSSG));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.CSSM,
-                header: translationParams.ConvertToCustom(RecordTypes.CSSM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.CSSR,
-                header: translationParams.ConvertToCustom(RecordTypes.CSSR));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.CSSA,
-                header: translationParams.ConvertToCustom(RecordTypes.CSSA));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.CSSD,
-                header: translationParams.ConvertToCustom(RecordTypes.CSSD));
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.CSTN)))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.TunnelCostMult);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.TunnelChance,
+                    integerType: FloatIntegerType.UInt);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.TunnelMaxDistance);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.TunnelSpeedMult);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.TunnelMinTime);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.TunnelMaxTime);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.TunnelMaximumTime);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.TunnelCooldown);
+            }
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.CSSG)))
+            {
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.SpaceGeneralPilotSkill,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.SpaceGeneralAccuracy,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.SpaceGeneralTargetShield,
+                    integerType: FloatIntegerType.UInt);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.SpaceGeneralAdjustment);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.SpaceGeneralEngageManeuverChanceDirectAttack,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.SpaceGeneralEngageManeuverChancePass,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.SpaceGeneralEngageManeuverChanceLeadTurn,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.SpaceGeneralEngageManeuverChanceSlideTurn,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.SpaceGeneralEngageManeuverChanceBarrelRoll,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.SpaceGeneralEvadeManeuverChanceBreak,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.SpaceGeneralEvadeManeuverChanceScissors,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.SpaceGeneralEvadeManeuverChanceCut,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.SpaceGeneralEvadeManeuverChanceBoost,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.SpaceGeneralAcquireManeuverChanceSliceback,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.SpaceGeneralAcquireManeuverChanceStrafeTurn,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.SpaceGeneralAcquireManeuverChanceAcquire,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.SpaceGeneralAcquireManeuverChanceTurn,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.SpaceGeneralDisengageManeuverChance,
+                    integerType: FloatIntegerType.UInt);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.SpaceGeneralMissileSeekingStrength);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.SpaceGeneralMinTimeBetweenBoosts);
+                writer.Write(item.SpaceGeneralCombatStrafing);
+                writer.Write(item.SpaceGeneralRollsDuringBoost);
+                writer.Write(item.UnknownCSSG);
+                var SpaceGeneralPowerWeightingItem = item.SpaceGeneralPowerWeighting;
+                ((CombatStylePowerWeightingBinaryWriteTranslation)((IBinaryItem)SpaceGeneralPowerWeightingItem).BinaryWriteTranslator).Write(
+                    item: SpaceGeneralPowerWeightingItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.CSSM)))
+            {
+                var SpaceManeuverTypesMaxTimeItem = item.SpaceManeuverTypesMaxTime;
+                ((CombatStyleManeuverTimingBinaryWriteTranslation)((IBinaryItem)SpaceManeuverTypesMaxTimeItem).BinaryWriteTranslator).Write(
+                    item: SpaceManeuverTypesMaxTimeItem,
+                    writer: writer,
+                    translationParams: translationParams);
+                var SpaceManeuverTypesReentryDelaysItem = item.SpaceManeuverTypesReentryDelays;
+                ((CombatStyleManeuverTimingBinaryWriteTranslation)((IBinaryItem)SpaceManeuverTypesReentryDelaysItem).BinaryWriteTranslator).Write(
+                    item: SpaceManeuverTypesReentryDelaysItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.CSSR)))
+            {
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.SpaceRepairDamageThreshold,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.SpaceRepairFarawayDistance,
+                    integerType: FloatIntegerType.UInt);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.SpaceRepairPowerToUse,
+                    integerType: FloatIntegerType.UInt);
+                var SpaceRepairInClosePowerWeightingTablesItem = item.SpaceRepairInClosePowerWeightingTables;
+                ((CombatStylePowerWeightingBinaryWriteTranslation)((IBinaryItem)SpaceRepairInClosePowerWeightingTablesItem).BinaryWriteTranslator).Write(
+                    item: SpaceRepairInClosePowerWeightingTablesItem,
+                    writer: writer,
+                    translationParams: translationParams);
+                var SpaceRepairFarawayPowerWeightingTablesItem = item.SpaceRepairFarawayPowerWeightingTables;
+                ((CombatStylePowerWeightingBinaryWriteTranslation)((IBinaryItem)SpaceRepairFarawayPowerWeightingTablesItem).BinaryWriteTranslator).Write(
+                    item: SpaceRepairFarawayPowerWeightingTablesItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.CSSA)))
+            {
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.SpaceApproachingMinDistance,
+                    integerType: FloatIntegerType.UInt);
+                var SpaceApproachingWeightingItem = item.SpaceApproachingWeighting;
+                ((CombatStylePowerWeightingBinaryWriteTranslation)((IBinaryItem)SpaceApproachingWeightingItem).BinaryWriteTranslator).Write(
+                    item: SpaceApproachingWeightingItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.CSSD)))
+            {
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.SpaceDetectionRating1);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.SpaceDetectionRating2);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.SpaceDetectionRating3);
+            }
             EnumBinaryTranslation<CombatStyle.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Flags,
@@ -5481,18 +7637,15 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.TNAM,
+                item: item.TemplateDefaultCombatStyle,
                 header: translationParams.ConvertToCustom(RecordTypes.TNAM));
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ICombatStyleGetter>>.Instance.Write(
-                writer: writer,
-                items: item.UNAM,
-                recordType: translationParams.ConvertToCustom(RecordTypes.UNAM),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ICombatStyleGetter> subItem, TypedWriteParams conv) =>
-                {
-                    FormLinkBinaryTranslation.Instance.Write(
-                        writer: subWriter,
-                        item: subItem);
-                });
+            if (item.Templates is {} TemplatesItem)
+            {
+                ((CombatStyleTemplatesBinaryWriteTranslation)((IBinaryItem)TemplatesItem).BinaryWriteTranslator).Write(
+                    item: TemplatesItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
         }
 
         public void Write(
@@ -5566,11 +7719,17 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 4) return null;
-                    item.OffensiveMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.OffensiveMult = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DefensiveMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.DefensiveMult = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.GroupOffensiveMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.GroupOffensiveMult = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
                     item.EquipmentScoreMultMelee = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
@@ -5584,18 +7743,24 @@ namespace Mutagen.Bethesda.Starfield
                     if (dataFrame.Remaining < 4) return null;
                     item.EquipmentScoreMultStaff = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.AvoidThreatChance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AvoidThreatChance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DodgeThreadChance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.DodgeThreadChance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.EvadeThreatChance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.EvadeThreatChance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CSGDUnknownFloat1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.HealAllyDistance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CSGDUnknownFloat2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.JumpCostMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CSGDUnknownFloat3 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    return (int)CombatStyle_FieldIndex.CSGDUnknownFloat3;
+                    item.TauntDelayMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)CombatStyle_FieldIndex.TauntDelayMult;
                 }
                 case RecordTypeInts.CSME:
                 {
@@ -5628,142 +7793,348 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 4) return null;
-                    item.RangedAccuracyMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.RangedAccuracyMult = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CSRAUnknownFloat1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.RangedThrowMult = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CSRAUnknownFloat2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.RangedGrenadeAdvancedThrowingMult = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CSRAUnknownFloat3 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.RangedGrenadeFlashTargetMult = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CSRAUnknownFloat4 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.RangedGrenadeThrowAtGroupMult = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CSRAUnknownFloat5 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    return (int)CombatStyle_FieldIndex.CSRAUnknownFloat5;
+                    item.RangedGrenadeCloseRangeAttackChanceMult = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    return (int)CombatStyle_FieldIndex.RangedGrenadeCloseRangeAttackChanceMult;
                 }
                 case RecordTypeInts.CSCR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CloseRangeDuelingCircleMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.CloseRangeDuelingCircleMult = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CloseRangeDuelingFallbackMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.CloseRangeDuelingFallbackMult = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CloseRangeFlankDistance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.CloseRangeFlankDistance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CloseRangeFlankingStalkTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.CloseRangeFlankingStalkTime = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CloseRangeChargeDistance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.CloseRangeChargeDistance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CloseRangeChargingThrowProbability = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.CloseRangeChargingThrowProbability = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CloseRangeChargingSprintFastProbability = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.CloseRangeChargingSprintFastProbability = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CloseRangeChargingSideswipeProbability = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.CloseRangeChargingSideswipeProbability = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CloseRangeChargingDisengageProbability = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.CloseRangeChargingDisengageProbability = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
                     item.CloseRangeChargingThrowMaxTargets = dataFrame.ReadUInt32();
                     if (dataFrame.Remaining < 4) return null;
-                    item.CloseRangeFlankingVariance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.CloseRangeFlankingVariance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CSCRUnknownFloat1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.CloseRangeRetreatChance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CSCRUnknownFloat2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    return (int)CombatStyle_FieldIndex.CSCRUnknownFloat2;
+                    item.CloseRangeRetreatDistanceMult = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    return (int)CombatStyle_FieldIndex.CloseRangeRetreatDistanceMult;
                 }
                 case RecordTypeInts.CSLR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 4) return null;
-                    item.LongRangeStrafeMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.LongRangeStrafeMult = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.LongRangeAdjustRangeMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.LongRangeAdjustRangeMult = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.LongRangeCrouchMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.LongRangeCrouchMult = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.LongRangeWaitMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.LongRangeWaitMult = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.LongRangeRangeMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.LongRangeRangeMult = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CSLRUnknownFloat1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.LongRangeProvideSuppressiveFireMult = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CSLRUnknownFloat2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.LongRangeRetreatChance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CSLRUnknownFloat3 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.LongRangeRetreatHideTimeMult = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CSLRUnknownFloat4 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    return (int)CombatStyle_FieldIndex.CSLRUnknownFloat4;
+                    item.LongRangeRetreatDistanceMult = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    return (int)CombatStyle_FieldIndex.LongRangeRetreatDistanceMult;
                 }
                 case RecordTypeInts.CSCV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CoverSearchDistanceMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.CoverSearchDistanceMult = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.CSCVUnknownFloat1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    return (int)CombatStyle_FieldIndex.CSCVUnknownFloat1;
+                    item.CoverSearchSuppressionSensitivity = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    return (int)CombatStyle_FieldIndex.CoverSearchSuppressionSensitivity;
                 }
                 case RecordTypeInts.CSFL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 4) return null;
-                    item.HoverChance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FlightHoverChance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DiveBombChance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FlightDiveBombChance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.GroundAttackChance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FlightGroundAttackChance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.HoverTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FlightHoverTime = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.GroundAttackTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FlightGroundAttackTime = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.PerchAttackChance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FlightPerchAttackChance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.PerchAttackTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FlightPerchAttackTime = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.FlyingAttackChance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    return (int)CombatStyle_FieldIndex.FlyingAttackChance;
+                    item.FlightFlyingAttackChance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    return (int)CombatStyle_FieldIndex.FlightFlyingAttackChance;
                 }
                 case RecordTypeInts.CSTN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CSTN = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)CombatStyle_FieldIndex.CSTN;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.TunnelCostMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.TunnelChance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.TunnelMaxDistance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.TunnelSpeedMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.TunnelMinTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.TunnelMaxTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.TunnelMaximumTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.TunnelCooldown = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)CombatStyle_FieldIndex.TunnelCooldown;
                 }
                 case RecordTypeInts.CSSG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CSSG = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)CombatStyle_FieldIndex.CSSG;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceGeneralPilotSkill = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceGeneralAccuracy = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceGeneralTargetShield = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceGeneralAdjustment = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceGeneralEngageManeuverChanceDirectAttack = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceGeneralEngageManeuverChancePass = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceGeneralEngageManeuverChanceLeadTurn = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceGeneralEngageManeuverChanceSlideTurn = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceGeneralEngageManeuverChanceBarrelRoll = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceGeneralEvadeManeuverChanceBreak = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceGeneralEvadeManeuverChanceScissors = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceGeneralEvadeManeuverChanceCut = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceGeneralEvadeManeuverChanceBoost = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceGeneralAcquireManeuverChanceSliceback = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceGeneralAcquireManeuverChanceStrafeTurn = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceGeneralAcquireManeuverChanceAcquire = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceGeneralAcquireManeuverChanceTurn = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceGeneralDisengageManeuverChance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceGeneralMissileSeekingStrength = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceGeneralMinTimeBetweenBoosts = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.SpaceGeneralCombatStrafing = dataFrame.ReadBoolean();
+                    if (dataFrame.Remaining < 1) return null;
+                    item.SpaceGeneralRollsDuringBoost = dataFrame.ReadBoolean();
+                    if (dataFrame.Remaining < 2) return null;
+                    item.UnknownCSSG = dataFrame.ReadInt16();
+                    if (dataFrame.Complete) return null;
+                    item.SpaceGeneralPowerWeighting = Mutagen.Bethesda.Starfield.CombatStylePowerWeighting.CreateFromBinary(frame: dataFrame);
+                    return (int)CombatStyle_FieldIndex.SpaceGeneralPowerWeighting;
                 }
                 case RecordTypeInts.CSSM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CSSM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)CombatStyle_FieldIndex.CSSM;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Complete) return null;
+                    item.SpaceManeuverTypesMaxTime = Mutagen.Bethesda.Starfield.CombatStyleManeuverTiming.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Complete) return null;
+                    item.SpaceManeuverTypesReentryDelays = Mutagen.Bethesda.Starfield.CombatStyleManeuverTiming.CreateFromBinary(frame: dataFrame);
+                    return (int)CombatStyle_FieldIndex.SpaceManeuverTypesReentryDelays;
                 }
                 case RecordTypeInts.CSSR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CSSR = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)CombatStyle_FieldIndex.CSSR;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceRepairDamageThreshold = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceRepairFarawayDistance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceRepairPowerToUse = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    if (dataFrame.Complete) return null;
+                    item.SpaceRepairInClosePowerWeightingTables = Mutagen.Bethesda.Starfield.CombatStylePowerWeighting.CreateFromBinary(frame: dataFrame);
+                    if (dataFrame.Complete) return null;
+                    item.SpaceRepairFarawayPowerWeightingTables = Mutagen.Bethesda.Starfield.CombatStylePowerWeighting.CreateFromBinary(frame: dataFrame);
+                    return (int)CombatStyle_FieldIndex.SpaceRepairFarawayPowerWeightingTables;
                 }
                 case RecordTypeInts.CSSA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CSSA = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)CombatStyle_FieldIndex.CSSA;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceApproachingMinDistance = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
+                    if (dataFrame.Complete) return null;
+                    item.SpaceApproachingWeighting = Mutagen.Bethesda.Starfield.CombatStylePowerWeighting.CreateFromBinary(frame: dataFrame);
+                    return (int)CombatStyle_FieldIndex.SpaceApproachingWeighting;
                 }
                 case RecordTypeInts.CSSD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CSSD = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)CombatStyle_FieldIndex.CSSD;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceDetectionRating1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceDetectionRating2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.SpaceDetectionRating3 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)CombatStyle_FieldIndex.SpaceDetectionRating3;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -5782,18 +8153,13 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TNAM.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)CombatStyle_FieldIndex.TNAM;
+                    item.TemplateDefaultCombatStyle.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)CombatStyle_FieldIndex.TemplateDefaultCombatStyle;
                 }
                 case RecordTypeInts.UNAM:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UNAM = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ICombatStyleGetter>>.Instance.Parse(
-                            reader: frame.SpawnWithLength(contentLength),
-                            transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLinkGetter<ICombatStyleGetter>>();
-                    return (int)CombatStyle_FieldIndex.UNAM;
+                    item.Templates = Mutagen.Bethesda.Starfield.CombatStyleTemplates.CreateFromBinary(frame: frame);
+                    return (int)CombatStyle_FieldIndex.Templates;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -5859,17 +8225,17 @@ namespace Mutagen.Bethesda.Starfield
         #region OffensiveMult
         private int _OffensiveMultLocation => _CSGDLocation!.Value.Min;
         private bool _OffensiveMult_IsSet => _CSGDLocation.HasValue;
-        public Single OffensiveMult => _OffensiveMult_IsSet ? _recordData.Slice(_OffensiveMultLocation, 4).Float() : default(Single);
+        public Percent OffensiveMult => _OffensiveMult_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_OffensiveMultLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
         #region DefensiveMult
         private int _DefensiveMultLocation => _CSGDLocation!.Value.Min + 0x4;
         private bool _DefensiveMult_IsSet => _CSGDLocation.HasValue;
-        public Single DefensiveMult => _DefensiveMult_IsSet ? _recordData.Slice(_DefensiveMultLocation, 4).Float() : default(Single);
+        public Percent DefensiveMult => _DefensiveMult_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_DefensiveMultLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
         #region GroupOffensiveMult
         private int _GroupOffensiveMultLocation => _CSGDLocation!.Value.Min + 0x8;
         private bool _GroupOffensiveMult_IsSet => _CSGDLocation.HasValue;
-        public Single GroupOffensiveMult => _GroupOffensiveMult_IsSet ? _recordData.Slice(_GroupOffensiveMultLocation, 4).Float() : default(Single);
+        public Percent GroupOffensiveMult => _GroupOffensiveMult_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_GroupOffensiveMultLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
         #region EquipmentScoreMultMelee
         private int _EquipmentScoreMultMeleeLocation => _CSGDLocation!.Value.Min + 0xC;
@@ -5904,32 +8270,32 @@ namespace Mutagen.Bethesda.Starfield
         #region AvoidThreatChance
         private int _AvoidThreatChanceLocation => _CSGDLocation!.Value.Min + 0x24;
         private bool _AvoidThreatChance_IsSet => _CSGDLocation.HasValue;
-        public Single AvoidThreatChance => _AvoidThreatChance_IsSet ? _recordData.Slice(_AvoidThreatChanceLocation, 4).Float() : default(Single);
+        public Percent AvoidThreatChance => _AvoidThreatChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_AvoidThreatChanceLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
         #region DodgeThreadChance
         private int _DodgeThreadChanceLocation => _CSGDLocation!.Value.Min + 0x28;
         private bool _DodgeThreadChance_IsSet => _CSGDLocation.HasValue;
-        public Single DodgeThreadChance => _DodgeThreadChance_IsSet ? _recordData.Slice(_DodgeThreadChanceLocation, 4).Float() : default(Single);
+        public Percent DodgeThreadChance => _DodgeThreadChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_DodgeThreadChanceLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
         #region EvadeThreatChance
         private int _EvadeThreatChanceLocation => _CSGDLocation!.Value.Min + 0x2C;
         private bool _EvadeThreatChance_IsSet => _CSGDLocation.HasValue;
-        public Single EvadeThreatChance => _EvadeThreatChance_IsSet ? _recordData.Slice(_EvadeThreatChanceLocation, 4).Float() : default(Single);
+        public Percent EvadeThreatChance => _EvadeThreatChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_EvadeThreatChanceLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region CSGDUnknownFloat1
-        private int _CSGDUnknownFloat1Location => _CSGDLocation!.Value.Min + 0x30;
-        private bool _CSGDUnknownFloat1_IsSet => _CSGDLocation.HasValue;
-        public Single CSGDUnknownFloat1 => _CSGDUnknownFloat1_IsSet ? _recordData.Slice(_CSGDUnknownFloat1Location, 4).Float() : default(Single);
+        #region HealAllyDistance
+        private int _HealAllyDistanceLocation => _CSGDLocation!.Value.Min + 0x30;
+        private bool _HealAllyDistance_IsSet => _CSGDLocation.HasValue;
+        public Single HealAllyDistance => _HealAllyDistance_IsSet ? _recordData.Slice(_HealAllyDistanceLocation, 4).Float() : default(Single);
         #endregion
-        #region CSGDUnknownFloat2
-        private int _CSGDUnknownFloat2Location => _CSGDLocation!.Value.Min + 0x34;
-        private bool _CSGDUnknownFloat2_IsSet => _CSGDLocation.HasValue;
-        public Single CSGDUnknownFloat2 => _CSGDUnknownFloat2_IsSet ? _recordData.Slice(_CSGDUnknownFloat2Location, 4).Float() : default(Single);
+        #region JumpCostMult
+        private int _JumpCostMultLocation => _CSGDLocation!.Value.Min + 0x34;
+        private bool _JumpCostMult_IsSet => _CSGDLocation.HasValue;
+        public Single JumpCostMult => _JumpCostMult_IsSet ? _recordData.Slice(_JumpCostMultLocation, 4).Float() : default(Single);
         #endregion
-        #region CSGDUnknownFloat3
-        private int _CSGDUnknownFloat3Location => _CSGDLocation!.Value.Min + 0x38;
-        private bool _CSGDUnknownFloat3_IsSet => _CSGDLocation.HasValue;
-        public Single CSGDUnknownFloat3 => _CSGDUnknownFloat3_IsSet ? _recordData.Slice(_CSGDUnknownFloat3Location, 4).Float() : default(Single);
+        #region TauntDelayMult
+        private int _TauntDelayMultLocation => _CSGDLocation!.Value.Min + 0x38;
+        private bool _TauntDelayMult_IsSet => _CSGDLocation.HasValue;
+        public Single TauntDelayMult => _TauntDelayMult_IsSet ? _recordData.Slice(_TauntDelayMultLocation, 4).Float() : default(Single);
         #endregion
         private RangeInt32? _CSMELocation;
         #region MeleeAttackStaggeredMult
@@ -5986,78 +8352,78 @@ namespace Mutagen.Bethesda.Starfield
         #region RangedAccuracyMult
         private int _RangedAccuracyMultLocation => _CSRALocation!.Value.Min;
         private bool _RangedAccuracyMult_IsSet => _CSRALocation.HasValue;
-        public Single RangedAccuracyMult => _RangedAccuracyMult_IsSet ? _recordData.Slice(_RangedAccuracyMultLocation, 4).Float() : default(Single);
+        public Percent RangedAccuracyMult => _RangedAccuracyMult_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_RangedAccuracyMultLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region CSRAUnknownFloat1
-        private int _CSRAUnknownFloat1Location => _CSRALocation!.Value.Min + 0x4;
-        private bool _CSRAUnknownFloat1_IsSet => _CSRALocation.HasValue;
-        public Single CSRAUnknownFloat1 => _CSRAUnknownFloat1_IsSet ? _recordData.Slice(_CSRAUnknownFloat1Location, 4).Float() : default(Single);
+        #region RangedThrowMult
+        private int _RangedThrowMultLocation => _CSRALocation!.Value.Min + 0x4;
+        private bool _RangedThrowMult_IsSet => _CSRALocation.HasValue;
+        public Percent RangedThrowMult => _RangedThrowMult_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_RangedThrowMultLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region CSRAUnknownFloat2
-        private int _CSRAUnknownFloat2Location => _CSRALocation!.Value.Min + 0x8;
-        private bool _CSRAUnknownFloat2_IsSet => _CSRALocation.HasValue;
-        public Single CSRAUnknownFloat2 => _CSRAUnknownFloat2_IsSet ? _recordData.Slice(_CSRAUnknownFloat2Location, 4).Float() : default(Single);
+        #region RangedGrenadeAdvancedThrowingMult
+        private int _RangedGrenadeAdvancedThrowingMultLocation => _CSRALocation!.Value.Min + 0x8;
+        private bool _RangedGrenadeAdvancedThrowingMult_IsSet => _CSRALocation.HasValue;
+        public Percent RangedGrenadeAdvancedThrowingMult => _RangedGrenadeAdvancedThrowingMult_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_RangedGrenadeAdvancedThrowingMultLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region CSRAUnknownFloat3
-        private int _CSRAUnknownFloat3Location => _CSRALocation!.Value.Min + 0xC;
-        private bool _CSRAUnknownFloat3_IsSet => _CSRALocation.HasValue;
-        public Single CSRAUnknownFloat3 => _CSRAUnknownFloat3_IsSet ? _recordData.Slice(_CSRAUnknownFloat3Location, 4).Float() : default(Single);
+        #region RangedGrenadeFlashTargetMult
+        private int _RangedGrenadeFlashTargetMultLocation => _CSRALocation!.Value.Min + 0xC;
+        private bool _RangedGrenadeFlashTargetMult_IsSet => _CSRALocation.HasValue;
+        public Percent RangedGrenadeFlashTargetMult => _RangedGrenadeFlashTargetMult_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_RangedGrenadeFlashTargetMultLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region CSRAUnknownFloat4
-        private int _CSRAUnknownFloat4Location => _CSRALocation!.Value.Min + 0x10;
-        private bool _CSRAUnknownFloat4_IsSet => _CSRALocation.HasValue;
-        public Single CSRAUnknownFloat4 => _CSRAUnknownFloat4_IsSet ? _recordData.Slice(_CSRAUnknownFloat4Location, 4).Float() : default(Single);
+        #region RangedGrenadeThrowAtGroupMult
+        private int _RangedGrenadeThrowAtGroupMultLocation => _CSRALocation!.Value.Min + 0x10;
+        private bool _RangedGrenadeThrowAtGroupMult_IsSet => _CSRALocation.HasValue;
+        public Percent RangedGrenadeThrowAtGroupMult => _RangedGrenadeThrowAtGroupMult_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_RangedGrenadeThrowAtGroupMultLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region CSRAUnknownFloat5
-        private int _CSRAUnknownFloat5Location => _CSRALocation!.Value.Min + 0x14;
-        private bool _CSRAUnknownFloat5_IsSet => _CSRALocation.HasValue;
-        public Single CSRAUnknownFloat5 => _CSRAUnknownFloat5_IsSet ? _recordData.Slice(_CSRAUnknownFloat5Location, 4).Float() : default(Single);
+        #region RangedGrenadeCloseRangeAttackChanceMult
+        private int _RangedGrenadeCloseRangeAttackChanceMultLocation => _CSRALocation!.Value.Min + 0x14;
+        private bool _RangedGrenadeCloseRangeAttackChanceMult_IsSet => _CSRALocation.HasValue;
+        public Percent RangedGrenadeCloseRangeAttackChanceMult => _RangedGrenadeCloseRangeAttackChanceMult_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_RangedGrenadeCloseRangeAttackChanceMultLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
         private RangeInt32? _CSCRLocation;
         #region CloseRangeDuelingCircleMult
         private int _CloseRangeDuelingCircleMultLocation => _CSCRLocation!.Value.Min;
         private bool _CloseRangeDuelingCircleMult_IsSet => _CSCRLocation.HasValue;
-        public Single CloseRangeDuelingCircleMult => _CloseRangeDuelingCircleMult_IsSet ? _recordData.Slice(_CloseRangeDuelingCircleMultLocation, 4).Float() : default(Single);
+        public Percent CloseRangeDuelingCircleMult => _CloseRangeDuelingCircleMult_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_CloseRangeDuelingCircleMultLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
         #region CloseRangeDuelingFallbackMult
         private int _CloseRangeDuelingFallbackMultLocation => _CSCRLocation!.Value.Min + 0x4;
         private bool _CloseRangeDuelingFallbackMult_IsSet => _CSCRLocation.HasValue;
-        public Single CloseRangeDuelingFallbackMult => _CloseRangeDuelingFallbackMult_IsSet ? _recordData.Slice(_CloseRangeDuelingFallbackMultLocation, 4).Float() : default(Single);
+        public Percent CloseRangeDuelingFallbackMult => _CloseRangeDuelingFallbackMult_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_CloseRangeDuelingFallbackMultLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
         #region CloseRangeFlankDistance
         private int _CloseRangeFlankDistanceLocation => _CSCRLocation!.Value.Min + 0x8;
         private bool _CloseRangeFlankDistance_IsSet => _CSCRLocation.HasValue;
-        public Single CloseRangeFlankDistance => _CloseRangeFlankDistance_IsSet ? _recordData.Slice(_CloseRangeFlankDistanceLocation, 4).Float() : default(Single);
+        public Percent CloseRangeFlankDistance => _CloseRangeFlankDistance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_CloseRangeFlankDistanceLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
         #region CloseRangeFlankingStalkTime
         private int _CloseRangeFlankingStalkTimeLocation => _CSCRLocation!.Value.Min + 0xC;
         private bool _CloseRangeFlankingStalkTime_IsSet => _CSCRLocation.HasValue;
-        public Single CloseRangeFlankingStalkTime => _CloseRangeFlankingStalkTime_IsSet ? _recordData.Slice(_CloseRangeFlankingStalkTimeLocation, 4).Float() : default(Single);
+        public Percent CloseRangeFlankingStalkTime => _CloseRangeFlankingStalkTime_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_CloseRangeFlankingStalkTimeLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
         #region CloseRangeChargeDistance
         private int _CloseRangeChargeDistanceLocation => _CSCRLocation!.Value.Min + 0x10;
         private bool _CloseRangeChargeDistance_IsSet => _CSCRLocation.HasValue;
-        public Single CloseRangeChargeDistance => _CloseRangeChargeDistance_IsSet ? _recordData.Slice(_CloseRangeChargeDistanceLocation, 4).Float() : default(Single);
+        public Percent CloseRangeChargeDistance => _CloseRangeChargeDistance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_CloseRangeChargeDistanceLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
         #region CloseRangeChargingThrowProbability
         private int _CloseRangeChargingThrowProbabilityLocation => _CSCRLocation!.Value.Min + 0x14;
         private bool _CloseRangeChargingThrowProbability_IsSet => _CSCRLocation.HasValue;
-        public Single CloseRangeChargingThrowProbability => _CloseRangeChargingThrowProbability_IsSet ? _recordData.Slice(_CloseRangeChargingThrowProbabilityLocation, 4).Float() : default(Single);
+        public Percent CloseRangeChargingThrowProbability => _CloseRangeChargingThrowProbability_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_CloseRangeChargingThrowProbabilityLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
         #region CloseRangeChargingSprintFastProbability
         private int _CloseRangeChargingSprintFastProbabilityLocation => _CSCRLocation!.Value.Min + 0x18;
         private bool _CloseRangeChargingSprintFastProbability_IsSet => _CSCRLocation.HasValue;
-        public Single CloseRangeChargingSprintFastProbability => _CloseRangeChargingSprintFastProbability_IsSet ? _recordData.Slice(_CloseRangeChargingSprintFastProbabilityLocation, 4).Float() : default(Single);
+        public Percent CloseRangeChargingSprintFastProbability => _CloseRangeChargingSprintFastProbability_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_CloseRangeChargingSprintFastProbabilityLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
         #region CloseRangeChargingSideswipeProbability
         private int _CloseRangeChargingSideswipeProbabilityLocation => _CSCRLocation!.Value.Min + 0x1C;
         private bool _CloseRangeChargingSideswipeProbability_IsSet => _CSCRLocation.HasValue;
-        public Single CloseRangeChargingSideswipeProbability => _CloseRangeChargingSideswipeProbability_IsSet ? _recordData.Slice(_CloseRangeChargingSideswipeProbabilityLocation, 4).Float() : default(Single);
+        public Percent CloseRangeChargingSideswipeProbability => _CloseRangeChargingSideswipeProbability_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_CloseRangeChargingSideswipeProbabilityLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
         #region CloseRangeChargingDisengageProbability
         private int _CloseRangeChargingDisengageProbabilityLocation => _CSCRLocation!.Value.Min + 0x20;
         private bool _CloseRangeChargingDisengageProbability_IsSet => _CSCRLocation.HasValue;
-        public Single CloseRangeChargingDisengageProbability => _CloseRangeChargingDisengageProbability_IsSet ? _recordData.Slice(_CloseRangeChargingDisengageProbabilityLocation, 4).Float() : default(Single);
+        public Percent CloseRangeChargingDisengageProbability => _CloseRangeChargingDisengageProbability_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_CloseRangeChargingDisengageProbabilityLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
         #region CloseRangeChargingThrowMaxTargets
         private int _CloseRangeChargingThrowMaxTargetsLocation => _CSCRLocation!.Value.Min + 0x24;
@@ -6067,139 +8433,347 @@ namespace Mutagen.Bethesda.Starfield
         #region CloseRangeFlankingVariance
         private int _CloseRangeFlankingVarianceLocation => _CSCRLocation!.Value.Min + 0x28;
         private bool _CloseRangeFlankingVariance_IsSet => _CSCRLocation.HasValue;
-        public Single CloseRangeFlankingVariance => _CloseRangeFlankingVariance_IsSet ? _recordData.Slice(_CloseRangeFlankingVarianceLocation, 4).Float() : default(Single);
+        public Percent CloseRangeFlankingVariance => _CloseRangeFlankingVariance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_CloseRangeFlankingVarianceLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region CSCRUnknownFloat1
-        private int _CSCRUnknownFloat1Location => _CSCRLocation!.Value.Min + 0x2C;
-        private bool _CSCRUnknownFloat1_IsSet => _CSCRLocation.HasValue;
-        public Single CSCRUnknownFloat1 => _CSCRUnknownFloat1_IsSet ? _recordData.Slice(_CSCRUnknownFloat1Location, 4).Float() : default(Single);
+        #region CloseRangeRetreatChance
+        private int _CloseRangeRetreatChanceLocation => _CSCRLocation!.Value.Min + 0x2C;
+        private bool _CloseRangeRetreatChance_IsSet => _CSCRLocation.HasValue;
+        public Percent CloseRangeRetreatChance => _CloseRangeRetreatChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_CloseRangeRetreatChanceLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region CSCRUnknownFloat2
-        private int _CSCRUnknownFloat2Location => _CSCRLocation!.Value.Min + 0x30;
-        private bool _CSCRUnknownFloat2_IsSet => _CSCRLocation.HasValue;
-        public Single CSCRUnknownFloat2 => _CSCRUnknownFloat2_IsSet ? _recordData.Slice(_CSCRUnknownFloat2Location, 4).Float() : default(Single);
+        #region CloseRangeRetreatDistanceMult
+        private int _CloseRangeRetreatDistanceMultLocation => _CSCRLocation!.Value.Min + 0x30;
+        private bool _CloseRangeRetreatDistanceMult_IsSet => _CSCRLocation.HasValue;
+        public Percent CloseRangeRetreatDistanceMult => _CloseRangeRetreatDistanceMult_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_CloseRangeRetreatDistanceMultLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
         private RangeInt32? _CSLRLocation;
         #region LongRangeStrafeMult
         private int _LongRangeStrafeMultLocation => _CSLRLocation!.Value.Min;
         private bool _LongRangeStrafeMult_IsSet => _CSLRLocation.HasValue;
-        public Single LongRangeStrafeMult => _LongRangeStrafeMult_IsSet ? _recordData.Slice(_LongRangeStrafeMultLocation, 4).Float() : default(Single);
+        public Percent LongRangeStrafeMult => _LongRangeStrafeMult_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_LongRangeStrafeMultLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
         #region LongRangeAdjustRangeMult
         private int _LongRangeAdjustRangeMultLocation => _CSLRLocation!.Value.Min + 0x4;
         private bool _LongRangeAdjustRangeMult_IsSet => _CSLRLocation.HasValue;
-        public Single LongRangeAdjustRangeMult => _LongRangeAdjustRangeMult_IsSet ? _recordData.Slice(_LongRangeAdjustRangeMultLocation, 4).Float() : default(Single);
+        public Percent LongRangeAdjustRangeMult => _LongRangeAdjustRangeMult_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_LongRangeAdjustRangeMultLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
         #region LongRangeCrouchMult
         private int _LongRangeCrouchMultLocation => _CSLRLocation!.Value.Min + 0x8;
         private bool _LongRangeCrouchMult_IsSet => _CSLRLocation.HasValue;
-        public Single LongRangeCrouchMult => _LongRangeCrouchMult_IsSet ? _recordData.Slice(_LongRangeCrouchMultLocation, 4).Float() : default(Single);
+        public Percent LongRangeCrouchMult => _LongRangeCrouchMult_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_LongRangeCrouchMultLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
         #region LongRangeWaitMult
         private int _LongRangeWaitMultLocation => _CSLRLocation!.Value.Min + 0xC;
         private bool _LongRangeWaitMult_IsSet => _CSLRLocation.HasValue;
-        public Single LongRangeWaitMult => _LongRangeWaitMult_IsSet ? _recordData.Slice(_LongRangeWaitMultLocation, 4).Float() : default(Single);
+        public Percent LongRangeWaitMult => _LongRangeWaitMult_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_LongRangeWaitMultLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
         #region LongRangeRangeMult
         private int _LongRangeRangeMultLocation => _CSLRLocation!.Value.Min + 0x10;
         private bool _LongRangeRangeMult_IsSet => _CSLRLocation.HasValue;
-        public Single LongRangeRangeMult => _LongRangeRangeMult_IsSet ? _recordData.Slice(_LongRangeRangeMultLocation, 4).Float() : default(Single);
+        public Percent LongRangeRangeMult => _LongRangeRangeMult_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_LongRangeRangeMultLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region CSLRUnknownFloat1
-        private int _CSLRUnknownFloat1Location => _CSLRLocation!.Value.Min + 0x14;
-        private bool _CSLRUnknownFloat1_IsSet => _CSLRLocation.HasValue;
-        public Single CSLRUnknownFloat1 => _CSLRUnknownFloat1_IsSet ? _recordData.Slice(_CSLRUnknownFloat1Location, 4).Float() : default(Single);
+        #region LongRangeProvideSuppressiveFireMult
+        private int _LongRangeProvideSuppressiveFireMultLocation => _CSLRLocation!.Value.Min + 0x14;
+        private bool _LongRangeProvideSuppressiveFireMult_IsSet => _CSLRLocation.HasValue;
+        public Percent LongRangeProvideSuppressiveFireMult => _LongRangeProvideSuppressiveFireMult_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_LongRangeProvideSuppressiveFireMultLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region CSLRUnknownFloat2
-        private int _CSLRUnknownFloat2Location => _CSLRLocation!.Value.Min + 0x18;
-        private bool _CSLRUnknownFloat2_IsSet => _CSLRLocation.HasValue;
-        public Single CSLRUnknownFloat2 => _CSLRUnknownFloat2_IsSet ? _recordData.Slice(_CSLRUnknownFloat2Location, 4).Float() : default(Single);
+        #region LongRangeRetreatChance
+        private int _LongRangeRetreatChanceLocation => _CSLRLocation!.Value.Min + 0x18;
+        private bool _LongRangeRetreatChance_IsSet => _CSLRLocation.HasValue;
+        public Percent LongRangeRetreatChance => _LongRangeRetreatChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_LongRangeRetreatChanceLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region CSLRUnknownFloat3
-        private int _CSLRUnknownFloat3Location => _CSLRLocation!.Value.Min + 0x1C;
-        private bool _CSLRUnknownFloat3_IsSet => _CSLRLocation.HasValue;
-        public Single CSLRUnknownFloat3 => _CSLRUnknownFloat3_IsSet ? _recordData.Slice(_CSLRUnknownFloat3Location, 4).Float() : default(Single);
+        #region LongRangeRetreatHideTimeMult
+        private int _LongRangeRetreatHideTimeMultLocation => _CSLRLocation!.Value.Min + 0x1C;
+        private bool _LongRangeRetreatHideTimeMult_IsSet => _CSLRLocation.HasValue;
+        public Percent LongRangeRetreatHideTimeMult => _LongRangeRetreatHideTimeMult_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_LongRangeRetreatHideTimeMultLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region CSLRUnknownFloat4
-        private int _CSLRUnknownFloat4Location => _CSLRLocation!.Value.Min + 0x20;
-        private bool _CSLRUnknownFloat4_IsSet => _CSLRLocation.HasValue;
-        public Single CSLRUnknownFloat4 => _CSLRUnknownFloat4_IsSet ? _recordData.Slice(_CSLRUnknownFloat4Location, 4).Float() : default(Single);
+        #region LongRangeRetreatDistanceMult
+        private int _LongRangeRetreatDistanceMultLocation => _CSLRLocation!.Value.Min + 0x20;
+        private bool _LongRangeRetreatDistanceMult_IsSet => _CSLRLocation.HasValue;
+        public Percent LongRangeRetreatDistanceMult => _LongRangeRetreatDistanceMult_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_LongRangeRetreatDistanceMultLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
         private RangeInt32? _CSCVLocation;
         #region CoverSearchDistanceMult
         private int _CoverSearchDistanceMultLocation => _CSCVLocation!.Value.Min;
         private bool _CoverSearchDistanceMult_IsSet => _CSCVLocation.HasValue;
-        public Single CoverSearchDistanceMult => _CoverSearchDistanceMult_IsSet ? _recordData.Slice(_CoverSearchDistanceMultLocation, 4).Float() : default(Single);
+        public Percent CoverSearchDistanceMult => _CoverSearchDistanceMult_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_CoverSearchDistanceMultLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region CSCVUnknownFloat1
-        private int _CSCVUnknownFloat1Location => _CSCVLocation!.Value.Min + 0x4;
-        private bool _CSCVUnknownFloat1_IsSet => _CSCVLocation.HasValue;
-        public Single CSCVUnknownFloat1 => _CSCVUnknownFloat1_IsSet ? _recordData.Slice(_CSCVUnknownFloat1Location, 4).Float() : default(Single);
+        #region CoverSearchSuppressionSensitivity
+        private int _CoverSearchSuppressionSensitivityLocation => _CSCVLocation!.Value.Min + 0x4;
+        private bool _CoverSearchSuppressionSensitivity_IsSet => _CSCVLocation.HasValue;
+        public Percent CoverSearchSuppressionSensitivity => _CoverSearchSuppressionSensitivity_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_CoverSearchSuppressionSensitivityLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
         private RangeInt32? _CSFLLocation;
-        #region HoverChance
-        private int _HoverChanceLocation => _CSFLLocation!.Value.Min;
-        private bool _HoverChance_IsSet => _CSFLLocation.HasValue;
-        public Single HoverChance => _HoverChance_IsSet ? _recordData.Slice(_HoverChanceLocation, 4).Float() : default(Single);
+        #region FlightHoverChance
+        private int _FlightHoverChanceLocation => _CSFLLocation!.Value.Min;
+        private bool _FlightHoverChance_IsSet => _CSFLLocation.HasValue;
+        public Percent FlightHoverChance => _FlightHoverChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_FlightHoverChanceLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region DiveBombChance
-        private int _DiveBombChanceLocation => _CSFLLocation!.Value.Min + 0x4;
-        private bool _DiveBombChance_IsSet => _CSFLLocation.HasValue;
-        public Single DiveBombChance => _DiveBombChance_IsSet ? _recordData.Slice(_DiveBombChanceLocation, 4).Float() : default(Single);
+        #region FlightDiveBombChance
+        private int _FlightDiveBombChanceLocation => _CSFLLocation!.Value.Min + 0x4;
+        private bool _FlightDiveBombChance_IsSet => _CSFLLocation.HasValue;
+        public Percent FlightDiveBombChance => _FlightDiveBombChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_FlightDiveBombChanceLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region GroundAttackChance
-        private int _GroundAttackChanceLocation => _CSFLLocation!.Value.Min + 0x8;
-        private bool _GroundAttackChance_IsSet => _CSFLLocation.HasValue;
-        public Single GroundAttackChance => _GroundAttackChance_IsSet ? _recordData.Slice(_GroundAttackChanceLocation, 4).Float() : default(Single);
+        #region FlightGroundAttackChance
+        private int _FlightGroundAttackChanceLocation => _CSFLLocation!.Value.Min + 0x8;
+        private bool _FlightGroundAttackChance_IsSet => _CSFLLocation.HasValue;
+        public Percent FlightGroundAttackChance => _FlightGroundAttackChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_FlightGroundAttackChanceLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region HoverTime
-        private int _HoverTimeLocation => _CSFLLocation!.Value.Min + 0xC;
-        private bool _HoverTime_IsSet => _CSFLLocation.HasValue;
-        public Single HoverTime => _HoverTime_IsSet ? _recordData.Slice(_HoverTimeLocation, 4).Float() : default(Single);
+        #region FlightHoverTime
+        private int _FlightHoverTimeLocation => _CSFLLocation!.Value.Min + 0xC;
+        private bool _FlightHoverTime_IsSet => _CSFLLocation.HasValue;
+        public Percent FlightHoverTime => _FlightHoverTime_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_FlightHoverTimeLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region GroundAttackTime
-        private int _GroundAttackTimeLocation => _CSFLLocation!.Value.Min + 0x10;
-        private bool _GroundAttackTime_IsSet => _CSFLLocation.HasValue;
-        public Single GroundAttackTime => _GroundAttackTime_IsSet ? _recordData.Slice(_GroundAttackTimeLocation, 4).Float() : default(Single);
+        #region FlightGroundAttackTime
+        private int _FlightGroundAttackTimeLocation => _CSFLLocation!.Value.Min + 0x10;
+        private bool _FlightGroundAttackTime_IsSet => _CSFLLocation.HasValue;
+        public Percent FlightGroundAttackTime => _FlightGroundAttackTime_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_FlightGroundAttackTimeLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region PerchAttackChance
-        private int _PerchAttackChanceLocation => _CSFLLocation!.Value.Min + 0x14;
-        private bool _PerchAttackChance_IsSet => _CSFLLocation.HasValue;
-        public Single PerchAttackChance => _PerchAttackChance_IsSet ? _recordData.Slice(_PerchAttackChanceLocation, 4).Float() : default(Single);
+        #region FlightPerchAttackChance
+        private int _FlightPerchAttackChanceLocation => _CSFLLocation!.Value.Min + 0x14;
+        private bool _FlightPerchAttackChance_IsSet => _CSFLLocation.HasValue;
+        public Percent FlightPerchAttackChance => _FlightPerchAttackChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_FlightPerchAttackChanceLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region PerchAttackTime
-        private int _PerchAttackTimeLocation => _CSFLLocation!.Value.Min + 0x18;
-        private bool _PerchAttackTime_IsSet => _CSFLLocation.HasValue;
-        public Single PerchAttackTime => _PerchAttackTime_IsSet ? _recordData.Slice(_PerchAttackTimeLocation, 4).Float() : default(Single);
+        #region FlightPerchAttackTime
+        private int _FlightPerchAttackTimeLocation => _CSFLLocation!.Value.Min + 0x18;
+        private bool _FlightPerchAttackTime_IsSet => _CSFLLocation.HasValue;
+        public Percent FlightPerchAttackTime => _FlightPerchAttackTime_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_FlightPerchAttackTimeLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region FlyingAttackChance
-        private int _FlyingAttackChanceLocation => _CSFLLocation!.Value.Min + 0x1C;
-        private bool _FlyingAttackChance_IsSet => _CSFLLocation.HasValue;
-        public Single FlyingAttackChance => _FlyingAttackChance_IsSet ? _recordData.Slice(_FlyingAttackChanceLocation, 4).Float() : default(Single);
+        #region FlightFlyingAttackChance
+        private int _FlightFlyingAttackChanceLocation => _CSFLLocation!.Value.Min + 0x1C;
+        private bool _FlightFlyingAttackChance_IsSet => _CSFLLocation.HasValue;
+        public Percent FlightFlyingAttackChance => _FlightFlyingAttackChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_FlightFlyingAttackChanceLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region CSTN
-        private int? _CSTNLocation;
-        public ReadOnlyMemorySlice<Byte>? CSTN => _CSTNLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CSTNLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        private RangeInt32? _CSTNLocation;
+        #region TunnelCostMult
+        private int _TunnelCostMultLocation => _CSTNLocation!.Value.Min;
+        private bool _TunnelCostMult_IsSet => _CSTNLocation.HasValue;
+        public Single TunnelCostMult => _TunnelCostMult_IsSet ? _recordData.Slice(_TunnelCostMultLocation, 4).Float() : default(Single);
         #endregion
-        #region CSSG
-        private int? _CSSGLocation;
-        public ReadOnlyMemorySlice<Byte>? CSSG => _CSSGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CSSGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region TunnelChance
+        private int _TunnelChanceLocation => _CSTNLocation!.Value.Min + 0x4;
+        private bool _TunnelChance_IsSet => _CSTNLocation.HasValue;
+        public Percent TunnelChance => _TunnelChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_TunnelChanceLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region CSSM
-        private int? _CSSMLocation;
-        public ReadOnlyMemorySlice<Byte>? CSSM => _CSSMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CSSMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region TunnelMaxDistance
+        private int _TunnelMaxDistanceLocation => _CSTNLocation!.Value.Min + 0x8;
+        private bool _TunnelMaxDistance_IsSet => _CSTNLocation.HasValue;
+        public Single TunnelMaxDistance => _TunnelMaxDistance_IsSet ? _recordData.Slice(_TunnelMaxDistanceLocation, 4).Float() : default(Single);
         #endregion
-        #region CSSR
-        private int? _CSSRLocation;
-        public ReadOnlyMemorySlice<Byte>? CSSR => _CSSRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CSSRLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region TunnelSpeedMult
+        private int _TunnelSpeedMultLocation => _CSTNLocation!.Value.Min + 0xC;
+        private bool _TunnelSpeedMult_IsSet => _CSTNLocation.HasValue;
+        public Single TunnelSpeedMult => _TunnelSpeedMult_IsSet ? _recordData.Slice(_TunnelSpeedMultLocation, 4).Float() : default(Single);
         #endregion
-        #region CSSA
-        private int? _CSSALocation;
-        public ReadOnlyMemorySlice<Byte>? CSSA => _CSSALocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CSSALocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region TunnelMinTime
+        private int _TunnelMinTimeLocation => _CSTNLocation!.Value.Min + 0x10;
+        private bool _TunnelMinTime_IsSet => _CSTNLocation.HasValue;
+        public Single TunnelMinTime => _TunnelMinTime_IsSet ? _recordData.Slice(_TunnelMinTimeLocation, 4).Float() : default(Single);
         #endregion
-        #region CSSD
-        private int? _CSSDLocation;
-        public ReadOnlyMemorySlice<Byte>? CSSD => _CSSDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CSSDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region TunnelMaxTime
+        private int _TunnelMaxTimeLocation => _CSTNLocation!.Value.Min + 0x14;
+        private bool _TunnelMaxTime_IsSet => _CSTNLocation.HasValue;
+        public Single TunnelMaxTime => _TunnelMaxTime_IsSet ? _recordData.Slice(_TunnelMaxTimeLocation, 4).Float() : default(Single);
+        #endregion
+        #region TunnelMaximumTime
+        private int _TunnelMaximumTimeLocation => _CSTNLocation!.Value.Min + 0x18;
+        private bool _TunnelMaximumTime_IsSet => _CSTNLocation.HasValue;
+        public Single TunnelMaximumTime => _TunnelMaximumTime_IsSet ? _recordData.Slice(_TunnelMaximumTimeLocation, 4).Float() : default(Single);
+        #endregion
+        #region TunnelCooldown
+        private int _TunnelCooldownLocation => _CSTNLocation!.Value.Min + 0x1C;
+        private bool _TunnelCooldown_IsSet => _CSTNLocation.HasValue;
+        public Single TunnelCooldown => _TunnelCooldown_IsSet ? _recordData.Slice(_TunnelCooldownLocation, 4).Float() : default(Single);
+        #endregion
+        private RangeInt32? _CSSGLocation;
+        #region SpaceGeneralPilotSkill
+        private int _SpaceGeneralPilotSkillLocation => _CSSGLocation!.Value.Min;
+        private bool _SpaceGeneralPilotSkill_IsSet => _CSSGLocation.HasValue;
+        public Percent SpaceGeneralPilotSkill => _SpaceGeneralPilotSkill_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SpaceGeneralPilotSkillLocation, 4), FloatIntegerType.UInt) : default(Percent);
+        #endregion
+        #region SpaceGeneralAccuracy
+        private int _SpaceGeneralAccuracyLocation => _CSSGLocation!.Value.Min + 0x4;
+        private bool _SpaceGeneralAccuracy_IsSet => _CSSGLocation.HasValue;
+        public Percent SpaceGeneralAccuracy => _SpaceGeneralAccuracy_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SpaceGeneralAccuracyLocation, 4), FloatIntegerType.UInt) : default(Percent);
+        #endregion
+        #region SpaceGeneralTargetShield
+        private int _SpaceGeneralTargetShieldLocation => _CSSGLocation!.Value.Min + 0x8;
+        private bool _SpaceGeneralTargetShield_IsSet => _CSSGLocation.HasValue;
+        public Percent SpaceGeneralTargetShield => _SpaceGeneralTargetShield_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SpaceGeneralTargetShieldLocation, 4), FloatIntegerType.UInt) : default(Percent);
+        #endregion
+        #region SpaceGeneralAdjustment
+        private int _SpaceGeneralAdjustmentLocation => _CSSGLocation!.Value.Min + 0xC;
+        private bool _SpaceGeneralAdjustment_IsSet => _CSSGLocation.HasValue;
+        public Single SpaceGeneralAdjustment => _SpaceGeneralAdjustment_IsSet ? _recordData.Slice(_SpaceGeneralAdjustmentLocation, 4).Float() : default(Single);
+        #endregion
+        #region SpaceGeneralEngageManeuverChanceDirectAttack
+        private int _SpaceGeneralEngageManeuverChanceDirectAttackLocation => _CSSGLocation!.Value.Min + 0x10;
+        private bool _SpaceGeneralEngageManeuverChanceDirectAttack_IsSet => _CSSGLocation.HasValue;
+        public Percent SpaceGeneralEngageManeuverChanceDirectAttack => _SpaceGeneralEngageManeuverChanceDirectAttack_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SpaceGeneralEngageManeuverChanceDirectAttackLocation, 4), FloatIntegerType.UInt) : default(Percent);
+        #endregion
+        #region SpaceGeneralEngageManeuverChancePass
+        private int _SpaceGeneralEngageManeuverChancePassLocation => _CSSGLocation!.Value.Min + 0x14;
+        private bool _SpaceGeneralEngageManeuverChancePass_IsSet => _CSSGLocation.HasValue;
+        public Percent SpaceGeneralEngageManeuverChancePass => _SpaceGeneralEngageManeuverChancePass_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SpaceGeneralEngageManeuverChancePassLocation, 4), FloatIntegerType.UInt) : default(Percent);
+        #endregion
+        #region SpaceGeneralEngageManeuverChanceLeadTurn
+        private int _SpaceGeneralEngageManeuverChanceLeadTurnLocation => _CSSGLocation!.Value.Min + 0x18;
+        private bool _SpaceGeneralEngageManeuverChanceLeadTurn_IsSet => _CSSGLocation.HasValue;
+        public Percent SpaceGeneralEngageManeuverChanceLeadTurn => _SpaceGeneralEngageManeuverChanceLeadTurn_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SpaceGeneralEngageManeuverChanceLeadTurnLocation, 4), FloatIntegerType.UInt) : default(Percent);
+        #endregion
+        #region SpaceGeneralEngageManeuverChanceSlideTurn
+        private int _SpaceGeneralEngageManeuverChanceSlideTurnLocation => _CSSGLocation!.Value.Min + 0x1C;
+        private bool _SpaceGeneralEngageManeuverChanceSlideTurn_IsSet => _CSSGLocation.HasValue;
+        public Percent SpaceGeneralEngageManeuverChanceSlideTurn => _SpaceGeneralEngageManeuverChanceSlideTurn_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SpaceGeneralEngageManeuverChanceSlideTurnLocation, 4), FloatIntegerType.UInt) : default(Percent);
+        #endregion
+        #region SpaceGeneralEngageManeuverChanceBarrelRoll
+        private int _SpaceGeneralEngageManeuverChanceBarrelRollLocation => _CSSGLocation!.Value.Min + 0x20;
+        private bool _SpaceGeneralEngageManeuverChanceBarrelRoll_IsSet => _CSSGLocation.HasValue;
+        public Percent SpaceGeneralEngageManeuverChanceBarrelRoll => _SpaceGeneralEngageManeuverChanceBarrelRoll_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SpaceGeneralEngageManeuverChanceBarrelRollLocation, 4), FloatIntegerType.UInt) : default(Percent);
+        #endregion
+        #region SpaceGeneralEvadeManeuverChanceBreak
+        private int _SpaceGeneralEvadeManeuverChanceBreakLocation => _CSSGLocation!.Value.Min + 0x24;
+        private bool _SpaceGeneralEvadeManeuverChanceBreak_IsSet => _CSSGLocation.HasValue;
+        public Percent SpaceGeneralEvadeManeuverChanceBreak => _SpaceGeneralEvadeManeuverChanceBreak_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SpaceGeneralEvadeManeuverChanceBreakLocation, 4), FloatIntegerType.UInt) : default(Percent);
+        #endregion
+        #region SpaceGeneralEvadeManeuverChanceScissors
+        private int _SpaceGeneralEvadeManeuverChanceScissorsLocation => _CSSGLocation!.Value.Min + 0x28;
+        private bool _SpaceGeneralEvadeManeuverChanceScissors_IsSet => _CSSGLocation.HasValue;
+        public Percent SpaceGeneralEvadeManeuverChanceScissors => _SpaceGeneralEvadeManeuverChanceScissors_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SpaceGeneralEvadeManeuverChanceScissorsLocation, 4), FloatIntegerType.UInt) : default(Percent);
+        #endregion
+        #region SpaceGeneralEvadeManeuverChanceCut
+        private int _SpaceGeneralEvadeManeuverChanceCutLocation => _CSSGLocation!.Value.Min + 0x2C;
+        private bool _SpaceGeneralEvadeManeuverChanceCut_IsSet => _CSSGLocation.HasValue;
+        public Percent SpaceGeneralEvadeManeuverChanceCut => _SpaceGeneralEvadeManeuverChanceCut_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SpaceGeneralEvadeManeuverChanceCutLocation, 4), FloatIntegerType.UInt) : default(Percent);
+        #endregion
+        #region SpaceGeneralEvadeManeuverChanceBoost
+        private int _SpaceGeneralEvadeManeuverChanceBoostLocation => _CSSGLocation!.Value.Min + 0x30;
+        private bool _SpaceGeneralEvadeManeuverChanceBoost_IsSet => _CSSGLocation.HasValue;
+        public Percent SpaceGeneralEvadeManeuverChanceBoost => _SpaceGeneralEvadeManeuverChanceBoost_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SpaceGeneralEvadeManeuverChanceBoostLocation, 4), FloatIntegerType.UInt) : default(Percent);
+        #endregion
+        #region SpaceGeneralAcquireManeuverChanceSliceback
+        private int _SpaceGeneralAcquireManeuverChanceSlicebackLocation => _CSSGLocation!.Value.Min + 0x34;
+        private bool _SpaceGeneralAcquireManeuverChanceSliceback_IsSet => _CSSGLocation.HasValue;
+        public Percent SpaceGeneralAcquireManeuverChanceSliceback => _SpaceGeneralAcquireManeuverChanceSliceback_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SpaceGeneralAcquireManeuverChanceSlicebackLocation, 4), FloatIntegerType.UInt) : default(Percent);
+        #endregion
+        #region SpaceGeneralAcquireManeuverChanceStrafeTurn
+        private int _SpaceGeneralAcquireManeuverChanceStrafeTurnLocation => _CSSGLocation!.Value.Min + 0x38;
+        private bool _SpaceGeneralAcquireManeuverChanceStrafeTurn_IsSet => _CSSGLocation.HasValue;
+        public Percent SpaceGeneralAcquireManeuverChanceStrafeTurn => _SpaceGeneralAcquireManeuverChanceStrafeTurn_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SpaceGeneralAcquireManeuverChanceStrafeTurnLocation, 4), FloatIntegerType.UInt) : default(Percent);
+        #endregion
+        #region SpaceGeneralAcquireManeuverChanceAcquire
+        private int _SpaceGeneralAcquireManeuverChanceAcquireLocation => _CSSGLocation!.Value.Min + 0x3C;
+        private bool _SpaceGeneralAcquireManeuverChanceAcquire_IsSet => _CSSGLocation.HasValue;
+        public Percent SpaceGeneralAcquireManeuverChanceAcquire => _SpaceGeneralAcquireManeuverChanceAcquire_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SpaceGeneralAcquireManeuverChanceAcquireLocation, 4), FloatIntegerType.UInt) : default(Percent);
+        #endregion
+        #region SpaceGeneralAcquireManeuverChanceTurn
+        private int _SpaceGeneralAcquireManeuverChanceTurnLocation => _CSSGLocation!.Value.Min + 0x40;
+        private bool _SpaceGeneralAcquireManeuverChanceTurn_IsSet => _CSSGLocation.HasValue;
+        public Percent SpaceGeneralAcquireManeuverChanceTurn => _SpaceGeneralAcquireManeuverChanceTurn_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SpaceGeneralAcquireManeuverChanceTurnLocation, 4), FloatIntegerType.UInt) : default(Percent);
+        #endregion
+        #region SpaceGeneralDisengageManeuverChance
+        private int _SpaceGeneralDisengageManeuverChanceLocation => _CSSGLocation!.Value.Min + 0x44;
+        private bool _SpaceGeneralDisengageManeuverChance_IsSet => _CSSGLocation.HasValue;
+        public Percent SpaceGeneralDisengageManeuverChance => _SpaceGeneralDisengageManeuverChance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SpaceGeneralDisengageManeuverChanceLocation, 4), FloatIntegerType.UInt) : default(Percent);
+        #endregion
+        #region SpaceGeneralMissileSeekingStrength
+        private int _SpaceGeneralMissileSeekingStrengthLocation => _CSSGLocation!.Value.Min + 0x48;
+        private bool _SpaceGeneralMissileSeekingStrength_IsSet => _CSSGLocation.HasValue;
+        public Single SpaceGeneralMissileSeekingStrength => _SpaceGeneralMissileSeekingStrength_IsSet ? _recordData.Slice(_SpaceGeneralMissileSeekingStrengthLocation, 4).Float() : default(Single);
+        #endregion
+        #region SpaceGeneralMinTimeBetweenBoosts
+        private int _SpaceGeneralMinTimeBetweenBoostsLocation => _CSSGLocation!.Value.Min + 0x4C;
+        private bool _SpaceGeneralMinTimeBetweenBoosts_IsSet => _CSSGLocation.HasValue;
+        public Single SpaceGeneralMinTimeBetweenBoosts => _SpaceGeneralMinTimeBetweenBoosts_IsSet ? _recordData.Slice(_SpaceGeneralMinTimeBetweenBoostsLocation, 4).Float() : default(Single);
+        #endregion
+        #region SpaceGeneralCombatStrafing
+        private int _SpaceGeneralCombatStrafingLocation => _CSSGLocation!.Value.Min + 0x50;
+        private bool _SpaceGeneralCombatStrafing_IsSet => _CSSGLocation.HasValue;
+        public Boolean SpaceGeneralCombatStrafing => _SpaceGeneralCombatStrafing_IsSet ? _recordData.Slice(_SpaceGeneralCombatStrafingLocation, 1)[0] >= 1 : default(Boolean);
+        #endregion
+        #region SpaceGeneralRollsDuringBoost
+        private int _SpaceGeneralRollsDuringBoostLocation => _CSSGLocation!.Value.Min + 0x51;
+        private bool _SpaceGeneralRollsDuringBoost_IsSet => _CSSGLocation.HasValue;
+        public Boolean SpaceGeneralRollsDuringBoost => _SpaceGeneralRollsDuringBoost_IsSet ? _recordData.Slice(_SpaceGeneralRollsDuringBoostLocation, 1)[0] >= 1 : default(Boolean);
+        #endregion
+        #region UnknownCSSG
+        private int _UnknownCSSGLocation => _CSSGLocation!.Value.Min + 0x52;
+        private bool _UnknownCSSG_IsSet => _CSSGLocation.HasValue;
+        public Int16 UnknownCSSG => _UnknownCSSG_IsSet ? BinaryPrimitives.ReadInt16LittleEndian(_recordData.Slice(_UnknownCSSGLocation, 2)) : default(Int16);
+        #endregion
+        #region SpaceGeneralPowerWeighting
+        private int _SpaceGeneralPowerWeightingLocation => _CSSGLocation!.Value.Min + 0x54;
+        private bool _SpaceGeneralPowerWeighting_IsSet => _CSSGLocation.HasValue;
+        private ICombatStylePowerWeightingGetter? _SpaceGeneralPowerWeighting => _SpaceGeneralPowerWeighting_IsSet ? CombatStylePowerWeightingBinaryOverlay.CombatStylePowerWeightingFactory(_recordData.Slice(_SpaceGeneralPowerWeightingLocation), _package) : default;
+        public ICombatStylePowerWeightingGetter SpaceGeneralPowerWeighting => _SpaceGeneralPowerWeighting ?? new CombatStylePowerWeighting();
+        #endregion
+        private RangeInt32? _CSSMLocation;
+        #region SpaceManeuverTypesMaxTime
+        private int _SpaceManeuverTypesMaxTimeLocation => _CSSMLocation!.Value.Min;
+        private bool _SpaceManeuverTypesMaxTime_IsSet => _CSSMLocation.HasValue;
+        private ICombatStyleManeuverTimingGetter? _SpaceManeuverTypesMaxTime => _SpaceManeuverTypesMaxTime_IsSet ? CombatStyleManeuverTimingBinaryOverlay.CombatStyleManeuverTimingFactory(_recordData.Slice(_SpaceManeuverTypesMaxTimeLocation), _package) : default;
+        public ICombatStyleManeuverTimingGetter SpaceManeuverTypesMaxTime => _SpaceManeuverTypesMaxTime ?? new CombatStyleManeuverTiming();
+        #endregion
+        #region SpaceManeuverTypesReentryDelays
+        private int _SpaceManeuverTypesReentryDelaysLocation => _CSSMLocation!.Value.Min + 0x20;
+        private bool _SpaceManeuverTypesReentryDelays_IsSet => _CSSMLocation.HasValue;
+        private ICombatStyleManeuverTimingGetter? _SpaceManeuverTypesReentryDelays => _SpaceManeuverTypesReentryDelays_IsSet ? CombatStyleManeuverTimingBinaryOverlay.CombatStyleManeuverTimingFactory(_recordData.Slice(_SpaceManeuverTypesReentryDelaysLocation), _package) : default;
+        public ICombatStyleManeuverTimingGetter SpaceManeuverTypesReentryDelays => _SpaceManeuverTypesReentryDelays ?? new CombatStyleManeuverTiming();
+        #endregion
+        private RangeInt32? _CSSRLocation;
+        #region SpaceRepairDamageThreshold
+        private int _SpaceRepairDamageThresholdLocation => _CSSRLocation!.Value.Min;
+        private bool _SpaceRepairDamageThreshold_IsSet => _CSSRLocation.HasValue;
+        public Percent SpaceRepairDamageThreshold => _SpaceRepairDamageThreshold_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SpaceRepairDamageThresholdLocation, 4), FloatIntegerType.UInt) : default(Percent);
+        #endregion
+        #region SpaceRepairFarawayDistance
+        private int _SpaceRepairFarawayDistanceLocation => _CSSRLocation!.Value.Min + 0x4;
+        private bool _SpaceRepairFarawayDistance_IsSet => _CSSRLocation.HasValue;
+        public Percent SpaceRepairFarawayDistance => _SpaceRepairFarawayDistance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SpaceRepairFarawayDistanceLocation, 4), FloatIntegerType.UInt) : default(Percent);
+        #endregion
+        #region SpaceRepairPowerToUse
+        private int _SpaceRepairPowerToUseLocation => _CSSRLocation!.Value.Min + 0x8;
+        private bool _SpaceRepairPowerToUse_IsSet => _CSSRLocation.HasValue;
+        public Percent SpaceRepairPowerToUse => _SpaceRepairPowerToUse_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SpaceRepairPowerToUseLocation, 4), FloatIntegerType.UInt) : default(Percent);
+        #endregion
+        #region SpaceRepairInClosePowerWeightingTables
+        private int _SpaceRepairInClosePowerWeightingTablesLocation => _CSSRLocation!.Value.Min + 0xC;
+        private bool _SpaceRepairInClosePowerWeightingTables_IsSet => _CSSRLocation.HasValue;
+        private ICombatStylePowerWeightingGetter? _SpaceRepairInClosePowerWeightingTables => _SpaceRepairInClosePowerWeightingTables_IsSet ? CombatStylePowerWeightingBinaryOverlay.CombatStylePowerWeightingFactory(_recordData.Slice(_SpaceRepairInClosePowerWeightingTablesLocation), _package) : default;
+        public ICombatStylePowerWeightingGetter SpaceRepairInClosePowerWeightingTables => _SpaceRepairInClosePowerWeightingTables ?? new CombatStylePowerWeighting();
+        #endregion
+        #region SpaceRepairFarawayPowerWeightingTables
+        private int _SpaceRepairFarawayPowerWeightingTablesLocation => _CSSRLocation!.Value.Min + 0x30;
+        private bool _SpaceRepairFarawayPowerWeightingTables_IsSet => _CSSRLocation.HasValue;
+        private ICombatStylePowerWeightingGetter? _SpaceRepairFarawayPowerWeightingTables => _SpaceRepairFarawayPowerWeightingTables_IsSet ? CombatStylePowerWeightingBinaryOverlay.CombatStylePowerWeightingFactory(_recordData.Slice(_SpaceRepairFarawayPowerWeightingTablesLocation), _package) : default;
+        public ICombatStylePowerWeightingGetter SpaceRepairFarawayPowerWeightingTables => _SpaceRepairFarawayPowerWeightingTables ?? new CombatStylePowerWeighting();
+        #endregion
+        private RangeInt32? _CSSALocation;
+        #region SpaceApproachingMinDistance
+        private int _SpaceApproachingMinDistanceLocation => _CSSALocation!.Value.Min;
+        private bool _SpaceApproachingMinDistance_IsSet => _CSSALocation.HasValue;
+        public Percent SpaceApproachingMinDistance => _SpaceApproachingMinDistance_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_SpaceApproachingMinDistanceLocation, 4), FloatIntegerType.UInt) : default(Percent);
+        #endregion
+        #region SpaceApproachingWeighting
+        private int _SpaceApproachingWeightingLocation => _CSSALocation!.Value.Min + 0x4;
+        private bool _SpaceApproachingWeighting_IsSet => _CSSALocation.HasValue;
+        private ICombatStylePowerWeightingGetter? _SpaceApproachingWeighting => _SpaceApproachingWeighting_IsSet ? CombatStylePowerWeightingBinaryOverlay.CombatStylePowerWeightingFactory(_recordData.Slice(_SpaceApproachingWeightingLocation), _package) : default;
+        public ICombatStylePowerWeightingGetter SpaceApproachingWeighting => _SpaceApproachingWeighting ?? new CombatStylePowerWeighting();
+        #endregion
+        private RangeInt32? _CSSDLocation;
+        #region SpaceDetectionRating1
+        private int _SpaceDetectionRating1Location => _CSSDLocation!.Value.Min;
+        private bool _SpaceDetectionRating1_IsSet => _CSSDLocation.HasValue;
+        public Single SpaceDetectionRating1 => _SpaceDetectionRating1_IsSet ? _recordData.Slice(_SpaceDetectionRating1Location, 4).Float() : default(Single);
+        #endregion
+        #region SpaceDetectionRating2
+        private int _SpaceDetectionRating2Location => _CSSDLocation!.Value.Min + 0x4;
+        private bool _SpaceDetectionRating2_IsSet => _CSSDLocation.HasValue;
+        public Single SpaceDetectionRating2 => _SpaceDetectionRating2_IsSet ? _recordData.Slice(_SpaceDetectionRating2Location, 4).Float() : default(Single);
+        #endregion
+        #region SpaceDetectionRating3
+        private int _SpaceDetectionRating3Location => _CSSDLocation!.Value.Min + 0x8;
+        private bool _SpaceDetectionRating3_IsSet => _CSSDLocation.HasValue;
+        public Single SpaceDetectionRating3 => _SpaceDetectionRating3_IsSet ? _recordData.Slice(_SpaceDetectionRating3Location, 4).Float() : default(Single);
         #endregion
         #region Flags
         private int? _FlagsLocation;
@@ -6209,11 +8783,14 @@ namespace Mutagen.Bethesda.Starfield
         private int? _FNAMLocation;
         public ReadOnlyMemorySlice<Byte>? FNAM => _FNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        #region TNAM
-        private int? _TNAMLocation;
-        public IFormLinkNullableGetter<ICombatStyleGetter> TNAM => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICombatStyleGetter>(_package, _recordData, _TNAMLocation);
+        #region TemplateDefaultCombatStyle
+        private int? _TemplateDefaultCombatStyleLocation;
+        public IFormLinkNullableGetter<ICombatStyleGetter> TemplateDefaultCombatStyle => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICombatStyleGetter>(_package, _recordData, _TemplateDefaultCombatStyleLocation);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<ICombatStyleGetter>>? UNAM { get; private set; }
+        #region Templates
+        private RangeInt32? _TemplatesLocation;
+        public ICombatStyleTemplatesGetter? Templates => _TemplatesLocation.HasValue ? CombatStyleTemplatesBinaryOverlay.CombatStyleTemplatesFactory(_recordData.Slice(_TemplatesLocation!.Value.Min), _package) : default;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -6286,7 +8863,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.CSGD:
                 {
                     _CSGDLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)CombatStyle_FieldIndex.CSGDUnknownFloat3;
+                    return (int)CombatStyle_FieldIndex.TauntDelayMult;
                 }
                 case RecordTypeInts.CSME:
                 {
@@ -6296,57 +8873,57 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.CSRA:
                 {
                     _CSRALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)CombatStyle_FieldIndex.CSRAUnknownFloat5;
+                    return (int)CombatStyle_FieldIndex.RangedGrenadeCloseRangeAttackChanceMult;
                 }
                 case RecordTypeInts.CSCR:
                 {
                     _CSCRLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)CombatStyle_FieldIndex.CSCRUnknownFloat2;
+                    return (int)CombatStyle_FieldIndex.CloseRangeRetreatDistanceMult;
                 }
                 case RecordTypeInts.CSLR:
                 {
                     _CSLRLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)CombatStyle_FieldIndex.CSLRUnknownFloat4;
+                    return (int)CombatStyle_FieldIndex.LongRangeRetreatDistanceMult;
                 }
                 case RecordTypeInts.CSCV:
                 {
                     _CSCVLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)CombatStyle_FieldIndex.CSCVUnknownFloat1;
+                    return (int)CombatStyle_FieldIndex.CoverSearchSuppressionSensitivity;
                 }
                 case RecordTypeInts.CSFL:
                 {
                     _CSFLLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)CombatStyle_FieldIndex.FlyingAttackChance;
+                    return (int)CombatStyle_FieldIndex.FlightFlyingAttackChance;
                 }
                 case RecordTypeInts.CSTN:
                 {
-                    _CSTNLocation = (stream.Position - offset);
-                    return (int)CombatStyle_FieldIndex.CSTN;
+                    _CSTNLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)CombatStyle_FieldIndex.TunnelCooldown;
                 }
                 case RecordTypeInts.CSSG:
                 {
-                    _CSSGLocation = (stream.Position - offset);
-                    return (int)CombatStyle_FieldIndex.CSSG;
+                    _CSSGLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)CombatStyle_FieldIndex.SpaceGeneralPowerWeighting;
                 }
                 case RecordTypeInts.CSSM:
                 {
-                    _CSSMLocation = (stream.Position - offset);
-                    return (int)CombatStyle_FieldIndex.CSSM;
+                    _CSSMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)CombatStyle_FieldIndex.SpaceManeuverTypesReentryDelays;
                 }
                 case RecordTypeInts.CSSR:
                 {
-                    _CSSRLocation = (stream.Position - offset);
-                    return (int)CombatStyle_FieldIndex.CSSR;
+                    _CSSRLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)CombatStyle_FieldIndex.SpaceRepairFarawayPowerWeightingTables;
                 }
                 case RecordTypeInts.CSSA:
                 {
-                    _CSSALocation = (stream.Position - offset);
-                    return (int)CombatStyle_FieldIndex.CSSA;
+                    _CSSALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)CombatStyle_FieldIndex.SpaceApproachingWeighting;
                 }
                 case RecordTypeInts.CSSD:
                 {
-                    _CSSDLocation = (stream.Position - offset);
-                    return (int)CombatStyle_FieldIndex.CSSD;
+                    _CSSDLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)CombatStyle_FieldIndex.SpaceDetectionRating3;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -6360,18 +8937,13 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _TNAMLocation = (stream.Position - offset);
-                    return (int)CombatStyle_FieldIndex.TNAM;
+                    _TemplateDefaultCombatStyleLocation = (stream.Position - offset);
+                    return (int)CombatStyle_FieldIndex.TemplateDefaultCombatStyle;
                 }
                 case RecordTypeInts.UNAM:
                 {
-                    this.UNAM = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ICombatStyleGetter>>(
-                        stream: stream,
-                        package: _package,
-                        finalPos: finalPos,
-                        itemLength: 4,
-                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ICombatStyleGetter>(p, s));
-                    return (int)CombatStyle_FieldIndex.UNAM;
+                    _TemplatesLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)CombatStyle_FieldIndex.Templates;
                 }
                 default:
                     return base.FillRecordType(

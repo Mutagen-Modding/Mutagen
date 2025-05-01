@@ -135,6 +135,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Destructible? _Destructible;
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         public Destructible? Destructible
         {
             get => _Destructible;
@@ -142,6 +145,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDestructibleGetter? IMoveableStaticGetter.Destructible => this.Destructible;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
+        #endregion
         #endregion
         #region Flags
         public MoveableStatic.Flag Flags { get; set; } = default(MoveableStatic.Flag);
@@ -749,6 +756,7 @@ namespace Mutagen.Bethesda.Skyrim
         IAssetLinkContainer,
         IExplodeSpawn,
         IFormLinkContainer,
+        IHasDestructible,
         ILoquiObjectSetter<IMoveableStaticInternal>,
         IModeled,
         IMoveableStaticGetter,
@@ -775,6 +783,9 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         new Destructible? Destructible { get; set; }
         new MoveableStatic.Flag Flags { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> LoopingSound { get; set; }
@@ -798,6 +809,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
+        IHasDestructibleGetter,
         ILoquiObject<IMoveableStaticGetter>,
         IMapsToGetter<IMoveableStaticGetter>,
         IModeledGetter,
@@ -830,7 +842,12 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
+        #region Destructible
+        /// <summary>
+        /// Aspects: IHasDestructibleGetter
+        /// </summary>
         IDestructibleGetter? Destructible { get; }
+        #endregion
         MoveableStatic.Flag Flags { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> LoopingSound { get; }
 
@@ -1973,8 +1990,10 @@ namespace Mutagen.Bethesda.Skyrim
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
                         source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)MoveableStatic_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
@@ -2075,7 +2094,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Name
         private int? _NameLocation;
-        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData) : default(TranslatedString?);
+        public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #region Aspects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         string INamedRequiredGetter.Name => this.Name?.String ?? string.Empty;

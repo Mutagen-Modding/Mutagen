@@ -4,10 +4,21 @@
     <Fields>
       <RefList name="Components" refName="AComponent" />
       <FormLink name="SurfacePatternStyle" refName="SurfacePatternStyle" recordType="CNAM" nullable="false" />
-      <Array2D name="SurfaceBlocks" fixedWidth="16" fixedHeight="16" recordType="FNAM" nullable="False">
+      <Array2D name="Blocks" fixedWidth="16" fixedHeight="16" recordType="BNAM" >
         <FormLink refName="SurfaceBlock" />
       </Array2D>
-      <ByteArray name="GNAM" recordType="GNAM" unknown="true" />
+      <Array2D name="MasterBlocks" fixedWidth="16" fixedHeight="16" recordType="FNAM" >
+        <FormLink refName="SurfaceBlock" />
+      </Array2D>
+      <Array2D name="MasterBlockRotations" fixedWidth="16" fixedHeight="16" recordType="GNAM" >
+        <Int8 />
+      </Array2D>
+      <Array2D name="OverrideBlocks" fixedWidth="16" fixedHeight="16" recordType="EFRM" >
+        <FormLink refName="SurfaceBlock" />
+      </Array2D>
+      <Array2D name="OverrideBlockRotations" fixedWidth="16" fixedHeight="16" recordType="EORI" >
+        <Int8 />
+      </Array2D>
       <List name="Worldspaces" recordType="DNAM" >
         <FormLink refName="Worldspace" />
       </List>

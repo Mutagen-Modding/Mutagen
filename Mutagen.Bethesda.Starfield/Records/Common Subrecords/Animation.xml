@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Animation" objType="Subrecord" endMarkerType="XNAM">
+    <Fields>
+      <FormLink name="NpcAnimation" refName="IdleAnimation" recordType="BNAM" nullable="False" />
+      <String name="Subgraph" recordType="STRV" />
+      <FormLink name="BodyArchetype" refName="Keyword" recordType="VCLR" />
+      <FormLink name="FaceArchetype" refName="Keyword" recordType="FLMV" />
+      <FormLink name="Flavor" refName="Keyword" recordType="FLAV" />
+      <Bool name="UseDialogueAnimation" recordType="QUAL" boolAsMarker="True" />
+      <Bool name="UseAnimationBodyArchetype" recordType="DOFT" boolAsMarker="True" />
+      <Bool name="HasAnimationFaceArchetype" recordType="SOFT" boolAsMarker="True" />
+      <Bool name="AnimationCompleteEndsPhase" recordType="DPLT" boolAsMarker="True" />
+      <Bool name="AnimationOnlyMovement" recordType="SPOR" boolAsMarker="True" />
+      <Bool name="UseFlavorAnimation" recordType="OCOR" boolAsMarker="True" />
+      <Float name="DelayStartTimeAction" recordType="LVCR" />
+      <RefList name="Conditions" refName="Condition" />
+      <FormLink name="Action" recordType="ATAC" refName="ActionRecord" />
+      <Bool name="UseActorAnimationAction" recordType="SHRT" boolAsMarker="True" />
+      <Bool name="AnimationHoldEvent" recordType="PLRL" boolAsMarker="True" />
+      <Int32 name="DTGT" recordType="DTGT" unknown="true" />
+      <Bool name="ACEP" recordType="ACEP" boolAsMarker="True" />
+    </Fields>
+  </Object>
+</Loqui>

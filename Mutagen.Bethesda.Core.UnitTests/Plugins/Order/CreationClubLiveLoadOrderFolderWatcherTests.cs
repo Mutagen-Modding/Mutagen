@@ -2,13 +2,14 @@
 using System.Reactive;
 using AutoFixture.Xunit2;
 using DynamicData;
-using FluentAssertions;
+using Shouldly;
 using Microsoft.Reactive.Testing;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
+using Noggog.Testing.Extensions;
 using Noggog.Testing.FileSystem;
 using Noggog.Testing.IO;
 using NSubstitute;
@@ -28,8 +29,8 @@ public class CreationClubLiveLoadOrderFolderWatcherTests
         {
             return sut.Get();
         });
-        obs.Messages.Should().HaveCount(1);
-        obs.Messages[0].Value.Kind.Should().Be(NotificationKind.OnCompleted);
+        obs.Messages.ShouldHaveCount(1);
+        obs.Messages[0].Value.Kind.ShouldBe(NotificationKind.OnCompleted);
     }
 
     [Theory, MutagenAutoData]
@@ -44,7 +45,7 @@ public class CreationClubLiveLoadOrderFolderWatcherTests
         {
             return sut.Get();
         });
-        obs.Messages.Should().HaveCount(0);
+        obs.Messages.ShouldHaveCount(0);
     }
 
     [Theory, MutagenAutoData]
@@ -55,8 +56,8 @@ public class CreationClubLiveLoadOrderFolderWatcherTests
         var list = sut
             .Get()
             .AsObservableCache();
-        list.Count.Should().Be(1);
-        list.Items.First().Should().Be(existingModKey);
+        list.Count.ShouldBe(1);
+        list.Items.First().ShouldBe(existingModKey);
     }
 
     [Theory, MutagenAutoData]
@@ -71,16 +72,16 @@ public class CreationClubLiveLoadOrderFolderWatcherTests
         var list = sut
             .Get()
             .AsObservableCache();
-        list.Count.Should().Be(1);
-        list.Items.First().Should().Be(existingModKey);
+        list.Count.ShouldBe(1);
+        list.Items.First().ShouldBe(existingModKey);
             
         var modKeyB = ModKey.FromNameAndExtension("NewMod.esm");
         var modKeyBPath = Path.Combine(dataDir.Path, modKeyB.FileName);
         fs.File.WriteAllText(modKeyBPath, string.Empty);
         mockChange.MarkCreated(modKeyBPath);
-        list.Count.Should().Be(2);
-        list.Items.First().Should().Be(existingModKey);
-        list.Items.Last().Should().Be(modKeyB);
+        list.Count.ShouldBe(2);
+        list.Items.First().ShouldBe(existingModKey);
+        list.Items.Last().ShouldBe(modKeyB);
     }
 
     [Theory, MutagenAutoData]
@@ -97,12 +98,12 @@ public class CreationClubLiveLoadOrderFolderWatcherTests
         var list = sut
             .Get()
             .AsObservableCache();
-        list.Count.Should().Be(2);
-        list.Items.First().Should().Be(existingModKey);
-        list.Items.Last().Should().Be(modKeyB);
+        list.Count.ShouldBe(2);
+        list.Items.First().ShouldBe(existingModKey);
+        list.Items.Last().ShouldBe(modKeyB);
         fs.File.Delete(modKeyBPath);
         mockChange.MarkDeleted(modKeyBPath);
-        list.Count.Should().Be(1);
-        list.Items.First().Should().Be(existingModKey);
+        list.Count.ShouldBe(1);
+        list.Items.First().ShouldBe(existingModKey);
     }
 }

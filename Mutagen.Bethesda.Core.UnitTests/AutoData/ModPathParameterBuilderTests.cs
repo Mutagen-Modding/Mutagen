@@ -1,9 +1,10 @@
 ﻿using AutoFixture.Kernel;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
 using Noggog.Testing.AutoFixture.Testing;
+using Noggog.Testing.Extensions;
 using NSubstitute;
 using Xunit;
 
@@ -27,7 +28,7 @@ public class ModPathParameterBuilderTests
         {
             var param = method.GetParameters().First();
             sut.Create(param, context)
-                .Should().BeOfType<NoSpecimen>();
+                .ShouldBeOfType<NoSpecimen>();
         }
     }
         

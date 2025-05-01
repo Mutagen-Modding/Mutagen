@@ -1,12 +1,12 @@
 ﻿using System.IO.Abstractions;
-using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
-using Xunit;
+using Noggog.Testing.Extensions;
+using Shouldly;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Builders;
 
@@ -32,8 +32,8 @@ public class ReadBuilderTests
             .WithFileSystem(fileSystem)
             .Mutable()
             .Construct();
-        reimport.MasterReferences.Select(x => x.Master).Should()
-            .Equal();
+        reimport.MasterReferences.Select(x => x.Master)
+            .ShouldBeEmpty();
     }
     
     [Theory, MutagenAutoData]
@@ -92,8 +92,8 @@ public class ReadBuilderTests
             .WithFileSystem(fileSystem)
             .Mutable()
             .Construct();
-        reimport.MasterReferences.Select(x => x.Master).Should()
-            .Equal();
+        reimport.MasterReferences.Select(x => x.Master)
+            .ShouldBeEmpty();
     }
     
     [Theory, MutagenAutoData]
@@ -162,8 +162,8 @@ public class ReadBuilderTests
             .WithFileSystem(fileSystem)
             .Mutable()
             .Construct();
-        reimport.MasterReferences.Select(x => x.Master).Should()
-            .Equal(masterMod);
+        reimport.MasterReferences.Select(x => x.Master)
+            .ShouldEqual(masterMod);
     }
     
     [Theory, MutagenAutoData]
@@ -235,8 +235,8 @@ public class ReadBuilderTests
             .WithFileSystem(fileSystem)
             .Mutable()
             .Construct();
-        reimport.MasterReferences.Select(x => x.Master).Should()
-            .Equal(masterMod);
+        reimport.MasterReferences.Select(x => x.Master)
+            .ShouldEqual(masterMod);
     }
 
     [Theory, MutagenAutoData]
@@ -278,8 +278,8 @@ public class ReadBuilderTests
             .WithKnownMasters(master2)
             .Mutable()
             .Construct();
-        reimport.MasterReferences.Select(x => x.Master).Should()
-            .Equal(masterMod, masterMod2);
+        reimport.MasterReferences.Select(x => x.Master)
+            .ShouldEqual(masterMod, masterMod2);
     }
 
     [Theory, MutagenAutoData]
@@ -313,7 +313,7 @@ public class ReadBuilderTests
             .WithKnownMasters(master, master2)
             .Mutable()
             .Construct();
-        reimport.MasterReferences.Select(x => x.Master).Should()
-            .Equal(masterMod, masterMod2);
+        reimport.MasterReferences.Select(x => x.Master)
+            .ShouldEqual(masterMod, masterMod2);
     }
 }

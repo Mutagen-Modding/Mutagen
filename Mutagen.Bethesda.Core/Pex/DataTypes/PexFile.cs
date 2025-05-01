@@ -101,7 +101,7 @@ public partial class PexFile
             DebugInfo.Write(write);
         }
 
-        write.Writer.Write((ushort)UserFlags.NotNull().Count());
+        write.Writer.Write((ushort)UserFlags.WhereNotNull().Count());
         for (byte i = 0; i < 32; i++)
         {
             var str = UserFlags[i];

@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
@@ -13,7 +13,7 @@ public class SkyrimRegionTests : ASpecificCaseTest<Region, IRegionGetter>
     
     public override void TestItem(IRegionGetter item)
     {
-        item.Sounds.Should().NotBeNull();
-        item.Sounds!.Sounds.Should().BeNull();
+        item.Sounds.ShouldNotBeNull();
+        item.Sounds!.Sounds.ShouldBeNull();
     }
 }

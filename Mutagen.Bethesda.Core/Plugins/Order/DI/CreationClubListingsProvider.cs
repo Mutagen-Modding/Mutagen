@@ -4,6 +4,9 @@ using Path = System.IO.Path;
 
 namespace Mutagen.Bethesda.Plugins.Order.DI;
 
+/// <summary>
+/// Provides listings added by the Creation Club systems
+/// </summary>
 public interface ICreationClubListingsProvider : IListingsProvider
 {
     /// <summary>

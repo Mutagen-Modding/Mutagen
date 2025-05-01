@@ -3,10 +3,9 @@
   <Object name="AudioOcclusionPrimitive" recordType="AOPF" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <Float name="ODTY" recordType="ODTY" unknown="true" />
-      <Float name="ODRT" recordType="ODRT" unknown="true" />
-      <Float name="OBSV" recordType="OBSV" unknown="true" />
-      <Float name="OCCV" recordType="OCCV" unknown="true" />
+      <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
+      <Float name="Obstruction" recordType="OBSV" />
+      <Float name="Occlusion" recordType="OCCV" />
     </Fields>
     <LinkInterface>IBaseObject</LinkInterface>
   </Object>

@@ -3,7 +3,7 @@
   <Object name="StaticCollection" recordType="SCOL" objType="Record" baseClass="StarfieldMajorRecord" majorFlags="true">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
       <FormLink name="SnapTemplate" refName="SnapTemplate" recordType="SNTP" />
       <RefList name="Components" refName="AComponent" />
       <RefDirect name="Model" refName="Model" />

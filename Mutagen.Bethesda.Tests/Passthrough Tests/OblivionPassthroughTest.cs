@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Tests;
 
 public class OblivionPassthroughTest : PassthroughTest
 {
-    protected override Processor ProcessorFactory() => new OblivionProcessor(Settings.ParallelProcessingSteps, MasterFlagsLookup);
+    protected override Processor ProcessorFactory() => new OblivionProcessor(WorkDropoff, MasterFlagsLookup);
 
     public OblivionPassthroughTest(PassthroughTestParams param)
         : base(param, GameRelease.Oblivion)
@@ -22,7 +22,7 @@ public class OblivionPassthroughTest : PassthroughTest
         return OblivionMod.Create
             .FromPath(
                 new ModPath(ModKey, path.Path))
-            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .Parallel(parallel: Settings.ParallelModTranslations)
             .ThrowIfUnknownSubrecord()
             .WithStringsParameters(stringsParams)
             .Construct();
@@ -33,7 +33,7 @@ public class OblivionPassthroughTest : PassthroughTest
         return OblivionMod.Create
             .FromPath(
                 new ModPath(ModKey, path.Path))
-            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .Parallel(parallel: Settings.ParallelModTranslations)
             .WithStringsParameters(stringsParams)
             .Mutable()
             .ThrowIfUnknownSubrecord()

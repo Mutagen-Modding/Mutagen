@@ -68,19 +68,25 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
-        #region RelatedPaths
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<ICameraPathGetter>> _RelatedPaths = new ExtendedList<IFormLinkGetter<ICameraPathGetter>>();
-        public ExtendedList<IFormLinkGetter<ICameraPathGetter>> RelatedPaths
+        #region Parent
+        private readonly IFormLink<ICameraPathGetter> _Parent = new FormLink<ICameraPathGetter>();
+        public IFormLink<ICameraPathGetter> Parent
         {
-            get => this._RelatedPaths;
-            init => this._RelatedPaths = value;
+            get => _Parent;
+            set => _Parent.SetTo(value);
         }
-        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<ICameraPathGetter>> ICameraPathGetter.RelatedPaths => _RelatedPaths;
+        IFormLinkGetter<ICameraPathGetter> ICameraPathGetter.Parent => this.Parent;
         #endregion
-
+        #region Previous
+        private readonly IFormLink<ICameraPathGetter> _Previous = new FormLink<ICameraPathGetter>();
+        public IFormLink<ICameraPathGetter> Previous
+        {
+            get => _Previous;
+            set => _Previous.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ICameraPathGetter> ICameraPathGetter.Previous => this.Previous;
         #endregion
         #region Zoom
         public CameraPath.Flags Zoom { get; set; } = default(CameraPath.Flags);
@@ -125,7 +131,8 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.RelatedPaths = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Parent = initialValue;
+                this.Previous = initialValue;
                 this.Zoom = initialValue;
                 this.Shots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
@@ -139,7 +146,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
                 TItem Conditions,
-                TItem RelatedPaths,
+                TItem Parent,
+                TItem Previous,
                 TItem Zoom,
                 TItem Shots)
             : base(
@@ -152,7 +160,8 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.RelatedPaths = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RelatedPaths, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Parent = Parent;
+                this.Previous = Previous;
                 this.Zoom = Zoom;
                 this.Shots = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Shots, Enumerable.Empty<(int Index, TItem Value)>());
             }
@@ -167,7 +176,8 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? RelatedPaths;
+            public TItem Parent;
+            public TItem Previous;
             public TItem Zoom;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Shots;
             #endregion
@@ -184,7 +194,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
-                if (!object.Equals(this.RelatedPaths, rhs.RelatedPaths)) return false;
+                if (!object.Equals(this.Parent, rhs.Parent)) return false;
+                if (!object.Equals(this.Previous, rhs.Previous)) return false;
                 if (!object.Equals(this.Zoom, rhs.Zoom)) return false;
                 if (!object.Equals(this.Shots, rhs.Shots)) return false;
                 return true;
@@ -193,7 +204,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 var hash = new HashCode();
                 hash.Add(this.Conditions);
-                hash.Add(this.RelatedPaths);
+                hash.Add(this.Parent);
+                hash.Add(this.Previous);
                 hash.Add(this.Zoom);
                 hash.Add(this.Shots);
                 hash.Add(base.GetHashCode());
@@ -218,17 +230,8 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (this.RelatedPaths != null)
-                {
-                    if (!eval(this.RelatedPaths.Overall)) return false;
-                    if (this.RelatedPaths.Specific != null)
-                    {
-                        foreach (var item in this.RelatedPaths.Specific)
-                        {
-                            if (!eval(item.Value)) return false;
-                        }
-                    }
-                }
+                if (!eval(this.Parent)) return false;
+                if (!eval(this.Previous)) return false;
                 if (!eval(this.Zoom)) return false;
                 if (this.Shots != null)
                 {
@@ -261,17 +264,8 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (this.RelatedPaths != null)
-                {
-                    if (eval(this.RelatedPaths.Overall)) return true;
-                    if (this.RelatedPaths.Specific != null)
-                    {
-                        foreach (var item in this.RelatedPaths.Specific)
-                        {
-                            if (!eval(item.Value)) return false;
-                        }
-                    }
-                }
+                if (eval(this.Parent)) return true;
+                if (eval(this.Previous)) return true;
                 if (eval(this.Zoom)) return true;
                 if (this.Shots != null)
                 {
@@ -314,20 +308,8 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (RelatedPaths != null)
-                {
-                    obj.RelatedPaths = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RelatedPaths.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (RelatedPaths.Specific != null)
-                    {
-                        var l = new List<(int Index, R Item)>();
-                        obj.RelatedPaths.Specific = l;
-                        foreach (var item in RelatedPaths.Specific)
-                        {
-                            R mask = eval(item.Value);
-                            l.Add((item.Index, mask));
-                        }
-                    }
-                }
+                obj.Parent = eval(this.Parent);
+                obj.Previous = eval(this.Previous);
                 obj.Zoom = eval(this.Zoom);
                 if (Shots != null)
                 {
@@ -380,26 +362,13 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if ((printMask?.RelatedPaths?.Overall ?? true)
-                        && RelatedPaths is {} RelatedPathsItem)
+                    if (printMask?.Parent ?? true)
                     {
-                        sb.AppendLine("RelatedPaths =>");
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(RelatedPathsItem.Overall);
-                            if (RelatedPathsItem.Specific != null)
-                            {
-                                foreach (var subItem in RelatedPathsItem.Specific)
-                                {
-                                    using (sb.Brace())
-                                    {
-                                        {
-                                            sb.AppendItem(subItem);
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        sb.AppendItem(Parent, "Parent");
+                    }
+                    if (printMask?.Previous ?? true)
+                    {
+                        sb.AppendItem(Previous, "Previous");
                     }
                     if (printMask?.Zoom ?? true)
                     {
@@ -438,7 +407,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? RelatedPaths;
+            public Exception? Parent;
+            public Exception? Previous;
             public Exception? Zoom;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Shots;
             #endregion
@@ -451,8 +421,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case CameraPath_FieldIndex.Conditions:
                         return Conditions;
-                    case CameraPath_FieldIndex.RelatedPaths:
-                        return RelatedPaths;
+                    case CameraPath_FieldIndex.Parent:
+                        return Parent;
+                    case CameraPath_FieldIndex.Previous:
+                        return Previous;
                     case CameraPath_FieldIndex.Zoom:
                         return Zoom;
                     case CameraPath_FieldIndex.Shots:
@@ -470,8 +442,11 @@ namespace Mutagen.Bethesda.Starfield
                     case CameraPath_FieldIndex.Conditions:
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
                         break;
-                    case CameraPath_FieldIndex.RelatedPaths:
-                        this.RelatedPaths = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case CameraPath_FieldIndex.Parent:
+                        this.Parent = ex;
+                        break;
+                    case CameraPath_FieldIndex.Previous:
+                        this.Previous = ex;
                         break;
                     case CameraPath_FieldIndex.Zoom:
                         this.Zoom = ex;
@@ -493,8 +468,11 @@ namespace Mutagen.Bethesda.Starfield
                     case CameraPath_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
                         break;
-                    case CameraPath_FieldIndex.RelatedPaths:
-                        this.RelatedPaths = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case CameraPath_FieldIndex.Parent:
+                        this.Parent = (Exception?)obj;
+                        break;
+                    case CameraPath_FieldIndex.Previous:
+                        this.Previous = (Exception?)obj;
                         break;
                     case CameraPath_FieldIndex.Zoom:
                         this.Zoom = (Exception?)obj;
@@ -512,7 +490,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (Conditions != null) return true;
-                if (RelatedPaths != null) return true;
+                if (Parent != null) return true;
+                if (Previous != null) return true;
                 if (Zoom != null) return true;
                 if (Shots != null) return true;
                 return false;
@@ -559,25 +538,11 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (RelatedPaths is {} RelatedPathsItem)
                 {
-                    sb.AppendLine("RelatedPaths =>");
-                    using (sb.Brace())
-                    {
-                        sb.AppendItem(RelatedPathsItem.Overall);
-                        if (RelatedPathsItem.Specific != null)
-                        {
-                            foreach (var subItem in RelatedPathsItem.Specific)
-                            {
-                                using (sb.Brace())
-                                {
-                                    {
-                                        sb.AppendItem(subItem);
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    sb.AppendItem(Parent, "Parent");
+                }
+                {
+                    sb.AppendItem(Previous, "Previous");
                 }
                 {
                     sb.AppendItem(Zoom, "Zoom");
@@ -611,7 +576,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-                ret.RelatedPaths = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.RelatedPaths?.Overall, rhs.RelatedPaths?.Overall), Noggog.ExceptionExt.Combine(this.RelatedPaths?.Specific, rhs.RelatedPaths?.Specific));
+                ret.Parent = this.Parent.Combine(rhs.Parent);
+                ret.Previous = this.Previous.Combine(rhs.Previous);
                 ret.Zoom = this.Zoom.Combine(rhs.Zoom);
                 ret.Shots = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Shots?.Overall, rhs.Shots?.Overall), Noggog.ExceptionExt.Combine(this.Shots?.Specific, rhs.Shots?.Specific));
                 return ret;
@@ -637,7 +603,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public Condition.TranslationMask? Conditions;
-            public bool RelatedPaths;
+            public bool Parent;
+            public bool Previous;
             public bool Zoom;
             public bool Shots;
             #endregion
@@ -648,7 +615,8 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.RelatedPaths = defaultOn;
+                this.Parent = defaultOn;
+                this.Previous = defaultOn;
                 this.Zoom = defaultOn;
                 this.Shots = defaultOn;
             }
@@ -659,7 +627,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.GetCrystal(ret);
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
-                ret.Add((RelatedPaths, null));
+                ret.Add((Parent, null));
+                ret.Add((Previous, null));
                 ret.Add((Zoom, null));
                 ret.Add((Shots, null));
             }
@@ -810,7 +779,8 @@ namespace Mutagen.Bethesda.Starfield
         IStarfieldMajorRecordInternal
     {
         new ExtendedList<Condition> Conditions { get; }
-        new ExtendedList<IFormLinkGetter<ICameraPathGetter>> RelatedPaths { get; }
+        new IFormLink<ICameraPathGetter> Parent { get; set; }
+        new IFormLink<ICameraPathGetter> Previous { get; set; }
         new CameraPath.Flags Zoom { get; set; }
         new ExtendedList<IFormLinkGetter<ICameraShotGetter>> Shots { get; }
     }
@@ -832,7 +802,8 @@ namespace Mutagen.Bethesda.Starfield
     {
         static new ILoquiRegistration StaticRegistration => CameraPath_Registration.Instance;
         IReadOnlyList<IConditionGetter> Conditions { get; }
-        IReadOnlyList<IFormLinkGetter<ICameraPathGetter>> RelatedPaths { get; }
+        IFormLinkGetter<ICameraPathGetter> Parent { get; }
+        IFormLinkGetter<ICameraPathGetter> Previous { get; }
         CameraPath.Flags Zoom { get; }
         IReadOnlyList<IFormLinkGetter<ICameraShotGetter>> Shots { get; }
 
@@ -1012,9 +983,10 @@ namespace Mutagen.Bethesda.Starfield
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
         Conditions = 7,
-        RelatedPaths = 8,
-        Zoom = 9,
-        Shots = 10,
+        Parent = 8,
+        Previous = 9,
+        Zoom = 10,
+        Shots = 11,
     }
     #endregion
 
@@ -1025,9 +997,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(CameraPath.Mask<>);
 
@@ -1112,7 +1084,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Conditions.Clear();
-            item.RelatedPaths.Clear();
+            item.Parent.Clear();
+            item.Previous.Clear();
             item.Zoom = default(CameraPath.Flags);
             item.Shots.Clear();
             base.Clear(item);
@@ -1133,7 +1106,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             base.RemapLinks(obj, mapping);
             obj.Conditions.RemapLinks(mapping);
-            obj.RelatedPaths.RemapLinks(mapping);
+            obj.Parent.Relink(mapping);
+            obj.Previous.Relink(mapping);
             obj.Shots.RemapLinks(mapping);
         }
         
@@ -1206,10 +1180,8 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.RelatedPaths = item.RelatedPaths.CollectionEqualsHelper(
-                rhs.RelatedPaths,
-                (l, r) => object.Equals(l, r),
-                include);
+            ret.Parent = item.Parent.Equals(rhs.Parent);
+            ret.Previous = item.Previous.Equals(rhs.Previous);
             ret.Zoom = item.Zoom == rhs.Zoom;
             ret.Shots = item.Shots.CollectionEqualsHelper(
                 rhs.Shots,
@@ -1278,19 +1250,13 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if (printMask?.RelatedPaths?.Overall ?? true)
+            if (printMask?.Parent ?? true)
             {
-                sb.AppendLine("RelatedPaths =>");
-                using (sb.Brace())
-                {
-                    foreach (var subItem in item.RelatedPaths)
-                    {
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(subItem.FormKey);
-                        }
-                    }
-                }
+                sb.AppendItem(item.Parent.FormKey, "Parent");
+            }
+            if (printMask?.Previous ?? true)
+            {
+                sb.AppendItem(item.Previous.FormKey, "Previous");
             }
             if (printMask?.Zoom ?? true)
             {
@@ -1364,9 +1330,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)CameraPath_FieldIndex.Conditions)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CameraPath_FieldIndex.RelatedPaths) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CameraPath_FieldIndex.Parent) ?? true))
             {
-                if (!lhs.RelatedPaths.SequenceEqualNullable(rhs.RelatedPaths)) return false;
+                if (!lhs.Parent.Equals(rhs.Parent)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)CameraPath_FieldIndex.Previous) ?? true))
+            {
+                if (!lhs.Previous.Equals(rhs.Previous)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CameraPath_FieldIndex.Zoom) ?? true))
             {
@@ -1405,7 +1375,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             var hash = new HashCode();
             hash.Add(item.Conditions);
-            hash.Add(item.RelatedPaths);
+            hash.Add(item.Parent);
+            hash.Add(item.Previous);
             hash.Add(item.Zoom);
             hash.Add(item.Shots);
             hash.Add(base.GetHashCode());
@@ -1441,10 +1412,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.RelatedPaths)
-            {
-                yield return FormLinkInformation.Factory(item);
-            }
+            yield return FormLinkInformation.Factory(obj.Parent);
+            yield return FormLinkInformation.Factory(obj.Previous);
             foreach (var item in obj.Shots)
             {
                 yield return FormLinkInformation.Factory(item);
@@ -1547,24 +1516,13 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)CameraPath_FieldIndex.RelatedPaths) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CameraPath_FieldIndex.Parent) ?? true))
             {
-                errorMask?.PushIndex((int)CameraPath_FieldIndex.RelatedPaths);
-                try
-                {
-                    item.RelatedPaths.SetTo(
-                        rhs.RelatedPaths
-                            .Select(b => (IFormLinkGetter<ICameraPathGetter>)new FormLink<ICameraPathGetter>(b.FormKey)));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Parent.SetTo(rhs.Parent.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)CameraPath_FieldIndex.Previous) ?? true))
+            {
+                item.Previous.SetTo(rhs.Previous.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)CameraPath_FieldIndex.Zoom) ?? true))
             {
@@ -1769,16 +1727,15 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ICameraPathGetter>>.Instance.Write(
-                writer: writer,
-                items: item.RelatedPaths,
-                recordType: translationParams.ConvertToCustom(RecordTypes.ANAM),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<ICameraPathGetter> subItem, TypedWriteParams conv) =>
-                {
-                    FormLinkBinaryTranslation.Instance.Write(
-                        writer: subWriter,
-                        item: subItem);
-                });
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.ANAM)))
+            {
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Parent);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Previous);
+            }
             EnumBinaryTranslation<CameraPath.Flags, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Zoom,
@@ -1875,11 +1832,12 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RelatedPaths.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ICameraPathGetter>>.Instance.Parse(
-                            reader: frame.SpawnWithLength(contentLength),
-                            transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return (int)CameraPath_FieldIndex.RelatedPaths;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Parent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Previous.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)CameraPath_FieldIndex.Previous;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -1958,7 +1916,17 @@ namespace Mutagen.Bethesda.Starfield
 
 
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
-        public IReadOnlyList<IFormLinkGetter<ICameraPathGetter>> RelatedPaths { get; private set; } = Array.Empty<IFormLinkGetter<ICameraPathGetter>>();
+        private RangeInt32? _ANAMLocation;
+        #region Parent
+        private int _ParentLocation => _ANAMLocation!.Value.Min;
+        private bool _Parent_IsSet => _ANAMLocation.HasValue;
+        public IFormLinkGetter<ICameraPathGetter> Parent => _Parent_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ICameraPathGetter>(_package, _recordData.Span.Slice(_ParentLocation, 0x4), isSet: _Parent_IsSet) : FormLink<ICameraPathGetter>.Null;
+        #endregion
+        #region Previous
+        private int _PreviousLocation => _ANAMLocation!.Value.Min + 0x4;
+        private bool _Previous_IsSet => _ANAMLocation.HasValue;
+        public IFormLinkGetter<ICameraPathGetter> Previous => _Previous_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ICameraPathGetter>(_package, _recordData.Span.Slice(_PreviousLocation, 0x4), isSet: _Previous_IsSet) : FormLink<ICameraPathGetter>.Null;
+        #endregion
         #region Zoom
         private int? _ZoomLocation;
         public CameraPath.Flags Zoom => _ZoomLocation.HasValue ? (CameraPath.Flags)HeaderTranslation.ExtractSubrecordMemory(_recordData, _ZoomLocation!.Value, _package.MetaData.Constants)[0] : default(CameraPath.Flags);
@@ -2050,13 +2018,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    this.RelatedPaths = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<ICameraPathGetter>>(
-                        stream: stream,
-                        package: _package,
-                        finalPos: finalPos,
-                        itemLength: 4,
-                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<ICameraPathGetter>(p, s));
-                    return (int)CameraPath_FieldIndex.RelatedPaths;
+                    _ANAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)CameraPath_FieldIndex.Previous;
                 }
                 case RecordTypeInts.DATA:
                 {

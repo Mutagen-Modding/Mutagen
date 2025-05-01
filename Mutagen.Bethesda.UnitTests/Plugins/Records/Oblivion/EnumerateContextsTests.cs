@@ -1,8 +1,9 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Testing.AutoData;
 using Noggog;
+using Noggog.Testing.Extensions;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records.Oblivion;
@@ -33,15 +34,15 @@ public class EnumerateContextsTests
         var linkCache = mod.ToImmutableLinkCache();
         mod.EnumerateMajorRecordContexts()
             .Select(x => x.Record.FormKey)
-            .Should().Equal(cell1.FormKey, worldspace.FormKey, cell2.FormKey, cell3.FormKey);
+            .ShouldEqual(cell1.FormKey, worldspace.FormKey, cell2.FormKey, cell3.FormKey);
         mod.EnumerateMajorRecordContexts<IMajorRecord, IMajorRecordGetter>(linkCache)
             .Select(x => x.Record.FormKey)
-            .Should().Equal(cell1.FormKey, worldspace.FormKey, cell2.FormKey, cell3.FormKey);
+            .ShouldEqual(cell1.FormKey, worldspace.FormKey, cell2.FormKey, cell3.FormKey);
         mod.EnumerateMajorRecordContexts(linkCache, typeof(Cell))
             .Select(x => x.Record.FormKey)
-            .Should().Equal(cell1.FormKey, cell2.FormKey, cell3.FormKey);
+            .ShouldEqual(cell1.FormKey, cell2.FormKey, cell3.FormKey);
         mod.EnumerateMajorRecordContexts<ICell, ICellGetter>(linkCache)
             .Select(x => x.Record.FormKey)
-            .Should().Equal(cell1.FormKey, cell2.FormKey, cell3.FormKey);
+            .ShouldEqual(cell1.FormKey, cell2.FormKey, cell3.FormKey);
     }
 }

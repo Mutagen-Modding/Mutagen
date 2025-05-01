@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Cache;
@@ -1018,34 +1018,34 @@ public partial class ALinkingTests
         WrapPotentialThrow(cacheType, style, () =>
         {
             Assert.True(TryTest<IEffectRecord, IEffectRecordGetter>(cache, overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
-            rec.EditorID.Should().Be(overriddenRec.EditorID);
+            rec.EditorID.ShouldBe(overriddenRec.EditorID);
         });
         WrapPotentialThrow(cacheType, style, () =>
         {
             Assert.True(TryTest<INamed, INamedGetter>(cache, overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
-            (rec as IMajorRecordGetter).EditorID.Should().Be(overriddenRec.EditorID);
+            (rec as IMajorRecordGetter).EditorID.ShouldBe(overriddenRec.EditorID);
         });
 
         WrapPotentialThrow(cacheType, style, () =>
         {
             Assert.True(TryTest(cache, overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
-            rec.EditorID.Should().Be(overriddenRec.EditorID);
+            rec.EditorID.ShouldBe(overriddenRec.EditorID);
         });
         WrapPotentialThrow(cacheType, style, () =>
         {
             Assert.True(TryTest<IMajorRecord, IMajorRecordGetter>(cache, overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
-            rec.EditorID.Should().Be(overriddenRec.EditorID);
+            rec.EditorID.ShouldBe(overriddenRec.EditorID);
         });
         WrapPotentialThrow(cacheType, style, () =>
         {
             Assert.True(TryTest<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(cache, overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
-            rec.EditorID.Should().Be(overriddenRec.EditorID);
+            rec.EditorID.ShouldBe(overriddenRec.EditorID);
         });
 
         WrapPotentialThrow(cacheType, style, () =>
         {
             Assert.True(TryTest<IObjectEffect, IObjectEffectGetter>(cache, overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
-            rec.EditorID.Should().Be(overriddenRec.EditorID);
+            rec.EditorID.ShouldBe(overriddenRec.EditorID);
         });
 
         if (ReadOnly)
@@ -1068,18 +1068,18 @@ public partial class ALinkingTests
             WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(TryTest<IObjectEffect, IObjectEffect>(cache, overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
-                rec.EditorID.Should().Be(overriddenRec.EditorID);
+                rec.EditorID.ShouldBe(overriddenRec.EditorID);
             });
             WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(TryTest<ObjectEffect, ObjectEffect>(cache, overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
-                rec.EditorID.Should().Be(overriddenRec.EditorID);
+                rec.EditorID.ShouldBe(overriddenRec.EditorID);
             });
 
             WrapPotentialThrow(cacheType, style, () =>
             {
                 Assert.True(TryTest<IEffectRecord, IEffectRecord>(cache, overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
-                rec.EditorID.Should().Be(overriddenRec.EditorID);
+                rec.EditorID.ShouldBe(overriddenRec.EditorID);
             });
         }
     }

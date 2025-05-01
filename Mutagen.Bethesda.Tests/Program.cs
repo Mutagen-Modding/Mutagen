@@ -4,6 +4,7 @@ using System.Diagnostics;
 using CommandLine;
 using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Tests.CLI;
+using Noggog.WorkEngine;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -56,9 +57,8 @@ class Program
                     TestBinaryOverlay = true,
                     DeleteCachesAfter = false,
                     TestImport = false,
-                    ParallelWriting = false,
+                    ParallelModTranslations = false,
                     TestCopyIn = false,
-                    ParallelProcessingSteps = false,
                     Trimming = new TrimmingSettings()
                     {
                         Enabled = false
@@ -104,9 +104,13 @@ class Program
     {
         try
         {
+            var dropoff = new WorkDropoff();
+            using var consumer = new WorkConsumer(
+                new NumWorkThreadsConstant(null),
+                dropoff, dropoff);
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            await TestBattery.RunTests(settings);
+            await TestBattery.RunTests(settings, dropoff);
             sw.Stop();
         }
         catch (Exception ex)

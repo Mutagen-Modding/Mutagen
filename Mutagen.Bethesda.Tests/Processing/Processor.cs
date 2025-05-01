@@ -17,11 +17,13 @@ using Mutagen.Bethesda.Plugins.Masters.DI;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Strings.DI;
+using Noggog.WorkEngine;
 
 namespace Mutagen.Bethesda.Tests;
 
 public abstract class Processor
 {
+    public IWorkDropoff WorkDropoff { get; }
     public GameRelease GameRelease { get; }
     public IReadOnlyCache<IModMasterStyledGetter, ModKey> MasterFlagLookup { get; }
     public readonly GameConstants Meta;
@@ -33,7 +35,6 @@ public abstract class Processor
     protected ParsingMeta Bundle;
     protected ModPath SourcePath;
     protected DirectoryPath TempFolder;
-    public bool DoMultithreading = true;
     public ModKey ModKey => SourcePath.ModKey;
     protected DirectoryPath DataFolder => new DirectoryInfo(Path.GetDirectoryName(SourcePath));
 
@@ -51,15 +52,15 @@ public abstract class Processor
     public virtual KeyValuePair<RecordType, FormKey>[] TrimmedRecords =>
         Array.Empty<KeyValuePair<RecordType, FormKey>>();
 
-    public Processor(bool multithread, GameRelease release, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup)
+    public Processor(IWorkDropoff workDropoff, GameRelease release, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup)
     {
+        WorkDropoff = workDropoff;
         GameRelease = release;
         MasterFlagLookup = masterFlagLookup;
         Meta = GameConstants.Get(GameRelease);
-        DoMultithreading = multithread;
         ParallelOptions = new ParallelOptions()
         {
-            MaxDegreeOfParallelism = multithread ? -1 : 1
+            MaxDegreeOfParallelism = -1
         };
     }
 
@@ -103,7 +104,7 @@ public abstract class Processor
         {
             await PreProcessorJobs(streamGetter);
 
-            await Task.WhenAll(ExtraJobs(streamGetter));
+            await WorkDropoff.EnqueueAndWait(ExtraJobs(streamGetter), x => x());
 
             AddDynamicProcessorInstructions();
             Parallel.ForEach(DynamicProcessors.Keys
@@ -158,17 +159,17 @@ public abstract class Processor
     {
     }
 
-    protected virtual IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
+    protected virtual IEnumerable<Func<Task>> ExtraJobs(Func<IMutagenReadStream> streamGetter)
     {
-        yield return TaskExt.Run(DoMultithreading, () => RemoveEmptyGroups(streamGetter));
+        yield return async () => RemoveEmptyGroups(streamGetter);
 
         if (GameRelease.ToCategory().HasLocalization())
         {
-            yield return TaskExt.Run(DoMultithreading, () => RealignStrings(streamGetter));
+            yield return () => RealignStrings(streamGetter);
         }
 
-        yield return TaskExt.Run(DoMultithreading, () => RemoveDeletedContent(streamGetter));
-        // yield return TaskExt.Run(DoMultithreading, () => OrderOverridenForms(streamGetter));
+        yield return async () => RemoveDeletedContent(streamGetter);
+        // yield return () => OrderOverridenForms(streamGetter);
     }
 
     protected virtual void AddDynamicProcessorInstructions()
@@ -223,8 +224,6 @@ public abstract class Processor
                 frame = stream.ReadMajorRecord(readSafe: true);
             }
 
-            if (frame.IsDeleted) return;
-
             if (procs != null)
             {
                 foreach (var proc in procs)
@@ -248,6 +247,7 @@ public abstract class Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
+        if (majorFrame.IsDeleted) return;
         if (!majorFrame.TryFindSubrecord("EDID", out var edidFrame)) return;
         var formKey = FormKey.Factory(Masters, majorFrame.FormID, reference: false);
         ProcessStringTermination(
@@ -260,6 +260,7 @@ public abstract class Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
+        if (majorFrame.IsDeleted) return;
         var formID = majorFrame.FormID;
         if (!CheckIsFormIDOverflow(formID)) return;
         // Need to zero out master
@@ -607,6 +608,16 @@ public abstract class Processor
         }
     }
 
+    public bool ProcessRotationFloats(SubrecordPinFrame pin, long offsetLoc, ref int loc, int amount, float multiplier = 57.2958f)
+    {
+        for (int i = 0; i < amount; i++)
+        {
+            if (!ProcessRotationFloat(pin, offsetLoc, ref loc, multiplier: multiplier)) return false;
+        }
+
+        return true;
+    }
+
     public bool ProcessRotationFloat(SubrecordPinFrame pin, long offsetLoc, ref int loc, float multiplier = 57.2958f)
     {
         if (loc >= pin.ContentLength) return false;
@@ -616,11 +627,40 @@ public abstract class Processor
         return true;
     }
 
+    public bool ProcessRotationFloatDiv(SubrecordPinFrame pin, long offsetLoc, ref int loc, float divider)
+    {
+        if (loc >= pin.ContentLength) return false;
+        long longLoc = offsetLoc + pin.Location + pin.HeaderLength + loc;
+        ProcessRotationFloatDiv(pin.Content.Slice(loc), ref longLoc, divider);
+        loc += 4;
+        return true;
+    }
+
     public void ProcessRotationFloat(ReadOnlySpan<byte> span, ref long offsetLoc, float multiplier)
     {
         var origFloat = span.Float();
         var multiplied = origFloat * multiplier;
         var newFloat = multiplied / multiplier;
+        if (origFloat != newFloat)
+        {
+            offsetLoc += 4;
+            var b = new byte[4];
+            BinaryPrimitives.WriteSingleLittleEndian(b, newFloat);
+            Instructions.SetSubstitution(
+                offsetLoc - 4,
+                b);
+        }
+        else
+        {
+            ProcessZeroFloat(span, ref offsetLoc);
+        }
+    }
+
+    public void ProcessRotationFloatDiv(ReadOnlySpan<byte> span, ref long offsetLoc, float divider)
+    {
+        var origFloat = span.Float();
+        var multiplied = origFloat / divider;
+        var newFloat = (float)(multiplied * divider);
         if (origFloat != newFloat)
         {
             offsetLoc += 4;
@@ -1013,12 +1053,7 @@ public abstract class Processor
             })
             .ToArray();
 
-        var bsaOrder = Archive.GetIniListings(GameRelease).ToList();
-        var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(GameRelease, ModKey, DataFolder,
-            new StringsReadParameters()
-            {
-                BsaOrdering = bsaOrder
-            });
+        var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(GameRelease, ModKey, DataFolder, null);
 
         var overlays = Enums<StringsSource>.Values
             .Select(x => (x, stringsOverlay.Get(x)))

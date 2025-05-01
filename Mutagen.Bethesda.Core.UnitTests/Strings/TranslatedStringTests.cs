@@ -1,5 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Strings;
 using Noggog;
 using Xunit;
@@ -12,17 +12,17 @@ public class TranslatedStringCoreTests
     public void NotNullStringImplicitCast()
     {
         TranslatedString? str = "Hello";
-        str.Should().NotBeNull();
-        str.String.Should().Be("Hello");
-        str.TryLookup(Language.English, out var outStr).Should().BeTrue();
-        outStr.Should().Be("Hello");
+        str.ShouldNotBeNull();
+        str.String.ShouldBe("Hello");
+        str.TryLookup(Language.English, out var outStr).ShouldBeTrue();
+        outStr.ShouldBe("Hello");
     }
     
     [Fact]
     public void NullStringImplicitCast()
     {
         TranslatedString? str = default(string?);
-        str.Should().BeNull();
+        str.ShouldBeNull();
     }
 }
 
@@ -254,7 +254,7 @@ public abstract class ATranslatedStringTests
         ITranslatedString str = Create(
             new KeyValuePair<Language, string>(Language.English, EnglishString),
             new KeyValuePair<Language, string>(Language.French, FrenchString));
-        comp.Equals(str, str).Should().BeTrue();
+        comp.Equals(str, str).ShouldBeTrue();
     }
 
     [Fact]
@@ -267,7 +267,7 @@ public abstract class ATranslatedStringTests
         ITranslatedString str2 = Create(
             new KeyValuePair<Language, string>(Language.English, EnglishString),
             new KeyValuePair<Language, string>(Language.French, FrenchString));
-        comp.Equals(str, str2).Should().BeTrue();
+        comp.Equals(str, str2).ShouldBeTrue();
     }
 
     [Fact]
@@ -276,7 +276,7 @@ public abstract class ATranslatedStringTests
         var comp = TranslatedString.OnlyDefaultComparer;
         ITranslatedString str = Create(EnglishString);
         ITranslatedString str2 = Create(EnglishString);
-        comp.Equals(str, str2).Should().BeTrue();
+        comp.Equals(str, str2).ShouldBeTrue();
     }
 
     [Fact]
@@ -290,7 +290,7 @@ public abstract class ATranslatedStringTests
         ITranslatedString str2 = Create(
             new KeyValuePair<Language, string>(Language.English, EnglishString),
             new KeyValuePair<Language, string>(Language.French, FrenchString));
-        comp.Equals(str, str2).Should().BeFalse();
+        comp.Equals(str, str2).ShouldBeFalse();
     }
 
     [Fact]
@@ -300,7 +300,7 @@ public abstract class ATranslatedStringTests
         ITranslatedString str = Create(
             new KeyValuePair<Language, string>(Language.English, EnglishString),
             new KeyValuePair<Language, string>(Language.French, FrenchString));
-        comp.Equals(str, str).Should().BeTrue();
+        comp.Equals(str, str).ShouldBeTrue();
     }
 
     [Fact]
@@ -313,7 +313,7 @@ public abstract class ATranslatedStringTests
         ITranslatedString str2 = Create(
             new KeyValuePair<Language, string>(Language.English, EnglishString),
             new KeyValuePair<Language, string>(Language.French, FrenchString));
-        comp.Equals(str, str2).Should().BeTrue();
+        comp.Equals(str, str2).ShouldBeTrue();
     }
 
     [Fact]
@@ -322,7 +322,7 @@ public abstract class ATranslatedStringTests
         var comp = TranslatedString.AllLanguageComparer;
         ITranslatedString str = Create(EnglishString);
         ITranslatedString str2 = Create(EnglishString);
-        comp.Equals(str, str2).Should().BeTrue();
+        comp.Equals(str, str2).ShouldBeTrue();
     }
 
     [Fact]
@@ -335,7 +335,7 @@ public abstract class ATranslatedStringTests
         ITranslatedString str2 = Create(
             new KeyValuePair<Language, string>(Language.English, EnglishString),
             new KeyValuePair<Language, string>(Language.French, FrenchString));
-        comp.Equals(str, str2).Should().BeFalse();
+        comp.Equals(str, str2).ShouldBeFalse();
     }
 }
 
@@ -363,7 +363,7 @@ public class TranslatedString_ByLookup : ATranslatedStringTests
         ITranslatedString str = Create(
             new KeyValuePair<Language, string>(Language.English, EnglishString),
             new KeyValuePair<Language, string>(Language.French, FrenchString));
-        str.NumLanguages.Should().Be(2);
+        str.NumLanguages.ShouldBe(2);
     }
     
     public class ManualStringsLookup : IStringsFolderLookup

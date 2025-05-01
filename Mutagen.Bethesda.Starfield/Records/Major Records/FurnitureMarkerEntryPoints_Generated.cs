@@ -53,8 +53,8 @@ namespace Mutagen.Bethesda.Starfield
         #region Type
         public Furniture.AnimationType Type { get; set; } = default(Furniture.AnimationType);
         #endregion
-        #region Points
-        public Furniture.EntryPointType Points { get; set; } = default(Furniture.EntryPointType);
+        #region EntryPoints
+        public Furniture.EntryPointType EntryPoints { get; set; } = default(Furniture.EntryPointType);
         #endregion
 
         #region To String
@@ -96,15 +96,15 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.Type = initialValue;
-                this.Points = initialValue;
+                this.EntryPoints = initialValue;
             }
 
             public Mask(
                 TItem Type,
-                TItem Points)
+                TItem EntryPoints)
             {
                 this.Type = Type;
-                this.Points = Points;
+                this.EntryPoints = EntryPoints;
             }
 
             #pragma warning disable CS8618
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public TItem Type;
-            public TItem Points;
+            public TItem EntryPoints;
             #endregion
 
             #region Equals
@@ -131,14 +131,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Type, rhs.Type)) return false;
-                if (!object.Equals(this.Points, rhs.Points)) return false;
+                if (!object.Equals(this.EntryPoints, rhs.EntryPoints)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Type);
-                hash.Add(this.Points);
+                hash.Add(this.EntryPoints);
                 return hash.ToHashCode();
             }
 
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Type)) return false;
-                if (!eval(this.Points)) return false;
+                if (!eval(this.EntryPoints)) return false;
                 return true;
             }
             #endregion
@@ -157,7 +157,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Type)) return true;
-                if (eval(this.Points)) return true;
+                if (eval(this.EntryPoints)) return true;
                 return false;
             }
             #endregion
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Type = eval(this.Type);
-                obj.Points = eval(this.Points);
+                obj.EntryPoints = eval(this.EntryPoints);
             }
             #endregion
 
@@ -196,9 +196,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Type, "Type");
                     }
-                    if (printMask?.Points ?? true)
+                    if (printMask?.EntryPoints ?? true)
                     {
-                        sb.AppendItem(Points, "Points");
+                        sb.AppendItem(EntryPoints, "EntryPoints");
                     }
                 }
             }
@@ -225,7 +225,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
             }
             public Exception? Type;
-            public Exception? Points;
+            public Exception? EntryPoints;
             #endregion
 
             #region IErrorMask
@@ -236,8 +236,8 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case FurnitureMarkerEntryPoints_FieldIndex.Type:
                         return Type;
-                    case FurnitureMarkerEntryPoints_FieldIndex.Points:
-                        return Points;
+                    case FurnitureMarkerEntryPoints_FieldIndex.EntryPoints:
+                        return EntryPoints;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -251,8 +251,8 @@ namespace Mutagen.Bethesda.Starfield
                     case FurnitureMarkerEntryPoints_FieldIndex.Type:
                         this.Type = ex;
                         break;
-                    case FurnitureMarkerEntryPoints_FieldIndex.Points:
-                        this.Points = ex;
+                    case FurnitureMarkerEntryPoints_FieldIndex.EntryPoints:
+                        this.EntryPoints = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -267,8 +267,8 @@ namespace Mutagen.Bethesda.Starfield
                     case FurnitureMarkerEntryPoints_FieldIndex.Type:
                         this.Type = (Exception?)obj;
                         break;
-                    case FurnitureMarkerEntryPoints_FieldIndex.Points:
-                        this.Points = (Exception?)obj;
+                    case FurnitureMarkerEntryPoints_FieldIndex.EntryPoints:
+                        this.EntryPoints = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -279,7 +279,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (Type != null) return true;
-                if (Points != null) return true;
+                if (EntryPoints != null) return true;
                 return false;
             }
             #endregion
@@ -309,7 +309,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Type, "Type");
                 }
                 {
-                    sb.AppendItem(Points, "Points");
+                    sb.AppendItem(EntryPoints, "EntryPoints");
                 }
             }
             #endregion
@@ -320,7 +320,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Type = this.Type.Combine(rhs.Type);
-                ret.Points = this.Points.Combine(rhs.Points);
+                ret.EntryPoints = this.EntryPoints.Combine(rhs.EntryPoints);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -345,7 +345,7 @@ namespace Mutagen.Bethesda.Starfield
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Type;
-            public bool Points;
+            public bool EntryPoints;
             #endregion
 
             #region Ctors
@@ -356,7 +356,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Type = defaultOn;
-                this.Points = defaultOn;
+                this.EntryPoints = defaultOn;
             }
 
             #endregion
@@ -373,7 +373,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Type, null));
-                ret.Add((Points, null));
+                ret.Add((EntryPoints, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -447,7 +447,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IFurnitureMarkerEntryPoints>
     {
         new Furniture.AnimationType Type { get; set; }
-        new Furniture.EntryPointType Points { get; set; }
+        new Furniture.EntryPointType EntryPoints { get; set; }
     }
 
     public partial interface IFurnitureMarkerEntryPointsGetter :
@@ -463,7 +463,7 @@ namespace Mutagen.Bethesda.Starfield
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => FurnitureMarkerEntryPoints_Registration.Instance;
         Furniture.AnimationType Type { get; }
-        Furniture.EntryPointType Points { get; }
+        Furniture.EntryPointType EntryPoints { get; }
 
     }
 
@@ -634,7 +634,7 @@ namespace Mutagen.Bethesda.Starfield
     internal enum FurnitureMarkerEntryPoints_FieldIndex
     {
         Type = 0,
-        Points = 1,
+        EntryPoints = 1,
     }
     #endregion
 
@@ -721,7 +721,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Type = default(Furniture.AnimationType);
-            item.Points = default(Furniture.EntryPointType);
+            item.EntryPoints = default(Furniture.EntryPointType);
         }
         
         #region Mutagen
@@ -776,7 +776,7 @@ namespace Mutagen.Bethesda.Starfield
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Type = item.Type == rhs.Type;
-            ret.Points = item.Points == rhs.Points;
+            ret.EntryPoints = item.EntryPoints == rhs.EntryPoints;
         }
         
         public string Print(
@@ -825,9 +825,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Type, "Type");
             }
-            if (printMask?.Points ?? true)
+            if (printMask?.EntryPoints ?? true)
             {
-                sb.AppendItem(item.Points, "Points");
+                sb.AppendItem(item.EntryPoints, "EntryPoints");
             }
         }
         
@@ -842,9 +842,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.Type != rhs.Type) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)FurnitureMarkerEntryPoints_FieldIndex.Points) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FurnitureMarkerEntryPoints_FieldIndex.EntryPoints) ?? true))
             {
-                if (lhs.Points != rhs.Points) return false;
+                if (lhs.EntryPoints != rhs.EntryPoints) return false;
             }
             return true;
         }
@@ -853,7 +853,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             var hash = new HashCode();
             hash.Add(item.Type);
-            hash.Add(item.Points);
+            hash.Add(item.EntryPoints);
             return hash.ToHashCode();
         }
         
@@ -890,9 +890,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Type = rhs.Type;
             }
-            if ((copyMask?.GetShouldTranslate((int)FurnitureMarkerEntryPoints_FieldIndex.Points) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FurnitureMarkerEntryPoints_FieldIndex.EntryPoints) ?? true))
             {
-                item.Points = rhs.Points;
+                item.EntryPoints = rhs.EntryPoints;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1008,7 +1008,7 @@ namespace Mutagen.Bethesda.Starfield
                 length: 2);
             EnumBinaryTranslation<Furniture.EntryPointType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
-                item.Points,
+                item.EntryPoints,
                 length: 2);
         }
 
@@ -1053,7 +1053,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Type = EnumBinaryTranslation<Furniture.AnimationType, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 length: 2);
-            item.Points = EnumBinaryTranslation<Furniture.EntryPointType, MutagenFrame, MutagenWriter>.Instance.Parse(
+            item.EntryPoints = EnumBinaryTranslation<Furniture.EntryPointType, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 length: 2);
         }
@@ -1122,7 +1122,7 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public Furniture.AnimationType Type => (Furniture.AnimationType)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(0x0, 0x2));
-        public Furniture.EntryPointType Points => (Furniture.EntryPointType)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(0x2, 0x2));
+        public Furniture.EntryPointType EntryPoints => (Furniture.EntryPointType)BinaryPrimitives.ReadUInt16LittleEndian(_structData.Span.Slice(0x2, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

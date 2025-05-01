@@ -1,5 +1,5 @@
 ﻿using AutoFixture.Kernel;
-using FluentAssertions;
+using Shouldly;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Testing.AutoData;
 using Xunit;
@@ -14,7 +14,7 @@ public class ModKeyMultipleBuilderTests
         ModKeyMultipleBuilder sut)
     {
         sut.Create(new MultipleRequest(typeof(ModKey)), context)
-            .Should().BeAssignableTo<IEnumerable<ModKey>>();
+            .ShouldBeAssignableTo<IEnumerable<ModKey>>();
     }
         
     [Theory, BasicAutoData]
@@ -25,7 +25,7 @@ public class ModKeyMultipleBuilderTests
         var keys = sut.Create(new MultipleRequest(typeof(ModKey)), context) as IEnumerable<ModKey>;
         foreach (var key in keys!)
         {
-            keys.Where(x => x == key).Should().HaveCount(1);
+            keys.Where(x => x == key).Count().ShouldBe(1);
         }
     }
         
@@ -35,7 +35,7 @@ public class ModKeyMultipleBuilderTests
         ModKeyMultipleBuilder sut)
     {
         var keys = sut.Create(new MultipleRequest(typeof(ModKey)), context) as IEnumerable<ModKey>;
-        keys.Should().Equal(keys);
+        keys.ShouldBe(keys);
     }
         
     [Theory, BasicAutoData]
@@ -47,7 +47,7 @@ public class ModKeyMultipleBuilderTests
         var keys2 = sut.Create(new MultipleRequest(typeof(ModKey)), context) as IEnumerable<ModKey>;
         foreach (var key in keys!)
         {
-            keys2.Should().NotContain(key);
+            keys2!.ShouldNotContain(key);
         }
     }
 }

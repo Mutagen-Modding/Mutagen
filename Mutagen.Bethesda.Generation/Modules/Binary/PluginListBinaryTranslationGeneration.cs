@@ -303,7 +303,8 @@ public class PluginListBinaryTranslationGeneration : BinaryTranslationGeneration
                             gen.AppendLine("catch (Exception ex)");
                             using (gen.CurlyBrace())
                             {
-                                gen.AppendLine("throw RecordException.Enrich(ex, subItem);");
+                                gen.AppendLine("RecordException.EnrichAndThrow(ex, subItem);");
+                                gen.AppendLine("throw;");
                             }
                         }
                     }

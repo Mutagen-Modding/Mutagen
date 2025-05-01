@@ -124,6 +124,7 @@ nav:
     - Reuse Translation Masks: best-practices/Reuse-Translation-Masks.md
     - Modifying Groups Being Iterated: best-practices/Modifying-Groups-Being-Iterated.md
     - Enriching Exceptions: best-practices/Enrich-Exceptions.md
+    - Mo2 Compatibility: best-practices/Mo2-Compatibility.md
     # - Testing:
     # - Auto Fixture:
     # - Major Record Test Building:

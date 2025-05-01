@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="DefaultObject" recordType="DFOB" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
-      <Enum name="Flags" enumName="DefaultObject.Flag" byteLength="8" recordType="XALG" />
+      <UInt64 name="XALG" recordType="XALG" unknown="true" />
       <FormLink name="Object" refName="StarfieldMajorRecord" recordType="DATA" />
     </Fields>
   </Object>

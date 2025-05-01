@@ -10,11 +10,12 @@
       <List name="ExtraParts">
         <FormLink refName="HeadPart" recordType="HNAM" />
       </List>
-      <String name="NAM2" recordType="NAM2" unknown="true" />
-      <String name="NAM3" recordType="NAM3" unknown="true" />
+      <String name="ColorMapping" recordType="NAM2" />
+      <String name="PartMask" recordType="NAM3" />
       <FormLink name="TextureSet" refName="TextureSet" recordType="TNAM" />
       <FormLink name="ValidRaces" recordType="RNAM" refName="FormList" />
-      <FormLink name="MNAM" recordType="MNAM" refName="MorphableObject" />
+      <FormLink name="Morph" recordType="MNAM" refName="MorphableObject" />
+      <RefList name="Conditions" refName="Condition" />
     </Fields>
   </Object>
 </Loqui>

@@ -18,9 +18,9 @@
       </List>
       <ByteArray name="Screenshot" recordType="SCRN" />
       <RefList name="TransientTypes" refName="TransientType" />
-      <ByteArray name="BNAM" recordType="BNAM" unknown="true" />
-      <ByteArray name="INTV" recordType="INTV" unknown="true" />
-      <Int32 name="INCC" recordType="INCC" unknown="true" />
+      <String name="Branch" recordType="BNAM" />
+      <Int32 name="INTV" recordType="INTV" unknown="true" />
+      <Int32 name="InteriorCellCount" recordType="INCC" />
       <ByteArray name="CHGL" recordType="CHGL" unknown="true" />
     </Fields>
   </Object>

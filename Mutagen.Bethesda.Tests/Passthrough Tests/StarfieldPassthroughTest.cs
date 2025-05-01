@@ -21,7 +21,7 @@ public class StarfieldPassthroughTest : PassthroughTest
             .FromPath(
                 new ModPath(ModKey, path.Path))
             .WithKnownMasters(MasterFlagsLookup.ListedOrder.ToArray())
-            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .Parallel(parallel: Settings.ParallelModTranslations)
             .WithStringsParameters(stringsParams)
             .ThrowIfUnknownSubrecord()
             .Construct();
@@ -33,7 +33,7 @@ public class StarfieldPassthroughTest : PassthroughTest
             .FromPath(
                 new ModPath(ModKey, path.Path))
             .WithDefaultLoadOrder()
-            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .Parallel(parallel: Settings.ParallelModTranslations)
             .WithStringsParameters(stringsParams)
             .ThrowIfUnknownSubrecord()
             .Mutable()
@@ -50,7 +50,7 @@ public class StarfieldPassthroughTest : PassthroughTest
         return ret;
     }
 
-    protected override Processor ProcessorFactory() => new StarfieldProcessor(Settings.ParallelProcessingSteps, MasterFlagsLookup);
+    protected override Processor ProcessorFactory() => new StarfieldProcessor(WorkDropoff, MasterFlagsLookup);
     
     public override AlignmentRules GetAlignmentRules()
     {

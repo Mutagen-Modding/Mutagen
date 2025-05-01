@@ -9,6 +9,7 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
+using Noggog.WorkEngine;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -16,8 +17,8 @@ public class OblivionProcessor : Processor
 {
     public override bool StrictStrings => true;
     
-    public OblivionProcessor(bool multithread, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup) 
-        : base(multithread, GameRelease.Oblivion, masterFlagLookup)
+    public OblivionProcessor(IWorkDropoff workDropoff, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup) 
+        : base(workDropoff, GameRelease.Oblivion, masterFlagLookup)
     {
     }
 

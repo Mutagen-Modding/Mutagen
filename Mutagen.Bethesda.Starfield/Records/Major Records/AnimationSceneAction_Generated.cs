@@ -56,15 +56,15 @@ namespace Mutagen.Bethesda.Starfield
 
         #region Animations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<AnimationSceneItem> _Animations = new ExtendedList<AnimationSceneItem>();
-        public ExtendedList<AnimationSceneItem> Animations
+        private ExtendedList<Animation> _Animations = new ExtendedList<Animation>();
+        public ExtendedList<Animation> Animations
         {
             get => this._Animations;
             init => this._Animations = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IAnimationSceneItemGetter> IAnimationSceneActionGetter.Animations => _Animations;
+        IReadOnlyList<IAnimationGetter> IAnimationSceneActionGetter.Animations => _Animations;
         #endregion
 
         #endregion
@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Animations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AnimationSceneItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AnimationSceneItem.Mask<TItem>?>>());
+                this.Animations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Animation.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Animation.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Starfield
                 StartPhase: StartPhase,
                 EndPhase: EndPhase)
             {
-                this.Animations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AnimationSceneItem.Mask<TItem>?>>?>(Animations, Enumerable.Empty<MaskItemIndexed<TItem, AnimationSceneItem.Mask<TItem>?>>());
+                this.Animations = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Animation.Mask<TItem>?>>?>(Animations, Enumerable.Empty<MaskItemIndexed<TItem, Animation.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AnimationSceneItem.Mask<TItem>?>>?>? Animations;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Animation.Mask<TItem>?>>?>? Animations;
             #endregion
 
             #region Equals
@@ -222,14 +222,14 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 if (Animations != null)
                 {
-                    obj.Animations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AnimationSceneItem.Mask<R>?>>?>(eval(this.Animations.Overall), Enumerable.Empty<MaskItemIndexed<R, AnimationSceneItem.Mask<R>?>>());
+                    obj.Animations = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Animation.Mask<R>?>>?>(eval(this.Animations.Overall), Enumerable.Empty<MaskItemIndexed<R, Animation.Mask<R>?>>());
                     if (Animations.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, AnimationSceneItem.Mask<R>?>>();
+                        var l = new List<MaskItemIndexed<R, Animation.Mask<R>?>>();
                         obj.Animations.Specific = l;
                         foreach (var item in Animations.Specific)
                         {
-                            MaskItemIndexed<R, AnimationSceneItem.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AnimationSceneItem.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, Animation.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Animation.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -283,7 +283,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AnimationSceneItem.ErrorMask?>>?>? Animations;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Animation.ErrorMask?>>?>? Animations;
             #endregion
 
             #region IErrorMask
@@ -305,7 +305,7 @@ namespace Mutagen.Bethesda.Starfield
                 switch (enu)
                 {
                     case AnimationSceneAction_FieldIndex.Animations:
-                        this.Animations = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AnimationSceneItem.ErrorMask?>>?>(ex, null);
+                        this.Animations = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Animation.ErrorMask?>>?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -319,7 +319,7 @@ namespace Mutagen.Bethesda.Starfield
                 switch (enu)
                 {
                     case AnimationSceneAction_FieldIndex.Animations:
-                        this.Animations = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AnimationSceneItem.ErrorMask?>>?>)obj;
+                        this.Animations = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Animation.ErrorMask?>>?>)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -383,7 +383,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Animations = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AnimationSceneItem.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Animations?.Overall, rhs.Animations?.Overall), Noggog.ExceptionExt.Combine(this.Animations?.Specific, rhs.Animations?.Specific));
+                ret.Animations = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Animation.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Animations?.Overall, rhs.Animations?.Overall), Noggog.ExceptionExt.Combine(this.Animations?.Specific, rhs.Animations?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -406,7 +406,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
-            public AnimationSceneItem.TranslationMask? Animations;
+            public Animation.TranslationMask? Animations;
             #endregion
 
             #region Ctors
@@ -501,7 +501,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IAnimationSceneAction>,
         INamedRequired
     {
-        new ExtendedList<AnimationSceneItem> Animations { get; }
+        new ExtendedList<Animation> Animations { get; }
     }
 
     public partial interface IAnimationSceneActionGetter :
@@ -512,7 +512,7 @@ namespace Mutagen.Bethesda.Starfield
         INamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => AnimationSceneAction_Registration.Instance;
-        IReadOnlyList<IAnimationSceneItemGetter> Animations { get; }
+        IReadOnlyList<IAnimationGetter> Animations { get; }
 
     }
 
@@ -711,26 +711,26 @@ namespace Mutagen.Bethesda.Starfield
             var all = RecordCollection.Factory(
                 RecordTypes.NAM0,
                 RecordTypes.BNAM,
+                RecordTypes.XNAM,
                 RecordTypes.STRV,
                 RecordTypes.VCLR,
-                RecordTypes.XNAM,
                 RecordTypes.FLMV,
                 RecordTypes.FLAV,
                 RecordTypes.QUAL,
+                RecordTypes.DOFT,
+                RecordTypes.SOFT,
+                RecordTypes.DPLT,
                 RecordTypes.SPOR,
                 RecordTypes.OCOR,
-                RecordTypes.SOFT,
-                RecordTypes.DOFT,
                 RecordTypes.LVCR,
                 RecordTypes.CTDA,
                 RecordTypes.CITC,
                 RecordTypes.CIS1,
                 RecordTypes.CIS2,
                 RecordTypes.ATAC,
-                RecordTypes.PLRL,
                 RecordTypes.SHRT,
+                RecordTypes.PLRL,
                 RecordTypes.DTGT,
-                RecordTypes.DPLT,
                 RecordTypes.ACEP);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
@@ -947,7 +947,7 @@ namespace Mutagen.Bethesda.Starfield
             if (!base.Equals((IASceneActionGetter)lhs, (IASceneActionGetter)rhs, equalsMask)) return false;
             if ((equalsMask?.GetShouldTranslate((int)AnimationSceneAction_FieldIndex.Animations) ?? true))
             {
-                if (!lhs.Animations.SequenceEqual(rhs.Animations, (l, r) => ((AnimationSceneItemCommon)((IAnimationSceneItemGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)AnimationSceneAction_FieldIndex.Animations)))) return false;
+                if (!lhs.Animations.SequenceEqual(rhs.Animations, (l, r) => ((AnimationCommon)((IAnimationGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)AnimationSceneAction_FieldIndex.Animations)))) return false;
             }
             return true;
         }
@@ -1168,13 +1168,13 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAnimationSceneItemGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAnimationGetter>.Instance.Write(
                 writer: writer,
                 items: item.Animations,
-                transl: (MutagenWriter subWriter, IAnimationSceneItemGetter subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, IAnimationGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
-                    ((AnimationSceneItemBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((AnimationBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
@@ -1233,15 +1233,13 @@ namespace Mutagen.Bethesda.Starfield
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.BNAM:
-                case RecordTypeInts.STRV:
-                case RecordTypeInts.VCLR:
                 {
                     item.Animations.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AnimationSceneItem>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Animation>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: AnimationSceneItem_Registration.TriggerSpecs,
+                            triggeringRecord: Animation_Registration.TriggerSpecs,
                             translationParams: translationParams,
-                            transl: AnimationSceneItem.TryCreateFromBinary));
+                            transl: Animation.TryCreateFromBinary));
                     return (int)AnimationSceneAction_FieldIndex.Animations;
                 }
                 default:
@@ -1301,7 +1299,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IReadOnlyList<IAnimationSceneItemGetter> Animations { get; private set; } = Array.Empty<IAnimationSceneItemGetter>();
+        public IReadOnlyList<IAnimationGetter> Animations { get; private set; } = Array.Empty<IAnimationGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1366,14 +1364,12 @@ namespace Mutagen.Bethesda.Starfield
             switch (type.TypeInt)
             {
                 case RecordTypeInts.BNAM:
-                case RecordTypeInts.STRV:
-                case RecordTypeInts.VCLR:
                 {
-                    this.Animations = this.ParseRepeatedTypelessSubrecord<IAnimationSceneItemGetter>(
+                    this.Animations = this.ParseRepeatedTypelessSubrecord<IAnimationGetter>(
                         stream: stream,
                         translationParams: translationParams,
-                        trigger: AnimationSceneItem_Registration.TriggerSpecs,
-                        factory: AnimationSceneItemBinaryOverlay.AnimationSceneItemFactory);
+                        trigger: Animation_Registration.TriggerSpecs,
+                        factory: AnimationBinaryOverlay.AnimationFactory);
                     return (int)AnimationSceneAction_FieldIndex.Animations;
                 }
                 default:

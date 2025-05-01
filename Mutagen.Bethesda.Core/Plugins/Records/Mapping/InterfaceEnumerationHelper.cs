@@ -199,7 +199,11 @@ internal static class InterfaceEnumerationHelper
     {
         if (!srcGroup.ContainedRecordType.InheritsFrom(type)) yield break;
 
-        foreach (var item in srcGroup.Records)
+        foreach (var item in srcGroup.Records.Catch(ex =>
+                 {
+                     RecordException.EnrichAndThrow(ex, modKey);
+                     throw RecordException.Enrich(ex, modKey);
+                 }))
         {
             yield return new GroupModContext<TMod, TModGetter, TMajor, TMajorTarget>(
                 modKey: modKey,

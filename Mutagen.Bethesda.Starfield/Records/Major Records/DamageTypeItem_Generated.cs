@@ -51,15 +51,15 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region ActorValue
-        private readonly IFormLink<IActorValueInformationGetter> _ActorValue = new FormLink<IActorValueInformationGetter>();
-        public IFormLink<IActorValueInformationGetter> ActorValue
+        #region ResistanceActorValue
+        private readonly IFormLink<IActorValueInformationGetter> _ResistanceActorValue = new FormLink<IActorValueInformationGetter>();
+        public IFormLink<IActorValueInformationGetter> ResistanceActorValue
         {
-            get => _ActorValue;
-            set => _ActorValue.SetTo(value);
+            get => _ResistanceActorValue;
+            set => _ResistanceActorValue.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IActorValueInformationGetter> IDamageTypeItemGetter.ActorValue => this.ActorValue;
+        IFormLinkGetter<IActorValueInformationGetter> IDamageTypeItemGetter.ResistanceActorValue => this.ResistanceActorValue;
         #endregion
         #region Spell
         private readonly IFormLink<ISpellGetter> _Spell = new FormLink<ISpellGetter>();
@@ -110,15 +110,15 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.ActorValue = initialValue;
+                this.ResistanceActorValue = initialValue;
                 this.Spell = initialValue;
             }
 
             public Mask(
-                TItem ActorValue,
+                TItem ResistanceActorValue,
                 TItem Spell)
             {
-                this.ActorValue = ActorValue;
+                this.ResistanceActorValue = ResistanceActorValue;
                 this.Spell = Spell;
             }
 
@@ -131,7 +131,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem ActorValue;
+            public TItem ResistanceActorValue;
             public TItem Spell;
             #endregion
 
@@ -145,14 +145,14 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.ActorValue, rhs.ActorValue)) return false;
+                if (!object.Equals(this.ResistanceActorValue, rhs.ResistanceActorValue)) return false;
                 if (!object.Equals(this.Spell, rhs.Spell)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.ActorValue);
+                hash.Add(this.ResistanceActorValue);
                 hash.Add(this.Spell);
                 return hash.ToHashCode();
             }
@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.ActorValue)) return false;
+                if (!eval(this.ResistanceActorValue)) return false;
                 if (!eval(this.Spell)) return false;
                 return true;
             }
@@ -171,7 +171,7 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.ActorValue)) return true;
+                if (eval(this.ResistanceActorValue)) return true;
                 if (eval(this.Spell)) return true;
                 return false;
             }
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.ActorValue = eval(this.ActorValue);
+                obj.ResistanceActorValue = eval(this.ResistanceActorValue);
                 obj.Spell = eval(this.Spell);
             }
             #endregion
@@ -207,9 +207,9 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(DamageTypeItem.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.ActorValue ?? true)
+                    if (printMask?.ResistanceActorValue ?? true)
                     {
-                        sb.AppendItem(ActorValue, "ActorValue");
+                        sb.AppendItem(ResistanceActorValue, "ResistanceActorValue");
                     }
                     if (printMask?.Spell ?? true)
                     {
@@ -239,7 +239,7 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? ActorValue;
+            public Exception? ResistanceActorValue;
             public Exception? Spell;
             #endregion
 
@@ -249,8 +249,8 @@ namespace Mutagen.Bethesda.Starfield
                 DamageTypeItem_FieldIndex enu = (DamageTypeItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case DamageTypeItem_FieldIndex.ActorValue:
-                        return ActorValue;
+                    case DamageTypeItem_FieldIndex.ResistanceActorValue:
+                        return ResistanceActorValue;
                     case DamageTypeItem_FieldIndex.Spell:
                         return Spell;
                     default:
@@ -263,8 +263,8 @@ namespace Mutagen.Bethesda.Starfield
                 DamageTypeItem_FieldIndex enu = (DamageTypeItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case DamageTypeItem_FieldIndex.ActorValue:
-                        this.ActorValue = ex;
+                    case DamageTypeItem_FieldIndex.ResistanceActorValue:
+                        this.ResistanceActorValue = ex;
                         break;
                     case DamageTypeItem_FieldIndex.Spell:
                         this.Spell = ex;
@@ -279,8 +279,8 @@ namespace Mutagen.Bethesda.Starfield
                 DamageTypeItem_FieldIndex enu = (DamageTypeItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case DamageTypeItem_FieldIndex.ActorValue:
-                        this.ActorValue = (Exception?)obj;
+                    case DamageTypeItem_FieldIndex.ResistanceActorValue:
+                        this.ResistanceActorValue = (Exception?)obj;
                         break;
                     case DamageTypeItem_FieldIndex.Spell:
                         this.Spell = (Exception?)obj;
@@ -293,7 +293,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (ActorValue != null) return true;
+                if (ResistanceActorValue != null) return true;
                 if (Spell != null) return true;
                 return false;
             }
@@ -321,7 +321,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(ActorValue, "ActorValue");
+                    sb.AppendItem(ResistanceActorValue, "ResistanceActorValue");
                 }
                 {
                     sb.AppendItem(Spell, "Spell");
@@ -334,7 +334,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.ActorValue = this.ActorValue.Combine(rhs.ActorValue);
+                ret.ResistanceActorValue = this.ResistanceActorValue.Combine(rhs.ResistanceActorValue);
                 ret.Spell = this.Spell.Combine(rhs.Spell);
                 return ret;
             }
@@ -359,7 +359,7 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool ActorValue;
+            public bool ResistanceActorValue;
             public bool Spell;
             #endregion
 
@@ -370,7 +370,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.ActorValue = defaultOn;
+                this.ResistanceActorValue = defaultOn;
                 this.Spell = defaultOn;
             }
 
@@ -387,7 +387,7 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((ActorValue, null));
+                ret.Add((ResistanceActorValue, null));
                 ret.Add((Spell, null));
             }
 
@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkContainer,
         ILoquiObjectSetter<IDamageTypeItem>
     {
-        new IFormLink<IActorValueInformationGetter> ActorValue { get; set; }
+        new IFormLink<IActorValueInformationGetter> ResistanceActorValue { get; set; }
         new IFormLink<ISpellGetter> Spell { get; set; }
     }
 
@@ -484,7 +484,7 @@ namespace Mutagen.Bethesda.Starfield
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => DamageTypeItem_Registration.Instance;
-        IFormLinkGetter<IActorValueInformationGetter> ActorValue { get; }
+        IFormLinkGetter<IActorValueInformationGetter> ResistanceActorValue { get; }
         IFormLinkGetter<ISpellGetter> Spell { get; }
 
     }
@@ -655,7 +655,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum DamageTypeItem_FieldIndex
     {
-        ActorValue = 0,
+        ResistanceActorValue = 0,
         Spell = 1,
     }
     #endregion
@@ -742,14 +742,14 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IDamageTypeItem item)
         {
             ClearPartial();
-            item.ActorValue.Clear();
+            item.ResistanceActorValue.Clear();
             item.Spell.Clear();
         }
         
         #region Mutagen
         public void RemapLinks(IDamageTypeItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.ActorValue.Relink(mapping);
+            obj.ResistanceActorValue.Relink(mapping);
             obj.Spell.Relink(mapping);
         }
         
@@ -799,7 +799,7 @@ namespace Mutagen.Bethesda.Starfield
             DamageTypeItem.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.ActorValue = item.ActorValue.Equals(rhs.ActorValue);
+            ret.ResistanceActorValue = item.ResistanceActorValue.Equals(rhs.ResistanceActorValue);
             ret.Spell = item.Spell.Equals(rhs.Spell);
         }
         
@@ -845,9 +845,9 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             DamageTypeItem.Mask<bool>? printMask = null)
         {
-            if (printMask?.ActorValue ?? true)
+            if (printMask?.ResistanceActorValue ?? true)
             {
-                sb.AppendItem(item.ActorValue.FormKey, "ActorValue");
+                sb.AppendItem(item.ResistanceActorValue.FormKey, "ResistanceActorValue");
             }
             if (printMask?.Spell ?? true)
             {
@@ -862,9 +862,9 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)DamageTypeItem_FieldIndex.ActorValue) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DamageTypeItem_FieldIndex.ResistanceActorValue) ?? true))
             {
-                if (!lhs.ActorValue.Equals(rhs.ActorValue)) return false;
+                if (!lhs.ResistanceActorValue.Equals(rhs.ResistanceActorValue)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)DamageTypeItem_FieldIndex.Spell) ?? true))
             {
@@ -876,7 +876,7 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IDamageTypeItemGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.ActorValue);
+            hash.Add(item.ResistanceActorValue);
             hash.Add(item.Spell);
             return hash.ToHashCode();
         }
@@ -892,7 +892,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IDamageTypeItemGetter obj)
         {
-            yield return FormLinkInformation.Factory(obj.ActorValue);
+            yield return FormLinkInformation.Factory(obj.ResistanceActorValue);
             yield return FormLinkInformation.Factory(obj.Spell);
             yield break;
         }
@@ -912,9 +912,9 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)DamageTypeItem_FieldIndex.ActorValue) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DamageTypeItem_FieldIndex.ResistanceActorValue) ?? true))
             {
-                item.ActorValue.SetTo(rhs.ActorValue.FormKey);
+                item.ResistanceActorValue.SetTo(rhs.ResistanceActorValue.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DamageTypeItem_FieldIndex.Spell) ?? true))
             {
@@ -1030,7 +1030,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.ActorValue);
+                item: item.ResistanceActorValue);
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Spell);
@@ -1074,7 +1074,7 @@ namespace Mutagen.Bethesda.Starfield
             IDamageTypeItem item,
             MutagenFrame frame)
         {
-            item.ActorValue.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.ResistanceActorValue.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Spell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
@@ -1142,7 +1142,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<IActorValueInformationGetter> ActorValue => FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<IActorValueInformationGetter> ResistanceActorValue => FormLinkBinaryTranslation.Instance.OverlayFactory<IActorValueInformationGetter>(_package, _structData.Span.Slice(0x0, 0x4));
         public IFormLinkGetter<ISpellGetter> Spell => FormLinkBinaryTranslation.Instance.OverlayFactory<ISpellGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

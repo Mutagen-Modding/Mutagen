@@ -7,8 +7,8 @@
   </Object>
   <Object name="AnimationSoundTag" objType="Subrecord">
     <Fields>
-      <String name="Name" nullable="false" recordType="STAE" />
-      <RefDirect name="STAD" recordType="STAD" unknown="true" refName="SoundReference" nullable="false" />
+      <String name="Tag" nullable="false" recordType="STAE" />
+      <RefDirect name="Sound" recordType="STAD" refName="SoundReference" nullable="false" />
     </Fields>
   </Object>
 </Loqui>

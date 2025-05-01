@@ -2,19 +2,30 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="AmbienceSet" recordType="AMBS" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
-      <RefList name="Sounds" refName="AmbienceSound" counterRecType="ASAS" />
-      <Bool name="ASMB" recordType="ASMB" byteLength="1" />
-      <RefDirect name="Walla" refName="SoundReference" recordType="WED0" />
+      <RefList name="Sounds" refName="AmbientSoundEvent" counterRecType="ASAS" />
+      <Enum name="MergeBehavior" recordType="ASMB" byteLength="1" enumName="AmbienceSet.MergeBehaviorEnum" />
+      <RefDirect name="WallaExterior" refName="SoundReference" recordType="WED0" />
     </Fields>
   </Object>
-  <Object name="AmbienceSound" recordType="ASAE" objType="Subrecord">
+  <Object name="AmbientSoundEvent" recordType="ASAE" objType="Subrecord">
     <Fields>
       <RefDirect name="Sound" refName="SoundReference" />
-      <UInt64 name="Unknown1" />
-      <Guid name="Variation" />
-      <Bool name="Unknown2" byteLength="1" />
-      <Float name="Unknown3" />
-      <Int32 name="Unknown4" />
+      <List name="WeatherKeywords" counterLength="4" >
+        <FormLink refName="Keyword" />
+      </List>
+      <List name="MarkerKeywords" counterLength="4" >
+        <FormLink refName="Keyword" />
+      </List>
+      <Guid name="SwitchGroup" />
+      <Bool name="ReEvaluateIntervalUseCustom" byteLength="1" />
+      <Float name="ReEvaluateIntervalSeconds" />
+      <RefList name="PlanetCustomizations" refName="AmbientSoundPlanetCustomization" counterLength="4" />
+    </Fields>
+  </Object>
+  <Object name="AmbientSoundPlanetCustomization" objType="Subrecord" >
+    <Fields>
+      <FormLink name="Planet" refName="Planet" />
+      <String name="SwitchState" />
     </Fields>
   </Object>
 </Loqui>

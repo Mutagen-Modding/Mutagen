@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Archives;
 using Mutagen.Bethesda.Archives.DI;
 using Mutagen.Bethesda.Environments.DI;
@@ -21,7 +21,7 @@ public class CheckArchiveApplicabilityTests
             .IsApplicable(
                 TestConstants.PluginModKey,
                 $"{Path.GetFileNameWithoutExtension(TestConstants.PluginModKey.FileName)}{Archive.GetExtension(release)}")
-            .Should().BeTrue();
+            .ShouldBeTrue();
     }
 
     [Fact]
@@ -34,7 +34,7 @@ public class CheckArchiveApplicabilityTests
             .IsApplicable(
                 TestConstants.PluginModKey,
                 $"{Path.GetFileNameWithoutExtension(TestConstants.PluginModKey.FileName)} - Textures{Archive.GetExtension(release)}")
-            .Should().BeTrue();
+            .ShouldBeTrue();
     }
 
     [Fact]
@@ -49,7 +49,7 @@ public class CheckArchiveApplicabilityTests
             .IsApplicable(
                 modKey,
                 $"{name}{Archive.GetExtension(release)}")
-            .Should().BeTrue();
+            .ShouldBeTrue();
     }
 
     [Fact]
@@ -64,7 +64,7 @@ public class CheckArchiveApplicabilityTests
             .IsApplicable(
                 modKey,
                 $"{name}{Archive.GetExtension(release)}")
-            .Should().BeTrue();
+            .ShouldBeTrue();
     }
 
     [Fact]
@@ -77,7 +77,7 @@ public class CheckArchiveApplicabilityTests
             .IsApplicable(
                 TestConstants.PluginModKey,
                 $"{Path.GetFileNameWithoutExtension(TestConstants.PluginModKey2.FileName)}{Archive.GetExtension(release)}")
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 
     [Fact]
@@ -90,7 +90,7 @@ public class CheckArchiveApplicabilityTests
             .IsApplicable(
                 TestConstants.PluginModKey,
                 $"{Path.GetFileNameWithoutExtension(TestConstants.PluginModKey2.FileName)} - Textures{Archive.GetExtension(release)}")
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 
     [Fact]
@@ -102,6 +102,6 @@ public class CheckArchiveApplicabilityTests
             .IsApplicable(
                 TestConstants.PluginModKey,
                 $"{Path.GetFileNameWithoutExtension(TestConstants.PluginModKey.FileName)}.bad")
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 }

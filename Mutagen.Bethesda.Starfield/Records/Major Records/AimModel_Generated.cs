@@ -53,11 +53,11 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region ConeOfFireMinAngle
-        public Single ConeOfFireMinAngle { get; set; } = default(Single);
+        #region ConeOfFireDegreesX
+        public Single ConeOfFireDegreesX { get; set; } = default(Single);
         #endregion
-        #region ConeOfFireMaxAngle
-        public Single ConeOfFireMaxAngle { get; set; } = default(Single);
+        #region ConeOfFireDegreesY
+        public Single ConeOfFireDegreesY { get; set; } = default(Single);
         #endregion
         #region ConeOfFireIncreasePerShot
         public Single ConeOfFireIncreasePerShot { get; set; } = default(Single);
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Starfield
         public Single ConeOfFireIncreasePerSec { get; set; } = default(Single);
         #endregion
         #region ConeOfFireDecreaseDelaySeconds
-        public UInt32 ConeOfFireDecreaseDelaySeconds { get; set; } = default(UInt32);
+        public Single ConeOfFireDecreaseDelaySeconds { get; set; } = default(Single);
         #endregion
         #region ConeOfFireSneakMult
         public Single ConeOfFireSneakMult { get; set; } = default(Single);
@@ -77,17 +77,17 @@ namespace Mutagen.Bethesda.Starfield
         #region RecoilDiminishSightsMult
         public Single RecoilDiminishSightsMult { get; set; } = default(Single);
         #endregion
-        #region RecoilMinPerShot
-        public Single RecoilMinPerShot { get; set; } = default(Single);
+        #region RecoilDegreesPerShotX
+        public Single RecoilDegreesPerShotX { get; set; } = default(Single);
         #endregion
-        #region RecoilMaxPerShot
-        public Single RecoilMaxPerShot { get; set; } = default(Single);
+        #region RecoilDegreesPerShotY
+        public Single RecoilDegreesPerShotY { get; set; } = default(Single);
         #endregion
         #region RecoilHipMult
         public Single RecoilHipMult { get; set; } = default(Single);
         #endregion
-        #region RunawayRecoilShots
-        public UInt32 RunawayRecoilShots { get; set; } = default(UInt32);
+        #region RecoilShotsForRunaway
+        public UInt32 RecoilShotsForRunaway { get; set; } = default(UInt32);
         #endregion
         #region RecoilArc
         public Single RecoilArc { get; set; } = default(Single);
@@ -98,11 +98,11 @@ namespace Mutagen.Bethesda.Starfield
         #region ConeOfFireIronSightsMult
         public Single ConeOfFireIronSightsMult { get; set; } = default(Single);
         #endregion
-        #region BaseStability
-        public Single BaseStability { get; set; } = default(Single);
+        #region RecoilBaseStability
+        public Single RecoilBaseStability { get; set; } = default(Single);
         #endregion
-        #region Unknown
-        public Byte Unknown { get; set; } = default(Byte);
+        #region ConeOfFireIgnoresMovement
+        public Boolean ConeOfFireIgnoresMovement { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -129,23 +129,23 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.ConeOfFireMinAngle = initialValue;
-                this.ConeOfFireMaxAngle = initialValue;
+                this.ConeOfFireDegreesX = initialValue;
+                this.ConeOfFireDegreesY = initialValue;
                 this.ConeOfFireIncreasePerShot = initialValue;
                 this.ConeOfFireIncreasePerSec = initialValue;
                 this.ConeOfFireDecreaseDelaySeconds = initialValue;
                 this.ConeOfFireSneakMult = initialValue;
                 this.RecoilDiminishSpringForce = initialValue;
                 this.RecoilDiminishSightsMult = initialValue;
-                this.RecoilMinPerShot = initialValue;
-                this.RecoilMaxPerShot = initialValue;
+                this.RecoilDegreesPerShotX = initialValue;
+                this.RecoilDegreesPerShotY = initialValue;
                 this.RecoilHipMult = initialValue;
-                this.RunawayRecoilShots = initialValue;
+                this.RecoilShotsForRunaway = initialValue;
                 this.RecoilArc = initialValue;
                 this.RecoilArcRotate = initialValue;
                 this.ConeOfFireIronSightsMult = initialValue;
-                this.BaseStability = initialValue;
-                this.Unknown = initialValue;
+                this.RecoilBaseStability = initialValue;
+                this.ConeOfFireIgnoresMovement = initialValue;
             }
 
             public Mask(
@@ -156,23 +156,23 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
-                TItem ConeOfFireMinAngle,
-                TItem ConeOfFireMaxAngle,
+                TItem ConeOfFireDegreesX,
+                TItem ConeOfFireDegreesY,
                 TItem ConeOfFireIncreasePerShot,
                 TItem ConeOfFireIncreasePerSec,
                 TItem ConeOfFireDecreaseDelaySeconds,
                 TItem ConeOfFireSneakMult,
                 TItem RecoilDiminishSpringForce,
                 TItem RecoilDiminishSightsMult,
-                TItem RecoilMinPerShot,
-                TItem RecoilMaxPerShot,
+                TItem RecoilDegreesPerShotX,
+                TItem RecoilDegreesPerShotY,
                 TItem RecoilHipMult,
-                TItem RunawayRecoilShots,
+                TItem RecoilShotsForRunaway,
                 TItem RecoilArc,
                 TItem RecoilArcRotate,
                 TItem ConeOfFireIronSightsMult,
-                TItem BaseStability,
-                TItem Unknown)
+                TItem RecoilBaseStability,
+                TItem ConeOfFireIgnoresMovement)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -182,23 +182,23 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.ConeOfFireMinAngle = ConeOfFireMinAngle;
-                this.ConeOfFireMaxAngle = ConeOfFireMaxAngle;
+                this.ConeOfFireDegreesX = ConeOfFireDegreesX;
+                this.ConeOfFireDegreesY = ConeOfFireDegreesY;
                 this.ConeOfFireIncreasePerShot = ConeOfFireIncreasePerShot;
                 this.ConeOfFireIncreasePerSec = ConeOfFireIncreasePerSec;
                 this.ConeOfFireDecreaseDelaySeconds = ConeOfFireDecreaseDelaySeconds;
                 this.ConeOfFireSneakMult = ConeOfFireSneakMult;
                 this.RecoilDiminishSpringForce = RecoilDiminishSpringForce;
                 this.RecoilDiminishSightsMult = RecoilDiminishSightsMult;
-                this.RecoilMinPerShot = RecoilMinPerShot;
-                this.RecoilMaxPerShot = RecoilMaxPerShot;
+                this.RecoilDegreesPerShotX = RecoilDegreesPerShotX;
+                this.RecoilDegreesPerShotY = RecoilDegreesPerShotY;
                 this.RecoilHipMult = RecoilHipMult;
-                this.RunawayRecoilShots = RunawayRecoilShots;
+                this.RecoilShotsForRunaway = RecoilShotsForRunaway;
                 this.RecoilArc = RecoilArc;
                 this.RecoilArcRotate = RecoilArcRotate;
                 this.ConeOfFireIronSightsMult = ConeOfFireIronSightsMult;
-                this.BaseStability = BaseStability;
-                this.Unknown = Unknown;
+                this.RecoilBaseStability = RecoilBaseStability;
+                this.ConeOfFireIgnoresMovement = ConeOfFireIgnoresMovement;
             }
 
             #pragma warning disable CS8618
@@ -210,23 +210,23 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem ConeOfFireMinAngle;
-            public TItem ConeOfFireMaxAngle;
+            public TItem ConeOfFireDegreesX;
+            public TItem ConeOfFireDegreesY;
             public TItem ConeOfFireIncreasePerShot;
             public TItem ConeOfFireIncreasePerSec;
             public TItem ConeOfFireDecreaseDelaySeconds;
             public TItem ConeOfFireSneakMult;
             public TItem RecoilDiminishSpringForce;
             public TItem RecoilDiminishSightsMult;
-            public TItem RecoilMinPerShot;
-            public TItem RecoilMaxPerShot;
+            public TItem RecoilDegreesPerShotX;
+            public TItem RecoilDegreesPerShotY;
             public TItem RecoilHipMult;
-            public TItem RunawayRecoilShots;
+            public TItem RecoilShotsForRunaway;
             public TItem RecoilArc;
             public TItem RecoilArcRotate;
             public TItem ConeOfFireIronSightsMult;
-            public TItem BaseStability;
-            public TItem Unknown;
+            public TItem RecoilBaseStability;
+            public TItem ConeOfFireIgnoresMovement;
             #endregion
 
             #region Equals
@@ -240,45 +240,45 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.ConeOfFireMinAngle, rhs.ConeOfFireMinAngle)) return false;
-                if (!object.Equals(this.ConeOfFireMaxAngle, rhs.ConeOfFireMaxAngle)) return false;
+                if (!object.Equals(this.ConeOfFireDegreesX, rhs.ConeOfFireDegreesX)) return false;
+                if (!object.Equals(this.ConeOfFireDegreesY, rhs.ConeOfFireDegreesY)) return false;
                 if (!object.Equals(this.ConeOfFireIncreasePerShot, rhs.ConeOfFireIncreasePerShot)) return false;
                 if (!object.Equals(this.ConeOfFireIncreasePerSec, rhs.ConeOfFireIncreasePerSec)) return false;
                 if (!object.Equals(this.ConeOfFireDecreaseDelaySeconds, rhs.ConeOfFireDecreaseDelaySeconds)) return false;
                 if (!object.Equals(this.ConeOfFireSneakMult, rhs.ConeOfFireSneakMult)) return false;
                 if (!object.Equals(this.RecoilDiminishSpringForce, rhs.RecoilDiminishSpringForce)) return false;
                 if (!object.Equals(this.RecoilDiminishSightsMult, rhs.RecoilDiminishSightsMult)) return false;
-                if (!object.Equals(this.RecoilMinPerShot, rhs.RecoilMinPerShot)) return false;
-                if (!object.Equals(this.RecoilMaxPerShot, rhs.RecoilMaxPerShot)) return false;
+                if (!object.Equals(this.RecoilDegreesPerShotX, rhs.RecoilDegreesPerShotX)) return false;
+                if (!object.Equals(this.RecoilDegreesPerShotY, rhs.RecoilDegreesPerShotY)) return false;
                 if (!object.Equals(this.RecoilHipMult, rhs.RecoilHipMult)) return false;
-                if (!object.Equals(this.RunawayRecoilShots, rhs.RunawayRecoilShots)) return false;
+                if (!object.Equals(this.RecoilShotsForRunaway, rhs.RecoilShotsForRunaway)) return false;
                 if (!object.Equals(this.RecoilArc, rhs.RecoilArc)) return false;
                 if (!object.Equals(this.RecoilArcRotate, rhs.RecoilArcRotate)) return false;
                 if (!object.Equals(this.ConeOfFireIronSightsMult, rhs.ConeOfFireIronSightsMult)) return false;
-                if (!object.Equals(this.BaseStability, rhs.BaseStability)) return false;
-                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.RecoilBaseStability, rhs.RecoilBaseStability)) return false;
+                if (!object.Equals(this.ConeOfFireIgnoresMovement, rhs.ConeOfFireIgnoresMovement)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.ConeOfFireMinAngle);
-                hash.Add(this.ConeOfFireMaxAngle);
+                hash.Add(this.ConeOfFireDegreesX);
+                hash.Add(this.ConeOfFireDegreesY);
                 hash.Add(this.ConeOfFireIncreasePerShot);
                 hash.Add(this.ConeOfFireIncreasePerSec);
                 hash.Add(this.ConeOfFireDecreaseDelaySeconds);
                 hash.Add(this.ConeOfFireSneakMult);
                 hash.Add(this.RecoilDiminishSpringForce);
                 hash.Add(this.RecoilDiminishSightsMult);
-                hash.Add(this.RecoilMinPerShot);
-                hash.Add(this.RecoilMaxPerShot);
+                hash.Add(this.RecoilDegreesPerShotX);
+                hash.Add(this.RecoilDegreesPerShotY);
                 hash.Add(this.RecoilHipMult);
-                hash.Add(this.RunawayRecoilShots);
+                hash.Add(this.RecoilShotsForRunaway);
                 hash.Add(this.RecoilArc);
                 hash.Add(this.RecoilArcRotate);
                 hash.Add(this.ConeOfFireIronSightsMult);
-                hash.Add(this.BaseStability);
-                hash.Add(this.Unknown);
+                hash.Add(this.RecoilBaseStability);
+                hash.Add(this.ConeOfFireIgnoresMovement);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -289,23 +289,23 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.ConeOfFireMinAngle)) return false;
-                if (!eval(this.ConeOfFireMaxAngle)) return false;
+                if (!eval(this.ConeOfFireDegreesX)) return false;
+                if (!eval(this.ConeOfFireDegreesY)) return false;
                 if (!eval(this.ConeOfFireIncreasePerShot)) return false;
                 if (!eval(this.ConeOfFireIncreasePerSec)) return false;
                 if (!eval(this.ConeOfFireDecreaseDelaySeconds)) return false;
                 if (!eval(this.ConeOfFireSneakMult)) return false;
                 if (!eval(this.RecoilDiminishSpringForce)) return false;
                 if (!eval(this.RecoilDiminishSightsMult)) return false;
-                if (!eval(this.RecoilMinPerShot)) return false;
-                if (!eval(this.RecoilMaxPerShot)) return false;
+                if (!eval(this.RecoilDegreesPerShotX)) return false;
+                if (!eval(this.RecoilDegreesPerShotY)) return false;
                 if (!eval(this.RecoilHipMult)) return false;
-                if (!eval(this.RunawayRecoilShots)) return false;
+                if (!eval(this.RecoilShotsForRunaway)) return false;
                 if (!eval(this.RecoilArc)) return false;
                 if (!eval(this.RecoilArcRotate)) return false;
                 if (!eval(this.ConeOfFireIronSightsMult)) return false;
-                if (!eval(this.BaseStability)) return false;
-                if (!eval(this.Unknown)) return false;
+                if (!eval(this.RecoilBaseStability)) return false;
+                if (!eval(this.ConeOfFireIgnoresMovement)) return false;
                 return true;
             }
             #endregion
@@ -314,23 +314,23 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.ConeOfFireMinAngle)) return true;
-                if (eval(this.ConeOfFireMaxAngle)) return true;
+                if (eval(this.ConeOfFireDegreesX)) return true;
+                if (eval(this.ConeOfFireDegreesY)) return true;
                 if (eval(this.ConeOfFireIncreasePerShot)) return true;
                 if (eval(this.ConeOfFireIncreasePerSec)) return true;
                 if (eval(this.ConeOfFireDecreaseDelaySeconds)) return true;
                 if (eval(this.ConeOfFireSneakMult)) return true;
                 if (eval(this.RecoilDiminishSpringForce)) return true;
                 if (eval(this.RecoilDiminishSightsMult)) return true;
-                if (eval(this.RecoilMinPerShot)) return true;
-                if (eval(this.RecoilMaxPerShot)) return true;
+                if (eval(this.RecoilDegreesPerShotX)) return true;
+                if (eval(this.RecoilDegreesPerShotY)) return true;
                 if (eval(this.RecoilHipMult)) return true;
-                if (eval(this.RunawayRecoilShots)) return true;
+                if (eval(this.RecoilShotsForRunaway)) return true;
                 if (eval(this.RecoilArc)) return true;
                 if (eval(this.RecoilArcRotate)) return true;
                 if (eval(this.ConeOfFireIronSightsMult)) return true;
-                if (eval(this.BaseStability)) return true;
-                if (eval(this.Unknown)) return true;
+                if (eval(this.RecoilBaseStability)) return true;
+                if (eval(this.ConeOfFireIgnoresMovement)) return true;
                 return false;
             }
             #endregion
@@ -346,23 +346,23 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.ConeOfFireMinAngle = eval(this.ConeOfFireMinAngle);
-                obj.ConeOfFireMaxAngle = eval(this.ConeOfFireMaxAngle);
+                obj.ConeOfFireDegreesX = eval(this.ConeOfFireDegreesX);
+                obj.ConeOfFireDegreesY = eval(this.ConeOfFireDegreesY);
                 obj.ConeOfFireIncreasePerShot = eval(this.ConeOfFireIncreasePerShot);
                 obj.ConeOfFireIncreasePerSec = eval(this.ConeOfFireIncreasePerSec);
                 obj.ConeOfFireDecreaseDelaySeconds = eval(this.ConeOfFireDecreaseDelaySeconds);
                 obj.ConeOfFireSneakMult = eval(this.ConeOfFireSneakMult);
                 obj.RecoilDiminishSpringForce = eval(this.RecoilDiminishSpringForce);
                 obj.RecoilDiminishSightsMult = eval(this.RecoilDiminishSightsMult);
-                obj.RecoilMinPerShot = eval(this.RecoilMinPerShot);
-                obj.RecoilMaxPerShot = eval(this.RecoilMaxPerShot);
+                obj.RecoilDegreesPerShotX = eval(this.RecoilDegreesPerShotX);
+                obj.RecoilDegreesPerShotY = eval(this.RecoilDegreesPerShotY);
                 obj.RecoilHipMult = eval(this.RecoilHipMult);
-                obj.RunawayRecoilShots = eval(this.RunawayRecoilShots);
+                obj.RecoilShotsForRunaway = eval(this.RecoilShotsForRunaway);
                 obj.RecoilArc = eval(this.RecoilArc);
                 obj.RecoilArcRotate = eval(this.RecoilArcRotate);
                 obj.ConeOfFireIronSightsMult = eval(this.ConeOfFireIronSightsMult);
-                obj.BaseStability = eval(this.BaseStability);
-                obj.Unknown = eval(this.Unknown);
+                obj.RecoilBaseStability = eval(this.RecoilBaseStability);
+                obj.ConeOfFireIgnoresMovement = eval(this.ConeOfFireIgnoresMovement);
             }
             #endregion
 
@@ -381,13 +381,13 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(AimModel.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.ConeOfFireMinAngle ?? true)
+                    if (printMask?.ConeOfFireDegreesX ?? true)
                     {
-                        sb.AppendItem(ConeOfFireMinAngle, "ConeOfFireMinAngle");
+                        sb.AppendItem(ConeOfFireDegreesX, "ConeOfFireDegreesX");
                     }
-                    if (printMask?.ConeOfFireMaxAngle ?? true)
+                    if (printMask?.ConeOfFireDegreesY ?? true)
                     {
-                        sb.AppendItem(ConeOfFireMaxAngle, "ConeOfFireMaxAngle");
+                        sb.AppendItem(ConeOfFireDegreesY, "ConeOfFireDegreesY");
                     }
                     if (printMask?.ConeOfFireIncreasePerShot ?? true)
                     {
@@ -413,21 +413,21 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(RecoilDiminishSightsMult, "RecoilDiminishSightsMult");
                     }
-                    if (printMask?.RecoilMinPerShot ?? true)
+                    if (printMask?.RecoilDegreesPerShotX ?? true)
                     {
-                        sb.AppendItem(RecoilMinPerShot, "RecoilMinPerShot");
+                        sb.AppendItem(RecoilDegreesPerShotX, "RecoilDegreesPerShotX");
                     }
-                    if (printMask?.RecoilMaxPerShot ?? true)
+                    if (printMask?.RecoilDegreesPerShotY ?? true)
                     {
-                        sb.AppendItem(RecoilMaxPerShot, "RecoilMaxPerShot");
+                        sb.AppendItem(RecoilDegreesPerShotY, "RecoilDegreesPerShotY");
                     }
                     if (printMask?.RecoilHipMult ?? true)
                     {
                         sb.AppendItem(RecoilHipMult, "RecoilHipMult");
                     }
-                    if (printMask?.RunawayRecoilShots ?? true)
+                    if (printMask?.RecoilShotsForRunaway ?? true)
                     {
-                        sb.AppendItem(RunawayRecoilShots, "RunawayRecoilShots");
+                        sb.AppendItem(RecoilShotsForRunaway, "RecoilShotsForRunaway");
                     }
                     if (printMask?.RecoilArc ?? true)
                     {
@@ -441,13 +441,13 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(ConeOfFireIronSightsMult, "ConeOfFireIronSightsMult");
                     }
-                    if (printMask?.BaseStability ?? true)
+                    if (printMask?.RecoilBaseStability ?? true)
                     {
-                        sb.AppendItem(BaseStability, "BaseStability");
+                        sb.AppendItem(RecoilBaseStability, "RecoilBaseStability");
                     }
-                    if (printMask?.Unknown ?? true)
+                    if (printMask?.ConeOfFireIgnoresMovement ?? true)
                     {
-                        sb.AppendItem(Unknown, "Unknown");
+                        sb.AppendItem(ConeOfFireIgnoresMovement, "ConeOfFireIgnoresMovement");
                     }
                 }
             }
@@ -460,23 +460,23 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? ConeOfFireMinAngle;
-            public Exception? ConeOfFireMaxAngle;
+            public Exception? ConeOfFireDegreesX;
+            public Exception? ConeOfFireDegreesY;
             public Exception? ConeOfFireIncreasePerShot;
             public Exception? ConeOfFireIncreasePerSec;
             public Exception? ConeOfFireDecreaseDelaySeconds;
             public Exception? ConeOfFireSneakMult;
             public Exception? RecoilDiminishSpringForce;
             public Exception? RecoilDiminishSightsMult;
-            public Exception? RecoilMinPerShot;
-            public Exception? RecoilMaxPerShot;
+            public Exception? RecoilDegreesPerShotX;
+            public Exception? RecoilDegreesPerShotY;
             public Exception? RecoilHipMult;
-            public Exception? RunawayRecoilShots;
+            public Exception? RecoilShotsForRunaway;
             public Exception? RecoilArc;
             public Exception? RecoilArcRotate;
             public Exception? ConeOfFireIronSightsMult;
-            public Exception? BaseStability;
-            public Exception? Unknown;
+            public Exception? RecoilBaseStability;
+            public Exception? ConeOfFireIgnoresMovement;
             #endregion
 
             #region IErrorMask
@@ -485,10 +485,10 @@ namespace Mutagen.Bethesda.Starfield
                 AimModel_FieldIndex enu = (AimModel_FieldIndex)index;
                 switch (enu)
                 {
-                    case AimModel_FieldIndex.ConeOfFireMinAngle:
-                        return ConeOfFireMinAngle;
-                    case AimModel_FieldIndex.ConeOfFireMaxAngle:
-                        return ConeOfFireMaxAngle;
+                    case AimModel_FieldIndex.ConeOfFireDegreesX:
+                        return ConeOfFireDegreesX;
+                    case AimModel_FieldIndex.ConeOfFireDegreesY:
+                        return ConeOfFireDegreesY;
                     case AimModel_FieldIndex.ConeOfFireIncreasePerShot:
                         return ConeOfFireIncreasePerShot;
                     case AimModel_FieldIndex.ConeOfFireIncreasePerSec:
@@ -501,24 +501,24 @@ namespace Mutagen.Bethesda.Starfield
                         return RecoilDiminishSpringForce;
                     case AimModel_FieldIndex.RecoilDiminishSightsMult:
                         return RecoilDiminishSightsMult;
-                    case AimModel_FieldIndex.RecoilMinPerShot:
-                        return RecoilMinPerShot;
-                    case AimModel_FieldIndex.RecoilMaxPerShot:
-                        return RecoilMaxPerShot;
+                    case AimModel_FieldIndex.RecoilDegreesPerShotX:
+                        return RecoilDegreesPerShotX;
+                    case AimModel_FieldIndex.RecoilDegreesPerShotY:
+                        return RecoilDegreesPerShotY;
                     case AimModel_FieldIndex.RecoilHipMult:
                         return RecoilHipMult;
-                    case AimModel_FieldIndex.RunawayRecoilShots:
-                        return RunawayRecoilShots;
+                    case AimModel_FieldIndex.RecoilShotsForRunaway:
+                        return RecoilShotsForRunaway;
                     case AimModel_FieldIndex.RecoilArc:
                         return RecoilArc;
                     case AimModel_FieldIndex.RecoilArcRotate:
                         return RecoilArcRotate;
                     case AimModel_FieldIndex.ConeOfFireIronSightsMult:
                         return ConeOfFireIronSightsMult;
-                    case AimModel_FieldIndex.BaseStability:
-                        return BaseStability;
-                    case AimModel_FieldIndex.Unknown:
-                        return Unknown;
+                    case AimModel_FieldIndex.RecoilBaseStability:
+                        return RecoilBaseStability;
+                    case AimModel_FieldIndex.ConeOfFireIgnoresMovement:
+                        return ConeOfFireIgnoresMovement;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -529,11 +529,11 @@ namespace Mutagen.Bethesda.Starfield
                 AimModel_FieldIndex enu = (AimModel_FieldIndex)index;
                 switch (enu)
                 {
-                    case AimModel_FieldIndex.ConeOfFireMinAngle:
-                        this.ConeOfFireMinAngle = ex;
+                    case AimModel_FieldIndex.ConeOfFireDegreesX:
+                        this.ConeOfFireDegreesX = ex;
                         break;
-                    case AimModel_FieldIndex.ConeOfFireMaxAngle:
-                        this.ConeOfFireMaxAngle = ex;
+                    case AimModel_FieldIndex.ConeOfFireDegreesY:
+                        this.ConeOfFireDegreesY = ex;
                         break;
                     case AimModel_FieldIndex.ConeOfFireIncreasePerShot:
                         this.ConeOfFireIncreasePerShot = ex;
@@ -553,17 +553,17 @@ namespace Mutagen.Bethesda.Starfield
                     case AimModel_FieldIndex.RecoilDiminishSightsMult:
                         this.RecoilDiminishSightsMult = ex;
                         break;
-                    case AimModel_FieldIndex.RecoilMinPerShot:
-                        this.RecoilMinPerShot = ex;
+                    case AimModel_FieldIndex.RecoilDegreesPerShotX:
+                        this.RecoilDegreesPerShotX = ex;
                         break;
-                    case AimModel_FieldIndex.RecoilMaxPerShot:
-                        this.RecoilMaxPerShot = ex;
+                    case AimModel_FieldIndex.RecoilDegreesPerShotY:
+                        this.RecoilDegreesPerShotY = ex;
                         break;
                     case AimModel_FieldIndex.RecoilHipMult:
                         this.RecoilHipMult = ex;
                         break;
-                    case AimModel_FieldIndex.RunawayRecoilShots:
-                        this.RunawayRecoilShots = ex;
+                    case AimModel_FieldIndex.RecoilShotsForRunaway:
+                        this.RecoilShotsForRunaway = ex;
                         break;
                     case AimModel_FieldIndex.RecoilArc:
                         this.RecoilArc = ex;
@@ -574,11 +574,11 @@ namespace Mutagen.Bethesda.Starfield
                     case AimModel_FieldIndex.ConeOfFireIronSightsMult:
                         this.ConeOfFireIronSightsMult = ex;
                         break;
-                    case AimModel_FieldIndex.BaseStability:
-                        this.BaseStability = ex;
+                    case AimModel_FieldIndex.RecoilBaseStability:
+                        this.RecoilBaseStability = ex;
                         break;
-                    case AimModel_FieldIndex.Unknown:
-                        this.Unknown = ex;
+                    case AimModel_FieldIndex.ConeOfFireIgnoresMovement:
+                        this.ConeOfFireIgnoresMovement = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -591,11 +591,11 @@ namespace Mutagen.Bethesda.Starfield
                 AimModel_FieldIndex enu = (AimModel_FieldIndex)index;
                 switch (enu)
                 {
-                    case AimModel_FieldIndex.ConeOfFireMinAngle:
-                        this.ConeOfFireMinAngle = (Exception?)obj;
+                    case AimModel_FieldIndex.ConeOfFireDegreesX:
+                        this.ConeOfFireDegreesX = (Exception?)obj;
                         break;
-                    case AimModel_FieldIndex.ConeOfFireMaxAngle:
-                        this.ConeOfFireMaxAngle = (Exception?)obj;
+                    case AimModel_FieldIndex.ConeOfFireDegreesY:
+                        this.ConeOfFireDegreesY = (Exception?)obj;
                         break;
                     case AimModel_FieldIndex.ConeOfFireIncreasePerShot:
                         this.ConeOfFireIncreasePerShot = (Exception?)obj;
@@ -615,17 +615,17 @@ namespace Mutagen.Bethesda.Starfield
                     case AimModel_FieldIndex.RecoilDiminishSightsMult:
                         this.RecoilDiminishSightsMult = (Exception?)obj;
                         break;
-                    case AimModel_FieldIndex.RecoilMinPerShot:
-                        this.RecoilMinPerShot = (Exception?)obj;
+                    case AimModel_FieldIndex.RecoilDegreesPerShotX:
+                        this.RecoilDegreesPerShotX = (Exception?)obj;
                         break;
-                    case AimModel_FieldIndex.RecoilMaxPerShot:
-                        this.RecoilMaxPerShot = (Exception?)obj;
+                    case AimModel_FieldIndex.RecoilDegreesPerShotY:
+                        this.RecoilDegreesPerShotY = (Exception?)obj;
                         break;
                     case AimModel_FieldIndex.RecoilHipMult:
                         this.RecoilHipMult = (Exception?)obj;
                         break;
-                    case AimModel_FieldIndex.RunawayRecoilShots:
-                        this.RunawayRecoilShots = (Exception?)obj;
+                    case AimModel_FieldIndex.RecoilShotsForRunaway:
+                        this.RecoilShotsForRunaway = (Exception?)obj;
                         break;
                     case AimModel_FieldIndex.RecoilArc:
                         this.RecoilArc = (Exception?)obj;
@@ -636,11 +636,11 @@ namespace Mutagen.Bethesda.Starfield
                     case AimModel_FieldIndex.ConeOfFireIronSightsMult:
                         this.ConeOfFireIronSightsMult = (Exception?)obj;
                         break;
-                    case AimModel_FieldIndex.BaseStability:
-                        this.BaseStability = (Exception?)obj;
+                    case AimModel_FieldIndex.RecoilBaseStability:
+                        this.RecoilBaseStability = (Exception?)obj;
                         break;
-                    case AimModel_FieldIndex.Unknown:
-                        this.Unknown = (Exception?)obj;
+                    case AimModel_FieldIndex.ConeOfFireIgnoresMovement:
+                        this.ConeOfFireIgnoresMovement = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -651,23 +651,23 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (ConeOfFireMinAngle != null) return true;
-                if (ConeOfFireMaxAngle != null) return true;
+                if (ConeOfFireDegreesX != null) return true;
+                if (ConeOfFireDegreesY != null) return true;
                 if (ConeOfFireIncreasePerShot != null) return true;
                 if (ConeOfFireIncreasePerSec != null) return true;
                 if (ConeOfFireDecreaseDelaySeconds != null) return true;
                 if (ConeOfFireSneakMult != null) return true;
                 if (RecoilDiminishSpringForce != null) return true;
                 if (RecoilDiminishSightsMult != null) return true;
-                if (RecoilMinPerShot != null) return true;
-                if (RecoilMaxPerShot != null) return true;
+                if (RecoilDegreesPerShotX != null) return true;
+                if (RecoilDegreesPerShotY != null) return true;
                 if (RecoilHipMult != null) return true;
-                if (RunawayRecoilShots != null) return true;
+                if (RecoilShotsForRunaway != null) return true;
                 if (RecoilArc != null) return true;
                 if (RecoilArcRotate != null) return true;
                 if (ConeOfFireIronSightsMult != null) return true;
-                if (BaseStability != null) return true;
-                if (Unknown != null) return true;
+                if (RecoilBaseStability != null) return true;
+                if (ConeOfFireIgnoresMovement != null) return true;
                 return false;
             }
             #endregion
@@ -695,10 +695,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(ConeOfFireMinAngle, "ConeOfFireMinAngle");
+                    sb.AppendItem(ConeOfFireDegreesX, "ConeOfFireDegreesX");
                 }
                 {
-                    sb.AppendItem(ConeOfFireMaxAngle, "ConeOfFireMaxAngle");
+                    sb.AppendItem(ConeOfFireDegreesY, "ConeOfFireDegreesY");
                 }
                 {
                     sb.AppendItem(ConeOfFireIncreasePerShot, "ConeOfFireIncreasePerShot");
@@ -719,16 +719,16 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(RecoilDiminishSightsMult, "RecoilDiminishSightsMult");
                 }
                 {
-                    sb.AppendItem(RecoilMinPerShot, "RecoilMinPerShot");
+                    sb.AppendItem(RecoilDegreesPerShotX, "RecoilDegreesPerShotX");
                 }
                 {
-                    sb.AppendItem(RecoilMaxPerShot, "RecoilMaxPerShot");
+                    sb.AppendItem(RecoilDegreesPerShotY, "RecoilDegreesPerShotY");
                 }
                 {
                     sb.AppendItem(RecoilHipMult, "RecoilHipMult");
                 }
                 {
-                    sb.AppendItem(RunawayRecoilShots, "RunawayRecoilShots");
+                    sb.AppendItem(RecoilShotsForRunaway, "RecoilShotsForRunaway");
                 }
                 {
                     sb.AppendItem(RecoilArc, "RecoilArc");
@@ -740,10 +740,10 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(ConeOfFireIronSightsMult, "ConeOfFireIronSightsMult");
                 }
                 {
-                    sb.AppendItem(BaseStability, "BaseStability");
+                    sb.AppendItem(RecoilBaseStability, "RecoilBaseStability");
                 }
                 {
-                    sb.AppendItem(Unknown, "Unknown");
+                    sb.AppendItem(ConeOfFireIgnoresMovement, "ConeOfFireIgnoresMovement");
                 }
             }
             #endregion
@@ -753,23 +753,23 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.ConeOfFireMinAngle = this.ConeOfFireMinAngle.Combine(rhs.ConeOfFireMinAngle);
-                ret.ConeOfFireMaxAngle = this.ConeOfFireMaxAngle.Combine(rhs.ConeOfFireMaxAngle);
+                ret.ConeOfFireDegreesX = this.ConeOfFireDegreesX.Combine(rhs.ConeOfFireDegreesX);
+                ret.ConeOfFireDegreesY = this.ConeOfFireDegreesY.Combine(rhs.ConeOfFireDegreesY);
                 ret.ConeOfFireIncreasePerShot = this.ConeOfFireIncreasePerShot.Combine(rhs.ConeOfFireIncreasePerShot);
                 ret.ConeOfFireIncreasePerSec = this.ConeOfFireIncreasePerSec.Combine(rhs.ConeOfFireIncreasePerSec);
                 ret.ConeOfFireDecreaseDelaySeconds = this.ConeOfFireDecreaseDelaySeconds.Combine(rhs.ConeOfFireDecreaseDelaySeconds);
                 ret.ConeOfFireSneakMult = this.ConeOfFireSneakMult.Combine(rhs.ConeOfFireSneakMult);
                 ret.RecoilDiminishSpringForce = this.RecoilDiminishSpringForce.Combine(rhs.RecoilDiminishSpringForce);
                 ret.RecoilDiminishSightsMult = this.RecoilDiminishSightsMult.Combine(rhs.RecoilDiminishSightsMult);
-                ret.RecoilMinPerShot = this.RecoilMinPerShot.Combine(rhs.RecoilMinPerShot);
-                ret.RecoilMaxPerShot = this.RecoilMaxPerShot.Combine(rhs.RecoilMaxPerShot);
+                ret.RecoilDegreesPerShotX = this.RecoilDegreesPerShotX.Combine(rhs.RecoilDegreesPerShotX);
+                ret.RecoilDegreesPerShotY = this.RecoilDegreesPerShotY.Combine(rhs.RecoilDegreesPerShotY);
                 ret.RecoilHipMult = this.RecoilHipMult.Combine(rhs.RecoilHipMult);
-                ret.RunawayRecoilShots = this.RunawayRecoilShots.Combine(rhs.RunawayRecoilShots);
+                ret.RecoilShotsForRunaway = this.RecoilShotsForRunaway.Combine(rhs.RecoilShotsForRunaway);
                 ret.RecoilArc = this.RecoilArc.Combine(rhs.RecoilArc);
                 ret.RecoilArcRotate = this.RecoilArcRotate.Combine(rhs.RecoilArcRotate);
                 ret.ConeOfFireIronSightsMult = this.ConeOfFireIronSightsMult.Combine(rhs.ConeOfFireIronSightsMult);
-                ret.BaseStability = this.BaseStability.Combine(rhs.BaseStability);
-                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.RecoilBaseStability = this.RecoilBaseStability.Combine(rhs.RecoilBaseStability);
+                ret.ConeOfFireIgnoresMovement = this.ConeOfFireIgnoresMovement.Combine(rhs.ConeOfFireIgnoresMovement);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -792,23 +792,23 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
-            public bool ConeOfFireMinAngle;
-            public bool ConeOfFireMaxAngle;
+            public bool ConeOfFireDegreesX;
+            public bool ConeOfFireDegreesY;
             public bool ConeOfFireIncreasePerShot;
             public bool ConeOfFireIncreasePerSec;
             public bool ConeOfFireDecreaseDelaySeconds;
             public bool ConeOfFireSneakMult;
             public bool RecoilDiminishSpringForce;
             public bool RecoilDiminishSightsMult;
-            public bool RecoilMinPerShot;
-            public bool RecoilMaxPerShot;
+            public bool RecoilDegreesPerShotX;
+            public bool RecoilDegreesPerShotY;
             public bool RecoilHipMult;
-            public bool RunawayRecoilShots;
+            public bool RecoilShotsForRunaway;
             public bool RecoilArc;
             public bool RecoilArcRotate;
             public bool ConeOfFireIronSightsMult;
-            public bool BaseStability;
-            public bool Unknown;
+            public bool RecoilBaseStability;
+            public bool ConeOfFireIgnoresMovement;
             #endregion
 
             #region Ctors
@@ -817,23 +817,23 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.ConeOfFireMinAngle = defaultOn;
-                this.ConeOfFireMaxAngle = defaultOn;
+                this.ConeOfFireDegreesX = defaultOn;
+                this.ConeOfFireDegreesY = defaultOn;
                 this.ConeOfFireIncreasePerShot = defaultOn;
                 this.ConeOfFireIncreasePerSec = defaultOn;
                 this.ConeOfFireDecreaseDelaySeconds = defaultOn;
                 this.ConeOfFireSneakMult = defaultOn;
                 this.RecoilDiminishSpringForce = defaultOn;
                 this.RecoilDiminishSightsMult = defaultOn;
-                this.RecoilMinPerShot = defaultOn;
-                this.RecoilMaxPerShot = defaultOn;
+                this.RecoilDegreesPerShotX = defaultOn;
+                this.RecoilDegreesPerShotY = defaultOn;
                 this.RecoilHipMult = defaultOn;
-                this.RunawayRecoilShots = defaultOn;
+                this.RecoilShotsForRunaway = defaultOn;
                 this.RecoilArc = defaultOn;
                 this.RecoilArcRotate = defaultOn;
                 this.ConeOfFireIronSightsMult = defaultOn;
-                this.BaseStability = defaultOn;
-                this.Unknown = defaultOn;
+                this.RecoilBaseStability = defaultOn;
+                this.ConeOfFireIgnoresMovement = defaultOn;
             }
 
             #endregion
@@ -841,23 +841,23 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((ConeOfFireMinAngle, null));
-                ret.Add((ConeOfFireMaxAngle, null));
+                ret.Add((ConeOfFireDegreesX, null));
+                ret.Add((ConeOfFireDegreesY, null));
                 ret.Add((ConeOfFireIncreasePerShot, null));
                 ret.Add((ConeOfFireIncreasePerSec, null));
                 ret.Add((ConeOfFireDecreaseDelaySeconds, null));
                 ret.Add((ConeOfFireSneakMult, null));
                 ret.Add((RecoilDiminishSpringForce, null));
                 ret.Add((RecoilDiminishSightsMult, null));
-                ret.Add((RecoilMinPerShot, null));
-                ret.Add((RecoilMaxPerShot, null));
+                ret.Add((RecoilDegreesPerShotX, null));
+                ret.Add((RecoilDegreesPerShotY, null));
                 ret.Add((RecoilHipMult, null));
-                ret.Add((RunawayRecoilShots, null));
+                ret.Add((RecoilShotsForRunaway, null));
                 ret.Add((RecoilArc, null));
                 ret.Add((RecoilArcRotate, null));
                 ret.Add((ConeOfFireIronSightsMult, null));
-                ret.Add((BaseStability, null));
-                ret.Add((Unknown, null));
+                ret.Add((RecoilBaseStability, null));
+                ret.Add((ConeOfFireIgnoresMovement, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1002,23 +1002,23 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IAimModelInternal>,
         IStarfieldMajorRecordInternal
     {
-        new Single ConeOfFireMinAngle { get; set; }
-        new Single ConeOfFireMaxAngle { get; set; }
+        new Single ConeOfFireDegreesX { get; set; }
+        new Single ConeOfFireDegreesY { get; set; }
         new Single ConeOfFireIncreasePerShot { get; set; }
         new Single ConeOfFireIncreasePerSec { get; set; }
-        new UInt32 ConeOfFireDecreaseDelaySeconds { get; set; }
+        new Single ConeOfFireDecreaseDelaySeconds { get; set; }
         new Single ConeOfFireSneakMult { get; set; }
         new Single RecoilDiminishSpringForce { get; set; }
         new Single RecoilDiminishSightsMult { get; set; }
-        new Single RecoilMinPerShot { get; set; }
-        new Single RecoilMaxPerShot { get; set; }
+        new Single RecoilDegreesPerShotX { get; set; }
+        new Single RecoilDegreesPerShotY { get; set; }
         new Single RecoilHipMult { get; set; }
-        new UInt32 RunawayRecoilShots { get; set; }
+        new UInt32 RecoilShotsForRunaway { get; set; }
         new Single RecoilArc { get; set; }
         new Single RecoilArcRotate { get; set; }
         new Single ConeOfFireIronSightsMult { get; set; }
-        new Single BaseStability { get; set; }
-        new Byte Unknown { get; set; }
+        new Single RecoilBaseStability { get; set; }
+        new Boolean ConeOfFireIgnoresMovement { get; set; }
     }
 
     public partial interface IAimModelInternal :
@@ -1036,23 +1036,23 @@ namespace Mutagen.Bethesda.Starfield
         IMapsToGetter<IAimModelGetter>
     {
         static new ILoquiRegistration StaticRegistration => AimModel_Registration.Instance;
-        Single ConeOfFireMinAngle { get; }
-        Single ConeOfFireMaxAngle { get; }
+        Single ConeOfFireDegreesX { get; }
+        Single ConeOfFireDegreesY { get; }
         Single ConeOfFireIncreasePerShot { get; }
         Single ConeOfFireIncreasePerSec { get; }
-        UInt32 ConeOfFireDecreaseDelaySeconds { get; }
+        Single ConeOfFireDecreaseDelaySeconds { get; }
         Single ConeOfFireSneakMult { get; }
         Single RecoilDiminishSpringForce { get; }
         Single RecoilDiminishSightsMult { get; }
-        Single RecoilMinPerShot { get; }
-        Single RecoilMaxPerShot { get; }
+        Single RecoilDegreesPerShotX { get; }
+        Single RecoilDegreesPerShotY { get; }
         Single RecoilHipMult { get; }
-        UInt32 RunawayRecoilShots { get; }
+        UInt32 RecoilShotsForRunaway { get; }
         Single RecoilArc { get; }
         Single RecoilArcRotate { get; }
         Single ConeOfFireIronSightsMult { get; }
-        Single BaseStability { get; }
-        Byte Unknown { get; }
+        Single RecoilBaseStability { get; }
+        Boolean ConeOfFireIgnoresMovement { get; }
 
     }
 
@@ -1229,23 +1229,23 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        ConeOfFireMinAngle = 7,
-        ConeOfFireMaxAngle = 8,
+        ConeOfFireDegreesX = 7,
+        ConeOfFireDegreesY = 8,
         ConeOfFireIncreasePerShot = 9,
         ConeOfFireIncreasePerSec = 10,
         ConeOfFireDecreaseDelaySeconds = 11,
         ConeOfFireSneakMult = 12,
         RecoilDiminishSpringForce = 13,
         RecoilDiminishSightsMult = 14,
-        RecoilMinPerShot = 15,
-        RecoilMaxPerShot = 16,
+        RecoilDegreesPerShotX = 15,
+        RecoilDegreesPerShotY = 16,
         RecoilHipMult = 17,
-        RunawayRecoilShots = 18,
+        RecoilShotsForRunaway = 18,
         RecoilArc = 19,
         RecoilArcRotate = 20,
         ConeOfFireIronSightsMult = 21,
-        BaseStability = 22,
-        Unknown = 23,
+        RecoilBaseStability = 22,
+        ConeOfFireIgnoresMovement = 23,
     }
     #endregion
 
@@ -1336,23 +1336,23 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IAimModelInternal item)
         {
             ClearPartial();
-            item.ConeOfFireMinAngle = default(Single);
-            item.ConeOfFireMaxAngle = default(Single);
+            item.ConeOfFireDegreesX = default(Single);
+            item.ConeOfFireDegreesY = default(Single);
             item.ConeOfFireIncreasePerShot = default(Single);
             item.ConeOfFireIncreasePerSec = default(Single);
-            item.ConeOfFireDecreaseDelaySeconds = default(UInt32);
+            item.ConeOfFireDecreaseDelaySeconds = default(Single);
             item.ConeOfFireSneakMult = default(Single);
             item.RecoilDiminishSpringForce = default(Single);
             item.RecoilDiminishSightsMult = default(Single);
-            item.RecoilMinPerShot = default(Single);
-            item.RecoilMaxPerShot = default(Single);
+            item.RecoilDegreesPerShotX = default(Single);
+            item.RecoilDegreesPerShotY = default(Single);
             item.RecoilHipMult = default(Single);
-            item.RunawayRecoilShots = default(UInt32);
+            item.RecoilShotsForRunaway = default(UInt32);
             item.RecoilArc = default(Single);
             item.RecoilArcRotate = default(Single);
             item.ConeOfFireIronSightsMult = default(Single);
-            item.BaseStability = default(Single);
-            item.Unknown = default(Byte);
+            item.RecoilBaseStability = default(Single);
+            item.ConeOfFireIgnoresMovement = default(Boolean);
             base.Clear(item);
         }
         
@@ -1437,23 +1437,23 @@ namespace Mutagen.Bethesda.Starfield
             AimModel.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.ConeOfFireMinAngle = item.ConeOfFireMinAngle.EqualsWithin(rhs.ConeOfFireMinAngle);
-            ret.ConeOfFireMaxAngle = item.ConeOfFireMaxAngle.EqualsWithin(rhs.ConeOfFireMaxAngle);
+            ret.ConeOfFireDegreesX = item.ConeOfFireDegreesX.EqualsWithin(rhs.ConeOfFireDegreesX);
+            ret.ConeOfFireDegreesY = item.ConeOfFireDegreesY.EqualsWithin(rhs.ConeOfFireDegreesY);
             ret.ConeOfFireIncreasePerShot = item.ConeOfFireIncreasePerShot.EqualsWithin(rhs.ConeOfFireIncreasePerShot);
             ret.ConeOfFireIncreasePerSec = item.ConeOfFireIncreasePerSec.EqualsWithin(rhs.ConeOfFireIncreasePerSec);
-            ret.ConeOfFireDecreaseDelaySeconds = item.ConeOfFireDecreaseDelaySeconds == rhs.ConeOfFireDecreaseDelaySeconds;
+            ret.ConeOfFireDecreaseDelaySeconds = item.ConeOfFireDecreaseDelaySeconds.EqualsWithin(rhs.ConeOfFireDecreaseDelaySeconds);
             ret.ConeOfFireSneakMult = item.ConeOfFireSneakMult.EqualsWithin(rhs.ConeOfFireSneakMult);
             ret.RecoilDiminishSpringForce = item.RecoilDiminishSpringForce.EqualsWithin(rhs.RecoilDiminishSpringForce);
             ret.RecoilDiminishSightsMult = item.RecoilDiminishSightsMult.EqualsWithin(rhs.RecoilDiminishSightsMult);
-            ret.RecoilMinPerShot = item.RecoilMinPerShot.EqualsWithin(rhs.RecoilMinPerShot);
-            ret.RecoilMaxPerShot = item.RecoilMaxPerShot.EqualsWithin(rhs.RecoilMaxPerShot);
+            ret.RecoilDegreesPerShotX = item.RecoilDegreesPerShotX.EqualsWithin(rhs.RecoilDegreesPerShotX);
+            ret.RecoilDegreesPerShotY = item.RecoilDegreesPerShotY.EqualsWithin(rhs.RecoilDegreesPerShotY);
             ret.RecoilHipMult = item.RecoilHipMult.EqualsWithin(rhs.RecoilHipMult);
-            ret.RunawayRecoilShots = item.RunawayRecoilShots == rhs.RunawayRecoilShots;
+            ret.RecoilShotsForRunaway = item.RecoilShotsForRunaway == rhs.RecoilShotsForRunaway;
             ret.RecoilArc = item.RecoilArc.EqualsWithin(rhs.RecoilArc);
             ret.RecoilArcRotate = item.RecoilArcRotate.EqualsWithin(rhs.RecoilArcRotate);
             ret.ConeOfFireIronSightsMult = item.ConeOfFireIronSightsMult.EqualsWithin(rhs.ConeOfFireIronSightsMult);
-            ret.BaseStability = item.BaseStability.EqualsWithin(rhs.BaseStability);
-            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.RecoilBaseStability = item.RecoilBaseStability.EqualsWithin(rhs.RecoilBaseStability);
+            ret.ConeOfFireIgnoresMovement = item.ConeOfFireIgnoresMovement == rhs.ConeOfFireIgnoresMovement;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1503,13 +1503,13 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.ConeOfFireMinAngle ?? true)
+            if (printMask?.ConeOfFireDegreesX ?? true)
             {
-                sb.AppendItem(item.ConeOfFireMinAngle, "ConeOfFireMinAngle");
+                sb.AppendItem(item.ConeOfFireDegreesX, "ConeOfFireDegreesX");
             }
-            if (printMask?.ConeOfFireMaxAngle ?? true)
+            if (printMask?.ConeOfFireDegreesY ?? true)
             {
-                sb.AppendItem(item.ConeOfFireMaxAngle, "ConeOfFireMaxAngle");
+                sb.AppendItem(item.ConeOfFireDegreesY, "ConeOfFireDegreesY");
             }
             if (printMask?.ConeOfFireIncreasePerShot ?? true)
             {
@@ -1535,21 +1535,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.RecoilDiminishSightsMult, "RecoilDiminishSightsMult");
             }
-            if (printMask?.RecoilMinPerShot ?? true)
+            if (printMask?.RecoilDegreesPerShotX ?? true)
             {
-                sb.AppendItem(item.RecoilMinPerShot, "RecoilMinPerShot");
+                sb.AppendItem(item.RecoilDegreesPerShotX, "RecoilDegreesPerShotX");
             }
-            if (printMask?.RecoilMaxPerShot ?? true)
+            if (printMask?.RecoilDegreesPerShotY ?? true)
             {
-                sb.AppendItem(item.RecoilMaxPerShot, "RecoilMaxPerShot");
+                sb.AppendItem(item.RecoilDegreesPerShotY, "RecoilDegreesPerShotY");
             }
             if (printMask?.RecoilHipMult ?? true)
             {
                 sb.AppendItem(item.RecoilHipMult, "RecoilHipMult");
             }
-            if (printMask?.RunawayRecoilShots ?? true)
+            if (printMask?.RecoilShotsForRunaway ?? true)
             {
-                sb.AppendItem(item.RunawayRecoilShots, "RunawayRecoilShots");
+                sb.AppendItem(item.RecoilShotsForRunaway, "RecoilShotsForRunaway");
             }
             if (printMask?.RecoilArc ?? true)
             {
@@ -1563,13 +1563,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.ConeOfFireIronSightsMult, "ConeOfFireIronSightsMult");
             }
-            if (printMask?.BaseStability ?? true)
+            if (printMask?.RecoilBaseStability ?? true)
             {
-                sb.AppendItem(item.BaseStability, "BaseStability");
+                sb.AppendItem(item.RecoilBaseStability, "RecoilBaseStability");
             }
-            if (printMask?.Unknown ?? true)
+            if (printMask?.ConeOfFireIgnoresMovement ?? true)
             {
-                sb.AppendItem(item.Unknown, "Unknown");
+                sb.AppendItem(item.ConeOfFireIgnoresMovement, "ConeOfFireIgnoresMovement");
             }
         }
         
@@ -1621,13 +1621,13 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireMinAngle) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireDegreesX) ?? true))
             {
-                if (!lhs.ConeOfFireMinAngle.EqualsWithin(rhs.ConeOfFireMinAngle)) return false;
+                if (!lhs.ConeOfFireDegreesX.EqualsWithin(rhs.ConeOfFireDegreesX)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireMaxAngle) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireDegreesY) ?? true))
             {
-                if (!lhs.ConeOfFireMaxAngle.EqualsWithin(rhs.ConeOfFireMaxAngle)) return false;
+                if (!lhs.ConeOfFireDegreesY.EqualsWithin(rhs.ConeOfFireDegreesY)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireIncreasePerShot) ?? true))
             {
@@ -1639,7 +1639,7 @@ namespace Mutagen.Bethesda.Starfield
             }
             if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireDecreaseDelaySeconds) ?? true))
             {
-                if (lhs.ConeOfFireDecreaseDelaySeconds != rhs.ConeOfFireDecreaseDelaySeconds) return false;
+                if (!lhs.ConeOfFireDecreaseDelaySeconds.EqualsWithin(rhs.ConeOfFireDecreaseDelaySeconds)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireSneakMult) ?? true))
             {
@@ -1653,21 +1653,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.RecoilDiminishSightsMult.EqualsWithin(rhs.RecoilDiminishSightsMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilMinPerShot) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilDegreesPerShotX) ?? true))
             {
-                if (!lhs.RecoilMinPerShot.EqualsWithin(rhs.RecoilMinPerShot)) return false;
+                if (!lhs.RecoilDegreesPerShotX.EqualsWithin(rhs.RecoilDegreesPerShotX)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilMaxPerShot) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilDegreesPerShotY) ?? true))
             {
-                if (!lhs.RecoilMaxPerShot.EqualsWithin(rhs.RecoilMaxPerShot)) return false;
+                if (!lhs.RecoilDegreesPerShotY.EqualsWithin(rhs.RecoilDegreesPerShotY)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilHipMult) ?? true))
             {
                 if (!lhs.RecoilHipMult.EqualsWithin(rhs.RecoilHipMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.RunawayRecoilShots) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilShotsForRunaway) ?? true))
             {
-                if (lhs.RunawayRecoilShots != rhs.RunawayRecoilShots) return false;
+                if (lhs.RecoilShotsForRunaway != rhs.RecoilShotsForRunaway) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilArc) ?? true))
             {
@@ -1681,13 +1681,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.ConeOfFireIronSightsMult.EqualsWithin(rhs.ConeOfFireIronSightsMult)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.BaseStability) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilBaseStability) ?? true))
             {
-                if (!lhs.BaseStability.EqualsWithin(rhs.BaseStability)) return false;
+                if (!lhs.RecoilBaseStability.EqualsWithin(rhs.RecoilBaseStability)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.Unknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireIgnoresMovement) ?? true))
             {
-                if (lhs.Unknown != rhs.Unknown) return false;
+                if (lhs.ConeOfFireIgnoresMovement != rhs.ConeOfFireIgnoresMovement) return false;
             }
             return true;
         }
@@ -1717,23 +1717,23 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IAimModelGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.ConeOfFireMinAngle);
-            hash.Add(item.ConeOfFireMaxAngle);
+            hash.Add(item.ConeOfFireDegreesX);
+            hash.Add(item.ConeOfFireDegreesY);
             hash.Add(item.ConeOfFireIncreasePerShot);
             hash.Add(item.ConeOfFireIncreasePerSec);
             hash.Add(item.ConeOfFireDecreaseDelaySeconds);
             hash.Add(item.ConeOfFireSneakMult);
             hash.Add(item.RecoilDiminishSpringForce);
             hash.Add(item.RecoilDiminishSightsMult);
-            hash.Add(item.RecoilMinPerShot);
-            hash.Add(item.RecoilMaxPerShot);
+            hash.Add(item.RecoilDegreesPerShotX);
+            hash.Add(item.RecoilDegreesPerShotY);
             hash.Add(item.RecoilHipMult);
-            hash.Add(item.RunawayRecoilShots);
+            hash.Add(item.RecoilShotsForRunaway);
             hash.Add(item.RecoilArc);
             hash.Add(item.RecoilArcRotate);
             hash.Add(item.ConeOfFireIronSightsMult);
-            hash.Add(item.BaseStability);
-            hash.Add(item.Unknown);
+            hash.Add(item.RecoilBaseStability);
+            hash.Add(item.ConeOfFireIgnoresMovement);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1837,13 +1837,13 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireMinAngle) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireDegreesX) ?? true))
             {
-                item.ConeOfFireMinAngle = rhs.ConeOfFireMinAngle;
+                item.ConeOfFireDegreesX = rhs.ConeOfFireDegreesX;
             }
-            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireMaxAngle) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireDegreesY) ?? true))
             {
-                item.ConeOfFireMaxAngle = rhs.ConeOfFireMaxAngle;
+                item.ConeOfFireDegreesY = rhs.ConeOfFireDegreesY;
             }
             if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireIncreasePerShot) ?? true))
             {
@@ -1869,21 +1869,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.RecoilDiminishSightsMult = rhs.RecoilDiminishSightsMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilMinPerShot) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilDegreesPerShotX) ?? true))
             {
-                item.RecoilMinPerShot = rhs.RecoilMinPerShot;
+                item.RecoilDegreesPerShotX = rhs.RecoilDegreesPerShotX;
             }
-            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilMaxPerShot) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilDegreesPerShotY) ?? true))
             {
-                item.RecoilMaxPerShot = rhs.RecoilMaxPerShot;
+                item.RecoilDegreesPerShotY = rhs.RecoilDegreesPerShotY;
             }
             if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilHipMult) ?? true))
             {
                 item.RecoilHipMult = rhs.RecoilHipMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.RunawayRecoilShots) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilShotsForRunaway) ?? true))
             {
-                item.RunawayRecoilShots = rhs.RunawayRecoilShots;
+                item.RecoilShotsForRunaway = rhs.RecoilShotsForRunaway;
             }
             if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilArc) ?? true))
             {
@@ -1897,13 +1897,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ConeOfFireIronSightsMult = rhs.ConeOfFireIronSightsMult;
             }
-            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.BaseStability) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.RecoilBaseStability) ?? true))
             {
-                item.BaseStability = rhs.BaseStability;
+                item.RecoilBaseStability = rhs.RecoilBaseStability;
             }
-            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimModel_FieldIndex.ConeOfFireIgnoresMovement) ?? true))
             {
-                item.Unknown = rhs.Unknown;
+                item.ConeOfFireIgnoresMovement = rhs.ConeOfFireIgnoresMovement;
             }
             DeepCopyInCustom(
                 item: item,
@@ -2078,17 +2078,19 @@ namespace Mutagen.Bethesda.Starfield
             {
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.ConeOfFireMinAngle);
+                    item: item.ConeOfFireDegreesX);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.ConeOfFireMaxAngle);
+                    item: item.ConeOfFireDegreesY);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ConeOfFireIncreasePerShot);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ConeOfFireIncreasePerSec);
-                writer.Write(item.ConeOfFireDecreaseDelaySeconds);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.ConeOfFireDecreaseDelaySeconds);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ConeOfFireSneakMult);
@@ -2100,14 +2102,14 @@ namespace Mutagen.Bethesda.Starfield
                     item: item.RecoilDiminishSightsMult);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.RecoilMinPerShot);
+                    item: item.RecoilDegreesPerShotX);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.RecoilMaxPerShot);
+                    item: item.RecoilDegreesPerShotY);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.RecoilHipMult);
-                writer.Write(item.RunawayRecoilShots);
+                writer.Write(item.RecoilShotsForRunaway);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.RecoilArc);
@@ -2119,8 +2121,8 @@ namespace Mutagen.Bethesda.Starfield
                     item: item.ConeOfFireIronSightsMult);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.BaseStability);
-                writer.Write(item.Unknown);
+                    item: item.RecoilBaseStability);
+                writer.Write(item.ConeOfFireIgnoresMovement);
             }
         }
 
@@ -2195,15 +2197,15 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 4) return null;
-                    item.ConeOfFireMinAngle = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ConeOfFireDegreesX = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.ConeOfFireMaxAngle = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ConeOfFireDegreesY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
                     item.ConeOfFireIncreasePerShot = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
                     item.ConeOfFireIncreasePerSec = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.ConeOfFireDecreaseDelaySeconds = dataFrame.ReadUInt32();
+                    item.ConeOfFireDecreaseDelaySeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
                     item.ConeOfFireSneakMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
@@ -2211,13 +2213,13 @@ namespace Mutagen.Bethesda.Starfield
                     if (dataFrame.Remaining < 4) return null;
                     item.RecoilDiminishSightsMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.RecoilMinPerShot = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.RecoilDegreesPerShotX = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.RecoilMaxPerShot = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.RecoilDegreesPerShotY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
                     item.RecoilHipMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.RunawayRecoilShots = dataFrame.ReadUInt32();
+                    item.RecoilShotsForRunaway = dataFrame.ReadUInt32();
                     if (dataFrame.Remaining < 4) return null;
                     item.RecoilArc = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
@@ -2225,10 +2227,10 @@ namespace Mutagen.Bethesda.Starfield
                     if (dataFrame.Remaining < 4) return null;
                     item.ConeOfFireIronSightsMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.BaseStability = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.RecoilBaseStability = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 1) return null;
-                    item.Unknown = dataFrame.ReadUInt8();
-                    return (int)AimModel_FieldIndex.Unknown;
+                    item.ConeOfFireIgnoresMovement = dataFrame.ReadBoolean();
+                    return (int)AimModel_FieldIndex.ConeOfFireIgnoresMovement;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2289,15 +2291,15 @@ namespace Mutagen.Bethesda.Starfield
 
 
         private RangeInt32? _ANAMLocation;
-        #region ConeOfFireMinAngle
-        private int _ConeOfFireMinAngleLocation => _ANAMLocation!.Value.Min;
-        private bool _ConeOfFireMinAngle_IsSet => _ANAMLocation.HasValue;
-        public Single ConeOfFireMinAngle => _ConeOfFireMinAngle_IsSet ? _recordData.Slice(_ConeOfFireMinAngleLocation, 4).Float() : default(Single);
+        #region ConeOfFireDegreesX
+        private int _ConeOfFireDegreesXLocation => _ANAMLocation!.Value.Min;
+        private bool _ConeOfFireDegreesX_IsSet => _ANAMLocation.HasValue;
+        public Single ConeOfFireDegreesX => _ConeOfFireDegreesX_IsSet ? _recordData.Slice(_ConeOfFireDegreesXLocation, 4).Float() : default(Single);
         #endregion
-        #region ConeOfFireMaxAngle
-        private int _ConeOfFireMaxAngleLocation => _ANAMLocation!.Value.Min + 0x4;
-        private bool _ConeOfFireMaxAngle_IsSet => _ANAMLocation.HasValue;
-        public Single ConeOfFireMaxAngle => _ConeOfFireMaxAngle_IsSet ? _recordData.Slice(_ConeOfFireMaxAngleLocation, 4).Float() : default(Single);
+        #region ConeOfFireDegreesY
+        private int _ConeOfFireDegreesYLocation => _ANAMLocation!.Value.Min + 0x4;
+        private bool _ConeOfFireDegreesY_IsSet => _ANAMLocation.HasValue;
+        public Single ConeOfFireDegreesY => _ConeOfFireDegreesY_IsSet ? _recordData.Slice(_ConeOfFireDegreesYLocation, 4).Float() : default(Single);
         #endregion
         #region ConeOfFireIncreasePerShot
         private int _ConeOfFireIncreasePerShotLocation => _ANAMLocation!.Value.Min + 0x8;
@@ -2312,7 +2314,7 @@ namespace Mutagen.Bethesda.Starfield
         #region ConeOfFireDecreaseDelaySeconds
         private int _ConeOfFireDecreaseDelaySecondsLocation => _ANAMLocation!.Value.Min + 0x10;
         private bool _ConeOfFireDecreaseDelaySeconds_IsSet => _ANAMLocation.HasValue;
-        public UInt32 ConeOfFireDecreaseDelaySeconds => _ConeOfFireDecreaseDelaySeconds_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_ConeOfFireDecreaseDelaySecondsLocation, 4)) : default(UInt32);
+        public Single ConeOfFireDecreaseDelaySeconds => _ConeOfFireDecreaseDelaySeconds_IsSet ? _recordData.Slice(_ConeOfFireDecreaseDelaySecondsLocation, 4).Float() : default(Single);
         #endregion
         #region ConeOfFireSneakMult
         private int _ConeOfFireSneakMultLocation => _ANAMLocation!.Value.Min + 0x14;
@@ -2329,25 +2331,25 @@ namespace Mutagen.Bethesda.Starfield
         private bool _RecoilDiminishSightsMult_IsSet => _ANAMLocation.HasValue;
         public Single RecoilDiminishSightsMult => _RecoilDiminishSightsMult_IsSet ? _recordData.Slice(_RecoilDiminishSightsMultLocation, 4).Float() : default(Single);
         #endregion
-        #region RecoilMinPerShot
-        private int _RecoilMinPerShotLocation => _ANAMLocation!.Value.Min + 0x20;
-        private bool _RecoilMinPerShot_IsSet => _ANAMLocation.HasValue;
-        public Single RecoilMinPerShot => _RecoilMinPerShot_IsSet ? _recordData.Slice(_RecoilMinPerShotLocation, 4).Float() : default(Single);
+        #region RecoilDegreesPerShotX
+        private int _RecoilDegreesPerShotXLocation => _ANAMLocation!.Value.Min + 0x20;
+        private bool _RecoilDegreesPerShotX_IsSet => _ANAMLocation.HasValue;
+        public Single RecoilDegreesPerShotX => _RecoilDegreesPerShotX_IsSet ? _recordData.Slice(_RecoilDegreesPerShotXLocation, 4).Float() : default(Single);
         #endregion
-        #region RecoilMaxPerShot
-        private int _RecoilMaxPerShotLocation => _ANAMLocation!.Value.Min + 0x24;
-        private bool _RecoilMaxPerShot_IsSet => _ANAMLocation.HasValue;
-        public Single RecoilMaxPerShot => _RecoilMaxPerShot_IsSet ? _recordData.Slice(_RecoilMaxPerShotLocation, 4).Float() : default(Single);
+        #region RecoilDegreesPerShotY
+        private int _RecoilDegreesPerShotYLocation => _ANAMLocation!.Value.Min + 0x24;
+        private bool _RecoilDegreesPerShotY_IsSet => _ANAMLocation.HasValue;
+        public Single RecoilDegreesPerShotY => _RecoilDegreesPerShotY_IsSet ? _recordData.Slice(_RecoilDegreesPerShotYLocation, 4).Float() : default(Single);
         #endregion
         #region RecoilHipMult
         private int _RecoilHipMultLocation => _ANAMLocation!.Value.Min + 0x28;
         private bool _RecoilHipMult_IsSet => _ANAMLocation.HasValue;
         public Single RecoilHipMult => _RecoilHipMult_IsSet ? _recordData.Slice(_RecoilHipMultLocation, 4).Float() : default(Single);
         #endregion
-        #region RunawayRecoilShots
-        private int _RunawayRecoilShotsLocation => _ANAMLocation!.Value.Min + 0x2C;
-        private bool _RunawayRecoilShots_IsSet => _ANAMLocation.HasValue;
-        public UInt32 RunawayRecoilShots => _RunawayRecoilShots_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_RunawayRecoilShotsLocation, 4)) : default(UInt32);
+        #region RecoilShotsForRunaway
+        private int _RecoilShotsForRunawayLocation => _ANAMLocation!.Value.Min + 0x2C;
+        private bool _RecoilShotsForRunaway_IsSet => _ANAMLocation.HasValue;
+        public UInt32 RecoilShotsForRunaway => _RecoilShotsForRunaway_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_RecoilShotsForRunawayLocation, 4)) : default(UInt32);
         #endregion
         #region RecoilArc
         private int _RecoilArcLocation => _ANAMLocation!.Value.Min + 0x30;
@@ -2364,15 +2366,15 @@ namespace Mutagen.Bethesda.Starfield
         private bool _ConeOfFireIronSightsMult_IsSet => _ANAMLocation.HasValue;
         public Single ConeOfFireIronSightsMult => _ConeOfFireIronSightsMult_IsSet ? _recordData.Slice(_ConeOfFireIronSightsMultLocation, 4).Float() : default(Single);
         #endregion
-        #region BaseStability
-        private int _BaseStabilityLocation => _ANAMLocation!.Value.Min + 0x3C;
-        private bool _BaseStability_IsSet => _ANAMLocation.HasValue;
-        public Single BaseStability => _BaseStability_IsSet ? _recordData.Slice(_BaseStabilityLocation, 4).Float() : default(Single);
+        #region RecoilBaseStability
+        private int _RecoilBaseStabilityLocation => _ANAMLocation!.Value.Min + 0x3C;
+        private bool _RecoilBaseStability_IsSet => _ANAMLocation.HasValue;
+        public Single RecoilBaseStability => _RecoilBaseStability_IsSet ? _recordData.Slice(_RecoilBaseStabilityLocation, 4).Float() : default(Single);
         #endregion
-        #region Unknown
-        private int _UnknownLocation => _ANAMLocation!.Value.Min + 0x40;
-        private bool _Unknown_IsSet => _ANAMLocation.HasValue;
-        public Byte Unknown => _Unknown_IsSet ? _recordData.Span[_UnknownLocation] : default;
+        #region ConeOfFireIgnoresMovement
+        private int _ConeOfFireIgnoresMovementLocation => _ANAMLocation!.Value.Min + 0x40;
+        private bool _ConeOfFireIgnoresMovement_IsSet => _ANAMLocation.HasValue;
+        public Boolean ConeOfFireIgnoresMovement => _ConeOfFireIgnoresMovement_IsSet ? _recordData.Slice(_ConeOfFireIgnoresMovementLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2446,7 +2448,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ANAM:
                 {
                     _ANAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)AimModel_FieldIndex.Unknown;
+                    return (int)AimModel_FieldIndex.ConeOfFireIgnoresMovement;
                 }
                 default:
                     return base.FillRecordType(

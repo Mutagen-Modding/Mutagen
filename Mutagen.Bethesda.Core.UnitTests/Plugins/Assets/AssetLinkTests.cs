@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Noggog;
@@ -14,9 +14,9 @@ public class AssetLinkTests
         IAssetLink link = new AssetLink<TestAssetType>();
         var path = Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif");
         link.TrySetPath(path)
-            .Should().BeTrue();
-        link.GivenPath.Should().Be(path);
-        link.DataRelativePath.Should().Be(path);
+            .ShouldBeTrue();
+        link.GivenPath.ShouldBe(path);
+        link.DataRelativePath.ShouldBe(path);
     }
     
     [Fact]
@@ -24,10 +24,10 @@ public class AssetLinkTests
     {
         IAssetLink link = new AssetLink<TestAssetType>();
         link.TrySetPath(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"))
-            .Should().BeTrue();
+            .ShouldBeTrue();
         link.TrySetPath(null);
-        link.GivenPath.Should().Be(string.Empty);
-        link.DataRelativePath.Should().Be(string.Empty);
+        link.GivenPath.ShouldBe(string.Empty);
+        link.DataRelativePath.ShouldBe(string.Empty);
     }
     
     [Fact]
@@ -36,11 +36,11 @@ public class AssetLinkTests
         IAssetLink link = new AssetLink<TestAssetType>();
         var path = Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif");
         link.TrySetPath(path)
-            .Should().BeTrue();
+            .ShouldBeTrue();
         link.TrySetPath(Path.Combine("Other", "SomeSubFolder", "SomeModel.nif"))
-            .Should().BeFalse();
-        link.GivenPath.Should().Be(path);
-        link.DataRelativePath.Should().Be(path);
+            .ShouldBeFalse();
+        link.GivenPath.ShouldBe(path);
+        link.DataRelativePath.ShouldBe(path);
     }
     
     [Fact]
@@ -49,8 +49,8 @@ public class AssetLinkTests
         IAssetLink link = new AssetLink<TestAssetType>();
         var path = Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif");
         link.SetPath(path);
-        link.GivenPath.Should().Be(path);
-        link.DataRelativePath.Should().Be(path);
+        link.GivenPath.ShouldBe(path);
+        link.DataRelativePath.ShouldBe(path);
     }
     
     [Fact]
@@ -59,8 +59,8 @@ public class AssetLinkTests
         IAssetLink link = new AssetLink<TestAssetType>();
         var path = Path.Combine("SomeFolder", "Data", "Meshes", "SomeSubFolder", "SomeModel.nif");
         link.SetPath(path);
-        link.GivenPath.Should().Be(path);
-        link.DataRelativePath.Should().Be(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
+        link.GivenPath.ShouldBe(path);
+        link.DataRelativePath.ShouldBe(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
     }
     
     [Fact]
@@ -69,8 +69,8 @@ public class AssetLinkTests
         IAssetLink link = new AssetLink<TestAssetType>();
         link.SetPath(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
         link.TrySetPath(null);
-        link.GivenPath.Should().Be(string.Empty);
-        link.DataRelativePath.Should().Be(string.Empty);
+        link.GivenPath.ShouldBe(string.Empty);
+        link.DataRelativePath.ShouldBe(string.Empty);
     }
     
     [Fact]
@@ -83,8 +83,8 @@ public class AssetLinkTests
         {
             link.SetPath(Path.Combine("Other", "SomeSubFolder", "SomeModel.nif"));
         });
-        link.GivenPath.Should().Be(path);
-        link.DataRelativePath.Should().Be(path);
+        link.GivenPath.ShouldBe(path);
+        link.DataRelativePath.ShouldBe(path);
     }
     
     [Fact]
@@ -93,7 +93,7 @@ public class AssetLinkTests
         IAssetLinkGetter link = new AssetLinkGetter<TestAssetType>(Path.Combine("SomeSubFolder", "SomeModel.nif"));
         var otherLink = new AssetLinkGetter<TestAssetType>(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
         
-        link.Equals(otherLink).Should().BeTrue();
+        link.Equals(otherLink).ShouldBeTrue();
     }
     
     [Fact]
@@ -103,7 +103,7 @@ public class AssetLinkTests
         IAssetLinkGetter link = new AssetLinkGetter<TestAssetType>(filePath.Path);
         var otherLink = new AssetLinkGetter<TestAssetType>(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
         
-        link.Equals(otherLink).Should().BeTrue();
+        link.Equals(otherLink).ShouldBeTrue();
     }
     
     [Fact]
@@ -112,7 +112,7 @@ public class AssetLinkTests
         IAssetLinkGetter link = new AssetLinkGetter<TestAssetType>(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
         var otherLink = new AssetLinkGetter<TestAssetType>(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
         
-        Equals(link, otherLink).Should().BeTrue();
+        Equals(link, otherLink).ShouldBeTrue();
     }
     
     [Fact]
@@ -121,7 +121,7 @@ public class AssetLinkTests
         IAssetLinkGetter link = new AssetLinkGetter<TestAssetType>(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
         var otherLink = new AssetLink<TestAssetType>(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
         
-        Equals(link, otherLink).Should().BeTrue();
+        Equals(link, otherLink).ShouldBeTrue();
     }
     
     [Fact]
@@ -130,7 +130,7 @@ public class AssetLinkTests
         IAssetLinkGetter link = new AssetLink<TestAssetType>(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
         var otherLink = new AssetLinkGetter<TestAssetType>(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
         
-        Equals(link, otherLink).Should().BeTrue();
+        Equals(link, otherLink).ShouldBeTrue();
     }
     
     [Fact]
@@ -139,7 +139,7 @@ public class AssetLinkTests
         IAssetLinkGetter link = new AssetLink<TestAssetType>(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
         var otherLink = new AssetLink<TestAssetType>(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
         
-        Equals(link, otherLink).Should().BeTrue();
+        Equals(link, otherLink).ShouldBeTrue();
     }
     
     [Fact]
@@ -148,7 +148,7 @@ public class AssetLinkTests
         IAssetLinkGetter link = new AssetLinkGetter<TestAssetType>(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
         var otherLink = new AssetLinkGetter<TestAssetType>(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
         
-        link.Equals(otherLink).Should().BeTrue();
+        link.Equals(otherLink).ShouldBeTrue();
     }
     
     [Fact]
@@ -157,7 +157,7 @@ public class AssetLinkTests
         IAssetLinkGetter link = new AssetLinkGetter<TestAssetType>(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
         var otherLink = new AssetLink<TestAssetType>(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
         
-        link.Equals(otherLink).Should().BeTrue();
+        link.Equals(otherLink).ShouldBeTrue();
     }
     
     [Fact]
@@ -166,7 +166,7 @@ public class AssetLinkTests
         IAssetLinkGetter link = new AssetLink<TestAssetType>(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
         var otherLink = new AssetLinkGetter<TestAssetType>(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
         
-        link.Equals(otherLink).Should().BeTrue();
+        link.Equals(otherLink).ShouldBeTrue();
     }
     
     [Fact]
@@ -175,6 +175,6 @@ public class AssetLinkTests
         IAssetLinkGetter link = new AssetLink<TestAssetType>(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
         var otherLink = new AssetLink<TestAssetType>(Path.Combine("Meshes", "SomeSubFolder", "SomeModel.nif"));
         
-        link.Equals(otherLink).Should().BeTrue();
+        link.Equals(otherLink).ShouldBeTrue();
     }
 }

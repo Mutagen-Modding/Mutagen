@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Testing;
@@ -37,8 +37,8 @@ public partial class ALinkingTests
         prototype.Armors.Clear();
         prototype.LeveledItems.Clear();
         package.TryResolveIdentifier<IArmorGetter>(armor.FormKey, out _)
-            .Should().Be(style == LinkCacheStyle.HasCaching || ReadOnly);
+            .ShouldBe(style == LinkCacheStyle.HasCaching || ReadOnly);
         package.TryResolveIdentifier<ILeveledItemGetter>(llist.FormKey, out _)
-            .Should().Be(ReadOnly);
+            .ShouldBe(ReadOnly);
     }
 }

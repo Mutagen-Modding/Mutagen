@@ -44,7 +44,7 @@ public static class MajorRecordTypeEnumerator
 			.Select(p =>
 				LoquiRegistration.StaticRegister.Registrations
 				.FirstOrDefault(r => r.GetterType == p.PropertyType.GetGenericArguments()[0]))
-			.NotNull()
+			.WhereNotNull()
 			.Select(r => new RecordTypes(r.ClassType, r.GetterType, r.SetterType))
 			.ToImmutableArray();
 	}

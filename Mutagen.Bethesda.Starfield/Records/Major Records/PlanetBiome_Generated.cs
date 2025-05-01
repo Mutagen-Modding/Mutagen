@@ -133,16 +133,19 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
-        #region Unknown4
+        #region UnknownItems
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unknown4 = new byte[0];
-        public MemorySlice<Byte> Unknown4
+        private ExtendedList<PlanetBiomeUnknownItem> _UnknownItems = new ExtendedList<PlanetBiomeUnknownItem>();
+        public ExtendedList<PlanetBiomeUnknownItem> UnknownItems
         {
-            get => _Unknown4;
-            set => this._Unknown4 = value;
+            get => this._UnknownItems;
+            init => this._UnknownItems = value;
         }
+        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IPlanetBiomeGetter.Unknown4 => this.Unknown4;
+        IReadOnlyList<IPlanetBiomeUnknownItemGetter> IPlanetBiomeGetter.UnknownItems => _UnknownItems;
+        #endregion
+
         #endregion
 
         #region To String
@@ -190,7 +193,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Fauna = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Flora = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetFlora.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PlanetFlora.Mask<TItem>?>>());
-                this.Unknown4 = initialValue;
+                this.UnknownItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetBiomeUnknownItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PlanetBiomeUnknownItem.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -201,7 +204,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Fauna,
                 TItem Keywords,
                 TItem Flora,
-                TItem Unknown4)
+                TItem UnknownItems)
             {
                 this.Biome = Biome;
                 this.Chance = Chance;
@@ -210,7 +213,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Fauna = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Fauna, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Flora = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetFlora.Mask<TItem>?>>?>(Flora, Enumerable.Empty<MaskItemIndexed<TItem, PlanetFlora.Mask<TItem>?>>());
-                this.Unknown4 = Unknown4;
+                this.UnknownItems = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetBiomeUnknownItem.Mask<TItem>?>>?>(UnknownItems, Enumerable.Empty<MaskItemIndexed<TItem, PlanetBiomeUnknownItem.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -229,7 +232,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Fauna;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetFlora.Mask<TItem>?>>?>? Flora;
-            public TItem Unknown4;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetBiomeUnknownItem.Mask<TItem>?>>?>? UnknownItems;
             #endregion
 
             #region Equals
@@ -249,7 +252,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Fauna, rhs.Fauna)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
                 if (!object.Equals(this.Flora, rhs.Flora)) return false;
-                if (!object.Equals(this.Unknown4, rhs.Unknown4)) return false;
+                if (!object.Equals(this.UnknownItems, rhs.UnknownItems)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -262,7 +265,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Fauna);
                 hash.Add(this.Keywords);
                 hash.Add(this.Flora);
-                hash.Add(this.Unknown4);
+                hash.Add(this.UnknownItems);
                 return hash.ToHashCode();
             }
 
@@ -309,7 +312,18 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (!eval(this.Unknown4)) return false;
+                if (this.UnknownItems != null)
+                {
+                    if (!eval(this.UnknownItems.Overall)) return false;
+                    if (this.UnknownItems.Specific != null)
+                    {
+                        foreach (var item in this.UnknownItems.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -355,7 +369,18 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (eval(this.Unknown4)) return true;
+                if (this.UnknownItems != null)
+                {
+                    if (eval(this.UnknownItems.Overall)) return true;
+                    if (this.UnknownItems.Specific != null)
+                    {
+                        foreach (var item in this.UnknownItems.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -417,7 +442,21 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                obj.Unknown4 = eval(this.Unknown4);
+                if (UnknownItems != null)
+                {
+                    obj.UnknownItems = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PlanetBiomeUnknownItem.Mask<R>?>>?>(eval(this.UnknownItems.Overall), Enumerable.Empty<MaskItemIndexed<R, PlanetBiomeUnknownItem.Mask<R>?>>());
+                    if (UnknownItems.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, PlanetBiomeUnknownItem.Mask<R>?>>();
+                        obj.UnknownItems.Specific = l;
+                        foreach (var item in UnknownItems.Specific)
+                        {
+                            MaskItemIndexed<R, PlanetBiomeUnknownItem.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, PlanetBiomeUnknownItem.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -513,9 +552,24 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.Unknown4 ?? true)
+                    if ((printMask?.UnknownItems?.Overall ?? true)
+                        && UnknownItems is {} UnknownItemsItem)
                     {
-                        sb.AppendItem(Unknown4, "Unknown4");
+                        sb.AppendLine("UnknownItems =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(UnknownItemsItem.Overall);
+                            if (UnknownItemsItem.Specific != null)
+                            {
+                                foreach (var subItem in UnknownItemsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -548,7 +602,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Fauna;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetFlora.ErrorMask?>>?>? Flora;
-            public Exception? Unknown4;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetBiomeUnknownItem.ErrorMask?>>?>? UnknownItems;
             #endregion
 
             #region IErrorMask
@@ -571,8 +625,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Keywords;
                     case PlanetBiome_FieldIndex.Flora:
                         return Flora;
-                    case PlanetBiome_FieldIndex.Unknown4:
-                        return Unknown4;
+                    case PlanetBiome_FieldIndex.UnknownItems:
+                        return UnknownItems;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -604,8 +658,8 @@ namespace Mutagen.Bethesda.Starfield
                     case PlanetBiome_FieldIndex.Flora:
                         this.Flora = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetFlora.ErrorMask?>>?>(ex, null);
                         break;
-                    case PlanetBiome_FieldIndex.Unknown4:
-                        this.Unknown4 = ex;
+                    case PlanetBiome_FieldIndex.UnknownItems:
+                        this.UnknownItems = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetBiomeUnknownItem.ErrorMask?>>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -638,8 +692,8 @@ namespace Mutagen.Bethesda.Starfield
                     case PlanetBiome_FieldIndex.Flora:
                         this.Flora = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetFlora.ErrorMask?>>?>)obj;
                         break;
-                    case PlanetBiome_FieldIndex.Unknown4:
-                        this.Unknown4 = (Exception?)obj;
+                    case PlanetBiome_FieldIndex.UnknownItems:
+                        this.UnknownItems = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetBiomeUnknownItem.ErrorMask?>>?>)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -656,7 +710,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Fauna != null) return true;
                 if (Keywords != null) return true;
                 if (Flora != null) return true;
-                if (Unknown4 != null) return true;
+                if (UnknownItems != null) return true;
                 return false;
             }
             #endregion
@@ -752,8 +806,23 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (UnknownItems is {} UnknownItemsItem)
                 {
-                    sb.AppendItem(Unknown4, "Unknown4");
+                    sb.AppendLine("UnknownItems =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(UnknownItemsItem.Overall);
+                        if (UnknownItemsItem.Specific != null)
+                        {
+                            foreach (var subItem in UnknownItemsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -770,7 +839,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Fauna = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Fauna?.Overall, rhs.Fauna?.Overall), Noggog.ExceptionExt.Combine(this.Fauna?.Specific, rhs.Fauna?.Specific));
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Flora = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetFlora.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Flora?.Overall, rhs.Flora?.Overall), Noggog.ExceptionExt.Combine(this.Flora?.Specific, rhs.Flora?.Specific));
-                ret.Unknown4 = this.Unknown4.Combine(rhs.Unknown4);
+                ret.UnknownItems = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetBiomeUnknownItem.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.UnknownItems?.Overall, rhs.UnknownItems?.Overall), Noggog.ExceptionExt.Combine(this.UnknownItems?.Specific, rhs.UnknownItems?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -801,7 +870,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Fauna;
             public bool Keywords;
             public PlanetFlora.TranslationMask? Flora;
-            public bool Unknown4;
+            public PlanetBiomeUnknownItem.TranslationMask? UnknownItems;
             #endregion
 
             #region Ctors
@@ -817,7 +886,6 @@ namespace Mutagen.Bethesda.Starfield
                 this.ResourceGeneration = defaultOn;
                 this.Fauna = defaultOn;
                 this.Keywords = defaultOn;
-                this.Unknown4 = defaultOn;
             }
 
             #endregion
@@ -840,7 +908,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Fauna, null));
                 ret.Add((Keywords, null));
                 ret.Add((Flora == null ? DefaultOn : !Flora.GetCrystal().CopyNothing, Flora?.GetCrystal()));
-                ret.Add((Unknown4, null));
+                ret.Add((UnknownItems == null ? DefaultOn : !UnknownItems.GetCrystal().CopyNothing, UnknownItems?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -930,7 +998,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>> Keywords { get; }
         new ExtendedList<PlanetFlora> Flora { get; }
-        new MemorySlice<Byte> Unknown4 { get; set; }
+        new ExtendedList<PlanetBiomeUnknownItem> UnknownItems { get; }
     }
 
     public partial interface IPlanetBiomeGetter :
@@ -959,7 +1027,7 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>> Keywords { get; }
         #endregion
         IReadOnlyList<IPlanetFloraGetter> Flora { get; }
-        ReadOnlyMemorySlice<Byte> Unknown4 { get; }
+        IReadOnlyList<IPlanetBiomeUnknownItemGetter> UnknownItems { get; }
 
     }
 
@@ -1136,7 +1204,7 @@ namespace Mutagen.Bethesda.Starfield
         Fauna = 4,
         Keywords = 5,
         Flora = 6,
-        Unknown4 = 7,
+        UnknownItems = 7,
     }
     #endregion
 
@@ -1229,7 +1297,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Fauna.Clear();
             item.Keywords.Clear();
             item.Flora.Clear();
-            item.Unknown4 = Array.Empty<byte>();
+            item.UnknownItems.Clear();
         }
         
         #region Mutagen
@@ -1304,7 +1372,10 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Flora,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.Unknown4 = MemoryExtensions.SequenceEqual(item.Unknown4.Span, rhs.Unknown4.Span);
+            ret.UnknownItems = item.UnknownItems.CollectionEqualsHelper(
+                rhs.UnknownItems,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
         }
         
         public string Print(
@@ -1407,9 +1478,19 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if (printMask?.Unknown4 ?? true)
+            if (printMask?.UnknownItems?.Overall ?? true)
             {
-                sb.AppendLine($"Unknown4 => {SpanExt.ToHexString(item.Unknown4)}");
+                sb.AppendLine("UnknownItems =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.UnknownItems)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
             }
         }
         
@@ -1448,9 +1529,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Flora.SequenceEqual(rhs.Flora, (l, r) => ((PlanetFloraCommon)((IPlanetFloraGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PlanetBiome_FieldIndex.Flora)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetBiome_FieldIndex.Unknown4) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetBiome_FieldIndex.UnknownItems) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.Unknown4.Span, rhs.Unknown4.Span)) return false;
+                if (!lhs.UnknownItems.SequenceEqual(rhs.UnknownItems, (l, r) => ((PlanetBiomeUnknownItemCommon)((IPlanetBiomeUnknownItemGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)PlanetBiome_FieldIndex.UnknownItems)))) return false;
             }
             return true;
         }
@@ -1465,7 +1546,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Fauna);
             hash.Add(item.Keywords);
             hash.Add(item.Flora);
-            hash.Add(item.Unknown4);
+            hash.Add(item.UnknownItems);
             return hash.ToHashCode();
         }
         
@@ -1590,9 +1671,29 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetBiome_FieldIndex.Unknown4) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetBiome_FieldIndex.UnknownItems) ?? true))
             {
-                item.Unknown4 = rhs.Unknown4.ToArray();
+                errorMask?.PushIndex((int)PlanetBiome_FieldIndex.UnknownItems);
+                try
+                {
+                    item.UnknownItems.SetTo(
+                        rhs.UnknownItems
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             DeepCopyInCustom(
                 item: item,
@@ -1746,9 +1847,18 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IPlanetBiomeUnknownItemGetter>.Instance.Write(
                 writer: writer,
-                item: item.Unknown4);
+                items: item.UnknownItems,
+                countLengthLength: 4,
+                transl: (MutagenWriter subWriter, IPlanetBiomeUnknownItemGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((PlanetBiomeUnknownItemBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
         }
 
         public void Write(
@@ -1810,7 +1920,11 @@ namespace Mutagen.Bethesda.Starfield
                     expectedLength: 9,
                     reader: frame,
                     transl: PlanetFlora.TryCreateFromBinary));
-            item.Unknown4 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.UnknownItems.SetTo(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<PlanetBiomeUnknownItem>.Instance.Parse(
+                    amount: checked((int)frame.ReadUInt32()),
+                    reader: frame,
+                    transl: PlanetBiomeUnknownItem.TryCreateFromBinary));
         }
 
     }
@@ -1894,9 +2008,9 @@ namespace Mutagen.Bethesda.Starfield
         public IReadOnlyList<IPlanetFloraGetter> Flora => BinaryOverlayList.FactoryByCountLength<IPlanetFloraGetter>(_structData.Slice(KeywordsEndingPos), _package, 9, countLength: 4, expectedLengthLength: 4, (s, p) => PlanetFloraBinaryOverlay.PlanetFloraFactory(s, p));
         protected int FloraEndingPos;
         #endregion
-        #region Unknown4
-        public ReadOnlyMemorySlice<Byte> Unknown4 => _structData.Span.Slice(FloraEndingPos).ToArray();
-        protected int Unknown4EndingPos;
+        #region UnknownItems
+        public IReadOnlyList<IPlanetBiomeUnknownItemGetter> UnknownItems => BinaryOverlayList.FactoryByCountLength<IPlanetBiomeUnknownItemGetter>(_structData.Slice(FloraEndingPos), _package, 16, countLength: 4, (s, p) => PlanetBiomeUnknownItemBinaryOverlay.PlanetBiomeUnknownItemFactory(s, p));
+        protected int UnknownItemsEndingPos;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1921,6 +2035,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.FaunaEndingPos = 0x10 + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(0x10)) * 4 + 4;
             ret.KeywordsEndingPos = ret.FaunaEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.FaunaEndingPos)) * 4 + 4;
             ret.FloraEndingPos = ret.KeywordsEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.KeywordsEndingPos)) * 9 + 4 + 4;
+            ret.UnknownItemsEndingPos = ret.FloraEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.FloraEndingPos)) * 16 + 4;
         }
 
         public static IPlanetBiomeGetter PlanetBiomeFactory(

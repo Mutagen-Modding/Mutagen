@@ -4,9 +4,11 @@
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <Float name="ODTY" recordType="ODTY" unknown="true" />
-      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
-      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
+      <RefDirect name="ObjectPaletteDefaults" refName="ObjectPaletteDefaults" />
+      <RefDirect name="Transforms" refName="Transforms" />
+      <FormLink name="SnapTemplate" refName="SnapTemplate" recordType="SNTP" />
+      <UInt64 name="XALG" recordType="XALG" unknown="true" />
       <RefList name="Components" refName="AComponent" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
@@ -20,12 +22,12 @@
       <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
       <RefDirect name="OpenSound" recordType="DOSH" refName="SoundReference" />
       <RefDirect name="CloseSound" recordType="DCSH" refName="SoundReference" />
-      <RefDirect name="LockSound" recordType="DLSH" refName="SoundReference" />
+      <RefDirect name="LoopSound" recordType="DLSH" refName="SoundReference" />
       <Enum name="Flags" enumName="Door.Flag" byteLength="1" recordType="FNAM" nullable="False" />
       <String name="AlternateTextOpen" recordType="ONAM" translated="Normal" />
       <String name="AlternateTextClose" recordType="CNAM" translated="Normal" />
-      <ByteArray name="DEVT" recordType="DEVT" unknown="true" />
-      <ByteArray name="ANAM" recordType="ANAM" unknown="true" />
+      <Enum name="SoundLevel" enumName="SoundLevel" byteLength="4" recordType="DEVT" />
+      <Enum name="FacingAxisOverride" enumName="Door.FacingAxisOverrideEnum" byteLength="4" recordType="ANAM" />
       <RefDirect name="NavmeshGeometry" refName="NavmeshGeometry" overflowRecordType="XXXX" />
     </Fields>
     <LinkInterface>IStaticTarget</LinkInterface>
