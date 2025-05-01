@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Race" baseClass="Fallout3MajorRecord" objType="Record" recordType="RACE">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

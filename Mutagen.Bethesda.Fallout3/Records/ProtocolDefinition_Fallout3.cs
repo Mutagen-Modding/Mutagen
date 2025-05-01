@@ -23,7 +23,9 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             GlobalShort_Registration.Instance,
             GlobalUnknown_Registration.Instance,
             ModStats_Registration.Instance,
-            Npc_Registration.Instance
+            Npc_Registration.Instance,
+            PlacedObject_Registration.Instance,
+            Race_Registration.Instance
         );
     }
 }

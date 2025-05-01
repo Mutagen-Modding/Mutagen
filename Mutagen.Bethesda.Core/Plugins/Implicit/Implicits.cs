@@ -12,6 +12,8 @@ public static class Implicits
 
     private static readonly ImplicitRegistration Oblivion;
     private static readonly ImplicitRegistration OblivionRE;
+    private static readonly ImplicitRegistration Fallout3;
+    private static readonly ImplicitRegistration FalloutNV;
     private static readonly ImplicitRegistration SkyrimLE;
     private static readonly ImplicitRegistration EnderalLE;
     private static readonly ImplicitRegistration SkyrimSE;
@@ -53,6 +55,46 @@ public static class Implicits
             GameRelease.Oblivion,
             BaseMasters: new ImplicitModKeyCollection(oblivionBaseMasters.And(oblivionReBaseMasters)),
             Listings: new ImplicitModKeyCollection(oblivionBaseMasters.And(oblivionReBaseMasters)),
+            RecordFormKeys: []);
+        #endregion
+        
+        #region Fallout3
+        var fo3 = ModKey.FromFileName("Fallout3.esm");
+        var fo3BaseMasters = new List<ModKey>()
+        {
+            fo3,
+            "Anchorage.esm",
+            "BrokenSteel.esm",
+            "PointLookout.esm",
+            "ThePitt.esm",
+            "Zeta.esm",
+        };
+        Fallout3 = new ImplicitRegistration(
+            GameRelease.Fallout3,
+            BaseMasters: new ImplicitModKeyCollection(fo3BaseMasters),
+            Listings: new ImplicitModKeyCollection(fo3.AsEnumerable()),
+            RecordFormKeys: []);
+        #endregion
+        
+        #region FalloutNV
+        var fonv = ModKey.FromFileName("FalloutNV.esm");
+        var fonvBaseMasters = new List<ModKey>()
+        {
+            fonv,
+            "DeadMoney.esm",
+            "HonestHearts.esm",
+            "OldWorldBlues.esm",
+            "LonesomeRoad.esm",
+            "TribalPack.esm",
+            "MercenaryPack.esm",
+            "ClassicPack.esm",
+            "CaravanPack.esm",
+            "GunRunnersArsenal.esm",
+        };
+        FalloutNV = new ImplicitRegistration(
+            GameRelease.FalloutNV,
+            BaseMasters: new ImplicitModKeyCollection(fonvBaseMasters),
+            Listings: new ImplicitModKeyCollection(fonv.AsEnumerable()),
             RecordFormKeys: []);
         #endregion
 
@@ -187,6 +229,8 @@ public static class Implicits
             GameRelease.SkyrimSEGog => SkyrimSE,
             GameRelease.EnderalSE => EnderalSE,
             GameRelease.SkyrimVR => SkyrimVR,
+            GameRelease.Fallout3 => Fallout3,
+            GameRelease.FalloutNV => FalloutNV,
             GameRelease.Fallout4 => Fallout4,
             GameRelease.Fallout4VR => Fallout4,
             GameRelease.Starfield => Starfield,

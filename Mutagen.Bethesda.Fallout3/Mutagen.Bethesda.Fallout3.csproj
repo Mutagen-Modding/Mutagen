@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
     <Description>A C# library for manipulating, creating, and analyzing Fallout3 mods</Description>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <IsPackable>true</IsPackable>
@@ -39,7 +39,12 @@
     <Compile Include="Records\Fallout3ListGroup.cs">
       <DependentUpon>Fallout3Group.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\MajorRecords\CellSubBlock.cs" />
+    <Compile Include="Records\MajorRecords\Cell.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\CellSubBlock.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\Global.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
@@ -106,5 +111,13 @@
     <Compile Include="Records\MajorRecords\Npc_Generated.cs">
       <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\Race_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\PlacedObject_Generated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IPlaced_Generated.cs" />
+    <Compile Include="Interfaces\Link\LinkInterfaceMapping_Generated.cs" />
   </ItemGroup>
 </Project>

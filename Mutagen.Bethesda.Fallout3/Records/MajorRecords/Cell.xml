@@ -18,6 +18,19 @@
   </Object>
   <Object name="Cell" recordType="CELL" baseClass="Fallout3MajorRecord" objType="Record" customBinaryEnd="Normal">
     <Fields>
+      <Int32 name="Timestamp" binary="NoGeneration" />
+      <Int32 name="PersistentTimestamp" binary="NoGeneration" />
+      <RefList name="Persistent" binary="NoGeneration" objType="Record">
+        <Interface>IPlaced</Interface>
+      </RefList>
+      <Int32 name="TemporaryTimestamp" binary="NoGeneration" />
+      <RefList name="Temporary" binary="NoGeneration" objType="Record">
+        <Interface>IPlaced</Interface>
+      </RefList>
+      <Int32 name="VisibleWhenDistantTimestamp" binary="NoGeneration" />
+      <RefList name="VisibleWhenDistant" binary="NoGeneration" objType="Record">
+        <Interface>IPlaced</Interface>
+      </RefList>
     </Fields>
   </Object>
 </Loqui>

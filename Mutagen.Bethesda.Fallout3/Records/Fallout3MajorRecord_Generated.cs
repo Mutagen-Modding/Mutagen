@@ -7,20 +7,22 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -40,7 +42,7 @@ namespace Mutagen.Bethesda.Fallout3
 {
     #region Class
     /// <summary>
-    /// Implemented by: [Cell, Global, Npc]
+    /// Implemented by: [Cell, Global, Npc, PlacedObject, Race]
     /// </summary>
     public abstract partial class Fallout3MajorRecord :
         MajorRecord,
@@ -335,10 +337,13 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Mutagen
-        public Fallout3MajorRecord(FormKey formKey)
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout3MajorRecordCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => Fallout3MajorRecordSetterCommon.Instance.RemapLinks(this, mapping);
+        public Fallout3MajorRecord(
+            FormKey formKey,
+            Fallout3Release gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = GameConstants.Fallout3.DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -351,12 +356,16 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public Fallout3MajorRecord(IFallout3Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout3Release)
         {
         }
 
         public Fallout3MajorRecord(IFallout3Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout3Release)
         {
             this.EditorID = editorID;
         }
@@ -366,6 +375,46 @@ namespace Mutagen.Bethesda.Fallout3
             return MajorRecordPrinter<Fallout3MajorRecord>.ToString(this);
         }
 
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
+        IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<IFormLinkIdentifier> formLinks) => this.Remove(formLinks);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(FormKey formKey, bool throwIfUnknown) => this.Remove<TMajor>(formKey, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(HashSet<FormKey> formKeys, bool throwIfUnknown) => this.Remove<TMajor>(formKeys, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<FormKey> formKeys, bool throwIfUnknown) => this.Remove<TMajor>(formKeys, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => Fallout3MajorRecordCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => Fallout3MajorRecordSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => Fallout3MajorRecordSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => Fallout3MajorRecordSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -419,11 +468,14 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     /// <summary>
-    /// Implemented by: [Cell, Global, Npc]
+    /// Implemented by: [Cell, Global, Npc, PlacedObject, Race]
     /// </summary>
     public partial interface IFallout3MajorRecord :
+        IAssetLinkContainer,
         IFallout3MajorRecordGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IFallout3MajorRecordInternal>,
+        IMajorRecordEnumerable,
         IMajorRecordInternal
     {
         new Fallout3MajorRecord.Fallout3MajorRecordFlag Fallout3MajorRecordFlags { get; set; }
@@ -437,12 +489,15 @@ namespace Mutagen.Bethesda.Fallout3
     }
 
     /// <summary>
-    /// Implemented by: [Cell, Global, Npc]
+    /// Implemented by: [Cell, Global, Npc, PlacedObject, Race]
     /// </summary>
     public partial interface IFallout3MajorRecordGetter :
         IMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
-        ILoquiObject<IFallout3MajorRecordGetter>
+        IFormLinkContainerGetter,
+        ILoquiObject<IFallout3MajorRecordGetter>,
+        IMajorRecordGetterEnumerable
     {
         static new ILoquiRegistration StaticRegistration => Fallout3MajorRecord_Registration.Instance;
         Fallout3MajorRecord.Fallout3MajorRecordFlag Fallout3MajorRecordFlags { get; }
@@ -567,6 +622,232 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         #region Mutagen
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(this IFallout3MajorRecordGetter obj)
+        {
+            return ((Fallout3MajorRecordCommon)((IFallout3MajorRecordGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
+            this IFallout3MajorRecordGetter obj,
+            bool throwIfUnknown = true)
+            where TMajor : class, IMajorRecordQueryableGetter
+        {
+            return ((Fallout3MajorRecordCommon)((IFallout3MajorRecordGetter)obj).CommonInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown)
+                .Select(m => (TMajor)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            this IFallout3MajorRecordGetter obj,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            return ((Fallout3MajorRecordCommon)((IFallout3MajorRecordGetter)obj).CommonInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown)
+                .Select(m => (IMajorRecordGetter)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords(this IFallout3MajorRecordInternal obj)
+        {
+            return ((Fallout3MajorRecordSetterCommon)((IFallout3MajorRecordGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IFallout3MajorRecordInternal obj)
+            where TMajor : class, IMajorRecordQueryable
+        {
+            return ((Fallout3MajorRecordSetterCommon)((IFallout3MajorRecordGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: typeof(TMajor),
+                throwIfUnknown: true)
+                .Select(m => (TMajor)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords(
+            this IFallout3MajorRecordInternal obj,
+            Type? type,
+            bool throwIfUnknown = true)
+        {
+            return ((Fallout3MajorRecordSetterCommon)((IFallout3MajorRecordGetter)obj).CommonSetterInstance()!).EnumeratePotentiallyTypedMajorRecords(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown)
+                .Select(m => (IMajorRecord)m);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IFallout3MajorRecordInternal obj,
+            FormKey key)
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((Fallout3MajorRecordSetterCommon)((IFallout3MajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IFallout3MajorRecordInternal obj,
+            IEnumerable<FormKey> keys)
+        {
+            ((Fallout3MajorRecordSetterCommon)((IFallout3MajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IFallout3MajorRecordInternal obj,
+            IEnumerable<IFormLinkIdentifier> keys)
+        {
+            foreach (var g in keys.GroupBy(x => x.Type))
+            {
+                Remove(
+                    obj: obj,
+                    keys: g.Select(x => x.FormKey),
+                    type: g.Key);
+            }
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IFallout3MajorRecordInternal obj,
+            HashSet<FormKey> keys)
+        {
+            ((Fallout3MajorRecordSetterCommon)((IFallout3MajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IFallout3MajorRecordInternal obj,
+            FormKey key,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((Fallout3MajorRecordSetterCommon)((IFallout3MajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IFallout3MajorRecordInternal obj,
+            IEnumerable<FormKey> keys,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            ((Fallout3MajorRecordSetterCommon)((IFallout3MajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet(),
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IFallout3MajorRecordInternal obj,
+            HashSet<FormKey> keys,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            ((Fallout3MajorRecordSetterCommon)((IFallout3MajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IFallout3MajorRecordInternal obj,
+            TMajor record,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(record.FormKey);
+            ((Fallout3MajorRecordSetterCommon)((IFallout3MajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IFallout3MajorRecordInternal obj,
+            IEnumerable<TMajor> records,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            ((Fallout3MajorRecordSetterCommon)((IFallout3MajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: records.Select(m => m.FormKey).ToHashSet(),
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IFallout3MajorRecordInternal obj,
+            FormKey key,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((Fallout3MajorRecordSetterCommon)((IFallout3MajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IFallout3MajorRecordInternal obj,
+            IEnumerable<FormKey> keys,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            ((Fallout3MajorRecordSetterCommon)((IFallout3MajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet(),
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this IFallout3MajorRecordInternal obj,
+            HashSet<FormKey> keys,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            ((Fallout3MajorRecordSetterCommon)((IFallout3MajorRecordGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
         public static Fallout3MajorRecord Duplicate(
             this IFallout3MajorRecordGetter item,
             FormKey formKey,
@@ -711,6 +992,87 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(IFallout3MajorRecord obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+        }
+        
+        public virtual IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3MajorRecordInternal obj)
+        {
+            foreach (var item in Fallout3MajorRecordCommon.Instance.EnumerateMajorRecords(obj))
+            {
+                yield return (item as IMajorRecord)!;
+            }
+        }
+        
+        public virtual IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
+            IFallout3MajorRecordInternal obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+        }
+        
+        public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IFallout3MajorRecordInternal obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in Fallout3MajorRecordCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            {
+                yield return item;
+            }
+        }
+        
+        public virtual void Remove(
+            IFallout3MajorRecordInternal obj,
+            HashSet<FormKey> keys)
+        {
+        }
+        
+        public virtual void Remove(
+            IFallout3MajorRecordInternal obj,
+            HashSet<FormKey> keys,
+            Type type,
+            bool throwIfUnknown)
+        {
+            switch (type.Name)
+            {
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "IFallout3MajorRecord":
+                case "Fallout3MajorRecord":
+                case "IMajorRecordGetter":
+                case "IFallout3MajorRecordGetter":
+                    if (!Fallout3MajorRecord_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
+                    this.Remove(obj, keys);
+                    break;
+                default:
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        break;
+                    }
+            }
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IFallout3MajorRecord obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IFallout3MajorRecord obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
         }
         
         #endregion
@@ -897,6 +1259,73 @@ namespace Mutagen.Bethesda.Fallout3
             yield break;
         }
         
+        public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IFallout3MajorRecordGetter obj)
+        {
+            yield break;
+        }
+        
+        public virtual IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
+            IFallout3MajorRecordGetter obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+        }
+        
+        public virtual IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            IFallout3MajorRecordGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            switch (type.Name)
+            {
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "IFallout3MajorRecord":
+                case "Fallout3MajorRecord":
+                    if (!Fallout3MajorRecord_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IFallout3MajorRecordGetter":
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout3, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        yield break;
+                    }
+            }
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IFallout3MajorRecordGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
         #region Duplicate
         public virtual Fallout3MajorRecord Duplicate(
             IFallout3MajorRecordGetter item,
@@ -959,8 +1388,20 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.Fallout3MajorRecordFlags = rhs.Fallout3MajorRecordFlags;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IFallout3MajorRecord item,
+            IFallout3MajorRecordGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IMajorRecordInternal item,
             IMajorRecordGetter rhs,
@@ -1091,23 +1532,7 @@ namespace Mutagen.Bethesda.Fallout3
             IFallout3MajorRecordGetter item,
             TypedWriteParams translationParams)
         {
-            try
-            {
-                WriteEmbedded(
-                    item: item,
-                    writer: writer);
-                if (!item.IsDeleted)
-                {
-                    MajorRecordBinaryWriteTranslation.WriteRecordTypes(
-                        item: item,
-                        writer: writer,
-                        translationParams: translationParams);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw RecordException.Enrich(ex, item);
-            }
+            throw new NotImplementedException();
         }
 
         public override void Write(
@@ -1180,6 +1605,14 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout3MajorRecordCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => Fallout3MajorRecordCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => Fallout3MajorRecordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

@@ -1455,8 +1455,20 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IFallout3ModHeader item,
+            IFallout3ModHeaderGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public Fallout3ModHeader DeepCopy(
@@ -1686,7 +1698,8 @@ namespace Mutagen.Bethesda.Fallout3
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Author = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Fallout3ModHeader_FieldIndex.Author;
                 }
                 case RecordTypeInts.SNAM:
@@ -1694,7 +1707,8 @@ namespace Mutagen.Bethesda.Fallout3
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
                     return (int)Fallout3ModHeader_FieldIndex.Description;
                 }
                 case RecordTypeInts.MAST:

@@ -24,6 +24,7 @@ public sealed class CreationClubEnabledProvider : ICreationClubEnabledProvider
             switch (_category.Category)
             {
                 case GameCategory.Oblivion:
+                case GameCategory.Fallout3:
                 case GameCategory.Starfield:
                     return false;
                 case GameCategory.Skyrim:

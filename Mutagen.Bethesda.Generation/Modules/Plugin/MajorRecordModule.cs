@@ -44,10 +44,6 @@ public class MajorRecordModule : GenerationModule
             {
                 sb.AppendLine("this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;");
             }
-            else if (obj.Name != "MajorRecord" && obj.GetObjectData().GameCategory != GameCategory.Oblivion)
-            {
-                sb.AppendLine($"this.FormVersion = GameConstants.{obj.GetObjectData().GameCategory}.DefaultFormVersion!.Value;");
-            }
             sb.AppendLine("CustomCtor();");
         }
         sb.AppendLine();

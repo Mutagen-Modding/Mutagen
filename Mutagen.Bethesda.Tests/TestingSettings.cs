@@ -22,6 +22,8 @@ public record DataFolderLocations
     public string Skyrim { get; set; } = string.Empty;
     public string SkyrimSpecialEdition { get; set; } = string.Empty;
     public string SkyrimVR { get; set; } = string.Empty;
+    public string Fallout3 { get; set; } = string.Empty;
+    public string FalloutNV { get; set; } = string.Empty;
     public string Fallout4 { get; set; } = string.Empty;
     public string Starfield { get; set; } = string.Empty;
 

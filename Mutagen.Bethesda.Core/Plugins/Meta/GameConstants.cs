@@ -258,6 +258,8 @@ public sealed record GameConstants
         mediumMasterFlag: null,
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
+    public static readonly GameConstants FalloutNV = Fallout3;
+    
     /// <summary> 
     /// Readonly singleton of Skyrim LE game constants 
     /// </summary> 
@@ -582,6 +584,8 @@ public sealed record GameConstants
             GameRelease.SkyrimSEGog => SkyrimSEGog,
             GameRelease.EnderalSE => EnderalSE,
             GameRelease.SkyrimVR => SkyrimVR,
+            GameRelease.Fallout3 => Fallout3,
+            GameRelease.FalloutNV => FalloutNV,
             GameRelease.Fallout4 => Fallout4,
             GameRelease.Fallout4VR => Fallout4VR,
             GameRelease.Starfield => Starfield,

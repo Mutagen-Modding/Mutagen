@@ -254,6 +254,46 @@ public sealed class GameLocator
                     })
             },
             {
+                GameRelease.Fallout3, new GameMetaData(
+                    GameRelease.Fallout3,
+                    GameSources: new IGameSource[]
+                    {
+                        new RegistryGameSource()
+                        {
+                            RegistryPath = @"SOFTWARE\WOW6432Node\Bethesda Softworks\Fallout3",
+                            RegistryKey = @"installed path"
+                        },
+                        new SteamGameSource()
+                        {
+                            Id = 22370
+                        },
+                    },
+                    RequiredFiles: new string[]
+                    {
+                        "Fallout3.exe"
+                    })
+            },
+            {
+                GameRelease.FalloutNV, new GameMetaData(
+                    GameRelease.FalloutNV,
+                    GameSources: new IGameSource[]
+                    {
+                        new RegistryGameSource()
+                        {
+                            RegistryPath = @"SOFTWARE\WOW6432Node\Bethesda Softworks\FalloutNV",
+                            RegistryKey = @"installed path"
+                        },
+                        new SteamGameSource()
+                        {
+                            Id = 22380
+                        },
+                    },
+                    RequiredFiles: new string[]
+                    {
+                        "FalloutNV.exe"
+                    })
+            },
+            {
                 GameRelease.SkyrimLE, new GameMetaData(
                     GameRelease.SkyrimLE,
                     GameSources: new IGameSource[]

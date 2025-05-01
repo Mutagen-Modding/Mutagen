@@ -15,13 +15,13 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -54,6 +54,16 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region Race
+        private readonly IFormLinkNullable<IRaceGetter> _Race = new FormLinkNullable<IRaceGetter>();
+        public IFormLinkNullable<IRaceGetter> Race
+        {
+            get => _Race;
+            set => _Race.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IRaceGetter> INpcGetter.Race => this.Race;
+        #endregion
 
         #region To String
 
@@ -79,6 +89,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Race = initialValue;
             }
 
             public Mask(
@@ -86,7 +97,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem FormKey,
                 TItem VersionControl,
                 TItem EditorID,
-                TItem Fallout3MajorRecordFlags)
+                TItem Fallout3MajorRecordFlags,
+                TItem Race)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -94,6 +106,7 @@ namespace Mutagen.Bethesda.Fallout3
                 EditorID: EditorID,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
+                this.Race = Race;
             }
 
             #pragma warning disable CS8618
@@ -102,6 +115,10 @@ namespace Mutagen.Bethesda.Fallout3
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Race;
             #endregion
 
             #region Equals
@@ -115,11 +132,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Race, rhs.Race)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Race);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -130,6 +149,7 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Race)) return false;
                 return true;
             }
             #endregion
@@ -138,6 +158,7 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Race)) return true;
                 return false;
             }
             #endregion
@@ -153,6 +174,7 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Race = eval(this.Race);
             }
             #endregion
 
@@ -171,6 +193,10 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(Npc.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Race ?? true)
+                    {
+                        sb.AppendItem(Race, "Race");
+                    }
                 }
             }
             #endregion
@@ -181,12 +207,18 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Race;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Npc_FieldIndex enu = (Npc_FieldIndex)index;
                 switch (enu)
                 {
+                    case Npc_FieldIndex.Race:
+                        return Race;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -197,6 +229,9 @@ namespace Mutagen.Bethesda.Fallout3
                 Npc_FieldIndex enu = (Npc_FieldIndex)index;
                 switch (enu)
                 {
+                    case Npc_FieldIndex.Race:
+                        this.Race = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -208,6 +243,9 @@ namespace Mutagen.Bethesda.Fallout3
                 Npc_FieldIndex enu = (Npc_FieldIndex)index;
                 switch (enu)
                 {
+                    case Npc_FieldIndex.Race:
+                        this.Race = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -217,6 +255,7 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Race != null) return true;
                 return false;
             }
             #endregion
@@ -243,6 +282,9 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Race, "Race");
+                }
             }
             #endregion
 
@@ -251,6 +293,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Race = this.Race.Combine(rhs.Race);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -272,15 +315,26 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Race;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Race = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Race, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -292,10 +346,13 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Npc_Registration.TriggeringRecordType;
-        public Npc(FormKey formKey)
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NpcCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSetterCommon.Instance.RemapLinks(this, mapping);
+        public Npc(
+            FormKey formKey,
+            Fallout3Release gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = GameConstants.Fallout3.DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -308,12 +365,16 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public Npc(IFallout3Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout3Release)
         {
         }
 
         public Npc(IFallout3Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout3Release)
         {
             this.EditorID = editorID;
         }
@@ -405,9 +466,11 @@ namespace Mutagen.Bethesda.Fallout3
     #region Interface
     public partial interface INpc :
         IFallout3MajorRecordInternal,
+        IFormLinkContainer,
         ILoquiObjectSetter<INpcInternal>,
         INpcGetter
     {
+        new IFormLinkNullable<IRaceGetter> Race { get; set; }
     }
 
     public partial interface INpcInternal :
@@ -421,10 +484,12 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface INpcGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<INpcGetter>,
         IMapsToGetter<INpcGetter>
     {
         static new ILoquiRegistration StaticRegistration => Npc_Registration.Instance;
+        IFormLinkNullableGetter<IRaceGetter> Race { get; }
 
     }
 
@@ -599,6 +664,7 @@ namespace Mutagen.Bethesda.Fallout3
         VersionControl = 2,
         EditorID = 3,
         Fallout3MajorRecordFlags = 4,
+        Race = 5,
     }
     #endregion
 
@@ -609,9 +675,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(Npc.Mask<>);
 
@@ -641,8 +707,13 @@ namespace Mutagen.Bethesda.Fallout3
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.NPC_);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.NPC_);
+            var all = RecordCollection.Factory(
+                RecordTypes.NPC_,
+                RecordTypes.RNAM);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(NpcBinaryWriteTranslation);
         #region Interface
@@ -684,6 +755,7 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(INpcInternal item)
         {
             ClearPartial();
+            item.Race.Clear();
             base.Clear(item);
         }
         
@@ -701,6 +773,7 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(INpc obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Race.Relink(mapping);
         }
         
         #endregion
@@ -768,6 +841,7 @@ namespace Mutagen.Bethesda.Fallout3
             Npc.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Race = item.Race.Equals(rhs.Race);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -817,6 +891,10 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Race ?? true)
+            {
+                sb.AppendItem(item.Race.FormKeyNullable, "Race");
+            }
         }
         
         public static Npc_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
@@ -863,6 +941,10 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Race) ?? true))
+            {
+                if (!lhs.Race.Equals(rhs.Race)) return false;
+            }
             return true;
         }
         
@@ -891,6 +973,7 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(INpcGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Race);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -920,6 +1003,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
+            if (FormLinkInformation.TryFactory(obj.Race, out var RaceInfo))
+            {
+                yield return RaceInfo;
+            }
             yield break;
         }
         
@@ -929,7 +1016,7 @@ namespace Mutagen.Bethesda.Fallout3
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Npc(formKey);
+            var newRec = new Npc(formKey, default(Fallout3Release));
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -994,8 +1081,24 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Race) ?? true))
+            {
+                item.Race.SetTo(rhs.Race.FormKeyNullable);
+            }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            INpc item,
+            INpcGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IFallout3MajorRecordInternal item,
             IFallout3MajorRecordGetter rhs,
@@ -1142,33 +1245,33 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly NpcBinaryWriteTranslation Instance = new();
 
+        public static void WriteRecordTypes(
+            INpcGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Race,
+                header: translationParams.ConvertToCustom(RecordTypes.RNAM));
+        }
+
         public void Write(
             MutagenWriter writer,
             INpcGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.NPC_)))
-            {
-                try
-                {
-                    Fallout3MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.NPC_,
+                writeEmbedded: Fallout3MajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -1211,6 +1314,36 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly NpcBinaryCreateTranslation Instance = new NpcBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.NPC_;
+        public static ParseResult FillBinaryRecordTypes(
+            INpcInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.RNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Race.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Npc_FieldIndex.Race;
+                }
+                default:
+                    return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
     }
 
 }
@@ -1243,6 +1376,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NpcCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NpcBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1257,6 +1391,10 @@ namespace Mutagen.Bethesda.Fallout3
         protected override Type LinkType => typeof(INpc);
 
 
+        #region Race
+        private int? _RaceLocation;
+        public IFormLinkNullableGetter<IRaceGetter> Race => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _RaceLocation);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1314,6 +1452,34 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.RNAM:
+                {
+                    _RaceLocation = (stream.Position - offset);
+                    return (int)Npc_FieldIndex.Race;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

@@ -7,19 +7,25 @@ namespace Mutagen.Bethesda
 {
     public static class ImplicitsMixIn
     {
-        public static IReadOnlyCollection<ModKey> Fallout3(this ImplicitBaseMasters _)
+        public static IReadOnlyCollection<ModKey> Fallout3(
+            this ImplicitBaseMasters _,
+            Fallout3Release release)
         {
-            return Implicits.Get(GameRelease.Fallout3).BaseMasters;
+            return Implicits.Get(release.ToGameRelease()).BaseMasters;
         }
 
-        public static IReadOnlyCollection<ModKey> Fallout3(this ImplicitListings _)
+        public static IReadOnlyCollection<ModKey> Fallout3(
+            this ImplicitListings _,
+            Fallout3Release release)
         {
-            return Implicits.Get(GameRelease.Fallout3).Listings;
+            return Implicits.Get(release.ToGameRelease()).Listings;
         }
 
-        public static IReadOnlyCollection<FormKey> Fallout3(this ImplicitRecordFormKeys _)
+        public static IReadOnlyCollection<FormKey> Fallout3(
+            this ImplicitRecordFormKeys _,
+            Fallout3Release release)
         {
-            return Implicits.Get(GameRelease.Fallout3).RecordFormKeys;
+            return Implicits.Get(release.ToGameRelease()).RecordFormKeys;
         }
     }
 }

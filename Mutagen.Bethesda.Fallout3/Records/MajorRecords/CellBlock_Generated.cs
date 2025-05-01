@@ -532,6 +532,8 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = (RecordType)CellSubBlock.GrupRecordType;
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CellBlockCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellBlockSetterCommon.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -550,6 +552,8 @@ namespace Mutagen.Bethesda.Fallout3
         void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<IFormLinkIdentifier> formLinks) => this.Remove(formLinks);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);
         [DebuggerStepThrough]
@@ -633,6 +637,7 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface ICellBlock :
         IAssetLinkContainer,
         ICellBlockGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<ICellBlock>,
         IMajorRecordEnumerable
     {
@@ -646,6 +651,7 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObject,
         IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<ICellBlockGetter>,
         IMajorRecordGetterEnumerable
     {
@@ -888,6 +894,20 @@ namespace Mutagen.Bethesda.Fallout3
             ((CellBlockSetterCommon)((ICellBlockGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
                 keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ICellBlock obj,
+            IEnumerable<IFormLinkIdentifier> keys)
+        {
+            foreach (var g in keys.GroupBy(x => x.Type))
+            {
+                Remove(
+                    obj: obj,
+                    keys: g.Select(x => x.FormKey),
+                    type: g.Key);
+            }
         }
 
         [DebuggerStepThrough]
@@ -1136,6 +1156,7 @@ namespace Mutagen.Bethesda.Fallout3
         #region Mutagen
         public void RemapLinks(ICellBlock obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.SubBlocks.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(ICellBlock obj)
@@ -1209,6 +1230,22 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     obj.SubBlocks.RemoveWhere(i => i.Cells.Count == 0);
                     break;
+                case "PlacedObject":
+                case "IPlacedObjectGetter":
+                case "IPlacedObject":
+                case "IPlacedObjectInternal":
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
+                case "IPlaced":
+                case "IPlacedGetter":
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
                 default:
                     if (throwIfUnknown)
                     {
@@ -1223,6 +1260,11 @@ namespace Mutagen.Bethesda.Fallout3
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ICellBlock obj)
         {
+            foreach (var item in obj.SubBlocks.WhereCastable<ICellSubBlockGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -1232,6 +1274,7 @@ namespace Mutagen.Bethesda.Fallout3
             IAssetLinkCache? linkCache,
             AssetLinkQuery queryCategories)
         {
+            obj.SubBlocks.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion
@@ -1403,6 +1446,11 @@ namespace Mutagen.Bethesda.Fallout3
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ICellBlockGetter obj)
         {
+            foreach (var item in obj.SubBlocks.WhereCastable<ICellSubBlockGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
             yield break;
         }
         
@@ -1473,7 +1521,27 @@ namespace Mutagen.Bethesda.Fallout3
                         }
                     }
                     yield break;
+                case "PlacedObject":
+                case "IPlacedObjectGetter":
+                case "IPlacedObject":
+                case "IPlacedObjectInternal":
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
                 default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout3, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
                     if (throwIfUnknown)
                     {
                         throw new ArgumentException($"Unknown major record type: {type}");
@@ -1487,6 +1555,11 @@ namespace Mutagen.Bethesda.Fallout3
         
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ICellBlockGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
+            foreach (var item in obj.SubBlocks.WhereCastable<ICellSubBlockGetter, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -1541,8 +1614,20 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ICellBlock item,
+            ICellBlockGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
         public CellBlock DeepCopy(
@@ -1787,6 +1872,8 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CellBlockCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => CellBlockCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

@@ -2,6 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Npc" baseClass="Fallout3MajorRecord" objType="Record" recordType="NPC_">
     <Fields>
+      <FormLink name="Race" refName="Race" recordType="RNAM" />
     </Fields>
   </Object>
 </Loqui>

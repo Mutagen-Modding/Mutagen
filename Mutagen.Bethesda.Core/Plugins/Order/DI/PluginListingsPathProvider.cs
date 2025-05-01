@@ -30,6 +30,8 @@ public class PluginListingsPathProvider : IPluginListingsPathProvider
             GameRelease.SkyrimSEGog => "Skyrim Special Edition GOG",
             GameRelease.EnderalSE => "Enderal Special Edition",
             GameRelease.SkyrimVR => "Skyrim VR",
+            GameRelease.Fallout3 => "Fallout3",
+            GameRelease.FalloutNV => "FalloutNV",
             GameRelease.Fallout4 => "Fallout4",
             GameRelease.Fallout4VR => "Fallout4VR",
             GameRelease.Starfield => "Starfield",

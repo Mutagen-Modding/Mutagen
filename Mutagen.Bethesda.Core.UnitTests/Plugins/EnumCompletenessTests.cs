@@ -71,6 +71,20 @@ public class EnumCompletenessTests
 
     [Theory]
     [MutagenAutoData]
+    public void CreationClubEnabledProvider(
+        [Frozen] IGameCategoryContext gameCategoryContext,
+        CreationClubEnabledProvider sut)
+    {
+        foreach (var category in Enums<GameCategory>.Values)
+        {
+            gameCategoryContext.Category.Returns(category);
+            bool? b = sut.Used;
+            b.ShouldNotBeNull();
+        }
+    }
+
+    [Theory]
+    [MutagenAutoData]
     public void ArchiveReaderProvider(
         [Frozen] IGameReleaseContext gameReleaseContext,
         FilePath path,
@@ -88,7 +102,9 @@ public class EnumCompletenessTests
     public void MutagenEncodingProvider()
     {
         foreach (var release in Enums<GameRelease>.Values
-                     .Where(x => x != GameRelease.Oblivion))
+                     .Where(x => x != GameRelease.Oblivion)
+                     .Where(x => x != GameRelease.Fallout3)
+                     .Where(x => x != GameRelease.FalloutNV))
         {
             foreach (var lang in Enums<Language>.Values)
             {

@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -39,23 +40,30 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Class
-    /// <summary>
-    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat, GlobalUnknown]
-    /// </summary>
-    public abstract partial class Global :
+    public partial class PlacedObject :
         Fallout3MajorRecord,
-        IEquatable<IGlobalGetter>,
-        IGlobalInternal,
-        ILoquiObjectSetter<Global>
+        IEquatable<IPlacedObjectGetter>,
+        ILoquiObjectSetter<PlacedObject>,
+        IPlacedObjectInternal
     {
         #region Ctor
-        protected Global()
+        protected PlacedObject()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
+        #region Base
+        private readonly IFormLinkNullable<IFallout3MajorRecordGetter> _Base = new FormLinkNullable<IFallout3MajorRecordGetter>();
+        public IFormLinkNullable<IFallout3MajorRecordGetter> Base
+        {
+            get => _Base;
+            set => _Base.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IFallout3MajorRecordGetter> IPlacedObjectGetter.Base => this.Base;
+        #endregion
 
         #region To String
 
@@ -63,7 +71,7 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             string? name = null)
         {
-            GlobalMixIn.Print(
+            PlacedObjectMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -81,6 +89,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Base = initialValue;
             }
 
             public Mask(
@@ -88,7 +97,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem FormKey,
                 TItem VersionControl,
                 TItem EditorID,
-                TItem Fallout3MajorRecordFlags)
+                TItem Fallout3MajorRecordFlags,
+                TItem Base)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -96,6 +106,7 @@ namespace Mutagen.Bethesda.Fallout3
                 EditorID: EditorID,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
+                this.Base = Base;
             }
 
             #pragma warning disable CS8618
@@ -104,6 +115,10 @@ namespace Mutagen.Bethesda.Fallout3
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Base;
             #endregion
 
             #region Equals
@@ -117,11 +132,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Base, rhs.Base)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Base);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -132,6 +149,7 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Base)) return false;
                 return true;
             }
             #endregion
@@ -140,6 +158,7 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Base)) return true;
                 return false;
             }
             #endregion
@@ -147,7 +166,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Global.Mask<R>();
+                var ret = new PlacedObject.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -155,24 +174,29 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Base = eval(this.Base);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(Global.Mask<bool>? printMask = null)
+            public string Print(PlacedObject.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, Global.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PlacedObject.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(Global.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(PlacedObject.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Base ?? true)
+                    {
+                        sb.AppendItem(Base, "Base");
+                    }
                 }
             }
             #endregion
@@ -183,12 +207,18 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Base;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                Global_FieldIndex enu = (Global_FieldIndex)index;
+                PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
                 switch (enu)
                 {
+                    case PlacedObject_FieldIndex.Base:
+                        return Base;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -196,9 +226,12 @@ namespace Mutagen.Bethesda.Fallout3
 
             public override void SetNthException(int index, Exception ex)
             {
-                Global_FieldIndex enu = (Global_FieldIndex)index;
+                PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
                 switch (enu)
                 {
+                    case PlacedObject_FieldIndex.Base:
+                        this.Base = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -207,9 +240,12 @@ namespace Mutagen.Bethesda.Fallout3
 
             public override void SetNthMask(int index, object obj)
             {
-                Global_FieldIndex enu = (Global_FieldIndex)index;
+                PlacedObject_FieldIndex enu = (PlacedObject_FieldIndex)index;
                 switch (enu)
                 {
+                    case PlacedObject_FieldIndex.Base:
+                        this.Base = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -219,6 +255,7 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Base != null) return true;
                 return false;
             }
             #endregion
@@ -245,6 +282,9 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Base, "Base");
+                }
             }
             #endregion
 
@@ -253,6 +293,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Base = this.Base.Combine(rhs.Base);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -274,15 +315,26 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Base;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Base = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Base, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -293,8 +345,10 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = Global_Registration.TriggeringRecordType;
-        public Global(
+        public static readonly RecordType GrupRecordType = PlacedObject_Registration.TriggeringRecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedObjectCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectSetterCommon.Instance.RemapLinks(this, mapping);
+        public PlacedObject(
             FormKey formKey,
             Fallout3Release gameRelease)
         {
@@ -302,7 +356,7 @@ namespace Mutagen.Bethesda.Fallout3
             CustomCtor();
         }
 
-        private Global(
+        private PlacedObject(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -310,14 +364,14 @@ namespace Mutagen.Bethesda.Fallout3
             CustomCtor();
         }
 
-        public Global(IFallout3Mod mod)
+        public PlacedObject(IFallout3Mod mod)
             : this(
                 mod.GetNextFormKey(),
                 mod.Fallout3Release)
         {
         }
 
-        public Global(IFallout3Mod mod, string editorID)
+        public PlacedObject(IFallout3Mod mod, string editorID)
             : this(
                 mod.GetNextFormKey(editorID),
                 mod.Fallout3Release)
@@ -327,8 +381,10 @@ namespace Mutagen.Bethesda.Fallout3
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Global>.ToString(this);
+            return MajorRecordPrinter<PlacedObject>.ToString(this);
         }
+
+        protected override Type LinkType => typeof(IPlacedObject);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -337,16 +393,16 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IGlobalGetter rhs) return false;
-            return ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IPlacedObjectGetter rhs) return false;
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IGlobalGetter? obj)
+        public bool Equals(IPlacedObjectGetter? obj)
         {
-            return ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -354,15 +410,41 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => GlobalBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => PlacedObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((GlobalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PlacedObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
+        }
+        #region Binary Create
+        public new static PlacedObject CreateFromBinary(
+            MutagenFrame frame,
+            TypedParseParams translationParams = default)
+        {
+            var ret = new PlacedObject();
+            ((PlacedObjectSetterCommon)((IPlacedObjectGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+                item: ret,
+                frame: frame,
+                translationParams: translationParams);
+            return ret;
+        }
+
+        #endregion
+
+        public static bool TryCreateFromBinary(
+            MutagenFrame frame,
+            out PlacedObject item,
+            TypedParseParams translationParams = default)
+        {
+            var startPos = frame.Position;
+            item = CreateFromBinary(
+                frame: frame,
+                translationParams: translationParams);
+            return startPos != frame.Position;
         }
         #endregion
 
@@ -370,86 +452,88 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IClearable.Clear()
         {
-            ((GlobalSetterCommon)((IGlobalGetter)this).CommonSetterInstance()!).Clear(this);
+            ((PlacedObjectSetterCommon)((IPlacedObjectGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new Global GetNew()
+        internal static new PlacedObject GetNew()
         {
-            throw new ArgumentException("New called on an abstract class.");
+            return new PlacedObject();
         }
 
     }
     #endregion
 
     #region Interface
-    /// <summary>
-    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat, GlobalUnknown]
-    /// </summary>
-    public partial interface IGlobal :
+    public partial interface IPlacedObject :
         IFallout3MajorRecordInternal,
-        IGlobalGetter,
-        ILoquiObjectSetter<IGlobalInternal>
+        IFormLinkContainer,
+        ILoquiObjectSetter<IPlacedObjectInternal>,
+        IPlaced,
+        IPlacedObjectGetter
+    {
+        new IFormLinkNullable<IFallout3MajorRecordGetter> Base { get; set; }
+    }
+
+    public partial interface IPlacedObjectInternal :
+        IFallout3MajorRecordInternal,
+        IPlacedObject,
+        IPlacedObjectGetter
     {
     }
 
-    public partial interface IGlobalInternal :
-        IFallout3MajorRecordInternal,
-        IGlobal,
-        IGlobalGetter
-    {
-    }
-
-    /// <summary>
-    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat, GlobalUnknown]
-    /// </summary>
-    public partial interface IGlobalGetter :
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.REFR)]
+    public partial interface IPlacedObjectGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IGlobalGetter>
+        IFormLinkContainerGetter,
+        ILoquiObject<IPlacedObjectGetter>,
+        IMapsToGetter<IPlacedObjectGetter>,
+        IPlacedGetter
     {
-        static new ILoquiRegistration StaticRegistration => Global_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => PlacedObject_Registration.Instance;
+        IFormLinkNullableGetter<IFallout3MajorRecordGetter> Base { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class GlobalMixIn
+    public static partial class PlacedObjectMixIn
     {
-        public static void Clear(this IGlobalInternal item)
+        public static void Clear(this IPlacedObjectInternal item)
         {
-            ((GlobalSetterCommon)((IGlobalGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((PlacedObjectSetterCommon)((IPlacedObjectGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Global.Mask<bool> GetEqualsMask(
-            this IGlobalGetter item,
-            IGlobalGetter rhs,
+        public static PlacedObject.Mask<bool> GetEqualsMask(
+            this IPlacedObjectGetter item,
+            IPlacedObjectGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IGlobalGetter item,
+            this IPlacedObjectGetter item,
             string? name = null,
-            Global.Mask<bool>? printMask = null)
+            PlacedObject.Mask<bool>? printMask = null)
         {
-            return ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).Print(
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IGlobalGetter item,
+            this IPlacedObjectGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Global.Mask<bool>? printMask = null)
+            PlacedObject.Mask<bool>? printMask = null)
         {
-            ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).Print(
+            ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -457,39 +541,39 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static bool Equals(
-            this IGlobalGetter item,
-            IGlobalGetter rhs,
-            Global.TranslationMask? equalsMask = null)
+            this IPlacedObjectGetter item,
+            IPlacedObjectGetter rhs,
+            PlacedObject.TranslationMask? equalsMask = null)
         {
-            return ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).Equals(
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IGlobalInternal lhs,
-            IGlobalGetter rhs,
-            out Global.ErrorMask errorMask,
-            Global.TranslationMask? copyMask = null)
+            this IPlacedObjectInternal lhs,
+            IPlacedObjectGetter rhs,
+            out PlacedObject.ErrorMask errorMask,
+            PlacedObject.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((GlobalSetterTranslationCommon)((IGlobalGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PlacedObjectSetterTranslationCommon)((IPlacedObjectGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = Global.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PlacedObject.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IGlobalInternal lhs,
-            IGlobalGetter rhs,
+            this IPlacedObjectInternal lhs,
+            IPlacedObjectGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((GlobalSetterTranslationCommon)((IGlobalGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PlacedObjectSetterTranslationCommon)((IPlacedObjectGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -497,55 +581,55 @@ namespace Mutagen.Bethesda.Fallout3
                 deepCopy: false);
         }
 
-        public static Global DeepCopy(
-            this IGlobalGetter item,
-            Global.TranslationMask? copyMask = null)
+        public static PlacedObject DeepCopy(
+            this IPlacedObjectGetter item,
+            PlacedObject.TranslationMask? copyMask = null)
         {
-            return ((GlobalSetterTranslationCommon)((IGlobalGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PlacedObjectSetterTranslationCommon)((IPlacedObjectGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Global DeepCopy(
-            this IGlobalGetter item,
-            out Global.ErrorMask errorMask,
-            Global.TranslationMask? copyMask = null)
+        public static PlacedObject DeepCopy(
+            this IPlacedObjectGetter item,
+            out PlacedObject.ErrorMask errorMask,
+            PlacedObject.TranslationMask? copyMask = null)
         {
-            return ((GlobalSetterTranslationCommon)((IGlobalGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PlacedObjectSetterTranslationCommon)((IPlacedObjectGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Global DeepCopy(
-            this IGlobalGetter item,
+        public static PlacedObject DeepCopy(
+            this IPlacedObjectGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((GlobalSetterTranslationCommon)((IGlobalGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PlacedObjectSetterTranslationCommon)((IPlacedObjectGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static Global Duplicate(
-            this IGlobalGetter item,
+        public static PlacedObject Duplicate(
+            this IPlacedObjectGetter item,
             FormKey formKey,
-            Global.TranslationMask? copyMask = null)
+            PlacedObject.TranslationMask? copyMask = null)
         {
-            return ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).Duplicate(
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static Global Duplicate(
-            this IGlobalGetter item,
+        public static PlacedObject Duplicate(
+            this IPlacedObjectGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).Duplicate(
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -555,11 +639,11 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IGlobalInternal item,
+            this IPlacedObjectInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((GlobalSetterCommon)((IGlobalGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((PlacedObjectSetterCommon)((IPlacedObjectGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -575,44 +659,45 @@ namespace Mutagen.Bethesda.Fallout3
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Field Index
-    internal enum Global_FieldIndex
+    internal enum PlacedObject_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
         VersionControl = 2,
         EditorID = 3,
         Fallout3MajorRecordFlags = 4,
+        Base = 5,
     }
     #endregion
 
     #region Registration
-    internal partial class Global_Registration : ILoquiRegistration
+    internal partial class PlacedObject_Registration : ILoquiRegistration
     {
-        public static readonly Global_Registration Instance = new Global_Registration();
+        public static readonly PlacedObject_Registration Instance = new PlacedObject_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 6;
 
-        public static readonly Type MaskType = typeof(Global.Mask<>);
+        public static readonly Type MaskType = typeof(PlacedObject.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Global.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(PlacedObject.ErrorMask);
 
-        public static readonly Type ClassType = typeof(Global);
+        public static readonly Type ClassType = typeof(PlacedObject);
 
-        public static readonly Type GetterType = typeof(IGlobalGetter);
+        public static readonly Type GetterType = typeof(IPlacedObjectGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IGlobal);
+        public static readonly Type SetterType = typeof(IPlacedObject);
 
-        public static readonly Type? InternalSetterType = typeof(IGlobalInternal);
+        public static readonly Type? InternalSetterType = typeof(IPlacedObjectInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Fallout3.Global";
+        public const string FullName = "Mutagen.Bethesda.Fallout3.PlacedObject";
 
-        public const string Name = "Global";
+        public const string Name = "PlacedObject";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout3";
 
@@ -620,19 +705,19 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.GLOB;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.REFR;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.GLOB);
+            var triggers = RecordCollection.Factory(RecordTypes.REFR);
             var all = RecordCollection.Factory(
-                RecordTypes.GLOB,
-                RecordTypes.FNAM);
+                RecordTypes.REFR,
+                RecordTypes.NAME);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(GlobalBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(PlacedObjectBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -663,48 +748,50 @@ namespace Mutagen.Bethesda.Fallout3
     #endregion
 
     #region Common
-    internal partial class GlobalSetterCommon : Fallout3MajorRecordSetterCommon
+    internal partial class PlacedObjectSetterCommon : Fallout3MajorRecordSetterCommon
     {
-        public new static readonly GlobalSetterCommon Instance = new GlobalSetterCommon();
+        public new static readonly PlacedObjectSetterCommon Instance = new PlacedObjectSetterCommon();
 
         partial void ClearPartial();
         
-        public virtual void Clear(IGlobalInternal item)
+        public void Clear(IPlacedObjectInternal item)
         {
             ClearPartial();
+            item.Base.Clear();
             base.Clear(item);
         }
         
         public override void Clear(IFallout3MajorRecordInternal item)
         {
-            Clear(item: (IGlobalInternal)item);
+            Clear(item: (IPlacedObjectInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IGlobalInternal)item);
+            Clear(item: (IPlacedObjectInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IGlobal obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IPlacedObject obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Base.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IGlobalInternal item,
+            IPlacedObjectInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IGlobalInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IPlacedObjectInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: GlobalBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: GlobalBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: PlacedObjectBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: PlacedObjectBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -713,7 +800,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Global)item,
+                item: (PlacedObject)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -724,7 +811,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Global)item,
+                item: (PlacedObject)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -732,17 +819,17 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         
     }
-    internal partial class GlobalCommon : Fallout3MajorRecordCommon
+    internal partial class PlacedObjectCommon : Fallout3MajorRecordCommon
     {
-        public new static readonly GlobalCommon Instance = new GlobalCommon();
+        public new static readonly PlacedObjectCommon Instance = new PlacedObjectCommon();
 
-        public Global.Mask<bool> GetEqualsMask(
-            IGlobalGetter item,
-            IGlobalGetter rhs,
+        public PlacedObject.Mask<bool> GetEqualsMask(
+            IPlacedObjectGetter item,
+            IPlacedObjectGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Global.Mask<bool>(false);
-            ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new PlacedObject.Mask<bool>(false);
+            ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -751,18 +838,19 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void FillEqualsMask(
-            IGlobalGetter item,
-            IGlobalGetter rhs,
-            Global.Mask<bool> ret,
+            IPlacedObjectGetter item,
+            IPlacedObjectGetter rhs,
+            PlacedObject.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Base = item.Base.Equals(rhs.Base);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IGlobalGetter item,
+            IPlacedObjectGetter item,
             string? name = null,
-            Global.Mask<bool>? printMask = null)
+            PlacedObject.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -774,18 +862,18 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void Print(
-            IGlobalGetter item,
+            IPlacedObjectGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Global.Mask<bool>? printMask = null)
+            PlacedObject.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"Global =>");
+                sb.AppendLine($"PlacedObject =>");
             }
             else
             {
-                sb.AppendLine($"{name} (Global) =>");
+                sb.AppendLine($"{name} (PlacedObject) =>");
             }
             using (sb.Brace())
             {
@@ -797,47 +885,51 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         protected static void ToStringFields(
-            IGlobalGetter item,
+            IPlacedObjectGetter item,
             StructuredStringBuilder sb,
-            Global.Mask<bool>? printMask = null)
+            PlacedObject.Mask<bool>? printMask = null)
         {
             Fallout3MajorRecordCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Base ?? true)
+            {
+                sb.AppendItem(item.Base.FormKeyNullable, "Base");
+            }
         }
         
-        public static Global_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
+        public static PlacedObject_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case Fallout3MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Global_FieldIndex)((int)index);
+                    return (PlacedObject_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.FormKey:
-                    return (Global_FieldIndex)((int)index);
+                    return (PlacedObject_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.VersionControl:
-                    return (Global_FieldIndex)((int)index);
+                    return (PlacedObject_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.EditorID:
-                    return (Global_FieldIndex)((int)index);
+                    return (PlacedObject_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.Fallout3MajorRecordFlags:
-                    return (Global_FieldIndex)((int)index);
+                    return (PlacedObject_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new Global_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new PlacedObject_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Global_FieldIndex)((int)index);
+                    return (PlacedObject_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (Global_FieldIndex)((int)index);
+                    return (PlacedObject_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (Global_FieldIndex)((int)index);
+                    return (PlacedObject_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Global_FieldIndex)((int)index);
+                    return (PlacedObject_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -845,12 +937,16 @@ namespace Mutagen.Bethesda.Fallout3
         
         #region Equals and Hash
         public virtual bool Equals(
-            IGlobalGetter? lhs,
-            IGlobalGetter? rhs,
+            IPlacedObjectGetter? lhs,
+            IPlacedObjectGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Base) ?? true))
+            {
+                if (!lhs.Base.Equals(rhs.Base)) return false;
+            }
             return true;
         }
         
@@ -860,8 +956,8 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IGlobalGetter?)lhs,
-                rhs: rhs as IGlobalGetter,
+                lhs: (IPlacedObjectGetter?)lhs,
+                rhs: rhs as IPlacedObjectGetter,
                 equalsMask: equalsMask);
         }
         
@@ -871,26 +967,27 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IGlobalGetter?)lhs,
-                rhs: rhs as IGlobalGetter,
+                lhs: (IPlacedObjectGetter?)lhs,
+                rhs: rhs as IPlacedObjectGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IGlobalGetter item)
+        public virtual int GetHashCode(IPlacedObjectGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Base);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
         public override int GetHashCode(IFallout3MajorRecordGetter item)
         {
-            return GetHashCode(item: (IGlobalGetter)item);
+            return GetHashCode(item: (IPlacedObjectGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IGlobalGetter)item);
+            return GetHashCode(item: (IPlacedObjectGetter)item);
         }
         
         #endregion
@@ -898,26 +995,32 @@ namespace Mutagen.Bethesda.Fallout3
         
         public override object GetNew()
         {
-            return Global.GetNew();
+            return PlacedObject.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IGlobalGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPlacedObjectGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
+            if (FormLinkInformation.TryFactory(obj.Base, out var BaseInfo))
+            {
+                yield return BaseInfo;
+            }
             yield break;
         }
         
         #region Duplicate
-        public virtual Global Duplicate(
-            IGlobalGetter item,
+        public PlacedObject Duplicate(
+            IPlacedObjectGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            throw new NotImplementedException();
+            var newRec = new PlacedObject(formKey, default(Fallout3Release));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
         
         public override Fallout3MajorRecord Duplicate(
@@ -926,7 +1029,7 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IGlobalGetter)item,
+                item: (IPlacedObjectGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -937,7 +1040,7 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IGlobalGetter)item,
+                item: (IPlacedObjectGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -947,14 +1050,14 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         
     }
-    internal partial class GlobalSetterTranslationCommon : Fallout3MajorRecordSetterTranslationCommon
+    internal partial class PlacedObjectSetterTranslationCommon : Fallout3MajorRecordSetterTranslationCommon
     {
-        public new static readonly GlobalSetterTranslationCommon Instance = new GlobalSetterTranslationCommon();
+        public new static readonly PlacedObjectSetterTranslationCommon Instance = new PlacedObjectSetterTranslationCommon();
 
         #region DeepCopyIn
-        public virtual void DeepCopyIn(
-            IGlobalInternal item,
-            IGlobalGetter rhs,
+        public void DeepCopyIn(
+            IPlacedObjectInternal item,
+            IPlacedObjectGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -967,9 +1070,9 @@ namespace Mutagen.Bethesda.Fallout3
                 deepCopy: deepCopy);
         }
         
-        public virtual void DeepCopyIn(
-            IGlobal item,
-            IGlobalGetter rhs,
+        public void DeepCopyIn(
+            IPlacedObject item,
+            IPlacedObjectGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -980,6 +1083,10 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Base) ?? true))
+            {
+                item.Base.SetTo(rhs.Base.FormKeyNullable);
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -989,8 +1096,8 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         partial void DeepCopyInCustom(
-            IGlobal item,
-            IGlobalGetter rhs,
+            IPlacedObject item,
+            IPlacedObjectGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
@@ -1002,8 +1109,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IGlobalInternal)item,
-                rhs: (IGlobalGetter)rhs,
+                item: (IPlacedObjectInternal)item,
+                rhs: (IPlacedObjectGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1017,8 +1124,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IGlobal)item,
-                rhs: (IGlobalGetter)rhs,
+                item: (IPlacedObject)item,
+                rhs: (IPlacedObjectGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1032,8 +1139,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IGlobalInternal)item,
-                rhs: (IGlobalGetter)rhs,
+                item: (IPlacedObjectInternal)item,
+                rhs: (IPlacedObjectGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1047,8 +1154,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IGlobal)item,
-                rhs: (IGlobalGetter)rhs,
+                item: (IPlacedObject)item,
+                rhs: (IPlacedObjectGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1056,12 +1163,12 @@ namespace Mutagen.Bethesda.Fallout3
         
         #endregion
         
-        public Global DeepCopy(
-            IGlobalGetter item,
-            Global.TranslationMask? copyMask = null)
+        public PlacedObject DeepCopy(
+            IPlacedObjectGetter item,
+            PlacedObject.TranslationMask? copyMask = null)
         {
-            Global ret = (Global)((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).GetNew();
-            ((GlobalSetterTranslationCommon)((IGlobalGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PlacedObject ret = (PlacedObject)((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).GetNew();
+            ((PlacedObjectSetterTranslationCommon)((IPlacedObjectGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1070,30 +1177,30 @@ namespace Mutagen.Bethesda.Fallout3
             return ret;
         }
         
-        public Global DeepCopy(
-            IGlobalGetter item,
-            out Global.ErrorMask errorMask,
-            Global.TranslationMask? copyMask = null)
+        public PlacedObject DeepCopy(
+            IPlacedObjectGetter item,
+            out PlacedObject.ErrorMask errorMask,
+            PlacedObject.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Global ret = (Global)((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).GetNew();
-            ((GlobalSetterTranslationCommon)((IGlobalGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PlacedObject ret = (PlacedObject)((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).GetNew();
+            ((PlacedObjectSetterTranslationCommon)((IPlacedObjectGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = Global.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PlacedObject.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public Global DeepCopy(
-            IGlobalGetter item,
+        public PlacedObject DeepCopy(
+            IPlacedObjectGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Global ret = (Global)((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).GetNew();
-            ((GlobalSetterTranslationCommon)((IGlobalGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PlacedObject ret = (PlacedObject)((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).GetNew();
+            ((PlacedObjectSetterTranslationCommon)((IPlacedObjectGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1109,21 +1216,21 @@ namespace Mutagen.Bethesda.Fallout3
 
 namespace Mutagen.Bethesda.Fallout3
 {
-    public partial class Global
+    public partial class PlacedObject
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Global_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Global_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PlacedObject_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedObject_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => GlobalCommon.Instance;
+        protected override object CommonInstance() => PlacedObjectCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return GlobalSetterCommon.Instance;
+            return PlacedObjectSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => GlobalSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => PlacedObjectSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1134,14 +1241,14 @@ namespace Mutagen.Bethesda.Fallout3
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout3
 {
-    public partial class GlobalBinaryWriteTranslation :
+    public partial class PlacedObjectBinaryWriteTranslation :
         Fallout3MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly GlobalBinaryWriteTranslation Instance = new();
+        public new static readonly PlacedObjectBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            IGlobalGetter item,
+            IPlacedObjectGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
@@ -1149,30 +1256,24 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            GlobalBinaryWriteTranslation.WriteBinaryTypeChar(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item);
+                item: item.Base,
+                header: translationParams.ConvertToCustom(RecordTypes.NAME));
         }
 
-        public static partial void WriteBinaryTypeCharCustom(
+        public void Write(
             MutagenWriter writer,
-            IGlobalGetter item);
-
-        public static void WriteBinaryTypeChar(
-            MutagenWriter writer,
-            IGlobalGetter item)
-        {
-            WriteBinaryTypeCharCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public virtual void Write(
-            MutagenWriter writer,
-            IGlobalGetter item,
+            IPlacedObjectGetter item,
             TypedWriteParams translationParams)
         {
-            throw new NotImplementedException();
+            PluginUtilityTranslation.WriteMajorRecord(
+                writer: writer,
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.REFR,
+                writeEmbedded: Fallout3MajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -1181,7 +1282,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IGlobalGetter)item,
+                item: (IPlacedObjectGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1192,7 +1293,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IGlobalGetter)item,
+                item: (IPlacedObjectGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1203,20 +1304,20 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IGlobalGetter)item,
+                item: (IPlacedObjectGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class GlobalBinaryCreateTranslation : Fallout3MajorRecordBinaryCreateTranslation
+    internal partial class PlacedObjectBinaryCreateTranslation : Fallout3MajorRecordBinaryCreateTranslation
     {
-        public new static readonly GlobalBinaryCreateTranslation Instance = new GlobalBinaryCreateTranslation();
+        public new static readonly PlacedObjectBinaryCreateTranslation Instance = new PlacedObjectBinaryCreateTranslation();
 
-        public override RecordType RecordType => throw new ArgumentException();
+        public override RecordType RecordType => RecordTypes.REFR;
         public static ParseResult FillBinaryRecordTypes(
-            IGlobalInternal item,
+            IPlacedObjectInternal item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1227,12 +1328,11 @@ namespace Mutagen.Bethesda.Fallout3
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.FNAM:
+                case RecordTypeInts.NAME:
                 {
-                    return GlobalBinaryCreateTranslation.FillBinaryTypeCharCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item,
-                        lastParsed: lastParsed);
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Base.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)PlacedObject_FieldIndex.Base;
                 }
                 default:
                     return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1246,18 +1346,13 @@ namespace Mutagen.Bethesda.Fallout3
             }
         }
 
-        public static partial ParseResult FillBinaryTypeCharCustom(
-            MutagenFrame frame,
-            IGlobalInternal item,
-            PreviousParse lastParsed);
-
     }
 
 }
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Binary Write Mixins
-    public static class GlobalBinaryTranslationMixIn
+    public static class PlacedObjectBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1266,40 +1361,41 @@ namespace Mutagen.Bethesda.Fallout3
 }
 namespace Mutagen.Bethesda.Fallout3
 {
-    internal abstract partial class GlobalBinaryOverlay :
+    internal partial class PlacedObjectBinaryOverlay :
         Fallout3MajorRecordBinaryOverlay,
-        IGlobalGetter
+        IPlacedObjectGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Global_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Global_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PlacedObject_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => PlacedObject_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => GlobalCommon.Instance;
+        protected override object CommonInstance() => PlacedObjectCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => GlobalSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => PlacedObjectSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedObjectCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => GlobalBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => PlacedObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((GlobalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PlacedObjectBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IPlacedObject);
 
-        #region TypeChar
-        public partial ParseResult TypeCharCustomParse(
-            OverlayStream stream,
-            int offset,
-            PreviousParse lastParsed);
+
+        #region Base
+        private int? _BaseLocation;
+        public IFormLinkNullableGetter<IFallout3MajorRecordGetter> Base => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFallout3MajorRecordGetter>(_package, _recordData, _BaseLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1307,7 +1403,7 @@ namespace Mutagen.Bethesda.Fallout3
             int offset);
 
         partial void CustomCtor();
-        protected GlobalBinaryOverlay(
+        protected PlacedObjectBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1317,6 +1413,46 @@ namespace Mutagen.Bethesda.Fallout3
             this.CustomCtor();
         }
 
+        public static IPlacedObjectGetter PlacedObjectFactory(
+            OverlayStream stream,
+            BinaryOverlayFactoryPackage package,
+            TypedParseParams translationParams = default)
+        {
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
+            var ret = new PlacedObjectBinaryOverlay(
+                memoryPair: memoryPair,
+                package: package);
+            ret._package.FormVersion = ret;
+            ret.CustomFactoryEnd(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset);
+            ret.FillSubrecordTypes(
+                majorReference: ret,
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                translationParams: translationParams,
+                fill: ret.FillRecordType);
+            return ret;
+        }
+
+        public static IPlacedObjectGetter PlacedObjectFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            TypedParseParams translationParams = default)
+        {
+            return PlacedObjectFactory(
+                stream: new OverlayStream(slice, package),
+                package: package,
+                translationParams: translationParams);
+        }
 
         public override ParseResult FillRecordType(
             OverlayStream stream,
@@ -1330,12 +1466,10 @@ namespace Mutagen.Bethesda.Fallout3
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.FNAM:
+                case RecordTypeInts.NAME:
                 {
-                    return TypeCharCustomParse(
-                        stream,
-                        offset,
-                        lastParsed: lastParsed);
+                    _BaseLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.Base;
                 }
                 default:
                     return base.FillRecordType(
@@ -1354,7 +1488,7 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             string? name = null)
         {
-            GlobalMixIn.Print(
+            PlacedObjectMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1364,7 +1498,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Global>.ToString(this);
+            return MajorRecordPrinter<PlacedObject>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1374,16 +1508,16 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IGlobalGetter rhs) return false;
-            return ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IPlacedObjectGetter rhs) return false;
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IGlobalGetter? obj)
+        public bool Equals(IPlacedObjectGetter? obj)
         {
-            return ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

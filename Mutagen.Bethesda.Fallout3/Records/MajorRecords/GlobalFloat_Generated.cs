@@ -21,7 +21,6 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -341,10 +340,11 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = GlobalFloat_Registration.TriggeringRecordType;
-        public GlobalFloat(FormKey formKey)
+        public GlobalFloat(
+            FormKey formKey,
+            Fallout3Release gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = GameConstants.Fallout3.DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -357,12 +357,16 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public GlobalFloat(IFallout3Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout3Release)
         {
         }
 
         public GlobalFloat(IFallout3Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout3Release)
         {
             this.EditorID = editorID;
         }
@@ -1052,7 +1056,7 @@ namespace Mutagen.Bethesda.Fallout3
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new GlobalFloat(formKey);
+            var newRec = new GlobalFloat(formKey, default(Fallout3Release));
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1132,8 +1136,20 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.Data = rhs.Data;
             }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IGlobalFloat item,
+            IGlobalFloatGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IGlobalInternal item,
             IGlobalGetter rhs,
@@ -1330,30 +1346,13 @@ namespace Mutagen.Bethesda.Fallout3
             IGlobalFloatGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.GLOB)))
-            {
-                try
-                {
-                    Fallout3MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        writer.MetaData.FormVersion = item.FormVersion;
-                        WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                        writer.MetaData.FormVersion = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.GLOB,
+                writeEmbedded: Fallout3MajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(

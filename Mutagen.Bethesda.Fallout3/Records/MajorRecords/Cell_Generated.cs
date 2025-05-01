@@ -7,21 +7,23 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout3;
 using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
-using Mutagen.Bethesda.Plugins.RecordTypeMapping;
 using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -54,6 +56,60 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region Timestamp
+        public Int32 Timestamp { get; set; } = default(Int32);
+        #endregion
+        #region PersistentTimestamp
+        public Int32 PersistentTimestamp { get; set; } = default(Int32);
+        #endregion
+        #region Persistent
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IPlaced> _Persistent = new ExtendedList<IPlaced>();
+        public ExtendedList<IPlaced> Persistent
+        {
+            get => this._Persistent;
+            init => this._Persistent = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IPlacedGetter> ICellGetter.Persistent => _Persistent;
+        #endregion
+
+        #endregion
+        #region TemporaryTimestamp
+        public Int32 TemporaryTimestamp { get; set; } = default(Int32);
+        #endregion
+        #region Temporary
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IPlaced> _Temporary = new ExtendedList<IPlaced>();
+        public ExtendedList<IPlaced> Temporary
+        {
+            get => this._Temporary;
+            init => this._Temporary = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IPlacedGetter> ICellGetter.Temporary => _Temporary;
+        #endregion
+
+        #endregion
+        #region VisibleWhenDistantTimestamp
+        public Int32 VisibleWhenDistantTimestamp { get; set; } = default(Int32);
+        #endregion
+        #region VisibleWhenDistant
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IPlaced> _VisibleWhenDistant = new ExtendedList<IPlaced>();
+        public ExtendedList<IPlaced> VisibleWhenDistant
+        {
+            get => this._VisibleWhenDistant;
+            init => this._VisibleWhenDistant = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IPlacedGetter> ICellGetter.VisibleWhenDistant => _VisibleWhenDistant;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -79,6 +135,13 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Timestamp = initialValue;
+                this.PersistentTimestamp = initialValue;
+                this.Persistent = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
+                this.TemporaryTimestamp = initialValue;
+                this.Temporary = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
+                this.VisibleWhenDistantTimestamp = initialValue;
+                this.VisibleWhenDistant = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
             }
 
             public Mask(
@@ -86,7 +149,14 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem FormKey,
                 TItem VersionControl,
                 TItem EditorID,
-                TItem Fallout3MajorRecordFlags)
+                TItem Fallout3MajorRecordFlags,
+                TItem Timestamp,
+                TItem PersistentTimestamp,
+                TItem Persistent,
+                TItem TemporaryTimestamp,
+                TItem Temporary,
+                TItem VisibleWhenDistantTimestamp,
+                TItem VisibleWhenDistant)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -94,6 +164,13 @@ namespace Mutagen.Bethesda.Fallout3
                 EditorID: EditorID,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
+                this.Timestamp = Timestamp;
+                this.PersistentTimestamp = PersistentTimestamp;
+                this.Persistent = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(Persistent, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
+                this.TemporaryTimestamp = TemporaryTimestamp;
+                this.Temporary = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(Temporary, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
+                this.VisibleWhenDistantTimestamp = VisibleWhenDistantTimestamp;
+                this.VisibleWhenDistant = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>(VisibleWhenDistant, Enumerable.Empty<MaskItemIndexed<TItem, IMask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -102,6 +179,16 @@ namespace Mutagen.Bethesda.Fallout3
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Timestamp;
+            public TItem PersistentTimestamp;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>? Persistent;
+            public TItem TemporaryTimestamp;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>? Temporary;
+            public TItem VisibleWhenDistantTimestamp;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, IMask<TItem>?>>?>? VisibleWhenDistant;
             #endregion
 
             #region Equals
@@ -115,11 +202,25 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Timestamp, rhs.Timestamp)) return false;
+                if (!object.Equals(this.PersistentTimestamp, rhs.PersistentTimestamp)) return false;
+                if (!object.Equals(this.Persistent, rhs.Persistent)) return false;
+                if (!object.Equals(this.TemporaryTimestamp, rhs.TemporaryTimestamp)) return false;
+                if (!object.Equals(this.Temporary, rhs.Temporary)) return false;
+                if (!object.Equals(this.VisibleWhenDistantTimestamp, rhs.VisibleWhenDistantTimestamp)) return false;
+                if (!object.Equals(this.VisibleWhenDistant, rhs.VisibleWhenDistant)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Timestamp);
+                hash.Add(this.PersistentTimestamp);
+                hash.Add(this.Persistent);
+                hash.Add(this.TemporaryTimestamp);
+                hash.Add(this.Temporary);
+                hash.Add(this.VisibleWhenDistantTimestamp);
+                hash.Add(this.VisibleWhenDistant);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -130,6 +231,46 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Timestamp)) return false;
+                if (!eval(this.PersistentTimestamp)) return false;
+                if (this.Persistent != null)
+                {
+                    if (!eval(this.Persistent.Overall)) return false;
+                    if (this.Persistent.Specific != null)
+                    {
+                        foreach (var item in this.Persistent.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (!(item.Specific?.All(eval) ?? true)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.TemporaryTimestamp)) return false;
+                if (this.Temporary != null)
+                {
+                    if (!eval(this.Temporary.Overall)) return false;
+                    if (this.Temporary.Specific != null)
+                    {
+                        foreach (var item in this.Temporary.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (!(item.Specific?.All(eval) ?? true)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.VisibleWhenDistantTimestamp)) return false;
+                if (this.VisibleWhenDistant != null)
+                {
+                    if (!eval(this.VisibleWhenDistant.Overall)) return false;
+                    if (this.VisibleWhenDistant.Specific != null)
+                    {
+                        foreach (var item in this.VisibleWhenDistant.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (!(item.Specific?.All(eval) ?? true)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -138,6 +279,46 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Timestamp)) return true;
+                if (eval(this.PersistentTimestamp)) return true;
+                if (this.Persistent != null)
+                {
+                    if (eval(this.Persistent.Overall)) return true;
+                    if (this.Persistent.Specific != null)
+                    {
+                        foreach (var item in this.Persistent.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (!(item.Specific?.All(eval) ?? true)) return false;
+                        }
+                    }
+                }
+                if (eval(this.TemporaryTimestamp)) return true;
+                if (this.Temporary != null)
+                {
+                    if (eval(this.Temporary.Overall)) return true;
+                    if (this.Temporary.Specific != null)
+                    {
+                        foreach (var item in this.Temporary.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (!(item.Specific?.All(eval) ?? true)) return false;
+                        }
+                    }
+                }
+                if (eval(this.VisibleWhenDistantTimestamp)) return true;
+                if (this.VisibleWhenDistant != null)
+                {
+                    if (eval(this.VisibleWhenDistant.Overall)) return true;
+                    if (this.VisibleWhenDistant.Specific != null)
+                    {
+                        foreach (var item in this.VisibleWhenDistant.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (!(item.Specific?.All(eval) ?? true)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -153,6 +334,58 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Timestamp = eval(this.Timestamp);
+                obj.PersistentTimestamp = eval(this.PersistentTimestamp);
+                if (Persistent != null)
+                {
+                    obj.Persistent = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>?>(eval(this.Persistent.Overall), Enumerable.Empty<MaskItemIndexed<R, IMask<R>?>>());
+                    if (Persistent.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, IMask<R>?>>();
+                        obj.Persistent.Specific = l;
+                        foreach (var item in Persistent.Specific)
+                        {
+                            MaskItemIndexed<R, IMask<R>?>? mask;
+                            throw new NotImplementedException();
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.TemporaryTimestamp = eval(this.TemporaryTimestamp);
+                if (Temporary != null)
+                {
+                    obj.Temporary = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>?>(eval(this.Temporary.Overall), Enumerable.Empty<MaskItemIndexed<R, IMask<R>?>>());
+                    if (Temporary.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, IMask<R>?>>();
+                        obj.Temporary.Specific = l;
+                        foreach (var item in Temporary.Specific)
+                        {
+                            MaskItemIndexed<R, IMask<R>?>? mask;
+                            throw new NotImplementedException();
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.VisibleWhenDistantTimestamp = eval(this.VisibleWhenDistantTimestamp);
+                if (VisibleWhenDistant != null)
+                {
+                    obj.VisibleWhenDistant = new MaskItem<R, IEnumerable<MaskItemIndexed<R, IMask<R>?>>?>(eval(this.VisibleWhenDistant.Overall), Enumerable.Empty<MaskItemIndexed<R, IMask<R>?>>());
+                    if (VisibleWhenDistant.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, IMask<R>?>>();
+                        obj.VisibleWhenDistant.Specific = l;
+                        foreach (var item in VisibleWhenDistant.Specific)
+                        {
+                            MaskItemIndexed<R, IMask<R>?>? mask;
+                            throw new NotImplementedException();
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -171,6 +404,79 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(Cell.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.Timestamp ?? true)
+                    {
+                        sb.AppendItem(Timestamp, "Timestamp");
+                    }
+                    if (printMask?.PersistentTimestamp ?? true)
+                    {
+                        sb.AppendItem(PersistentTimestamp, "PersistentTimestamp");
+                    }
+                    if ((printMask?.Persistent?.Overall ?? true)
+                        && Persistent is {} PersistentItem)
+                    {
+                        sb.AppendLine("Persistent =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(PersistentItem.Overall);
+                            if (PersistentItem.Specific != null)
+                            {
+                                foreach (var subItem in PersistentItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.TemporaryTimestamp ?? true)
+                    {
+                        sb.AppendItem(TemporaryTimestamp, "TemporaryTimestamp");
+                    }
+                    if ((printMask?.Temporary?.Overall ?? true)
+                        && Temporary is {} TemporaryItem)
+                    {
+                        sb.AppendLine("Temporary =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(TemporaryItem.Overall);
+                            if (TemporaryItem.Specific != null)
+                            {
+                                foreach (var subItem in TemporaryItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.VisibleWhenDistantTimestamp ?? true)
+                    {
+                        sb.AppendItem(VisibleWhenDistantTimestamp, "VisibleWhenDistantTimestamp");
+                    }
+                    if ((printMask?.VisibleWhenDistant?.Overall ?? true)
+                        && VisibleWhenDistant is {} VisibleWhenDistantItem)
+                    {
+                        sb.AppendLine("VisibleWhenDistant =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(VisibleWhenDistantItem.Overall);
+                            if (VisibleWhenDistantItem.Specific != null)
+                            {
+                                foreach (var subItem in VisibleWhenDistantItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -181,12 +487,36 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Timestamp;
+            public Exception? PersistentTimestamp;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>? Persistent;
+            public Exception? TemporaryTimestamp;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>? Temporary;
+            public Exception? VisibleWhenDistantTimestamp;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>? VisibleWhenDistant;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Cell_FieldIndex enu = (Cell_FieldIndex)index;
                 switch (enu)
                 {
+                    case Cell_FieldIndex.Timestamp:
+                        return Timestamp;
+                    case Cell_FieldIndex.PersistentTimestamp:
+                        return PersistentTimestamp;
+                    case Cell_FieldIndex.Persistent:
+                        return Persistent;
+                    case Cell_FieldIndex.TemporaryTimestamp:
+                        return TemporaryTimestamp;
+                    case Cell_FieldIndex.Temporary:
+                        return Temporary;
+                    case Cell_FieldIndex.VisibleWhenDistantTimestamp:
+                        return VisibleWhenDistantTimestamp;
+                    case Cell_FieldIndex.VisibleWhenDistant:
+                        return VisibleWhenDistant;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -197,6 +527,27 @@ namespace Mutagen.Bethesda.Fallout3
                 Cell_FieldIndex enu = (Cell_FieldIndex)index;
                 switch (enu)
                 {
+                    case Cell_FieldIndex.Timestamp:
+                        this.Timestamp = ex;
+                        break;
+                    case Cell_FieldIndex.PersistentTimestamp:
+                        this.PersistentTimestamp = ex;
+                        break;
+                    case Cell_FieldIndex.Persistent:
+                        this.Persistent = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ex, null);
+                        break;
+                    case Cell_FieldIndex.TemporaryTimestamp:
+                        this.TemporaryTimestamp = ex;
+                        break;
+                    case Cell_FieldIndex.Temporary:
+                        this.Temporary = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ex, null);
+                        break;
+                    case Cell_FieldIndex.VisibleWhenDistantTimestamp:
+                        this.VisibleWhenDistantTimestamp = ex;
+                        break;
+                    case Cell_FieldIndex.VisibleWhenDistant:
+                        this.VisibleWhenDistant = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -208,6 +559,27 @@ namespace Mutagen.Bethesda.Fallout3
                 Cell_FieldIndex enu = (Cell_FieldIndex)index;
                 switch (enu)
                 {
+                    case Cell_FieldIndex.Timestamp:
+                        this.Timestamp = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.PersistentTimestamp:
+                        this.PersistentTimestamp = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.Persistent:
+                        this.Persistent = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>)obj;
+                        break;
+                    case Cell_FieldIndex.TemporaryTimestamp:
+                        this.TemporaryTimestamp = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.Temporary:
+                        this.Temporary = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>)obj;
+                        break;
+                    case Cell_FieldIndex.VisibleWhenDistantTimestamp:
+                        this.VisibleWhenDistantTimestamp = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.VisibleWhenDistant:
+                        this.VisibleWhenDistant = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -217,6 +589,13 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Timestamp != null) return true;
+                if (PersistentTimestamp != null) return true;
+                if (Persistent != null) return true;
+                if (TemporaryTimestamp != null) return true;
+                if (Temporary != null) return true;
+                if (VisibleWhenDistantTimestamp != null) return true;
+                if (VisibleWhenDistant != null) return true;
                 return false;
             }
             #endregion
@@ -243,6 +622,72 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                {
+                    sb.AppendItem(Timestamp, "Timestamp");
+                }
+                {
+                    sb.AppendItem(PersistentTimestamp, "PersistentTimestamp");
+                }
+                if (Persistent is {} PersistentItem)
+                {
+                    sb.AppendLine("Persistent =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(PersistentItem.Overall);
+                        if (PersistentItem.Specific != null)
+                        {
+                            foreach (var subItem in PersistentItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(TemporaryTimestamp, "TemporaryTimestamp");
+                }
+                if (Temporary is {} TemporaryItem)
+                {
+                    sb.AppendLine("Temporary =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(TemporaryItem.Overall);
+                        if (TemporaryItem.Specific != null)
+                        {
+                            foreach (var subItem in TemporaryItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    sb.AppendItem(VisibleWhenDistantTimestamp, "VisibleWhenDistantTimestamp");
+                }
+                if (VisibleWhenDistant is {} VisibleWhenDistantItem)
+                {
+                    sb.AppendLine("VisibleWhenDistant =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(VisibleWhenDistantItem.Overall);
+                        if (VisibleWhenDistantItem.Specific != null)
+                        {
+                            foreach (var subItem in VisibleWhenDistantItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -251,6 +696,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
+                ret.PersistentTimestamp = this.PersistentTimestamp.Combine(rhs.PersistentTimestamp);
+                ret.Persistent = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Persistent?.Overall, rhs.Persistent?.Overall), Noggog.ExceptionExt.Combine(this.Persistent?.Specific, rhs.Persistent?.Specific));
+                ret.TemporaryTimestamp = this.TemporaryTimestamp.Combine(rhs.TemporaryTimestamp);
+                ret.Temporary = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Temporary?.Overall, rhs.Temporary?.Overall), Noggog.ExceptionExt.Combine(this.Temporary?.Specific, rhs.Temporary?.Specific));
+                ret.VisibleWhenDistantTimestamp = this.VisibleWhenDistantTimestamp.Combine(rhs.VisibleWhenDistantTimestamp);
+                ret.VisibleWhenDistant = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, IErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.VisibleWhenDistant?.Overall, rhs.VisibleWhenDistant?.Overall), Noggog.ExceptionExt.Combine(this.VisibleWhenDistant?.Specific, rhs.VisibleWhenDistant?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -272,15 +724,44 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Timestamp;
+            public bool PersistentTimestamp;
+            public bool Persistent;
+            public bool TemporaryTimestamp;
+            public bool Temporary;
+            public bool VisibleWhenDistantTimestamp;
+            public bool VisibleWhenDistant;
+            #endregion
+
             #region Ctors
             public TranslationMask(
                 bool defaultOn,
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Timestamp = defaultOn;
+                this.PersistentTimestamp = defaultOn;
+                this.Persistent = defaultOn;
+                this.TemporaryTimestamp = defaultOn;
+                this.Temporary = defaultOn;
+                this.VisibleWhenDistantTimestamp = defaultOn;
+                this.VisibleWhenDistant = defaultOn;
             }
 
             #endregion
+
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Timestamp, null));
+                ret.Add((PersistentTimestamp, null));
+                ret.Add((Persistent, null));
+                ret.Add((TemporaryTimestamp, null));
+                ret.Add((Temporary, null));
+                ret.Add((VisibleWhenDistantTimestamp, null));
+                ret.Add((VisibleWhenDistant, null));
+            }
 
             public static implicit operator TranslationMask(bool defaultOn)
             {
@@ -292,10 +773,13 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Cell_Registration.TriggeringRecordType;
-        public Cell(FormKey formKey)
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CellCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellSetterCommon.Instance.RemapLinks(this, mapping);
+        public Cell(
+            FormKey formKey,
+            Fallout3Release gameRelease)
         {
             this.FormKey = formKey;
-            this.FormVersion = GameConstants.Fallout3.DefaultFormVersion!.Value;
             CustomCtor();
         }
 
@@ -308,12 +792,16 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public Cell(IFallout3Mod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.Fallout3Release)
         {
         }
 
         public Cell(IFallout3Mod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.Fallout3Release)
         {
             this.EditorID = editorID;
         }
@@ -325,6 +813,46 @@ namespace Mutagen.Bethesda.Fallout3
 
         protected override Type LinkType => typeof(ICell);
 
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
+        IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecord> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<IFormLinkIdentifier> formLinks) => this.Remove(formLinks);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys, Type type, bool throwIfUnknown) => this.Remove(formKeys, type, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(FormKey formKey, bool throwIfUnknown) => this.Remove<TMajor>(formKey, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(HashSet<FormKey> formKeys, bool throwIfUnknown) => this.Remove<TMajor>(formKeys, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<FormKey> formKeys, bool throwIfUnknown) => this.Remove<TMajor>(formKeys, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => CellCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => CellSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => CellSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => CellSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -404,10 +932,20 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     public partial interface ICell :
+        IAssetLinkContainer,
         ICellGetter,
         IFallout3MajorRecordInternal,
-        ILoquiObjectSetter<ICellInternal>
+        IFormLinkContainer,
+        ILoquiObjectSetter<ICellInternal>,
+        IMajorRecordEnumerable
     {
+        new Int32 Timestamp { get; set; }
+        new Int32 PersistentTimestamp { get; set; }
+        new ExtendedList<IPlaced> Persistent { get; }
+        new Int32 TemporaryTimestamp { get; set; }
+        new ExtendedList<IPlaced> Temporary { get; }
+        new Int32 VisibleWhenDistantTimestamp { get; set; }
+        new ExtendedList<IPlaced> VisibleWhenDistant { get; }
     }
 
     public partial interface ICellInternal :
@@ -420,11 +958,21 @@ namespace Mutagen.Bethesda.Fallout3
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.CELL)]
     public partial interface ICellGetter :
         IFallout3MajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<ICellGetter>,
+        IMajorRecordGetterEnumerable,
         IMapsToGetter<ICellGetter>
     {
         static new ILoquiRegistration StaticRegistration => Cell_Registration.Instance;
+        Int32 Timestamp { get; }
+        Int32 PersistentTimestamp { get; }
+        IReadOnlyList<IPlacedGetter> Persistent { get; }
+        Int32 TemporaryTimestamp { get; }
+        IReadOnlyList<IPlacedGetter> Temporary { get; }
+        Int32 VisibleWhenDistantTimestamp { get; }
+        IReadOnlyList<IPlacedGetter> VisibleWhenDistant { get; }
 
     }
 
@@ -546,6 +1094,232 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         #region Mutagen
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(this ICellGetter obj)
+        {
+            return ((CellCommon)((ICellGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(
+            this ICellGetter obj,
+            bool throwIfUnknown = true)
+            where TMajor : class, IMajorRecordQueryableGetter
+        {
+            return ((CellCommon)((ICellGetter)obj).CommonInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown)
+                .Select(m => (TMajor)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            this ICellGetter obj,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            return ((CellCommon)((ICellGetter)obj).CommonInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown)
+                .Select(m => (IMajorRecordGetter)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords(this ICellInternal obj)
+        {
+            return ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this ICellInternal obj)
+            where TMajor : class, IMajorRecordQueryable
+        {
+            return ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: typeof(TMajor),
+                throwIfUnknown: true)
+                .Select(m => (TMajor)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecord> EnumerateMajorRecords(
+            this ICellInternal obj,
+            Type? type,
+            bool throwIfUnknown = true)
+        {
+            return ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).EnumeratePotentiallyTypedMajorRecords(
+                obj: obj,
+                type: type,
+                throwIfUnknown: throwIfUnknown)
+                .Select(m => (IMajorRecord)m);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ICellInternal obj,
+            FormKey key)
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ICellInternal obj,
+            IEnumerable<FormKey> keys)
+        {
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ICellInternal obj,
+            IEnumerable<IFormLinkIdentifier> keys)
+        {
+            foreach (var g in keys.GroupBy(x => x.Type))
+            {
+                Remove(
+                    obj: obj,
+                    keys: g.Select(x => x.FormKey),
+                    type: g.Key);
+            }
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ICellInternal obj,
+            HashSet<FormKey> keys)
+        {
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ICellInternal obj,
+            FormKey key,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ICellInternal obj,
+            IEnumerable<FormKey> keys,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet(),
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this ICellInternal obj,
+            HashSet<FormKey> keys,
+            Type type,
+            bool throwIfUnknown = true)
+        {
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: type,
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this ICellInternal obj,
+            TMajor record,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(record.FormKey);
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this ICellInternal obj,
+            IEnumerable<TMajor> records,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: records.Select(m => m.FormKey).ToHashSet(),
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this ICellInternal obj,
+            FormKey key,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            var keys = new HashSet<FormKey>();
+            keys.Add(key);
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this ICellInternal obj,
+            IEnumerable<FormKey> keys,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys.ToHashSet(),
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<TMajor>(
+            this ICellInternal obj,
+            HashSet<FormKey> keys,
+            bool throwIfUnknown = true)
+            where TMajor : IMajorRecordGetter
+        {
+            ((CellSetterCommon)((ICellGetter)obj).CommonSetterInstance()!).Remove(
+                obj: obj,
+                keys: keys,
+                type: typeof(TMajor),
+                throwIfUnknown: throwIfUnknown);
+        }
+
         public static Cell Duplicate(
             this ICellGetter item,
             FormKey formKey,
@@ -599,6 +1373,13 @@ namespace Mutagen.Bethesda.Fallout3
         VersionControl = 2,
         EditorID = 3,
         Fallout3MajorRecordFlags = 4,
+        Timestamp = 5,
+        PersistentTimestamp = 6,
+        Persistent = 7,
+        TemporaryTimestamp = 8,
+        Temporary = 9,
+        VisibleWhenDistantTimestamp = 10,
+        VisibleWhenDistant = 11,
     }
     #endregion
 
@@ -609,9 +1390,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(Cell.Mask<>);
 
@@ -641,8 +1422,13 @@ namespace Mutagen.Bethesda.Fallout3
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var all = RecordCollection.Factory(RecordTypes.CELL);
-            return new RecordTriggerSpecs(allRecordTypes: all);
+            var triggers = RecordCollection.Factory(RecordTypes.CELL);
+            var all = RecordCollection.Factory(
+                RecordTypes.CELL,
+                RecordTypes.REFR);
+            return new RecordTriggerSpecs(
+                allRecordTypes: all,
+                triggeringRecordTypes: triggers);
         });
         public static readonly Type BinaryWriteTranslation = typeof(CellBinaryWriteTranslation);
         #region Interface
@@ -684,6 +1470,13 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(ICellInternal item)
         {
             ClearPartial();
+            item.Timestamp = default(Int32);
+            item.PersistentTimestamp = default(Int32);
+            item.Persistent.Clear();
+            item.TemporaryTimestamp = default(Int32);
+            item.Temporary.Clear();
+            item.VisibleWhenDistantTimestamp = default(Int32);
+            item.VisibleWhenDistant.Clear();
             base.Clear(item);
         }
         
@@ -701,6 +1494,125 @@ namespace Mutagen.Bethesda.Fallout3
         public void RemapLinks(ICell obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Persistent.RemapLinks(mapping);
+            obj.Temporary.RemapLinks(mapping);
+            obj.VisibleWhenDistant.RemapLinks(mapping);
+        }
+        
+        public IEnumerable<IMajorRecord> EnumerateMajorRecords(ICellInternal obj)
+        {
+            foreach (var item in CellCommon.Instance.EnumerateMajorRecords(obj))
+            {
+                yield return (item as IMajorRecord)!;
+            }
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
+            ICellInternal obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            ICellInternal obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            foreach (var item in CellCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
+            {
+                yield return item;
+            }
+        }
+        
+        public void Remove(
+            ICellInternal obj,
+            HashSet<FormKey> keys)
+        {
+            obj.Persistent.Remove(keys);
+            obj.Temporary.Remove(keys);
+            obj.VisibleWhenDistant.Remove(keys);
+        }
+        
+        public void Remove(
+            ICellInternal obj,
+            HashSet<FormKey> keys,
+            Type type,
+            bool throwIfUnknown)
+        {
+            switch (type.Name)
+            {
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "IFallout3MajorRecord":
+                case "Fallout3MajorRecord":
+                case "IMajorRecordGetter":
+                case "IFallout3MajorRecordGetter":
+                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
+                    this.Remove(obj, keys);
+                    break;
+                case "PlacedObject":
+                case "IPlacedObjectGetter":
+                case "IPlacedObject":
+                case "IPlacedObjectInternal":
+                    obj.Persistent.RemoveWhere(i => keys.Contains(i.FormKey));
+                    obj.Temporary.RemoveWhere(i => keys.Contains(i.FormKey));
+                    obj.VisibleWhenDistant.RemoveWhere(i => keys.Contains(i.FormKey));
+                    break;
+                case "IPlaced":
+                case "IPlacedGetter":
+                    obj.Persistent.RemoveWhere(i => keys.Contains(i.FormKey));
+                    obj.Temporary.RemoveWhere(i => keys.Contains(i.FormKey));
+                    obj.VisibleWhenDistant.RemoveWhere(i => keys.Contains(i.FormKey));
+                    break;
+                default:
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        break;
+                    }
+            }
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ICell obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Temporary.WhereCastable<IPlacedGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.VisibleWhenDistant.WhereCastable<IPlacedGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            ICell obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Persistent.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.Temporary.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
+            obj.VisibleWhenDistant.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion
@@ -771,6 +1683,22 @@ namespace Mutagen.Bethesda.Fallout3
             Cell.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.Timestamp = item.Timestamp == rhs.Timestamp;
+            ret.PersistentTimestamp = item.PersistentTimestamp == rhs.PersistentTimestamp;
+            ret.Persistent = item.Persistent.CollectionEqualsHelper(
+                rhs.Persistent,
+                (loqLhs, loqRhs) => (IMask<bool>)loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.TemporaryTimestamp = item.TemporaryTimestamp == rhs.TemporaryTimestamp;
+            ret.Temporary = item.Temporary.CollectionEqualsHelper(
+                rhs.Temporary,
+                (loqLhs, loqRhs) => (IMask<bool>)loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.VisibleWhenDistantTimestamp = item.VisibleWhenDistantTimestamp == rhs.VisibleWhenDistantTimestamp;
+            ret.VisibleWhenDistant = item.VisibleWhenDistant.CollectionEqualsHelper(
+                rhs.VisibleWhenDistant,
+                (loqLhs, loqRhs) => (IMask<bool>)loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -820,6 +1748,64 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.Timestamp ?? true)
+            {
+                sb.AppendItem(item.Timestamp, "Timestamp");
+            }
+            if (printMask?.PersistentTimestamp ?? true)
+            {
+                sb.AppendItem(item.PersistentTimestamp, "PersistentTimestamp");
+            }
+            if (printMask?.Persistent?.Overall ?? true)
+            {
+                sb.AppendLine("Persistent =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Persistent)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.TemporaryTimestamp ?? true)
+            {
+                sb.AppendItem(item.TemporaryTimestamp, "TemporaryTimestamp");
+            }
+            if (printMask?.Temporary?.Overall ?? true)
+            {
+                sb.AppendLine("Temporary =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Temporary)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if (printMask?.VisibleWhenDistantTimestamp ?? true)
+            {
+                sb.AppendItem(item.VisibleWhenDistantTimestamp, "VisibleWhenDistantTimestamp");
+            }
+            if (printMask?.VisibleWhenDistant?.Overall ?? true)
+            {
+                sb.AppendLine("VisibleWhenDistant =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.VisibleWhenDistant)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
         }
         
         public static Cell_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
@@ -866,6 +1852,34 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.Timestamp) ?? true))
+            {
+                if (lhs.Timestamp != rhs.Timestamp) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.PersistentTimestamp) ?? true))
+            {
+                if (lhs.PersistentTimestamp != rhs.PersistentTimestamp) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.Persistent) ?? true))
+            {
+                if (!lhs.Persistent.SequenceEqualNullable(rhs.Persistent)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.TemporaryTimestamp) ?? true))
+            {
+                if (lhs.TemporaryTimestamp != rhs.TemporaryTimestamp) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.Temporary) ?? true))
+            {
+                if (!lhs.Temporary.SequenceEqualNullable(rhs.Temporary)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.VisibleWhenDistantTimestamp) ?? true))
+            {
+                if (lhs.VisibleWhenDistantTimestamp != rhs.VisibleWhenDistantTimestamp) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.VisibleWhenDistant) ?? true))
+            {
+                if (!lhs.VisibleWhenDistant.SequenceEqualNullable(rhs.VisibleWhenDistant)) return false;
+            }
             return true;
         }
         
@@ -894,6 +1908,13 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(ICellGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Timestamp);
+            hash.Add(item.PersistentTimestamp);
+            hash.Add(item.Persistent);
+            hash.Add(item.TemporaryTimestamp);
+            hash.Add(item.Temporary);
+            hash.Add(item.VisibleWhenDistantTimestamp);
+            hash.Add(item.VisibleWhenDistant);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -923,6 +1944,477 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 yield return item;
             }
+            foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.Temporary.WhereCastable<IPlacedGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            foreach (var item in obj.VisibleWhenDistant.WhereCastable<IPlacedGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            yield break;
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(ICellGetter obj)
+        {
+            foreach (var subItem in obj.Persistent)
+            {
+                yield return subItem;
+            }
+            foreach (var subItem in obj.Temporary)
+            {
+                yield return subItem;
+            }
+            foreach (var subItem in obj.VisibleWhenDistant)
+            {
+                yield return subItem;
+            }
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumeratePotentiallyTypedMajorRecords(
+            ICellGetter obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+        }
+        
+        public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(
+            ICellGetter obj,
+            Type type,
+            bool throwIfUnknown)
+        {
+            switch (type.Name)
+            {
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "IFallout3MajorRecord":
+                case "Fallout3MajorRecord":
+                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IFallout3MajorRecordGetter":
+                    foreach (var item in this.EnumerateMajorRecords(obj))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IPlacedGetter":
+                case "IPlaced":
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.VisibleWhenDistant)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    yield break;
+                case "PlacedObject":
+                case "IPlacedObjectGetter":
+                case "IPlacedObject":
+                case "IPlacedObjectInternal":
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    foreach (var subItem in obj.VisibleWhenDistant)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return subItem;
+                        }
+                    }
+                    yield break;
+                default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout3, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        yield break;
+                    }
+            }
+        }
+        
+        public IEnumerable<IModContext<IFallout3Mod, IFallout3ModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
+            ICellGetter obj,
+            ILinkCache linkCache,
+            ModKey modKey,
+            IModContext? parent,
+            Func<IFallout3Mod, ICellGetter, ICell> getOrAddAsOverride,
+            Func<IFallout3Mod, ICellGetter, string?, FormKey?, ICell> duplicateInto)
+        {
+            var curContext = new ModContext<IFallout3Mod, IFallout3ModGetter, ICell, ICellGetter>(
+                modKey,
+                record: obj,
+                getOrAddAsOverride: getOrAddAsOverride,
+                duplicateInto: duplicateInto,
+                parent: parent);
+            foreach (var subItem in obj.Persistent)
+            {
+                yield return new ModContext<IFallout3Mod, IFallout3ModGetter, IPlaced, IPlacedGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getOrAddAsOverride: (m, r) =>
+                    {
+                        var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                        var ret = parent.Persistent.FirstOrDefault(x => x.FormKey == r.FormKey);
+                        if (ret != null) return ret;
+                        ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                        parent.Persistent.Add(ret);
+                        return ret;
+                    },
+                    duplicateInto: (m, r, e, f) =>
+                    {
+                        var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
+                        getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                        return dup;
+                    });
+            }
+            foreach (var subItem in obj.Temporary)
+            {
+                yield return new ModContext<IFallout3Mod, IFallout3ModGetter, IPlaced, IPlacedGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getOrAddAsOverride: (m, r) =>
+                    {
+                        var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                        var ret = parent.Temporary.FirstOrDefault(x => x.FormKey == r.FormKey);
+                        if (ret != null) return ret;
+                        ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                        parent.Temporary.Add(ret);
+                        return ret;
+                    },
+                    duplicateInto: (m, r, e, f) =>
+                    {
+                        var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
+                        getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                        return dup;
+                    });
+            }
+            foreach (var subItem in obj.VisibleWhenDistant)
+            {
+                yield return new ModContext<IFallout3Mod, IFallout3ModGetter, IPlaced, IPlacedGetter>(
+                    modKey: modKey,
+                    record: subItem,
+                    parent: curContext,
+                    getOrAddAsOverride: (m, r) =>
+                    {
+                        var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                        var ret = parent.VisibleWhenDistant.FirstOrDefault(x => x.FormKey == r.FormKey);
+                        if (ret != null) return ret;
+                        ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                        parent.VisibleWhenDistant.Add(ret);
+                        return ret;
+                    },
+                    duplicateInto: (m, r, e, f) =>
+                    {
+                        var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
+                        getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(dup);
+                        return dup;
+                    });
+            }
+        }
+        
+        public IEnumerable<IModContext<IFallout3Mod, IFallout3ModGetter, IMajorRecord, IMajorRecordGetter>> EnumerateMajorRecordContexts(
+            ICellGetter obj,
+            ILinkCache linkCache,
+            Type type,
+            ModKey modKey,
+            IModContext? parent,
+            bool throwIfUnknown,
+            Func<IFallout3Mod, ICellGetter, ICell> getOrAddAsOverride,
+            Func<IFallout3Mod, ICellGetter, string?, FormKey?, ICell> duplicateInto)
+        {
+            var curContext = new ModContext<IFallout3Mod, IFallout3ModGetter, ICell, ICellGetter>(
+                modKey,
+                record: obj,
+                getOrAddAsOverride: getOrAddAsOverride,
+                duplicateInto: duplicateInto,
+                parent: parent);
+            switch (type.Name)
+            {
+                case "IMajorRecord":
+                case "MajorRecord":
+                case "IFallout3MajorRecord":
+                case "Fallout3MajorRecord":
+                    if (!Cell_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: parent,
+                        getOrAddAsOverride: getOrAddAsOverride,
+                        duplicateInto: duplicateInto))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IMajorRecordGetter":
+                case "IFallout3MajorRecordGetter":
+                    foreach (var item in this.EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        modKey: modKey,
+                        parent: parent,
+                        getOrAddAsOverride: getOrAddAsOverride,
+                        duplicateInto: duplicateInto))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IPlacedGetter":
+                case "IPlaced":
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IFallout3Mod, IFallout3ModGetter, IPlaced, IPlacedGetter>(
+                                modKey: modKey,
+                                record: subItem,
+                                parent: curContext,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Persistent.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Persistent.Add(ret);
+                                    return ret;
+                                },
+                                duplicateInto: (m, r, e, f) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                                    return dup;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IFallout3Mod, IFallout3ModGetter, IPlaced, IPlacedGetter>(
+                                modKey: modKey,
+                                record: subItem,
+                                parent: curContext,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Temporary.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Temporary.Add(ret);
+                                    return ret;
+                                },
+                                duplicateInto: (m, r, e, f) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                                    return dup;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.VisibleWhenDistant)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IFallout3Mod, IFallout3ModGetter, IPlaced, IPlacedGetter>(
+                                modKey: modKey,
+                                record: subItem,
+                                parent: curContext,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.VisibleWhenDistant.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.VisibleWhenDistant.Add(ret);
+                                    return ret;
+                                },
+                                duplicateInto: (m, r, e, f) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(dup);
+                                    return dup;
+                                });
+                        }
+                    }
+                    yield break;
+                case "PlacedObject":
+                case "IPlacedObjectGetter":
+                case "IPlacedObject":
+                case "IPlacedObjectInternal":
+                    foreach (var subItem in obj.Persistent)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IFallout3Mod, IFallout3ModGetter, IPlaced, IPlacedGetter>(
+                                modKey: modKey,
+                                record: subItem,
+                                parent: curContext,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Persistent.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Persistent.Add(ret);
+                                    return ret;
+                                },
+                                duplicateInto: (m, r, e, f) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Persistent.Add(dup);
+                                    return dup;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.Temporary)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IFallout3Mod, IFallout3ModGetter, IPlaced, IPlacedGetter>(
+                                modKey: modKey,
+                                record: subItem,
+                                parent: curContext,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.Temporary.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.Temporary.Add(ret);
+                                    return ret;
+                                },
+                                duplicateInto: (m, r, e, f) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).Temporary.Add(dup);
+                                    return dup;
+                                });
+                        }
+                    }
+                    foreach (var subItem in obj.VisibleWhenDistant)
+                    {
+                        if (type.IsAssignableFrom(subItem.GetType()))
+                        {
+                            yield return new ModContext<IFallout3Mod, IFallout3ModGetter, IPlaced, IPlacedGetter>(
+                                modKey: modKey,
+                                record: subItem,
+                                parent: curContext,
+                                getOrAddAsOverride: (m, r) =>
+                                {
+                                    var parent = getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey));
+                                    var ret = parent.VisibleWhenDistant.FirstOrDefault(x => x.FormKey == r.FormKey);
+                                    if (ret != null) return ret;
+                                    ret = (IPlaced)((IPlacedGetter)r).DeepCopy();
+                                    parent.VisibleWhenDistant.Add(ret);
+                                    return ret;
+                                },
+                                duplicateInto: (m, r, e, f) =>
+                                {
+                                    var dup = (IPlaced)((IPlacedGetter)r).Duplicate(f ?? m.GetNextFormKey(e));
+                                    getOrAddAsOverride(m, linkCache.Resolve<ICellGetter>(obj.FormKey)).VisibleWhenDistant.Add(dup);
+                                    return dup;
+                                });
+                        }
+                    }
+                    yield break;
+                default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceContextsFor<ICellGetter, IFallout3Mod, IFallout3ModGetter>(
+                        GameCategory.Fallout3,
+                        obj,
+                        type,
+                        linkCache,
+                        (lk, t, b) => this.EnumerateMajorRecordContexts(obj, lk, t, modKey, parent, b, getOrAddAsOverride, duplicateInto),
+                        out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        yield break;
+                    }
+            }
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ICellGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Persistent.WhereCastable<IPlacedGetter, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Temporary.WhereCastable<IPlacedGetter, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.VisibleWhenDistant.WhereCastable<IPlacedGetter, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -932,7 +2424,7 @@ namespace Mutagen.Bethesda.Fallout3
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Cell(formKey);
+            var newRec = new Cell(formKey, default(Fallout3Release));
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -997,8 +2489,102 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Timestamp) ?? true))
+            {
+                item.Timestamp = rhs.Timestamp;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.PersistentTimestamp) ?? true))
+            {
+                item.PersistentTimestamp = rhs.PersistentTimestamp;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Persistent) ?? true))
+            {
+                errorMask?.PushIndex((int)Cell_FieldIndex.Persistent);
+                try
+                {
+                    item.Persistent.SetTo(
+                        rhs.Persistent
+                        .Select(r =>
+                        {
+                            return (r.DeepCopy() as IPlaced)!;
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.TemporaryTimestamp) ?? true))
+            {
+                item.TemporaryTimestamp = rhs.TemporaryTimestamp;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Temporary) ?? true))
+            {
+                errorMask?.PushIndex((int)Cell_FieldIndex.Temporary);
+                try
+                {
+                    item.Temporary.SetTo(
+                        rhs.Temporary
+                        .Select(r =>
+                        {
+                            return (r.DeepCopy() as IPlaced)!;
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.VisibleWhenDistantTimestamp) ?? true))
+            {
+                item.VisibleWhenDistantTimestamp = rhs.VisibleWhenDistantTimestamp;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.VisibleWhenDistant) ?? true))
+            {
+                errorMask?.PushIndex((int)Cell_FieldIndex.VisibleWhenDistant);
+                try
+                {
+                    item.VisibleWhenDistant.SetTo(
+                        rhs.VisibleWhenDistant
+                        .Select(r =>
+                        {
+                            return (r.DeepCopy() as IPlaced)!;
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            ICell item,
+            ICellGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         public override void DeepCopyIn(
             IFallout3MajorRecordInternal item,
             IFallout3MajorRecordGetter rhs,
@@ -1145,6 +2731,26 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public new static readonly CellBinaryWriteTranslation Instance = new();
 
+        public static void WriteEmbedded(
+            ICellGetter item,
+            MutagenWriter writer)
+        {
+            Fallout3MajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            ICellGetter item,
+            MutagenWriter writer,
+            TypedWriteParams translationParams)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                translationParams: translationParams);
+        }
+
         public static partial void CustomBinaryEndExport(
             MutagenWriter writer,
             ICellGetter obj);
@@ -1161,28 +2767,13 @@ namespace Mutagen.Bethesda.Fallout3
             ICellGetter item,
             TypedWriteParams translationParams)
         {
-            using (HeaderExport.Record(
+            PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
-                record: translationParams.ConvertToCustom(RecordTypes.CELL)))
-            {
-                try
-                {
-                    Fallout3MajorRecordBinaryWriteTranslation.WriteEmbedded(
-                        item: item,
-                        writer: writer);
-                    if (!item.IsDeleted)
-                    {
-                        MajorRecordBinaryWriteTranslation.WriteRecordTypes(
-                            item: item,
-                            writer: writer,
-                            translationParams: translationParams);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw RecordException.Enrich(ex, item);
-                }
-            }
+                item: item,
+                translationParams: translationParams,
+                type: RecordTypes.CELL,
+                writeEmbedded: Fallout3MajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
             CustomBinaryEndExportInternal(
                 writer: writer,
                 obj: item);
@@ -1228,6 +2819,39 @@ namespace Mutagen.Bethesda.Fallout3
         public new static readonly CellBinaryCreateTranslation Instance = new CellBinaryCreateTranslation();
 
         public override RecordType RecordType => RecordTypes.CELL;
+        public static void FillBinaryStructs(
+            ICellInternal item,
+            MutagenFrame frame)
+        {
+            Fallout3MajorRecordBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+        }
+
+        public static ParseResult FillBinaryRecordTypes(
+            ICellInternal item,
+            MutagenFrame frame,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            TypedParseParams translationParams = default)
+        {
+            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                default:
+                    return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
+
         public static partial void CustomBinaryEndImport(
             MutagenFrame frame,
             ICellInternal obj);
@@ -1271,6 +2895,14 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CellCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => CellCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
+        [DebuggerStepThrough]
+        IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => CellBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1351,6 +2983,29 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            PreviousParse lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            TypedParseParams translationParams = default)
+        {
+            type = translationParams.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount,
+                        translationParams: translationParams.WithNoConverter());
+            }
+        }
         #region To String
 
         public override void Print(

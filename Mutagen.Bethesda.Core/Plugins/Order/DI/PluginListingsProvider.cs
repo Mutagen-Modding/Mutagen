@@ -30,6 +30,8 @@ public sealed class PluginListingsProvider : IPluginListingsProvider
         switch (_gameReleaseContext.Release)
         {
             case GameRelease.Oblivion:
+            case GameRelease.Fallout3:
+            case GameRelease.FalloutNV:
                 return _timestampedPluginsProvider.Get();
             case GameRelease.SkyrimLE:
             case GameRelease.SkyrimSE:

@@ -15,8 +15,12 @@ public partial class RecordTypes
     public static readonly RecordType GRUP = new(0x50555247);
     public static readonly RecordType HEDR = new(0x52444548);
     public static readonly RecordType MAST = new(0x5453414D);
+    public static readonly RecordType NAME = new(0x454D414E);
     public static readonly RecordType NPC_ = new(0x5F43504E);
     public static readonly RecordType OFST = new(0x5453464F);
+    public static readonly RecordType RACE = new(0x45434152);
+    public static readonly RecordType REFR = new(0x52464552);
+    public static readonly RecordType RNAM = new(0x4D414E52);
     public static readonly RecordType SNAM = new(0x4D414E53);
     public static readonly RecordType TES4 = new(0x34534554);
     public static readonly RecordType XXXX = new(0x58585858);

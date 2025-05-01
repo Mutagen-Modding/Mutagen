@@ -646,13 +646,15 @@ public abstract class PassthroughTest
     {
         return passthroughSettings.GameRelease switch
         {
-            GameRelease.Oblivion => new OblivionPassthroughTest(passthroughSettings, GameRelease.Oblivion),
-            GameRelease.OblivionRE => new OblivionPassthroughTest(passthroughSettings, GameRelease.OblivionRE),
-            GameRelease.SkyrimLE => new SkyrimPassthroughTest(passthroughSettings, GameRelease.SkyrimLE),
-            GameRelease.SkyrimSE => new SkyrimPassthroughTest(passthroughSettings, GameRelease.SkyrimSE),
-            GameRelease.SkyrimVR => new SkyrimPassthroughTest(passthroughSettings, GameRelease.SkyrimVR),
-            GameRelease.Fallout4 => new Fallout4PassthroughTest(passthroughSettings, GameRelease.Fallout4),
-            GameRelease.Starfield => new StarfieldPassthroughTest(passthroughSettings, GameRelease.Starfield),
+            GameRelease.Oblivion => new OblivionPassthroughTest(passthroughSettings, passthroughSettings.GameRelease),
+            GameRelease.OblivionRE => new OblivionPassthroughTest(passthroughSettings, passthroughSettings.GameRelease),
+            GameRelease.SkyrimLE => new SkyrimPassthroughTest(passthroughSettings, passthroughSettings.GameRelease),
+            GameRelease.SkyrimSE => new SkyrimPassthroughTest(passthroughSettings, passthroughSettings.GameRelease),
+            GameRelease.SkyrimVR => new SkyrimPassthroughTest(passthroughSettings, passthroughSettings.GameRelease),
+            GameRelease.Fallout3 => new Fallout3PassthroughTest(passthroughSettings, passthroughSettings.GameRelease),
+            GameRelease.FalloutNV => new Fallout3PassthroughTest(passthroughSettings, passthroughSettings.GameRelease),
+            GameRelease.Fallout4 => new Fallout4PassthroughTest(passthroughSettings, passthroughSettings.GameRelease),
+            GameRelease.Starfield => new StarfieldPassthroughTest(passthroughSettings, passthroughSettings.GameRelease),
             _ => throw new NotImplementedException(),
         };
     }

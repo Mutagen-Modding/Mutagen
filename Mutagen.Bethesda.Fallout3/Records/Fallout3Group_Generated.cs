@@ -111,6 +111,8 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mutagen
         public static readonly RecordType T_RecordType;
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout3GroupCommon<T>.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => Fallout3GroupSetterCommon<T>.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -129,6 +131,8 @@ namespace Mutagen.Bethesda.Fallout3
         void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<IFormLinkIdentifier> formLinks) => this.Remove(formLinks);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);
         [DebuggerStepThrough]
@@ -212,6 +216,7 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IFallout3Group<T> :
         IAssetLinkContainer,
         IFallout3GroupGetter<T>,
+        IFormLinkContainer,
         ILoquiObjectSetter<IFallout3Group<T>>,
         IMajorRecordEnumerable
         where T : class, IFallout3MajorRecordInternal, IBinaryItem
@@ -225,6 +230,7 @@ namespace Mutagen.Bethesda.Fallout3
         ILoquiObject,
         IAssetLinkContainerGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<IFallout3GroupGetter<T>>,
         IMajorRecordGetterEnumerable
         where T : class, IFallout3MajorRecordGetter, IBinaryItem
@@ -512,6 +518,21 @@ namespace Mutagen.Bethesda.Fallout3
             ((Fallout3GroupSetterCommon<T>)((IFallout3GroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).Remove(
                 obj: obj,
                 keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove<T>(
+            this IFallout3Group<T> obj,
+            IEnumerable<IFormLinkIdentifier> keys)
+            where T : class, IFallout3MajorRecordInternal, IBinaryItem
+        {
+            foreach (var g in keys.GroupBy(x => x.Type))
+            {
+                Remove(
+                    obj: obj,
+                    keys: g.Select(x => x.FormKey),
+                    type: g.Key);
+            }
         }
 
         [DebuggerStepThrough]
@@ -846,6 +867,11 @@ namespace Mutagen.Bethesda.Fallout3
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IFallout3Group<T> obj)
         {
+            foreach (var item in obj.RecordCache.Items.WhereCastable<T, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -855,6 +881,7 @@ namespace Mutagen.Bethesda.Fallout3
             IAssetLinkCache? linkCache,
             AssetLinkQuery queryCategories)
         {
+            obj.RecordCache.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -1021,6 +1048,11 @@ namespace Mutagen.Bethesda.Fallout3
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFallout3GroupGetter<T> obj)
         {
+            foreach (var item in obj.RecordCache.Items.WhereCastable<T, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -1070,6 +1102,14 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     yield break;
                 default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout3, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
                     var assignable = type.IsAssignableFrom(typeof(T));
                     foreach (var item in obj.RecordCache.Items)
                     {
@@ -1088,6 +1128,11 @@ namespace Mutagen.Bethesda.Fallout3
         
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IFallout3GroupGetter<T> obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
+            foreach (var item in obj.RecordCache.Items.WhereCastable<T, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -1138,8 +1183,22 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            DeepCopyInCustom<T, TGetter>(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom<T, TGetter>(
+            IFallout3Group<T> item,
+            IFallout3GroupGetter<TGetter> rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+            where T : class, IFallout3MajorRecordInternal, IBinaryItem
+            where TGetter : class, IFallout3MajorRecordGetter, IBinaryItem;
         #endregion
         
         public Fallout3Group<T> DeepCopy<T, TGetter, T_TranslMask>(
@@ -1391,6 +1450,8 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout3GroupCommon<T>.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => Fallout3GroupCommon<T>.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

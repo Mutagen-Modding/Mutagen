@@ -39,17 +39,14 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Class
-    /// <summary>
-    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat, GlobalUnknown]
-    /// </summary>
-    public abstract partial class Global :
+    public partial class Race :
         Fallout3MajorRecord,
-        IEquatable<IGlobalGetter>,
-        IGlobalInternal,
-        ILoquiObjectSetter<Global>
+        IEquatable<IRaceGetter>,
+        ILoquiObjectSetter<Race>,
+        IRaceInternal
     {
         #region Ctor
-        protected Global()
+        protected Race()
         {
             CustomCtor();
         }
@@ -63,7 +60,7 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             string? name = null)
         {
-            GlobalMixIn.Print(
+            RaceMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -147,7 +144,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Global.Mask<R>();
+                var ret = new Race.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -161,16 +158,16 @@ namespace Mutagen.Bethesda.Fallout3
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(Global.Mask<bool>? printMask = null)
+            public string Print(Race.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, Global.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, Race.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(Global.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(Race.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                 }
@@ -186,7 +183,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                Global_FieldIndex enu = (Global_FieldIndex)index;
+                Race_FieldIndex enu = (Race_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -196,7 +193,7 @@ namespace Mutagen.Bethesda.Fallout3
 
             public override void SetNthException(int index, Exception ex)
             {
-                Global_FieldIndex enu = (Global_FieldIndex)index;
+                Race_FieldIndex enu = (Race_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -207,7 +204,7 @@ namespace Mutagen.Bethesda.Fallout3
 
             public override void SetNthMask(int index, object obj)
             {
-                Global_FieldIndex enu = (Global_FieldIndex)index;
+                Race_FieldIndex enu = (Race_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -293,8 +290,8 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = Global_Registration.TriggeringRecordType;
-        public Global(
+        public static readonly RecordType GrupRecordType = Race_Registration.TriggeringRecordType;
+        public Race(
             FormKey formKey,
             Fallout3Release gameRelease)
         {
@@ -302,7 +299,7 @@ namespace Mutagen.Bethesda.Fallout3
             CustomCtor();
         }
 
-        private Global(
+        private Race(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -310,14 +307,14 @@ namespace Mutagen.Bethesda.Fallout3
             CustomCtor();
         }
 
-        public Global(IFallout3Mod mod)
+        public Race(IFallout3Mod mod)
             : this(
                 mod.GetNextFormKey(),
                 mod.Fallout3Release)
         {
         }
 
-        public Global(IFallout3Mod mod, string editorID)
+        public Race(IFallout3Mod mod, string editorID)
             : this(
                 mod.GetNextFormKey(editorID),
                 mod.Fallout3Release)
@@ -327,8 +324,10 @@ namespace Mutagen.Bethesda.Fallout3
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Global>.ToString(this);
+            return MajorRecordPrinter<Race>.ToString(this);
         }
+
+        protected override Type LinkType => typeof(IRace);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -337,16 +336,16 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IGlobalGetter rhs) return false;
-            return ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IRaceGetter rhs) return false;
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IGlobalGetter? obj)
+        public bool Equals(IRaceGetter? obj)
         {
-            return ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((RaceCommon)((IRaceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -354,15 +353,41 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => GlobalBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((GlobalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((RaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
+        }
+        #region Binary Create
+        public new static Race CreateFromBinary(
+            MutagenFrame frame,
+            TypedParseParams translationParams = default)
+        {
+            var ret = new Race();
+            ((RaceSetterCommon)((IRaceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+                item: ret,
+                frame: frame,
+                translationParams: translationParams);
+            return ret;
+        }
+
+        #endregion
+
+        public static bool TryCreateFromBinary(
+            MutagenFrame frame,
+            out Race item,
+            TypedParseParams translationParams = default)
+        {
+            var startPos = frame.Position;
+            item = CreateFromBinary(
+                frame: frame,
+                translationParams: translationParams);
+            return startPos != frame.Position;
         }
         #endregion
 
@@ -370,86 +395,82 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IClearable.Clear()
         {
-            ((GlobalSetterCommon)((IGlobalGetter)this).CommonSetterInstance()!).Clear(this);
+            ((RaceSetterCommon)((IRaceGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new Global GetNew()
+        internal static new Race GetNew()
         {
-            throw new ArgumentException("New called on an abstract class.");
+            return new Race();
         }
 
     }
     #endregion
 
     #region Interface
-    /// <summary>
-    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat, GlobalUnknown]
-    /// </summary>
-    public partial interface IGlobal :
+    public partial interface IRace :
         IFallout3MajorRecordInternal,
-        IGlobalGetter,
-        ILoquiObjectSetter<IGlobalInternal>
+        ILoquiObjectSetter<IRaceInternal>,
+        IRaceGetter
     {
     }
 
-    public partial interface IGlobalInternal :
+    public partial interface IRaceInternal :
         IFallout3MajorRecordInternal,
-        IGlobal,
-        IGlobalGetter
+        IRace,
+        IRaceGetter
     {
     }
 
-    /// <summary>
-    /// Implemented by: [GlobalInt, GlobalShort, GlobalFloat, GlobalUnknown]
-    /// </summary>
-    public partial interface IGlobalGetter :
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.RACE)]
+    public partial interface IRaceGetter :
         IFallout3MajorRecordGetter,
         IBinaryItem,
-        ILoquiObject<IGlobalGetter>
+        ILoquiObject<IRaceGetter>,
+        IMapsToGetter<IRaceGetter>
     {
-        static new ILoquiRegistration StaticRegistration => Global_Registration.Instance;
+        static new ILoquiRegistration StaticRegistration => Race_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class GlobalMixIn
+    public static partial class RaceMixIn
     {
-        public static void Clear(this IGlobalInternal item)
+        public static void Clear(this IRaceInternal item)
         {
-            ((GlobalSetterCommon)((IGlobalGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((RaceSetterCommon)((IRaceGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Global.Mask<bool> GetEqualsMask(
-            this IGlobalGetter item,
-            IGlobalGetter rhs,
+        public static Race.Mask<bool> GetEqualsMask(
+            this IRaceGetter item,
+            IRaceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this IGlobalGetter item,
+            this IRaceGetter item,
             string? name = null,
-            Global.Mask<bool>? printMask = null)
+            Race.Mask<bool>? printMask = null)
         {
-            return ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).Print(
+            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this IGlobalGetter item,
+            this IRaceGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Global.Mask<bool>? printMask = null)
+            Race.Mask<bool>? printMask = null)
         {
-            ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).Print(
+            ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -457,39 +478,39 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static bool Equals(
-            this IGlobalGetter item,
-            IGlobalGetter rhs,
-            Global.TranslationMask? equalsMask = null)
+            this IRaceGetter item,
+            IRaceGetter rhs,
+            Race.TranslationMask? equalsMask = null)
         {
-            return ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).Equals(
+            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this IGlobalInternal lhs,
-            IGlobalGetter rhs,
-            out Global.ErrorMask errorMask,
-            Global.TranslationMask? copyMask = null)
+            this IRaceInternal lhs,
+            IRaceGetter rhs,
+            out Race.ErrorMask errorMask,
+            Race.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((GlobalSetterTranslationCommon)((IGlobalGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((RaceSetterTranslationCommon)((IRaceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = Global.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Race.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IGlobalInternal lhs,
-            IGlobalGetter rhs,
+            this IRaceInternal lhs,
+            IRaceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((GlobalSetterTranslationCommon)((IGlobalGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((RaceSetterTranslationCommon)((IRaceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -497,55 +518,55 @@ namespace Mutagen.Bethesda.Fallout3
                 deepCopy: false);
         }
 
-        public static Global DeepCopy(
-            this IGlobalGetter item,
-            Global.TranslationMask? copyMask = null)
+        public static Race DeepCopy(
+            this IRaceGetter item,
+            Race.TranslationMask? copyMask = null)
         {
-            return ((GlobalSetterTranslationCommon)((IGlobalGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((RaceSetterTranslationCommon)((IRaceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Global DeepCopy(
-            this IGlobalGetter item,
-            out Global.ErrorMask errorMask,
-            Global.TranslationMask? copyMask = null)
+        public static Race DeepCopy(
+            this IRaceGetter item,
+            out Race.ErrorMask errorMask,
+            Race.TranslationMask? copyMask = null)
         {
-            return ((GlobalSetterTranslationCommon)((IGlobalGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((RaceSetterTranslationCommon)((IRaceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Global DeepCopy(
-            this IGlobalGetter item,
+        public static Race DeepCopy(
+            this IRaceGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((GlobalSetterTranslationCommon)((IGlobalGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((RaceSetterTranslationCommon)((IRaceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static Global Duplicate(
-            this IGlobalGetter item,
+        public static Race Duplicate(
+            this IRaceGetter item,
             FormKey formKey,
-            Global.TranslationMask? copyMask = null)
+            Race.TranslationMask? copyMask = null)
         {
-            return ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).Duplicate(
+            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static Global Duplicate(
-            this IGlobalGetter item,
+        public static Race Duplicate(
+            this IRaceGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).Duplicate(
+            return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -555,11 +576,11 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this IGlobalInternal item,
+            this IRaceInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((GlobalSetterCommon)((IGlobalGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((RaceSetterCommon)((IRaceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -575,7 +596,7 @@ namespace Mutagen.Bethesda.Fallout3
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Field Index
-    internal enum Global_FieldIndex
+    internal enum Race_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -586,9 +607,9 @@ namespace Mutagen.Bethesda.Fallout3
     #endregion
 
     #region Registration
-    internal partial class Global_Registration : ILoquiRegistration
+    internal partial class Race_Registration : ILoquiRegistration
     {
-        public static readonly Global_Registration Instance = new Global_Registration();
+        public static readonly Race_Registration Instance = new Race_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
@@ -596,23 +617,23 @@ namespace Mutagen.Bethesda.Fallout3
 
         public const ushort FieldCount = 5;
 
-        public static readonly Type MaskType = typeof(Global.Mask<>);
+        public static readonly Type MaskType = typeof(Race.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Global.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Race.ErrorMask);
 
-        public static readonly Type ClassType = typeof(Global);
+        public static readonly Type ClassType = typeof(Race);
 
-        public static readonly Type GetterType = typeof(IGlobalGetter);
+        public static readonly Type GetterType = typeof(IRaceGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IGlobal);
+        public static readonly Type SetterType = typeof(IRace);
 
-        public static readonly Type? InternalSetterType = typeof(IGlobalInternal);
+        public static readonly Type? InternalSetterType = typeof(IRaceInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Fallout3.Global";
+        public const string FullName = "Mutagen.Bethesda.Fallout3.Race";
 
-        public const string Name = "Global";
+        public const string Name = "Race";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout3";
 
@@ -620,19 +641,14 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.GLOB;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.RACE;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.GLOB);
-            var all = RecordCollection.Factory(
-                RecordTypes.GLOB,
-                RecordTypes.FNAM);
-            return new RecordTriggerSpecs(
-                allRecordTypes: all,
-                triggeringRecordTypes: triggers);
+            var all = RecordCollection.Factory(RecordTypes.RACE);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(GlobalBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(RaceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -663,13 +679,13 @@ namespace Mutagen.Bethesda.Fallout3
     #endregion
 
     #region Common
-    internal partial class GlobalSetterCommon : Fallout3MajorRecordSetterCommon
+    internal partial class RaceSetterCommon : Fallout3MajorRecordSetterCommon
     {
-        public new static readonly GlobalSetterCommon Instance = new GlobalSetterCommon();
+        public new static readonly RaceSetterCommon Instance = new RaceSetterCommon();
 
         partial void ClearPartial();
         
-        public virtual void Clear(IGlobalInternal item)
+        public void Clear(IRaceInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -677,16 +693,16 @@ namespace Mutagen.Bethesda.Fallout3
         
         public override void Clear(IFallout3MajorRecordInternal item)
         {
-            Clear(item: (IGlobalInternal)item);
+            Clear(item: (IRaceInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IGlobalInternal)item);
+            Clear(item: (IRaceInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(IGlobal obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IRace obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
         }
@@ -695,16 +711,16 @@ namespace Mutagen.Bethesda.Fallout3
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IGlobalInternal item,
+            IRaceInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<IGlobalInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IRaceInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: GlobalBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: GlobalBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: RaceBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: RaceBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -713,7 +729,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Global)item,
+                item: (Race)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -724,7 +740,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Global)item,
+                item: (Race)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -732,17 +748,17 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         
     }
-    internal partial class GlobalCommon : Fallout3MajorRecordCommon
+    internal partial class RaceCommon : Fallout3MajorRecordCommon
     {
-        public new static readonly GlobalCommon Instance = new GlobalCommon();
+        public new static readonly RaceCommon Instance = new RaceCommon();
 
-        public Global.Mask<bool> GetEqualsMask(
-            IGlobalGetter item,
-            IGlobalGetter rhs,
+        public Race.Mask<bool> GetEqualsMask(
+            IRaceGetter item,
+            IRaceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Global.Mask<bool>(false);
-            ((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new Race.Mask<bool>(false);
+            ((RaceCommon)((IRaceGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -751,18 +767,18 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void FillEqualsMask(
-            IGlobalGetter item,
-            IGlobalGetter rhs,
-            Global.Mask<bool> ret,
+            IRaceGetter item,
+            IRaceGetter rhs,
+            Race.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            IGlobalGetter item,
+            IRaceGetter item,
             string? name = null,
-            Global.Mask<bool>? printMask = null)
+            Race.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -774,18 +790,18 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void Print(
-            IGlobalGetter item,
+            IRaceGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Global.Mask<bool>? printMask = null)
+            Race.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"Global =>");
+                sb.AppendLine($"Race =>");
             }
             else
             {
-                sb.AppendLine($"{name} (Global) =>");
+                sb.AppendLine($"{name} (Race) =>");
             }
             using (sb.Brace())
             {
@@ -797,9 +813,9 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         protected static void ToStringFields(
-            IGlobalGetter item,
+            IRaceGetter item,
             StructuredStringBuilder sb,
-            Global.Mask<bool>? printMask = null)
+            Race.Mask<bool>? printMask = null)
         {
             Fallout3MajorRecordCommon.ToStringFields(
                 item: item,
@@ -807,37 +823,37 @@ namespace Mutagen.Bethesda.Fallout3
                 printMask: printMask);
         }
         
-        public static Global_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
+        public static Race_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case Fallout3MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Global_FieldIndex)((int)index);
+                    return (Race_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.FormKey:
-                    return (Global_FieldIndex)((int)index);
+                    return (Race_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.VersionControl:
-                    return (Global_FieldIndex)((int)index);
+                    return (Race_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.EditorID:
-                    return (Global_FieldIndex)((int)index);
+                    return (Race_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.Fallout3MajorRecordFlags:
-                    return (Global_FieldIndex)((int)index);
+                    return (Race_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new Global_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Race_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Global_FieldIndex)((int)index);
+                    return (Race_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (Global_FieldIndex)((int)index);
+                    return (Race_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (Global_FieldIndex)((int)index);
+                    return (Race_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Global_FieldIndex)((int)index);
+                    return (Race_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -845,8 +861,8 @@ namespace Mutagen.Bethesda.Fallout3
         
         #region Equals and Hash
         public virtual bool Equals(
-            IGlobalGetter? lhs,
-            IGlobalGetter? rhs,
+            IRaceGetter? lhs,
+            IRaceGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
@@ -860,8 +876,8 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IGlobalGetter?)lhs,
-                rhs: rhs as IGlobalGetter,
+                lhs: (IRaceGetter?)lhs,
+                rhs: rhs as IRaceGetter,
                 equalsMask: equalsMask);
         }
         
@@ -871,12 +887,12 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (IGlobalGetter?)lhs,
-                rhs: rhs as IGlobalGetter,
+                lhs: (IRaceGetter?)lhs,
+                rhs: rhs as IRaceGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(IGlobalGetter item)
+        public virtual int GetHashCode(IRaceGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -885,12 +901,12 @@ namespace Mutagen.Bethesda.Fallout3
         
         public override int GetHashCode(IFallout3MajorRecordGetter item)
         {
-            return GetHashCode(item: (IGlobalGetter)item);
+            return GetHashCode(item: (IRaceGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IGlobalGetter)item);
+            return GetHashCode(item: (IRaceGetter)item);
         }
         
         #endregion
@@ -898,11 +914,11 @@ namespace Mutagen.Bethesda.Fallout3
         
         public override object GetNew()
         {
-            return Global.GetNew();
+            return Race.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IGlobalGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IRaceGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
@@ -912,12 +928,14 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         #region Duplicate
-        public virtual Global Duplicate(
-            IGlobalGetter item,
+        public Race Duplicate(
+            IRaceGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            throw new NotImplementedException();
+            var newRec = new Race(formKey, default(Fallout3Release));
+            newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
+            return newRec;
         }
         
         public override Fallout3MajorRecord Duplicate(
@@ -926,7 +944,7 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IGlobalGetter)item,
+                item: (IRaceGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -937,7 +955,7 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IGlobalGetter)item,
+                item: (IRaceGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -947,14 +965,14 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         
     }
-    internal partial class GlobalSetterTranslationCommon : Fallout3MajorRecordSetterTranslationCommon
+    internal partial class RaceSetterTranslationCommon : Fallout3MajorRecordSetterTranslationCommon
     {
-        public new static readonly GlobalSetterTranslationCommon Instance = new GlobalSetterTranslationCommon();
+        public new static readonly RaceSetterTranslationCommon Instance = new RaceSetterTranslationCommon();
 
         #region DeepCopyIn
-        public virtual void DeepCopyIn(
-            IGlobalInternal item,
-            IGlobalGetter rhs,
+        public void DeepCopyIn(
+            IRaceInternal item,
+            IRaceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -967,9 +985,9 @@ namespace Mutagen.Bethesda.Fallout3
                 deepCopy: deepCopy);
         }
         
-        public virtual void DeepCopyIn(
-            IGlobal item,
-            IGlobalGetter rhs,
+        public void DeepCopyIn(
+            IRace item,
+            IRaceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -989,8 +1007,8 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         partial void DeepCopyInCustom(
-            IGlobal item,
-            IGlobalGetter rhs,
+            IRace item,
+            IRaceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
@@ -1002,8 +1020,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IGlobalInternal)item,
-                rhs: (IGlobalGetter)rhs,
+                item: (IRaceInternal)item,
+                rhs: (IRaceGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1017,8 +1035,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IGlobal)item,
-                rhs: (IGlobalGetter)rhs,
+                item: (IRace)item,
+                rhs: (IRaceGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1032,8 +1050,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IGlobalInternal)item,
-                rhs: (IGlobalGetter)rhs,
+                item: (IRaceInternal)item,
+                rhs: (IRaceGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1047,8 +1065,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (IGlobal)item,
-                rhs: (IGlobalGetter)rhs,
+                item: (IRace)item,
+                rhs: (IRaceGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1056,12 +1074,12 @@ namespace Mutagen.Bethesda.Fallout3
         
         #endregion
         
-        public Global DeepCopy(
-            IGlobalGetter item,
-            Global.TranslationMask? copyMask = null)
+        public Race DeepCopy(
+            IRaceGetter item,
+            Race.TranslationMask? copyMask = null)
         {
-            Global ret = (Global)((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).GetNew();
-            ((GlobalSetterTranslationCommon)((IGlobalGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Race ret = (Race)((RaceCommon)((IRaceGetter)item).CommonInstance()!).GetNew();
+            ((RaceSetterTranslationCommon)((IRaceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1070,30 +1088,30 @@ namespace Mutagen.Bethesda.Fallout3
             return ret;
         }
         
-        public Global DeepCopy(
-            IGlobalGetter item,
-            out Global.ErrorMask errorMask,
-            Global.TranslationMask? copyMask = null)
+        public Race DeepCopy(
+            IRaceGetter item,
+            out Race.ErrorMask errorMask,
+            Race.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Global ret = (Global)((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).GetNew();
-            ((GlobalSetterTranslationCommon)((IGlobalGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Race ret = (Race)((RaceCommon)((IRaceGetter)item).CommonInstance()!).GetNew();
+            ((RaceSetterTranslationCommon)((IRaceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = Global.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Race.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public Global DeepCopy(
-            IGlobalGetter item,
+        public Race DeepCopy(
+            IRaceGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Global ret = (Global)((GlobalCommon)((IGlobalGetter)item).CommonInstance()!).GetNew();
-            ((GlobalSetterTranslationCommon)((IGlobalGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            Race ret = (Race)((RaceCommon)((IRaceGetter)item).CommonInstance()!).GetNew();
+            ((RaceSetterTranslationCommon)((IRaceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1109,21 +1127,21 @@ namespace Mutagen.Bethesda.Fallout3
 
 namespace Mutagen.Bethesda.Fallout3
 {
-    public partial class Global
+    public partial class Race
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Global_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Global_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Race_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => GlobalCommon.Instance;
+        protected override object CommonInstance() => RaceCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return GlobalSetterCommon.Instance;
+            return RaceSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => GlobalSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => RaceSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1134,45 +1152,24 @@ namespace Mutagen.Bethesda.Fallout3
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout3
 {
-    public partial class GlobalBinaryWriteTranslation :
+    public partial class RaceBinaryWriteTranslation :
         Fallout3MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly GlobalBinaryWriteTranslation Instance = new();
+        public new static readonly RaceBinaryWriteTranslation Instance = new();
 
-        public static void WriteRecordTypes(
-            IGlobalGetter item,
+        public void Write(
             MutagenWriter writer,
+            IRaceGetter item,
             TypedWriteParams translationParams)
         {
-            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+            PluginUtilityTranslation.WriteMajorRecord(
+                writer: writer,
                 item: item,
-                writer: writer,
-                translationParams: translationParams);
-            GlobalBinaryWriteTranslation.WriteBinaryTypeChar(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryTypeCharCustom(
-            MutagenWriter writer,
-            IGlobalGetter item);
-
-        public static void WriteBinaryTypeChar(
-            MutagenWriter writer,
-            IGlobalGetter item)
-        {
-            WriteBinaryTypeCharCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public virtual void Write(
-            MutagenWriter writer,
-            IGlobalGetter item,
-            TypedWriteParams translationParams)
-        {
-            throw new NotImplementedException();
+                translationParams: translationParams,
+                type: RecordTypes.RACE,
+                writeEmbedded: Fallout3MajorRecordBinaryWriteTranslation.WriteEmbedded,
+                writeRecordTypes: WriteRecordTypes);
         }
 
         public override void Write(
@@ -1181,7 +1178,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (IGlobalGetter)item,
+                item: (IRaceGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1192,7 +1189,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IGlobalGetter)item,
+                item: (IRaceGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1203,61 +1200,25 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams)
         {
             Write(
-                item: (IGlobalGetter)item,
+                item: (IRaceGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class GlobalBinaryCreateTranslation : Fallout3MajorRecordBinaryCreateTranslation
+    internal partial class RaceBinaryCreateTranslation : Fallout3MajorRecordBinaryCreateTranslation
     {
-        public new static readonly GlobalBinaryCreateTranslation Instance = new GlobalBinaryCreateTranslation();
+        public new static readonly RaceBinaryCreateTranslation Instance = new RaceBinaryCreateTranslation();
 
-        public override RecordType RecordType => throw new ArgumentException();
-        public static ParseResult FillBinaryRecordTypes(
-            IGlobalInternal item,
-            MutagenFrame frame,
-            PreviousParse lastParsed,
-            Dictionary<RecordType, int>? recordParseCount,
-            RecordType nextRecordType,
-            int contentLength,
-            TypedParseParams translationParams = default)
-        {
-            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case RecordTypeInts.FNAM:
-                {
-                    return GlobalBinaryCreateTranslation.FillBinaryTypeCharCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item,
-                        lastParsed: lastParsed);
-                }
-                default:
-                    return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        lastParsed: lastParsed,
-                        recordParseCount: recordParseCount,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        translationParams: translationParams.WithNoConverter());
-            }
-        }
-
-        public static partial ParseResult FillBinaryTypeCharCustom(
-            MutagenFrame frame,
-            IGlobalInternal item,
-            PreviousParse lastParsed);
-
+        public override RecordType RecordType => RecordTypes.RACE;
     }
 
 }
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Binary Write Mixins
-    public static class GlobalBinaryTranslationMixIn
+    public static class RaceBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1266,48 +1227,44 @@ namespace Mutagen.Bethesda.Fallout3
 }
 namespace Mutagen.Bethesda.Fallout3
 {
-    internal abstract partial class GlobalBinaryOverlay :
+    internal partial class RaceBinaryOverlay :
         Fallout3MajorRecordBinaryOverlay,
-        IGlobalGetter
+        IRaceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Global_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Global_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => Race_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => GlobalCommon.Instance;
+        protected override object CommonInstance() => RaceCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => GlobalSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => RaceSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => GlobalBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((GlobalBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((RaceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
+        protected override Type LinkType => typeof(IRace);
 
-        #region TypeChar
-        public partial ParseResult TypeCharCustomParse(
-            OverlayStream stream,
-            int offset,
-            PreviousParse lastParsed);
-        #endregion
+
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected GlobalBinaryOverlay(
+        protected RaceBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1317,44 +1274,54 @@ namespace Mutagen.Bethesda.Fallout3
             this.CustomCtor();
         }
 
-
-        public override ParseResult FillRecordType(
+        public static IRaceGetter RaceFactory(
             OverlayStream stream,
-            int finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed,
-            Dictionary<RecordType, int>? recordParseCount,
+            BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            type = translationParams.ConvertToStandard(type);
-            switch (type.TypeInt)
-            {
-                case RecordTypeInts.FNAM:
-                {
-                    return TypeCharCustomParse(
-                        stream,
-                        offset,
-                        lastParsed: lastParsed);
-                }
-                default:
-                    return base.FillRecordType(
-                        stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed,
-                        recordParseCount: recordParseCount,
-                        translationParams: translationParams.WithNoConverter());
-            }
+            stream = Decompression.DecompressStream(stream);
+            stream = ExtractRecordMemory(
+                stream: stream,
+                meta: package.MetaData.Constants,
+                memoryPair: out var memoryPair,
+                offset: out var offset,
+                finalPos: out var finalPos);
+            var ret = new RaceBinaryOverlay(
+                memoryPair: memoryPair,
+                package: package);
+            ret._package.FormVersion = ret;
+            ret.CustomFactoryEnd(
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset);
+            ret.FillSubrecordTypes(
+                majorReference: ret,
+                stream: stream,
+                finalPos: finalPos,
+                offset: offset,
+                translationParams: translationParams,
+                fill: ret.FillRecordType);
+            return ret;
         }
+
+        public static IRaceGetter RaceFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            TypedParseParams translationParams = default)
+        {
+            return RaceFactory(
+                stream: new OverlayStream(slice, package),
+                package: package,
+                translationParams: translationParams);
+        }
+
         #region To String
 
         public override void Print(
             StructuredStringBuilder sb,
             string? name = null)
         {
-            GlobalMixIn.Print(
+            RaceMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1364,7 +1331,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Global>.ToString(this);
+            return MajorRecordPrinter<Race>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1374,16 +1341,16 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 return formLink.Equals(this);
             }
-            if (obj is not IGlobalGetter rhs) return false;
-            return ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IRaceGetter rhs) return false;
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(IGlobalGetter? obj)
+        public bool Equals(IRaceGetter? obj)
         {
-            return ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((GlobalCommon)((IGlobalGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((RaceCommon)((IRaceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

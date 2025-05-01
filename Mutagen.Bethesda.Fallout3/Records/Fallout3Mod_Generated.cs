@@ -63,6 +63,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             _Globals_Object = new Fallout3Group<Global>(this);
             _Npcs_Object = new Fallout3Group<Npc>(this);
+            _Races_Object = new Fallout3Group<Race>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -88,6 +89,13 @@ namespace Mutagen.Bethesda.Fallout3
         public Fallout3Group<Npc> Npcs => _Npcs_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<INpcGetter> IFallout3ModGetter.Npcs => _Npcs_Object;
+        #endregion
+        #region Races
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Race> _Races_Object;
+        public Fallout3Group<Race> Races => _Races_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IRaceGetter> IFallout3ModGetter.Races => _Races_Object;
         #endregion
 
         #region To String
@@ -131,16 +139,19 @@ namespace Mutagen.Bethesda.Fallout3
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(initialValue, new Fallout3ModHeader.Mask<TItem>(initialValue));
                 this.Globals = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Npcs = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Races = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
                 TItem ModHeader,
                 TItem Globals,
-                TItem Npcs)
+                TItem Npcs,
+                TItem Races)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.Globals = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Globals, new Fallout3Group.Mask<TItem>(Globals));
                 this.Npcs = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Npcs, new Fallout3Group.Mask<TItem>(Npcs));
+                this.Races = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Races, new Fallout3Group.Mask<TItem>(Races));
             }
 
             #pragma warning disable CS8618
@@ -155,6 +166,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>? ModHeader { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Globals { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Npcs { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Races { get; set; }
             #endregion
 
             #region Equals
@@ -170,6 +182,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.ModHeader, rhs.ModHeader)) return false;
                 if (!object.Equals(this.Globals, rhs.Globals)) return false;
                 if (!object.Equals(this.Npcs, rhs.Npcs)) return false;
+                if (!object.Equals(this.Races, rhs.Races)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -178,6 +191,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.ModHeader);
                 hash.Add(this.Globals);
                 hash.Add(this.Npcs);
+                hash.Add(this.Races);
                 return hash.ToHashCode();
             }
 
@@ -201,6 +215,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Npcs.Overall)) return false;
                     if (this.Npcs.Specific != null && !this.Npcs.Specific.All(eval)) return false;
                 }
+                if (Races != null)
+                {
+                    if (!eval(this.Races.Overall)) return false;
+                    if (this.Races.Specific != null && !this.Races.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -223,6 +242,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Npcs.Overall)) return true;
                     if (this.Npcs.Specific != null && this.Npcs.Specific.Any(eval)) return true;
                 }
+                if (Races != null)
+                {
+                    if (eval(this.Races.Overall)) return true;
+                    if (this.Races.Specific != null && this.Races.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -240,6 +264,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.ModHeader = this.ModHeader == null ? null : new MaskItem<R, Fallout3ModHeader.Mask<R>?>(eval(this.ModHeader.Overall), this.ModHeader.Specific?.Translate(eval));
                 obj.Globals = this.Globals == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Globals.Overall), this.Globals.Specific?.Translate(eval));
                 obj.Npcs = this.Npcs == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Npcs.Overall), this.Npcs.Specific?.Translate(eval));
+                obj.Races = this.Races == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Races.Overall), this.Races.Specific?.Translate(eval));
             }
             #endregion
 
@@ -270,6 +295,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Npcs?.Print(sb);
                     }
+                    if (printMask?.Races?.Overall ?? true)
+                    {
+                        Races?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -297,6 +326,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3ModHeader.ErrorMask?>? ModHeader;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Global.ErrorMask>?>? Globals;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Npc.ErrorMask>?>? Npcs;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Race.ErrorMask>?>? Races;
             #endregion
 
             #region IErrorMask
@@ -311,6 +341,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return Globals;
                     case Fallout3Mod_FieldIndex.Npcs:
                         return Npcs;
+                    case Fallout3Mod_FieldIndex.Races:
+                        return Races;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -329,6 +361,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.Npcs:
                         this.Npcs = new MaskItem<Exception?, Fallout3Group.ErrorMask<Npc.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Races:
+                        this.Races = new MaskItem<Exception?, Fallout3Group.ErrorMask<Race.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -349,6 +384,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.Npcs:
                         this.Npcs = (MaskItem<Exception?, Fallout3Group.ErrorMask<Npc.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.Races:
+                        this.Races = (MaskItem<Exception?, Fallout3Group.ErrorMask<Race.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -360,6 +398,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (ModHeader != null) return true;
                 if (Globals != null) return true;
                 if (Npcs != null) return true;
+                if (Races != null) return true;
                 return false;
             }
             #endregion
@@ -388,6 +427,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ModHeader?.Print(sb);
                 Globals?.Print(sb);
                 Npcs?.Print(sb);
+                Races?.Print(sb);
             }
             #endregion
 
@@ -399,6 +439,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.ModHeader = this.ModHeader.Combine(rhs.ModHeader, (l, r) => l.Combine(r));
                 ret.Globals = this.Globals.Combine(rhs.Globals, (l, r) => l.Combine(r));
                 ret.Npcs = this.Npcs.Combine(rhs.Npcs, (l, r) => l.Combine(r));
+                ret.Races = this.Races.Combine(rhs.Races, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -425,6 +466,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3ModHeader.TranslationMask? ModHeader;
             public Fallout3Group.TranslationMask<Global.TranslationMask>? Globals;
             public Fallout3Group.TranslationMask<Npc.TranslationMask>? Npcs;
+            public Fallout3Group.TranslationMask<Race.TranslationMask>? Races;
             #endregion
 
             #region Ctors
@@ -452,6 +494,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((ModHeader != null ? ModHeader.OnOverall : DefaultOn, ModHeader?.GetCrystal()));
                 ret.Add((Globals != null ? Globals.OnOverall : DefaultOn, Globals?.GetCrystal()));
                 ret.Add((Npcs != null ? Npcs.OnOverall : DefaultOn, Npcs?.GetCrystal()));
+                ret.Add((Races != null ? Races.OnOverall : DefaultOn, Races?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -463,21 +506,21 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Mutagen
-        public override GameRelease GameRelease => GameRelease.Fallout3;
+        public Fallout3Release Fallout3Release { get; }
+        public override GameRelease GameRelease => Fallout3Release.ToGameRelease();
         IGroupGetter<T>? IModGetter.TryGetTopLevelGroup<T>() => this.TryGetTopLevelGroup<T>();
         IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
         IGroup<T>? IMod.TryGetTopLevelGroup<T>() => this.TryGetTopLevelGroup<T>();
         IGroup? IMod.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
-        void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
-        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem, parallelParam: parallelWriteParams);
+        void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinary(Stream stream, BinaryWriteParameters? param) => this.WriteToBinary(stream, importMask: null, param: param);
-        void IModGetter.WriteToBinaryParallel(Stream stream, BinaryWriteParameters? param, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(stream, param, parallelParam: parallelWriteParams);
+        uint IModGetter.GetRecordCount() => this.GetRecordCount();
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => Fallout3ModMixIn.GetEqualsMask(this, (IFallout3ModGetter)rhs, include);
-        public override bool CanUseLocalization => true;
+        public override bool CanUseLocalization => false;
         public override bool UsingLocalization
         {
-            get => this.ModHeader.Flags.HasFlag(Fallout3ModHeader.HeaderFlag.Localized);
-            set => this.ModHeader.Flags = this.ModHeader.Flags.SetFlag(Fallout3ModHeader.HeaderFlag.Localized, value);
+            get => false;
+            set => throw new ArgumentException("Tried to set localization flag on unsupported mod type");
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IList<MasterReference> IMod.MasterReferences => this.ModHeader.MasterReferences;
@@ -492,10 +535,12 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         uint IModGetter.NextFormID => this.ModHeader.Stats.NextFormID;
         /// <param name="modKey">ModKey to assign to the mod</param>
+        /// <param name="release">Release to assign to the mod</param>
         /// <param name="headerVersion">Header version to assign to the mod.  Default value is latest header version the game supports</param>
         /// <param name="forceUseLowerFormIDRanges">Default value of false, which will not use lower FormID ranges from 1-X.  A null value will refer to header version + game release to determine if it should be allowed.  True will force it to always use FormIDs 1-X</param>
         public Fallout3Mod(
             ModKey modKey,
+            Fallout3Release release,
             float? headerVersion = null,
             bool? forceUseLowerFormIDRanges = false)
             : base(modKey)
@@ -504,9 +549,11 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.ModHeader.Stats.Version = headerVersion.Value;
             }
+            this.Fallout3Release = release;
             this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID(forceUseLowerFormIDRanges: forceUseLowerFormIDRanges);
             _Globals_Object = new Fallout3Group<Global>(this);
             _Npcs_Object = new Fallout3Group<Npc>(this);
+            _Races_Object = new Fallout3Group<Race>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -521,23 +568,16 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.Npcs.RecordCache.Set(rhsMod.Npcs.RecordCache.Items);
             }
+            if (mask?.Races ?? true)
+            {
+                this.Races.RecordCache.Set(rhsMod.Races.RecordCache.Items);
+            }
         }
 
         public override void SyncRecordCount()
         {
-            this.ModHeader.Stats.NumRecords = GetRecordCount();
+            this.ModHeader.Stats.NumRecords = this.GetRecordCount();
         }
-
-        public uint GetRecordCount()
-        {
-            uint count = (uint)this.EnumerateMajorRecords().Count();
-            count += Globals.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Npcs.RecordCache.Count > 0 ? 1 : default(uint);
-            GetCustomRecordCount((customCount) => count += customCount);
-            return count;
-        }
-
-        partial void GetCustomRecordCount(Action<uint> setter);
 
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout3ModCommon.Instance.EnumerateFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => Fallout3ModSetterCommon.Instance.RemapLinks(this, mapping);
@@ -559,6 +599,8 @@ namespace Mutagen.Bethesda.Fallout3
         void IMajorRecordEnumerable.Remove(HashSet<FormKey> formKeys) => this.Remove(formKeys);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(IEnumerable<FormKey> formKeys) => this.Remove(formKeys);
+        [DebuggerStepThrough]
+        void IMajorRecordEnumerable.Remove(IEnumerable<IFormLinkIdentifier> formLinks) => this.Remove(formLinks);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey, Type type, bool throwIfUnknown) => this.Remove(formKey, type, throwIfUnknown);
         [DebuggerStepThrough]
@@ -595,127 +637,119 @@ namespace Mutagen.Bethesda.Fallout3
         #region Binary Create
         public static Fallout3Mod CreateFromBinary(
             ModPath path,
-            GroupMask? importMask = null,
-            StringsReadParameters? stringsParam = null,
-            bool parallel = true,
-            IFileSystem? fileSystem = null)
+            Fallout3Release release,
+            BinaryReadParameters? param = null,
+            GroupMask? importMask = null)
         {
             try
             {
-                using (var reader = new MutagenBinaryReadStream(path, GameRelease.Fallout3, fileSystem: fileSystem))
+                var gameRelease = release.ToGameRelease();
+                param ??= BinaryReadParameters.Default;
+                var fileSystem = param.FileSystem.GetOrDefault();
+                var meta = ParsingMeta.Factory(param, gameRelease, path);
+                using (var reader = new MutagenBinaryReadStream(path, meta))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout3, fileSystem: fileSystem));
-                    frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ModKey = path.ModKey;
-                    frame.MetaData.Absorb(stringsParam);
-                    if (reader.Remaining < 12)
-                    {
-                        throw new ArgumentException("File stream was too short to parse flags");
-                    }
-                    var flags = reader.GetInt32(offset: 8);
-                    if (Enums.HasFlag(flags, (int)Fallout3ModHeader.HeaderFlag.Localized))
-                    {
-                        frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(GameRelease.Fallout3, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
-                    }
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
                     return CreateFromBinary(
+                        release: release,
                         importMask: importMask,
                         frame: frame);
                 }
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, path.ModKey);
+                RecordException.EnrichAndThrow(ex, path.ModKey);
+                throw;
             }
         }
 
         public static Fallout3Mod CreateFromBinary(
             ModPath path,
+            Fallout3Release release,
             ErrorMaskBuilder? errorMask,
-            GroupMask? importMask = null,
-            StringsReadParameters? stringsParam = null,
-            bool parallel = true,
-            IFileSystem? fileSystem = null)
+            BinaryReadParameters? param = null,
+            GroupMask? importMask = null)
         {
             try
             {
-                using (var reader = new MutagenBinaryReadStream(path, GameRelease.Fallout3, fileSystem: fileSystem))
+                var gameRelease = release.ToGameRelease();
+                param ??= BinaryReadParameters.Default;
+                var fileSystem = param.FileSystem.GetOrDefault();
+                var meta = ParsingMeta.Factory(param, gameRelease, path);
+                using (var reader = new MutagenBinaryReadStream(path, meta))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout3, fileSystem: fileSystem));
-                    frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ModKey = path.ModKey;
-                    frame.MetaData.Absorb(stringsParam);
-                    if (reader.Remaining < 12)
-                    {
-                        throw new ArgumentException("File stream was too short to parse flags");
-                    }
-                    var flags = reader.GetInt32(offset: 8);
-                    if (Enums.HasFlag(flags, (int)Fallout3ModHeader.HeaderFlag.Localized))
-                    {
-                        frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(GameRelease.Fallout3, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
-                    }
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
                     return CreateFromBinary(
+                        release: release,
                         importMask: importMask,
                         frame: frame);
                 }
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, path.ModKey);
+                RecordException.EnrichAndThrow(ex, path.ModKey);
+                throw;
             }
         }
 
         public static Fallout3Mod CreateFromBinary(
             Stream stream,
             ModKey modKey,
+            Fallout3Release release,
             RecordTypeInfoCacheReader infoCache,
-            GroupMask? importMask = null,
-            bool parallel = true)
+            BinaryReadParameters? param = null,
+            GroupMask? importMask = null)
         {
             try
             {
-                using (var reader = new MutagenBinaryReadStream(stream, modKey, GameRelease.Fallout3))
+                param ??= BinaryReadParameters.Default;
+                var meta = ParsingMeta.Factory(param, GameRelease.Oblivion, modKey, stream);
+                using (var reader = new MutagenBinaryReadStream(stream, meta))
                 {
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
-                    frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ModKey = modKey;
                     return CreateFromBinary(
+                        release: release,
                         importMask: importMask,
                         frame: frame);
                 }
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, modKey);
+                RecordException.EnrichAndThrow(ex, modKey);
+                throw;
             }
         }
 
         public static Fallout3Mod CreateFromBinary(
             Stream stream,
             ModKey modKey,
+            Fallout3Release release,
             RecordTypeInfoCacheReader infoCache,
             ErrorMaskBuilder? errorMask,
-            GroupMask? importMask = null,
-            bool parallel = true)
+            BinaryReadParameters? param = null,
+            GroupMask? importMask = null)
         {
             try
             {
-                using (var reader = new MutagenBinaryReadStream(stream, modKey, GameRelease.Fallout3))
+                param ??= BinaryReadParameters.Default;
+                var meta = ParsingMeta.Factory(param, GameRelease.Oblivion, modKey, stream);
+                using (var reader = new MutagenBinaryReadStream(stream, meta))
                 {
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
-                    frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ModKey = modKey;
                     return CreateFromBinary(
+                        release: release,
                         importMask: importMask,
                         frame: frame);
                 }
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, modKey);
+                RecordException.EnrichAndThrow(ex, modKey);
+                throw;
             }
         }
 
@@ -723,41 +757,51 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static IFallout3ModDisposableGetter CreateFromBinaryOverlay(
             ModPath path,
-            StringsReadParameters? stringsParam = null,
-            IFileSystem? fileSystem = null)
+            Fallout3Release release,
+            BinaryReadParameters? param = null)
         {
             return Fallout3ModBinaryOverlay.Fallout3ModFactory(
                 path: path,
-                stringsParam: stringsParam,
-                fileSystem: fileSystem);
+                release: release,
+                param: param);
         }
 
         public static IFallout3ModDisposableGetter CreateFromBinaryOverlay(
             Stream stream,
-            ModKey modKey)
+            Fallout3Release release,
+            ModKey modKey,
+            BinaryReadParameters? param = null)
         {
+            param ??= BinaryReadParameters.Default;
+            var meta = ParsingMeta.Factory(param, release.ToGameRelease(), modKey, stream);
             return Fallout3ModBinaryOverlay.Fallout3ModFactory(
-                stream: new MutagenBinaryReadStream(stream, modKey, GameRelease.Fallout3),
+                stream: new MutagenBinaryReadStream(stream, meta),
                 modKey: modKey,
+                release: release,
                 shouldDispose: false);
         }
 
         public static Fallout3Mod CreateFromBinary(
             MutagenFrame frame,
+            Fallout3Release release,
             GroupMask? importMask = null)
         {
             try
             {
-                var ret = new Fallout3Mod(modKey: frame.MetaData.ModKey);
+                var ret = new Fallout3Mod(
+                    modKey: frame.MetaData.ModKey,
+                    release: release);
                 ((Fallout3ModSetterCommon)((IFallout3ModGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                     item: ret,
                     frame: frame,
+                    release: release,
                     importMask: importMask);
                 return ret;
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, frame.MetaData.ModKey);
+                RecordException.EnrichAndThrow(ex, frame.MetaData.ModKey);
+                throw;
             }
         }
 
@@ -783,6 +827,7 @@ namespace Mutagen.Bethesda.Fallout3
         IAssetLinkContainer,
         IContextMod<IFallout3Mod, IFallout3ModGetter>,
         IFallout3ModGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IFallout3Mod>,
         IMajorRecordEnumerable,
         IMod
@@ -790,12 +835,14 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3ModHeader ModHeader { get; }
         new Fallout3Group<Global> Globals { get; }
         new Fallout3Group<Npc> Npcs { get; }
+        new Fallout3Group<Race> Races { get; }
     }
 
     public partial interface IFallout3ModGetter :
         ILoquiObject,
         IAssetLinkContainerGetter,
         IContextGetterMod<IFallout3Mod, IFallout3ModGetter>,
+        IFormLinkContainerGetter,
         ILoquiObject<IFallout3ModGetter>,
         IMajorRecordContextEnumerable<IFallout3Mod, IFallout3ModGetter>,
         IMajorRecordGetterEnumerable,
@@ -811,6 +858,11 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3ModHeaderGetter ModHeader { get; }
         IFallout3GroupGetter<IGlobalGetter> Globals { get; }
         IFallout3GroupGetter<INpcGetter> Npcs { get; }
+        IFallout3GroupGetter<IRaceGetter> Races { get; }
+
+        #region Mutagen
+        Fallout3Release Fallout3Release { get; }
+        #endregion
 
     }
 
@@ -991,54 +1043,15 @@ namespace Mutagen.Bethesda.Fallout3
                 type: type);
         }
 
-        public static void WriteToBinaryParallel(
-            this IFallout3ModGetter item,
-            Stream stream,
-            BinaryWriteParameters? param = null,
-            ParallelWriteParameters? parallelParam = null)
+        public static uint GetRecordCount(this IFallout3ModGetter item)
         {
-            Fallout3ModCommon.WriteParallel(
-                item: item,
-                stream: stream,
-                parallelParam: parallelParam ?? ParallelWriteParameters.Default,
-                param: param ?? BinaryWriteParameters.Default,
-                modKey: item.ModKey);
-        }
-
-        public static void WriteToBinaryParallel(
-            this IFallout3ModGetter item,
-            string path,
-            BinaryWriteParameters? param = null,
-            ParallelWriteParameters? parallelParam = null,
-            IFileSystem? fileSystem = null)
-        {
-            fileSystem = fileSystem.GetOrDefault();
-            param ??= BinaryWriteParameters.Default;
-            parallelParam ??= ParallelWriteParameters.Default;
-            var modKey = param.RunMasterMatch(
-                mod: item,
-                path: path);
-            param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, item.GameRelease.ToCategory().GetLocalizedFlagIndex()!.Value) ? new StringsWriter(GameRelease.Fallout3, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncoding.Default, fileSystem: fileSystem) : null;
-            bool disposeStrings = param.StringsWriter != null;
-            using (var stream = fileSystem.FileStream.New(path, FileMode.Create, FileAccess.Write))
-            {
-                Fallout3ModCommon.WriteParallel(
-                    item: item,
-                    stream: stream,
-                    parallelParam: parallelParam,
-                    param: param,
-                    modKey: modKey);
-            }
-            if (disposeStrings)
-            {
-                param.StringsWriter?.Dispose();
-            }
+            return ((Fallout3ModCommon)((IFallout3ModGetter)item).CommonInstance()!).GetRecordCount(item: item);
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(this IFallout3ModGetter obj)
         {
-            return ((Fallout3ModCommon)((IFallout3ModGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => throw RecordException.Enrich(e, obj.ModKey));
+            return ((Fallout3ModCommon)((IFallout3ModGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -1052,7 +1065,7 @@ namespace Mutagen.Bethesda.Fallout3
                 type: typeof(TMajor),
                 throwIfUnknown: throwIfUnknown)
                 .Select(m => (TMajor)m)
-                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
+                .Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -1066,13 +1079,13 @@ namespace Mutagen.Bethesda.Fallout3
                 type: type,
                 throwIfUnknown: throwIfUnknown)
                 .Select(m => (IMajorRecordGetter)m)
-                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
+                .Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecord> EnumerateMajorRecords(this IFallout3Mod obj)
         {
-            return ((Fallout3ModSetterCommon)((IFallout3ModGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => throw RecordException.Enrich(e, obj.ModKey));
+            return ((Fallout3ModSetterCommon)((IFallout3ModGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -1084,7 +1097,7 @@ namespace Mutagen.Bethesda.Fallout3
                 type: typeof(TMajor),
                 throwIfUnknown: true)
                 .Select(m => (TMajor)m)
-                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
+                .Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -1098,7 +1111,7 @@ namespace Mutagen.Bethesda.Fallout3
                 type: type,
                 throwIfUnknown: throwIfUnknown)
                 .Select(m => (IMajorRecord)m)
-                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
+                .Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -1121,6 +1134,20 @@ namespace Mutagen.Bethesda.Fallout3
             ((Fallout3ModSetterCommon)((IFallout3ModGetter)obj).CommonSetterInstance()!).Remove(
                 obj: obj,
                 keys: keys.ToHashSet());
+        }
+
+        [DebuggerStepThrough]
+        public static void Remove(
+            this IFallout3Mod obj,
+            IEnumerable<IFormLinkIdentifier> keys)
+        {
+            foreach (var g in keys.GroupBy(x => x.Type))
+            {
+                Remove(
+                    obj: obj,
+                    keys: g.Select(x => x.FormKey),
+                    type: g.Key);
+            }
         }
 
         [DebuggerStepThrough]
@@ -1265,7 +1292,7 @@ namespace Mutagen.Bethesda.Fallout3
                 type: typeof(TGetter),
                 throwIfUnknown: throwIfUnknown)
                 .Select(m => m.AsType<IFallout3Mod, IFallout3ModGetter, IMajorRecordQueryable, IMajorRecordQueryableGetter, TSetter, TGetter>())
-                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
+                .Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -1273,7 +1300,8 @@ namespace Mutagen.Bethesda.Fallout3
         {
             return ((Fallout3ModCommon)((IFallout3ModGetter)obj).CommonInstance()!).EnumerateMajorRecordContexts(
                 obj: obj,
-                linkCache: null!);
+                linkCache: null!)
+                .Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -1287,7 +1315,8 @@ namespace Mutagen.Bethesda.Fallout3
                 obj: obj,
                 linkCache: linkCache,
                 type: type,
-                throwIfUnknown: throwIfUnknown);
+                throwIfUnknown: throwIfUnknown)
+                .Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey));
         }
 
         #endregion
@@ -1296,49 +1325,44 @@ namespace Mutagen.Bethesda.Fallout3
         public static void CopyInFromBinary(
             this IFallout3Mod item,
             MutagenFrame frame,
+            Fallout3Release release,
             GroupMask? importMask = null)
         {
             ((Fallout3ModSetterCommon)((IFallout3ModGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
+                release: release,
                 importMask: importMask);
         }
 
         public static void CopyInFromBinary(
             this IFallout3Mod item,
             ModPath path,
-            GroupMask? importMask = null,
-            StringsReadParameters? stringsParam = null,
-            bool parallel = true,
-            IFileSystem? fileSystem = null)
+            Fallout3Release release,
+            BinaryReadParameters? param = null,
+            GroupMask? importMask = null)
         {
             try
             {
-                using (var reader = new MutagenBinaryReadStream(path, GameRelease.Fallout3, fileSystem: fileSystem))
+                var gameRelease = release.ToGameRelease();
+                param ??= BinaryReadParameters.Default;
+                var fileSystem = param.FileSystem.GetOrDefault();
+                var meta = ParsingMeta.Factory(param, gameRelease, path);
+                using (var reader = new MutagenBinaryReadStream(path, meta))
                 {
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout3, fileSystem: fileSystem));
-                    frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ModKey = path.ModKey;
-                    frame.MetaData.Absorb(stringsParam);
-                    if (reader.Remaining < 12)
-                    {
-                        throw new ArgumentException("File stream was too short to parse flags");
-                    }
-                    var flags = reader.GetInt32(offset: 8);
-                    if (Enums.HasFlag(flags, (int)Fallout3ModHeader.HeaderFlag.Localized))
-                    {
-                        frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(GameRelease.Fallout3, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
-                    }
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
                     CopyInFromBinary(
                         item: item,
+                        release: release,
                         importMask: importMask,
                         frame: frame);
                 }
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, path.ModKey);
+                RecordException.EnrichAndThrow(ex, path.ModKey);
+                throw;
             }
         }
 
@@ -1346,27 +1370,30 @@ namespace Mutagen.Bethesda.Fallout3
             this IFallout3Mod item,
             Stream stream,
             ModKey modKey,
+            Fallout3Release release,
             RecordTypeInfoCacheReader infoCache,
-            GroupMask? importMask = null,
-            bool parallel = true)
+            BinaryReadParameters? param = null,
+            GroupMask? importMask = null)
         {
             try
             {
-                using (var reader = new MutagenBinaryReadStream(stream, modKey, GameRelease.Fallout3))
+                param ??= BinaryReadParameters.Default;
+                var meta = ParsingMeta.Factory(param, GameRelease.Oblivion, modKey, stream);
+                using (var reader = new MutagenBinaryReadStream(stream, meta))
                 {
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
-                    frame.MetaData.Parallel = parallel;
-                    frame.MetaData.ModKey = modKey;
                     CopyInFromBinary(
                         item: item,
+                        release: release,
                         importMask: importMask,
                         frame: frame);
                 }
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, modKey);
+                RecordException.EnrichAndThrow(ex, modKey);
+                throw;
             }
         }
 
@@ -1385,6 +1412,7 @@ namespace Mutagen.Bethesda.Fallout3
         ModHeader = 0,
         Globals = 1,
         Npcs = 2,
+        Races = 3,
     }
     #endregion
 
@@ -1395,9 +1423,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -1466,11 +1494,13 @@ namespace Mutagen.Bethesda.Fallout3
             ClearPartial();
             item.Globals.Clear();
             item.Npcs.Clear();
+            item.Races.Clear();
         }
         
         #region Mutagen
         public void RemapLinks(IFallout3Mod obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.Npcs.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -1507,6 +1537,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             obj.Globals.Remove(keys);
             obj.Npcs.Remove(keys);
+            obj.Races.Remove(keys);
         }
         
         public void Remove(
@@ -1558,6 +1589,14 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
+                case "Race":
+                case "IRaceGetter":
+                case "IRace":
+                case "IRaceInternal":
+                    obj.Races.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 default:
                     if (throwIfUnknown)
                     {
@@ -1589,6 +1628,7 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual void CopyInFromBinary(
             IFallout3Mod item,
             MutagenFrame frame,
+            Fallout3Release release,
             GroupMask? importMask = null)
         {
             PluginUtilityTranslation.ModParse(
@@ -1628,6 +1668,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.ModHeader = MaskItemExt.Factory(item.ModHeader.GetEqualsMask(rhs.ModHeader, include), include);
             ret.Globals = MaskItemExt.Factory(item.Globals.GetEqualsMask(rhs.Globals, include), include);
             ret.Npcs = MaskItemExt.Factory(item.Npcs.GetEqualsMask(rhs.Npcs, include), include);
+            ret.Races = MaskItemExt.Factory(item.Races.GetEqualsMask(rhs.Races, include), include);
         }
         
         public string Print(
@@ -1684,6 +1725,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.Npcs?.Print(sb, "Npcs");
             }
+            if (printMask?.Races?.Overall ?? true)
+            {
+                item.Races?.Print(sb, "Races");
+            }
         }
         
         #region Equals and Hash
@@ -1717,6 +1762,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isNpcsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Races) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Races, rhs.Races, out var lhsRaces, out var rhsRaces, out var isRacesEqual))
+                {
+                    if (!object.Equals(lhsRaces, rhsRaces)) return false;
+                }
+                else if (!isRacesEqual) return false;
+            }
             return true;
         }
         
@@ -1726,6 +1779,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.ModHeader);
             hash.Add(item.Globals);
             hash.Add(item.Npcs);
+            hash.Add(item.Races);
             return hash.ToHashCode();
         }
         
@@ -1754,6 +1808,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "INpc":
                 case "INpcInternal":
                     return obj.Npcs;
+                case "Race":
+                case "IRaceGetter":
+                case "IRace":
+                case "IRaceInternal":
+                    return obj.Races;
                 default:
                     return null;
             }
@@ -1761,32 +1820,25 @@ namespace Mutagen.Bethesda.Fallout3
         
         public static void WriteParallel(
             IFallout3ModGetter item,
-            Stream stream,
+            MutagenWriter writer,
             BinaryWriteParameters param,
-            ParallelWriteParameters parallelParam,
             ModKey modKey)
         {
-            var bundle = new WritingBundle(GameConstants.Fallout3)
-            {
-                StringsWriter = param.StringsWriter,
-                TargetLanguageOverride = param.TargetLanguageOverride,
-                Encodings = param.Encodings ?? GameConstants.Fallout3.Encodings,
-            };
-            var writer = new MutagenWriter(stream, bundle);
             ModHeaderWriteLogic.WriteHeader(
                 param: param,
                 writer: writer,
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[2];
+            Stream[] outputStreams = new Stream[3];
             List<Action> toDo = new List<Action>();
-            toDo.Add(() => WriteGroupParallel(item.Globals, 0, outputStreams, bundle, parallelParam));
-            toDo.Add(() => WriteGroupParallel(item.Npcs, 1, outputStreams, bundle, parallelParam));
-            Parallel.Invoke(parallelParam.ParallelOptions, toDo.ToArray());
+            toDo.Add(() => WriteGroupParallel(item.Globals, 0, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Npcs, 1, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Races, 2, outputStreams, writer.MetaData, param.Parallel));
+            Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
-                outputStreams.NotNull(),
-                stream);
+                outputStreams.WhereNotNull(),
+                writer.BaseStream);
         }
         
         public static void WriteGroupParallel<T>(
@@ -1825,8 +1877,24 @@ namespace Mutagen.Bethesda.Fallout3
             streamDepositArray[targetIndex] = new CompositeReadStream(subStreams, resetPositions: true);
         }
         
+        public uint GetRecordCount(IFallout3ModGetter item)
+        {
+            uint count = (uint)item.EnumerateMajorRecords().Count();
+            count += item.Globals.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Npcs.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Races.RecordCache.Count > 0 ? 1 : default(uint);
+            GetCustomRecordCount(item, (customCount) => count += customCount);
+            return count;
+        }
+        
+        partial void GetCustomRecordCount(IFallout3ModGetter item, Action<uint> setter);
+        
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFallout3ModGetter obj)
         {
+            foreach (var item in obj.Npcs.EnumerateFormLinks())
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -1837,6 +1905,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Npcs.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Races.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -1893,7 +1965,24 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "Race":
+                case "IRaceGetter":
+                case "IRace":
+                case "IRaceInternal":
+                    foreach (var item in obj.Races.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout3, obj, type, out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
                     if (throwIfUnknown)
                     {
                         throw new ArgumentException($"Unknown major record type: {type}");
@@ -1924,6 +2013,15 @@ namespace Mutagen.Bethesda.Fallout3
                 modKey: obj.ModKey,
                 group: (m) => m.Npcs,
                 groupGetter: (m) => m.Npcs))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Race, IRaceGetter>(
+                srcGroup: obj.Races,
+                type: typeof(IRaceGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Races,
+                groupGetter: (m) => m.Races))
             {
                 yield return item;
             }
@@ -1986,7 +2084,34 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "Race":
+                case "IRaceGetter":
+                case "IRace":
+                case "IRaceInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Race, IRaceGetter>(
+                        srcGroup: obj.Races,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Races,
+                        groupGetter: (m) => m.Races))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
+                    if (InterfaceEnumerationHelper.TryEnumerateInterfaceContextsFor<IFallout3ModGetter, IFallout3Mod, IFallout3ModGetter>(
+                        GameCategory.Fallout3,
+                        obj,
+                        type,
+                        linkCache,
+                        out var linkInterfaces))
+                    {
+                        foreach (var item in linkInterfaces)
+                        {
+                            yield return item;
+                        }
+                        yield break;
+                    }
                     if (throwIfUnknown)
                     {
                         throw new ArgumentException($"Unknown major record type: {type}");
@@ -2078,15 +2203,48 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Races) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Races);
+                try
+                {
+                    item.Races.DeepCopyIn(
+                        rhs: rhs.Races,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Races));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            DeepCopyInCustom(
+                item: item,
+                rhs: rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
         }
         
+        partial void DeepCopyInCustom(
+            IFallout3Mod item,
+            IFallout3ModGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy);
         #endregion
         
+        public partial Fallout3Mod DeepCopyGetNew(IFallout3ModGetter item);
         public Fallout3Mod DeepCopy(
             IFallout3ModGetter item,
             Fallout3Mod.TranslationMask? copyMask = null)
         {
-            Fallout3Mod ret = (Fallout3Mod)((Fallout3ModCommon)((IFallout3ModGetter)item).CommonInstance()!).GetNew();
+            var ret = DeepCopyGetNew(item);
             ((Fallout3ModSetterTranslationCommon)((IFallout3ModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
@@ -2102,7 +2260,7 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3Mod.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Fallout3Mod ret = (Fallout3Mod)((Fallout3ModCommon)((IFallout3ModGetter)item).CommonInstance()!).GetNew();
+            var ret = DeepCopyGetNew(item);
             ((Fallout3ModSetterTranslationCommon)((IFallout3ModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
@@ -2118,7 +2276,7 @@ namespace Mutagen.Bethesda.Fallout3
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Fallout3Mod ret = (Fallout3Mod)((Fallout3ModCommon)((IFallout3ModGetter)item).CommonInstance()!).GetNew();
+            var ret = DeepCopyGetNew(item);
             ((Fallout3ModSetterTranslationCommon)((IFallout3ModGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
@@ -2170,6 +2328,7 @@ namespace Mutagen.Bethesda.Fallout3
     {
         public bool Globals;
         public bool Npcs;
+        public bool Races;
         public GroupMask()
         {
         }
@@ -2177,6 +2336,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             Globals = defaultValue;
             Npcs = defaultValue;
+            Races = defaultValue;
         }
     }
 
@@ -2184,6 +2344,37 @@ namespace Mutagen.Bethesda.Fallout3
     {
     }
 
+    /// <summary>
+    /// Different game release versions a Fallout3 mod can have
+    /// </summary>
+    public enum Fallout3Release
+    {
+        Fallout3 = 11,
+        FalloutNV = 12
+    }
+
+    public static class Fallout3ReleaseExt
+    {
+        public static GameRelease ToGameRelease(this Fallout3Release release)
+        {
+            return release switch
+            {
+                Fallout3Release.Fallout3 => GameRelease.Fallout3,
+                Fallout3Release.FalloutNV => GameRelease.FalloutNV,
+                _ => throw new ArgumentException()
+            };
+        }
+
+        public static Fallout3Release ToFallout3Release(this GameRelease release)
+        {
+            return release switch
+            {
+                GameRelease.Fallout3 => Fallout3Release.Fallout3,
+                GameRelease.FalloutNV => Fallout3Release.FalloutNV,
+                _ => throw new ArgumentException()
+            };
+        }
+    }
 }
 namespace Mutagen.Bethesda.Fallout3
 {
@@ -2230,6 +2421,17 @@ namespace Mutagen.Bethesda.Fallout3
                         translationParams: translationParams);
                 }
             }
+            if (importMask?.Races ?? true)
+            {
+                var RacesItem = item.Races;
+                if (RacesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)RacesItem).BinaryWriteTranslator).Write<IRaceGetter>(
+                        item: RacesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
         }
 
         public void Write(
@@ -2239,6 +2441,16 @@ namespace Mutagen.Bethesda.Fallout3
             GroupMask? importMask = null,
             BinaryWriteParameters? param = null)
         {
+            param ??= BinaryWriteParameters.Default;
+            if (param.Parallel.MaxDegreeOfParallelism != 1)
+            {
+                Fallout3ModCommon.WriteParallel(
+                    item: item,
+                    writer: writer,
+                    param: param,
+                    modKey: modKey);
+                return;
+            }
             ModHeaderWriteLogic.WriteHeader(
                 param: param,
                 writer: writer,
@@ -2318,6 +2530,20 @@ namespace Mutagen.Bethesda.Fallout3
                     }
                     return (int)Fallout3Mod_FieldIndex.Npcs;
                 }
+                case RecordTypeInts.RACE:
+                {
+                    if (importMask?.Races ?? true)
+                    {
+                        item.Races.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Races;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -2351,20 +2577,17 @@ namespace Mutagen.Bethesda.Fallout3
             this IFallout3ModGetter item,
             FilePath path,
             BinaryWriteParameters? param = null,
-            GroupMask? importMask = null,
-            IFileSystem? fileSystem = null)
+            GroupMask? importMask = null)
         {
             param ??= BinaryWriteParameters.Default;
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            param.StringsWriter ??= Enums.HasFlag((int)item.ModHeader.Flags, (int)Fallout3ModHeader.HeaderFlag.Localized) ? new StringsWriter(GameRelease.Fallout3, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings"), MutagenEncoding.Default, fileSystem: fileSystem.GetOrDefault()) : null;
-            bool disposeStrings = param.StringsWriter != null;
-            var bundle = new WritingBundle(GameRelease.Fallout3)
+            var bundle = new WritingBundle(item.Fallout3Release.ToGameRelease())
             {
-                StringsWriter = param.StringsWriter,
                 CleanNulls = param.CleanNulls,
-                TargetLanguageOverride = param.TargetLanguageOverride
+                TargetLanguageOverride = param.TargetLanguageOverride,
+                Header = item
             };
             if (param.Encodings != null)
             {
@@ -2383,15 +2606,12 @@ namespace Mutagen.Bethesda.Fallout3
                     param: param,
                     modKey: modKey);
             }
-            using (var fs = fileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))
+            using (var fs = param.FileSystem.GetOrDefault().FileStream.New(path, FileMode.Create, FileAccess.Write))
             {
                 memStream.Position = 0;
                 memStream.CopyTo(fs);
             }
-            if (disposeStrings)
-            {
-                param.StringsWriter?.Dispose();
-            }
+            param.StringsWriter?.Dispose();
         }
 
         public static void WriteToBinary(
@@ -2403,7 +2623,7 @@ namespace Mutagen.Bethesda.Fallout3
             var modKey = item.ModKey;
             using (var writer = new MutagenWriter(
                 stream: stream,
-                new WritingBundle(GameRelease.Fallout3),
+                new WritingBundle(item.Fallout3Release.ToGameRelease()),
                 dispose: false))
             {
                 Fallout3ModBinaryWriteTranslation.Instance.Write(
@@ -2444,16 +2664,16 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public GameRelease GameRelease => GameRelease.Fallout3;
+        public Fallout3Release Fallout3Release { get; }
+        public GameRelease GameRelease => Fallout3Release.ToGameRelease();
         IGroupGetter<T>? IModGetter.TryGetTopLevelGroup<T>() => this.TryGetTopLevelGroup<T>();
         IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
-        void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
-        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem, parallelParam: parallelWriteParams);
+        void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinary(Stream stream, BinaryWriteParameters? param) => this.WriteToBinary(stream, importMask: null, param: param);
-        void IModGetter.WriteToBinaryParallel(Stream stream, BinaryWriteParameters? param, ParallelWriteParameters? parallelWriteParams) => this.WriteToBinaryParallel(stream, param, parallelParam: parallelWriteParams);
+        uint IModGetter.GetRecordCount() => this.GetRecordCount();
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
-        public bool CanUseLocalization => true;
-        public bool UsingLocalization => this.ModHeader.Flags.HasFlag(Fallout3ModHeader.HeaderFlag.Localized);
+        public bool CanUseLocalization => false;
+        public bool UsingLocalization => false;
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => Fallout3ModCommon.Instance.EnumerateFormLinks(this);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => Fallout3ModCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerStepThrough]
@@ -2498,12 +2718,19 @@ namespace Mutagen.Bethesda.Fallout3
         private IFallout3GroupGetter<INpcGetter>? _Npcs => _NpcsLocations != null ? Fallout3GroupBinaryOverlay<INpcGetter>.Fallout3GroupFactory(_stream, _NpcsLocations, _package) : default;
         public IFallout3GroupGetter<INpcGetter> Npcs => _Npcs ?? new Fallout3Group<Npc>(this);
         #endregion
+        #region Races
+        private List<RangeInt64>? _RacesLocations;
+        private IFallout3GroupGetter<IRaceGetter>? _Races => _RacesLocations != null ? Fallout3GroupBinaryOverlay<IRaceGetter>.Fallout3GroupFactory(_stream, _RacesLocations, _package) : default;
+        public IFallout3GroupGetter<IRaceGetter> Races => _Races ?? new Fallout3Group<Race>(this);
+        #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
-            bool shouldDispose)
+            bool shouldDispose,
+            Fallout3Release release)
         {
             this.ModKey = modKey;
+            this.Fallout3Release = release;
             this._stream = stream;
             this._package = new BinaryOverlayFactoryPackage(stream.MetaData);
             this._shouldDispose = shouldDispose;
@@ -2511,32 +2738,21 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static Fallout3ModBinaryOverlay Fallout3ModFactory(
             ModPath path,
-            StringsReadParameters? stringsParam = null,
-            IFileSystem? fileSystem = null)
+            Fallout3Release release,
+            BinaryReadParameters? param)
         {
-            var meta = new ParsingBundle(GameRelease.Fallout3, new MasterReferenceCollection(path.ModKey))
-            {
-                RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout3, fileSystem: fileSystem))
-            };
+            param ??= BinaryReadParameters.Default;
+            var meta = ParsingMeta.Factory(param, release.ToGameRelease(), path);
+            meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
             var stream = new MutagenBinaryReadStream(
                 path: path.Path,
-                metaData: meta,
-                fileSystem: fileSystem);
+                metaData: meta);
             try
             {
-                meta.Absorb(stringsParam);
-                if (stream.Remaining < 12)
-                {
-                    throw new ArgumentException("File stream was too short to parse flags");
-                }
-                var flags = stream.GetInt32(offset: 8);
-                if (Enums.HasFlag(flags, (int)Fallout3ModHeader.HeaderFlag.Localized))
-                {
-                    meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(GameRelease.Fallout3, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam, fileSystem: fileSystem);
-                }
                 return Fallout3ModFactory(
                     stream: stream,
                     path.ModKey,
+                    release: release,
                     shouldDispose: true);
             }
             catch (Exception)
@@ -2549,10 +2765,12 @@ namespace Mutagen.Bethesda.Fallout3
         public static Fallout3ModBinaryOverlay Fallout3ModFactory(
             IMutagenReadStream stream,
             ModKey modKey,
+            Fallout3Release release,
             bool shouldDispose)
         {
             var ret = new Fallout3ModBinaryOverlay(
                 stream: stream,
+                release: release,
                 modKey: modKey,
                 shouldDispose: shouldDispose);
             PluginBinaryOverlay.FillModTypes(
@@ -2577,13 +2795,6 @@ namespace Mutagen.Bethesda.Fallout3
                 case RecordTypeInts.TES4:
                 {
                     _ModHeaderLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
-                    _package.MetaData.MasterReferences!.SetTo(
-                        this.ModHeader.MasterReferences.Select(
-                            master => new MasterReference()
-                            {
-                                Master = master.Master,
-                                FileSize = master.FileSize,
-                            }));
                     return (int)Fallout3Mod_FieldIndex.ModHeader;
                 }
                 case RecordTypeInts.GLOB:
@@ -2597,6 +2808,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _NpcsLocations ??= new();
                     _NpcsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.Npcs;
+                }
+                case RecordTypeInts.RACE:
+                {
+                    _RacesLocations ??= new();
+                    _RacesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Races;
                 }
                 default:
                     return default(int?);
