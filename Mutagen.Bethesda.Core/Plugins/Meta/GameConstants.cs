@@ -111,6 +111,72 @@ public sealed record GameConstants
     }
 
     /// <summary> 
+    /// Readonly singleton of Morrowind game constants 
+    /// </summary> 
+    public static readonly GameConstants Morrowind = new GameConstants(
+        release: GameRelease.Morrowind,
+        modHeaderLength: 20,
+        modHeaderFluffLength: 12,
+        groupConstants: new GroupConstants(
+            ObjectType.Group,
+            headerLength: 20,
+            lengthLength: 4,
+            cell: new GroupCellConstants(6, SubTypes: new[] { 8, 9, 10 }),
+            world: new GroupWorldConstants(
+                TopGroupType: 1,
+                CellGroupTypes: new[] { 2, 4 },
+                CellSubGroupTypes: new[] { 3, 5 }),
+            topic: new GroupTopicConstants(7),
+            hasSubGroups: new int[] { 1, 2, 4, 6, 7 },
+            new GroupNesting[]
+            {
+                new GroupNesting(2,
+                    new GroupNesting(HasTopLevelRecordType: true, 3,
+                        new GroupNesting(6,
+                            new GroupNesting(8),
+                            new GroupNesting(9),
+                            new GroupNesting(10)))),
+                new GroupNesting(GroupType: 7),
+                new GroupNesting(
+                    HasTopLevelRecordType: true, GroupType: 1,
+                    new GroupNesting(
+                        GroupType: 6,
+                        new GroupNesting(8),
+                        new GroupNesting(9),
+                        new GroupNesting(10)),
+                    new GroupNesting(4,
+                        new GroupNesting(HasTopLevelRecordType: true, 5,
+                            new GroupNesting(
+                                GroupType: 6,
+                                new GroupNesting(8),
+                                new GroupNesting(9),
+                                new GroupNesting(10))))),
+            }),
+        majorConstants: new MajorRecordConstants(
+            headerLength: 20,
+            lengthLength: 4,
+            flagsLoc: 8,
+            formIDloc: 12,
+            formVersionLoc: null),
+        subConstants: new RecordHeaderConstants(
+            ObjectType.Subrecord,
+            headerLength: 6,
+            lengthLength: 2),
+        languages: [],
+        languageFormat: null,
+        hasEnabledMarkers: false,
+        defaultFormVersion: null,
+        defaultModHeaderVersion: 1f,
+        defaultHighRangeFormId: 0xD62,
+        useLowerRangeFormIdVersion: null,
+        myDocumentsString: "Morrowind",
+        iniName: "Morrowind",
+        separateMasterLoadOrders: false,
+        smallMasterFlag: null,
+        mediumMasterFlag: null,
+        encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
+
+    /// <summary> 
     /// Readonly singleton of Oblivion game constants 
     /// </summary> 
     public static readonly GameConstants Oblivion = new GameConstants(
@@ -162,7 +228,7 @@ public sealed record GameConstants
             ObjectType.Subrecord,
             headerLength: 6,
             lengthLength: 2),
-        languages: Array.Empty<Language>(),
+        languages: [],
         languageFormat: null,
         hasEnabledMarkers: false,
         defaultFormVersion: null,

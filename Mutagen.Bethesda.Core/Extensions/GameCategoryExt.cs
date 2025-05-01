@@ -10,6 +10,7 @@ public static class GameCategoryExt
     {
         return release switch
         {
+            GameCategory.Morrowind => false,
             GameCategory.Oblivion => false,
             GameCategory.Skyrim => true,
             GameCategory.Fallout4 => true,
@@ -21,6 +22,7 @@ public static class GameCategoryExt
     {
         return gameCategory switch
         {
+            GameCategory.Morrowind => GameRelease.Morrowind,
             GameCategory.Oblivion => GameRelease.Oblivion,
             GameCategory.Skyrim => GameRelease.SkyrimSE,
             GameCategory.Fallout4 => GameRelease.Fallout4,
@@ -33,6 +35,9 @@ public static class GameCategoryExt
     {
         switch (gameCategory)
         {
+            case GameCategory.Morrowind:
+                yield return GameRelease.Morrowind;
+                yield break;
             case GameCategory.Oblivion:
                 yield return GameRelease.Oblivion;
                 yield break;
@@ -60,6 +65,7 @@ public static class GameCategoryExt
     {
         switch (category)
         {
+            case GameCategory.Morrowind:
             case GameCategory.Oblivion:
                 return false;
             case GameCategory.Skyrim:
@@ -74,6 +80,7 @@ public static class GameCategoryExt
     {
         return release switch
         {
+            GameCategory.Morrowind => true,
             GameCategory.Oblivion => true,
             GameCategory.Skyrim => true,
             GameCategory.Fallout4 => true,

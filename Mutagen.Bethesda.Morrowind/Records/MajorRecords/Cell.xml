@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="CellBlock" objType="Group">
+    <Fields>
+      <Int32 name="BlockNumber" />
+      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
+      <Int32 name="LastModified" />
+      <RefList name="SubBlocks" refName="CellSubBlock" thread="true" />
+    </Fields>
+  </Object>
+  <Object name="CellSubBlock" objType="Group">
+    <Fields>
+      <Int32 name="BlockNumber" />
+      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
+      <Int32 name="LastModified" />
+      <RefList name="Cells" refName="Cell" binaryOverlay="Custom" />
+    </Fields>
+  </Object>
+  <Object name="Cell" recordType="CELL" baseClass="MorrowindMajorRecord" objType="Record" customBinaryEnd="Normal">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

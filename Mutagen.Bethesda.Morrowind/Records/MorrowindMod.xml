@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MorrowindMod" objType="Mod" ctorPermission="protected" usesStringFiles="false" generateDeepCopyNew="false">
+    <Fields>
+      <RefDirect name="ModHeader" refName="MorrowindModHeader" singleton="true" />
+      <Group name="GameSettings" refName="GameSetting" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -23,7 +23,8 @@
     <ProjectReference Include="..\Mutagen.Bethesda.Skyrim\Mutagen.Bethesda.Skyrim.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Oblivion\Mutagen.Bethesda.Oblivion.csproj" />
-    <ProjectReference Include="..\Mutagen.Bethesda.Starfield\Mutagen.Bethesda.Starfield.csproj" />
+      <ProjectReference Include="..\Mutagen.Bethesda.Starfield\Mutagen.Bethesda.Starfield.csproj" />
+      <ProjectReference Include="..\Mutagen.Bethesda.Morrowind\Mutagen.Bethesda.Morrowind.csproj" />
   </ItemGroup>
   
 </Project>

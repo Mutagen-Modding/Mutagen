@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <Description>A C# library for manipulating, creating, and analyzing Morrowind mods.</Description>
+    <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
+    <IsPackable>true</IsPackable>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <WarningsAsErrors>nullable</WarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Loqui" />
+    <PackageReference Include="Noggog.CSharpExt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Enums\GroupTypeEnum.cs" />
+    <Compile Include="Records\MajorRecords\Cell.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\CellSubBlock.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MorrowindListGroup.cs">
+      <DependentUpon>MorrowindGroup.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\GameSetting.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\GameSettingFloat.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\GameSettingInt.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\GameSettingString.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\ModStats_Generated.cs">
+      <DependentUpon>MorrowindModHeader.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MorrowindGroup.cs">
+      <DependentUpon>MorrowindGroup.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MorrowindGroupWrapper.cs">
+      <DependentUpon>MorrowindGroup.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MorrowindMod.cs">
+      <DependentUpon>MorrowindMod.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MorrowindModHeader.cs">
+      <DependentUpon>MorrowindModHeader.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MorrowindModHeader_Generated.cs">
+      <DependentUpon>MorrowindModHeader.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MorrowindGroup_Generated.cs">
+      <DependentUpon>MorrowindGroup.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MorrowindListGroup_Generated.cs">
+      <DependentUpon>MorrowindGroup.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MorrowindMajorRecord_Generated.cs">
+      <DependentUpon>MorrowindMajorRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MorrowindMod_Generated.cs">
+      <DependentUpon>MorrowindMod.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\CellBlock_Generated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\CellSubBlock_Generated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Cell_Generated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\GameSetting_Generated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\GameSettingInt_Generated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\GameSettingFloat_Generated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\GameSettingString_Generated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\RecordTypes_Generated.cs" />
+    <Compile Include="Records\RecordTypeInts_Generated.cs" />
+    <Compile Include="Interfaces\IsolatedAbstractInterfaceMapping_Generated.cs" />
+    <Compile Include="Interfaces\InheritingInterfaceMapping_Generated.cs" />
+    <Compile Include="Records\TypeSolidifier_Generated.cs" />
+    <Compile Include="Records\LinkCacheMixIns_Generated.cs" />
+    <Compile Include="GameEnvironmentMixIn_Generated.cs" />
+    <Compile Include="ImplicitsMixIn_Generated.cs" />
+    <Compile Include="Records\ProtocolDefinition_Morrowind.cs" />
+  </ItemGroup>
+</Project>
