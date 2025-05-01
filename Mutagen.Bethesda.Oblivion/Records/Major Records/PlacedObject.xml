@@ -28,7 +28,7 @@
       <Bool name="OpenByDefault" recordType="ONAM" binary="Custom" nullable="False" />
       <ByteArray name="RagdollData" recordType="XRGD" />
       <Float name="Scale" recordType="XSCL" />
-      <FormLink name="ContainedSoul" recordType="XSOL" refName="SoulGem" />
+      <Enum name="ContainedSoul" recordType="XSOL" enumName="SoulLevel" />
       <RefDirect name="Location" refName="Location" recordType="DATA" />
     </Fields>
     <LinkInterface>IPlaced</LinkInterface>
