@@ -13,6 +13,7 @@
         <FormLink refName="Keyword" />
       </List>
       <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Destructible" refName="Destructible" />
       <RefDirect name="PickupSound" refName="SoundReference" recordType="PUSH" />
       <RefDirect name="DropdownSound" refName="SoundReference" recordType="PDSH" />
       <FormLink name="EquipmentType" refName="EquipType" recordType="ETYP" />

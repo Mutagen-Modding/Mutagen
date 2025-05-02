@@ -13,6 +13,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - DestructibleObjectComponent
 - Flora
 - Furniture
+- Ingestible
+- Key
 - Light
 - MiscItem
 - MoveableStatic
@@ -209,7 +211,6 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - HeadPart
 - IdleAnimation
 - Ingestible
-- InstanceNamingRule
 - Key
 - Keyword
 - Light
@@ -594,6 +595,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Impact
 - IModeled
 ### Ingestible
+- IHasDestructible
 - IKeyworded
 - IModeled
 - INamed
@@ -601,8 +603,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IWeightValue
 ### InstanceNamingRule
 - IKeyworded
-- INamed
 ### Key
+- IHasDestructible
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - IModeled

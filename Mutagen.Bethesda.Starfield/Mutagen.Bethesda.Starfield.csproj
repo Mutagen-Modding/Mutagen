@@ -2243,9 +2243,6 @@
     <Compile Include="Records\Major Records\Ingestible.cs">
       <DependentUpon>Ingestible.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\InstanceNamingRule.cs">
-      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\InstanceNamingRules.cs">
       <DependentUpon>InstanceNamingRules.xml</DependentUpon>
     </Compile>
@@ -5130,9 +5127,6 @@
     <Compile Include="Records\Major Records\Ingestible_Generated.cs">
       <DependentUpon>Ingestible.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\InstanceNamingRules_Generated.cs">
-      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Key_Generated.cs">
       <DependentUpon>Key.xml</DependentUpon>
     </Compile>
@@ -6313,15 +6307,6 @@
     <Compile Include="Records\Common Subrecords\OffsetRotation_Generated.cs">
       <DependentUpon>OffsetRotation.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\InstanceNamingRuleSet_Generated.cs">
-      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\InstanceNamingRule_Generated.cs">
-      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\InstanceNamingRuleProperties_Generated.cs">
-      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\FurnitureMarkerEntryPoints_Generated.cs">
       <DependentUpon>Furniture.xml</DependentUpon>
     </Compile>
@@ -6847,6 +6832,42 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\SurfaceTreePatternSwapInfoComponentData_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\InstanceNamingRules_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AInstanceNamingRules_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\InstanceNamingRuleSet_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\InstanceNamingRule_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ArmorInstanceNamingRules_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FloraInstanceNamingRules_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FurnitureInstanceNamingRules_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WeaponInstanceNamingRules_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ActorInstanceNamingRules_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ContainerInstanceNamingRules_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NoInstanceNamingRules_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\InstanceNamingRuleProperty_Generated.cs">
+      <DependentUpon>InstanceNamingRules.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

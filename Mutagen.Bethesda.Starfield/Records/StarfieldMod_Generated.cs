@@ -17774,9 +17774,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            foreach (var item in obj.InstanceNamingRules.EnumerateFormLinks())
+            if (obj.InstanceNamingRules is IFormLinkContainerGetter InstanceNamingRuleslinkCont)
             {
-                yield return item;
+                foreach (var item in InstanceNamingRuleslinkCont.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             foreach (var item in obj.SoundKeywordMappings.EnumerateFormLinks())
             {
