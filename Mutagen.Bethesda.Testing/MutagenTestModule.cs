@@ -11,13 +11,16 @@ public class MutagenTestModule : Module
 {
     private readonly GameRelease _release;
     private readonly IFileSystem? _fileSystem;
-    
+    private readonly Module[] _modules;
+
     public MutagenTestModule(
         GameRelease release,
-        IFileSystem? fileSystem)
+        IFileSystem? fileSystem,
+        Module[] modules)
     {
         _release = release;
         _fileSystem = fileSystem;
+        _modules = modules;
     }
     
     protected override void Load(ContainerBuilder builder)
@@ -37,5 +40,10 @@ public class MutagenTestModule : Module
             .AsSelf()
             .AsImplementedInterfaces()
             .SingleInstance();
+        
+        foreach (var module in _modules)
+        {
+            builder.RegisterModule(module);
+        }
     }
 }
