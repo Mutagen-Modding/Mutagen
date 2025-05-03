@@ -1,5 +1,6 @@
 ﻿using System.IO.Abstractions;
 using Autofac;
+using Autofac.Core;
 using AutoFixture;
 using AutoFixture.Xunit2;
 using Noggog.Testing.AutoFixture;
@@ -26,9 +27,12 @@ public class MutagenContainerAutoData : AutoDataAttribute
         })
     {
     }
-    
+}
+
+public class MutagenContainerAutoData<TModule> : AutoDataAttribute
+    where TModule : Module, new()
+{
     public MutagenContainerAutoData(
-        Module module,
         GameRelease Release = GameRelease.SkyrimSE,
         TargetFileSystem FileSystem = TargetFileSystem.Fake)
         : base(() =>
@@ -41,7 +45,7 @@ public class MutagenContainerAutoData : AutoDataAttribute
                 new MutagenTestModule(
                     Release,
                     fixture.Create<IFileSystem>(),
-                    [module])));
+                    [new TModule()])));
             return fixture;
         })
     {
