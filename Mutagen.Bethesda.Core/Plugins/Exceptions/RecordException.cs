@@ -169,6 +169,16 @@ public class RecordException : Exception
     /// Wraps an exception to associate it with a specific major record
     /// </summary>
     /// <param name="ex">Exception to enrich</param>
+    /// <param name="mod">Mod to mark as containing the record</param>
+    public static RecordException Enrich(Exception ex, IModGetter mod)
+    {
+        return Enrich(ex, mod.ModKey);
+    }
+
+    /// <summary>
+    /// Wraps an exception to associate it with a specific major record
+    /// </summary>
+    /// <param name="ex">Exception to enrich</param>
     /// <param name="majorRecordContext">ModContext to pull information from</param>
     public static RecordException Enrich<TMajor>(Exception ex, IModContext<TMajor> majorRecordContext)
         where TMajor : IMajorRecordGetter
@@ -280,6 +290,17 @@ public class RecordException : Exception
             edid: null,
             recordType: null,
             innerException: ex);
+    }
+
+    /// <summary>
+    /// Wraps an exception to associate it with a specific major record, and then throws it
+    /// </summary>
+    /// <param name="ex">Exception to enrich</param>
+    /// <param name="mod">Mod to mark as containing the record</param>
+    [DoesNotReturn]
+    public static void EnrichAndThrow(Exception ex, IModGetter mod)
+    {
+        EnrichAndThrow(ex, mod.ModKey);
     }
 
     /// <summary>
