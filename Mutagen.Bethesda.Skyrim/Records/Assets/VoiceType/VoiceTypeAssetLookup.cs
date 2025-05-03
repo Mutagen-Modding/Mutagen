@@ -33,7 +33,8 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         var childRaces = new HashSet<FormKey>();
         foreach (var mod in _formLinkCache.PriorityOrder)
         {
-            foreach (var npc in mod.EnumerateMajorRecords<INpcGetter>()) {
+            foreach (var npc in mod.EnumerateMajorRecords<INpcGetter>())
+            {
                 _speakerVoices.GetOrAdd(npc.FormKey, () => GetVoiceTypes(npc));
 
                 foreach (var factionKey in GetFactions(npc))
@@ -163,7 +164,8 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         if (_questCache.TryGetValue(quest.FormKey, out var questVoiceContainer))
         {
             questVoices = questVoiceContainer;
-        } else
+        }
+        else
         {
             questVoices = GetVoices(quest, topic.FormKey.ModKey);
             _questCache.Add(quest.FormKey, questVoices);
@@ -175,8 +177,9 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         {
             if (voices.IsDefault)
             {
-                voices = (VoiceContainer) questVoices.Clone();
-            } else
+                voices = (VoiceContainer)questVoices.Clone();
+            }
+            else
             {
                 voices.IntersectWith(questVoices);
             }
@@ -245,7 +248,8 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         IQuestGetter quest,
         VoiceContainer questVoices,
         string questString,
-        string topicString) {
+        string topicString)
+    {
         //Don't process responses with response data
         if (!responses.ResponseData.IsNull) yield break;
 
@@ -257,8 +261,9 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             //If we have selected default voices, make sure the quest voices are being checked first - they might not be part of default voice
             if (voices.IsDefault)
             {
-                voices = (VoiceContainer) questVoices.Clone();
-            } else
+                voices = (VoiceContainer)questVoices.Clone();
+            }
+            else
             {
                 voices.IntersectWith(questVoices);
             }
@@ -305,12 +310,14 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         }
     }
 
-    private VoiceContainer GetQuestVoices(IDialogTopicGetter topic, IQuestGetter quest) {
+    private VoiceContainer GetQuestVoices(IDialogTopicGetter topic, IQuestGetter quest)
+    {
         VoiceContainer questVoices;
         if (_questCache.TryGetValue(quest.FormKey, out var questVoiceContainer))
         {
             questVoices = questVoiceContainer;
-        } else
+        }
+        else
         {
             questVoices = GetVoices(quest, topic.FormKey.ModKey);
             _questCache.Add(quest.FormKey, questVoices);
@@ -319,7 +326,8 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         return questVoices;
     }
 
-    private static (string questString, string topicString) GetQuestAndTopicStrings(IDialogTopicGetter topic, IQuestGetter quest) {
+    private static (string questString, string topicString) GetQuestAndTopicStrings(IDialogTopicGetter topic, IQuestGetter quest)
+    {
         //Voice line variables
         var questID = quest.EditorID ?? "";
         var topicID = topic.EditorID ?? "";
@@ -333,7 +341,8 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             {
                 questLength = 10;
                 topicLength = 15;
-            } else
+            }
+            else
             {
                 topicLength = 25 - questLength;
             }
@@ -415,7 +424,8 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         switch (data)
         {
             case IGetIsIDConditionDataGetter getIsId:
-                if (getIsId.Object.UsesLink()) {
+                if (getIsId.Object.UsesLink())
+                {
                     var getIsIdFormKey = getIsId.Object.Link.FormKey;
                     if (_speakerVoices.TryGetValue(getIsIdFormKey, out var idVoices))
                     {
@@ -441,7 +451,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                             break;
                     }
                 }
-                
+
                 break;
             case IGetIsAliasRefConditionDataGetter aliasRef:
                 voices = GetVoices(quest, aliasRef.ReferenceAliasIndex, currentMod);
@@ -566,7 +576,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         {
             var externalQuest = alias.External.Quest.TryResolve(_formLinkCache);
             var aliasIndex = alias.External.AliasID;
-            if (externalQuest != null && aliasIndex != null) 
+            if (externalQuest != null && aliasIndex != null)
             {
                 return GetVoices(externalQuest, aliasIndex.Value, currentMod);
             }
@@ -684,7 +694,8 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             {
                 //FormList entry is VoiceType
                 voices.Add(new VoiceContainer(voiceTypeEditorId!));
-            } else if (_speakerVoices.ContainsKey(item.FormKey))
+            }
+            else if (_speakerVoices.ContainsKey(item.FormKey))
             {
                 //FormList entry is Npc
                 voices.Add(GetVoices(item.FormKey));
@@ -711,8 +722,9 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         VoiceContainer baseVoices;
         if (invertDefaultVoices)
         {
-            baseVoices = (VoiceContainer) GetDefaultVoices(currentMod).Clone();
-        } else
+            baseVoices = (VoiceContainer)GetDefaultVoices(currentMod).Clone();
+        }
+        else
         {
             baseVoices = new VoiceContainer(_speakerVoices);
         }
