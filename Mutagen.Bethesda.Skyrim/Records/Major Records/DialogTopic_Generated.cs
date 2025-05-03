@@ -1685,12 +1685,6 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
-        private static partial void RemapResolvedAssetLinks(
-            IDialogTopic obj,
-            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
-            IAssetLinkCache? linkCache,
-            AssetLinkQuery queryCategories);
-        
         public void RemapAssetLinks(
             IDialogTopic obj,
             IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
@@ -1698,7 +1692,6 @@ namespace Mutagen.Bethesda.Skyrim
             AssetLinkQuery queryCategories)
         {
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
-            RemapResolvedAssetLinks(obj, mapping, linkCache, queryCategories);
             obj.Responses.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
@@ -2290,20 +2283,11 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
         
-        public static partial IEnumerable<IAssetLinkGetter> GetResolvedAssetLinks(IDialogTopicGetter obj, IAssetLinkCache linkCache, Type? assetType);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IDialogTopicGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
             foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
             {
                 yield return item;
-            }
-            if (queryCategories.HasFlag(AssetLinkQuery.Resolved))
-            {
-                if (linkCache == null) throw new ArgumentNullException("No link cache was given on a query interested in resolved assets");
-                foreach (var additional in GetResolvedAssetLinks(obj, linkCache, assetType))
-                {
-                    yield return additional;
-                }
             }
             foreach (var item in obj.Responses.SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
             {
