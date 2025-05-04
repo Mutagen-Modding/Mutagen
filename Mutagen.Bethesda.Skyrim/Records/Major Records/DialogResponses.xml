@@ -9,9 +9,7 @@
       <FormLink name="PreviousDialog" recordType="PNAM" refName="DialogResponses" />
       <Enum name="FavorLevel" enumName="FavorLevel" byteLength="1" recordType="CNAM" />
       <List name="LinkTo">
-        <FormLink recordType="TCLT">
-          <Interface>IDialog</Interface>
-        </FormLink>
+        <FormLink recordType="TCLT" refName="DialogTopic" />
       </List>
       <FormLink name="ResponseData" recordType="DNAM" refName="DialogResponses" />
       <RefList name="Responses" refName="DialogResponse" />
@@ -22,7 +20,6 @@
       <FormLink name="WalkAwayTopic" recordType="TWAT" refName="DialogTopic" />
       <FormLink name="AudioOutputOverride" recordType="ONAM" refName="SoundOutputModel" />
     </Fields>
-    <LinkInterface>IDialog</LinkInterface>
   </Object>
   <Object name="DialogResponseFlags" objType="Subrecord" recordType="ENAM">
     <Fields>

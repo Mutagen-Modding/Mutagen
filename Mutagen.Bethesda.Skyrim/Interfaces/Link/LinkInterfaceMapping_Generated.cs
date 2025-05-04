@@ -283,17 +283,6 @@ internal class SkyrimLinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(IComplexLocation),
                 Getter: typeof(IComplexLocationGetter)));
         dict[typeof(IComplexLocationGetter)] = dict[typeof(IComplexLocation)] with { Setter = false };
-        dict[typeof(IDialog)] = new InterfaceMappingResult(
-            true,
-            new ILoquiRegistration[]
-            {
-                DialogResponses_Registration.Instance,
-                DialogTopic_Registration.Instance,
-            },
-            new InterfaceMappingTypes(
-                Setter: typeof(IDialog),
-                Getter: typeof(IDialogGetter)));
-        dict[typeof(IDialogGetter)] = dict[typeof(IDialog)] with { Setter = false };
         dict[typeof(IOwner)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]

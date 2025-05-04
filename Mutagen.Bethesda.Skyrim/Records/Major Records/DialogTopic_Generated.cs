@@ -972,7 +972,6 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IDialogTopic :
         IAssetLinkContainer,
-        IDialog,
         IDialogTopicGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IDialogTopicInternal>,
@@ -1011,7 +1010,6 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
-        IDialogGetter,
         IFormLinkContainerGetter,
         ILoquiObject<IDialogTopicGetter>,
         IMajorRecordGetterEnumerable,
