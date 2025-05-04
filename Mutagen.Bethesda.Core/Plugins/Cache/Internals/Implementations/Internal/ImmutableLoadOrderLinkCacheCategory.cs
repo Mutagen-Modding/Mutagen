@@ -273,6 +273,13 @@ internal sealed class ImmutableLoadOrderLinkCacheCategory<TKey>
                         AddRecords(targetMod, type, throwIfUnknown: true);
                     }
                 }
+                else
+                {
+                    if (cache.TryGetValue(key, out var requeriedList))
+                    {
+                        list = requeriedList;
+                    }
+                }
                 consideredDepth = cache.Depth;
                 more = !InternalImmutableLoadOrderLinkCache.ShouldStopQuery(modKey, _listedOrder.Count, cache);
             }

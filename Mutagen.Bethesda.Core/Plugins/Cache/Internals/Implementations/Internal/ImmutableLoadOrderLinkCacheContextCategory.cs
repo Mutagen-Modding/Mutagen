@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using Loqui;
 using Mutagen.Bethesda.Plugins.Exceptions;
@@ -224,7 +224,7 @@ internal sealed class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGette
             consideredDepth = cache.Depth;
         }
 
-        // Return everyhing we have already
+        // Return everything we have already
         foreach (var item in list)
         {
             yield return item;
@@ -285,6 +285,13 @@ internal sealed class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGette
                     else
                     {
                         AddRecords(targetMod, type, throwIfUnknown: true);
+                    }
+                }
+                else
+                {
+                    if (cache.TryGetValue(key, out var requeriedList))
+                    {
+                        list = requeriedList;
                     }
                 }
                 consideredDepth = cache.Depth;
