@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="DialogResponses" recordType="INFO" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true">
+  <Object name="DialogResponses" recordType="INFO" objType="Record" resolvedAssets="true" baseClass="SkyrimMajorRecord" majorFlag="true">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="DialogResponsesAdapter" recordType="VMAD" overflowRecordType="XXXX" />
       <ByteArray name="DATA" recordType="DATA" />
