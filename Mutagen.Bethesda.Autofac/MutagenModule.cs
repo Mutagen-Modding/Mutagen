@@ -34,6 +34,7 @@ public class MutagenModule : Module
                 typeof(IModCompactor),
                 typeof(IRecordCompactionCompatibilityDetector),
                 typeof(IMasterReferenceReaderFactory))
+            .Except<FontProvider>()
             .NotInjection()
             .AsMatchingInterface();
         builder.RegisterGeneric(typeof(GameEnvironmentProvider<>))
