@@ -19,7 +19,7 @@ public class FontProvider : IFontProvider
 		Language language,
 		IGetFontConfig fontConfig)
 	{
-		var configFileStream = fontConfig.GetStream(language);
+		using var configFileStream = fontConfig.GetStream(language);
 		Init(configFileStream);
 	}
 
