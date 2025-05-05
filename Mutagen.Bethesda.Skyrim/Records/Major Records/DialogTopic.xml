@@ -19,6 +19,5 @@
       <Int32 name="Unknown" binary="NoGeneration" />
       <RefList name="Responses" binary="NoGeneration" refName="DialogResponses" />
     </Fields>
-    <LinkInterface>IDialog</LinkInterface>
   </Object>
 </Loqui>
