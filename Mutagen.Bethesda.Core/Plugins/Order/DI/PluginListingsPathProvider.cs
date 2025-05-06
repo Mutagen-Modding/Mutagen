@@ -14,6 +14,7 @@ public class PluginListingsPathProvider : IPluginListingsPathProvider
         return release switch
         {
             GameRelease.Oblivion => "Oblivion",
+            GameRelease.OblivionRE => Path.Combine("Oblivion Remastered", "OblivionRemastered", "Content", "Dev", "ObvData", "Data"),
             GameRelease.SkyrimLE => "Skyrim",
             GameRelease.EnderalLE => "Enderal",
             GameRelease.SkyrimSE => "Skyrim Special Edition",

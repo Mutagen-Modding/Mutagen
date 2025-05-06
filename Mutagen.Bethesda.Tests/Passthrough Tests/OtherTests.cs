@@ -19,6 +19,7 @@ public class OtherTests
             new ModPath(
                 Constants.Oblivion,
                 Path.Combine(settings.DataFolderLocations.Oblivion, target.Path)),
+            OblivionRelease.Oblivion,
             importMask: new GroupMask()
             {
                 Npcs = true
@@ -46,7 +47,8 @@ public class OtherTests
         var mod = OblivionMod.CreateFromBinary(
             new ModPath(
                 Constants.Oblivion,
-                Path.Combine(settings.DataFolderLocations.Oblivion, target.Path)));
+                Path.Combine(settings.DataFolderLocations.Oblivion, target.Path)),
+            OblivionRelease.Oblivion);
 
         using var tmp = TempFolder.FactoryByAddedPath("Mutagen_Oblivion_Binary_GroupMask_Export");
         var oblivionOutputPath = Path.Combine(tmp.Dir.Path, TestConstants.Oblivion.FileName);
@@ -82,7 +84,8 @@ public class OtherTests
     public static async Task RecordEnumerations(TestingSettings settings, Target target)
     {
         var mod = OblivionMod.CreateFromBinaryOverlay(
-            Path.Combine(settings.DataFolderLocations.Oblivion, target.Path));
+            Path.Combine(settings.DataFolderLocations.Oblivion, target.Path),
+            OblivionRelease.Oblivion);
         var set1 = new HashSet<FormKey>(mod.EnumerateMajorRecords().Select(m => m.FormKey));
         var set2 = new HashSet<FormKey>(mod.EnumerateMajorRecords<IMajorRecordGetter>().Select(m => m.FormKey));
         set1.Count.ShouldBe(set2.Count);

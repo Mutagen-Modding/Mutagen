@@ -42,8 +42,10 @@ public class OblivionPassthroughTest : PassthroughTest
 
     protected override async Task<IMod> ImportCopyIn(FilePath file)
     {
-        var wrapper = OblivionMod.CreateFromBinaryOverlay(file.Path);
-        var ret = new OblivionMod(ModKey);
+        var wrapper = OblivionMod.CreateFromBinaryOverlay(file.Path,
+            OblivionRelease.Oblivion);
+        var ret = new OblivionMod(ModKey,
+            OblivionRelease.Oblivion);
         ret.DeepCopyIn(wrapper);
         return ret;
     }

@@ -2784,7 +2784,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public override GameRelease GameRelease => GameRelease.Oblivion;
+        public OblivionRelease OblivionRelease { get; }
+        public override GameRelease GameRelease => OblivionRelease.ToGameRelease();
         IGroupGetter<T>? IModGetter.TryGetTopLevelGroup<T>() => this.TryGetTopLevelGroup<T>();
         IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
         IGroup<T>? IMod.TryGetTopLevelGroup<T>() => this.TryGetTopLevelGroup<T>();
@@ -2812,10 +2813,12 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         uint IModGetter.NextFormID => this.ModHeader.Stats.NextFormID;
         /// <param name="modKey">ModKey to assign to the mod</param>
+        /// <param name="release">Release to assign to the mod</param>
         /// <param name="headerVersion">Header version to assign to the mod.  Default value is latest header version the game supports</param>
         /// <param name="forceUseLowerFormIDRanges">Default value of false, which will not use lower FormID ranges from 1-X.  A null value will refer to header version + game release to determine if it should be allowed.  True will force it to always use FormIDs 1-X</param>
         public OblivionMod(
             ModKey modKey,
+            OblivionRelease release,
             float? headerVersion = null,
             bool? forceUseLowerFormIDRanges = false)
             : base(modKey)
@@ -2824,6 +2827,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 this.ModHeader.Stats.Version = headerVersion.Value;
             }
+            this.OblivionRelease = release;
             this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID(forceUseLowerFormIDRanges: forceUseLowerFormIDRanges);
             _GameSettings_Object = new OblivionGroup<GameSetting>(this);
             _Globals_Object = new OblivionGroup<Global>(this);
@@ -3178,19 +3182,22 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Create
         public static OblivionMod CreateFromBinary(
             ModPath path,
+            OblivionRelease release,
             BinaryReadParameters? param = null,
             GroupMask? importMask = null)
         {
             try
             {
+                var gameRelease = release.ToGameRelease();
                 param ??= BinaryReadParameters.Default;
                 var fileSystem = param.FileSystem.GetOrDefault();
-                var meta = ParsingMeta.Factory(param, GameRelease.Oblivion, path);
+                var meta = ParsingMeta.Factory(param, gameRelease, path);
                 using (var reader = new MutagenBinaryReadStream(path, meta))
                 {
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
                     return CreateFromBinary(
+                        release: release,
                         importMask: importMask,
                         frame: frame);
                 }
@@ -3204,20 +3211,23 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static OblivionMod CreateFromBinary(
             ModPath path,
+            OblivionRelease release,
             ErrorMaskBuilder? errorMask,
             BinaryReadParameters? param = null,
             GroupMask? importMask = null)
         {
             try
             {
+                var gameRelease = release.ToGameRelease();
                 param ??= BinaryReadParameters.Default;
                 var fileSystem = param.FileSystem.GetOrDefault();
-                var meta = ParsingMeta.Factory(param, GameRelease.Oblivion, path);
+                var meta = ParsingMeta.Factory(param, gameRelease, path);
                 using (var reader = new MutagenBinaryReadStream(path, meta))
                 {
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
                     return CreateFromBinary(
+                        release: release,
                         importMask: importMask,
                         frame: frame);
                 }
@@ -3232,6 +3242,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static OblivionMod CreateFromBinary(
             Stream stream,
             ModKey modKey,
+            OblivionRelease release,
             RecordTypeInfoCacheReader infoCache,
             BinaryReadParameters? param = null,
             GroupMask? importMask = null)
@@ -3245,6 +3256,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
                     return CreateFromBinary(
+                        release: release,
                         importMask: importMask,
                         frame: frame);
                 }
@@ -3259,6 +3271,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static OblivionMod CreateFromBinary(
             Stream stream,
             ModKey modKey,
+            OblivionRelease release,
             RecordTypeInfoCacheReader infoCache,
             ErrorMaskBuilder? errorMask,
             BinaryReadParameters? param = null,
@@ -3273,6 +3286,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = infoCache;
                     return CreateFromBinary(
+                        release: release,
                         importMask: importMask,
                         frame: frame);
                 }
@@ -3288,36 +3302,44 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static IOblivionModDisposableGetter CreateFromBinaryOverlay(
             ModPath path,
+            OblivionRelease release,
             BinaryReadParameters? param = null)
         {
             return OblivionModBinaryOverlay.OblivionModFactory(
                 path: path,
+                release: release,
                 param: param);
         }
 
         public static IOblivionModDisposableGetter CreateFromBinaryOverlay(
             Stream stream,
+            OblivionRelease release,
             ModKey modKey,
             BinaryReadParameters? param = null)
         {
             param ??= BinaryReadParameters.Default;
-            var meta = ParsingMeta.Factory(param, GameRelease.Oblivion, modKey, stream);
+            var meta = ParsingMeta.Factory(param, release.ToGameRelease(), modKey, stream);
             return OblivionModBinaryOverlay.OblivionModFactory(
                 stream: new MutagenBinaryReadStream(stream, meta),
                 modKey: modKey,
+                release: release,
                 shouldDispose: false);
         }
 
         public static OblivionMod CreateFromBinary(
             MutagenFrame frame,
+            OblivionRelease release,
             GroupMask? importMask = null)
         {
             try
             {
-                var ret = new OblivionMod(modKey: frame.MetaData.ModKey);
+                var ret = new OblivionMod(
+                    modKey: frame.MetaData.ModKey,
+                    release: release);
                 ((OblivionModSetterCommon)((IOblivionModGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                     item: ret,
                     frame: frame,
+                    release: release,
                     importMask: importMask);
                 return ret;
             }
@@ -3488,6 +3510,10 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionGroupGetter<IAnimatedObjectGetter> AnimatedObjects { get; }
         IOblivionGroupGetter<IWaterGetter> Waters { get; }
         IOblivionGroupGetter<IEffectShaderGetter> EffectShaders { get; }
+
+        #region Mutagen
+        OblivionRelease OblivionRelease { get; }
+        #endregion
 
     }
 
@@ -3950,31 +3976,36 @@ namespace Mutagen.Bethesda.Oblivion
         public static void CopyInFromBinary(
             this IOblivionMod item,
             MutagenFrame frame,
+            OblivionRelease release,
             GroupMask? importMask = null)
         {
             ((OblivionModSetterCommon)((IOblivionModGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
+                release: release,
                 importMask: importMask);
         }
 
         public static void CopyInFromBinary(
             this IOblivionMod item,
             ModPath path,
+            OblivionRelease release,
             BinaryReadParameters? param = null,
             GroupMask? importMask = null)
         {
             try
             {
+                var gameRelease = release.ToGameRelease();
                 param ??= BinaryReadParameters.Default;
                 var fileSystem = param.FileSystem.GetOrDefault();
-                var meta = ParsingMeta.Factory(param, GameRelease.Oblivion, path);
+                var meta = ParsingMeta.Factory(param, gameRelease, path);
                 using (var reader = new MutagenBinaryReadStream(path, meta))
                 {
                     var frame = new MutagenFrame(reader);
                     frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
                     CopyInFromBinary(
                         item: item,
+                        release: release,
                         importMask: importMask,
                         frame: frame);
                 }
@@ -3990,6 +4021,7 @@ namespace Mutagen.Bethesda.Oblivion
             this IOblivionMod item,
             Stream stream,
             ModKey modKey,
+            OblivionRelease release,
             RecordTypeInfoCacheReader infoCache,
             BinaryReadParameters? param = null,
             GroupMask? importMask = null)
@@ -4004,6 +4036,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.MetaData.RecordInfoCache = infoCache;
                     CopyInFromBinary(
                         item: item,
+                        release: release,
                         importMask: importMask,
                         frame: frame);
                 }
@@ -5023,6 +5056,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyInFromBinary(
             IOblivionMod item,
             MutagenFrame frame,
+            OblivionRelease release,
             GroupMask? importMask = null)
         {
             PluginUtilityTranslation.ModParse(
@@ -10420,6 +10454,37 @@ namespace Mutagen.Bethesda.Oblivion
     {
     }
 
+    /// <summary>
+    /// Different game release versions a Oblivion mod can have
+    /// </summary>
+    public enum OblivionRelease
+    {
+        Oblivion = 0,
+        OblivionRE = 10
+    }
+
+    public static class OblivionReleaseExt
+    {
+        public static GameRelease ToGameRelease(this OblivionRelease release)
+        {
+            return release switch
+            {
+                OblivionRelease.Oblivion => GameRelease.Oblivion,
+                OblivionRelease.OblivionRE => GameRelease.OblivionRE,
+                _ => throw new ArgumentException()
+            };
+        }
+
+        public static OblivionRelease ToOblivionRelease(this GameRelease release)
+        {
+            return release switch
+            {
+                GameRelease.Oblivion => OblivionRelease.Oblivion,
+                GameRelease.OblivionRE => OblivionRelease.OblivionRE,
+                _ => throw new ArgumentException()
+            };
+        }
+    }
 }
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -11953,7 +12018,7 @@ namespace Mutagen.Bethesda.Oblivion
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            var bundle = new WritingBundle(GameRelease.Oblivion)
+            var bundle = new WritingBundle(item.OblivionRelease.ToGameRelease())
             {
                 CleanNulls = param.CleanNulls,
                 TargetLanguageOverride = param.TargetLanguageOverride,
@@ -11993,7 +12058,7 @@ namespace Mutagen.Bethesda.Oblivion
             var modKey = item.ModKey;
             using (var writer = new MutagenWriter(
                 stream: stream,
-                new WritingBundle(GameRelease.Oblivion),
+                new WritingBundle(item.OblivionRelease.ToGameRelease()),
                 dispose: false))
             {
                 OblivionModBinaryWriteTranslation.Instance.Write(
@@ -12034,7 +12099,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public GameRelease GameRelease => GameRelease.Oblivion;
+        public OblivionRelease OblivionRelease { get; }
+        public GameRelease GameRelease => OblivionRelease.ToGameRelease();
         IGroupGetter<T>? IModGetter.TryGetTopLevelGroup<T>() => this.TryGetTopLevelGroup<T>();
         IGroupGetter? IModGetter.TryGetTopLevelGroup(Type type) => this.TryGetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
@@ -12360,9 +12426,11 @@ namespace Mutagen.Bethesda.Oblivion
         protected OblivionModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
-            bool shouldDispose)
+            bool shouldDispose,
+            OblivionRelease release)
         {
             this.ModKey = modKey;
+            this.OblivionRelease = release;
             this._stream = stream;
             this._package = new BinaryOverlayFactoryPackage(stream.MetaData);
             this._shouldDispose = shouldDispose;
@@ -12370,10 +12438,11 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static OblivionModBinaryOverlay OblivionModFactory(
             ModPath path,
+            OblivionRelease release,
             BinaryReadParameters? param)
         {
             param ??= BinaryReadParameters.Default;
-            var meta = ParsingMeta.Factory(param, GameRelease.Oblivion, path);
+            var meta = ParsingMeta.Factory(param, release.ToGameRelease(), path);
             meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, meta));
             var stream = new MutagenBinaryReadStream(
                 path: path.Path,
@@ -12383,6 +12452,7 @@ namespace Mutagen.Bethesda.Oblivion
                 return OblivionModFactory(
                     stream: stream,
                     path.ModKey,
+                    release: release,
                     shouldDispose: true);
             }
             catch (Exception)
@@ -12395,10 +12465,12 @@ namespace Mutagen.Bethesda.Oblivion
         public static OblivionModBinaryOverlay OblivionModFactory(
             IMutagenReadStream stream,
             ModKey modKey,
+            OblivionRelease release,
             bool shouldDispose)
         {
             var ret = new OblivionModBinaryOverlay(
                 stream: stream,
+                release: release,
                 modKey: modKey,
                 shouldDispose: shouldDispose);
             PluginBinaryOverlay.FillModTypes(

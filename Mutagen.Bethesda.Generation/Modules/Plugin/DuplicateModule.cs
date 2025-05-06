@@ -87,7 +87,9 @@ public class DuplicateModule : GenerationModule
                 }
                 else
                 {
-                    sb.AppendLine($"var newRec = new {obj.Name}(formKey{(obj.GetObjectData().HasMultipleReleases ? $", item.FormVersion" : null)});");
+                    var hasFormVersion = obj.GetObjectData().GameCategory?.HasFormVersion() ?? false;
+                    var multipleGameReleases = obj.GetObjectData().HasMultipleReleases;
+                    sb.AppendLine($"var newRec = new {obj.Name}(formKey{(hasFormVersion ? $", item.FormVersion" : (multipleGameReleases ? $", default({obj.GetObjectData().GameCategory}Release)" : string.Empty))});");
                     sb.AppendLine($"newRec.DeepCopyIn(item, default({nameof(ErrorMaskBuilder)}?), copyMask);");
                     sb.AppendLine("return newRec;");
                 }

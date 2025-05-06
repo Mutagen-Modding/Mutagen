@@ -162,7 +162,7 @@ public sealed record GameConstants
             ObjectType.Subrecord,
             headerLength: 6,
             lengthLength: 2),
-        languages: Array.Empty<Language>(),
+        languages: [],
         languageFormat: null,
         hasEnabledMarkers: false,
         defaultFormVersion: null,
@@ -486,6 +486,7 @@ public sealed record GameConstants
         return release switch
         {
             GameRelease.Oblivion => Oblivion,
+            GameRelease.OblivionRE => Oblivion,
             GameRelease.SkyrimLE => SkyrimLE,
             GameRelease.EnderalLE => EnderalLE,
             GameRelease.SkyrimSE => SkyrimSE,

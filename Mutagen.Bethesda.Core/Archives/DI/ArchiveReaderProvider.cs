@@ -35,6 +35,7 @@ public sealed class ArchiveReaderProvider : IArchiveReaderProvider
         switch (_gameRelease.Release)
         {
             case GameRelease.Oblivion:
+            case GameRelease.OblivionRE:
             case GameRelease.SkyrimLE:
             case GameRelease.SkyrimSE:
             case GameRelease.SkyrimSEGog:

@@ -66,6 +66,7 @@ public partial class OblivionMod : AMod
                     path: new ModPath(
                         builder._param.ModKey,
                         builder._param._path.Value),
+                    release: builder._param.GameRelease.ToOblivionRelease(),
                     errorMask: builder._param.ErrorMaskBuilder,
                     param: builder._param.Params,
                     importMask: builder._param.GroupMask);
@@ -86,6 +87,7 @@ public partial class OblivionMod : AMod
 
                 return OblivionMod.CreateFromBinary(
                     stream: stream,
+                    release: builder._param.GameRelease.ToOblivionRelease(),
                     modKey: builder._param.ModKey,
                     infoCache: recordCache,
                     param: builder._param.Params,
@@ -105,6 +107,7 @@ public partial class OblivionMod : AMod
                     path: new ModPath(
                         builder._param.ModKey,
                         builder._param._path.Value),
+                    release: builder._param.GameRelease.ToOblivionRelease(),
                     param: builder._param.Params);
             }
             else if (builder._param._streamFactory != null)
@@ -113,6 +116,7 @@ public partial class OblivionMod : AMod
 
                 return OblivionMod.CreateFromBinaryOverlay(
                     stream: stream,
+                    release: builder._param.GameRelease.ToOblivionRelease(),
                     modKey: builder._param.ModKey,
                     param: builder._param.Params);
             }
@@ -188,7 +192,7 @@ partial class OblivionModSetterTranslationCommon
 
     public partial OblivionMod DeepCopyGetNew(IOblivionModGetter item)
     {
-        return new OblivionMod(item.ModKey);
+        return new OblivionMod(item.ModKey, item.OblivionRelease);
     }
 }
 

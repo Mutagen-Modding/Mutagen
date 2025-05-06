@@ -11,6 +11,7 @@ public static class Implicits
     public static readonly ImplicitRecordFormKeys RecordFormKeys = ImplicitRecordFormKeys.Instance;
 
     private static readonly ImplicitRegistration Oblivion;
+    private static readonly ImplicitRegistration OblivionRE;
     private static readonly ImplicitRegistration SkyrimLE;
     private static readonly ImplicitRegistration EnderalLE;
     private static readonly ImplicitRegistration SkyrimSE;
@@ -42,7 +43,19 @@ public static class Implicits
             GameRelease.Oblivion,
             BaseMasters: new ImplicitModKeyCollection(oblivionBaseMasters),
             Listings: new ImplicitModKeyCollection(oblivion.AsEnumerable()),
-            RecordFormKeys: Array.Empty<FormKey>());
+            RecordFormKeys: []);
+        var oblivionReBaseMasters = new List<ModKey>()
+        {
+            "AltarESPMain.esp",
+            "AltarDeluxe.esp",
+            "AltarGymNavigation.esp",
+            "TamrielLeveledRegion.esp",
+        };
+        OblivionRE = new ImplicitRegistration(
+            GameRelease.Oblivion,
+            BaseMasters: new ImplicitModKeyCollection(oblivionBaseMasters.And(oblivionReBaseMasters)),
+            Listings: new ImplicitModKeyCollection(oblivion.AsEnumerable()),
+            RecordFormKeys: []);
         #endregion
 
         #region Skyrim
@@ -169,6 +182,7 @@ public static class Implicits
         return release switch
         {
             GameRelease.Oblivion => Oblivion,
+            GameRelease.OblivionRE => OblivionRE,
             GameRelease.SkyrimLE => SkyrimLE,
             GameRelease.EnderalLE => EnderalLE,
             GameRelease.SkyrimSE => SkyrimSE,

@@ -647,6 +647,7 @@ public abstract class PassthroughTest
         return passthroughSettings.GameRelease switch
         {
             GameRelease.Oblivion => new OblivionPassthroughTest(passthroughSettings),
+            GameRelease.OblivionRE => new OblivionPassthroughTest(passthroughSettings),
             GameRelease.SkyrimLE => new SkyrimPassthroughTest(passthroughSettings, GameRelease.SkyrimLE),
             GameRelease.SkyrimSE => new SkyrimPassthroughTest(passthroughSettings, GameRelease.SkyrimSE),
             GameRelease.SkyrimVR => new SkyrimPassthroughTest(passthroughSettings, GameRelease.SkyrimVR),

@@ -251,6 +251,22 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILocationGetter? IPlacedObjectGetter.Location => this.Location;
         #endregion
+        #region XAAG
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _XAAG;
+        public MemorySlice<Byte>? XAAG
+        {
+            get => this._XAAG;
+            set => this._XAAG = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.XAAG => this.XAAG;
+        #endregion
+        #region XACN
+        public String? XACN { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IPlacedObjectGetter.XACN => this.XACN;
+        #endregion
 
         #region To String
 
@@ -300,6 +316,8 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Scale = initialValue;
                 this.ContainedSoul = initialValue;
                 this.Location = new MaskItem<TItem, Location.Mask<TItem>?>(initialValue, new Location.Mask<TItem>(initialValue));
+                this.XAAG = initialValue;
+                this.XACN = initialValue;
             }
 
             public Mask(
@@ -331,7 +349,9 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem RagdollData,
                 TItem Scale,
                 TItem ContainedSoul,
-                TItem Location)
+                TItem Location,
+                TItem XAAG,
+                TItem XACN)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -363,6 +383,8 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Scale = Scale;
                 this.ContainedSoul = ContainedSoul;
                 this.Location = new MaskItem<TItem, Location.Mask<TItem>?>(Location, new Location.Mask<TItem>(Location));
+                this.XAAG = XAAG;
+                this.XACN = XACN;
             }
 
             #pragma warning disable CS8618
@@ -398,6 +420,8 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem Scale;
             public TItem ContainedSoul;
             public MaskItem<TItem, Location.Mask<TItem>?>? Location { get; set; }
+            public TItem XAAG;
+            public TItem XACN;
             #endregion
 
             #region Equals
@@ -435,6 +459,8 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.Scale, rhs.Scale)) return false;
                 if (!object.Equals(this.ContainedSoul, rhs.ContainedSoul)) return false;
                 if (!object.Equals(this.Location, rhs.Location)) return false;
+                if (!object.Equals(this.XAAG, rhs.XAAG)) return false;
+                if (!object.Equals(this.XACN, rhs.XACN)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -464,6 +490,8 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.Scale);
                 hash.Add(this.ContainedSoul);
                 hash.Add(this.Location);
+                hash.Add(this.XAAG);
+                hash.Add(this.XACN);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -522,6 +550,8 @@ namespace Mutagen.Bethesda.Oblivion
                     if (!eval(this.Location.Overall)) return false;
                     if (this.Location.Specific != null && !this.Location.Specific.All(eval)) return false;
                 }
+                if (!eval(this.XAAG)) return false;
+                if (!eval(this.XACN)) return false;
                 return true;
             }
             #endregion
@@ -578,6 +608,8 @@ namespace Mutagen.Bethesda.Oblivion
                     if (eval(this.Location.Overall)) return true;
                     if (this.Location.Specific != null && this.Location.Specific.Any(eval)) return true;
                 }
+                if (eval(this.XAAG)) return true;
+                if (eval(this.XACN)) return true;
                 return false;
             }
             #endregion
@@ -617,6 +649,8 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Scale = eval(this.Scale);
                 obj.ContainedSoul = eval(this.ContainedSoul);
                 obj.Location = this.Location == null ? null : new MaskItem<R, Location.Mask<R>?>(eval(this.Location.Overall), this.Location.Specific?.Translate(eval));
+                obj.XAAG = eval(this.XAAG);
+                obj.XACN = eval(this.XACN);
             }
             #endregion
 
@@ -731,6 +765,14 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         Location?.Print(sb);
                     }
+                    if (printMask?.XAAG ?? true)
+                    {
+                        sb.AppendItem(XAAG, "XAAG");
+                    }
+                    if (printMask?.XACN ?? true)
+                    {
+                        sb.AppendItem(XACN, "XACN");
+                    }
                 }
             }
             #endregion
@@ -766,6 +808,8 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? Scale;
             public Exception? ContainedSoul;
             public MaskItem<Exception?, Location.ErrorMask?>? Location;
+            public Exception? XAAG;
+            public Exception? XACN;
             #endregion
 
             #region IErrorMask
@@ -822,6 +866,10 @@ namespace Mutagen.Bethesda.Oblivion
                         return ContainedSoul;
                     case PlacedObject_FieldIndex.Location:
                         return Location;
+                    case PlacedObject_FieldIndex.XAAG:
+                        return XAAG;
+                    case PlacedObject_FieldIndex.XACN:
+                        return XACN;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -903,6 +951,12 @@ namespace Mutagen.Bethesda.Oblivion
                         break;
                     case PlacedObject_FieldIndex.Location:
                         this.Location = new MaskItem<Exception?, Location.ErrorMask?>(ex, null);
+                        break;
+                    case PlacedObject_FieldIndex.XAAG:
+                        this.XAAG = ex;
+                        break;
+                    case PlacedObject_FieldIndex.XACN:
+                        this.XACN = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -987,6 +1041,12 @@ namespace Mutagen.Bethesda.Oblivion
                     case PlacedObject_FieldIndex.Location:
                         this.Location = (MaskItem<Exception?, Location.ErrorMask?>?)obj;
                         break;
+                    case PlacedObject_FieldIndex.XAAG:
+                        this.XAAG = (Exception?)obj;
+                        break;
+                    case PlacedObject_FieldIndex.XACN:
+                        this.XACN = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -1020,6 +1080,8 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Scale != null) return true;
                 if (ContainedSoul != null) return true;
                 if (Location != null) return true;
+                if (XAAG != null) return true;
+                if (XACN != null) return true;
                 return false;
             }
             #endregion
@@ -1106,6 +1168,12 @@ namespace Mutagen.Bethesda.Oblivion
                     sb.AppendItem(ContainedSoul, "ContainedSoul");
                 }
                 Location?.Print(sb);
+                {
+                    sb.AppendItem(XAAG, "XAAG");
+                }
+                {
+                    sb.AppendItem(XACN, "XACN");
+                }
             }
             #endregion
 
@@ -1138,6 +1206,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Scale = this.Scale.Combine(rhs.Scale);
                 ret.ContainedSoul = this.ContainedSoul.Combine(rhs.ContainedSoul);
                 ret.Location = this.Location.Combine(rhs.Location, (l, r) => l.Combine(r));
+                ret.XAAG = this.XAAG.Combine(rhs.XAAG);
+                ret.XACN = this.XACN.Combine(rhs.XACN);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1184,6 +1254,8 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Scale;
             public bool ContainedSoul;
             public Location.TranslationMask? Location;
+            public bool XAAG;
+            public bool XACN;
             #endregion
 
             #region Ctors
@@ -1210,6 +1282,8 @@ namespace Mutagen.Bethesda.Oblivion
                 this.RagdollData = defaultOn;
                 this.Scale = defaultOn;
                 this.ContainedSoul = defaultOn;
+                this.XAAG = defaultOn;
+                this.XACN = defaultOn;
             }
 
             #endregion
@@ -1241,6 +1315,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Scale, null));
                 ret.Add((ContainedSoul, null));
                 ret.Add((Location != null ? Location.OnOverall : DefaultOn, Location?.GetCrystal()));
+                ret.Add((XAAG, null));
+                ret.Add((XACN, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1255,7 +1331,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = PlacedObject_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PlacedObjectCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedObjectSetterCommon.Instance.RemapLinks(this, mapping);
-        public PlacedObject(FormKey formKey)
+        public PlacedObject(
+            FormKey formKey,
+            OblivionRelease gameRelease)
         {
             this.FormKey = formKey;
             CustomCtor();
@@ -1270,12 +1348,16 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public PlacedObject(IOblivionMod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.OblivionRelease)
         {
         }
 
         public PlacedObject(IOblivionMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.OblivionRelease)
         {
             this.EditorID = editorID;
         }
@@ -1396,6 +1478,8 @@ namespace Mutagen.Bethesda.Oblivion
         new Single? Scale { get; set; }
         new SoulLevel? ContainedSoul { get; set; }
         new Location? Location { get; set; }
+        new MemorySlice<Byte>? XAAG { get; set; }
+        new String? XACN { get; set; }
     }
 
     public partial interface IPlacedObjectInternal :
@@ -1439,6 +1523,8 @@ namespace Mutagen.Bethesda.Oblivion
         Single? Scale { get; }
         SoulLevel? ContainedSoul { get; }
         ILocationGetter? Location { get; }
+        ReadOnlyMemorySlice<Byte>? XAAG { get; }
+        String? XACN { get; }
 
     }
 
@@ -1637,6 +1723,8 @@ namespace Mutagen.Bethesda.Oblivion
         Scale = 26,
         ContainedSoul = 27,
         Location = 28,
+        XAAG = 29,
+        XACN = 30,
     }
     #endregion
 
@@ -1647,9 +1735,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 24;
+        public const ushort AdditionalFieldCount = 26;
 
-        public const ushort FieldCount = 29;
+        public const ushort FieldCount = 31;
 
         public static readonly Type MaskType = typeof(PlacedObject.Mask<>);
 
@@ -1705,7 +1793,9 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.XRGD,
                 RecordTypes.XSCL,
                 RecordTypes.XSOL,
-                RecordTypes.DATA);
+                RecordTypes.DATA,
+                RecordTypes.XAAG,
+                RecordTypes.XACN);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -1774,6 +1864,8 @@ namespace Mutagen.Bethesda.Oblivion
             item.Scale = default;
             item.ContainedSoul = default;
             item.Location = null;
+            item.XAAG = default;
+            item.XACN = default;
             base.Clear(item);
         }
         
@@ -1914,6 +2006,8 @@ namespace Mutagen.Bethesda.Oblivion
                 rhs.Location,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
+            ret.XAAG = MemorySliceExt.SequenceEqual(item.XAAG, rhs.XAAG);
+            ret.XACN = string.Equals(item.XACN, rhs.XACN);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2076,6 +2170,16 @@ namespace Mutagen.Bethesda.Oblivion
                 && item.Location is {} LocationItem)
             {
                 LocationItem?.Print(sb, "Location");
+            }
+            if ((printMask?.XAAG ?? true)
+                && item.XAAG is {} XAAGItem)
+            {
+                sb.AppendLine($"XAAG => {SpanExt.ToHexString(XAAGItem)}");
+            }
+            if ((printMask?.XACN ?? true)
+                && item.XACN is {} XACNItem)
+            {
+                sb.AppendItem(XACNItem, "XACN");
             }
         }
         
@@ -2243,6 +2347,14 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 else if (!isLocationEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XAAG) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.XAAG, rhs.XAAG)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XACN) ?? true))
+            {
+                if (!string.Equals(lhs.XACN, rhs.XACN)) return false;
+            }
             return true;
         }
         
@@ -2349,6 +2461,14 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 hash.Add(Locationitem);
             }
+            if (item.XAAG is {} XAAGItem)
+            {
+                hash.Add(XAAGItem);
+            }
+            if (item.XACN is {} XACNitem)
+            {
+                hash.Add(XACNitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2428,7 +2548,7 @@ namespace Mutagen.Bethesda.Oblivion
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new PlacedObject(formKey);
+            var newRec = new PlacedObject(formKey, default(OblivionRelease));
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -2742,6 +2862,21 @@ namespace Mutagen.Bethesda.Oblivion
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XAAG) ?? true))
+            {
+                if(rhs.XAAG is {} XAAGrhs)
+                {
+                    item.XAAG = XAAGrhs.ToArray();
+                }
+                else
+                {
+                    item.XAAG = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.XACN) ?? true))
+            {
+                item.XACN = rhs.XACN;
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -3030,6 +3165,15 @@ namespace Mutagen.Bethesda.Oblivion
                         translationParams: translationParams);
                 }
             }
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.XAAG,
+                header: translationParams.ConvertToCustom(RecordTypes.XAAG));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.XACN,
+                header: translationParams.ConvertToCustom(RecordTypes.XACN),
+                binaryType: StringBinaryType.NullTerminate);
         }
 
         public static partial void WriteBinaryOpenByDefaultCustom(
@@ -3259,6 +3403,21 @@ namespace Mutagen.Bethesda.Oblivion
                     item.Location = Mutagen.Bethesda.Oblivion.Location.CreateFromBinary(frame: frame);
                     return (int)PlacedObject_FieldIndex.Location;
                 }
+                case RecordTypeInts.XAAG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XAAG = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)PlacedObject_FieldIndex.XAAG;
+                }
+                case RecordTypeInts.XACN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XACN = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
+                    return (int)PlacedObject_FieldIndex.XACN;
+                }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -3417,6 +3576,14 @@ namespace Mutagen.Bethesda.Oblivion
         public SoulLevel? ContainedSoul => _ContainedSoulLocation.HasValue ? (SoulLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ContainedSoulLocation!.Value, _package.MetaData.Constants)) : default(SoulLevel?);
         #endregion
         public ILocationGetter? Location { get; private set; }
+        #region XAAG
+        private int? _XAAGLocation;
+        public ReadOnlyMemorySlice<Byte>? XAAG => _XAAGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XAAGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region XACN
+        private int? _XACNLocation;
+        public String? XACN => _XACNLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XACNLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -3616,6 +3783,16 @@ namespace Mutagen.Bethesda.Oblivion
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)PlacedObject_FieldIndex.Location;
+                }
+                case RecordTypeInts.XAAG:
+                {
+                    _XAAGLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.XAAG;
+                }
+                case RecordTypeInts.XACN:
+                {
+                    _XACNLocation = (stream.Position - offset);
+                    return (int)PlacedObject_FieldIndex.XACN;
                 }
                 default:
                     return base.FillRecordType(
