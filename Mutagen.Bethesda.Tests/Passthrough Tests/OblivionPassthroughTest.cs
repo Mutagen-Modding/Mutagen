@@ -12,8 +12,8 @@ public class OblivionPassthroughTest : PassthroughTest
 {
     protected override Processor ProcessorFactory() => new OblivionProcessor(WorkDropoff, MasterFlagsLookup);
 
-    public OblivionPassthroughTest(PassthroughTestParams param)
-        : base(param, GameRelease.Oblivion)
+    public OblivionPassthroughTest(PassthroughTestParams param, GameRelease release)
+        : base(param, release)
     {
     }
 

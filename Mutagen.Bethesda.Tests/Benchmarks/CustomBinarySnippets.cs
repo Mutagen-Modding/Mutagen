@@ -43,7 +43,7 @@ public class CustomBinarySnippets
             WorkDropoff = dropoff
         };
 
-        var passthrough = new OblivionPassthroughTest(passthroughSettings);
+        var passthrough = new OblivionPassthroughTest(passthroughSettings, GameRelease.Oblivion);
 
         (TempFolder TempFolder, Test Test) = passthrough.SetupProcessedFiles();
         using var tmp = TempFolder;

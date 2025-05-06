@@ -10,8 +10,8 @@ namespace Mutagen.Bethesda.Tests;
 
 public class StarfieldPassthroughTest : PassthroughTest
 {
-    public StarfieldPassthroughTest(PassthroughTestParams param)
-        : base(param, GameRelease.Starfield)
+    public StarfieldPassthroughTest(PassthroughTestParams param, GameRelease gameRelease)
+        : base(param, gameRelease)
     {
     }
 

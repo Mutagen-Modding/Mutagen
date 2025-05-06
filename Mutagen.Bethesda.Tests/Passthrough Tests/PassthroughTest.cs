@@ -60,7 +60,7 @@ public abstract class PassthroughTest
     };
     protected abstract Processor ProcessorFactory();
     
-    public static DirectoryPath GetTestFolderPath(string nickname) => Path.Combine(Path.GetTempPath(), $"Mutagen_Binary_Tests/{nickname}");
+    public static DirectoryPath GetTestFolderPath(string nickname, GameRelease release) => Path.Combine(Path.GetTempPath(), "Mutagen_Binary_Tests", release.ToString(), nickname);
 
     public PassthroughTest(PassthroughTestParams param, GameRelease release)
     {
@@ -80,7 +80,7 @@ public abstract class PassthroughTest
 
     public (TempFolder TempFolder, Test Test) SetupProcessedFiles()
     {
-        var tmp = TempFolder.FactoryByPath(GetTestFolderPath(Nickname), deleteAfter: Settings.DeleteCachesAfter, deleteBefore: false);
+        var tmp = TempFolder.FactoryByPath(GetTestFolderPath(Nickname, GameRelease), deleteAfter: Settings.DeleteCachesAfter, deleteBefore: false);
 
         var test = new Test(
             $"Setup Processed Files",
@@ -646,13 +646,13 @@ public abstract class PassthroughTest
     {
         return passthroughSettings.GameRelease switch
         {
-            GameRelease.Oblivion => new OblivionPassthroughTest(passthroughSettings),
-            GameRelease.OblivionRE => new OblivionPassthroughTest(passthroughSettings),
+            GameRelease.Oblivion => new OblivionPassthroughTest(passthroughSettings, GameRelease.Oblivion),
+            GameRelease.OblivionRE => new OblivionPassthroughTest(passthroughSettings, GameRelease.OblivionRE),
             GameRelease.SkyrimLE => new SkyrimPassthroughTest(passthroughSettings, GameRelease.SkyrimLE),
             GameRelease.SkyrimSE => new SkyrimPassthroughTest(passthroughSettings, GameRelease.SkyrimSE),
             GameRelease.SkyrimVR => new SkyrimPassthroughTest(passthroughSettings, GameRelease.SkyrimVR),
-            GameRelease.Fallout4 => new Fallout4PassthroughTest(passthroughSettings),
-            GameRelease.Starfield => new StarfieldPassthroughTest(passthroughSettings),
+            GameRelease.Fallout4 => new Fallout4PassthroughTest(passthroughSettings, GameRelease.Fallout4),
+            GameRelease.Starfield => new StarfieldPassthroughTest(passthroughSettings, GameRelease.Starfield),
             _ => throw new NotImplementedException(),
         };
     }

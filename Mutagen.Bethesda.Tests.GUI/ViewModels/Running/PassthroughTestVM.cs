@@ -92,7 +92,7 @@ public class PassthroughTestVM : ViewModel
             {
                 try
                 {
-                    Process.Start(new ProcessStartInfo(PassthroughTest.GetTestFolderPath(Name))
+                    Process.Start(new ProcessStartInfo(PassthroughTest.GetTestFolderPath(Name, Group.Settings.GameRelease))
                     {
                         UseShellExecute = true,
                     });
