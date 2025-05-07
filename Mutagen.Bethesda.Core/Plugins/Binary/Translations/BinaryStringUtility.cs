@@ -28,12 +28,11 @@ public static class BinaryStringUtility
     public static ReadOnlySpan<byte> ProcessNullTermination(ReadOnlySpan<byte> bytes)
     {
         if (bytes.Length == 0) return bytes;
-        // If null terminated, don't include
-        if (bytes[^1] == 0)
-        {
-            return bytes[0..^1];
-        }
-        return bytes;
+
+        var nullTerm = bytes.IndexOf((byte)0);
+        if (nullTerm == -1) return bytes;
+
+        return bytes.Slice(0, nullTerm);
     }
 
     /// <summary>

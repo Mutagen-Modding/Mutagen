@@ -27,6 +27,9 @@
 
     <ItemGroup>
         <None Include="$(SolutionDir)Mutagen.Bethesda.Testing\Files\**" CopyToOutputDirectory="PreserveNewest" />
+        <None Update="Files\Core\Strings\FluffedNullString">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
