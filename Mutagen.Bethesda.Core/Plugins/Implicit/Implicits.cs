@@ -54,7 +54,7 @@ public static class Implicits
         OblivionRE = new ImplicitRegistration(
             GameRelease.Oblivion,
             BaseMasters: new ImplicitModKeyCollection(oblivionBaseMasters.And(oblivionReBaseMasters)),
-            Listings: new ImplicitModKeyCollection(oblivion.AsEnumerable()),
+            Listings: new ImplicitModKeyCollection(oblivionBaseMasters.And(oblivionReBaseMasters)),
             RecordFormKeys: []);
         #endregion
 
