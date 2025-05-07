@@ -62,6 +62,8 @@ public sealed record GameConstants
     
     public StringsLanguageFormat? StringsLanguageFormat { get; init; }
 
+    public string DataFolderRelativePath { get; init; } = "Data";
+
     public bool UsesStrings => StringsLanguageFormat != null;
     
     public bool SeparateMasterLoadOrders { get; init; }
@@ -175,6 +177,11 @@ public sealed record GameConstants
         smallMasterFlag: null,
         mediumMasterFlag: null,
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
+
+    public static readonly GameConstants OblivionRE = Oblivion with
+    {
+        DataFolderRelativePath = Path.Combine("OblivionRemastered", "Content", "Dev", "ObvData", "Data")
+    };
 
     /// <summary> 
     /// Readonly singleton of Skyrim LE game constants 
@@ -486,7 +493,7 @@ public sealed record GameConstants
         return release switch
         {
             GameRelease.Oblivion => Oblivion,
-            GameRelease.OblivionRE => Oblivion,
+            GameRelease.OblivionRE => OblivionRE,
             GameRelease.SkyrimLE => SkyrimLE,
             GameRelease.EnderalLE => EnderalLE,
             GameRelease.SkyrimSE => SkyrimSE,

@@ -5,6 +5,8 @@ using GameFinder.StoreHandlers.Steam;
 using GameFinder.StoreHandlers.Steam.Models.ValueTypes;
 using GameFinder.StoreHandlers.Xbox;
 using Microsoft.Win32;
+using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 using FileSystem = NexusMods.Paths.FileSystem;
 
@@ -107,7 +109,8 @@ public sealed class GameLocator
     {
         if (TryGetGameDirectory(release, out path))
         {
-            path = Path.Combine(path, "Data");
+            var constants = GameConstants.Get(release);
+            path = Path.Combine(path, constants.DataFolderRelativePath);
             return true;
         }
         path = default;
