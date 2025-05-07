@@ -327,6 +327,11 @@ public class MainVM : ViewModel
             df.DataFolder.TargetPath = settings.DataFolderLocations.Oblivion;
         }
 
+        if (DataFolders.TryGetValue(GameRelease.OblivionRE, out df))
+        {
+            df.DataFolder.TargetPath = settings.DataFolderLocations.OblivionRE;
+        }
+
         if (DataFolders.TryGetValue(GameRelease.SkyrimLE, out df))
         {
             df.DataFolder.TargetPath = settings.DataFolderLocations.Skyrim;
@@ -393,6 +398,7 @@ public class MainVM : ViewModel
         settings.PassthroughSettings.Trimming.TypesToInclude = InterestingRecordTypes.Select(x => x.RecordType.Type).ToList();
 
         settings.DataFolderLocations.Oblivion = DataFolders.Get(GameRelease.Oblivion).DataFolder.TargetPath;
+        settings.DataFolderLocations.OblivionRE = DataFolders.Get(GameRelease.OblivionRE).DataFolder.TargetPath;
         settings.DataFolderLocations.Skyrim = DataFolders.Get(GameRelease.SkyrimLE).DataFolder.TargetPath;
         settings.DataFolderLocations.SkyrimSpecialEdition = DataFolders.Get(GameRelease.SkyrimSE).DataFolder.TargetPath;
         settings.DataFolderLocations.SkyrimVR = DataFolders.Get(GameRelease.SkyrimVR).DataFolder.TargetPath;
