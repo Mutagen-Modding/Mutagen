@@ -81,7 +81,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Description
-        public String Description { get; set; } = string.Empty;
+        public TranslatedString Description { get; set; } = string.Empty;
+        ITranslatedStringGetter IClassGetter.Description => this.Description;
         #endregion
         #region Icon
         public String? Icon { get; set; }
@@ -1054,7 +1055,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// Aspects: INamedRequired, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString Name { get; set; }
-        new String Description { get; set; }
+        new TranslatedString Description { get; set; }
         new String? Icon { get; set; }
         new Int32 Unknown { get; set; }
         new Skill? Teaches { get; set; }
@@ -1091,7 +1092,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         ITranslatedStringGetter Name { get; }
         #endregion
-        String Description { get; }
+        ITranslatedStringGetter Description { get; }
         String? Icon { get; }
         Int32 Unknown { get; }
         Skill? Teaches { get; }
@@ -1382,7 +1383,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Name.Clear();
-            item.Description = string.Empty;
+            item.Description.Clear();
             item.Icon = default;
             item.Unknown = default(Int32);
             item.Teaches = default;
@@ -1477,7 +1478,7 @@ namespace Mutagen.Bethesda.Skyrim
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Name = object.Equals(item.Name, rhs.Name);
-            ret.Description = string.Equals(item.Description, rhs.Description);
+            ret.Description = object.Equals(item.Description, rhs.Description);
             ret.Icon = string.Equals(item.Icon, rhs.Icon);
             ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Teaches = item.Teaches == rhs.Teaches;
@@ -1666,7 +1667,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.Description) ?? true))
             {
-                if (!string.Equals(lhs.Description, rhs.Description)) return false;
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Class_FieldIndex.Icon) ?? true))
             {
@@ -1858,7 +1859,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Description) ?? true))
             {
-                item.Description = rhs.Description;
+                item.Description = rhs.Description.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Class_FieldIndex.Icon) ?? true))
             {
@@ -2075,7 +2076,8 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.Description,
                 header: translationParams.ConvertToCustom(RecordTypes.DESC),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Icon,
@@ -2187,6 +2189,8 @@ namespace Mutagen.Bethesda.Skyrim
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
                     return (int)Class_FieldIndex.Description;
@@ -2298,7 +2302,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : TranslatedString.Empty;
         #endregion
         #region Icon
         private int? _IconLocation;

@@ -1126,7 +1126,7 @@ public abstract class Processor
     {
         var folderOverlay = StringsFolderLookupOverlay.TypicalFactory(GameRelease, ModKey, DataFolder, null);
         var sourceDict = folderOverlay.Get(source);
-        if (!sourceDict.TryGetValue(language, out var overlay)) return Array.Empty<StringEntry>();
+        if (!sourceDict.TryGetValue(language, out var overlay)) return [];
         var ret = new List<StringEntry>();
         var stringAlignmentLookup = new Dictionary<RecordType, AStringsAlignment>();
         var stringAlignmentsForAll = new List<AStringsAlignment>();
@@ -1146,7 +1146,7 @@ public abstract class Processor
         var mod = stream.ReadModHeader();
         var localizedIndex = stream.MetaData.Constants.Release.ToCategory().GetLocalizedFlagIndex();
         if (!localizedIndex.HasValue || !Enums.HasFlag(mod.Flags, localizedIndex.Value))
-            return Array.Empty<StringEntry>();
+            return [];
 
         stream.Position = 0;
         var locs = RecordLocator.GetLocations(stream);

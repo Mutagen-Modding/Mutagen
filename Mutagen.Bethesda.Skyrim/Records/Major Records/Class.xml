@@ -3,7 +3,7 @@
   <Object name="Class" recordType="CLAS" objType="Record" baseClass="SkyrimMajorRecord">
     <Fields>
       <String name="Name" recordType="FULL" nullable="False" translated="Normal" />
-      <String name="Description" recordType="DESC" nullable="False" />
+      <String name="Description" recordType="DESC" nullable="False" translated="DL" />
       <String name="Icon" recordType="ICON" />
       <Data>
         <Fields>

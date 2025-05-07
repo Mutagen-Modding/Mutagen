@@ -26,6 +26,7 @@ using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Assets;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -107,9 +108,9 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ISoundOutputModelGetter> ISoundDescriptorGetter.OutputModel => this.OutputModel;
         #endregion
         #region String
-        public String? String { get; set; }
+        public TranslatedString? String { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? ISoundDescriptorGetter.String => this.String;
+        ITranslatedStringGetter? ISoundDescriptorGetter.String => this.String;
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1080,7 +1081,7 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLinkNullable<ISoundDescriptorGetter> AlternateSoundFor { get; set; }
         new ExtendedList<IAssetLink<SkyrimSoundAssetType>> SoundFiles { get; }
         new IFormLinkNullable<ISoundOutputModelGetter> OutputModel { get; set; }
-        new String? String { get; set; }
+        new TranslatedString? String { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         new SoundLoopAndRumble? LoopAndRumble { get; set; }
         new Percent PercentFrequencyShift { get; set; }
@@ -1113,7 +1114,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ISoundDescriptorGetter> AlternateSoundFor { get; }
         IReadOnlyList<IAssetLinkGetter<SkyrimSoundAssetType>> SoundFiles { get; }
         IFormLinkNullableGetter<ISoundOutputModelGetter> OutputModel { get; }
-        String? String { get; }
+        ITranslatedStringGetter? String { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         ISoundLoopAndRumbleGetter? LoopAndRumble { get; }
         Percent PercentFrequencyShift { get; }
@@ -1542,7 +1543,7 @@ namespace Mutagen.Bethesda.Skyrim
                 (l, r) => object.Equals(l, r),
                 include);
             ret.OutputModel = item.OutputModel.Equals(rhs.OutputModel);
-            ret.String = string.Equals(item.String, rhs.String);
+            ret.String = object.Equals(item.String, rhs.String);
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1753,7 +1754,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((equalsMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.String) ?? true))
             {
-                if (!string.Equals(lhs.String, rhs.String)) return false;
+                if (!object.Equals(lhs.String, rhs.String)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Conditions) ?? true))
             {
@@ -2009,7 +2010,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.String) ?? true))
             {
-                item.String = rhs.String;
+                item.String = rhs.String?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Conditions) ?? true))
             {
@@ -2282,7 +2283,8 @@ namespace Mutagen.Bethesda.Skyrim
                 writer: writer,
                 item: item.String,
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
@@ -2433,6 +2435,8 @@ namespace Mutagen.Bethesda.Skyrim
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.String = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
                     return (int)SoundDescriptor_FieldIndex.String;
@@ -2555,7 +2559,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region String
         private int? _StringLocation;
-        public String? String => _StringLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StringLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public ITranslatedStringGetter? String => _StringLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StringLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         #region LoopAndRumble
