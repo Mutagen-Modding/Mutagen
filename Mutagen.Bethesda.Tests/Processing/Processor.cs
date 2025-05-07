@@ -119,14 +119,14 @@ public abstract class Processor
 
         var config = Instructions.GetConfig();
 
-        using (var processor = new BinaryFileProcessor(
-                   new FileStream(preprocessedPath, FileMode.Open, FileAccess.Read),
-                   config))
+        await using (var processor = new BinaryFileProcessor(
+                         new FileStream(preprocessedPath, FileMode.Open, FileAccess.Read),
+                         config))
         {
             try
             {
-                using var outStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write);
-                processor.CopyTo(outStream);
+                await using var outStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write);
+                await processor.CopyToAsync(outStream);
             }
             catch (Exception)
             {
@@ -155,13 +155,15 @@ public abstract class Processor
         }
     }
 
-    protected virtual async Task PreProcessorJobs(Func<IMutagenReadStream> streamGetter)
+    protected async virtual Task PreProcessorJobs(Func<IMutagenReadStream> streamGetter)
     {
     }
 
     protected virtual IEnumerable<Func<Task>> ExtraJobs(Func<IMutagenReadStream> streamGetter)
     {
         yield return async () => RemoveEmptyGroups(streamGetter);
+
+        yield return async () => FixGroupFormIdOverflows(streamGetter);
 
         if (GameRelease.ToCategory().HasLocalization())
         {
@@ -845,7 +847,7 @@ public abstract class Processor
             offsetLoc + subRec.Location + subRec.HeaderLength + subRec.ContentLength - numBytes, 
             numBytes));
     }
-
+    
     public void RemoveEmptyGroups(Func<IMutagenReadStream> streamGetter)
     {
         using var stream = streamGetter();
@@ -855,6 +857,19 @@ public abstract class Processor
             var groupMeta = stream.ReadGroupHeader();
             if (groupMeta.ContentLength != 0 || groupMeta.GroupType != 0) continue; 
             Instructions.SetRemove(RangeInt64.FromLength(loc, groupMeta.HeaderLength));
+        }
+    }
+    
+    public void FixGroupFormIdOverflows(Func<IMutagenReadStream> streamGetter)
+    {
+        using var stream = streamGetter();
+        foreach (var loc in _alignedFileLocs.GrupLocations.Keys)
+        {
+            stream.Position = loc;
+            var groupMeta = stream.ReadGroupHeader();
+            if (!this.Meta.GroupConstants.HasParentFormId.Contains(groupMeta.GroupType)) continue;
+            var offset = loc + 8;
+            ProcessFormIDOverflow(groupMeta.HeaderData.Slice(8), ref offset);
         }
     }
 

@@ -67,7 +67,9 @@ public class OblivionPassthroughTest : PassthroughTest
             new RecordType("XCWT"),
             new RecordType("XOWN"),
             new RecordType("XRNK"),
-            new RecordType("XGLB"));
+            new RecordType("XGLB"),
+            new RecordType("XTLI"),
+            new RecordType("XLRL"));
         ret.AddAlignments(
             RecordTypes.WRLD,
             new RecordType("EDID"),
@@ -116,7 +118,9 @@ public class OblivionPassthroughTest : PassthroughTest
             new RecordType("XRGD"),
             new RecordType("XSCL"),
             new RecordType("XSOL"),
-            new RecordType("DATA"));
+            new RecordType("DATA"),
+            new RecordType("XAAG"),
+            new RecordType("XACN"));
         ret.AddAlignments(
             RecordTypes.ACRE,
             new RecordType("EDID"),

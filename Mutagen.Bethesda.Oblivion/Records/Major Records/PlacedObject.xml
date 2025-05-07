@@ -31,7 +31,7 @@
       <Enum name="ContainedSoul" recordType="XSOL" enumName="SoulLevel" />
       <RefDirect name="Location" refName="Location" recordType="DATA" />
       <ByteArray name="XAAG" recordType="XAAG" unknown="true" />
-      <String name="XACN" recordType="XACN" />
+      <String name="XACN" recordType="XACN" binaryType="NullTerminate" />
     </Fields>
     <LinkInterface>IPlaced</LinkInterface>
   </Object>

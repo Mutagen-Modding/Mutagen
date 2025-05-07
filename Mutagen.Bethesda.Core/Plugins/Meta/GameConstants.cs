@@ -130,6 +130,7 @@ public sealed record GameConstants
                 CellSubGroupTypes: new[] { 3, 5 }),
             topic: new GroupTopicConstants(7),
             hasSubGroups: new int[] { 1, 2, 4, 6, 7 },
+            hasParentFormId: new int[] { 1, 6, 7, 8, 9, 10 },
             new GroupNesting[]
             {
                 new GroupNesting(2,
@@ -201,6 +202,7 @@ public sealed record GameConstants
                 CellSubGroupTypes: new[] { 3, 5 }),
             topic: new GroupTopicConstants(7),
             hasSubGroups: new int[] { 1, 2, 4, 6, 7 },
+            hasParentFormId: new int[] {  }, // ToDo
             new GroupNesting[]
             {
                 new GroupNesting(2,
@@ -318,6 +320,7 @@ public sealed record GameConstants
                 CellSubGroupTypes: new[] { 3, 5 }),
             topic: new GroupTopicConstants(7),
             hasSubGroups: new int[] { 1, 2, 4, 6, 7, 10 },
+            hasParentFormId: new int[] {  }, // ToDo
             new GroupNesting[]
             {
                 new GroupNesting(2,
@@ -405,6 +408,7 @@ public sealed record GameConstants
                 CellSubGroupTypes: new[] { 3, 5 }),
             topic: new GroupTopicConstants(7),
             hasSubGroups: new int[] { 1, 2, 4, 6, 7, 10 },
+            hasParentFormId: new int[] {  }, // ToDo
             new GroupNesting[]
             {
                 new GroupNesting(2,
