@@ -788,10 +788,10 @@ public class SkyrimProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        foreach (var snam in majorFrame.FindEnumerateSubrecords(RecordTypes.SNAM))
-        {
-            ProcessFormIDOverflow(snam, fileOffset);
-        }
+        ProcessFormIDOverflowsForRecords(
+            majorFrame,
+            fileOffset,
+            RecordTypes.SNAM);
     }
 
     private void ProcessStatics(

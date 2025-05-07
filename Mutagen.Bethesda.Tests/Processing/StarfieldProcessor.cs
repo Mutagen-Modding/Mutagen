@@ -535,10 +535,10 @@ public class StarfieldProcessor : Processor
             ProcessBool(xlgd, fileOffset, 0x54, 4, 1);
         }
 
-        foreach (var xplk in majorFrame.FindEnumerateSubrecords(RecordTypes.XPLK))
-        {
-            ProcessFormIDOverflow(xplk, fileOffset);
-        }
+        ProcessFormIDOverflowsForRecords(
+            majorFrame,
+            fileOffset,
+            RecordTypes.XPLK);
     }
 
     private void ProcessRagdollData(MajorRecordFrame majorFrame, long fileOffset)
@@ -1333,20 +1333,20 @@ public class StarfieldProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        foreach (var bnam in majorFrame.FindEnumerateSubrecords(RecordTypes.BNAM))
-        {
-            ProcessFormIDOverflows(bnam, fileOffset);
-        }
+        ProcessFormIDOverflowsForRecords(
+            majorFrame,
+            fileOffset,
+            RecordTypes.BNAM);
     }
 
     private void ProcessSurfaceTree(
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        foreach (var bnam in majorFrame.FindEnumerateSubrecords(RecordTypes.ENAM))
-        {
-            ProcessFormIDOverflows(bnam, fileOffset);
-        }
+        ProcessFormIDOverflowsForRecords(
+            majorFrame,
+            fileOffset,
+            RecordTypes.ENAM);
     }
 
     private void ProcessStatics(
@@ -1370,10 +1370,10 @@ public class StarfieldProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        if (majorFrame.TryFindSubrecord(RecordTypes.LLKC, out var llkc))
-        {
-            ProcessFormIDOverflow(llkc, fileOffset);
-        }
+        ProcessFormIDOverflowsForRecords(
+            majorFrame,
+            fileOffset,
+            RecordTypes.LLKC);
     }
 
     private readonly string[] OMODRecords = new[]
