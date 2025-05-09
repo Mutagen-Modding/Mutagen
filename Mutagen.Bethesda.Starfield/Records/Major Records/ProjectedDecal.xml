@@ -3,9 +3,8 @@
   <Object name="ProjectedDecal" recordType="PDCL" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <Float name="ODTY" recordType="ODTY" unknown="true" />
-      <Float name="ODRT" recordType="ODRT" unknown="true" />
-      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
+      <RefDirect name="ObjectPaletteDefaults" refName="ObjectPaletteDefaults" />
       <RefList name="Components" refName="AComponent" />
       <RefDirect name="Transforms" refName="Transforms" />
       <RefDirect name="PTTA" refName="PTTA" unknown="true" />

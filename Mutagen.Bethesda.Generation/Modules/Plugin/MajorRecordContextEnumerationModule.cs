@@ -52,7 +52,7 @@ public class MajorRecordContextEnumerationModule : GenerationModule
     {
         if (obj.GetObjectType() != ObjectType.Mod) return;
         var needsCatch = obj.GetObjectType() == ObjectType.Mod;
-        string catchLine = needsCatch ? ".Catch(e => throw RecordException.Enrich(e, obj.ModKey))" : string.Empty;
+        string catchLine = needsCatch ? ".Catch(e => RecordException.EnrichAndThrow(e, obj.ModKey))" : string.Empty;
         string enderSemi = needsCatch ? string.Empty : ";";
         var modGetter = obj.GetObjectData().GameCategory.Value.ModInterface(getter: true);
         var modSetter = obj.GetObjectData().GameCategory.Value.ModInterface(getter: false);

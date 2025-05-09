@@ -197,6 +197,8 @@ public partial class RecordTypeInts
     public const int WNAM = 0x4D414E57;
     public const int WRLD = 0x444C5257;
     public const int WTHR = 0x52485457;
+    public const int XAAG = 0x47414158;
+    public const int XACN = 0x4E434158;
     public const int XACT = 0x54434158;
     public const int XCCM = 0x4D434358;
     public const int XCHG = 0x47484358;
@@ -214,6 +216,7 @@ public partial class RecordTypeInts
     public const int XLCM = 0x4D434C58;
     public const int XLOC = 0x434F4C58;
     public const int XLOD = 0x444F4C58;
+    public const int XLRL = 0x4C524C58;
     public const int XMRC = 0x43524D58;
     public const int XMRK = 0x4B524D58;
     public const int XNAM = 0x4D414E58;
@@ -226,6 +229,7 @@ public partial class RecordTypeInts
     public const int XSED = 0x44455358;
     public const int XSOL = 0x4C4F5358;
     public const int XTEL = 0x4C455458;
+    public const int XTLI = 0x494C5458;
     public const int XTRG = 0x47525458;
     public const int XXXX = 0x58585858;
     public const int ZNAM = 0x4D414E5A;

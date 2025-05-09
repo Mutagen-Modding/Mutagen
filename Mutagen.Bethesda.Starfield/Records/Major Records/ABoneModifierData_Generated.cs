@@ -53,11 +53,14 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region UnknownString1
-        public String UnknownString1 { get; set; } = string.Empty;
+        #region Driver
+        public String Driver { get; set; } = string.Empty;
         #endregion
-        #region UnknownString2
-        public String UnknownString2 { get; set; } = string.Empty;
+        #region Target
+        public String Target { get; set; } = string.Empty;
+        #endregion
+        #region MaxAnimationDistance
+        public Single MaxAnimationDistance { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -98,16 +101,19 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.UnknownString1 = initialValue;
-                this.UnknownString2 = initialValue;
+                this.Driver = initialValue;
+                this.Target = initialValue;
+                this.MaxAnimationDistance = initialValue;
             }
 
             public Mask(
-                TItem UnknownString1,
-                TItem UnknownString2)
+                TItem Driver,
+                TItem Target,
+                TItem MaxAnimationDistance)
             {
-                this.UnknownString1 = UnknownString1;
-                this.UnknownString2 = UnknownString2;
+                this.Driver = Driver;
+                this.Target = Target;
+                this.MaxAnimationDistance = MaxAnimationDistance;
             }
 
             #pragma warning disable CS8618
@@ -119,8 +125,9 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem UnknownString1;
-            public TItem UnknownString2;
+            public TItem Driver;
+            public TItem Target;
+            public TItem MaxAnimationDistance;
             #endregion
 
             #region Equals
@@ -133,15 +140,17 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.UnknownString1, rhs.UnknownString1)) return false;
-                if (!object.Equals(this.UnknownString2, rhs.UnknownString2)) return false;
+                if (!object.Equals(this.Driver, rhs.Driver)) return false;
+                if (!object.Equals(this.Target, rhs.Target)) return false;
+                if (!object.Equals(this.MaxAnimationDistance, rhs.MaxAnimationDistance)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.UnknownString1);
-                hash.Add(this.UnknownString2);
+                hash.Add(this.Driver);
+                hash.Add(this.Target);
+                hash.Add(this.MaxAnimationDistance);
                 return hash.ToHashCode();
             }
 
@@ -150,8 +159,9 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public virtual bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.UnknownString1)) return false;
-                if (!eval(this.UnknownString2)) return false;
+                if (!eval(this.Driver)) return false;
+                if (!eval(this.Target)) return false;
+                if (!eval(this.MaxAnimationDistance)) return false;
                 return true;
             }
             #endregion
@@ -159,8 +169,9 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public virtual bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.UnknownString1)) return true;
-                if (eval(this.UnknownString2)) return true;
+                if (eval(this.Driver)) return true;
+                if (eval(this.Target)) return true;
+                if (eval(this.MaxAnimationDistance)) return true;
                 return false;
             }
             #endregion
@@ -175,8 +186,9 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.UnknownString1 = eval(this.UnknownString1);
-                obj.UnknownString2 = eval(this.UnknownString2);
+                obj.Driver = eval(this.Driver);
+                obj.Target = eval(this.Target);
+                obj.MaxAnimationDistance = eval(this.MaxAnimationDistance);
             }
             #endregion
 
@@ -195,13 +207,17 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(ABoneModifierData.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.UnknownString1 ?? true)
+                    if (printMask?.Driver ?? true)
                     {
-                        sb.AppendItem(UnknownString1, "UnknownString1");
+                        sb.AppendItem(Driver, "Driver");
                     }
-                    if (printMask?.UnknownString2 ?? true)
+                    if (printMask?.Target ?? true)
                     {
-                        sb.AppendItem(UnknownString2, "UnknownString2");
+                        sb.AppendItem(Target, "Target");
+                    }
+                    if (printMask?.MaxAnimationDistance ?? true)
+                    {
+                        sb.AppendItem(MaxAnimationDistance, "MaxAnimationDistance");
                     }
                 }
             }
@@ -227,8 +243,9 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? UnknownString1;
-            public Exception? UnknownString2;
+            public Exception? Driver;
+            public Exception? Target;
+            public Exception? MaxAnimationDistance;
             #endregion
 
             #region IErrorMask
@@ -237,10 +254,12 @@ namespace Mutagen.Bethesda.Starfield
                 ABoneModifierData_FieldIndex enu = (ABoneModifierData_FieldIndex)index;
                 switch (enu)
                 {
-                    case ABoneModifierData_FieldIndex.UnknownString1:
-                        return UnknownString1;
-                    case ABoneModifierData_FieldIndex.UnknownString2:
-                        return UnknownString2;
+                    case ABoneModifierData_FieldIndex.Driver:
+                        return Driver;
+                    case ABoneModifierData_FieldIndex.Target:
+                        return Target;
+                    case ABoneModifierData_FieldIndex.MaxAnimationDistance:
+                        return MaxAnimationDistance;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -251,11 +270,14 @@ namespace Mutagen.Bethesda.Starfield
                 ABoneModifierData_FieldIndex enu = (ABoneModifierData_FieldIndex)index;
                 switch (enu)
                 {
-                    case ABoneModifierData_FieldIndex.UnknownString1:
-                        this.UnknownString1 = ex;
+                    case ABoneModifierData_FieldIndex.Driver:
+                        this.Driver = ex;
                         break;
-                    case ABoneModifierData_FieldIndex.UnknownString2:
-                        this.UnknownString2 = ex;
+                    case ABoneModifierData_FieldIndex.Target:
+                        this.Target = ex;
+                        break;
+                    case ABoneModifierData_FieldIndex.MaxAnimationDistance:
+                        this.MaxAnimationDistance = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -267,11 +289,14 @@ namespace Mutagen.Bethesda.Starfield
                 ABoneModifierData_FieldIndex enu = (ABoneModifierData_FieldIndex)index;
                 switch (enu)
                 {
-                    case ABoneModifierData_FieldIndex.UnknownString1:
-                        this.UnknownString1 = (Exception?)obj;
+                    case ABoneModifierData_FieldIndex.Driver:
+                        this.Driver = (Exception?)obj;
                         break;
-                    case ABoneModifierData_FieldIndex.UnknownString2:
-                        this.UnknownString2 = (Exception?)obj;
+                    case ABoneModifierData_FieldIndex.Target:
+                        this.Target = (Exception?)obj;
+                        break;
+                    case ABoneModifierData_FieldIndex.MaxAnimationDistance:
+                        this.MaxAnimationDistance = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -281,8 +306,9 @@ namespace Mutagen.Bethesda.Starfield
             public virtual bool IsInError()
             {
                 if (Overall != null) return true;
-                if (UnknownString1 != null) return true;
-                if (UnknownString2 != null) return true;
+                if (Driver != null) return true;
+                if (Target != null) return true;
+                if (MaxAnimationDistance != null) return true;
                 return false;
             }
             #endregion
@@ -309,10 +335,13 @@ namespace Mutagen.Bethesda.Starfield
             protected virtual void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(UnknownString1, "UnknownString1");
+                    sb.AppendItem(Driver, "Driver");
                 }
                 {
-                    sb.AppendItem(UnknownString2, "UnknownString2");
+                    sb.AppendItem(Target, "Target");
+                }
+                {
+                    sb.AppendItem(MaxAnimationDistance, "MaxAnimationDistance");
                 }
             }
             #endregion
@@ -322,8 +351,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.UnknownString1 = this.UnknownString1.Combine(rhs.UnknownString1);
-                ret.UnknownString2 = this.UnknownString2.Combine(rhs.UnknownString2);
+                ret.Driver = this.Driver.Combine(rhs.Driver);
+                ret.Target = this.Target.Combine(rhs.Target);
+                ret.MaxAnimationDistance = this.MaxAnimationDistance.Combine(rhs.MaxAnimationDistance);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -347,8 +377,9 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool UnknownString1;
-            public bool UnknownString2;
+            public bool Driver;
+            public bool Target;
+            public bool MaxAnimationDistance;
             #endregion
 
             #region Ctors
@@ -358,8 +389,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.UnknownString1 = defaultOn;
-                this.UnknownString2 = defaultOn;
+                this.Driver = defaultOn;
+                this.Target = defaultOn;
+                this.MaxAnimationDistance = defaultOn;
             }
 
             #endregion
@@ -375,8 +407,9 @@ namespace Mutagen.Bethesda.Starfield
 
             protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((UnknownString1, null));
-                ret.Add((UnknownString2, null));
+                ret.Add((Driver, null));
+                ret.Add((Target, null));
+                ret.Add((MaxAnimationDistance, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -426,8 +459,9 @@ namespace Mutagen.Bethesda.Starfield
         IABoneModifierDataGetter,
         ILoquiObjectSetter<IABoneModifierData>
     {
-        new String UnknownString1 { get; set; }
-        new String UnknownString2 { get; set; }
+        new String Driver { get; set; }
+        new String Target { get; set; }
+        new Single MaxAnimationDistance { get; set; }
     }
 
     /// <summary>
@@ -445,8 +479,9 @@ namespace Mutagen.Bethesda.Starfield
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => ABoneModifierData_Registration.Instance;
-        String UnknownString1 { get; }
-        String UnknownString2 { get; }
+        String Driver { get; }
+        String Target { get; }
+        Single MaxAnimationDistance { get; }
 
     }
 
@@ -616,8 +651,9 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum ABoneModifierData_FieldIndex
     {
-        UnknownString1 = 0,
-        UnknownString2 = 1,
+        Driver = 0,
+        Target = 1,
+        MaxAnimationDistance = 2,
     }
     #endregion
 
@@ -628,9 +664,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(ABoneModifierData.Mask<>);
 
@@ -696,8 +732,9 @@ namespace Mutagen.Bethesda.Starfield
         public virtual void Clear(IABoneModifierData item)
         {
             ClearPartial();
-            item.UnknownString1 = string.Empty;
-            item.UnknownString2 = string.Empty;
+            item.Driver = string.Empty;
+            item.Target = string.Empty;
+            item.MaxAnimationDistance = default(Single);
         }
         
         #region Mutagen
@@ -747,8 +784,9 @@ namespace Mutagen.Bethesda.Starfield
             ABoneModifierData.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.UnknownString1 = string.Equals(item.UnknownString1, rhs.UnknownString1);
-            ret.UnknownString2 = string.Equals(item.UnknownString2, rhs.UnknownString2);
+            ret.Driver = string.Equals(item.Driver, rhs.Driver);
+            ret.Target = string.Equals(item.Target, rhs.Target);
+            ret.MaxAnimationDistance = item.MaxAnimationDistance.EqualsWithin(rhs.MaxAnimationDistance);
         }
         
         public string Print(
@@ -793,13 +831,17 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             ABoneModifierData.Mask<bool>? printMask = null)
         {
-            if (printMask?.UnknownString1 ?? true)
+            if (printMask?.Driver ?? true)
             {
-                sb.AppendItem(item.UnknownString1, "UnknownString1");
+                sb.AppendItem(item.Driver, "Driver");
             }
-            if (printMask?.UnknownString2 ?? true)
+            if (printMask?.Target ?? true)
             {
-                sb.AppendItem(item.UnknownString2, "UnknownString2");
+                sb.AppendItem(item.Target, "Target");
+            }
+            if (printMask?.MaxAnimationDistance ?? true)
+            {
+                sb.AppendItem(item.MaxAnimationDistance, "MaxAnimationDistance");
             }
         }
         
@@ -810,13 +852,17 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)ABoneModifierData_FieldIndex.UnknownString1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ABoneModifierData_FieldIndex.Driver) ?? true))
             {
-                if (!string.Equals(lhs.UnknownString1, rhs.UnknownString1)) return false;
+                if (!string.Equals(lhs.Driver, rhs.Driver)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ABoneModifierData_FieldIndex.UnknownString2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ABoneModifierData_FieldIndex.Target) ?? true))
             {
-                if (!string.Equals(lhs.UnknownString2, rhs.UnknownString2)) return false;
+                if (!string.Equals(lhs.Target, rhs.Target)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ABoneModifierData_FieldIndex.MaxAnimationDistance) ?? true))
+            {
+                if (!lhs.MaxAnimationDistance.EqualsWithin(rhs.MaxAnimationDistance)) return false;
             }
             return true;
         }
@@ -824,8 +870,9 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IABoneModifierDataGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.UnknownString1);
-            hash.Add(item.UnknownString2);
+            hash.Add(item.Driver);
+            hash.Add(item.Target);
+            hash.Add(item.MaxAnimationDistance);
             return hash.ToHashCode();
         }
         
@@ -858,13 +905,17 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)ABoneModifierData_FieldIndex.UnknownString1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ABoneModifierData_FieldIndex.Driver) ?? true))
             {
-                item.UnknownString1 = rhs.UnknownString1;
+                item.Driver = rhs.Driver;
             }
-            if ((copyMask?.GetShouldTranslate((int)ABoneModifierData_FieldIndex.UnknownString2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ABoneModifierData_FieldIndex.Target) ?? true))
             {
-                item.UnknownString2 = rhs.UnknownString2;
+                item.Target = rhs.Target;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ABoneModifierData_FieldIndex.MaxAnimationDistance) ?? true))
+            {
+                item.MaxAnimationDistance = rhs.MaxAnimationDistance;
             }
             DeepCopyInCustom(
                 item: item,
@@ -976,12 +1027,15 @@ namespace Mutagen.Bethesda.Starfield
         {
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.UnknownString1,
+                item: item.Driver,
                 binaryType: StringBinaryType.PrependLengthWithNullIfContent);
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.UnknownString2,
+                item: item.Target,
                 binaryType: StringBinaryType.PrependLengthWithNullIfContent);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.MaxAnimationDistance);
         }
 
         public virtual void Write(
@@ -1015,14 +1069,15 @@ namespace Mutagen.Bethesda.Starfield
             IABoneModifierData item,
             MutagenFrame frame)
         {
-            item.UnknownString1 = StringBinaryTranslation.Instance.Parse(
+            item.Driver = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
                 stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
                 parseWhole: true);
-            item.UnknownString2 = StringBinaryTranslation.Instance.Parse(
+            item.Target = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
                 stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
                 parseWhole: true);
+            item.MaxAnimationDistance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -1088,14 +1143,15 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        #region UnknownString1
-        public String UnknownString1 => BinaryStringUtility.ParsePrependedString(_structData.Slice(0x0), lengthLength: 4, encoding: _package.MetaData.Encodings.NonTranslated);
-        protected int UnknownString1EndingPos;
+        #region Driver
+        public String Driver => BinaryStringUtility.ParsePrependedString(_structData.Slice(0x0), lengthLength: 4, encoding: _package.MetaData.Encodings.NonTranslated);
+        protected int DriverEndingPos;
         #endregion
-        #region UnknownString2
-        public String UnknownString2 => BinaryStringUtility.ParsePrependedString(_structData.Slice(UnknownString1EndingPos), lengthLength: 4, encoding: _package.MetaData.Encodings.NonTranslated);
-        protected int UnknownString2EndingPos;
+        #region Target
+        public String Target => BinaryStringUtility.ParsePrependedString(_structData.Slice(DriverEndingPos), lengthLength: 4, encoding: _package.MetaData.Encodings.NonTranslated);
+        protected int TargetEndingPos;
         #endregion
+        public Single MaxAnimationDistance => _structData.Slice(TargetEndingPos, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1116,8 +1172,8 @@ namespace Mutagen.Bethesda.Starfield
             ABoneModifierDataBinaryOverlay ret,
             BinaryOverlayFactoryPackage package)
         {
-            ret.UnknownString1EndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._structData) + 4;
-            ret.UnknownString2EndingPos = ret.UnknownString1EndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.UnknownString1EndingPos)) + 4;
+            ret.DriverEndingPos = BinaryPrimitives.ReadInt32LittleEndian(ret._structData) + 4;
+            ret.TargetEndingPos = ret.DriverEndingPos + BinaryPrimitives.ReadInt32LittleEndian(ret._structData.Slice(ret.DriverEndingPos)) + 4;
         }
 
 

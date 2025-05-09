@@ -28,9 +28,9 @@ public class MultiModFileSplitterTests
         /// </summary>
         private HashSet<string> expectedEdids = new();
 
-        public Payload(SkyrimMod mod, Func<FormKey> formKeyGen, Func<string> edidFunc)
+        public Payload(SkyrimMod mod, Func<ModKey> modKeyGen, Func<string> edidFunc)
         {
-            _formKeyGen = formKeyGen;
+            _formKeyGen = () => new FormKey(modKeyGen(), 0x800);
             _edidFunc = edidFunc;
             Mod = mod;
         }

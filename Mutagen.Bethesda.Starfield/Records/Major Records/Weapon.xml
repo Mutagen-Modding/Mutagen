@@ -4,17 +4,14 @@
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <Float name="ODTY" recordType="ODTY" unknown="true" />
-      <Float name="ODRT" recordType="ODRT" unknown="true" />
-      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
+      <RefDirect name="ObjectPaletteDefaults" refName="ObjectPaletteDefaults" />
       <RefDirect name="Transforms" refName="Transforms" />
-      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <UInt64 name="XALG" recordType="XALG" unknown="true" />
       <RefList name="Components" refName="AComponent" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
-      <FormLink name="ObjectEffect" recordType="EITM">
-        <Interface>IEffectRecord</Interface>
-      </FormLink>
+      <FormLink name="ObjectEffect" recordType="EITM" refName="ObjectEffect" />
       <UInt16 name="EnchantmentAmount" recordType="EAMT" />
       <FormLink name="EquipmentType" recordType="ETYP" refName="EquipType" />
       <FormLink name="BlockBashImpactDataSet" recordType="BIDS" refName="ImpactDataSet" />
@@ -240,6 +237,7 @@
     <LinkInterface>IConstructibleObjectTarget</LinkInterface>
     <LinkInterface>IBindableEquipment</LinkInterface>
     <LinkInterface>IBaseObject</LinkInterface>
+    <LinkInterface>IResearchResourceTarget</LinkInterface>
   </Object>
   <Object name="WeaponDamageType" objType="Subrecord">
     <Fields>

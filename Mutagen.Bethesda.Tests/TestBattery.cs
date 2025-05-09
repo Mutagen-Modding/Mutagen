@@ -1,16 +1,17 @@
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Noggog.StructuredStrings;
+using Noggog.WorkEngine;
 
 namespace Mutagen.Bethesda.Tests;
 
 public static class TestBattery
 {
-    public static async Task RunTests(TestingSettings settings)
+    public static async Task RunTests(TestingSettings settings, IWorkDropoff workDropoff)
     {
         int passed = 0;
         int failed = 0;
-        await foreach (var test in GetTests(settings: settings))
+        await foreach (var test in GetTests(settings: settings, workDropoff))
         {
             using var sub = test.AllOutput.Subscribe(msg =>
             {
@@ -47,24 +48,24 @@ public static class TestBattery
         }
     }
 
-    public static Test RunTest(string name, Func<Subject<string>, Task> toDo, bool parallel = true)
+    public static Test RunTest(string name, Func<Subject<string>, Task> toDo, IWorkDropoff workDropoff)
     {
         return new Test(
             name,
-            parallel: parallel,
+            workDropoff: workDropoff,
             toDo: toDo);
     }
 
-    public static Test RunTest(string name, GameRelease release, Target target, Func<Subject<string>, Task> toDo, bool parallel = true)
+    public static Test RunTest(string name, GameRelease release, Target target, Func<Subject<string>, Task> toDo, IWorkDropoff workDropoff)
     {
         return new Test(name,
-            parallel: parallel,
+            workDropoff: workDropoff,
             toDo: toDo,
             release: release,
             filePath: target.Path);
     }
 
-    public static async IAsyncEnumerable<Test> GetTests(TestingSettings settings)
+    public static async IAsyncEnumerable<Test> GetTests(TestingSettings settings, IWorkDropoff workDropoff)
     {
         var oblivPassthrough = new Target()
         {
@@ -78,7 +79,7 @@ public static class TestBattery
             foreach (var target in targetGroup.Targets)
             {
                 if (!target.Do) continue;
-                PassthroughTest passthroughTest = PassthroughTest.Factory(settings, targetGroup, target);
+                PassthroughTest passthroughTest = PassthroughTest.Factory(settings, targetGroup, target, workDropoff);
                 if (passthroughTests)
                 {
                     yield return passthroughTest.BinaryPassthroughTest();
@@ -100,12 +101,12 @@ public static class TestBattery
 
         if (settings.TestGroupMasks)
         {
-            yield return RunTest("GroupMask Import", (o) => OtherTests.OblivionESM_GroupMask_Import(settings, oblivPassthrough));
-            yield return RunTest("GroupMask Export", (o) => OtherTests.OblivionESM_GroupMask_Export(settings, oblivPassthrough));
+            yield return RunTest("GroupMask Import", (o) => OtherTests.OblivionESM_GroupMask_Import(settings, oblivPassthrough), workDropoff);
+            yield return RunTest("GroupMask Export", (o) => OtherTests.OblivionESM_GroupMask_Export(settings, oblivPassthrough), workDropoff);
         }
         if (settings.TestFlattenedMod)
         {
-            yield return RunTest("Flatten Mod", (o) => FlattenedMod_Tests.Oblivion_FlattenMod(settings));
+            yield return RunTest("Flatten Mod", (o) => FlattenedMod_Tests.Oblivion_FlattenMod(settings), workDropoff);
         }
         if (settings.TestBenchmarks)
         {
@@ -113,7 +114,7 @@ public static class TestBattery
         }
         if (settings.TestRecordEnumerables)
         {
-            yield return RunTest("Record Enumerations", (o) => OtherTests.RecordEnumerations(settings, oblivPassthrough));
+            yield return RunTest("Record Enumerations", (o) => OtherTests.RecordEnumerations(settings, oblivPassthrough), workDropoff);
         }
     }
 }

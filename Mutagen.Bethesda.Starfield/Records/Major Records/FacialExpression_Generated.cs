@@ -91,17 +91,17 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
         #endregion
-        #region Items
+        #region Morphs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<FacialExpressionItem> _Items = new ExtendedList<FacialExpressionItem>();
-        public ExtendedList<FacialExpressionItem> Items
+        private ExtendedList<FacialExpressionMorph> _Morphs = new ExtendedList<FacialExpressionMorph>();
+        public ExtendedList<FacialExpressionMorph> Morphs
         {
-            get => this._Items;
-            init => this._Items = value;
+            get => this._Morphs;
+            init => this._Morphs = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFacialExpressionItemGetter> IFacialExpressionGetter.Items => _Items;
+        IReadOnlyList<IFacialExpressionMorphGetter> IFacialExpressionGetter.Morphs => _Morphs;
         #endregion
 
         #endregion
@@ -131,7 +131,7 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.Name = initialValue;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FacialExpressionItem.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FacialExpressionItem.Mask<TItem>?>>());
+                this.Morphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FacialExpressionMorph.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FacialExpressionMorph.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
                 TItem Name,
-                TItem Items)
+                TItem Morphs)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -154,7 +154,7 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.Name = Name;
-                this.Items = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FacialExpressionItem.Mask<TItem>?>>?>(Items, Enumerable.Empty<MaskItemIndexed<TItem, FacialExpressionItem.Mask<TItem>?>>());
+                this.Morphs = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FacialExpressionMorph.Mask<TItem>?>>?>(Morphs, Enumerable.Empty<MaskItemIndexed<TItem, FacialExpressionMorph.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -167,7 +167,7 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public TItem Name;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FacialExpressionItem.Mask<TItem>?>>?>? Items;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FacialExpressionMorph.Mask<TItem>?>>?>? Morphs;
             #endregion
 
             #region Equals
@@ -182,14 +182,14 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
-                if (!object.Equals(this.Items, rhs.Items)) return false;
+                if (!object.Equals(this.Morphs, rhs.Morphs)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Name);
-                hash.Add(this.Items);
+                hash.Add(this.Morphs);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -201,12 +201,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Name)) return false;
-                if (this.Items != null)
+                if (this.Morphs != null)
                 {
-                    if (!eval(this.Items.Overall)) return false;
-                    if (this.Items.Specific != null)
+                    if (!eval(this.Morphs.Overall)) return false;
+                    if (this.Morphs.Specific != null)
                     {
-                        foreach (var item in this.Items.Specific)
+                        foreach (var item in this.Morphs.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -222,12 +222,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Name)) return true;
-                if (this.Items != null)
+                if (this.Morphs != null)
                 {
-                    if (eval(this.Items.Overall)) return true;
-                    if (this.Items.Specific != null)
+                    if (eval(this.Morphs.Overall)) return true;
+                    if (this.Morphs.Specific != null)
                     {
-                        foreach (var item in this.Items.Specific)
+                        foreach (var item in this.Morphs.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -250,16 +250,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Name = eval(this.Name);
-                if (Items != null)
+                if (Morphs != null)
                 {
-                    obj.Items = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FacialExpressionItem.Mask<R>?>>?>(eval(this.Items.Overall), Enumerable.Empty<MaskItemIndexed<R, FacialExpressionItem.Mask<R>?>>());
-                    if (Items.Specific != null)
+                    obj.Morphs = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FacialExpressionMorph.Mask<R>?>>?>(eval(this.Morphs.Overall), Enumerable.Empty<MaskItemIndexed<R, FacialExpressionMorph.Mask<R>?>>());
+                    if (Morphs.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, FacialExpressionItem.Mask<R>?>>();
-                        obj.Items.Specific = l;
-                        foreach (var item in Items.Specific)
+                        var l = new List<MaskItemIndexed<R, FacialExpressionMorph.Mask<R>?>>();
+                        obj.Morphs.Specific = l;
+                        foreach (var item in Morphs.Specific)
                         {
-                            MaskItemIndexed<R, FacialExpressionItem.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, FacialExpressionItem.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, FacialExpressionMorph.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, FacialExpressionMorph.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -287,16 +287,16 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Name, "Name");
                     }
-                    if ((printMask?.Items?.Overall ?? true)
-                        && Items is {} ItemsItem)
+                    if ((printMask?.Morphs?.Overall ?? true)
+                        && Morphs is {} MorphsItem)
                     {
-                        sb.AppendLine("Items =>");
+                        sb.AppendLine("Morphs =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(ItemsItem.Overall);
-                            if (ItemsItem.Specific != null)
+                            sb.AppendItem(MorphsItem.Overall);
+                            if (MorphsItem.Specific != null)
                             {
-                                foreach (var subItem in ItemsItem.Specific)
+                                foreach (var subItem in MorphsItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -318,7 +318,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public Exception? Name;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FacialExpressionItem.ErrorMask?>>?>? Items;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FacialExpressionMorph.ErrorMask?>>?>? Morphs;
             #endregion
 
             #region IErrorMask
@@ -329,8 +329,8 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case FacialExpression_FieldIndex.Name:
                         return Name;
-                    case FacialExpression_FieldIndex.Items:
-                        return Items;
+                    case FacialExpression_FieldIndex.Morphs:
+                        return Morphs;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -344,8 +344,8 @@ namespace Mutagen.Bethesda.Starfield
                     case FacialExpression_FieldIndex.Name:
                         this.Name = ex;
                         break;
-                    case FacialExpression_FieldIndex.Items:
-                        this.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FacialExpressionItem.ErrorMask?>>?>(ex, null);
+                    case FacialExpression_FieldIndex.Morphs:
+                        this.Morphs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FacialExpressionMorph.ErrorMask?>>?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -361,8 +361,8 @@ namespace Mutagen.Bethesda.Starfield
                     case FacialExpression_FieldIndex.Name:
                         this.Name = (Exception?)obj;
                         break;
-                    case FacialExpression_FieldIndex.Items:
-                        this.Items = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FacialExpressionItem.ErrorMask?>>?>)obj;
+                    case FacialExpression_FieldIndex.Morphs:
+                        this.Morphs = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FacialExpressionMorph.ErrorMask?>>?>)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -374,7 +374,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (Name != null) return true;
-                if (Items != null) return true;
+                if (Morphs != null) return true;
                 return false;
             }
             #endregion
@@ -404,15 +404,15 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(Name, "Name");
                 }
-                if (Items is {} ItemsItem)
+                if (Morphs is {} MorphsItem)
                 {
-                    sb.AppendLine("Items =>");
+                    sb.AppendLine("Morphs =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(ItemsItem.Overall);
-                        if (ItemsItem.Specific != null)
+                        sb.AppendItem(MorphsItem.Overall);
+                        if (MorphsItem.Specific != null)
                         {
-                            foreach (var subItem in ItemsItem.Specific)
+                            foreach (var subItem in MorphsItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -431,7 +431,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.Items = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FacialExpressionItem.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Items?.Overall, rhs.Items?.Overall), Noggog.ExceptionExt.Combine(this.Items?.Specific, rhs.Items?.Specific));
+                ret.Morphs = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FacialExpressionMorph.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Morphs?.Overall, rhs.Morphs?.Overall), Noggog.ExceptionExt.Combine(this.Morphs?.Specific, rhs.Morphs?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -455,7 +455,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public bool Name;
-            public FacialExpressionItem.TranslationMask? Items;
+            public FacialExpressionMorph.TranslationMask? Morphs;
             #endregion
 
             #region Ctors
@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.GetCrystal(ret);
                 ret.Add((Name, null));
-                ret.Add((Items == null ? DefaultOn : !Items.GetCrystal().CopyNothing, Items?.GetCrystal()));
+                ret.Add((Morphs == null ? DefaultOn : !Morphs.GetCrystal().CopyNothing, Morphs?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -626,7 +626,7 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
-        new ExtendedList<FacialExpressionItem> Items { get; }
+        new ExtendedList<FacialExpressionMorph> Morphs { get; }
     }
 
     public partial interface IFacialExpressionInternal :
@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion
-        IReadOnlyList<IFacialExpressionItemGetter> Items { get; }
+        IReadOnlyList<IFacialExpressionMorphGetter> Morphs { get; }
 
     }
 
@@ -832,7 +832,7 @@ namespace Mutagen.Bethesda.Starfield
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
         Name = 7,
-        Items = 8,
+        Morphs = 8,
     }
     #endregion
 
@@ -926,7 +926,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Name = default;
-            item.Items.Clear();
+            item.Morphs.Clear();
             base.Clear(item);
         }
         
@@ -1012,8 +1012,8 @@ namespace Mutagen.Bethesda.Starfield
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Name = object.Equals(item.Name, rhs.Name);
-            ret.Items = item.Items.CollectionEqualsHelper(
-                rhs.Items,
+            ret.Morphs = item.Morphs.CollectionEqualsHelper(
+                rhs.Morphs,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1070,12 +1070,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(NameItem, "Name");
             }
-            if (printMask?.Items?.Overall ?? true)
+            if (printMask?.Morphs?.Overall ?? true)
             {
-                sb.AppendLine("Items =>");
+                sb.AppendLine("Morphs =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.Items)
+                    foreach (var subItem in item.Morphs)
                     {
                         using (sb.Brace())
                         {
@@ -1138,9 +1138,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)FacialExpression_FieldIndex.Items) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)FacialExpression_FieldIndex.Morphs) ?? true))
             {
-                if (!lhs.Items.SequenceEqual(rhs.Items, (l, r) => ((FacialExpressionItemCommon)((IFacialExpressionItemGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)FacialExpression_FieldIndex.Items)))) return false;
+                if (!lhs.Morphs.SequenceEqual(rhs.Morphs, (l, r) => ((FacialExpressionMorphCommon)((IFacialExpressionMorphGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)FacialExpression_FieldIndex.Morphs)))) return false;
             }
             return true;
         }
@@ -1174,7 +1174,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(Nameitem);
             }
-            hash.Add(item.Items);
+            hash.Add(item.Morphs);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1282,13 +1282,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Name = rhs.Name?.DeepCopy();
             }
-            if ((copyMask?.GetShouldTranslate((int)FacialExpression_FieldIndex.Items) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FacialExpression_FieldIndex.Morphs) ?? true))
             {
-                errorMask?.PushIndex((int)FacialExpression_FieldIndex.Items);
+                errorMask?.PushIndex((int)FacialExpression_FieldIndex.Morphs);
                 try
                 {
-                    item.Items.SetTo(
-                        rhs.Items
+                    item.Morphs.SetTo(
+                        rhs.Morphs
                         .Select(r =>
                         {
                             return r.DeepCopy(
@@ -1481,13 +1481,13 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFacialExpressionItemGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFacialExpressionMorphGetter>.Instance.Write(
                 writer: writer,
-                items: item.Items,
-                transl: (MutagenWriter subWriter, IFacialExpressionItemGetter subItem, TypedWriteParams conv) =>
+                items: item.Morphs,
+                transl: (MutagenWriter subWriter, IFacialExpressionMorphGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
-                    ((FacialExpressionItemBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((FacialExpressionMorphBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
@@ -1574,13 +1574,13 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MNAM:
                 case RecordTypeInts.MWGT:
                 {
-                    item.Items.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<FacialExpressionItem>.Instance.Parse(
+                    item.Morphs.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<FacialExpressionMorph>.Instance.Parse(
                             reader: frame,
-                            triggeringRecord: FacialExpressionItem_Registration.TriggerSpecs,
+                            triggeringRecord: FacialExpressionMorph_Registration.TriggerSpecs,
                             translationParams: translationParams,
-                            transl: FacialExpressionItem.TryCreateFromBinary));
-                    return (int)FacialExpression_FieldIndex.Items;
+                            transl: FacialExpressionMorph.TryCreateFromBinary));
+                    return (int)FacialExpression_FieldIndex.Morphs;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1652,7 +1652,7 @@ namespace Mutagen.Bethesda.Starfield
         ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
         #endregion
-        public IReadOnlyList<IFacialExpressionItemGetter> Items { get; private set; } = Array.Empty<IFacialExpressionItemGetter>();
+        public IReadOnlyList<IFacialExpressionMorphGetter> Morphs { get; private set; } = Array.Empty<IFacialExpressionMorphGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1730,12 +1730,12 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MNAM:
                 case RecordTypeInts.MWGT:
                 {
-                    this.Items = this.ParseRepeatedTypelessSubrecord<IFacialExpressionItemGetter>(
+                    this.Morphs = this.ParseRepeatedTypelessSubrecord<IFacialExpressionMorphGetter>(
                         stream: stream,
                         translationParams: translationParams,
-                        trigger: FacialExpressionItem_Registration.TriggerSpecs,
-                        factory: FacialExpressionItemBinaryOverlay.FacialExpressionItemFactory);
-                    return (int)FacialExpression_FieldIndex.Items;
+                        trigger: FacialExpressionMorph_Registration.TriggerSpecs,
+                        factory: FacialExpressionMorphBinaryOverlay.FacialExpressionMorphFactory);
+                    return (int)FacialExpression_FieldIndex.Morphs;
                 }
                 default:
                     return base.FillRecordType(

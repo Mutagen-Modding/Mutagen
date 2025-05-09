@@ -4,14 +4,11 @@
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <Float name="ODTY" recordType="ODTY" unknown="true" />
-      <Float name="ODRT" recordType="ODRT" unknown="true" />
+      <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
       <RefDirect name="Transforms" refName="Transforms" />
       <RefList name="Components" refName="AComponent" />
       <String name="Name" recordType="FULL" translated="Normal" />
-      <FormLink name="ObjectEffect" recordType="EITM">
-        <Interface>IEffectRecord</Interface>
-      </FormLink>
+      <FormLink name="ObjectEffect" recordType="EITM" refName="ObjectEffect" />
       <Gendered name="WorldModel" parseNonConvertedItems="true">
         <MaleTypeOverrides>
           <Mapping From="MODL" To="MOD2" />
@@ -31,10 +28,12 @@
           <RefDirect refName="Model" />
         </Fields>
       </Gendered>
-      <RefList name="UnknownModels" refName="Model" />
       <Enum enumName="FirstPersonFlag" name="FirstPersonFlags" byteLength="8" recordType="BO64" />
+      <RefDirect name="Destructible" refName="Destructible" />
       <RefDirect name="PickupSound" refName="SoundReference" recordType="PUSH" />
       <RefDirect name="DropdownSound" refName="SoundReference" recordType="PDSH" />
+      <FormLink name="EquipmentType" refName="EquipType" recordType="ETYP" />
+      <FormLink name="BlockBashImpactDataSet" recordType="BIDS" refName="ImpactDataSet" />
       <FormLink name="AlternateBlockMaterial" recordType="BAMT" refName="MaterialType" />
       <FormLink name="Race" recordType="RNAM" refName="Race" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
@@ -70,14 +69,15 @@
         </Ref>
       </List>
       <Marker name="STOP" recordType="STOP" />
-      <RefDirect name="Voice" refName="ArmorCategoryValue" recordType="AVSG" />
-      <RefDirect name="Footstep" refName="ArmorCategoryValue" recordType="AFSG" />
+      <RefDirect name="Voice" refName="ArmorSwitch" recordType="AVSG" />
+      <RefDirect name="Foley" refName="ArmorSwitch" recordType="AFSG" />
     </Fields>
     <LinkInterface>IOutfitTarget</LinkInterface>
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IBindableEquipment</LinkInterface>
     <LinkInterface>IConstructibleObjectTarget</LinkInterface>
     <LinkInterface>IBaseObject</LinkInterface>
+    <LinkInterface>IResearchResourceTarget</LinkInterface>
   </Object>
   <Object name="ArmorMorph" objType="Subrecord" >
     <Fields>
@@ -88,13 +88,13 @@
   <Object name="ArmorAddonModel" objType="Subrecord">
     <Fields>
       <UInt16 name="AddonIndex" recordType="INDX" nullable="False" />
-      <FormLink name="AddonModel" recordType="MODL" refName="ArmorAddon" />
+      <FormLink name="ArmorAddon" recordType="MODL" refName="ArmorAddon" />
     </Fields>
   </Object>
-  <Object name="ArmorCategoryValue" objType="Subrecord">
+  <Object name="ArmorSwitch" objType="Subrecord">
     <Fields>
       <Guid name="Category" />
-      <Guid name="Value" />
+      <Guid name="Variant" />
     </Fields>
   </Object>
 </Loqui>

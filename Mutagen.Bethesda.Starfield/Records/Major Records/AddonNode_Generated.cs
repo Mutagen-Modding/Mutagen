@@ -77,15 +77,8 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
         #endregion
         #endregion
-        #region ODTY
-        public Single? ODTY { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IAddonNodeGetter.ODTY => this.ODTY;
-        #endregion
-        #region ODRT
-        public Single? ODRT { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IAddonNodeGetter.ODRT => this.ODRT;
+        #region DirtinessScale
+        public Percent DirtinessScale { get; set; } = default(Percent);
         #endregion
         #region Components
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -132,16 +125,16 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ILightGetter> IAddonNodeGetter.Light => this.Light;
         #endregion
-        #region PSDF
+        #region Reflection
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _PSDF;
-        public MemorySlice<Byte>? PSDF
+        protected MemorySlice<Byte>? _Reflection;
+        public MemorySlice<Byte>? Reflection
         {
-            get => this._PSDF;
-            set => this._PSDF = value;
+            get => this._Reflection;
+            set => this._Reflection = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IAddonNodeGetter.PSDF => this.PSDF;
+        ReadOnlyMemorySlice<Byte>? IAddonNodeGetter.Reflection => this.Reflection;
         #endregion
         #region MasterParticleSystemCap
         public UInt16 MasterParticleSystemCap { get; set; } = default(UInt16);
@@ -175,13 +168,12 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
-                this.ODTY = initialValue;
-                this.ODRT = initialValue;
+                this.DirtinessScale = initialValue;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.NodeIndex = initialValue;
                 this.Light = initialValue;
-                this.PSDF = initialValue;
+                this.Reflection = initialValue;
                 this.MasterParticleSystemCap = initialValue;
                 this.Flags = initialValue;
             }
@@ -195,13 +187,12 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
                 TItem ObjectBounds,
-                TItem ODTY,
-                TItem ODRT,
+                TItem DirtinessScale,
                 TItem Components,
                 TItem Model,
                 TItem NodeIndex,
                 TItem Light,
-                TItem PSDF,
+                TItem Reflection,
                 TItem MasterParticleSystemCap,
                 TItem Flags)
             : base(
@@ -214,13 +205,12 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
-                this.ODTY = ODTY;
-                this.ODRT = ODRT;
+                this.DirtinessScale = DirtinessScale;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.NodeIndex = NodeIndex;
                 this.Light = Light;
-                this.PSDF = PSDF;
+                this.Reflection = Reflection;
                 this.MasterParticleSystemCap = MasterParticleSystemCap;
                 this.Flags = Flags;
             }
@@ -235,13 +225,12 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
-            public TItem ODTY;
-            public TItem ODRT;
+            public TItem DirtinessScale;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public TItem NodeIndex;
             public TItem Light;
-            public TItem PSDF;
+            public TItem Reflection;
             public TItem MasterParticleSystemCap;
             public TItem Flags;
             #endregion
@@ -258,13 +247,12 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
-                if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
-                if (!object.Equals(this.ODRT, rhs.ODRT)) return false;
+                if (!object.Equals(this.DirtinessScale, rhs.DirtinessScale)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.NodeIndex, rhs.NodeIndex)) return false;
                 if (!object.Equals(this.Light, rhs.Light)) return false;
-                if (!object.Equals(this.PSDF, rhs.PSDF)) return false;
+                if (!object.Equals(this.Reflection, rhs.Reflection)) return false;
                 if (!object.Equals(this.MasterParticleSystemCap, rhs.MasterParticleSystemCap)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 return true;
@@ -273,13 +261,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 var hash = new HashCode();
                 hash.Add(this.ObjectBounds);
-                hash.Add(this.ODTY);
-                hash.Add(this.ODRT);
+                hash.Add(this.DirtinessScale);
                 hash.Add(this.Components);
                 hash.Add(this.Model);
                 hash.Add(this.NodeIndex);
                 hash.Add(this.Light);
-                hash.Add(this.PSDF);
+                hash.Add(this.Reflection);
                 hash.Add(this.MasterParticleSystemCap);
                 hash.Add(this.Flags);
                 hash.Add(base.GetHashCode());
@@ -297,8 +284,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.ObjectBounds.Overall)) return false;
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
-                if (!eval(this.ODTY)) return false;
-                if (!eval(this.ODRT)) return false;
+                if (!eval(this.DirtinessScale)) return false;
                 if (this.Components != null)
                 {
                     if (!eval(this.Components.Overall)) return false;
@@ -318,7 +304,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (!eval(this.NodeIndex)) return false;
                 if (!eval(this.Light)) return false;
-                if (!eval(this.PSDF)) return false;
+                if (!eval(this.Reflection)) return false;
                 if (!eval(this.MasterParticleSystemCap)) return false;
                 if (!eval(this.Flags)) return false;
                 return true;
@@ -334,8 +320,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.ObjectBounds.Overall)) return true;
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
-                if (eval(this.ODTY)) return true;
-                if (eval(this.ODRT)) return true;
+                if (eval(this.DirtinessScale)) return true;
                 if (this.Components != null)
                 {
                     if (eval(this.Components.Overall)) return true;
@@ -355,7 +340,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (eval(this.NodeIndex)) return true;
                 if (eval(this.Light)) return true;
-                if (eval(this.PSDF)) return true;
+                if (eval(this.Reflection)) return true;
                 if (eval(this.MasterParticleSystemCap)) return true;
                 if (eval(this.Flags)) return true;
                 return false;
@@ -374,8 +359,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
-                obj.ODTY = eval(this.ODTY);
-                obj.ODRT = eval(this.ODRT);
+                obj.DirtinessScale = eval(this.DirtinessScale);
                 if (Components != null)
                 {
                     obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
@@ -394,7 +378,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 obj.NodeIndex = eval(this.NodeIndex);
                 obj.Light = eval(this.Light);
-                obj.PSDF = eval(this.PSDF);
+                obj.Reflection = eval(this.Reflection);
                 obj.MasterParticleSystemCap = eval(this.MasterParticleSystemCap);
                 obj.Flags = eval(this.Flags);
             }
@@ -419,13 +403,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         ObjectBounds?.Print(sb);
                     }
-                    if (printMask?.ODTY ?? true)
+                    if (printMask?.DirtinessScale ?? true)
                     {
-                        sb.AppendItem(ODTY, "ODTY");
-                    }
-                    if (printMask?.ODRT ?? true)
-                    {
-                        sb.AppendItem(ODRT, "ODRT");
+                        sb.AppendItem(DirtinessScale, "DirtinessScale");
                     }
                     if ((printMask?.Components?.Overall ?? true)
                         && Components is {} ComponentsItem)
@@ -458,9 +438,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Light, "Light");
                     }
-                    if (printMask?.PSDF ?? true)
+                    if (printMask?.Reflection ?? true)
                     {
-                        sb.AppendItem(PSDF, "PSDF");
+                        sb.AppendItem(Reflection, "Reflection");
                     }
                     if (printMask?.MasterParticleSystemCap ?? true)
                     {
@@ -482,13 +462,12 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
-            public Exception? ODTY;
-            public Exception? ODRT;
+            public Exception? DirtinessScale;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public Exception? NodeIndex;
             public Exception? Light;
-            public Exception? PSDF;
+            public Exception? Reflection;
             public Exception? MasterParticleSystemCap;
             public Exception? Flags;
             #endregion
@@ -501,10 +480,8 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case AddonNode_FieldIndex.ObjectBounds:
                         return ObjectBounds;
-                    case AddonNode_FieldIndex.ODTY:
-                        return ODTY;
-                    case AddonNode_FieldIndex.ODRT:
-                        return ODRT;
+                    case AddonNode_FieldIndex.DirtinessScale:
+                        return DirtinessScale;
                     case AddonNode_FieldIndex.Components:
                         return Components;
                     case AddonNode_FieldIndex.Model:
@@ -513,8 +490,8 @@ namespace Mutagen.Bethesda.Starfield
                         return NodeIndex;
                     case AddonNode_FieldIndex.Light:
                         return Light;
-                    case AddonNode_FieldIndex.PSDF:
-                        return PSDF;
+                    case AddonNode_FieldIndex.Reflection:
+                        return Reflection;
                     case AddonNode_FieldIndex.MasterParticleSystemCap:
                         return MasterParticleSystemCap;
                     case AddonNode_FieldIndex.Flags:
@@ -532,11 +509,8 @@ namespace Mutagen.Bethesda.Starfield
                     case AddonNode_FieldIndex.ObjectBounds:
                         this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
                         break;
-                    case AddonNode_FieldIndex.ODTY:
-                        this.ODTY = ex;
-                        break;
-                    case AddonNode_FieldIndex.ODRT:
-                        this.ODRT = ex;
+                    case AddonNode_FieldIndex.DirtinessScale:
+                        this.DirtinessScale = ex;
                         break;
                     case AddonNode_FieldIndex.Components:
                         this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
@@ -550,8 +524,8 @@ namespace Mutagen.Bethesda.Starfield
                     case AddonNode_FieldIndex.Light:
                         this.Light = ex;
                         break;
-                    case AddonNode_FieldIndex.PSDF:
-                        this.PSDF = ex;
+                    case AddonNode_FieldIndex.Reflection:
+                        this.Reflection = ex;
                         break;
                     case AddonNode_FieldIndex.MasterParticleSystemCap:
                         this.MasterParticleSystemCap = ex;
@@ -573,11 +547,8 @@ namespace Mutagen.Bethesda.Starfield
                     case AddonNode_FieldIndex.ObjectBounds:
                         this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
                         break;
-                    case AddonNode_FieldIndex.ODTY:
-                        this.ODTY = (Exception?)obj;
-                        break;
-                    case AddonNode_FieldIndex.ODRT:
-                        this.ODRT = (Exception?)obj;
+                    case AddonNode_FieldIndex.DirtinessScale:
+                        this.DirtinessScale = (Exception?)obj;
                         break;
                     case AddonNode_FieldIndex.Components:
                         this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
@@ -591,8 +562,8 @@ namespace Mutagen.Bethesda.Starfield
                     case AddonNode_FieldIndex.Light:
                         this.Light = (Exception?)obj;
                         break;
-                    case AddonNode_FieldIndex.PSDF:
-                        this.PSDF = (Exception?)obj;
+                    case AddonNode_FieldIndex.Reflection:
+                        this.Reflection = (Exception?)obj;
                         break;
                     case AddonNode_FieldIndex.MasterParticleSystemCap:
                         this.MasterParticleSystemCap = (Exception?)obj;
@@ -610,13 +581,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (ObjectBounds != null) return true;
-                if (ODTY != null) return true;
-                if (ODRT != null) return true;
+                if (DirtinessScale != null) return true;
                 if (Components != null) return true;
                 if (Model != null) return true;
                 if (NodeIndex != null) return true;
                 if (Light != null) return true;
-                if (PSDF != null) return true;
+                if (Reflection != null) return true;
                 if (MasterParticleSystemCap != null) return true;
                 if (Flags != null) return true;
                 return false;
@@ -647,10 +617,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.PrintFillInternal(sb);
                 ObjectBounds?.Print(sb);
                 {
-                    sb.AppendItem(ODTY, "ODTY");
-                }
-                {
-                    sb.AppendItem(ODRT, "ODRT");
+                    sb.AppendItem(DirtinessScale, "DirtinessScale");
                 }
                 if (Components is {} ComponentsItem)
                 {
@@ -678,7 +645,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Light, "Light");
                 }
                 {
-                    sb.AppendItem(PSDF, "PSDF");
+                    sb.AppendItem(Reflection, "Reflection");
                 }
                 {
                     sb.AppendItem(MasterParticleSystemCap, "MasterParticleSystemCap");
@@ -695,13 +662,12 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
-                ret.ODTY = this.ODTY.Combine(rhs.ODTY);
-                ret.ODRT = this.ODRT.Combine(rhs.ODRT);
+                ret.DirtinessScale = this.DirtinessScale.Combine(rhs.DirtinessScale);
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.NodeIndex = this.NodeIndex.Combine(rhs.NodeIndex);
                 ret.Light = this.Light.Combine(rhs.Light);
-                ret.PSDF = this.PSDF.Combine(rhs.PSDF);
+                ret.Reflection = this.Reflection.Combine(rhs.Reflection);
                 ret.MasterParticleSystemCap = this.MasterParticleSystemCap.Combine(rhs.MasterParticleSystemCap);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 return ret;
@@ -727,13 +693,12 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public ObjectBounds.TranslationMask? ObjectBounds;
-            public bool ODTY;
-            public bool ODRT;
+            public bool DirtinessScale;
             public AComponent.TranslationMask? Components;
             public Model.TranslationMask? Model;
             public bool NodeIndex;
             public bool Light;
-            public bool PSDF;
+            public bool Reflection;
             public bool MasterParticleSystemCap;
             public bool Flags;
             #endregion
@@ -744,11 +709,10 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.ODTY = defaultOn;
-                this.ODRT = defaultOn;
+                this.DirtinessScale = defaultOn;
                 this.NodeIndex = defaultOn;
                 this.Light = defaultOn;
-                this.PSDF = defaultOn;
+                this.Reflection = defaultOn;
                 this.MasterParticleSystemCap = defaultOn;
                 this.Flags = defaultOn;
             }
@@ -759,13 +723,12 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.GetCrystal(ret);
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
-                ret.Add((ODTY, null));
-                ret.Add((ODRT, null));
+                ret.Add((DirtinessScale, null));
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
                 ret.Add((NodeIndex, null));
                 ret.Add((Light, null));
-                ret.Add((PSDF, null));
+                ret.Add((Reflection, null));
                 ret.Add((MasterParticleSystemCap, null));
                 ret.Add((Flags, null));
             }
@@ -927,8 +890,7 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: IObjectBounded
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
-        new Single? ODTY { get; set; }
-        new Single? ODRT { get; set; }
+        new Percent DirtinessScale { get; set; }
         new ExtendedList<AComponent> Components { get; }
         /// <summary>
         /// Aspects: IModeled
@@ -936,7 +898,7 @@ namespace Mutagen.Bethesda.Starfield
         new Model? Model { get; set; }
         new Int32 NodeIndex { get; set; }
         new IFormLinkNullable<ILightGetter> Light { get; set; }
-        new MemorySlice<Byte>? PSDF { get; set; }
+        new MemorySlice<Byte>? Reflection { get; set; }
         new UInt16 MasterParticleSystemCap { get; set; }
         new AddonNode.Flag Flags { get; set; }
     }
@@ -967,8 +929,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
-        Single? ODTY { get; }
-        Single? ODRT { get; }
+        Percent DirtinessScale { get; }
         IReadOnlyList<IAComponentGetter> Components { get; }
         #region Model
         /// <summary>
@@ -978,7 +939,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         Int32 NodeIndex { get; }
         IFormLinkNullableGetter<ILightGetter> Light { get; }
-        ReadOnlyMemorySlice<Byte>? PSDF { get; }
+        ReadOnlyMemorySlice<Byte>? Reflection { get; }
         UInt16 MasterParticleSystemCap { get; }
         AddonNode.Flag Flags { get; }
 
@@ -1158,15 +1119,14 @@ namespace Mutagen.Bethesda.Starfield
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
         ObjectBounds = 7,
-        ODTY = 8,
-        ODRT = 9,
-        Components = 10,
-        Model = 11,
-        NodeIndex = 12,
-        Light = 13,
-        PSDF = 14,
-        MasterParticleSystemCap = 15,
-        Flags = 16,
+        DirtinessScale = 8,
+        Components = 9,
+        Model = 10,
+        NodeIndex = 11,
+        Light = 12,
+        Reflection = 13,
+        MasterParticleSystemCap = 14,
+        Flags = 15,
     }
     #endregion
 
@@ -1177,9 +1137,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 10;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 17;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(AddonNode.Mask<>);
 
@@ -1214,14 +1174,11 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.ADDN,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
-                RecordTypes.ODRT,
                 RecordTypes.BFCB,
                 RecordTypes.BFCE,
                 RecordTypes.MODL,
                 RecordTypes.MODT,
                 RecordTypes.MOLM,
-                RecordTypes.DMDC,
-                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
@@ -1275,13 +1232,12 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.ObjectBounds.Clear();
-            item.ODTY = default;
-            item.ODRT = default;
+            item.DirtinessScale = default(Percent);
             item.Components.Clear();
             item.Model = null;
             item.NodeIndex = default(Int32);
             item.Light.Clear();
-            item.PSDF = default;
+            item.Reflection = default;
             item.MasterParticleSystemCap = default(UInt16);
             item.Flags = default(AddonNode.Flag);
             base.Clear(item);
@@ -1404,8 +1360,7 @@ namespace Mutagen.Bethesda.Starfield
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
-            ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
-            ret.ODRT = item.ODRT.EqualsWithin(rhs.ODRT);
+            ret.DirtinessScale = item.DirtinessScale.Equals(rhs.DirtinessScale);
             ret.Components = item.Components.CollectionEqualsHelper(
                 rhs.Components,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1417,7 +1372,7 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.NodeIndex = item.NodeIndex == rhs.NodeIndex;
             ret.Light = item.Light.Equals(rhs.Light);
-            ret.PSDF = MemorySliceExt.SequenceEqual(item.PSDF, rhs.PSDF);
+            ret.Reflection = MemorySliceExt.SequenceEqual(item.Reflection, rhs.Reflection);
             ret.MasterParticleSystemCap = item.MasterParticleSystemCap == rhs.MasterParticleSystemCap;
             ret.Flags = item.Flags == rhs.Flags;
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1473,15 +1428,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ObjectBounds?.Print(sb, "ObjectBounds");
             }
-            if ((printMask?.ODTY ?? true)
-                && item.ODTY is {} ODTYItem)
+            if (printMask?.DirtinessScale ?? true)
             {
-                sb.AppendItem(ODTYItem, "ODTY");
-            }
-            if ((printMask?.ODRT ?? true)
-                && item.ODRT is {} ODRTItem)
-            {
-                sb.AppendItem(ODRTItem, "ODRT");
+                sb.AppendItem(item.DirtinessScale, "DirtinessScale");
             }
             if (printMask?.Components?.Overall ?? true)
             {
@@ -1510,10 +1459,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Light.FormKeyNullable, "Light");
             }
-            if ((printMask?.PSDF ?? true)
-                && item.PSDF is {} PSDFItem)
+            if ((printMask?.Reflection ?? true)
+                && item.Reflection is {} ReflectionItem)
             {
-                sb.AppendLine($"PSDF => {SpanExt.ToHexString(PSDFItem)}");
+                sb.AppendLine($"Reflection => {SpanExt.ToHexString(ReflectionItem)}");
             }
             if (printMask?.MasterParticleSystemCap ?? true)
             {
@@ -1581,13 +1530,9 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AddonNode_FieldIndex.ODTY) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AddonNode_FieldIndex.DirtinessScale) ?? true))
             {
-                if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)AddonNode_FieldIndex.ODRT) ?? true))
-            {
-                if (!lhs.ODRT.EqualsWithin(rhs.ODRT)) return false;
+                if (!lhs.DirtinessScale.Equals(rhs.DirtinessScale)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)AddonNode_FieldIndex.Components) ?? true))
             {
@@ -1609,9 +1554,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Light.Equals(rhs.Light)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AddonNode_FieldIndex.PSDF) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AddonNode_FieldIndex.Reflection) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.PSDF, rhs.PSDF)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.Reflection, rhs.Reflection)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)AddonNode_FieldIndex.MasterParticleSystemCap) ?? true))
             {
@@ -1650,14 +1595,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
-            if (item.ODTY is {} ODTYitem)
-            {
-                hash.Add(ODTYitem);
-            }
-            if (item.ODRT is {} ODRTitem)
-            {
-                hash.Add(ODRTitem);
-            }
+            hash.Add(item.DirtinessScale);
             hash.Add(item.Components);
             if (item.Model is {} Modelitem)
             {
@@ -1665,9 +1603,9 @@ namespace Mutagen.Bethesda.Starfield
             }
             hash.Add(item.NodeIndex);
             hash.Add(item.Light);
-            if (item.PSDF is {} PSDFItem)
+            if (item.Reflection is {} ReflectionItem)
             {
-                hash.Add(PSDFItem);
+                hash.Add(ReflectionItem);
             }
             hash.Add(item.MasterParticleSystemCap);
             hash.Add(item.Flags);
@@ -1833,13 +1771,9 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.ODTY) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.DirtinessScale) ?? true))
             {
-                item.ODTY = rhs.ODTY;
-            }
-            if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.ODRT) ?? true))
-            {
-                item.ODRT = rhs.ODRT;
+                item.DirtinessScale = rhs.DirtinessScale;
             }
             if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.Components) ?? true))
             {
@@ -1899,15 +1833,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Light.SetTo(rhs.Light.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.PSDF) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.Reflection) ?? true))
             {
-                if(rhs.PSDF is {} PSDFrhs)
+                if(rhs.Reflection is {} Reflectionrhs)
                 {
-                    item.PSDF = PSDFrhs.ToArray();
+                    item.Reflection = Reflectionrhs.ToArray();
                 }
                 else
                 {
-                    item.PSDF = default;
+                    item.Reflection = default;
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.MasterParticleSystemCap) ?? true))
@@ -2092,14 +2026,11 @@ namespace Mutagen.Bethesda.Starfield
                 item: ObjectBoundsItem,
                 writer: writer,
                 translationParams: translationParams);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            PercentBinaryTranslation.Write(
                 writer: writer,
-                item: item.ODTY,
+                item: item.DirtinessScale,
+                integerType: FloatIntegerType.UInt,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.ODRT,
-                header: translationParams.ConvertToCustom(RecordTypes.ODRT));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
                 writer: writer,
                 items: item.Components,
@@ -2128,7 +2059,7 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.LNAM));
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.PSDF,
+                item: item.Reflection,
                 header: translationParams.ConvertToCustom(RecordTypes.PSDF));
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
             {
@@ -2214,14 +2145,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ODTY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)AddonNode_FieldIndex.ODTY;
-                }
-                case RecordTypeInts.ODRT:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ODRT = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)AddonNode_FieldIndex.ODRT;
+                    item.DirtinessScale = PercentBinaryTranslation.Parse(
+                        reader: frame,
+                        integerType: FloatIntegerType.UInt);
+                    return (int)AddonNode_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.BFCB:
                 {
@@ -2236,8 +2163,6 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -2263,8 +2188,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.PSDF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PSDF = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)AddonNode_FieldIndex.PSDF;
+                    item.Reflection = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)AddonNode_FieldIndex.Reflection;
                 }
                 case RecordTypeInts.DNAM:
                 {
@@ -2343,13 +2268,9 @@ namespace Mutagen.Bethesda.Starfield
         private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
-        #region ODTY
-        private int? _ODTYLocation;
-        public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
-        #endregion
-        #region ODRT
-        private int? _ODRTLocation;
-        public Single? ODRT => _ODRTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODRTLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region DirtinessScale
+        private int? _DirtinessScaleLocation;
+        public Percent DirtinessScale => _DirtinessScaleLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DirtinessScaleLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt) : default(Percent);
         #endregion
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         public IModelGetter? Model { get; private set; }
@@ -2361,9 +2282,9 @@ namespace Mutagen.Bethesda.Starfield
         private int? _LightLocation;
         public IFormLinkNullableGetter<ILightGetter> Light => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILightGetter>(_package, _recordData, _LightLocation);
         #endregion
-        #region PSDF
-        private int? _PSDFLocation;
-        public ReadOnlyMemorySlice<Byte>? PSDF => _PSDFLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PSDFLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region Reflection
+        private int? _ReflectionLocation;
+        public ReadOnlyMemorySlice<Byte>? Reflection => _ReflectionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ReflectionLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         private RangeInt32? _DNAMLocation;
         #region MasterParticleSystemCap
@@ -2452,13 +2373,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ODTY:
                 {
-                    _ODTYLocation = (stream.Position - offset);
-                    return (int)AddonNode_FieldIndex.ODTY;
-                }
-                case RecordTypeInts.ODRT:
-                {
-                    _ODRTLocation = (stream.Position - offset);
-                    return (int)AddonNode_FieldIndex.ODRT;
+                    _DirtinessScaleLocation = (stream.Position - offset);
+                    return (int)AddonNode_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.BFCB:
                 {
@@ -2472,8 +2388,6 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -2497,8 +2411,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.PSDF:
                 {
-                    _PSDFLocation = (stream.Position - offset);
-                    return (int)AddonNode_FieldIndex.PSDF;
+                    _ReflectionLocation = (stream.Position - offset);
+                    return (int)AddonNode_FieldIndex.Reflection;
                 }
                 case RecordTypeInts.DNAM:
                 {

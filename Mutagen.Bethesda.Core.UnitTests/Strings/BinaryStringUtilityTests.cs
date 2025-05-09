@@ -45,4 +45,13 @@ public class BinaryStringUtilityTests
         var span = BinaryStringUtility.ProcessNullTermination(Array.Empty<byte>().AsSpan());
         span.Length.ShouldBe(0);
     }
+
+    [Fact]
+    public void ProcessNullTerminationOnExtraFluff()
+    {
+        var span = BinaryStringUtility.ProcessNullTermination(File.ReadAllBytes(TestDataPathing.FluffedNullString));
+        span.Length.ShouldBe(0xB);
+        var str = BinaryStringUtility.ToZString(span, MutagenEncoding._utf8);
+        str.ShouldBe("Hello world");
+    }
 }

@@ -617,7 +617,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = IdleAnimation_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => IdleAnimationCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleAnimationSetterCommon.Instance.RemapLinks(this, mapping);
-        public IdleAnimation(FormKey formKey)
+        public IdleAnimation(
+            FormKey formKey,
+            OblivionRelease gameRelease)
         {
             this.FormKey = formKey;
             CustomCtor();
@@ -632,12 +634,16 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public IdleAnimation(IOblivionMod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.OblivionRelease)
         {
         }
 
         public IdleAnimation(IOblivionMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.OblivionRelease)
         {
             this.EditorID = editorID;
         }
@@ -1381,7 +1387,7 @@ namespace Mutagen.Bethesda.Oblivion
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new IdleAnimation(formKey);
+            var newRec = new IdleAnimation(formKey, default(OblivionRelease));
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }

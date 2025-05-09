@@ -98,10 +98,8 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
         #endregion
         #endregion
-        #region ODTY
-        public Single? ODTY { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IBookGetter.ODTY => this.ODTY;
+        #region DirtinessScale
+        public Percent DirtinessScale { get; set; } = default(Percent);
         #endregion
         #region Transforms
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -114,16 +112,20 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITransformsGetter? IBookGetter.Transforms => this.Transforms;
         #endregion
-        #region XALG
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _XALG;
-        public MemorySlice<Byte>? XALG
+        #region DefaultLayer
+        private readonly IFormLinkNullable<ILayerGetter> _DefaultLayer = new FormLinkNullable<ILayerGetter>();
+        public IFormLinkNullable<ILayerGetter> DefaultLayer
         {
-            get => this._XALG;
-            set => this._XALG = value;
+            get => _DefaultLayer;
+            set => _DefaultLayer.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IBookGetter.XALG => this.XALG;
+        IFormLinkNullableGetter<ILayerGetter> IBookGetter.DefaultLayer => this.DefaultLayer;
+        #endregion
+        #region XALG
+        public UInt64? XALG { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt64? IBookGetter.XALG => this.XALG;
         #endregion
         #region Components
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -193,9 +195,27 @@ namespace Mutagen.Bethesda.Starfield
         IModelGetter? IModeledGetter.Model => this.Model;
         #endregion
         #endregion
-        #region Description
-        public TranslatedString Description { get; set; } = string.Empty;
-        ITranslatedStringGetter IBookGetter.Description => this.Description;
+        #region Text
+        public TranslatedString Text { get; set; } = string.Empty;
+        ITranslatedStringGetter IBookGetter.Text => this.Text;
+        #endregion
+        #region Destructible
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Destructible? _Destructible;
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
+        public Destructible? Destructible
+        {
+            get => _Destructible;
+            set => _Destructible = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IBookGetter.Destructible => this.Destructible;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
+        #endregion
         #endregion
         #region PickupSound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -276,23 +296,23 @@ namespace Mutagen.Bethesda.Starfield
         #region TextOffsetY
         public UInt32 TextOffsetY { get; set; } = default(UInt32);
         #endregion
-        #region DNAMUnknown
-        public UInt32 DNAMUnknown { get; set; } = default(UInt32);
+        #region DataSlateType
+        public Book.DataSlateTypeEnum DataSlateType { get; set; } = default(Book.DataSlateTypeEnum);
         #endregion
-        #region CNAM
-        public TranslatedString? CNAM { get; set; }
+        #region Description
+        public TranslatedString? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter? IBookGetter.CNAM => this.CNAM;
+        ITranslatedStringGetter? IBookGetter.Description => this.Description;
         #endregion
-        #region ENAM
-        public TranslatedString? ENAM { get; set; }
+        #region DataSlateHeaderLeft
+        public TranslatedString? DataSlateHeaderLeft { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter? IBookGetter.ENAM => this.ENAM;
+        ITranslatedStringGetter? IBookGetter.DataSlateHeaderLeft => this.DataSlateHeaderLeft;
         #endregion
-        #region FNAM
-        public TranslatedString? FNAM { get; set; }
+        #region DataSlateHeaderRight
+        public TranslatedString? DataSlateHeaderRight { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter? IBookGetter.FNAM => this.FNAM;
+        ITranslatedStringGetter? IBookGetter.DataSlateHeaderRight => this.DataSlateHeaderRight;
         #endregion
         #region InventoryArt
         private readonly IFormLinkNullable<IStaticGetter> _InventoryArt = new FormLinkNullable<IStaticGetter>();
@@ -341,13 +361,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
-                this.ODTY = initialValue;
+                this.DirtinessScale = initialValue;
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
+                this.DefaultLayer = initialValue;
                 this.XALG = initialValue;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Name = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.Description = initialValue;
+                this.Text = initialValue;
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
                 this.PickupSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.DropdownSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
@@ -358,10 +380,10 @@ namespace Mutagen.Bethesda.Starfield
                 this.Teaches = new MaskItem<TItem, BookTeachTarget.Mask<TItem>?>(initialValue, new BookTeachTarget.Mask<TItem>(initialValue));
                 this.TextOffsetX = initialValue;
                 this.TextOffsetY = initialValue;
-                this.DNAMUnknown = initialValue;
-                this.CNAM = initialValue;
-                this.ENAM = initialValue;
-                this.FNAM = initialValue;
+                this.DataSlateType = initialValue;
+                this.Description = initialValue;
+                this.DataSlateHeaderLeft = initialValue;
+                this.DataSlateHeaderRight = initialValue;
                 this.InventoryArt = initialValue;
                 this.Scene = initialValue;
             }
@@ -376,13 +398,15 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
-                TItem ODTY,
+                TItem DirtinessScale,
                 TItem Transforms,
+                TItem DefaultLayer,
                 TItem XALG,
                 TItem Components,
                 TItem Name,
                 TItem Model,
-                TItem Description,
+                TItem Text,
+                TItem Destructible,
                 TItem PickupSound,
                 TItem DropdownSound,
                 TItem Keywords,
@@ -393,10 +417,10 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Teaches,
                 TItem TextOffsetX,
                 TItem TextOffsetY,
-                TItem DNAMUnknown,
-                TItem CNAM,
-                TItem ENAM,
-                TItem FNAM,
+                TItem DataSlateType,
+                TItem Description,
+                TItem DataSlateHeaderLeft,
+                TItem DataSlateHeaderRight,
                 TItem InventoryArt,
                 TItem Scene)
             : base(
@@ -410,13 +434,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
-                this.ODTY = ODTY;
+                this.DirtinessScale = DirtinessScale;
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
+                this.DefaultLayer = DefaultLayer;
                 this.XALG = XALG;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Name = Name;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.Description = Description;
+                this.Text = Text;
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
                 this.PickupSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(PickupSound, new SoundReference.Mask<TItem>(PickupSound));
                 this.DropdownSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(DropdownSound, new SoundReference.Mask<TItem>(DropdownSound));
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
@@ -427,10 +453,10 @@ namespace Mutagen.Bethesda.Starfield
                 this.Teaches = new MaskItem<TItem, BookTeachTarget.Mask<TItem>?>(Teaches, new BookTeachTarget.Mask<TItem>(Teaches));
                 this.TextOffsetX = TextOffsetX;
                 this.TextOffsetY = TextOffsetY;
-                this.DNAMUnknown = DNAMUnknown;
-                this.CNAM = CNAM;
-                this.ENAM = ENAM;
-                this.FNAM = FNAM;
+                this.DataSlateType = DataSlateType;
+                this.Description = Description;
+                this.DataSlateHeaderLeft = DataSlateHeaderLeft;
+                this.DataSlateHeaderRight = DataSlateHeaderRight;
                 this.InventoryArt = InventoryArt;
                 this.Scene = Scene;
             }
@@ -446,13 +472,15 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
-            public TItem ODTY;
+            public TItem DirtinessScale;
             public MaskItem<TItem, Transforms.Mask<TItem>?>? Transforms { get; set; }
+            public TItem DefaultLayer;
             public TItem XALG;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public TItem Name;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
-            public TItem Description;
+            public TItem Text;
+            public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? PickupSound { get; set; }
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? DropdownSound { get; set; }
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
@@ -463,10 +491,10 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, BookTeachTarget.Mask<TItem>?>? Teaches { get; set; }
             public TItem TextOffsetX;
             public TItem TextOffsetY;
-            public TItem DNAMUnknown;
-            public TItem CNAM;
-            public TItem ENAM;
-            public TItem FNAM;
+            public TItem DataSlateType;
+            public TItem Description;
+            public TItem DataSlateHeaderLeft;
+            public TItem DataSlateHeaderRight;
             public TItem InventoryArt;
             public TItem Scene;
             #endregion
@@ -484,13 +512,15 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
-                if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
+                if (!object.Equals(this.DirtinessScale, rhs.DirtinessScale)) return false;
                 if (!object.Equals(this.Transforms, rhs.Transforms)) return false;
+                if (!object.Equals(this.DefaultLayer, rhs.DefaultLayer)) return false;
                 if (!object.Equals(this.XALG, rhs.XALG)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
-                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.Text, rhs.Text)) return false;
+                if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
                 if (!object.Equals(this.PickupSound, rhs.PickupSound)) return false;
                 if (!object.Equals(this.DropdownSound, rhs.DropdownSound)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
@@ -501,10 +531,10 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Teaches, rhs.Teaches)) return false;
                 if (!object.Equals(this.TextOffsetX, rhs.TextOffsetX)) return false;
                 if (!object.Equals(this.TextOffsetY, rhs.TextOffsetY)) return false;
-                if (!object.Equals(this.DNAMUnknown, rhs.DNAMUnknown)) return false;
-                if (!object.Equals(this.CNAM, rhs.CNAM)) return false;
-                if (!object.Equals(this.ENAM, rhs.ENAM)) return false;
-                if (!object.Equals(this.FNAM, rhs.FNAM)) return false;
+                if (!object.Equals(this.DataSlateType, rhs.DataSlateType)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.DataSlateHeaderLeft, rhs.DataSlateHeaderLeft)) return false;
+                if (!object.Equals(this.DataSlateHeaderRight, rhs.DataSlateHeaderRight)) return false;
                 if (!object.Equals(this.InventoryArt, rhs.InventoryArt)) return false;
                 if (!object.Equals(this.Scene, rhs.Scene)) return false;
                 return true;
@@ -514,13 +544,15 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.ObjectBounds);
-                hash.Add(this.ODTY);
+                hash.Add(this.DirtinessScale);
                 hash.Add(this.Transforms);
+                hash.Add(this.DefaultLayer);
                 hash.Add(this.XALG);
                 hash.Add(this.Components);
                 hash.Add(this.Name);
                 hash.Add(this.Model);
-                hash.Add(this.Description);
+                hash.Add(this.Text);
+                hash.Add(this.Destructible);
                 hash.Add(this.PickupSound);
                 hash.Add(this.DropdownSound);
                 hash.Add(this.Keywords);
@@ -531,10 +563,10 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Teaches);
                 hash.Add(this.TextOffsetX);
                 hash.Add(this.TextOffsetY);
-                hash.Add(this.DNAMUnknown);
-                hash.Add(this.CNAM);
-                hash.Add(this.ENAM);
-                hash.Add(this.FNAM);
+                hash.Add(this.DataSlateType);
+                hash.Add(this.Description);
+                hash.Add(this.DataSlateHeaderLeft);
+                hash.Add(this.DataSlateHeaderRight);
                 hash.Add(this.InventoryArt);
                 hash.Add(this.Scene);
                 hash.Add(base.GetHashCode());
@@ -557,12 +589,13 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.ObjectBounds.Overall)) return false;
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
-                if (!eval(this.ODTY)) return false;
+                if (!eval(this.DirtinessScale)) return false;
                 if (Transforms != null)
                 {
                     if (!eval(this.Transforms.Overall)) return false;
                     if (this.Transforms.Specific != null && !this.Transforms.Specific.All(eval)) return false;
                 }
+                if (!eval(this.DefaultLayer)) return false;
                 if (!eval(this.XALG)) return false;
                 if (this.Components != null)
                 {
@@ -582,7 +615,12 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
-                if (!eval(this.Description)) return false;
+                if (!eval(this.Text)) return false;
+                if (Destructible != null)
+                {
+                    if (!eval(this.Destructible.Overall)) return false;
+                    if (this.Destructible.Specific != null && !this.Destructible.Specific.All(eval)) return false;
+                }
                 if (PickupSound != null)
                 {
                     if (!eval(this.PickupSound.Overall)) return false;
@@ -615,10 +653,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (!eval(this.TextOffsetX)) return false;
                 if (!eval(this.TextOffsetY)) return false;
-                if (!eval(this.DNAMUnknown)) return false;
-                if (!eval(this.CNAM)) return false;
-                if (!eval(this.ENAM)) return false;
-                if (!eval(this.FNAM)) return false;
+                if (!eval(this.DataSlateType)) return false;
+                if (!eval(this.Description)) return false;
+                if (!eval(this.DataSlateHeaderLeft)) return false;
+                if (!eval(this.DataSlateHeaderRight)) return false;
                 if (!eval(this.InventoryArt)) return false;
                 if (!eval(this.Scene)) return false;
                 return true;
@@ -639,12 +677,13 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.ObjectBounds.Overall)) return true;
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
-                if (eval(this.ODTY)) return true;
+                if (eval(this.DirtinessScale)) return true;
                 if (Transforms != null)
                 {
                     if (eval(this.Transforms.Overall)) return true;
                     if (this.Transforms.Specific != null && this.Transforms.Specific.Any(eval)) return true;
                 }
+                if (eval(this.DefaultLayer)) return true;
                 if (eval(this.XALG)) return true;
                 if (this.Components != null)
                 {
@@ -664,7 +703,12 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
-                if (eval(this.Description)) return true;
+                if (eval(this.Text)) return true;
+                if (Destructible != null)
+                {
+                    if (eval(this.Destructible.Overall)) return true;
+                    if (this.Destructible.Specific != null && this.Destructible.Specific.Any(eval)) return true;
+                }
                 if (PickupSound != null)
                 {
                     if (eval(this.PickupSound.Overall)) return true;
@@ -697,10 +741,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (eval(this.TextOffsetX)) return true;
                 if (eval(this.TextOffsetY)) return true;
-                if (eval(this.DNAMUnknown)) return true;
-                if (eval(this.CNAM)) return true;
-                if (eval(this.ENAM)) return true;
-                if (eval(this.FNAM)) return true;
+                if (eval(this.DataSlateType)) return true;
+                if (eval(this.Description)) return true;
+                if (eval(this.DataSlateHeaderLeft)) return true;
+                if (eval(this.DataSlateHeaderRight)) return true;
                 if (eval(this.InventoryArt)) return true;
                 if (eval(this.Scene)) return true;
                 return false;
@@ -720,8 +764,9 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
-                obj.ODTY = eval(this.ODTY);
+                obj.DirtinessScale = eval(this.DirtinessScale);
                 obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Transforms.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
+                obj.DefaultLayer = eval(this.DefaultLayer);
                 obj.XALG = eval(this.XALG);
                 if (Components != null)
                 {
@@ -740,7 +785,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 obj.Name = eval(this.Name);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-                obj.Description = eval(this.Description);
+                obj.Text = eval(this.Text);
+                obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
                 obj.PickupSound = this.PickupSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.PickupSound.Overall), this.PickupSound.Specific?.Translate(eval));
                 obj.DropdownSound = this.DropdownSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.DropdownSound.Overall), this.DropdownSound.Specific?.Translate(eval));
                 if (Keywords != null)
@@ -764,10 +810,10 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Teaches = this.Teaches == null ? null : new MaskItem<R, BookTeachTarget.Mask<R>?>(eval(this.Teaches.Overall), this.Teaches.Specific?.Translate(eval));
                 obj.TextOffsetX = eval(this.TextOffsetX);
                 obj.TextOffsetY = eval(this.TextOffsetY);
-                obj.DNAMUnknown = eval(this.DNAMUnknown);
-                obj.CNAM = eval(this.CNAM);
-                obj.ENAM = eval(this.ENAM);
-                obj.FNAM = eval(this.FNAM);
+                obj.DataSlateType = eval(this.DataSlateType);
+                obj.Description = eval(this.Description);
+                obj.DataSlateHeaderLeft = eval(this.DataSlateHeaderLeft);
+                obj.DataSlateHeaderRight = eval(this.DataSlateHeaderRight);
                 obj.InventoryArt = eval(this.InventoryArt);
                 obj.Scene = eval(this.Scene);
             }
@@ -796,13 +842,17 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         ObjectBounds?.Print(sb);
                     }
-                    if (printMask?.ODTY ?? true)
+                    if (printMask?.DirtinessScale ?? true)
                     {
-                        sb.AppendItem(ODTY, "ODTY");
+                        sb.AppendItem(DirtinessScale, "DirtinessScale");
                     }
                     if (printMask?.Transforms?.Overall ?? true)
                     {
                         Transforms?.Print(sb);
+                    }
+                    if (printMask?.DefaultLayer ?? true)
+                    {
+                        sb.AppendItem(DefaultLayer, "DefaultLayer");
                     }
                     if (printMask?.XALG ?? true)
                     {
@@ -835,9 +885,13 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         Model?.Print(sb);
                     }
-                    if (printMask?.Description ?? true)
+                    if (printMask?.Text ?? true)
                     {
-                        sb.AppendItem(Description, "Description");
+                        sb.AppendItem(Text, "Text");
+                    }
+                    if (printMask?.Destructible?.Overall ?? true)
+                    {
+                        Destructible?.Print(sb);
                     }
                     if (printMask?.PickupSound?.Overall ?? true)
                     {
@@ -896,21 +950,21 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(TextOffsetY, "TextOffsetY");
                     }
-                    if (printMask?.DNAMUnknown ?? true)
+                    if (printMask?.DataSlateType ?? true)
                     {
-                        sb.AppendItem(DNAMUnknown, "DNAMUnknown");
+                        sb.AppendItem(DataSlateType, "DataSlateType");
                     }
-                    if (printMask?.CNAM ?? true)
+                    if (printMask?.Description ?? true)
                     {
-                        sb.AppendItem(CNAM, "CNAM");
+                        sb.AppendItem(Description, "Description");
                     }
-                    if (printMask?.ENAM ?? true)
+                    if (printMask?.DataSlateHeaderLeft ?? true)
                     {
-                        sb.AppendItem(ENAM, "ENAM");
+                        sb.AppendItem(DataSlateHeaderLeft, "DataSlateHeaderLeft");
                     }
-                    if (printMask?.FNAM ?? true)
+                    if (printMask?.DataSlateHeaderRight ?? true)
                     {
-                        sb.AppendItem(FNAM, "FNAM");
+                        sb.AppendItem(DataSlateHeaderRight, "DataSlateHeaderRight");
                     }
                     if (printMask?.InventoryArt ?? true)
                     {
@@ -933,13 +987,15 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
-            public Exception? ODTY;
+            public Exception? DirtinessScale;
             public MaskItem<Exception?, Transforms.ErrorMask?>? Transforms;
+            public Exception? DefaultLayer;
             public Exception? XALG;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public Exception? Name;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
-            public Exception? Description;
+            public Exception? Text;
+            public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? PickupSound;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? DropdownSound;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
@@ -950,10 +1006,10 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, BookTeachTarget.ErrorMask?>? Teaches;
             public Exception? TextOffsetX;
             public Exception? TextOffsetY;
-            public Exception? DNAMUnknown;
-            public Exception? CNAM;
-            public Exception? ENAM;
-            public Exception? FNAM;
+            public Exception? DataSlateType;
+            public Exception? Description;
+            public Exception? DataSlateHeaderLeft;
+            public Exception? DataSlateHeaderRight;
             public Exception? InventoryArt;
             public Exception? Scene;
             #endregion
@@ -968,10 +1024,12 @@ namespace Mutagen.Bethesda.Starfield
                         return VirtualMachineAdapter;
                     case Book_FieldIndex.ObjectBounds:
                         return ObjectBounds;
-                    case Book_FieldIndex.ODTY:
-                        return ODTY;
+                    case Book_FieldIndex.DirtinessScale:
+                        return DirtinessScale;
                     case Book_FieldIndex.Transforms:
                         return Transforms;
+                    case Book_FieldIndex.DefaultLayer:
+                        return DefaultLayer;
                     case Book_FieldIndex.XALG:
                         return XALG;
                     case Book_FieldIndex.Components:
@@ -980,8 +1038,10 @@ namespace Mutagen.Bethesda.Starfield
                         return Name;
                     case Book_FieldIndex.Model:
                         return Model;
-                    case Book_FieldIndex.Description:
-                        return Description;
+                    case Book_FieldIndex.Text:
+                        return Text;
+                    case Book_FieldIndex.Destructible:
+                        return Destructible;
                     case Book_FieldIndex.PickupSound:
                         return PickupSound;
                     case Book_FieldIndex.DropdownSound:
@@ -1002,14 +1062,14 @@ namespace Mutagen.Bethesda.Starfield
                         return TextOffsetX;
                     case Book_FieldIndex.TextOffsetY:
                         return TextOffsetY;
-                    case Book_FieldIndex.DNAMUnknown:
-                        return DNAMUnknown;
-                    case Book_FieldIndex.CNAM:
-                        return CNAM;
-                    case Book_FieldIndex.ENAM:
-                        return ENAM;
-                    case Book_FieldIndex.FNAM:
-                        return FNAM;
+                    case Book_FieldIndex.DataSlateType:
+                        return DataSlateType;
+                    case Book_FieldIndex.Description:
+                        return Description;
+                    case Book_FieldIndex.DataSlateHeaderLeft:
+                        return DataSlateHeaderLeft;
+                    case Book_FieldIndex.DataSlateHeaderRight:
+                        return DataSlateHeaderRight;
                     case Book_FieldIndex.InventoryArt:
                         return InventoryArt;
                     case Book_FieldIndex.Scene:
@@ -1030,11 +1090,14 @@ namespace Mutagen.Bethesda.Starfield
                     case Book_FieldIndex.ObjectBounds:
                         this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
                         break;
-                    case Book_FieldIndex.ODTY:
-                        this.ODTY = ex;
+                    case Book_FieldIndex.DirtinessScale:
+                        this.DirtinessScale = ex;
                         break;
                     case Book_FieldIndex.Transforms:
                         this.Transforms = new MaskItem<Exception?, Transforms.ErrorMask?>(ex, null);
+                        break;
+                    case Book_FieldIndex.DefaultLayer:
+                        this.DefaultLayer = ex;
                         break;
                     case Book_FieldIndex.XALG:
                         this.XALG = ex;
@@ -1048,8 +1111,11 @@ namespace Mutagen.Bethesda.Starfield
                     case Book_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
-                    case Book_FieldIndex.Description:
-                        this.Description = ex;
+                    case Book_FieldIndex.Text:
+                        this.Text = ex;
+                        break;
+                    case Book_FieldIndex.Destructible:
+                        this.Destructible = new MaskItem<Exception?, Destructible.ErrorMask?>(ex, null);
                         break;
                     case Book_FieldIndex.PickupSound:
                         this.PickupSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
@@ -1081,17 +1147,17 @@ namespace Mutagen.Bethesda.Starfield
                     case Book_FieldIndex.TextOffsetY:
                         this.TextOffsetY = ex;
                         break;
-                    case Book_FieldIndex.DNAMUnknown:
-                        this.DNAMUnknown = ex;
+                    case Book_FieldIndex.DataSlateType:
+                        this.DataSlateType = ex;
                         break;
-                    case Book_FieldIndex.CNAM:
-                        this.CNAM = ex;
+                    case Book_FieldIndex.Description:
+                        this.Description = ex;
                         break;
-                    case Book_FieldIndex.ENAM:
-                        this.ENAM = ex;
+                    case Book_FieldIndex.DataSlateHeaderLeft:
+                        this.DataSlateHeaderLeft = ex;
                         break;
-                    case Book_FieldIndex.FNAM:
-                        this.FNAM = ex;
+                    case Book_FieldIndex.DataSlateHeaderRight:
+                        this.DataSlateHeaderRight = ex;
                         break;
                     case Book_FieldIndex.InventoryArt:
                         this.InventoryArt = ex;
@@ -1116,11 +1182,14 @@ namespace Mutagen.Bethesda.Starfield
                     case Book_FieldIndex.ObjectBounds:
                         this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
                         break;
-                    case Book_FieldIndex.ODTY:
-                        this.ODTY = (Exception?)obj;
+                    case Book_FieldIndex.DirtinessScale:
+                        this.DirtinessScale = (Exception?)obj;
                         break;
                     case Book_FieldIndex.Transforms:
                         this.Transforms = (MaskItem<Exception?, Transforms.ErrorMask?>?)obj;
+                        break;
+                    case Book_FieldIndex.DefaultLayer:
+                        this.DefaultLayer = (Exception?)obj;
                         break;
                     case Book_FieldIndex.XALG:
                         this.XALG = (Exception?)obj;
@@ -1134,8 +1203,11 @@ namespace Mutagen.Bethesda.Starfield
                     case Book_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case Book_FieldIndex.Description:
-                        this.Description = (Exception?)obj;
+                    case Book_FieldIndex.Text:
+                        this.Text = (Exception?)obj;
+                        break;
+                    case Book_FieldIndex.Destructible:
+                        this.Destructible = (MaskItem<Exception?, Destructible.ErrorMask?>?)obj;
                         break;
                     case Book_FieldIndex.PickupSound:
                         this.PickupSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
@@ -1167,17 +1239,17 @@ namespace Mutagen.Bethesda.Starfield
                     case Book_FieldIndex.TextOffsetY:
                         this.TextOffsetY = (Exception?)obj;
                         break;
-                    case Book_FieldIndex.DNAMUnknown:
-                        this.DNAMUnknown = (Exception?)obj;
+                    case Book_FieldIndex.DataSlateType:
+                        this.DataSlateType = (Exception?)obj;
                         break;
-                    case Book_FieldIndex.CNAM:
-                        this.CNAM = (Exception?)obj;
+                    case Book_FieldIndex.Description:
+                        this.Description = (Exception?)obj;
                         break;
-                    case Book_FieldIndex.ENAM:
-                        this.ENAM = (Exception?)obj;
+                    case Book_FieldIndex.DataSlateHeaderLeft:
+                        this.DataSlateHeaderLeft = (Exception?)obj;
                         break;
-                    case Book_FieldIndex.FNAM:
-                        this.FNAM = (Exception?)obj;
+                    case Book_FieldIndex.DataSlateHeaderRight:
+                        this.DataSlateHeaderRight = (Exception?)obj;
                         break;
                     case Book_FieldIndex.InventoryArt:
                         this.InventoryArt = (Exception?)obj;
@@ -1196,13 +1268,15 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (VirtualMachineAdapter != null) return true;
                 if (ObjectBounds != null) return true;
-                if (ODTY != null) return true;
+                if (DirtinessScale != null) return true;
                 if (Transforms != null) return true;
+                if (DefaultLayer != null) return true;
                 if (XALG != null) return true;
                 if (Components != null) return true;
                 if (Name != null) return true;
                 if (Model != null) return true;
-                if (Description != null) return true;
+                if (Text != null) return true;
+                if (Destructible != null) return true;
                 if (PickupSound != null) return true;
                 if (DropdownSound != null) return true;
                 if (Keywords != null) return true;
@@ -1213,10 +1287,10 @@ namespace Mutagen.Bethesda.Starfield
                 if (Teaches != null) return true;
                 if (TextOffsetX != null) return true;
                 if (TextOffsetY != null) return true;
-                if (DNAMUnknown != null) return true;
-                if (CNAM != null) return true;
-                if (ENAM != null) return true;
-                if (FNAM != null) return true;
+                if (DataSlateType != null) return true;
+                if (Description != null) return true;
+                if (DataSlateHeaderLeft != null) return true;
+                if (DataSlateHeaderRight != null) return true;
                 if (InventoryArt != null) return true;
                 if (Scene != null) return true;
                 return false;
@@ -1248,9 +1322,12 @@ namespace Mutagen.Bethesda.Starfield
                 VirtualMachineAdapter?.Print(sb);
                 ObjectBounds?.Print(sb);
                 {
-                    sb.AppendItem(ODTY, "ODTY");
+                    sb.AppendItem(DirtinessScale, "DirtinessScale");
                 }
                 Transforms?.Print(sb);
+                {
+                    sb.AppendItem(DefaultLayer, "DefaultLayer");
+                }
                 {
                     sb.AppendItem(XALG, "XALG");
                 }
@@ -1277,8 +1354,9 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 Model?.Print(sb);
                 {
-                    sb.AppendItem(Description, "Description");
+                    sb.AppendItem(Text, "Text");
                 }
+                Destructible?.Print(sb);
                 PickupSound?.Print(sb);
                 DropdownSound?.Print(sb);
                 if (Keywords is {} KeywordsItem)
@@ -1321,16 +1399,16 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(TextOffsetY, "TextOffsetY");
                 }
                 {
-                    sb.AppendItem(DNAMUnknown, "DNAMUnknown");
+                    sb.AppendItem(DataSlateType, "DataSlateType");
                 }
                 {
-                    sb.AppendItem(CNAM, "CNAM");
+                    sb.AppendItem(Description, "Description");
                 }
                 {
-                    sb.AppendItem(ENAM, "ENAM");
+                    sb.AppendItem(DataSlateHeaderLeft, "DataSlateHeaderLeft");
                 }
                 {
-                    sb.AppendItem(FNAM, "FNAM");
+                    sb.AppendItem(DataSlateHeaderRight, "DataSlateHeaderRight");
                 }
                 {
                     sb.AppendItem(InventoryArt, "InventoryArt");
@@ -1348,13 +1426,15 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
-                ret.ODTY = this.ODTY.Combine(rhs.ODTY);
+                ret.DirtinessScale = this.DirtinessScale.Combine(rhs.DirtinessScale);
                 ret.Transforms = this.Transforms.Combine(rhs.Transforms, (l, r) => l.Combine(r));
+                ret.DefaultLayer = this.DefaultLayer.Combine(rhs.DefaultLayer);
                 ret.XALG = this.XALG.Combine(rhs.XALG);
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.Description = this.Description.Combine(rhs.Description);
+                ret.Text = this.Text.Combine(rhs.Text);
+                ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.PickupSound = this.PickupSound.Combine(rhs.PickupSound, (l, r) => l.Combine(r));
                 ret.DropdownSound = this.DropdownSound.Combine(rhs.DropdownSound, (l, r) => l.Combine(r));
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
@@ -1365,10 +1445,10 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Teaches = this.Teaches.Combine(rhs.Teaches, (l, r) => l.Combine(r));
                 ret.TextOffsetX = this.TextOffsetX.Combine(rhs.TextOffsetX);
                 ret.TextOffsetY = this.TextOffsetY.Combine(rhs.TextOffsetY);
-                ret.DNAMUnknown = this.DNAMUnknown.Combine(rhs.DNAMUnknown);
-                ret.CNAM = this.CNAM.Combine(rhs.CNAM);
-                ret.ENAM = this.ENAM.Combine(rhs.ENAM);
-                ret.FNAM = this.FNAM.Combine(rhs.FNAM);
+                ret.DataSlateType = this.DataSlateType.Combine(rhs.DataSlateType);
+                ret.Description = this.Description.Combine(rhs.Description);
+                ret.DataSlateHeaderLeft = this.DataSlateHeaderLeft.Combine(rhs.DataSlateHeaderLeft);
+                ret.DataSlateHeaderRight = this.DataSlateHeaderRight.Combine(rhs.DataSlateHeaderRight);
                 ret.InventoryArt = this.InventoryArt.Combine(rhs.InventoryArt);
                 ret.Scene = this.Scene.Combine(rhs.Scene);
                 return ret;
@@ -1395,13 +1475,15 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public ObjectBounds.TranslationMask? ObjectBounds;
-            public bool ODTY;
+            public bool DirtinessScale;
             public Transforms.TranslationMask? Transforms;
+            public bool DefaultLayer;
             public bool XALG;
             public AComponent.TranslationMask? Components;
             public bool Name;
             public Model.TranslationMask? Model;
-            public bool Description;
+            public bool Text;
+            public Destructible.TranslationMask? Destructible;
             public SoundReference.TranslationMask? PickupSound;
             public SoundReference.TranslationMask? DropdownSound;
             public bool Keywords;
@@ -1412,10 +1494,10 @@ namespace Mutagen.Bethesda.Starfield
             public BookTeachTarget.TranslationMask? Teaches;
             public bool TextOffsetX;
             public bool TextOffsetY;
-            public bool DNAMUnknown;
-            public bool CNAM;
-            public bool ENAM;
-            public bool FNAM;
+            public bool DataSlateType;
+            public bool Description;
+            public bool DataSlateHeaderLeft;
+            public bool DataSlateHeaderRight;
             public bool InventoryArt;
             public bool Scene;
             #endregion
@@ -1426,10 +1508,11 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.ODTY = defaultOn;
+                this.DirtinessScale = defaultOn;
+                this.DefaultLayer = defaultOn;
                 this.XALG = defaultOn;
                 this.Name = defaultOn;
-                this.Description = defaultOn;
+                this.Text = defaultOn;
                 this.Keywords = defaultOn;
                 this.FeaturedItemMessage = defaultOn;
                 this.Value = defaultOn;
@@ -1437,10 +1520,10 @@ namespace Mutagen.Bethesda.Starfield
                 this.Flags = defaultOn;
                 this.TextOffsetX = defaultOn;
                 this.TextOffsetY = defaultOn;
-                this.DNAMUnknown = defaultOn;
-                this.CNAM = defaultOn;
-                this.ENAM = defaultOn;
-                this.FNAM = defaultOn;
+                this.DataSlateType = defaultOn;
+                this.Description = defaultOn;
+                this.DataSlateHeaderLeft = defaultOn;
+                this.DataSlateHeaderRight = defaultOn;
                 this.InventoryArt = defaultOn;
                 this.Scene = defaultOn;
             }
@@ -1452,13 +1535,15 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
-                ret.Add((ODTY, null));
+                ret.Add((DirtinessScale, null));
                 ret.Add((Transforms != null ? Transforms.OnOverall : DefaultOn, Transforms?.GetCrystal()));
+                ret.Add((DefaultLayer, null));
                 ret.Add((XALG, null));
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((Name, null));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
-                ret.Add((Description, null));
+                ret.Add((Text, null));
+                ret.Add((Destructible != null ? Destructible.OnOverall : DefaultOn, Destructible?.GetCrystal()));
                 ret.Add((PickupSound != null ? PickupSound.OnOverall : DefaultOn, PickupSound?.GetCrystal()));
                 ret.Add((DropdownSound != null ? DropdownSound.OnOverall : DefaultOn, DropdownSound?.GetCrystal()));
                 ret.Add((Keywords, null));
@@ -1469,10 +1554,10 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Teaches != null ? Teaches.OnOverall : DefaultOn, Teaches?.GetCrystal()));
                 ret.Add((TextOffsetX, null));
                 ret.Add((TextOffsetY, null));
-                ret.Add((DNAMUnknown, null));
-                ret.Add((CNAM, null));
-                ret.Add((ENAM, null));
-                ret.Add((FNAM, null));
+                ret.Add((DataSlateType, null));
+                ret.Add((Description, null));
+                ret.Add((DataSlateHeaderLeft, null));
+                ret.Add((DataSlateHeaderRight, null));
                 ret.Add((InventoryArt, null));
                 ret.Add((Scene, null));
             }
@@ -1626,6 +1711,7 @@ namespace Mutagen.Bethesda.Starfield
         IBookGetter,
         IConstructibleObjectTarget,
         IFormLinkContainer,
+        IHasDestructible,
         IHaveVirtualMachineAdapter,
         IItem,
         IKeyworded<IKeywordGetter>,
@@ -1634,6 +1720,7 @@ namespace Mutagen.Bethesda.Starfield
         INamed,
         INamedRequired,
         IObjectBounded,
+        IResearchResourceTarget,
         IScripted,
         IStarfieldMajorRecordInternal,
         IStaticTarget,
@@ -1649,9 +1736,10 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: IObjectBounded
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
-        new Single? ODTY { get; set; }
+        new Percent DirtinessScale { get; set; }
         new Transforms? Transforms { get; set; }
-        new MemorySlice<Byte>? XALG { get; set; }
+        new IFormLinkNullable<ILayerGetter> DefaultLayer { get; set; }
+        new UInt64? XALG { get; set; }
         new ExtendedList<AComponent> Components { get; }
         /// <summary>
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
@@ -1661,7 +1749,11 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new TranslatedString Description { get; set; }
+        new TranslatedString Text { get; set; }
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
+        new Destructible? Destructible { get; set; }
         new SoundReference? PickupSound { get; set; }
         new SoundReference? DropdownSound { get; set; }
         /// <summary>
@@ -1675,10 +1767,10 @@ namespace Mutagen.Bethesda.Starfield
         new BookTeachTarget? Teaches { get; set; }
         new UInt32 TextOffsetX { get; set; }
         new UInt32 TextOffsetY { get; set; }
-        new UInt32 DNAMUnknown { get; set; }
-        new TranslatedString? CNAM { get; set; }
-        new TranslatedString? ENAM { get; set; }
-        new TranslatedString? FNAM { get; set; }
+        new Book.DataSlateTypeEnum DataSlateType { get; set; }
+        new TranslatedString? Description { get; set; }
+        new TranslatedString? DataSlateHeaderLeft { get; set; }
+        new TranslatedString? DataSlateHeaderRight { get; set; }
         new IFormLinkNullable<IStaticGetter> InventoryArt { get; set; }
         new IFormLinkNullable<ISceneGetter> Scene { get; set; }
     }
@@ -1698,6 +1790,7 @@ namespace Mutagen.Bethesda.Starfield
         IBinaryItem,
         IConstructibleObjectTargetGetter,
         IFormLinkContainerGetter,
+        IHasDestructibleGetter,
         IHaveVirtualMachineAdapterGetter,
         IItemGetter,
         IKeywordedGetter<IKeywordGetter>,
@@ -1707,6 +1800,7 @@ namespace Mutagen.Bethesda.Starfield
         INamedGetter,
         INamedRequiredGetter,
         IObjectBoundedGetter,
+        IResearchResourceTargetGetter,
         IScriptedGetter,
         IStaticTargetGetter,
         ITranslatedNamedGetter,
@@ -1726,9 +1820,10 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
-        Single? ODTY { get; }
+        Percent DirtinessScale { get; }
         ITransformsGetter? Transforms { get; }
-        ReadOnlyMemorySlice<Byte>? XALG { get; }
+        IFormLinkNullableGetter<ILayerGetter> DefaultLayer { get; }
+        UInt64? XALG { get; }
         IReadOnlyList<IAComponentGetter> Components { get; }
         #region Name
         /// <summary>
@@ -1742,7 +1837,13 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
-        ITranslatedStringGetter Description { get; }
+        ITranslatedStringGetter Text { get; }
+        #region Destructible
+        /// <summary>
+        /// Aspects: IHasDestructibleGetter
+        /// </summary>
+        IDestructibleGetter? Destructible { get; }
+        #endregion
         ISoundReferenceGetter? PickupSound { get; }
         ISoundReferenceGetter? DropdownSound { get; }
         #region Keywords
@@ -1758,10 +1859,10 @@ namespace Mutagen.Bethesda.Starfield
         IBookTeachTargetGetter? Teaches { get; }
         UInt32 TextOffsetX { get; }
         UInt32 TextOffsetY { get; }
-        UInt32 DNAMUnknown { get; }
-        ITranslatedStringGetter? CNAM { get; }
-        ITranslatedStringGetter? ENAM { get; }
-        ITranslatedStringGetter? FNAM { get; }
+        Book.DataSlateTypeEnum DataSlateType { get; }
+        ITranslatedStringGetter? Description { get; }
+        ITranslatedStringGetter? DataSlateHeaderLeft { get; }
+        ITranslatedStringGetter? DataSlateHeaderRight { get; }
         IFormLinkNullableGetter<IStaticGetter> InventoryArt { get; }
         IFormLinkNullableGetter<ISceneGetter> Scene { get; }
 
@@ -1942,29 +2043,31 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         VirtualMachineAdapter = 7,
         ObjectBounds = 8,
-        ODTY = 9,
+        DirtinessScale = 9,
         Transforms = 10,
-        XALG = 11,
-        Components = 12,
-        Name = 13,
-        Model = 14,
-        Description = 15,
-        PickupSound = 16,
-        DropdownSound = 17,
-        Keywords = 18,
-        FeaturedItemMessage = 19,
-        Value = 20,
-        Weight = 21,
-        Flags = 22,
-        Teaches = 23,
-        TextOffsetX = 24,
-        TextOffsetY = 25,
-        DNAMUnknown = 26,
-        CNAM = 27,
-        ENAM = 28,
-        FNAM = 29,
-        InventoryArt = 30,
-        Scene = 31,
+        DefaultLayer = 11,
+        XALG = 12,
+        Components = 13,
+        Name = 14,
+        Model = 15,
+        Text = 16,
+        Destructible = 17,
+        PickupSound = 18,
+        DropdownSound = 19,
+        Keywords = 20,
+        FeaturedItemMessage = 21,
+        Value = 22,
+        Weight = 23,
+        Flags = 24,
+        Teaches = 25,
+        TextOffsetX = 26,
+        TextOffsetY = 27,
+        DataSlateType = 28,
+        Description = 29,
+        DataSlateHeaderLeft = 30,
+        DataSlateHeaderRight = 31,
+        InventoryArt = 32,
+        Scene = 33,
     }
     #endregion
 
@@ -1975,9 +2078,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 25;
+        public const ushort AdditionalFieldCount = 27;
 
-        public const ushort FieldCount = 32;
+        public const ushort FieldCount = 34;
 
         public static readonly Type MaskType = typeof(Book.Mask<>);
 
@@ -2015,6 +2118,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
                 RecordTypes.PTT2,
+                RecordTypes.DEFL,
                 RecordTypes.XALG,
                 RecordTypes.BFCB,
                 RecordTypes.BFCE,
@@ -2022,13 +2126,15 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MODL,
                 RecordTypes.MODT,
                 RecordTypes.MOLM,
-                RecordTypes.DMDC,
-                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
                 RecordTypes.MODF,
                 RecordTypes.DESC,
+                RecordTypes.DEST,
+                RecordTypes.DAMC,
+                RecordTypes.DSDL,
+                RecordTypes.DSTD,
                 RecordTypes.PUSH,
                 RecordTypes.PDSH,
                 RecordTypes.KWDA,
@@ -2087,13 +2193,15 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.VirtualMachineAdapter = null;
             item.ObjectBounds.Clear();
-            item.ODTY = default;
+            item.DirtinessScale = default(Percent);
             item.Transforms = null;
+            item.DefaultLayer.Clear();
             item.XALG = default;
             item.Components.Clear();
             item.Name = default;
             item.Model = null;
-            item.Description.Clear();
+            item.Text.Clear();
+            item.Destructible = null;
             item.PickupSound = null;
             item.DropdownSound = null;
             item.Keywords = null;
@@ -2104,10 +2212,10 @@ namespace Mutagen.Bethesda.Starfield
             item.Teaches = null;
             item.TextOffsetX = default(UInt32);
             item.TextOffsetY = default(UInt32);
-            item.DNAMUnknown = default(UInt32);
-            item.CNAM = default;
-            item.ENAM = default;
-            item.FNAM = default;
+            item.DataSlateType = default(Book.DataSlateTypeEnum);
+            item.Description = default;
+            item.DataSlateHeaderLeft = default;
+            item.DataSlateHeaderRight = default;
             item.InventoryArt.Clear();
             item.Scene.Clear();
             base.Clear(item);
@@ -2129,8 +2237,10 @@ namespace Mutagen.Bethesda.Starfield
             base.RemapLinks(obj, mapping);
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.Transforms?.RemapLinks(mapping);
+            obj.DefaultLayer.Relink(mapping);
             obj.Components.RemapLinks(mapping);
             obj.Model?.RemapLinks(mapping);
+            obj.Destructible?.RemapLinks(mapping);
             obj.PickupSound?.RemapLinks(mapping);
             obj.DropdownSound?.RemapLinks(mapping);
             obj.Keywords?.RemapLinks(mapping);
@@ -2158,6 +2268,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -2170,6 +2287,7 @@ namespace Mutagen.Bethesda.Starfield
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
             obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
             obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Destructible?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -2243,13 +2361,14 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
-            ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
+            ret.DirtinessScale = item.DirtinessScale.Equals(rhs.DirtinessScale);
             ret.Transforms = EqualsMaskHelper.EqualsHelper(
                 item.Transforms,
                 rhs.Transforms,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.XALG = MemorySliceExt.SequenceEqual(item.XALG, rhs.XALG);
+            ret.DefaultLayer = item.DefaultLayer.Equals(rhs.DefaultLayer);
+            ret.XALG = item.XALG == rhs.XALG;
             ret.Components = item.Components.CollectionEqualsHelper(
                 rhs.Components,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -2260,7 +2379,12 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.Description = object.Equals(item.Description, rhs.Description);
+            ret.Text = object.Equals(item.Text, rhs.Text);
+            ret.Destructible = EqualsMaskHelper.EqualsHelper(
+                item.Destructible,
+                rhs.Destructible,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.PickupSound = EqualsMaskHelper.EqualsHelper(
                 item.PickupSound,
                 rhs.PickupSound,
@@ -2286,10 +2410,10 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.TextOffsetX = item.TextOffsetX == rhs.TextOffsetX;
             ret.TextOffsetY = item.TextOffsetY == rhs.TextOffsetY;
-            ret.DNAMUnknown = item.DNAMUnknown == rhs.DNAMUnknown;
-            ret.CNAM = object.Equals(item.CNAM, rhs.CNAM);
-            ret.ENAM = object.Equals(item.ENAM, rhs.ENAM);
-            ret.FNAM = object.Equals(item.FNAM, rhs.FNAM);
+            ret.DataSlateType = item.DataSlateType == rhs.DataSlateType;
+            ret.Description = object.Equals(item.Description, rhs.Description);
+            ret.DataSlateHeaderLeft = object.Equals(item.DataSlateHeaderLeft, rhs.DataSlateHeaderLeft);
+            ret.DataSlateHeaderRight = object.Equals(item.DataSlateHeaderRight, rhs.DataSlateHeaderRight);
             ret.InventoryArt = item.InventoryArt.Equals(rhs.InventoryArt);
             ret.Scene = item.Scene.Equals(rhs.Scene);
             base.FillEqualsMask(item, rhs, ret, include);
@@ -2350,20 +2474,23 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ObjectBounds?.Print(sb, "ObjectBounds");
             }
-            if ((printMask?.ODTY ?? true)
-                && item.ODTY is {} ODTYItem)
+            if (printMask?.DirtinessScale ?? true)
             {
-                sb.AppendItem(ODTYItem, "ODTY");
+                sb.AppendItem(item.DirtinessScale, "DirtinessScale");
             }
             if ((printMask?.Transforms?.Overall ?? true)
                 && item.Transforms is {} TransformsItem)
             {
                 TransformsItem?.Print(sb, "Transforms");
             }
+            if (printMask?.DefaultLayer ?? true)
+            {
+                sb.AppendItem(item.DefaultLayer.FormKeyNullable, "DefaultLayer");
+            }
             if ((printMask?.XALG ?? true)
                 && item.XALG is {} XALGItem)
             {
-                sb.AppendLine($"XALG => {SpanExt.ToHexString(XALGItem)}");
+                sb.AppendItem(XALGItem, "XALG");
             }
             if (printMask?.Components?.Overall ?? true)
             {
@@ -2389,9 +2516,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 ModelItem?.Print(sb, "Model");
             }
-            if (printMask?.Description ?? true)
+            if (printMask?.Text ?? true)
             {
-                sb.AppendItem(item.Description, "Description");
+                sb.AppendItem(item.Text, "Text");
+            }
+            if ((printMask?.Destructible?.Overall ?? true)
+                && item.Destructible is {} DestructibleItem)
+            {
+                DestructibleItem?.Print(sb, "Destructible");
             }
             if ((printMask?.PickupSound?.Overall ?? true)
                 && item.PickupSound is {} PickupSoundItem)
@@ -2447,24 +2579,24 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.TextOffsetY, "TextOffsetY");
             }
-            if (printMask?.DNAMUnknown ?? true)
+            if (printMask?.DataSlateType ?? true)
             {
-                sb.AppendItem(item.DNAMUnknown, "DNAMUnknown");
+                sb.AppendItem(item.DataSlateType, "DataSlateType");
             }
-            if ((printMask?.CNAM ?? true)
-                && item.CNAM is {} CNAMItem)
+            if ((printMask?.Description ?? true)
+                && item.Description is {} DescriptionItem)
             {
-                sb.AppendItem(CNAMItem, "CNAM");
+                sb.AppendItem(DescriptionItem, "Description");
             }
-            if ((printMask?.ENAM ?? true)
-                && item.ENAM is {} ENAMItem)
+            if ((printMask?.DataSlateHeaderLeft ?? true)
+                && item.DataSlateHeaderLeft is {} DataSlateHeaderLeftItem)
             {
-                sb.AppendItem(ENAMItem, "ENAM");
+                sb.AppendItem(DataSlateHeaderLeftItem, "DataSlateHeaderLeft");
             }
-            if ((printMask?.FNAM ?? true)
-                && item.FNAM is {} FNAMItem)
+            if ((printMask?.DataSlateHeaderRight ?? true)
+                && item.DataSlateHeaderRight is {} DataSlateHeaderRightItem)
             {
-                sb.AppendItem(FNAMItem, "FNAM");
+                sb.AppendItem(DataSlateHeaderRightItem, "DataSlateHeaderRight");
             }
             if (printMask?.InventoryArt ?? true)
             {
@@ -2540,9 +2672,9 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.ODTY) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.DirtinessScale) ?? true))
             {
-                if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
+                if (!lhs.DirtinessScale.Equals(rhs.DirtinessScale)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Transforms) ?? true))
             {
@@ -2552,9 +2684,13 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isTransformsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.DefaultLayer) ?? true))
+            {
+                if (!lhs.DefaultLayer.Equals(rhs.DefaultLayer)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.XALG) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.XALG, rhs.XALG)) return false;
+                if (lhs.XALG != rhs.XALG) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Components) ?? true))
             {
@@ -2572,9 +2708,17 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Description) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Text) ?? true))
             {
-                if (!object.Equals(lhs.Description, rhs.Description)) return false;
+                if (!object.Equals(lhs.Text, rhs.Text)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Destructible) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
+                {
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)Book_FieldIndex.Destructible))) return false;
+                }
+                else if (!isDestructibleEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.PickupSound) ?? true))
             {
@@ -2628,21 +2772,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.TextOffsetY != rhs.TextOffsetY) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.DNAMUnknown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.DataSlateType) ?? true))
             {
-                if (lhs.DNAMUnknown != rhs.DNAMUnknown) return false;
+                if (lhs.DataSlateType != rhs.DataSlateType) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.CNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.Description) ?? true))
             {
-                if (!object.Equals(lhs.CNAM, rhs.CNAM)) return false;
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.ENAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.DataSlateHeaderLeft) ?? true))
             {
-                if (!object.Equals(lhs.ENAM, rhs.ENAM)) return false;
+                if (!object.Equals(lhs.DataSlateHeaderLeft, rhs.DataSlateHeaderLeft)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.FNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.DataSlateHeaderRight) ?? true))
             {
-                if (!object.Equals(lhs.FNAM, rhs.FNAM)) return false;
+                if (!object.Equals(lhs.DataSlateHeaderRight, rhs.DataSlateHeaderRight)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Book_FieldIndex.InventoryArt) ?? true))
             {
@@ -2685,17 +2829,15 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(VirtualMachineAdapteritem);
             }
             hash.Add(item.ObjectBounds);
-            if (item.ODTY is {} ODTYitem)
-            {
-                hash.Add(ODTYitem);
-            }
+            hash.Add(item.DirtinessScale);
             if (item.Transforms is {} Transformsitem)
             {
                 hash.Add(Transformsitem);
             }
-            if (item.XALG is {} XALGItem)
+            hash.Add(item.DefaultLayer);
+            if (item.XALG is {} XALGitem)
             {
-                hash.Add(XALGItem);
+                hash.Add(XALGitem);
             }
             hash.Add(item.Components);
             if (item.Name is {} Nameitem)
@@ -2706,7 +2848,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(Modelitem);
             }
-            hash.Add(item.Description);
+            hash.Add(item.Text);
+            if (item.Destructible is {} Destructibleitem)
+            {
+                hash.Add(Destructibleitem);
+            }
             if (item.PickupSound is {} PickupSounditem)
             {
                 hash.Add(PickupSounditem);
@@ -2726,18 +2872,18 @@ namespace Mutagen.Bethesda.Starfield
             }
             hash.Add(item.TextOffsetX);
             hash.Add(item.TextOffsetY);
-            hash.Add(item.DNAMUnknown);
-            if (item.CNAM is {} CNAMitem)
+            hash.Add(item.DataSlateType);
+            if (item.Description is {} Descriptionitem)
             {
-                hash.Add(CNAMitem);
+                hash.Add(Descriptionitem);
             }
-            if (item.ENAM is {} ENAMitem)
+            if (item.DataSlateHeaderLeft is {} DataSlateHeaderLeftitem)
             {
-                hash.Add(ENAMitem);
+                hash.Add(DataSlateHeaderLeftitem);
             }
-            if (item.FNAM is {} FNAMitem)
+            if (item.DataSlateHeaderRight is {} DataSlateHeaderRightitem)
             {
-                hash.Add(FNAMitem);
+                hash.Add(DataSlateHeaderRightitem);
             }
             hash.Add(item.InventoryArt);
             hash.Add(item.Scene);
@@ -2784,6 +2930,10 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (FormLinkInformation.TryFactory(obj.DefaultLayer, out var DefaultLayerInfo))
+            {
+                yield return DefaultLayerInfo;
+            }
             foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.EnumerateFormLinks()))
             {
@@ -2792,6 +2942,13 @@ namespace Mutagen.Bethesda.Starfield
             if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -2853,6 +3010,13 @@ namespace Mutagen.Bethesda.Starfield
             if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
@@ -2979,9 +3143,9 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.ODTY) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.DirtinessScale) ?? true))
             {
-                item.ODTY = rhs.ODTY;
+                item.DirtinessScale = rhs.DirtinessScale;
             }
             if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Transforms) ?? true))
             {
@@ -3009,16 +3173,13 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.DefaultLayer) ?? true))
+            {
+                item.DefaultLayer.SetTo(rhs.DefaultLayer.FormKeyNullable);
+            }
             if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.XALG) ?? true))
             {
-                if(rhs.XALG is {} XALGrhs)
-                {
-                    item.XALG = XALGrhs.ToArray();
-                }
-                else
-                {
-                    item.XALG = default;
-                }
+                item.XALG = rhs.XALG;
             }
             if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Components) ?? true))
             {
@@ -3074,9 +3235,35 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Description) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Text) ?? true))
             {
-                item.Description = rhs.Description.DeepCopy();
+                item.Text = rhs.Text.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Destructible) ?? true))
+            {
+                errorMask?.PushIndex((int)Book_FieldIndex.Destructible);
+                try
+                {
+                    if(rhs.Destructible is {} rhsDestructible)
+                    {
+                        item.Destructible = rhsDestructible.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Book_FieldIndex.Destructible));
+                    }
+                    else
+                    {
+                        item.Destructible = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.PickupSound) ?? true))
             {
@@ -3207,21 +3394,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.TextOffsetY = rhs.TextOffsetY;
             }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.DNAMUnknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.DataSlateType) ?? true))
             {
-                item.DNAMUnknown = rhs.DNAMUnknown;
+                item.DataSlateType = rhs.DataSlateType;
             }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.CNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.Description) ?? true))
             {
-                item.CNAM = rhs.CNAM?.DeepCopy();
+                item.Description = rhs.Description?.DeepCopy();
             }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.ENAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.DataSlateHeaderLeft) ?? true))
             {
-                item.ENAM = rhs.ENAM?.DeepCopy();
+                item.DataSlateHeaderLeft = rhs.DataSlateHeaderLeft?.DeepCopy();
             }
-            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.FNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.DataSlateHeaderRight) ?? true))
             {
-                item.FNAM = rhs.FNAM?.DeepCopy();
+                item.DataSlateHeaderRight = rhs.DataSlateHeaderRight?.DeepCopy();
             }
             if ((copyMask?.GetShouldTranslate((int)Book_FieldIndex.InventoryArt) ?? true))
             {
@@ -3412,9 +3599,10 @@ namespace Mutagen.Bethesda.Starfield
                 item: ObjectBoundsItem,
                 writer: writer,
                 translationParams: translationParams);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            PercentBinaryTranslation.Write(
                 writer: writer,
-                item: item.ODTY,
+                item: item.DirtinessScale,
+                integerType: FloatIntegerType.UInt,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
             if (item.Transforms is {} TransformsItem)
             {
@@ -3423,7 +3611,11 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     translationParams: translationParams);
             }
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.DefaultLayer,
+                header: translationParams.ConvertToCustom(RecordTypes.DEFL));
+            UInt64BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.XALG,
                 header: translationParams.ConvertToCustom(RecordTypes.XALG));
@@ -3453,10 +3645,17 @@ namespace Mutagen.Bethesda.Starfield
             }
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Description,
+                item: item.Text,
                 header: translationParams.ConvertToCustom(RecordTypes.DESC),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.DL);
+            if (item.Destructible is {} DestructibleItem)
+            {
+                ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
+                    item: DestructibleItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             if (item.PickupSound is {} PickupSoundItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.PUSH))
@@ -3510,23 +3709,26 @@ namespace Mutagen.Bethesda.Starfield
                     item: item);
                 writer.Write(item.TextOffsetX);
                 writer.Write(item.TextOffsetY);
-                writer.Write(item.DNAMUnknown);
+                EnumBinaryTranslation<Book.DataSlateTypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.DataSlateType,
+                    length: 4);
             }
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.CNAM,
+                item: item.Description,
                 header: translationParams.ConvertToCustom(RecordTypes.CNAM),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.ENAM,
+                item: item.DataSlateHeaderLeft,
                 header: translationParams.ConvertToCustom(RecordTypes.ENAM),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.FNAM,
+                item: item.DataSlateHeaderRight,
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
@@ -3647,18 +3849,26 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ODTY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Book_FieldIndex.ODTY;
+                    item.DirtinessScale = PercentBinaryTranslation.Parse(
+                        reader: frame,
+                        integerType: FloatIntegerType.UInt);
+                    return (int)Book_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.PTT2:
                 {
                     item.Transforms = Mutagen.Bethesda.Starfield.Transforms.CreateFromBinary(frame: frame);
                     return (int)Book_FieldIndex.Transforms;
                 }
+                case RecordTypeInts.DEFL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DefaultLayer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Book_FieldIndex.DefaultLayer;
+                }
                 case RecordTypeInts.XALG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XALG = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.XALG = frame.ReadUInt64();
                     return (int)Book_FieldIndex.XALG;
                 }
                 case RecordTypeInts.BFCB:
@@ -3685,8 +3895,6 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -3700,13 +3908,23 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DESC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Description = StringBinaryTranslation.Instance.Parse(
+                    item.Text = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         eager: true,
                         source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)Book_FieldIndex.Description;
+                    return (int)Book_FieldIndex.Text;
+                }
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DAMC:
+                case RecordTypeInts.DSDL:
+                case RecordTypeInts.DSTD:
+                {
+                    item.Destructible = Mutagen.Bethesda.Starfield.Destructible.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Book_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.PUSH:
                 {
@@ -3764,41 +3982,43 @@ namespace Mutagen.Bethesda.Starfield
                     if (dataFrame.Remaining < 4) return null;
                     item.TextOffsetY = dataFrame.ReadUInt32();
                     if (dataFrame.Remaining < 4) return null;
-                    item.DNAMUnknown = dataFrame.ReadUInt32();
-                    return (int)Book_FieldIndex.DNAMUnknown;
+                    item.DataSlateType = EnumBinaryTranslation<Book.DataSlateTypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    return (int)Book_FieldIndex.DataSlateType;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CNAM = StringBinaryTranslation.Instance.Parse(
+                    item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         eager: true,
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)Book_FieldIndex.CNAM;
+                    return (int)Book_FieldIndex.Description;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ENAM = StringBinaryTranslation.Instance.Parse(
+                    item.DataSlateHeaderLeft = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         eager: true,
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)Book_FieldIndex.ENAM;
+                    return (int)Book_FieldIndex.DataSlateHeaderLeft;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FNAM = StringBinaryTranslation.Instance.Parse(
+                    item.DataSlateHeaderRight = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         eager: true,
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)Book_FieldIndex.FNAM;
+                    return (int)Book_FieldIndex.DataSlateHeaderRight;
                 }
                 case RecordTypeInts.INAM:
                 {
@@ -3896,17 +4116,21 @@ namespace Mutagen.Bethesda.Starfield
         private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
-        #region ODTY
-        private int? _ODTYLocation;
-        public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region DirtinessScale
+        private int? _DirtinessScaleLocation;
+        public Percent DirtinessScale => _DirtinessScaleLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DirtinessScaleLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt) : default(Percent);
         #endregion
         #region Transforms
         private RangeInt32? _TransformsLocation;
         public ITransformsGetter? Transforms => _TransformsLocation.HasValue ? TransformsBinaryOverlay.TransformsFactory(_recordData.Slice(_TransformsLocation!.Value.Min), _package) : default;
         #endregion
+        #region DefaultLayer
+        private int? _DefaultLayerLocation;
+        public IFormLinkNullableGetter<ILayerGetter> DefaultLayer => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILayerGetter>(_package, _recordData, _DefaultLayerLocation);
+        #endregion
         #region XALG
         private int? _XALGLocation;
-        public ReadOnlyMemorySlice<Byte>? XALG => _XALGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public UInt64? XALG => _XALGLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants)) : default(UInt64?);
         #endregion
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         #region Name
@@ -3922,10 +4146,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #endregion
         public IModelGetter? Model { get; private set; }
-        #region Description
-        private int? _DescriptionLocation;
-        public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData, eager: false) : TranslatedString.Empty;
+        #region Text
+        private int? _TextLocation;
+        public ITranslatedStringGetter Text => _TextLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TextLocation.Value, _package.MetaData.Constants), StringsSource.DL, parsingBundle: _package.MetaData, eager: false) : TranslatedString.Empty;
         #endregion
+        public IDestructibleGetter? Destructible { get; private set; }
         public ISoundReferenceGetter? PickupSound { get; private set; }
         public ISoundReferenceGetter? DropdownSound { get; private set; }
         #region Keywords
@@ -3968,22 +4193,22 @@ namespace Mutagen.Bethesda.Starfield
         private bool _TextOffsetY_IsSet => _DNAMLocation.HasValue;
         public UInt32 TextOffsetY => _TextOffsetY_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_TextOffsetYLocation, 4)) : default(UInt32);
         #endregion
-        #region DNAMUnknown
-        private int _DNAMUnknownLocation => _DNAMLocation!.Value.Min + 0xD;
-        private bool _DNAMUnknown_IsSet => _DNAMLocation.HasValue;
-        public UInt32 DNAMUnknown => _DNAMUnknown_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_DNAMUnknownLocation, 4)) : default(UInt32);
+        #region DataSlateType
+        private int _DataSlateTypeLocation => _DNAMLocation!.Value.Min + 0xD;
+        private bool _DataSlateType_IsSet => _DNAMLocation.HasValue;
+        public Book.DataSlateTypeEnum DataSlateType => _DataSlateType_IsSet ? (Book.DataSlateTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_DataSlateTypeLocation, 0x4)) : default;
         #endregion
-        #region CNAM
-        private int? _CNAMLocation;
-        public ITranslatedStringGetter? CNAM => _CNAMLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _CNAMLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
+        #region Description
+        private int? _DescriptionLocation;
+        public ITranslatedStringGetter? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
-        #region ENAM
-        private int? _ENAMLocation;
-        public ITranslatedStringGetter? ENAM => _ENAMLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ENAMLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
+        #region DataSlateHeaderLeft
+        private int? _DataSlateHeaderLeftLocation;
+        public ITranslatedStringGetter? DataSlateHeaderLeft => _DataSlateHeaderLeftLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DataSlateHeaderLeftLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
-        #region FNAM
-        private int? _FNAMLocation;
-        public ITranslatedStringGetter? FNAM => _FNAMLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FNAMLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
+        #region DataSlateHeaderRight
+        private int? _DataSlateHeaderRightLocation;
+        public ITranslatedStringGetter? DataSlateHeaderRight => _DataSlateHeaderRightLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DataSlateHeaderRightLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
         #region InventoryArt
         private int? _InventoryArtLocation;
@@ -4079,13 +4304,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ODTY:
                 {
-                    _ODTYLocation = (stream.Position - offset);
-                    return (int)Book_FieldIndex.ODTY;
+                    _DirtinessScaleLocation = (stream.Position - offset);
+                    return (int)Book_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.PTT2:
                 {
                     _TransformsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
                     return (int)Book_FieldIndex.Transforms;
+                }
+                case RecordTypeInts.DEFL:
+                {
+                    _DefaultLayerLocation = (stream.Position - offset);
+                    return (int)Book_FieldIndex.DefaultLayer;
                 }
                 case RecordTypeInts.XALG:
                 {
@@ -4109,8 +4339,6 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -4124,8 +4352,19 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.DESC:
                 {
-                    _DescriptionLocation = (stream.Position - offset);
-                    return (int)Book_FieldIndex.Description;
+                    _TextLocation = (stream.Position - offset);
+                    return (int)Book_FieldIndex.Text;
+                }
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DAMC:
+                case RecordTypeInts.DSDL:
+                case RecordTypeInts.DSTD:
+                {
+                    this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Book_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.PUSH:
                 {
@@ -4171,22 +4410,22 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DNAM:
                 {
                     _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)Book_FieldIndex.DNAMUnknown;
+                    return (int)Book_FieldIndex.DataSlateType;
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _CNAMLocation = (stream.Position - offset);
-                    return (int)Book_FieldIndex.CNAM;
+                    _DescriptionLocation = (stream.Position - offset);
+                    return (int)Book_FieldIndex.Description;
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    _ENAMLocation = (stream.Position - offset);
-                    return (int)Book_FieldIndex.ENAM;
+                    _DataSlateHeaderLeftLocation = (stream.Position - offset);
+                    return (int)Book_FieldIndex.DataSlateHeaderLeft;
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    _FNAMLocation = (stream.Position - offset);
-                    return (int)Book_FieldIndex.FNAM;
+                    _DataSlateHeaderRightLocation = (stream.Position - offset);
+                    return (int)Book_FieldIndex.DataSlateHeaderRight;
                 }
                 case RecordTypeInts.INAM:
                 {

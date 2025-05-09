@@ -1951,7 +1951,8 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     catch (Exception ex)
                     {
-                        throw RecordException.Enrich(ex, subItem);
+                        RecordException.EnrichAndThrow(ex, subItem);
+                        throw;
                     }
                 });
         }

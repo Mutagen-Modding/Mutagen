@@ -50,11 +50,11 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region Float1
-        public Single Float1 { get; set; } = default(Single);
+        #region TerrainHeight
+        public Single TerrainHeight { get; set; } = default(Single);
         #endregion
-        #region Float2
-        public Single Float2 { get; set; } = default(Single);
+        #region WaterHeight
+        public Single WaterHeight { get; set; } = default(Single);
         #endregion
 
         #region To String
@@ -95,16 +95,16 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Float1 = initialValue;
-                this.Float2 = initialValue;
+                this.TerrainHeight = initialValue;
+                this.WaterHeight = initialValue;
             }
 
             public Mask(
-                TItem Float1,
-                TItem Float2)
+                TItem TerrainHeight,
+                TItem WaterHeight)
             {
-                this.Float1 = Float1;
-                this.Float2 = Float2;
+                this.TerrainHeight = TerrainHeight;
+                this.WaterHeight = WaterHeight;
             }
 
             #pragma warning disable CS8618
@@ -116,8 +116,8 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Float1;
-            public TItem Float2;
+            public TItem TerrainHeight;
+            public TItem WaterHeight;
             #endregion
 
             #region Equals
@@ -130,15 +130,15 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Float1, rhs.Float1)) return false;
-                if (!object.Equals(this.Float2, rhs.Float2)) return false;
+                if (!object.Equals(this.TerrainHeight, rhs.TerrainHeight)) return false;
+                if (!object.Equals(this.WaterHeight, rhs.WaterHeight)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Float1);
-                hash.Add(this.Float2);
+                hash.Add(this.TerrainHeight);
+                hash.Add(this.WaterHeight);
                 return hash.ToHashCode();
             }
 
@@ -147,8 +147,8 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Float1)) return false;
-                if (!eval(this.Float2)) return false;
+                if (!eval(this.TerrainHeight)) return false;
+                if (!eval(this.WaterHeight)) return false;
                 return true;
             }
             #endregion
@@ -156,8 +156,8 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Float1)) return true;
-                if (eval(this.Float2)) return true;
+                if (eval(this.TerrainHeight)) return true;
+                if (eval(this.WaterHeight)) return true;
                 return false;
             }
             #endregion
@@ -172,8 +172,8 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Float1 = eval(this.Float1);
-                obj.Float2 = eval(this.Float2);
+                obj.TerrainHeight = eval(this.TerrainHeight);
+                obj.WaterHeight = eval(this.WaterHeight);
             }
             #endregion
 
@@ -192,13 +192,13 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(BlockHeightAdjustmentComponentItem.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Float1 ?? true)
+                    if (printMask?.TerrainHeight ?? true)
                     {
-                        sb.AppendItem(Float1, "Float1");
+                        sb.AppendItem(TerrainHeight, "TerrainHeight");
                     }
-                    if (printMask?.Float2 ?? true)
+                    if (printMask?.WaterHeight ?? true)
                     {
-                        sb.AppendItem(Float2, "Float2");
+                        sb.AppendItem(WaterHeight, "WaterHeight");
                     }
                 }
             }
@@ -224,8 +224,8 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? Float1;
-            public Exception? Float2;
+            public Exception? TerrainHeight;
+            public Exception? WaterHeight;
             #endregion
 
             #region IErrorMask
@@ -234,10 +234,10 @@ namespace Mutagen.Bethesda.Starfield
                 BlockHeightAdjustmentComponentItem_FieldIndex enu = (BlockHeightAdjustmentComponentItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case BlockHeightAdjustmentComponentItem_FieldIndex.Float1:
-                        return Float1;
-                    case BlockHeightAdjustmentComponentItem_FieldIndex.Float2:
-                        return Float2;
+                    case BlockHeightAdjustmentComponentItem_FieldIndex.TerrainHeight:
+                        return TerrainHeight;
+                    case BlockHeightAdjustmentComponentItem_FieldIndex.WaterHeight:
+                        return WaterHeight;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -248,11 +248,11 @@ namespace Mutagen.Bethesda.Starfield
                 BlockHeightAdjustmentComponentItem_FieldIndex enu = (BlockHeightAdjustmentComponentItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case BlockHeightAdjustmentComponentItem_FieldIndex.Float1:
-                        this.Float1 = ex;
+                    case BlockHeightAdjustmentComponentItem_FieldIndex.TerrainHeight:
+                        this.TerrainHeight = ex;
                         break;
-                    case BlockHeightAdjustmentComponentItem_FieldIndex.Float2:
-                        this.Float2 = ex;
+                    case BlockHeightAdjustmentComponentItem_FieldIndex.WaterHeight:
+                        this.WaterHeight = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -264,11 +264,11 @@ namespace Mutagen.Bethesda.Starfield
                 BlockHeightAdjustmentComponentItem_FieldIndex enu = (BlockHeightAdjustmentComponentItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case BlockHeightAdjustmentComponentItem_FieldIndex.Float1:
-                        this.Float1 = (Exception?)obj;
+                    case BlockHeightAdjustmentComponentItem_FieldIndex.TerrainHeight:
+                        this.TerrainHeight = (Exception?)obj;
                         break;
-                    case BlockHeightAdjustmentComponentItem_FieldIndex.Float2:
-                        this.Float2 = (Exception?)obj;
+                    case BlockHeightAdjustmentComponentItem_FieldIndex.WaterHeight:
+                        this.WaterHeight = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -278,8 +278,8 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Float1 != null) return true;
-                if (Float2 != null) return true;
+                if (TerrainHeight != null) return true;
+                if (WaterHeight != null) return true;
                 return false;
             }
             #endregion
@@ -306,10 +306,10 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Float1, "Float1");
+                    sb.AppendItem(TerrainHeight, "TerrainHeight");
                 }
                 {
-                    sb.AppendItem(Float2, "Float2");
+                    sb.AppendItem(WaterHeight, "WaterHeight");
                 }
             }
             #endregion
@@ -319,8 +319,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Float1 = this.Float1.Combine(rhs.Float1);
-                ret.Float2 = this.Float2.Combine(rhs.Float2);
+                ret.TerrainHeight = this.TerrainHeight.Combine(rhs.TerrainHeight);
+                ret.WaterHeight = this.WaterHeight.Combine(rhs.WaterHeight);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -344,8 +344,8 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Float1;
-            public bool Float2;
+            public bool TerrainHeight;
+            public bool WaterHeight;
             #endregion
 
             #region Ctors
@@ -355,8 +355,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Float1 = defaultOn;
-                this.Float2 = defaultOn;
+                this.TerrainHeight = defaultOn;
+                this.WaterHeight = defaultOn;
             }
 
             #endregion
@@ -372,8 +372,8 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Float1, null));
-                ret.Add((Float2, null));
+                ret.Add((TerrainHeight, null));
+                ret.Add((WaterHeight, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -446,8 +446,8 @@ namespace Mutagen.Bethesda.Starfield
         IBlockHeightAdjustmentComponentItemGetter,
         ILoquiObjectSetter<IBlockHeightAdjustmentComponentItem>
     {
-        new Single Float1 { get; set; }
-        new Single Float2 { get; set; }
+        new Single TerrainHeight { get; set; }
+        new Single WaterHeight { get; set; }
     }
 
     public partial interface IBlockHeightAdjustmentComponentItemGetter :
@@ -462,8 +462,8 @@ namespace Mutagen.Bethesda.Starfield
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => BlockHeightAdjustmentComponentItem_Registration.Instance;
-        Single Float1 { get; }
-        Single Float2 { get; }
+        Single TerrainHeight { get; }
+        Single WaterHeight { get; }
 
     }
 
@@ -633,8 +633,8 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum BlockHeightAdjustmentComponentItem_FieldIndex
     {
-        Float1 = 0,
-        Float2 = 1,
+        TerrainHeight = 0,
+        WaterHeight = 1,
     }
     #endregion
 
@@ -713,8 +713,8 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IBlockHeightAdjustmentComponentItem item)
         {
             ClearPartial();
-            item.Float1 = default(Single);
-            item.Float2 = default(Single);
+            item.TerrainHeight = default(Single);
+            item.WaterHeight = default(Single);
         }
         
         #region Mutagen
@@ -764,8 +764,8 @@ namespace Mutagen.Bethesda.Starfield
             BlockHeightAdjustmentComponentItem.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Float1 = item.Float1.EqualsWithin(rhs.Float1);
-            ret.Float2 = item.Float2.EqualsWithin(rhs.Float2);
+            ret.TerrainHeight = item.TerrainHeight.EqualsWithin(rhs.TerrainHeight);
+            ret.WaterHeight = item.WaterHeight.EqualsWithin(rhs.WaterHeight);
         }
         
         public string Print(
@@ -810,13 +810,13 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             BlockHeightAdjustmentComponentItem.Mask<bool>? printMask = null)
         {
-            if (printMask?.Float1 ?? true)
+            if (printMask?.TerrainHeight ?? true)
             {
-                sb.AppendItem(item.Float1, "Float1");
+                sb.AppendItem(item.TerrainHeight, "TerrainHeight");
             }
-            if (printMask?.Float2 ?? true)
+            if (printMask?.WaterHeight ?? true)
             {
-                sb.AppendItem(item.Float2, "Float2");
+                sb.AppendItem(item.WaterHeight, "WaterHeight");
             }
         }
         
@@ -827,13 +827,13 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)BlockHeightAdjustmentComponentItem_FieldIndex.Float1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BlockHeightAdjustmentComponentItem_FieldIndex.TerrainHeight) ?? true))
             {
-                if (!lhs.Float1.EqualsWithin(rhs.Float1)) return false;
+                if (!lhs.TerrainHeight.EqualsWithin(rhs.TerrainHeight)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)BlockHeightAdjustmentComponentItem_FieldIndex.Float2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)BlockHeightAdjustmentComponentItem_FieldIndex.WaterHeight) ?? true))
             {
-                if (!lhs.Float2.EqualsWithin(rhs.Float2)) return false;
+                if (!lhs.WaterHeight.EqualsWithin(rhs.WaterHeight)) return false;
             }
             return true;
         }
@@ -841,8 +841,8 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IBlockHeightAdjustmentComponentItemGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Float1);
-            hash.Add(item.Float2);
+            hash.Add(item.TerrainHeight);
+            hash.Add(item.WaterHeight);
             return hash.ToHashCode();
         }
         
@@ -875,13 +875,13 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)BlockHeightAdjustmentComponentItem_FieldIndex.Float1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)BlockHeightAdjustmentComponentItem_FieldIndex.TerrainHeight) ?? true))
             {
-                item.Float1 = rhs.Float1;
+                item.TerrainHeight = rhs.TerrainHeight;
             }
-            if ((copyMask?.GetShouldTranslate((int)BlockHeightAdjustmentComponentItem_FieldIndex.Float2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)BlockHeightAdjustmentComponentItem_FieldIndex.WaterHeight) ?? true))
             {
-                item.Float2 = rhs.Float2;
+                item.WaterHeight = rhs.WaterHeight;
             }
             DeepCopyInCustom(
                 item: item,
@@ -993,10 +993,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.Float1);
+                item: item.TerrainHeight);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.Float2);
+                item: item.WaterHeight);
         }
 
         public void Write(
@@ -1030,8 +1030,8 @@ namespace Mutagen.Bethesda.Starfield
             IBlockHeightAdjustmentComponentItem item,
             MutagenFrame frame)
         {
-            item.Float1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Float2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.TerrainHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.WaterHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -1097,8 +1097,8 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public Single Float1 => _structData.Slice(0x0, 0x4).Float();
-        public Single Float2 => _structData.Slice(0x4, 0x4).Float();
+        public Single TerrainHeight => _structData.Slice(0x0, 0x4).Float();
+        public Single WaterHeight => _structData.Slice(0x4, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

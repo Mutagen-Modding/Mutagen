@@ -50,17 +50,17 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region Unknown1
-        public String Unknown1 { get; set; } = string.Empty;
+        #region ResourceID
+        public String ResourceID { get; set; } = string.Empty;
         #endregion
-        #region Unknown2
-        public Int32 Unknown2 { get; set; } = default(Int32);
+        #region FileHash
+        public Int32 FileHash { get; set; } = default(Int32);
         #endregion
-        #region Unknown3
-        public String Unknown3 { get; set; } = string.Empty;
+        #region Extension
+        public String Extension { get; set; } = string.Empty;
         #endregion
-        #region Unknown4
-        public Int32 Unknown4 { get; set; } = default(Int32);
+        #region FolderHash
+        public Int32 FolderHash { get; set; } = default(Int32);
         #endregion
 
         #region To String
@@ -101,22 +101,22 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Unknown1 = initialValue;
-                this.Unknown2 = initialValue;
-                this.Unknown3 = initialValue;
-                this.Unknown4 = initialValue;
+                this.ResourceID = initialValue;
+                this.FileHash = initialValue;
+                this.Extension = initialValue;
+                this.FolderHash = initialValue;
             }
 
             public Mask(
-                TItem Unknown1,
-                TItem Unknown2,
-                TItem Unknown3,
-                TItem Unknown4)
+                TItem ResourceID,
+                TItem FileHash,
+                TItem Extension,
+                TItem FolderHash)
             {
-                this.Unknown1 = Unknown1;
-                this.Unknown2 = Unknown2;
-                this.Unknown3 = Unknown3;
-                this.Unknown4 = Unknown4;
+                this.ResourceID = ResourceID;
+                this.FileHash = FileHash;
+                this.Extension = Extension;
+                this.FolderHash = FolderHash;
             }
 
             #pragma warning disable CS8618
@@ -128,10 +128,10 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Unknown1;
-            public TItem Unknown2;
-            public TItem Unknown3;
-            public TItem Unknown4;
+            public TItem ResourceID;
+            public TItem FileHash;
+            public TItem Extension;
+            public TItem FolderHash;
             #endregion
 
             #region Equals
@@ -144,19 +144,19 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
-                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
-                if (!object.Equals(this.Unknown4, rhs.Unknown4)) return false;
+                if (!object.Equals(this.ResourceID, rhs.ResourceID)) return false;
+                if (!object.Equals(this.FileHash, rhs.FileHash)) return false;
+                if (!object.Equals(this.Extension, rhs.Extension)) return false;
+                if (!object.Equals(this.FolderHash, rhs.FolderHash)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Unknown1);
-                hash.Add(this.Unknown2);
-                hash.Add(this.Unknown3);
-                hash.Add(this.Unknown4);
+                hash.Add(this.ResourceID);
+                hash.Add(this.FileHash);
+                hash.Add(this.Extension);
+                hash.Add(this.FolderHash);
                 return hash.ToHashCode();
             }
 
@@ -165,10 +165,10 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Unknown1)) return false;
-                if (!eval(this.Unknown2)) return false;
-                if (!eval(this.Unknown3)) return false;
-                if (!eval(this.Unknown4)) return false;
+                if (!eval(this.ResourceID)) return false;
+                if (!eval(this.FileHash)) return false;
+                if (!eval(this.Extension)) return false;
+                if (!eval(this.FolderHash)) return false;
                 return true;
             }
             #endregion
@@ -176,10 +176,10 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Unknown1)) return true;
-                if (eval(this.Unknown2)) return true;
-                if (eval(this.Unknown3)) return true;
-                if (eval(this.Unknown4)) return true;
+                if (eval(this.ResourceID)) return true;
+                if (eval(this.FileHash)) return true;
+                if (eval(this.Extension)) return true;
+                if (eval(this.FolderHash)) return true;
                 return false;
             }
             #endregion
@@ -194,10 +194,10 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Unknown1 = eval(this.Unknown1);
-                obj.Unknown2 = eval(this.Unknown2);
-                obj.Unknown3 = eval(this.Unknown3);
-                obj.Unknown4 = eval(this.Unknown4);
+                obj.ResourceID = eval(this.ResourceID);
+                obj.FileHash = eval(this.FileHash);
+                obj.Extension = eval(this.Extension);
+                obj.FolderHash = eval(this.FolderHash);
             }
             #endregion
 
@@ -216,21 +216,21 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(PlanetModelComponentXMPMSubItem.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Unknown1 ?? true)
+                    if (printMask?.ResourceID ?? true)
                     {
-                        sb.AppendItem(Unknown1, "Unknown1");
+                        sb.AppendItem(ResourceID, "ResourceID");
                     }
-                    if (printMask?.Unknown2 ?? true)
+                    if (printMask?.FileHash ?? true)
                     {
-                        sb.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(FileHash, "FileHash");
                     }
-                    if (printMask?.Unknown3 ?? true)
+                    if (printMask?.Extension ?? true)
                     {
-                        sb.AppendItem(Unknown3, "Unknown3");
+                        sb.AppendItem(Extension, "Extension");
                     }
-                    if (printMask?.Unknown4 ?? true)
+                    if (printMask?.FolderHash ?? true)
                     {
-                        sb.AppendItem(Unknown4, "Unknown4");
+                        sb.AppendItem(FolderHash, "FolderHash");
                     }
                 }
             }
@@ -256,10 +256,10 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? Unknown1;
-            public Exception? Unknown2;
-            public Exception? Unknown3;
-            public Exception? Unknown4;
+            public Exception? ResourceID;
+            public Exception? FileHash;
+            public Exception? Extension;
+            public Exception? FolderHash;
             #endregion
 
             #region IErrorMask
@@ -268,14 +268,14 @@ namespace Mutagen.Bethesda.Starfield
                 PlanetModelComponentXMPMSubItem_FieldIndex enu = (PlanetModelComponentXMPMSubItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlanetModelComponentXMPMSubItem_FieldIndex.Unknown1:
-                        return Unknown1;
-                    case PlanetModelComponentXMPMSubItem_FieldIndex.Unknown2:
-                        return Unknown2;
-                    case PlanetModelComponentXMPMSubItem_FieldIndex.Unknown3:
-                        return Unknown3;
-                    case PlanetModelComponentXMPMSubItem_FieldIndex.Unknown4:
-                        return Unknown4;
+                    case PlanetModelComponentXMPMSubItem_FieldIndex.ResourceID:
+                        return ResourceID;
+                    case PlanetModelComponentXMPMSubItem_FieldIndex.FileHash:
+                        return FileHash;
+                    case PlanetModelComponentXMPMSubItem_FieldIndex.Extension:
+                        return Extension;
+                    case PlanetModelComponentXMPMSubItem_FieldIndex.FolderHash:
+                        return FolderHash;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -286,17 +286,17 @@ namespace Mutagen.Bethesda.Starfield
                 PlanetModelComponentXMPMSubItem_FieldIndex enu = (PlanetModelComponentXMPMSubItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlanetModelComponentXMPMSubItem_FieldIndex.Unknown1:
-                        this.Unknown1 = ex;
+                    case PlanetModelComponentXMPMSubItem_FieldIndex.ResourceID:
+                        this.ResourceID = ex;
                         break;
-                    case PlanetModelComponentXMPMSubItem_FieldIndex.Unknown2:
-                        this.Unknown2 = ex;
+                    case PlanetModelComponentXMPMSubItem_FieldIndex.FileHash:
+                        this.FileHash = ex;
                         break;
-                    case PlanetModelComponentXMPMSubItem_FieldIndex.Unknown3:
-                        this.Unknown3 = ex;
+                    case PlanetModelComponentXMPMSubItem_FieldIndex.Extension:
+                        this.Extension = ex;
                         break;
-                    case PlanetModelComponentXMPMSubItem_FieldIndex.Unknown4:
-                        this.Unknown4 = ex;
+                    case PlanetModelComponentXMPMSubItem_FieldIndex.FolderHash:
+                        this.FolderHash = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -308,17 +308,17 @@ namespace Mutagen.Bethesda.Starfield
                 PlanetModelComponentXMPMSubItem_FieldIndex enu = (PlanetModelComponentXMPMSubItem_FieldIndex)index;
                 switch (enu)
                 {
-                    case PlanetModelComponentXMPMSubItem_FieldIndex.Unknown1:
-                        this.Unknown1 = (Exception?)obj;
+                    case PlanetModelComponentXMPMSubItem_FieldIndex.ResourceID:
+                        this.ResourceID = (Exception?)obj;
                         break;
-                    case PlanetModelComponentXMPMSubItem_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception?)obj;
+                    case PlanetModelComponentXMPMSubItem_FieldIndex.FileHash:
+                        this.FileHash = (Exception?)obj;
                         break;
-                    case PlanetModelComponentXMPMSubItem_FieldIndex.Unknown3:
-                        this.Unknown3 = (Exception?)obj;
+                    case PlanetModelComponentXMPMSubItem_FieldIndex.Extension:
+                        this.Extension = (Exception?)obj;
                         break;
-                    case PlanetModelComponentXMPMSubItem_FieldIndex.Unknown4:
-                        this.Unknown4 = (Exception?)obj;
+                    case PlanetModelComponentXMPMSubItem_FieldIndex.FolderHash:
+                        this.FolderHash = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -328,10 +328,10 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Unknown1 != null) return true;
-                if (Unknown2 != null) return true;
-                if (Unknown3 != null) return true;
-                if (Unknown4 != null) return true;
+                if (ResourceID != null) return true;
+                if (FileHash != null) return true;
+                if (Extension != null) return true;
+                if (FolderHash != null) return true;
                 return false;
             }
             #endregion
@@ -358,16 +358,16 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Unknown1, "Unknown1");
+                    sb.AppendItem(ResourceID, "ResourceID");
                 }
                 {
-                    sb.AppendItem(Unknown2, "Unknown2");
+                    sb.AppendItem(FileHash, "FileHash");
                 }
                 {
-                    sb.AppendItem(Unknown3, "Unknown3");
+                    sb.AppendItem(Extension, "Extension");
                 }
                 {
-                    sb.AppendItem(Unknown4, "Unknown4");
+                    sb.AppendItem(FolderHash, "FolderHash");
                 }
             }
             #endregion
@@ -377,10 +377,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
-                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
-                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
-                ret.Unknown4 = this.Unknown4.Combine(rhs.Unknown4);
+                ret.ResourceID = this.ResourceID.Combine(rhs.ResourceID);
+                ret.FileHash = this.FileHash.Combine(rhs.FileHash);
+                ret.Extension = this.Extension.Combine(rhs.Extension);
+                ret.FolderHash = this.FolderHash.Combine(rhs.FolderHash);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -404,10 +404,10 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Unknown1;
-            public bool Unknown2;
-            public bool Unknown3;
-            public bool Unknown4;
+            public bool ResourceID;
+            public bool FileHash;
+            public bool Extension;
+            public bool FolderHash;
             #endregion
 
             #region Ctors
@@ -417,10 +417,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Unknown1 = defaultOn;
-                this.Unknown2 = defaultOn;
-                this.Unknown3 = defaultOn;
-                this.Unknown4 = defaultOn;
+                this.ResourceID = defaultOn;
+                this.FileHash = defaultOn;
+                this.Extension = defaultOn;
+                this.FolderHash = defaultOn;
             }
 
             #endregion
@@ -436,10 +436,10 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Unknown1, null));
-                ret.Add((Unknown2, null));
-                ret.Add((Unknown3, null));
-                ret.Add((Unknown4, null));
+                ret.Add((ResourceID, null));
+                ret.Add((FileHash, null));
+                ret.Add((Extension, null));
+                ret.Add((FolderHash, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -512,10 +512,10 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IPlanetModelComponentXMPMSubItem>,
         IPlanetModelComponentXMPMSubItemGetter
     {
-        new String Unknown1 { get; set; }
-        new Int32 Unknown2 { get; set; }
-        new String Unknown3 { get; set; }
-        new Int32 Unknown4 { get; set; }
+        new String ResourceID { get; set; }
+        new Int32 FileHash { get; set; }
+        new String Extension { get; set; }
+        new Int32 FolderHash { get; set; }
     }
 
     public partial interface IPlanetModelComponentXMPMSubItemGetter :
@@ -530,10 +530,10 @@ namespace Mutagen.Bethesda.Starfield
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => PlanetModelComponentXMPMSubItem_Registration.Instance;
-        String Unknown1 { get; }
-        Int32 Unknown2 { get; }
-        String Unknown3 { get; }
-        Int32 Unknown4 { get; }
+        String ResourceID { get; }
+        Int32 FileHash { get; }
+        String Extension { get; }
+        Int32 FolderHash { get; }
 
     }
 
@@ -703,10 +703,10 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum PlanetModelComponentXMPMSubItem_FieldIndex
     {
-        Unknown1 = 0,
-        Unknown2 = 1,
-        Unknown3 = 2,
-        Unknown4 = 3,
+        ResourceID = 0,
+        FileHash = 1,
+        Extension = 2,
+        FolderHash = 3,
     }
     #endregion
 
@@ -785,10 +785,10 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IPlanetModelComponentXMPMSubItem item)
         {
             ClearPartial();
-            item.Unknown1 = string.Empty;
-            item.Unknown2 = default(Int32);
-            item.Unknown3 = string.Empty;
-            item.Unknown4 = default(Int32);
+            item.ResourceID = string.Empty;
+            item.FileHash = default(Int32);
+            item.Extension = string.Empty;
+            item.FolderHash = default(Int32);
         }
         
         #region Mutagen
@@ -838,10 +838,10 @@ namespace Mutagen.Bethesda.Starfield
             PlanetModelComponentXMPMSubItem.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Unknown1 = string.Equals(item.Unknown1, rhs.Unknown1);
-            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
-            ret.Unknown3 = string.Equals(item.Unknown3, rhs.Unknown3);
-            ret.Unknown4 = item.Unknown4 == rhs.Unknown4;
+            ret.ResourceID = string.Equals(item.ResourceID, rhs.ResourceID);
+            ret.FileHash = item.FileHash == rhs.FileHash;
+            ret.Extension = string.Equals(item.Extension, rhs.Extension);
+            ret.FolderHash = item.FolderHash == rhs.FolderHash;
         }
         
         public string Print(
@@ -886,21 +886,21 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             PlanetModelComponentXMPMSubItem.Mask<bool>? printMask = null)
         {
-            if (printMask?.Unknown1 ?? true)
+            if (printMask?.ResourceID ?? true)
             {
-                sb.AppendItem(item.Unknown1, "Unknown1");
+                sb.AppendItem(item.ResourceID, "ResourceID");
             }
-            if (printMask?.Unknown2 ?? true)
+            if (printMask?.FileHash ?? true)
             {
-                sb.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendItem(item.FileHash, "FileHash");
             }
-            if (printMask?.Unknown3 ?? true)
+            if (printMask?.Extension ?? true)
             {
-                sb.AppendItem(item.Unknown3, "Unknown3");
+                sb.AppendItem(item.Extension, "Extension");
             }
-            if (printMask?.Unknown4 ?? true)
+            if (printMask?.FolderHash ?? true)
             {
-                sb.AppendItem(item.Unknown4, "Unknown4");
+                sb.AppendItem(item.FolderHash, "FolderHash");
             }
         }
         
@@ -911,21 +911,21 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)PlanetModelComponentXMPMSubItem_FieldIndex.Unknown1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetModelComponentXMPMSubItem_FieldIndex.ResourceID) ?? true))
             {
-                if (!string.Equals(lhs.Unknown1, rhs.Unknown1)) return false;
+                if (!string.Equals(lhs.ResourceID, rhs.ResourceID)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetModelComponentXMPMSubItem_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetModelComponentXMPMSubItem_FieldIndex.FileHash) ?? true))
             {
-                if (lhs.Unknown2 != rhs.Unknown2) return false;
+                if (lhs.FileHash != rhs.FileHash) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetModelComponentXMPMSubItem_FieldIndex.Unknown3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetModelComponentXMPMSubItem_FieldIndex.Extension) ?? true))
             {
-                if (!string.Equals(lhs.Unknown3, rhs.Unknown3)) return false;
+                if (!string.Equals(lhs.Extension, rhs.Extension)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)PlanetModelComponentXMPMSubItem_FieldIndex.Unknown4) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PlanetModelComponentXMPMSubItem_FieldIndex.FolderHash) ?? true))
             {
-                if (lhs.Unknown4 != rhs.Unknown4) return false;
+                if (lhs.FolderHash != rhs.FolderHash) return false;
             }
             return true;
         }
@@ -933,10 +933,10 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IPlanetModelComponentXMPMSubItemGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Unknown1);
-            hash.Add(item.Unknown2);
-            hash.Add(item.Unknown3);
-            hash.Add(item.Unknown4);
+            hash.Add(item.ResourceID);
+            hash.Add(item.FileHash);
+            hash.Add(item.Extension);
+            hash.Add(item.FolderHash);
             return hash.ToHashCode();
         }
         
@@ -969,21 +969,21 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)PlanetModelComponentXMPMSubItem_FieldIndex.Unknown1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetModelComponentXMPMSubItem_FieldIndex.ResourceID) ?? true))
             {
-                item.Unknown1 = rhs.Unknown1;
+                item.ResourceID = rhs.ResourceID;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetModelComponentXMPMSubItem_FieldIndex.Unknown2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetModelComponentXMPMSubItem_FieldIndex.FileHash) ?? true))
             {
-                item.Unknown2 = rhs.Unknown2;
+                item.FileHash = rhs.FileHash;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetModelComponentXMPMSubItem_FieldIndex.Unknown3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetModelComponentXMPMSubItem_FieldIndex.Extension) ?? true))
             {
-                item.Unknown3 = rhs.Unknown3;
+                item.Extension = rhs.Extension;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlanetModelComponentXMPMSubItem_FieldIndex.Unknown4) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlanetModelComponentXMPMSubItem_FieldIndex.FolderHash) ?? true))
             {
-                item.Unknown4 = rhs.Unknown4;
+                item.FolderHash = rhs.FolderHash;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1095,14 +1095,14 @@ namespace Mutagen.Bethesda.Starfield
         {
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown1,
+                item: item.ResourceID,
                 binaryType: StringBinaryType.PrependLengthUShort);
-            writer.Write(item.Unknown2);
+            writer.Write(item.FileHash);
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unknown3,
+                item: item.Extension,
                 binaryType: StringBinaryType.NullTerminate);
-            writer.Write(item.Unknown4);
+            writer.Write(item.FolderHash);
         }
 
         public void Write(
@@ -1136,16 +1136,16 @@ namespace Mutagen.Bethesda.Starfield
             IPlanetModelComponentXMPMSubItem item,
             MutagenFrame frame)
         {
-            item.Unknown1 = StringBinaryTranslation.Instance.Parse(
+            item.ResourceID = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
                 stringBinaryType: StringBinaryType.PrependLengthUShort,
                 parseWhole: true);
-            item.Unknown2 = frame.ReadInt32();
-            item.Unknown3 = StringBinaryTranslation.Instance.Parse(
+            item.FileHash = frame.ReadInt32();
+            item.Extension = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
                 stringBinaryType: StringBinaryType.NullTerminate,
                 parseWhole: false);
-            item.Unknown4 = frame.ReadInt32();
+            item.FolderHash = frame.ReadInt32();
         }
 
     }
@@ -1211,16 +1211,16 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        #region Unknown1
-        public String Unknown1 => BinaryStringUtility.ParsePrependedString(_structData.Slice(0x0), lengthLength: 2, encoding: _package.MetaData.Encodings.NonTranslated);
-        protected int Unknown1EndingPos;
+        #region ResourceID
+        public String ResourceID => BinaryStringUtility.ParsePrependedString(_structData.Slice(0x0), lengthLength: 2, encoding: _package.MetaData.Encodings.NonTranslated);
+        protected int ResourceIDEndingPos;
         #endregion
-        public Int32 Unknown2 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(Unknown1EndingPos, 0x4));
-        #region Unknown3
-        public String Unknown3 { get; private set; } = string.Empty;
-        protected int Unknown3EndingPos;
+        public Int32 FileHash => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(ResourceIDEndingPos, 0x4));
+        #region Extension
+        public String Extension { get; private set; } = string.Empty;
+        protected int ExtensionEndingPos;
         #endregion
-        public Int32 Unknown4 => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(Unknown3EndingPos, 0x4));
+        public Int32 FolderHash => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(ExtensionEndingPos, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1241,9 +1241,9 @@ namespace Mutagen.Bethesda.Starfield
             PlanetModelComponentXMPMSubItemBinaryOverlay ret,
             BinaryOverlayFactoryPackage package)
         {
-            ret.Unknown1EndingPos = BinaryPrimitives.ReadUInt16LittleEndian(ret._structData) + 2;
-            ret.Unknown3 = BinaryStringUtility.ParseUnknownLengthString(ret._structData.Slice(ret.Unknown1EndingPos + 0x4), package.MetaData.Encodings.NonTranslated);
-            ret.Unknown3EndingPos = ret.Unknown1EndingPos + 0x4 + ret.Unknown3.Length + 1;
+            ret.ResourceIDEndingPos = BinaryPrimitives.ReadUInt16LittleEndian(ret._structData) + 2;
+            ret.Extension = BinaryStringUtility.ParseUnknownLengthString(ret._structData.Slice(ret.ResourceIDEndingPos + 0x4), package.MetaData.Encodings.NonTranslated);
+            ret.ExtensionEndingPos = ret.ResourceIDEndingPos + 0x4 + ret.Extension.Length + 1;
         }
 
         public static IPlanetModelComponentXMPMSubItemGetter PlanetModelComponentXMPMSubItemFactory(
@@ -1262,7 +1262,7 @@ namespace Mutagen.Bethesda.Starfield
                 memoryPair: memoryPair,
                 package: package);
             PlanetModelComponentXMPMSubItemParseEndingPositions(ret, package);
-            stream.Position += ret.Unknown3EndingPos + 0x4;
+            stream.Position += ret.ExtensionEndingPos + 0x4;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

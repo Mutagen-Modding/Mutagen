@@ -22,7 +22,6 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Starfield.Internals;
-using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -63,16 +62,6 @@ namespace Mutagen.Bethesda.Starfield
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISpellGetter> IPerkEntryPointAddActivateChoiceGetter.Spell => this.Spell;
-        #endregion
-        #region ButtonLabel
-        public TranslatedString? ButtonLabel { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter? IPerkEntryPointAddActivateChoiceGetter.ButtonLabel => this.ButtonLabel;
-        #endregion
-        #region Flags
-        public PerkEntryPointAddActivateChoice.Flag? Flags { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        PerkEntryPointAddActivateChoice.Flag? IPerkEntryPointAddActivateChoiceGetter.Flags => this.Flags;
         #endregion
 
         #region To String
@@ -116,31 +105,29 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.Spell = initialValue;
-                this.ButtonLabel = initialValue;
-                this.Flags = initialValue;
             }
 
             public Mask(
                 TItem Rank,
                 TItem Priority,
                 TItem Conditions,
+                TItem PerkEntryID,
+                TItem ButtonLabel,
+                TItem Flags,
                 TItem EntryPoint,
                 TItem PerkConditionTabCount,
-                TItem PerkEntryID,
-                TItem Spell,
-                TItem ButtonLabel,
-                TItem Flags)
+                TItem Spell)
             : base(
                 Rank: Rank,
                 Priority: Priority,
                 Conditions: Conditions,
+                PerkEntryID: PerkEntryID,
+                ButtonLabel: ButtonLabel,
+                Flags: Flags,
                 EntryPoint: EntryPoint,
-                PerkConditionTabCount: PerkConditionTabCount,
-                PerkEntryID: PerkEntryID)
+                PerkConditionTabCount: PerkConditionTabCount)
             {
                 this.Spell = Spell;
-                this.ButtonLabel = ButtonLabel;
-                this.Flags = Flags;
             }
 
             #pragma warning disable CS8618
@@ -153,8 +140,6 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public TItem Spell;
-            public TItem ButtonLabel;
-            public TItem Flags;
             #endregion
 
             #region Equals
@@ -169,16 +154,12 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Spell, rhs.Spell)) return false;
-                if (!object.Equals(this.ButtonLabel, rhs.ButtonLabel)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Spell);
-                hash.Add(this.ButtonLabel);
-                hash.Add(this.Flags);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -190,8 +171,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Spell)) return false;
-                if (!eval(this.ButtonLabel)) return false;
-                if (!eval(this.Flags)) return false;
                 return true;
             }
             #endregion
@@ -201,8 +180,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Spell)) return true;
-                if (eval(this.ButtonLabel)) return true;
-                if (eval(this.Flags)) return true;
                 return false;
             }
             #endregion
@@ -219,8 +196,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Spell = eval(this.Spell);
-                obj.ButtonLabel = eval(this.ButtonLabel);
-                obj.Flags = eval(this.Flags);
             }
             #endregion
 
@@ -243,14 +218,6 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Spell, "Spell");
                     }
-                    if (printMask?.ButtonLabel ?? true)
-                    {
-                        sb.AppendItem(ButtonLabel, "ButtonLabel");
-                    }
-                    if (printMask?.Flags ?? true)
-                    {
-                        sb.AppendItem(Flags, "Flags");
-                    }
                 }
             }
             #endregion
@@ -263,8 +230,6 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public Exception? Spell;
-            public Exception? ButtonLabel;
-            public Exception? Flags;
             #endregion
 
             #region IErrorMask
@@ -275,10 +240,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case PerkEntryPointAddActivateChoice_FieldIndex.Spell:
                         return Spell;
-                    case PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel:
-                        return ButtonLabel;
-                    case PerkEntryPointAddActivateChoice_FieldIndex.Flags:
-                        return Flags;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -291,12 +252,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case PerkEntryPointAddActivateChoice_FieldIndex.Spell:
                         this.Spell = ex;
-                        break;
-                    case PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel:
-                        this.ButtonLabel = ex;
-                        break;
-                    case PerkEntryPointAddActivateChoice_FieldIndex.Flags:
-                        this.Flags = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -312,12 +267,6 @@ namespace Mutagen.Bethesda.Starfield
                     case PerkEntryPointAddActivateChoice_FieldIndex.Spell:
                         this.Spell = (Exception?)obj;
                         break;
-                    case PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel:
-                        this.ButtonLabel = (Exception?)obj;
-                        break;
-                    case PerkEntryPointAddActivateChoice_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -328,8 +277,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (Spell != null) return true;
-                if (ButtonLabel != null) return true;
-                if (Flags != null) return true;
                 return false;
             }
             #endregion
@@ -359,12 +306,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(Spell, "Spell");
                 }
-                {
-                    sb.AppendItem(ButtonLabel, "ButtonLabel");
-                }
-                {
-                    sb.AppendItem(Flags, "Flags");
-                }
             }
             #endregion
 
@@ -374,8 +315,6 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Spell = this.Spell.Combine(rhs.Spell);
-                ret.ButtonLabel = this.ButtonLabel.Combine(rhs.ButtonLabel);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -399,8 +338,6 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public bool Spell;
-            public bool ButtonLabel;
-            public bool Flags;
             #endregion
 
             #region Ctors
@@ -410,8 +347,6 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.Spell = defaultOn;
-                this.ButtonLabel = defaultOn;
-                this.Flags = defaultOn;
             }
 
             #endregion
@@ -420,8 +355,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.GetCrystal(ret);
                 ret.Add((Spell, null));
-                ret.Add((ButtonLabel, null));
-                ret.Add((Flags, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -500,8 +433,6 @@ namespace Mutagen.Bethesda.Starfield
         IPerkEntryPointAddActivateChoiceGetter
     {
         new IFormLinkNullable<ISpellGetter> Spell { get; set; }
-        new TranslatedString? ButtonLabel { get; set; }
-        new PerkEntryPointAddActivateChoice.Flag? Flags { get; set; }
     }
 
     public partial interface IPerkEntryPointAddActivateChoiceGetter :
@@ -512,8 +443,6 @@ namespace Mutagen.Bethesda.Starfield
     {
         static new ILoquiRegistration StaticRegistration => PerkEntryPointAddActivateChoice_Registration.Instance;
         IFormLinkNullableGetter<ISpellGetter> Spell { get; }
-        ITranslatedStringGetter? ButtonLabel { get; }
-        PerkEntryPointAddActivateChoice.Flag? Flags { get; }
 
     }
 
@@ -661,12 +590,12 @@ namespace Mutagen.Bethesda.Starfield
         Rank = 0,
         Priority = 1,
         Conditions = 2,
-        EntryPoint = 3,
-        PerkConditionTabCount = 4,
-        PerkEntryID = 5,
-        Spell = 6,
-        ButtonLabel = 7,
-        Flags = 8,
+        PerkEntryID = 3,
+        ButtonLabel = 4,
+        Flags = 5,
+        EntryPoint = 6,
+        PerkConditionTabCount = 7,
+        Spell = 8,
     }
     #endregion
 
@@ -677,7 +606,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 1;
 
         public const ushort FieldCount = 9;
 
@@ -709,14 +638,8 @@ namespace Mutagen.Bethesda.Starfield
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.PRKE);
-            var all = RecordCollection.Factory(
-                RecordTypes.PRKE,
-                RecordTypes.EPF2,
-                RecordTypes.EPF3);
-            return new RecordTriggerSpecs(
-                allRecordTypes: all,
-                triggeringRecordTypes: triggers);
+            var all = RecordCollection.Factory(RecordTypes.PRKE);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PerkEntryPointAddActivateChoiceBinaryWriteTranslation);
         #region Interface
@@ -759,8 +682,6 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Spell.Clear();
-            item.ButtonLabel = default;
-            item.Flags = default;
             base.Clear(item);
         }
         
@@ -847,8 +768,6 @@ namespace Mutagen.Bethesda.Starfield
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Spell = item.Spell.Equals(rhs.Spell);
-            ret.ButtonLabel = object.Equals(item.ButtonLabel, rhs.ButtonLabel);
-            ret.Flags = item.Flags == rhs.Flags;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -902,16 +821,6 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Spell.FormKeyNullable, "Spell");
             }
-            if ((printMask?.ButtonLabel ?? true)
-                && item.ButtonLabel is {} ButtonLabelItem)
-            {
-                sb.AppendItem(ButtonLabelItem, "ButtonLabel");
-            }
-            if ((printMask?.Flags ?? true)
-                && item.Flags is {} FlagsItem)
-            {
-                sb.AppendItem(FlagsItem, "Flags");
-            }
         }
         
         public static PerkEntryPointAddActivateChoice_FieldIndex ConvertFieldIndex(APerkEntryPointEffect_FieldIndex index)
@@ -924,11 +833,15 @@ namespace Mutagen.Bethesda.Starfield
                     return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.Conditions:
                     return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
+                case APerkEntryPointEffect_FieldIndex.PerkEntryID:
+                    return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
+                case APerkEntryPointEffect_FieldIndex.ButtonLabel:
+                    return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
+                case APerkEntryPointEffect_FieldIndex.Flags:
+                    return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.EntryPoint:
                     return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.PerkConditionTabCount:
-                    return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
-                case APerkEntryPointEffect_FieldIndex.PerkEntryID:
                     return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -944,6 +857,12 @@ namespace Mutagen.Bethesda.Starfield
                 case APerkEffect_FieldIndex.Priority:
                     return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
                 case APerkEffect_FieldIndex.Conditions:
+                    return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
+                case APerkEffect_FieldIndex.PerkEntryID:
+                    return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
+                case APerkEffect_FieldIndex.ButtonLabel:
+                    return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
+                case APerkEffect_FieldIndex.Flags:
                     return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -961,14 +880,6 @@ namespace Mutagen.Bethesda.Starfield
             if ((equalsMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Spell) ?? true))
             {
                 if (!lhs.Spell.Equals(rhs.Spell)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel) ?? true))
-            {
-                if (!object.Equals(lhs.ButtonLabel, rhs.ButtonLabel)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Flags) ?? true))
-            {
-                if (lhs.Flags != rhs.Flags) return false;
             }
             return true;
         }
@@ -999,14 +910,6 @@ namespace Mutagen.Bethesda.Starfield
         {
             var hash = new HashCode();
             hash.Add(item.Spell);
-            if (item.ButtonLabel is {} ButtonLabelitem)
-            {
-                hash.Add(ButtonLabelitem);
-            }
-            if (item.Flags is {} Flagsitem)
-            {
-                hash.Add(Flagsitem);
-            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1067,14 +970,6 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Spell) ?? true))
             {
                 item.Spell.SetTo(rhs.Spell.FormKeyNullable);
-            }
-            if ((copyMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel) ?? true))
-            {
-                item.ButtonLabel = rhs.ButtonLabel?.DeepCopy();
-            }
-            if ((copyMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Flags) ?? true))
-            {
-                item.Flags = rhs.Flags;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1220,28 +1115,6 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.Spell);
         }
 
-        public static void WriteRecordTypes(
-            IPerkEntryPointAddActivateChoiceGetter item,
-            MutagenWriter writer,
-            TypedWriteParams translationParams)
-        {
-            APerkEntryPointEffectBinaryWriteTranslation.WriteRecordTypes(
-                item: item,
-                writer: writer,
-                translationParams: translationParams);
-            StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.ButtonLabel,
-                header: translationParams.ConvertToCustom(RecordTypes.EPF2),
-                binaryType: StringBinaryType.NullTerminate,
-                source: StringsSource.Normal);
-            EnumBinaryTranslation<PerkEntryPointAddActivateChoice.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer,
-                item.Flags,
-                length: 2,
-                header: translationParams.ConvertToCustom(RecordTypes.EPF3));
-        }
-
         public void Write(
             MutagenWriter writer,
             IPerkEntryPointAddActivateChoiceGetter item,
@@ -1250,7 +1123,7 @@ namespace Mutagen.Bethesda.Starfield
             WriteEmbedded(
                 item: item,
                 writer: writer);
-            WriteRecordTypes(
+            APerkEffectBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1307,49 +1180,6 @@ namespace Mutagen.Bethesda.Starfield
             item.Spell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
-        public static ParseResult FillBinaryRecordTypes(
-            IPerkEntryPointAddActivateChoice item,
-            MutagenFrame frame,
-            PreviousParse lastParsed,
-            Dictionary<RecordType, int>? recordParseCount,
-            RecordType nextRecordType,
-            int contentLength,
-            TypedParseParams translationParams = default)
-        {
-            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case RecordTypeInts.EPF2:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ButtonLabel = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        eager: true,
-                        source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
-                    return (int)PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel;
-                }
-                case RecordTypeInts.EPF3:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<PerkEntryPointAddActivateChoice.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
-                        reader: frame,
-                        length: contentLength);
-                    return (int)PerkEntryPointAddActivateChoice_FieldIndex.Flags;
-                }
-                default:
-                    return APerkEntryPointEffectBinaryCreateTranslation.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        lastParsed: lastParsed,
-                        recordParseCount: recordParseCount,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        translationParams: translationParams.WithNoConverter());
-            }
-        }
-
     }
 
 }
@@ -1396,14 +1226,6 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public IFormLinkNullableGetter<ISpellGetter> Spell => FormLinkBinaryTranslation.Instance.NullableOverlayFactory<ISpellGetter>(_package, _structData.Span.Slice(0x2, 0x4));
-        #region ButtonLabel
-        private int? _ButtonLabelLocation;
-        public ITranslatedStringGetter? ButtonLabel => _ButtonLabelLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ButtonLabelLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
-        #endregion
-        #region Flags
-        private int? _FlagsLocation;
-        public PerkEntryPointAddActivateChoice.Flag? Flags => _FlagsLocation.HasValue ? (PerkEntryPointAddActivateChoice.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(PerkEntryPointAddActivateChoice.Flag?);
-        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1455,39 +1277,6 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        public override ParseResult FillRecordType(
-            OverlayStream stream,
-            int finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed,
-            Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams translationParams = default)
-        {
-            type = translationParams.ConvertToStandard(type);
-            switch (type.TypeInt)
-            {
-                case RecordTypeInts.EPF2:
-                {
-                    _ButtonLabelLocation = (stream.Position - offset);
-                    return (int)PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel;
-                }
-                case RecordTypeInts.EPF3:
-                {
-                    _FlagsLocation = (stream.Position - offset);
-                    return (int)PerkEntryPointAddActivateChoice_FieldIndex.Flags;
-                }
-                default:
-                    return base.FillRecordType(
-                        stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed,
-                        recordParseCount: recordParseCount,
-                        translationParams: translationParams.WithNoConverter());
-            }
-        }
         #region To String
 
         public override void Print(

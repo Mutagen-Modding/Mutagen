@@ -54,15 +54,15 @@ namespace Mutagen.Bethesda.Starfield
         #region AddonIndex
         public UInt16 AddonIndex { get; set; } = default(UInt16);
         #endregion
-        #region AddonModel
-        private readonly IFormLinkNullable<IArmorAddonGetter> _AddonModel = new FormLinkNullable<IArmorAddonGetter>();
-        public IFormLinkNullable<IArmorAddonGetter> AddonModel
+        #region ArmorAddon
+        private readonly IFormLinkNullable<IArmorAddonGetter> _ArmorAddon = new FormLinkNullable<IArmorAddonGetter>();
+        public IFormLinkNullable<IArmorAddonGetter> ArmorAddon
         {
-            get => _AddonModel;
-            set => _AddonModel.SetTo(value);
+            get => _ArmorAddon;
+            set => _ArmorAddon.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IArmorAddonGetter> IArmorAddonModelGetter.AddonModel => this.AddonModel;
+        IFormLinkNullableGetter<IArmorAddonGetter> IArmorAddonModelGetter.ArmorAddon => this.ArmorAddon;
         #endregion
 
         #region To String
@@ -104,15 +104,15 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.AddonIndex = initialValue;
-                this.AddonModel = initialValue;
+                this.ArmorAddon = initialValue;
             }
 
             public Mask(
                 TItem AddonIndex,
-                TItem AddonModel)
+                TItem ArmorAddon)
             {
                 this.AddonIndex = AddonIndex;
-                this.AddonModel = AddonModel;
+                this.ArmorAddon = ArmorAddon;
             }
 
             #pragma warning disable CS8618
@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public TItem AddonIndex;
-            public TItem AddonModel;
+            public TItem ArmorAddon;
             #endregion
 
             #region Equals
@@ -139,14 +139,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.AddonIndex, rhs.AddonIndex)) return false;
-                if (!object.Equals(this.AddonModel, rhs.AddonModel)) return false;
+                if (!object.Equals(this.ArmorAddon, rhs.ArmorAddon)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.AddonIndex);
-                hash.Add(this.AddonModel);
+                hash.Add(this.ArmorAddon);
                 return hash.ToHashCode();
             }
 
@@ -156,7 +156,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.AddonIndex)) return false;
-                if (!eval(this.AddonModel)) return false;
+                if (!eval(this.ArmorAddon)) return false;
                 return true;
             }
             #endregion
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.AddonIndex)) return true;
-                if (eval(this.AddonModel)) return true;
+                if (eval(this.ArmorAddon)) return true;
                 return false;
             }
             #endregion
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.AddonIndex = eval(this.AddonIndex);
-                obj.AddonModel = eval(this.AddonModel);
+                obj.ArmorAddon = eval(this.ArmorAddon);
             }
             #endregion
 
@@ -204,9 +204,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(AddonIndex, "AddonIndex");
                     }
-                    if (printMask?.AddonModel ?? true)
+                    if (printMask?.ArmorAddon ?? true)
                     {
-                        sb.AppendItem(AddonModel, "AddonModel");
+                        sb.AppendItem(ArmorAddon, "ArmorAddon");
                     }
                 }
             }
@@ -233,7 +233,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
             }
             public Exception? AddonIndex;
-            public Exception? AddonModel;
+            public Exception? ArmorAddon;
             #endregion
 
             #region IErrorMask
@@ -244,8 +244,8 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case ArmorAddonModel_FieldIndex.AddonIndex:
                         return AddonIndex;
-                    case ArmorAddonModel_FieldIndex.AddonModel:
-                        return AddonModel;
+                    case ArmorAddonModel_FieldIndex.ArmorAddon:
+                        return ArmorAddon;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -259,8 +259,8 @@ namespace Mutagen.Bethesda.Starfield
                     case ArmorAddonModel_FieldIndex.AddonIndex:
                         this.AddonIndex = ex;
                         break;
-                    case ArmorAddonModel_FieldIndex.AddonModel:
-                        this.AddonModel = ex;
+                    case ArmorAddonModel_FieldIndex.ArmorAddon:
+                        this.ArmorAddon = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -275,8 +275,8 @@ namespace Mutagen.Bethesda.Starfield
                     case ArmorAddonModel_FieldIndex.AddonIndex:
                         this.AddonIndex = (Exception?)obj;
                         break;
-                    case ArmorAddonModel_FieldIndex.AddonModel:
-                        this.AddonModel = (Exception?)obj;
+                    case ArmorAddonModel_FieldIndex.ArmorAddon:
+                        this.ArmorAddon = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -287,7 +287,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (AddonIndex != null) return true;
-                if (AddonModel != null) return true;
+                if (ArmorAddon != null) return true;
                 return false;
             }
             #endregion
@@ -317,7 +317,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(AddonIndex, "AddonIndex");
                 }
                 {
-                    sb.AppendItem(AddonModel, "AddonModel");
+                    sb.AppendItem(ArmorAddon, "ArmorAddon");
                 }
             }
             #endregion
@@ -328,7 +328,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.AddonIndex = this.AddonIndex.Combine(rhs.AddonIndex);
-                ret.AddonModel = this.AddonModel.Combine(rhs.AddonModel);
+                ret.ArmorAddon = this.ArmorAddon.Combine(rhs.ArmorAddon);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -353,7 +353,7 @@ namespace Mutagen.Bethesda.Starfield
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool AddonIndex;
-            public bool AddonModel;
+            public bool ArmorAddon;
             #endregion
 
             #region Ctors
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.AddonIndex = defaultOn;
-                this.AddonModel = defaultOn;
+                this.ArmorAddon = defaultOn;
             }
 
             #endregion
@@ -381,7 +381,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((AddonIndex, null));
-                ret.Add((AddonModel, null));
+                ret.Add((ArmorAddon, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -461,7 +461,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IArmorAddonModel>
     {
         new UInt16 AddonIndex { get; set; }
-        new IFormLinkNullable<IArmorAddonGetter> AddonModel { get; set; }
+        new IFormLinkNullable<IArmorAddonGetter> ArmorAddon { get; set; }
     }
 
     public partial interface IArmorAddonModelGetter :
@@ -478,7 +478,7 @@ namespace Mutagen.Bethesda.Starfield
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => ArmorAddonModel_Registration.Instance;
         UInt16 AddonIndex { get; }
-        IFormLinkNullableGetter<IArmorAddonGetter> AddonModel { get; }
+        IFormLinkNullableGetter<IArmorAddonGetter> ArmorAddon { get; }
 
     }
 
@@ -649,7 +649,7 @@ namespace Mutagen.Bethesda.Starfield
     internal enum ArmorAddonModel_FieldIndex
     {
         AddonIndex = 0,
-        AddonModel = 1,
+        ArmorAddon = 1,
     }
     #endregion
 
@@ -741,13 +741,13 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.AddonIndex = default(UInt16);
-            item.AddonModel.Clear();
+            item.ArmorAddon.Clear();
         }
         
         #region Mutagen
         public void RemapLinks(IArmorAddonModel obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.AddonModel.Relink(mapping);
+            obj.ArmorAddon.Relink(mapping);
         }
         
         #endregion
@@ -793,7 +793,7 @@ namespace Mutagen.Bethesda.Starfield
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.AddonIndex = item.AddonIndex == rhs.AddonIndex;
-            ret.AddonModel = item.AddonModel.Equals(rhs.AddonModel);
+            ret.ArmorAddon = item.ArmorAddon.Equals(rhs.ArmorAddon);
         }
         
         public string Print(
@@ -842,9 +842,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.AddonIndex, "AddonIndex");
             }
-            if (printMask?.AddonModel ?? true)
+            if (printMask?.ArmorAddon ?? true)
             {
-                sb.AppendItem(item.AddonModel.FormKeyNullable, "AddonModel");
+                sb.AppendItem(item.ArmorAddon.FormKeyNullable, "ArmorAddon");
             }
         }
         
@@ -859,9 +859,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.AddonIndex != rhs.AddonIndex) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ArmorAddonModel_FieldIndex.AddonModel) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddonModel_FieldIndex.ArmorAddon) ?? true))
             {
-                if (!lhs.AddonModel.Equals(rhs.AddonModel)) return false;
+                if (!lhs.ArmorAddon.Equals(rhs.ArmorAddon)) return false;
             }
             return true;
         }
@@ -870,7 +870,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             var hash = new HashCode();
             hash.Add(item.AddonIndex);
-            hash.Add(item.AddonModel);
+            hash.Add(item.ArmorAddon);
             return hash.ToHashCode();
         }
         
@@ -885,9 +885,9 @@ namespace Mutagen.Bethesda.Starfield
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IArmorAddonModelGetter obj)
         {
-            if (FormLinkInformation.TryFactory(obj.AddonModel, out var AddonModelInfo))
+            if (FormLinkInformation.TryFactory(obj.ArmorAddon, out var ArmorAddonInfo))
             {
-                yield return AddonModelInfo;
+                yield return ArmorAddonInfo;
             }
             yield break;
         }
@@ -911,9 +911,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.AddonIndex = rhs.AddonIndex;
             }
-            if ((copyMask?.GetShouldTranslate((int)ArmorAddonModel_FieldIndex.AddonModel) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ArmorAddonModel_FieldIndex.ArmorAddon) ?? true))
             {
-                item.AddonModel.SetTo(rhs.AddonModel.FormKeyNullable);
+                item.ArmorAddon.SetTo(rhs.ArmorAddon.FormKeyNullable);
             }
             DeepCopyInCustom(
                 item: item,
@@ -1030,7 +1030,7 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.INDX));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.AddonModel,
+                item: item.ArmorAddon,
                 header: translationParams.ConvertToCustom(RecordTypes.MODL));
         }
 
@@ -1084,8 +1084,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AddonModel.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)ArmorAddonModel_FieldIndex.AddonModel;
+                    item.ArmorAddon.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ArmorAddonModel_FieldIndex.ArmorAddon;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1160,9 +1160,9 @@ namespace Mutagen.Bethesda.Starfield
         private int? _AddonIndexLocation;
         public UInt16 AddonIndex => _AddonIndexLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AddonIndexLocation.Value, _package.MetaData.Constants)) : default(UInt16);
         #endregion
-        #region AddonModel
-        private int? _AddonModelLocation;
-        public IFormLinkNullableGetter<IArmorAddonGetter> AddonModel => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArmorAddonGetter>(_package, _recordData, _AddonModelLocation);
+        #region ArmorAddon
+        private int? _ArmorAddonLocation;
+        public IFormLinkNullableGetter<IArmorAddonGetter> ArmorAddon => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArmorAddonGetter>(_package, _recordData, _ArmorAddonLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1235,8 +1235,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.MODL:
                 {
-                    _AddonModelLocation = (stream.Position - offset);
-                    return (int)ArmorAddonModel_FieldIndex.AddonModel;
+                    _ArmorAddonLocation = (stream.Position - offset);
+                    return (int)ArmorAddonModel_FieldIndex.ArmorAddon;
                 }
                 default:
                     return ParseResult.Stop;

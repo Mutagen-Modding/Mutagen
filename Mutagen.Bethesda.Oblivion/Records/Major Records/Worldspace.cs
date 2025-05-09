@@ -56,7 +56,8 @@ partial class WorldspaceBinaryWriteTranslation
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, obj);
+            RecordException.EnrichAndThrow(ex, obj);
+            throw;
         }
     }
 }
@@ -109,7 +110,8 @@ partial class WorldspaceBinaryCreateTranslation
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, obj);
+            RecordException.EnrichAndThrow(ex, obj);
+            throw;
         }
     }   
 }
@@ -133,8 +135,7 @@ partial class WorldspaceBinaryOverlay
         try
         {
             if (stream.Complete) return;
-            var groupMeta = stream.GetGroupHeader();
-            if (!groupMeta.IsGroup || groupMeta.GroupType != (int)GroupTypeEnum.WorldChildren) return;
+            if (!stream.TryGetGroupHeader(out var groupMeta) || !groupMeta.IsGroup || groupMeta.GroupType != (int)GroupTypeEnum.WorldChildren) return;
 
             if (this.FormKey != Mutagen.Bethesda.Plugins.FormKey.Factory(
                     _package.MetaData.MasterReferences, 
@@ -189,7 +190,8 @@ partial class WorldspaceBinaryOverlay
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, this);
+            RecordException.EnrichAndThrow(ex, this);
+            throw;
         }
     }
 }

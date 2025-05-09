@@ -201,6 +201,7 @@ internal static class InterfaceEnumerationHelper
 
         foreach (var item in srcGroup.Records.Catch(ex =>
                  {
+                     RecordException.EnrichAndThrow(ex, modKey);
                      throw RecordException.Enrich(ex, modKey);
                  }))
         {

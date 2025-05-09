@@ -74,17 +74,17 @@ namespace Mutagen.Bethesda.Starfield
         #region Unknown
         public UInt16 Unknown { get; set; } = default(UInt16);
         #endregion
-        #region StealMult
-        public Single StealMult { get; set; } = default(Single);
+        #region StealMultiplier
+        public Single StealMultiplier { get; set; } = default(Single);
         #endregion
         #region Escape
         public UInt16 Escape { get; set; } = default(UInt16);
         #endregion
-        #region WerewolfUnused
-        public UInt16 WerewolfUnused { get; set; } = default(UInt16);
+        #region Piracy
+        public UInt16 Piracy { get; set; } = default(UInt16);
         #endregion
-        #region Unknown2
-        public UInt32 Unknown2 { get; set; } = default(UInt32);
+        #region SmuggleMultiplier
+        public UInt32 SmuggleMultiplier { get; set; } = default(UInt32);
         #endregion
 
         #region To String
@@ -133,10 +133,10 @@ namespace Mutagen.Bethesda.Starfield
                 this.Trespass = initialValue;
                 this.Pickpocket = initialValue;
                 this.Unknown = initialValue;
-                this.StealMult = initialValue;
+                this.StealMultiplier = initialValue;
                 this.Escape = initialValue;
-                this.WerewolfUnused = initialValue;
-                this.Unknown2 = initialValue;
+                this.Piracy = initialValue;
+                this.SmuggleMultiplier = initialValue;
             }
 
             public Mask(
@@ -148,10 +148,10 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Trespass,
                 TItem Pickpocket,
                 TItem Unknown,
-                TItem StealMult,
+                TItem StealMultiplier,
                 TItem Escape,
-                TItem WerewolfUnused,
-                TItem Unknown2)
+                TItem Piracy,
+                TItem SmuggleMultiplier)
             {
                 this.Versioning = Versioning;
                 this.Arrest = Arrest;
@@ -161,10 +161,10 @@ namespace Mutagen.Bethesda.Starfield
                 this.Trespass = Trespass;
                 this.Pickpocket = Pickpocket;
                 this.Unknown = Unknown;
-                this.StealMult = StealMult;
+                this.StealMultiplier = StealMultiplier;
                 this.Escape = Escape;
-                this.WerewolfUnused = WerewolfUnused;
-                this.Unknown2 = Unknown2;
+                this.Piracy = Piracy;
+                this.SmuggleMultiplier = SmuggleMultiplier;
             }
 
             #pragma warning disable CS8618
@@ -184,10 +184,10 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Trespass;
             public TItem Pickpocket;
             public TItem Unknown;
-            public TItem StealMult;
+            public TItem StealMultiplier;
             public TItem Escape;
-            public TItem WerewolfUnused;
-            public TItem Unknown2;
+            public TItem Piracy;
+            public TItem SmuggleMultiplier;
             #endregion
 
             #region Equals
@@ -208,10 +208,10 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Trespass, rhs.Trespass)) return false;
                 if (!object.Equals(this.Pickpocket, rhs.Pickpocket)) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.StealMult, rhs.StealMult)) return false;
+                if (!object.Equals(this.StealMultiplier, rhs.StealMultiplier)) return false;
                 if (!object.Equals(this.Escape, rhs.Escape)) return false;
-                if (!object.Equals(this.WerewolfUnused, rhs.WerewolfUnused)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.Piracy, rhs.Piracy)) return false;
+                if (!object.Equals(this.SmuggleMultiplier, rhs.SmuggleMultiplier)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -225,10 +225,10 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Trespass);
                 hash.Add(this.Pickpocket);
                 hash.Add(this.Unknown);
-                hash.Add(this.StealMult);
+                hash.Add(this.StealMultiplier);
                 hash.Add(this.Escape);
-                hash.Add(this.WerewolfUnused);
-                hash.Add(this.Unknown2);
+                hash.Add(this.Piracy);
+                hash.Add(this.SmuggleMultiplier);
                 return hash.ToHashCode();
             }
 
@@ -245,10 +245,10 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.Trespass)) return false;
                 if (!eval(this.Pickpocket)) return false;
                 if (!eval(this.Unknown)) return false;
-                if (!eval(this.StealMult)) return false;
+                if (!eval(this.StealMultiplier)) return false;
                 if (!eval(this.Escape)) return false;
-                if (!eval(this.WerewolfUnused)) return false;
-                if (!eval(this.Unknown2)) return false;
+                if (!eval(this.Piracy)) return false;
+                if (!eval(this.SmuggleMultiplier)) return false;
                 return true;
             }
             #endregion
@@ -264,10 +264,10 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.Trespass)) return true;
                 if (eval(this.Pickpocket)) return true;
                 if (eval(this.Unknown)) return true;
-                if (eval(this.StealMult)) return true;
+                if (eval(this.StealMultiplier)) return true;
                 if (eval(this.Escape)) return true;
-                if (eval(this.WerewolfUnused)) return true;
-                if (eval(this.Unknown2)) return true;
+                if (eval(this.Piracy)) return true;
+                if (eval(this.SmuggleMultiplier)) return true;
                 return false;
             }
             #endregion
@@ -290,10 +290,10 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Trespass = eval(this.Trespass);
                 obj.Pickpocket = eval(this.Pickpocket);
                 obj.Unknown = eval(this.Unknown);
-                obj.StealMult = eval(this.StealMult);
+                obj.StealMultiplier = eval(this.StealMultiplier);
                 obj.Escape = eval(this.Escape);
-                obj.WerewolfUnused = eval(this.WerewolfUnused);
-                obj.Unknown2 = eval(this.Unknown2);
+                obj.Piracy = eval(this.Piracy);
+                obj.SmuggleMultiplier = eval(this.SmuggleMultiplier);
             }
             #endregion
 
@@ -344,21 +344,21 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Unknown, "Unknown");
                     }
-                    if (printMask?.StealMult ?? true)
+                    if (printMask?.StealMultiplier ?? true)
                     {
-                        sb.AppendItem(StealMult, "StealMult");
+                        sb.AppendItem(StealMultiplier, "StealMultiplier");
                     }
                     if (printMask?.Escape ?? true)
                     {
                         sb.AppendItem(Escape, "Escape");
                     }
-                    if (printMask?.WerewolfUnused ?? true)
+                    if (printMask?.Piracy ?? true)
                     {
-                        sb.AppendItem(WerewolfUnused, "WerewolfUnused");
+                        sb.AppendItem(Piracy, "Piracy");
                     }
-                    if (printMask?.Unknown2 ?? true)
+                    if (printMask?.SmuggleMultiplier ?? true)
                     {
-                        sb.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(SmuggleMultiplier, "SmuggleMultiplier");
                     }
                 }
             }
@@ -392,10 +392,10 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Trespass;
             public Exception? Pickpocket;
             public Exception? Unknown;
-            public Exception? StealMult;
+            public Exception? StealMultiplier;
             public Exception? Escape;
-            public Exception? WerewolfUnused;
-            public Exception? Unknown2;
+            public Exception? Piracy;
+            public Exception? SmuggleMultiplier;
             #endregion
 
             #region IErrorMask
@@ -420,14 +420,14 @@ namespace Mutagen.Bethesda.Starfield
                         return Pickpocket;
                     case CrimeValues_FieldIndex.Unknown:
                         return Unknown;
-                    case CrimeValues_FieldIndex.StealMult:
-                        return StealMult;
+                    case CrimeValues_FieldIndex.StealMultiplier:
+                        return StealMultiplier;
                     case CrimeValues_FieldIndex.Escape:
                         return Escape;
-                    case CrimeValues_FieldIndex.WerewolfUnused:
-                        return WerewolfUnused;
-                    case CrimeValues_FieldIndex.Unknown2:
-                        return Unknown2;
+                    case CrimeValues_FieldIndex.Piracy:
+                        return Piracy;
+                    case CrimeValues_FieldIndex.SmuggleMultiplier:
+                        return SmuggleMultiplier;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -462,17 +462,17 @@ namespace Mutagen.Bethesda.Starfield
                     case CrimeValues_FieldIndex.Unknown:
                         this.Unknown = ex;
                         break;
-                    case CrimeValues_FieldIndex.StealMult:
-                        this.StealMult = ex;
+                    case CrimeValues_FieldIndex.StealMultiplier:
+                        this.StealMultiplier = ex;
                         break;
                     case CrimeValues_FieldIndex.Escape:
                         this.Escape = ex;
                         break;
-                    case CrimeValues_FieldIndex.WerewolfUnused:
-                        this.WerewolfUnused = ex;
+                    case CrimeValues_FieldIndex.Piracy:
+                        this.Piracy = ex;
                         break;
-                    case CrimeValues_FieldIndex.Unknown2:
-                        this.Unknown2 = ex;
+                    case CrimeValues_FieldIndex.SmuggleMultiplier:
+                        this.SmuggleMultiplier = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -508,17 +508,17 @@ namespace Mutagen.Bethesda.Starfield
                     case CrimeValues_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
                         break;
-                    case CrimeValues_FieldIndex.StealMult:
-                        this.StealMult = (Exception?)obj;
+                    case CrimeValues_FieldIndex.StealMultiplier:
+                        this.StealMultiplier = (Exception?)obj;
                         break;
                     case CrimeValues_FieldIndex.Escape:
                         this.Escape = (Exception?)obj;
                         break;
-                    case CrimeValues_FieldIndex.WerewolfUnused:
-                        this.WerewolfUnused = (Exception?)obj;
+                    case CrimeValues_FieldIndex.Piracy:
+                        this.Piracy = (Exception?)obj;
                         break;
-                    case CrimeValues_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception?)obj;
+                    case CrimeValues_FieldIndex.SmuggleMultiplier:
+                        this.SmuggleMultiplier = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -536,10 +536,10 @@ namespace Mutagen.Bethesda.Starfield
                 if (Trespass != null) return true;
                 if (Pickpocket != null) return true;
                 if (Unknown != null) return true;
-                if (StealMult != null) return true;
+                if (StealMultiplier != null) return true;
                 if (Escape != null) return true;
-                if (WerewolfUnused != null) return true;
-                if (Unknown2 != null) return true;
+                if (Piracy != null) return true;
+                if (SmuggleMultiplier != null) return true;
                 return false;
             }
             #endregion
@@ -590,16 +590,16 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Unknown, "Unknown");
                 }
                 {
-                    sb.AppendItem(StealMult, "StealMult");
+                    sb.AppendItem(StealMultiplier, "StealMultiplier");
                 }
                 {
                     sb.AppendItem(Escape, "Escape");
                 }
                 {
-                    sb.AppendItem(WerewolfUnused, "WerewolfUnused");
+                    sb.AppendItem(Piracy, "Piracy");
                 }
                 {
-                    sb.AppendItem(Unknown2, "Unknown2");
+                    sb.AppendItem(SmuggleMultiplier, "SmuggleMultiplier");
                 }
             }
             #endregion
@@ -617,10 +617,10 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Trespass = this.Trespass.Combine(rhs.Trespass);
                 ret.Pickpocket = this.Pickpocket.Combine(rhs.Pickpocket);
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.StealMult = this.StealMult.Combine(rhs.StealMult);
+                ret.StealMultiplier = this.StealMultiplier.Combine(rhs.StealMultiplier);
                 ret.Escape = this.Escape.Combine(rhs.Escape);
-                ret.WerewolfUnused = this.WerewolfUnused.Combine(rhs.WerewolfUnused);
-                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.Piracy = this.Piracy.Combine(rhs.Piracy);
+                ret.SmuggleMultiplier = this.SmuggleMultiplier.Combine(rhs.SmuggleMultiplier);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -652,10 +652,10 @@ namespace Mutagen.Bethesda.Starfield
             public bool Trespass;
             public bool Pickpocket;
             public bool Unknown;
-            public bool StealMult;
+            public bool StealMultiplier;
             public bool Escape;
-            public bool WerewolfUnused;
-            public bool Unknown2;
+            public bool Piracy;
+            public bool SmuggleMultiplier;
             #endregion
 
             #region Ctors
@@ -673,10 +673,10 @@ namespace Mutagen.Bethesda.Starfield
                 this.Trespass = defaultOn;
                 this.Pickpocket = defaultOn;
                 this.Unknown = defaultOn;
-                this.StealMult = defaultOn;
+                this.StealMultiplier = defaultOn;
                 this.Escape = defaultOn;
-                this.WerewolfUnused = defaultOn;
-                this.Unknown2 = defaultOn;
+                this.Piracy = defaultOn;
+                this.SmuggleMultiplier = defaultOn;
             }
 
             #endregion
@@ -700,10 +700,10 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Trespass, null));
                 ret.Add((Pickpocket, null));
                 ret.Add((Unknown, null));
-                ret.Add((StealMult, null));
+                ret.Add((StealMultiplier, null));
                 ret.Add((Escape, null));
-                ret.Add((WerewolfUnused, null));
-                ret.Add((Unknown2, null));
+                ret.Add((Piracy, null));
+                ret.Add((SmuggleMultiplier, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -792,10 +792,10 @@ namespace Mutagen.Bethesda.Starfield
         new UInt16 Trespass { get; set; }
         new UInt16 Pickpocket { get; set; }
         new UInt16 Unknown { get; set; }
-        new Single StealMult { get; set; }
+        new Single StealMultiplier { get; set; }
         new UInt16 Escape { get; set; }
-        new UInt16 WerewolfUnused { get; set; }
-        new UInt32 Unknown2 { get; set; }
+        new UInt16 Piracy { get; set; }
+        new UInt32 SmuggleMultiplier { get; set; }
     }
 
     public partial interface ICrimeValuesGetter :
@@ -818,10 +818,10 @@ namespace Mutagen.Bethesda.Starfield
         UInt16 Trespass { get; }
         UInt16 Pickpocket { get; }
         UInt16 Unknown { get; }
-        Single StealMult { get; }
+        Single StealMultiplier { get; }
         UInt16 Escape { get; }
-        UInt16 WerewolfUnused { get; }
-        UInt32 Unknown2 { get; }
+        UInt16 Piracy { get; }
+        UInt32 SmuggleMultiplier { get; }
 
     }
 
@@ -999,10 +999,10 @@ namespace Mutagen.Bethesda.Starfield
         Trespass = 5,
         Pickpocket = 6,
         Unknown = 7,
-        StealMult = 8,
+        StealMultiplier = 8,
         Escape = 9,
-        WerewolfUnused = 10,
-        Unknown2 = 11,
+        Piracy = 10,
+        SmuggleMultiplier = 11,
     }
     #endregion
 
@@ -1096,10 +1096,10 @@ namespace Mutagen.Bethesda.Starfield
             item.Trespass = default(UInt16);
             item.Pickpocket = default(UInt16);
             item.Unknown = default(UInt16);
-            item.StealMult = default(Single);
+            item.StealMultiplier = default(Single);
             item.Escape = default(UInt16);
-            item.WerewolfUnused = default(UInt16);
-            item.Unknown2 = default(UInt32);
+            item.Piracy = default(UInt16);
+            item.SmuggleMultiplier = default(UInt32);
         }
         
         #region Mutagen
@@ -1161,10 +1161,10 @@ namespace Mutagen.Bethesda.Starfield
             ret.Trespass = item.Trespass == rhs.Trespass;
             ret.Pickpocket = item.Pickpocket == rhs.Pickpocket;
             ret.Unknown = item.Unknown == rhs.Unknown;
-            ret.StealMult = item.StealMult.EqualsWithin(rhs.StealMult);
+            ret.StealMultiplier = item.StealMultiplier.EqualsWithin(rhs.StealMultiplier);
             ret.Escape = item.Escape == rhs.Escape;
-            ret.WerewolfUnused = item.WerewolfUnused == rhs.WerewolfUnused;
-            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
+            ret.Piracy = item.Piracy == rhs.Piracy;
+            ret.SmuggleMultiplier = item.SmuggleMultiplier == rhs.SmuggleMultiplier;
         }
         
         public string Print(
@@ -1241,21 +1241,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Unknown, "Unknown");
             }
-            if (printMask?.StealMult ?? true)
+            if (printMask?.StealMultiplier ?? true)
             {
-                sb.AppendItem(item.StealMult, "StealMult");
+                sb.AppendItem(item.StealMultiplier, "StealMultiplier");
             }
             if (printMask?.Escape ?? true)
             {
                 sb.AppendItem(item.Escape, "Escape");
             }
-            if (printMask?.WerewolfUnused ?? true)
+            if (printMask?.Piracy ?? true)
             {
-                sb.AppendItem(item.WerewolfUnused, "WerewolfUnused");
+                sb.AppendItem(item.Piracy, "Piracy");
             }
-            if (printMask?.Unknown2 ?? true)
+            if (printMask?.SmuggleMultiplier ?? true)
             {
-                sb.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendItem(item.SmuggleMultiplier, "SmuggleMultiplier");
             }
         }
         
@@ -1298,21 +1298,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.StealMult) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.StealMultiplier) ?? true))
             {
-                if (!lhs.StealMult.EqualsWithin(rhs.StealMult)) return false;
+                if (!lhs.StealMultiplier.EqualsWithin(rhs.StealMultiplier)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.Escape) ?? true))
             {
                 if (lhs.Escape != rhs.Escape) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.WerewolfUnused) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.Piracy) ?? true))
             {
-                if (lhs.WerewolfUnused != rhs.WerewolfUnused) return false;
+                if (lhs.Piracy != rhs.Piracy) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.SmuggleMultiplier) ?? true))
             {
-                if (lhs.Unknown2 != rhs.Unknown2) return false;
+                if (lhs.SmuggleMultiplier != rhs.SmuggleMultiplier) return false;
             }
             return true;
         }
@@ -1328,10 +1328,10 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.Trespass);
             hash.Add(item.Pickpocket);
             hash.Add(item.Unknown);
-            hash.Add(item.StealMult);
+            hash.Add(item.StealMultiplier);
             hash.Add(item.Escape);
-            hash.Add(item.WerewolfUnused);
-            hash.Add(item.Unknown2);
+            hash.Add(item.Piracy);
+            hash.Add(item.SmuggleMultiplier);
             return hash.ToHashCode();
         }
         
@@ -1396,22 +1396,22 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Unknown = rhs.Unknown;
             }
-            if ((copyMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.StealMult) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.StealMultiplier) ?? true))
             {
-                item.StealMult = rhs.StealMult;
+                item.StealMultiplier = rhs.StealMultiplier;
             }
             if ((copyMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.Escape) ?? true))
             {
                 item.Escape = rhs.Escape;
             }
-            if ((copyMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.WerewolfUnused) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.Piracy) ?? true))
             {
-                item.WerewolfUnused = rhs.WerewolfUnused;
+                item.Piracy = rhs.Piracy;
             }
             if (rhs.Versioning.HasFlag(CrimeValues.VersioningBreaks.Break0)) return;
-            if ((copyMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.Unknown2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)CrimeValues_FieldIndex.SmuggleMultiplier) ?? true))
             {
-                item.Unknown2 = rhs.Unknown2;
+                item.SmuggleMultiplier = rhs.SmuggleMultiplier;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1530,12 +1530,12 @@ namespace Mutagen.Bethesda.Starfield
             writer.Write(item.Unknown);
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.StealMult);
+                item: item.StealMultiplier);
             writer.Write(item.Escape);
-            writer.Write(item.WerewolfUnused);
+            writer.Write(item.Piracy);
             if (!item.Versioning.HasFlag(CrimeValues.VersioningBreaks.Break0))
             {
-                writer.Write(item.Unknown2);
+                writer.Write(item.SmuggleMultiplier);
             }
         }
 
@@ -1584,15 +1584,15 @@ namespace Mutagen.Bethesda.Starfield
             item.Trespass = frame.ReadUInt16();
             item.Pickpocket = frame.ReadUInt16();
             item.Unknown = frame.ReadUInt16();
-            item.StealMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.StealMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Escape = frame.ReadUInt16();
-            item.WerewolfUnused = frame.ReadUInt16();
+            item.Piracy = frame.ReadUInt16();
             if (frame.Complete)
             {
                 item.Versioning |= CrimeValues.VersioningBreaks.Break0;
                 return;
             }
-            item.Unknown2 = frame.ReadUInt32();
+            item.SmuggleMultiplier = frame.ReadUInt32();
         }
 
     }
@@ -1666,10 +1666,10 @@ namespace Mutagen.Bethesda.Starfield
         public UInt16 Trespass => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x6, 0x2));
         public UInt16 Pickpocket => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x8, 0x2));
         public UInt16 Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0xA, 0x2));
-        public Single StealMult => _structData.Slice(0xC, 0x4).Float();
+        public Single StealMultiplier => _structData.Slice(0xC, 0x4).Float();
         public UInt16 Escape => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x10, 0x2));
-        public UInt16 WerewolfUnused => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x12, 0x2));
-        public UInt32 Unknown2 => _structData.Length <= 0x14 ? default : BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x14, 0x4));
+        public UInt16 Piracy => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0x12, 0x2));
+        public UInt32 SmuggleMultiplier => _structData.Length <= 0x14 ? default : BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x14, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

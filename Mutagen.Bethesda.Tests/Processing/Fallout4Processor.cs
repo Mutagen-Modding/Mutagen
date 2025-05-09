@@ -11,6 +11,7 @@ using Noggog;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
+using Noggog.WorkEngine;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -18,8 +19,8 @@ public class Fallout4Processor : Processor
 {
     public override bool StrictStrings => true;
     
-    public Fallout4Processor(bool multithread, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup) 
-        : base(multithread, GameRelease.Fallout4, masterFlagLookup)
+    public Fallout4Processor(IWorkDropoff workDropoff, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup) 
+        : base(workDropoff, GameRelease.Fallout4, masterFlagLookup)
     {
     }
 
@@ -70,13 +71,13 @@ public class Fallout4Processor : Processor
         AddDynamicProcessing(RecordTypes.LVLI, ProcessLeveledItems);
     }
 
-    protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
+    protected override IEnumerable<Func<Task>> ExtraJobs(Func<IMutagenReadStream> streamGetter)
     {
         foreach (var job in base.ExtraJobs(streamGetter))
         {
             yield return job;
         }
-        yield return TaskExt.Run(DoMultithreading, () => AddOrphanedRecords(streamGetter));
+        yield return async () => AddOrphanedRecords(streamGetter);
     }
     
 

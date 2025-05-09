@@ -54,16 +54,16 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region REFL
+        #region Reflection
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _REFL;
-        public MemorySlice<Byte>? REFL
+        protected MemorySlice<Byte>? _Reflection;
+        public MemorySlice<Byte>? Reflection
         {
-            get => this._REFL;
-            set => this._REFL = value;
+            get => this._Reflection;
+            set => this._Reflection = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IImageSpaceGetter.REFL => this.REFL;
+        ReadOnlyMemorySlice<Byte>? IImageSpaceGetter.Reflection => this.Reflection;
         #endregion
         #region ReflectionParent
         private readonly IFormLinkNullable<IWeatherSettingGetter> _ReflectionParent = new FormLinkNullable<IWeatherSettingGetter>();
@@ -85,99 +85,6 @@ namespace Mutagen.Bethesda.Starfield
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte>? IImageSpaceGetter.ReflectionDiff => this.ReflectionDiff;
-        #endregion
-        #region ENAM
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _ENAM;
-        public MemorySlice<Byte>? ENAM
-        {
-            get => this._ENAM;
-            set => this._ENAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IImageSpaceGetter.ENAM => this.ENAM;
-        #endregion
-        #region CNAM
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _CNAM;
-        public MemorySlice<Byte>? CNAM
-        {
-            get => this._CNAM;
-            set => this._CNAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IImageSpaceGetter.CNAM => this.CNAM;
-        #endregion
-        #region TNAM
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _TNAM;
-        public MemorySlice<Byte>? TNAM
-        {
-            get => this._TNAM;
-            set => this._TNAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IImageSpaceGetter.TNAM => this.TNAM;
-        #endregion
-        #region DNAM
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _DNAM;
-        public MemorySlice<Byte>? DNAM
-        {
-            get => this._DNAM;
-            set => this._DNAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IImageSpaceGetter.DNAM => this.DNAM;
-        #endregion
-        #region XNAM
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _XNAM;
-        public MemorySlice<Byte>? XNAM
-        {
-            get => this._XNAM;
-            set => this._XNAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IImageSpaceGetter.XNAM => this.XNAM;
-        #endregion
-        #region INAM
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _INAM;
-        public MemorySlice<Byte>? INAM
-        {
-            get => this._INAM;
-            set => this._INAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IImageSpaceGetter.INAM => this.INAM;
-        #endregion
-        #region YNAM
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _YNAM;
-        public MemorySlice<Byte>? YNAM
-        {
-            get => this._YNAM;
-            set => this._YNAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IImageSpaceGetter.YNAM => this.YNAM;
-        #endregion
-        #region ZNAM
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _ZNAM;
-        public MemorySlice<Byte>? ZNAM
-        {
-            get => this._ZNAM;
-            set => this._ZNAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IImageSpaceGetter.ZNAM => this.ZNAM;
-        #endregion
-        #region Lut
-        public String? Lut { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IImageSpaceGetter.Lut => this.Lut;
         #endregion
 
         #region To String
@@ -204,18 +111,9 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.REFL = initialValue;
+                this.Reflection = initialValue;
                 this.ReflectionParent = initialValue;
                 this.ReflectionDiff = initialValue;
-                this.ENAM = initialValue;
-                this.CNAM = initialValue;
-                this.TNAM = initialValue;
-                this.DNAM = initialValue;
-                this.XNAM = initialValue;
-                this.INAM = initialValue;
-                this.YNAM = initialValue;
-                this.ZNAM = initialValue;
-                this.Lut = initialValue;
             }
 
             public Mask(
@@ -226,18 +124,9 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
-                TItem REFL,
+                TItem Reflection,
                 TItem ReflectionParent,
-                TItem ReflectionDiff,
-                TItem ENAM,
-                TItem CNAM,
-                TItem TNAM,
-                TItem DNAM,
-                TItem XNAM,
-                TItem INAM,
-                TItem YNAM,
-                TItem ZNAM,
-                TItem Lut)
+                TItem ReflectionDiff)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -247,18 +136,9 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.REFL = REFL;
+                this.Reflection = Reflection;
                 this.ReflectionParent = ReflectionParent;
                 this.ReflectionDiff = ReflectionDiff;
-                this.ENAM = ENAM;
-                this.CNAM = CNAM;
-                this.TNAM = TNAM;
-                this.DNAM = DNAM;
-                this.XNAM = XNAM;
-                this.INAM = INAM;
-                this.YNAM = YNAM;
-                this.ZNAM = ZNAM;
-                this.Lut = Lut;
             }
 
             #pragma warning disable CS8618
@@ -270,18 +150,9 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem REFL;
+            public TItem Reflection;
             public TItem ReflectionParent;
             public TItem ReflectionDiff;
-            public TItem ENAM;
-            public TItem CNAM;
-            public TItem TNAM;
-            public TItem DNAM;
-            public TItem XNAM;
-            public TItem INAM;
-            public TItem YNAM;
-            public TItem ZNAM;
-            public TItem Lut;
             #endregion
 
             #region Equals
@@ -295,35 +166,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.REFL, rhs.REFL)) return false;
+                if (!object.Equals(this.Reflection, rhs.Reflection)) return false;
                 if (!object.Equals(this.ReflectionParent, rhs.ReflectionParent)) return false;
                 if (!object.Equals(this.ReflectionDiff, rhs.ReflectionDiff)) return false;
-                if (!object.Equals(this.ENAM, rhs.ENAM)) return false;
-                if (!object.Equals(this.CNAM, rhs.CNAM)) return false;
-                if (!object.Equals(this.TNAM, rhs.TNAM)) return false;
-                if (!object.Equals(this.DNAM, rhs.DNAM)) return false;
-                if (!object.Equals(this.XNAM, rhs.XNAM)) return false;
-                if (!object.Equals(this.INAM, rhs.INAM)) return false;
-                if (!object.Equals(this.YNAM, rhs.YNAM)) return false;
-                if (!object.Equals(this.ZNAM, rhs.ZNAM)) return false;
-                if (!object.Equals(this.Lut, rhs.Lut)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.REFL);
+                hash.Add(this.Reflection);
                 hash.Add(this.ReflectionParent);
                 hash.Add(this.ReflectionDiff);
-                hash.Add(this.ENAM);
-                hash.Add(this.CNAM);
-                hash.Add(this.TNAM);
-                hash.Add(this.DNAM);
-                hash.Add(this.XNAM);
-                hash.Add(this.INAM);
-                hash.Add(this.YNAM);
-                hash.Add(this.ZNAM);
-                hash.Add(this.Lut);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -334,18 +187,9 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.REFL)) return false;
+                if (!eval(this.Reflection)) return false;
                 if (!eval(this.ReflectionParent)) return false;
                 if (!eval(this.ReflectionDiff)) return false;
-                if (!eval(this.ENAM)) return false;
-                if (!eval(this.CNAM)) return false;
-                if (!eval(this.TNAM)) return false;
-                if (!eval(this.DNAM)) return false;
-                if (!eval(this.XNAM)) return false;
-                if (!eval(this.INAM)) return false;
-                if (!eval(this.YNAM)) return false;
-                if (!eval(this.ZNAM)) return false;
-                if (!eval(this.Lut)) return false;
                 return true;
             }
             #endregion
@@ -354,18 +198,9 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.REFL)) return true;
+                if (eval(this.Reflection)) return true;
                 if (eval(this.ReflectionParent)) return true;
                 if (eval(this.ReflectionDiff)) return true;
-                if (eval(this.ENAM)) return true;
-                if (eval(this.CNAM)) return true;
-                if (eval(this.TNAM)) return true;
-                if (eval(this.DNAM)) return true;
-                if (eval(this.XNAM)) return true;
-                if (eval(this.INAM)) return true;
-                if (eval(this.YNAM)) return true;
-                if (eval(this.ZNAM)) return true;
-                if (eval(this.Lut)) return true;
                 return false;
             }
             #endregion
@@ -381,18 +216,9 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.REFL = eval(this.REFL);
+                obj.Reflection = eval(this.Reflection);
                 obj.ReflectionParent = eval(this.ReflectionParent);
                 obj.ReflectionDiff = eval(this.ReflectionDiff);
-                obj.ENAM = eval(this.ENAM);
-                obj.CNAM = eval(this.CNAM);
-                obj.TNAM = eval(this.TNAM);
-                obj.DNAM = eval(this.DNAM);
-                obj.XNAM = eval(this.XNAM);
-                obj.INAM = eval(this.INAM);
-                obj.YNAM = eval(this.YNAM);
-                obj.ZNAM = eval(this.ZNAM);
-                obj.Lut = eval(this.Lut);
             }
             #endregion
 
@@ -411,9 +237,9 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(ImageSpace.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.REFL ?? true)
+                    if (printMask?.Reflection ?? true)
                     {
-                        sb.AppendItem(REFL, "REFL");
+                        sb.AppendItem(Reflection, "Reflection");
                     }
                     if (printMask?.ReflectionParent ?? true)
                     {
@@ -422,42 +248,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.ReflectionDiff ?? true)
                     {
                         sb.AppendItem(ReflectionDiff, "ReflectionDiff");
-                    }
-                    if (printMask?.ENAM ?? true)
-                    {
-                        sb.AppendItem(ENAM, "ENAM");
-                    }
-                    if (printMask?.CNAM ?? true)
-                    {
-                        sb.AppendItem(CNAM, "CNAM");
-                    }
-                    if (printMask?.TNAM ?? true)
-                    {
-                        sb.AppendItem(TNAM, "TNAM");
-                    }
-                    if (printMask?.DNAM ?? true)
-                    {
-                        sb.AppendItem(DNAM, "DNAM");
-                    }
-                    if (printMask?.XNAM ?? true)
-                    {
-                        sb.AppendItem(XNAM, "XNAM");
-                    }
-                    if (printMask?.INAM ?? true)
-                    {
-                        sb.AppendItem(INAM, "INAM");
-                    }
-                    if (printMask?.YNAM ?? true)
-                    {
-                        sb.AppendItem(YNAM, "YNAM");
-                    }
-                    if (printMask?.ZNAM ?? true)
-                    {
-                        sb.AppendItem(ZNAM, "ZNAM");
-                    }
-                    if (printMask?.Lut ?? true)
-                    {
-                        sb.AppendItem(Lut, "Lut");
                     }
                 }
             }
@@ -470,18 +260,9 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? REFL;
+            public Exception? Reflection;
             public Exception? ReflectionParent;
             public Exception? ReflectionDiff;
-            public Exception? ENAM;
-            public Exception? CNAM;
-            public Exception? TNAM;
-            public Exception? DNAM;
-            public Exception? XNAM;
-            public Exception? INAM;
-            public Exception? YNAM;
-            public Exception? ZNAM;
-            public Exception? Lut;
             #endregion
 
             #region IErrorMask
@@ -490,30 +271,12 @@ namespace Mutagen.Bethesda.Starfield
                 ImageSpace_FieldIndex enu = (ImageSpace_FieldIndex)index;
                 switch (enu)
                 {
-                    case ImageSpace_FieldIndex.REFL:
-                        return REFL;
+                    case ImageSpace_FieldIndex.Reflection:
+                        return Reflection;
                     case ImageSpace_FieldIndex.ReflectionParent:
                         return ReflectionParent;
                     case ImageSpace_FieldIndex.ReflectionDiff:
                         return ReflectionDiff;
-                    case ImageSpace_FieldIndex.ENAM:
-                        return ENAM;
-                    case ImageSpace_FieldIndex.CNAM:
-                        return CNAM;
-                    case ImageSpace_FieldIndex.TNAM:
-                        return TNAM;
-                    case ImageSpace_FieldIndex.DNAM:
-                        return DNAM;
-                    case ImageSpace_FieldIndex.XNAM:
-                        return XNAM;
-                    case ImageSpace_FieldIndex.INAM:
-                        return INAM;
-                    case ImageSpace_FieldIndex.YNAM:
-                        return YNAM;
-                    case ImageSpace_FieldIndex.ZNAM:
-                        return ZNAM;
-                    case ImageSpace_FieldIndex.Lut:
-                        return Lut;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -524,41 +287,14 @@ namespace Mutagen.Bethesda.Starfield
                 ImageSpace_FieldIndex enu = (ImageSpace_FieldIndex)index;
                 switch (enu)
                 {
-                    case ImageSpace_FieldIndex.REFL:
-                        this.REFL = ex;
+                    case ImageSpace_FieldIndex.Reflection:
+                        this.Reflection = ex;
                         break;
                     case ImageSpace_FieldIndex.ReflectionParent:
                         this.ReflectionParent = ex;
                         break;
                     case ImageSpace_FieldIndex.ReflectionDiff:
                         this.ReflectionDiff = ex;
-                        break;
-                    case ImageSpace_FieldIndex.ENAM:
-                        this.ENAM = ex;
-                        break;
-                    case ImageSpace_FieldIndex.CNAM:
-                        this.CNAM = ex;
-                        break;
-                    case ImageSpace_FieldIndex.TNAM:
-                        this.TNAM = ex;
-                        break;
-                    case ImageSpace_FieldIndex.DNAM:
-                        this.DNAM = ex;
-                        break;
-                    case ImageSpace_FieldIndex.XNAM:
-                        this.XNAM = ex;
-                        break;
-                    case ImageSpace_FieldIndex.INAM:
-                        this.INAM = ex;
-                        break;
-                    case ImageSpace_FieldIndex.YNAM:
-                        this.YNAM = ex;
-                        break;
-                    case ImageSpace_FieldIndex.ZNAM:
-                        this.ZNAM = ex;
-                        break;
-                    case ImageSpace_FieldIndex.Lut:
-                        this.Lut = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -571,41 +307,14 @@ namespace Mutagen.Bethesda.Starfield
                 ImageSpace_FieldIndex enu = (ImageSpace_FieldIndex)index;
                 switch (enu)
                 {
-                    case ImageSpace_FieldIndex.REFL:
-                        this.REFL = (Exception?)obj;
+                    case ImageSpace_FieldIndex.Reflection:
+                        this.Reflection = (Exception?)obj;
                         break;
                     case ImageSpace_FieldIndex.ReflectionParent:
                         this.ReflectionParent = (Exception?)obj;
                         break;
                     case ImageSpace_FieldIndex.ReflectionDiff:
                         this.ReflectionDiff = (Exception?)obj;
-                        break;
-                    case ImageSpace_FieldIndex.ENAM:
-                        this.ENAM = (Exception?)obj;
-                        break;
-                    case ImageSpace_FieldIndex.CNAM:
-                        this.CNAM = (Exception?)obj;
-                        break;
-                    case ImageSpace_FieldIndex.TNAM:
-                        this.TNAM = (Exception?)obj;
-                        break;
-                    case ImageSpace_FieldIndex.DNAM:
-                        this.DNAM = (Exception?)obj;
-                        break;
-                    case ImageSpace_FieldIndex.XNAM:
-                        this.XNAM = (Exception?)obj;
-                        break;
-                    case ImageSpace_FieldIndex.INAM:
-                        this.INAM = (Exception?)obj;
-                        break;
-                    case ImageSpace_FieldIndex.YNAM:
-                        this.YNAM = (Exception?)obj;
-                        break;
-                    case ImageSpace_FieldIndex.ZNAM:
-                        this.ZNAM = (Exception?)obj;
-                        break;
-                    case ImageSpace_FieldIndex.Lut:
-                        this.Lut = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -616,18 +325,9 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (REFL != null) return true;
+                if (Reflection != null) return true;
                 if (ReflectionParent != null) return true;
                 if (ReflectionDiff != null) return true;
-                if (ENAM != null) return true;
-                if (CNAM != null) return true;
-                if (TNAM != null) return true;
-                if (DNAM != null) return true;
-                if (XNAM != null) return true;
-                if (INAM != null) return true;
-                if (YNAM != null) return true;
-                if (ZNAM != null) return true;
-                if (Lut != null) return true;
                 return false;
             }
             #endregion
@@ -655,40 +355,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(REFL, "REFL");
+                    sb.AppendItem(Reflection, "Reflection");
                 }
                 {
                     sb.AppendItem(ReflectionParent, "ReflectionParent");
                 }
                 {
                     sb.AppendItem(ReflectionDiff, "ReflectionDiff");
-                }
-                {
-                    sb.AppendItem(ENAM, "ENAM");
-                }
-                {
-                    sb.AppendItem(CNAM, "CNAM");
-                }
-                {
-                    sb.AppendItem(TNAM, "TNAM");
-                }
-                {
-                    sb.AppendItem(DNAM, "DNAM");
-                }
-                {
-                    sb.AppendItem(XNAM, "XNAM");
-                }
-                {
-                    sb.AppendItem(INAM, "INAM");
-                }
-                {
-                    sb.AppendItem(YNAM, "YNAM");
-                }
-                {
-                    sb.AppendItem(ZNAM, "ZNAM");
-                }
-                {
-                    sb.AppendItem(Lut, "Lut");
                 }
             }
             #endregion
@@ -698,18 +371,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.REFL = this.REFL.Combine(rhs.REFL);
+                ret.Reflection = this.Reflection.Combine(rhs.Reflection);
                 ret.ReflectionParent = this.ReflectionParent.Combine(rhs.ReflectionParent);
                 ret.ReflectionDiff = this.ReflectionDiff.Combine(rhs.ReflectionDiff);
-                ret.ENAM = this.ENAM.Combine(rhs.ENAM);
-                ret.CNAM = this.CNAM.Combine(rhs.CNAM);
-                ret.TNAM = this.TNAM.Combine(rhs.TNAM);
-                ret.DNAM = this.DNAM.Combine(rhs.DNAM);
-                ret.XNAM = this.XNAM.Combine(rhs.XNAM);
-                ret.INAM = this.INAM.Combine(rhs.INAM);
-                ret.YNAM = this.YNAM.Combine(rhs.YNAM);
-                ret.ZNAM = this.ZNAM.Combine(rhs.ZNAM);
-                ret.Lut = this.Lut.Combine(rhs.Lut);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -732,18 +396,9 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
-            public bool REFL;
+            public bool Reflection;
             public bool ReflectionParent;
             public bool ReflectionDiff;
-            public bool ENAM;
-            public bool CNAM;
-            public bool TNAM;
-            public bool DNAM;
-            public bool XNAM;
-            public bool INAM;
-            public bool YNAM;
-            public bool ZNAM;
-            public bool Lut;
             #endregion
 
             #region Ctors
@@ -752,18 +407,9 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.REFL = defaultOn;
+                this.Reflection = defaultOn;
                 this.ReflectionParent = defaultOn;
                 this.ReflectionDiff = defaultOn;
-                this.ENAM = defaultOn;
-                this.CNAM = defaultOn;
-                this.TNAM = defaultOn;
-                this.DNAM = defaultOn;
-                this.XNAM = defaultOn;
-                this.INAM = defaultOn;
-                this.YNAM = defaultOn;
-                this.ZNAM = defaultOn;
-                this.Lut = defaultOn;
             }
 
             #endregion
@@ -771,18 +417,9 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((REFL, null));
+                ret.Add((Reflection, null));
                 ret.Add((ReflectionParent, null));
                 ret.Add((ReflectionDiff, null));
-                ret.Add((ENAM, null));
-                ret.Add((CNAM, null));
-                ret.Add((TNAM, null));
-                ret.Add((DNAM, null));
-                ret.Add((XNAM, null));
-                ret.Add((INAM, null));
-                ret.Add((YNAM, null));
-                ret.Add((ZNAM, null));
-                ret.Add((Lut, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -930,18 +567,9 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IImageSpaceInternal>,
         IStarfieldMajorRecordInternal
     {
-        new MemorySlice<Byte>? REFL { get; set; }
+        new MemorySlice<Byte>? Reflection { get; set; }
         new IFormLinkNullable<IWeatherSettingGetter> ReflectionParent { get; set; }
         new MemorySlice<Byte>? ReflectionDiff { get; set; }
-        new MemorySlice<Byte>? ENAM { get; set; }
-        new MemorySlice<Byte>? CNAM { get; set; }
-        new MemorySlice<Byte>? TNAM { get; set; }
-        new MemorySlice<Byte>? DNAM { get; set; }
-        new MemorySlice<Byte>? XNAM { get; set; }
-        new MemorySlice<Byte>? INAM { get; set; }
-        new MemorySlice<Byte>? YNAM { get; set; }
-        new MemorySlice<Byte>? ZNAM { get; set; }
-        new String? Lut { get; set; }
     }
 
     public partial interface IImageSpaceInternal :
@@ -960,18 +588,9 @@ namespace Mutagen.Bethesda.Starfield
         IMapsToGetter<IImageSpaceGetter>
     {
         static new ILoquiRegistration StaticRegistration => ImageSpace_Registration.Instance;
-        ReadOnlyMemorySlice<Byte>? REFL { get; }
+        ReadOnlyMemorySlice<Byte>? Reflection { get; }
         IFormLinkNullableGetter<IWeatherSettingGetter> ReflectionParent { get; }
         ReadOnlyMemorySlice<Byte>? ReflectionDiff { get; }
-        ReadOnlyMemorySlice<Byte>? ENAM { get; }
-        ReadOnlyMemorySlice<Byte>? CNAM { get; }
-        ReadOnlyMemorySlice<Byte>? TNAM { get; }
-        ReadOnlyMemorySlice<Byte>? DNAM { get; }
-        ReadOnlyMemorySlice<Byte>? XNAM { get; }
-        ReadOnlyMemorySlice<Byte>? INAM { get; }
-        ReadOnlyMemorySlice<Byte>? YNAM { get; }
-        ReadOnlyMemorySlice<Byte>? ZNAM { get; }
-        String? Lut { get; }
 
     }
 
@@ -1148,18 +767,9 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        REFL = 7,
+        Reflection = 7,
         ReflectionParent = 8,
         ReflectionDiff = 9,
-        ENAM = 10,
-        CNAM = 11,
-        TNAM = 12,
-        DNAM = 13,
-        XNAM = 14,
-        INAM = 15,
-        YNAM = 16,
-        ZNAM = 17,
-        Lut = 18,
     }
     #endregion
 
@@ -1170,9 +780,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 12;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 19;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(ImageSpace.Mask<>);
 
@@ -1207,16 +817,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.IMGS,
                 RecordTypes.REFL,
                 RecordTypes.RFDP,
-                RecordTypes.RDIF,
-                RecordTypes.ENAM,
-                RecordTypes.CNAM,
-                RecordTypes.TNAM,
-                RecordTypes.DNAM,
-                RecordTypes.XNAM,
-                RecordTypes.INAM,
-                RecordTypes.YNAM,
-                RecordTypes.ZNAM,
-                RecordTypes.TX00);
+                RecordTypes.RDIF);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -1261,18 +862,9 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IImageSpaceInternal item)
         {
             ClearPartial();
-            item.REFL = default;
+            item.Reflection = default;
             item.ReflectionParent.Clear();
             item.ReflectionDiff = default;
-            item.ENAM = default;
-            item.CNAM = default;
-            item.TNAM = default;
-            item.DNAM = default;
-            item.XNAM = default;
-            item.INAM = default;
-            item.YNAM = default;
-            item.ZNAM = default;
-            item.Lut = default;
             base.Clear(item);
         }
         
@@ -1358,18 +950,9 @@ namespace Mutagen.Bethesda.Starfield
             ImageSpace.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.REFL = MemorySliceExt.SequenceEqual(item.REFL, rhs.REFL);
+            ret.Reflection = MemorySliceExt.SequenceEqual(item.Reflection, rhs.Reflection);
             ret.ReflectionParent = item.ReflectionParent.Equals(rhs.ReflectionParent);
             ret.ReflectionDiff = MemorySliceExt.SequenceEqual(item.ReflectionDiff, rhs.ReflectionDiff);
-            ret.ENAM = MemorySliceExt.SequenceEqual(item.ENAM, rhs.ENAM);
-            ret.CNAM = MemorySliceExt.SequenceEqual(item.CNAM, rhs.CNAM);
-            ret.TNAM = MemorySliceExt.SequenceEqual(item.TNAM, rhs.TNAM);
-            ret.DNAM = MemorySliceExt.SequenceEqual(item.DNAM, rhs.DNAM);
-            ret.XNAM = MemorySliceExt.SequenceEqual(item.XNAM, rhs.XNAM);
-            ret.INAM = MemorySliceExt.SequenceEqual(item.INAM, rhs.INAM);
-            ret.YNAM = MemorySliceExt.SequenceEqual(item.YNAM, rhs.YNAM);
-            ret.ZNAM = MemorySliceExt.SequenceEqual(item.ZNAM, rhs.ZNAM);
-            ret.Lut = string.Equals(item.Lut, rhs.Lut);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1419,10 +1002,10 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.REFL ?? true)
-                && item.REFL is {} REFLItem)
+            if ((printMask?.Reflection ?? true)
+                && item.Reflection is {} ReflectionItem)
             {
-                sb.AppendLine($"REFL => {SpanExt.ToHexString(REFLItem)}");
+                sb.AppendLine($"Reflection => {SpanExt.ToHexString(ReflectionItem)}");
             }
             if (printMask?.ReflectionParent ?? true)
             {
@@ -1432,51 +1015,6 @@ namespace Mutagen.Bethesda.Starfield
                 && item.ReflectionDiff is {} ReflectionDiffItem)
             {
                 sb.AppendLine($"ReflectionDiff => {SpanExt.ToHexString(ReflectionDiffItem)}");
-            }
-            if ((printMask?.ENAM ?? true)
-                && item.ENAM is {} ENAMItem)
-            {
-                sb.AppendLine($"ENAM => {SpanExt.ToHexString(ENAMItem)}");
-            }
-            if ((printMask?.CNAM ?? true)
-                && item.CNAM is {} CNAMItem)
-            {
-                sb.AppendLine($"CNAM => {SpanExt.ToHexString(CNAMItem)}");
-            }
-            if ((printMask?.TNAM ?? true)
-                && item.TNAM is {} TNAMItem)
-            {
-                sb.AppendLine($"TNAM => {SpanExt.ToHexString(TNAMItem)}");
-            }
-            if ((printMask?.DNAM ?? true)
-                && item.DNAM is {} DNAMItem)
-            {
-                sb.AppendLine($"DNAM => {SpanExt.ToHexString(DNAMItem)}");
-            }
-            if ((printMask?.XNAM ?? true)
-                && item.XNAM is {} XNAMItem)
-            {
-                sb.AppendLine($"XNAM => {SpanExt.ToHexString(XNAMItem)}");
-            }
-            if ((printMask?.INAM ?? true)
-                && item.INAM is {} INAMItem)
-            {
-                sb.AppendLine($"INAM => {SpanExt.ToHexString(INAMItem)}");
-            }
-            if ((printMask?.YNAM ?? true)
-                && item.YNAM is {} YNAMItem)
-            {
-                sb.AppendLine($"YNAM => {SpanExt.ToHexString(YNAMItem)}");
-            }
-            if ((printMask?.ZNAM ?? true)
-                && item.ZNAM is {} ZNAMItem)
-            {
-                sb.AppendLine($"ZNAM => {SpanExt.ToHexString(ZNAMItem)}");
-            }
-            if ((printMask?.Lut ?? true)
-                && item.Lut is {} LutItem)
-            {
-                sb.AppendItem(LutItem, "Lut");
             }
         }
         
@@ -1528,9 +1066,9 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.REFL) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.Reflection) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.REFL, rhs.REFL)) return false;
+                if (!MemorySliceExt.SequenceEqual(lhs.Reflection, rhs.Reflection)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.ReflectionParent) ?? true))
             {
@@ -1539,42 +1077,6 @@ namespace Mutagen.Bethesda.Starfield
             if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.ReflectionDiff) ?? true))
             {
                 if (!MemorySliceExt.SequenceEqual(lhs.ReflectionDiff, rhs.ReflectionDiff)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.ENAM) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.ENAM, rhs.ENAM)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.CNAM) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.CNAM, rhs.CNAM)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.TNAM) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.TNAM, rhs.TNAM)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.DNAM) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.DNAM, rhs.DNAM)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.XNAM) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.XNAM, rhs.XNAM)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.INAM) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.INAM, rhs.INAM)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.YNAM) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.YNAM, rhs.YNAM)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.ZNAM) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.ZNAM, rhs.ZNAM)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.Lut) ?? true))
-            {
-                if (!string.Equals(lhs.Lut, rhs.Lut)) return false;
             }
             return true;
         }
@@ -1604,50 +1106,14 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IImageSpaceGetter item)
         {
             var hash = new HashCode();
-            if (item.REFL is {} REFLItem)
+            if (item.Reflection is {} ReflectionItem)
             {
-                hash.Add(REFLItem);
+                hash.Add(ReflectionItem);
             }
             hash.Add(item.ReflectionParent);
             if (item.ReflectionDiff is {} ReflectionDiffItem)
             {
                 hash.Add(ReflectionDiffItem);
-            }
-            if (item.ENAM is {} ENAMItem)
-            {
-                hash.Add(ENAMItem);
-            }
-            if (item.CNAM is {} CNAMItem)
-            {
-                hash.Add(CNAMItem);
-            }
-            if (item.TNAM is {} TNAMItem)
-            {
-                hash.Add(TNAMItem);
-            }
-            if (item.DNAM is {} DNAMItem)
-            {
-                hash.Add(DNAMItem);
-            }
-            if (item.XNAM is {} XNAMItem)
-            {
-                hash.Add(XNAMItem);
-            }
-            if (item.INAM is {} INAMItem)
-            {
-                hash.Add(INAMItem);
-            }
-            if (item.YNAM is {} YNAMItem)
-            {
-                hash.Add(YNAMItem);
-            }
-            if (item.ZNAM is {} ZNAMItem)
-            {
-                hash.Add(ZNAMItem);
-            }
-            if (item.Lut is {} Lutitem)
-            {
-                hash.Add(Lutitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1756,15 +1222,15 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.REFL) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.Reflection) ?? true))
             {
-                if(rhs.REFL is {} REFLrhs)
+                if(rhs.Reflection is {} Reflectionrhs)
                 {
-                    item.REFL = REFLrhs.ToArray();
+                    item.Reflection = Reflectionrhs.ToArray();
                 }
                 else
                 {
-                    item.REFL = default;
+                    item.Reflection = default;
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.ReflectionParent) ?? true))
@@ -1781,98 +1247,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     item.ReflectionDiff = default;
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.ENAM) ?? true))
-            {
-                if(rhs.ENAM is {} ENAMrhs)
-                {
-                    item.ENAM = ENAMrhs.ToArray();
-                }
-                else
-                {
-                    item.ENAM = default;
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.CNAM) ?? true))
-            {
-                if(rhs.CNAM is {} CNAMrhs)
-                {
-                    item.CNAM = CNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.CNAM = default;
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.TNAM) ?? true))
-            {
-                if(rhs.TNAM is {} TNAMrhs)
-                {
-                    item.TNAM = TNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.TNAM = default;
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.DNAM) ?? true))
-            {
-                if(rhs.DNAM is {} DNAMrhs)
-                {
-                    item.DNAM = DNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.DNAM = default;
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.XNAM) ?? true))
-            {
-                if(rhs.XNAM is {} XNAMrhs)
-                {
-                    item.XNAM = XNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.XNAM = default;
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.INAM) ?? true))
-            {
-                if(rhs.INAM is {} INAMrhs)
-                {
-                    item.INAM = INAMrhs.ToArray();
-                }
-                else
-                {
-                    item.INAM = default;
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.YNAM) ?? true))
-            {
-                if(rhs.YNAM is {} YNAMrhs)
-                {
-                    item.YNAM = YNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.YNAM = default;
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.ZNAM) ?? true))
-            {
-                if(rhs.ZNAM is {} ZNAMrhs)
-                {
-                    item.ZNAM = ZNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.ZNAM = default;
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)ImageSpace_FieldIndex.Lut) ?? true))
-            {
-                item.Lut = rhs.Lut;
             }
             DeepCopyInCustom(
                 item: item,
@@ -2045,7 +1419,7 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.REFL,
+                item: item.Reflection,
                 header: translationParams.ConvertToCustom(RecordTypes.REFL));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -2055,43 +1429,6 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.ReflectionDiff,
                 header: translationParams.ConvertToCustom(RecordTypes.RDIF));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.ENAM,
-                header: translationParams.ConvertToCustom(RecordTypes.ENAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.CNAM,
-                header: translationParams.ConvertToCustom(RecordTypes.CNAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.TNAM,
-                header: translationParams.ConvertToCustom(RecordTypes.TNAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.DNAM,
-                header: translationParams.ConvertToCustom(RecordTypes.DNAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.XNAM,
-                header: translationParams.ConvertToCustom(RecordTypes.XNAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.INAM,
-                header: translationParams.ConvertToCustom(RecordTypes.INAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.YNAM,
-                header: translationParams.ConvertToCustom(RecordTypes.YNAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.ZNAM,
-                header: translationParams.ConvertToCustom(RecordTypes.ZNAM));
-            StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.Lut,
-                header: translationParams.ConvertToCustom(RecordTypes.TX00),
-                binaryType: StringBinaryType.NullTerminate);
         }
 
         public void Write(
@@ -2163,8 +1500,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.REFL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.REFL = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)ImageSpace_FieldIndex.REFL;
+                    item.Reflection = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)ImageSpace_FieldIndex.Reflection;
                 }
                 case RecordTypeInts.RFDP:
                 {
@@ -2177,63 +1514,6 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ReflectionDiff = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)ImageSpace_FieldIndex.ReflectionDiff;
-                }
-                case RecordTypeInts.ENAM:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ENAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)ImageSpace_FieldIndex.ENAM;
-                }
-                case RecordTypeInts.CNAM:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)ImageSpace_FieldIndex.CNAM;
-                }
-                case RecordTypeInts.TNAM:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)ImageSpace_FieldIndex.TNAM;
-                }
-                case RecordTypeInts.DNAM:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)ImageSpace_FieldIndex.DNAM;
-                }
-                case RecordTypeInts.XNAM:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)ImageSpace_FieldIndex.XNAM;
-                }
-                case RecordTypeInts.INAM:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.INAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)ImageSpace_FieldIndex.INAM;
-                }
-                case RecordTypeInts.YNAM:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.YNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)ImageSpace_FieldIndex.YNAM;
-                }
-                case RecordTypeInts.ZNAM:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ZNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)ImageSpace_FieldIndex.ZNAM;
-                }
-                case RecordTypeInts.TX00:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Lut = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
-                    return (int)ImageSpace_FieldIndex.Lut;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2294,9 +1574,9 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IImageSpace);
 
 
-        #region REFL
-        private int? _REFLLocation;
-        public ReadOnlyMemorySlice<Byte>? REFL => _REFLLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _REFLLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region Reflection
+        private int? _ReflectionLocation;
+        public ReadOnlyMemorySlice<Byte>? Reflection => _ReflectionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ReflectionLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         #region ReflectionParent
         private int? _ReflectionParentLocation;
@@ -2305,42 +1585,6 @@ namespace Mutagen.Bethesda.Starfield
         #region ReflectionDiff
         private int? _ReflectionDiffLocation;
         public ReadOnlyMemorySlice<Byte>? ReflectionDiff => _ReflectionDiffLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ReflectionDiffLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region ENAM
-        private int? _ENAMLocation;
-        public ReadOnlyMemorySlice<Byte>? ENAM => _ENAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ENAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region CNAM
-        private int? _CNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? CNAM => _CNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _CNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region TNAM
-        private int? _TNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? TNAM => _TNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region DNAM
-        private int? _DNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? DNAM => _DNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region XNAM
-        private int? _XNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? XNAM => _XNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region INAM
-        private int? _INAMLocation;
-        public ReadOnlyMemorySlice<Byte>? INAM => _INAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _INAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region YNAM
-        private int? _YNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? YNAM => _YNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _YNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region ZNAM
-        private int? _ZNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? ZNAM => _ZNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ZNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region Lut
-        private int? _LutLocation;
-        public String? Lut => _LutLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LutLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2413,8 +1657,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.REFL:
                 {
-                    _REFLLocation = (stream.Position - offset);
-                    return (int)ImageSpace_FieldIndex.REFL;
+                    _ReflectionLocation = (stream.Position - offset);
+                    return (int)ImageSpace_FieldIndex.Reflection;
                 }
                 case RecordTypeInts.RFDP:
                 {
@@ -2425,51 +1669,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _ReflectionDiffLocation = (stream.Position - offset);
                     return (int)ImageSpace_FieldIndex.ReflectionDiff;
-                }
-                case RecordTypeInts.ENAM:
-                {
-                    _ENAMLocation = (stream.Position - offset);
-                    return (int)ImageSpace_FieldIndex.ENAM;
-                }
-                case RecordTypeInts.CNAM:
-                {
-                    _CNAMLocation = (stream.Position - offset);
-                    return (int)ImageSpace_FieldIndex.CNAM;
-                }
-                case RecordTypeInts.TNAM:
-                {
-                    _TNAMLocation = (stream.Position - offset);
-                    return (int)ImageSpace_FieldIndex.TNAM;
-                }
-                case RecordTypeInts.DNAM:
-                {
-                    _DNAMLocation = (stream.Position - offset);
-                    return (int)ImageSpace_FieldIndex.DNAM;
-                }
-                case RecordTypeInts.XNAM:
-                {
-                    _XNAMLocation = (stream.Position - offset);
-                    return (int)ImageSpace_FieldIndex.XNAM;
-                }
-                case RecordTypeInts.INAM:
-                {
-                    _INAMLocation = (stream.Position - offset);
-                    return (int)ImageSpace_FieldIndex.INAM;
-                }
-                case RecordTypeInts.YNAM:
-                {
-                    _YNAMLocation = (stream.Position - offset);
-                    return (int)ImageSpace_FieldIndex.YNAM;
-                }
-                case RecordTypeInts.ZNAM:
-                {
-                    _ZNAMLocation = (stream.Position - offset);
-                    return (int)ImageSpace_FieldIndex.ZNAM;
-                }
-                case RecordTypeInts.TX00:
-                {
-                    _LutLocation = (stream.Position - offset);
-                    return (int)ImageSpace_FieldIndex.Lut;
                 }
                 default:
                     return base.FillRecordType(

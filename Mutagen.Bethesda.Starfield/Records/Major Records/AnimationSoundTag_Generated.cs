@@ -9,7 +9,6 @@ using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Aspects;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -53,16 +52,13 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region Name
-        /// <summary>
-        /// Aspects: INamedRequired
-        /// </summary>
-        public String Name { get; set; } = string.Empty;
+        #region Tag
+        public String Tag { get; set; } = string.Empty;
         #endregion
-        #region STAD
-        public SoundReference STAD { get; set; } = new SoundReference();
+        #region Sound
+        public SoundReference Sound { get; set; } = new SoundReference();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISoundReferenceGetter IAnimationSoundTagGetter.STAD => STAD;
+        ISoundReferenceGetter IAnimationSoundTagGetter.Sound => Sound;
         #endregion
 
         #region To String
@@ -103,16 +99,16 @@ namespace Mutagen.Bethesda.Starfield
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Name = initialValue;
-                this.STAD = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.Tag = initialValue;
+                this.Sound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
             }
 
             public Mask(
-                TItem Name,
-                TItem STAD)
+                TItem Tag,
+                TItem Sound)
             {
-                this.Name = Name;
-                this.STAD = new MaskItem<TItem, SoundReference.Mask<TItem>?>(STAD, new SoundReference.Mask<TItem>(STAD));
+                this.Tag = Tag;
+                this.Sound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(Sound, new SoundReference.Mask<TItem>(Sound));
             }
 
             #pragma warning disable CS8618
@@ -124,8 +120,8 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem Name;
-            public MaskItem<TItem, SoundReference.Mask<TItem>?>? STAD { get; set; }
+            public TItem Tag;
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? Sound { get; set; }
             #endregion
 
             #region Equals
@@ -138,15 +134,15 @@ namespace Mutagen.Bethesda.Starfield
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Name, rhs.Name)) return false;
-                if (!object.Equals(this.STAD, rhs.STAD)) return false;
+                if (!object.Equals(this.Tag, rhs.Tag)) return false;
+                if (!object.Equals(this.Sound, rhs.Sound)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Name);
-                hash.Add(this.STAD);
+                hash.Add(this.Tag);
+                hash.Add(this.Sound);
                 return hash.ToHashCode();
             }
 
@@ -155,11 +151,11 @@ namespace Mutagen.Bethesda.Starfield
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Name)) return false;
-                if (STAD != null)
+                if (!eval(this.Tag)) return false;
+                if (Sound != null)
                 {
-                    if (!eval(this.STAD.Overall)) return false;
-                    if (this.STAD.Specific != null && !this.STAD.Specific.All(eval)) return false;
+                    if (!eval(this.Sound.Overall)) return false;
+                    if (this.Sound.Specific != null && !this.Sound.Specific.All(eval)) return false;
                 }
                 return true;
             }
@@ -168,11 +164,11 @@ namespace Mutagen.Bethesda.Starfield
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Name)) return true;
-                if (STAD != null)
+                if (eval(this.Tag)) return true;
+                if (Sound != null)
                 {
-                    if (eval(this.STAD.Overall)) return true;
-                    if (this.STAD.Specific != null && this.STAD.Specific.Any(eval)) return true;
+                    if (eval(this.Sound.Overall)) return true;
+                    if (this.Sound.Specific != null && this.Sound.Specific.Any(eval)) return true;
                 }
                 return false;
             }
@@ -188,8 +184,8 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Name = eval(this.Name);
-                obj.STAD = this.STAD == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.STAD.Overall), this.STAD.Specific?.Translate(eval));
+                obj.Tag = eval(this.Tag);
+                obj.Sound = this.Sound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.Sound.Overall), this.Sound.Specific?.Translate(eval));
             }
             #endregion
 
@@ -208,13 +204,13 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(AnimationSoundTag.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Name ?? true)
+                    if (printMask?.Tag ?? true)
                     {
-                        sb.AppendItem(Name, "Name");
+                        sb.AppendItem(Tag, "Tag");
                     }
-                    if (printMask?.STAD?.Overall ?? true)
+                    if (printMask?.Sound?.Overall ?? true)
                     {
-                        STAD?.Print(sb);
+                        Sound?.Print(sb);
                     }
                 }
             }
@@ -240,8 +236,8 @@ namespace Mutagen.Bethesda.Starfield
                     return _warnings;
                 }
             }
-            public Exception? Name;
-            public MaskItem<Exception?, SoundReference.ErrorMask?>? STAD;
+            public Exception? Tag;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? Sound;
             #endregion
 
             #region IErrorMask
@@ -250,10 +246,10 @@ namespace Mutagen.Bethesda.Starfield
                 AnimationSoundTag_FieldIndex enu = (AnimationSoundTag_FieldIndex)index;
                 switch (enu)
                 {
-                    case AnimationSoundTag_FieldIndex.Name:
-                        return Name;
-                    case AnimationSoundTag_FieldIndex.STAD:
-                        return STAD;
+                    case AnimationSoundTag_FieldIndex.Tag:
+                        return Tag;
+                    case AnimationSoundTag_FieldIndex.Sound:
+                        return Sound;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -264,11 +260,11 @@ namespace Mutagen.Bethesda.Starfield
                 AnimationSoundTag_FieldIndex enu = (AnimationSoundTag_FieldIndex)index;
                 switch (enu)
                 {
-                    case AnimationSoundTag_FieldIndex.Name:
-                        this.Name = ex;
+                    case AnimationSoundTag_FieldIndex.Tag:
+                        this.Tag = ex;
                         break;
-                    case AnimationSoundTag_FieldIndex.STAD:
-                        this.STAD = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                    case AnimationSoundTag_FieldIndex.Sound:
+                        this.Sound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -280,11 +276,11 @@ namespace Mutagen.Bethesda.Starfield
                 AnimationSoundTag_FieldIndex enu = (AnimationSoundTag_FieldIndex)index;
                 switch (enu)
                 {
-                    case AnimationSoundTag_FieldIndex.Name:
-                        this.Name = (Exception?)obj;
+                    case AnimationSoundTag_FieldIndex.Tag:
+                        this.Tag = (Exception?)obj;
                         break;
-                    case AnimationSoundTag_FieldIndex.STAD:
-                        this.STAD = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                    case AnimationSoundTag_FieldIndex.Sound:
+                        this.Sound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -294,8 +290,8 @@ namespace Mutagen.Bethesda.Starfield
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Name != null) return true;
-                if (STAD != null) return true;
+                if (Tag != null) return true;
+                if (Sound != null) return true;
                 return false;
             }
             #endregion
@@ -322,9 +318,9 @@ namespace Mutagen.Bethesda.Starfield
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Name, "Name");
+                    sb.AppendItem(Tag, "Tag");
                 }
-                STAD?.Print(sb);
+                Sound?.Print(sb);
             }
             #endregion
 
@@ -333,8 +329,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Name = this.Name.Combine(rhs.Name);
-                ret.STAD = this.STAD.Combine(rhs.STAD, (l, r) => l.Combine(r));
+                ret.Tag = this.Tag.Combine(rhs.Tag);
+                ret.Sound = this.Sound.Combine(rhs.Sound, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -358,8 +354,8 @@ namespace Mutagen.Bethesda.Starfield
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Name;
-            public SoundReference.TranslationMask? STAD;
+            public bool Tag;
+            public SoundReference.TranslationMask? Sound;
             #endregion
 
             #region Ctors
@@ -369,7 +365,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Name = defaultOn;
+                this.Tag = defaultOn;
             }
 
             #endregion
@@ -385,8 +381,8 @@ namespace Mutagen.Bethesda.Starfield
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Name, null));
-                ret.Add((STAD != null ? STAD.OnOverall : DefaultOn, STAD?.GetCrystal()));
+                ret.Add((Tag, null));
+                ret.Add((Sound != null ? Sound.OnOverall : DefaultOn, Sound?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -463,22 +459,17 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IAnimationSoundTag :
         IAnimationSoundTagGetter,
         IFormLinkContainer,
-        ILoquiObjectSetter<IAnimationSoundTag>,
-        INamedRequired
+        ILoquiObjectSetter<IAnimationSoundTag>
     {
-        /// <summary>
-        /// Aspects: INamedRequired
-        /// </summary>
-        new String Name { get; set; }
-        new SoundReference STAD { get; set; }
+        new String Tag { get; set; }
+        new SoundReference Sound { get; set; }
     }
 
     public partial interface IAnimationSoundTagGetter :
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<IAnimationSoundTagGetter>,
-        INamedRequiredGetter
+        ILoquiObject<IAnimationSoundTagGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -487,13 +478,8 @@ namespace Mutagen.Bethesda.Starfield
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => AnimationSoundTag_Registration.Instance;
-        #region Name
-        /// <summary>
-        /// Aspects: INamedRequiredGetter
-        /// </summary>
-        String Name { get; }
-        #endregion
-        ISoundReferenceGetter STAD { get; }
+        String Tag { get; }
+        ISoundReferenceGetter Sound { get; }
 
     }
 
@@ -663,8 +649,8 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum AnimationSoundTag_FieldIndex
     {
-        Name = 0,
-        STAD = 1,
+        Tag = 0,
+        Sound = 1,
     }
     #endregion
 
@@ -755,14 +741,14 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IAnimationSoundTag item)
         {
             ClearPartial();
-            item.Name = string.Empty;
-            item.STAD.Clear();
+            item.Tag = string.Empty;
+            item.Sound.Clear();
         }
         
         #region Mutagen
         public void RemapLinks(IAnimationSoundTag obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.STAD.RemapLinks(mapping);
+            obj.Sound.RemapLinks(mapping);
         }
         
         #endregion
@@ -807,8 +793,8 @@ namespace Mutagen.Bethesda.Starfield
             AnimationSoundTag.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Name = string.Equals(item.Name, rhs.Name);
-            ret.STAD = MaskItemExt.Factory(item.STAD.GetEqualsMask(rhs.STAD, include), include);
+            ret.Tag = string.Equals(item.Tag, rhs.Tag);
+            ret.Sound = MaskItemExt.Factory(item.Sound.GetEqualsMask(rhs.Sound, include), include);
         }
         
         public string Print(
@@ -853,13 +839,13 @@ namespace Mutagen.Bethesda.Starfield
             StructuredStringBuilder sb,
             AnimationSoundTag.Mask<bool>? printMask = null)
         {
-            if (printMask?.Name ?? true)
+            if (printMask?.Tag ?? true)
             {
-                sb.AppendItem(item.Name, "Name");
+                sb.AppendItem(item.Tag, "Tag");
             }
-            if (printMask?.STAD?.Overall ?? true)
+            if (printMask?.Sound?.Overall ?? true)
             {
-                item.STAD?.Print(sb, "STAD");
+                item.Sound?.Print(sb, "Sound");
             }
         }
         
@@ -870,17 +856,17 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)AnimationSoundTag_FieldIndex.Name) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AnimationSoundTag_FieldIndex.Tag) ?? true))
             {
-                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+                if (!string.Equals(lhs.Tag, rhs.Tag)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AnimationSoundTag_FieldIndex.STAD) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AnimationSoundTag_FieldIndex.Sound) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.STAD, rhs.STAD, out var lhsSTAD, out var rhsSTAD, out var isSTADEqual))
+                if (EqualsMaskHelper.RefEquality(lhs.Sound, rhs.Sound, out var lhsSound, out var rhsSound, out var isSoundEqual))
                 {
-                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsSTAD).CommonInstance()!).Equals(lhsSTAD, rhsSTAD, equalsMask?.GetSubCrystal((int)AnimationSoundTag_FieldIndex.STAD))) return false;
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsSound).CommonInstance()!).Equals(lhsSound, rhsSound, equalsMask?.GetSubCrystal((int)AnimationSoundTag_FieldIndex.Sound))) return false;
                 }
-                else if (!isSTADEqual) return false;
+                else if (!isSoundEqual) return false;
             }
             return true;
         }
@@ -888,8 +874,8 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IAnimationSoundTagGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Name);
-            hash.Add(item.STAD);
+            hash.Add(item.Tag);
+            hash.Add(item.Sound);
             return hash.ToHashCode();
         }
         
@@ -904,7 +890,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IAnimationSoundTagGetter obj)
         {
-            foreach (var item in obj.STAD.EnumerateFormLinks())
+            foreach (var item in obj.Sound.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -926,19 +912,19 @@ namespace Mutagen.Bethesda.Starfield
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)AnimationSoundTag_FieldIndex.Name) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AnimationSoundTag_FieldIndex.Tag) ?? true))
             {
-                item.Name = rhs.Name;
+                item.Tag = rhs.Tag;
             }
-            if ((copyMask?.GetShouldTranslate((int)AnimationSoundTag_FieldIndex.STAD) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AnimationSoundTag_FieldIndex.Sound) ?? true))
             {
-                errorMask?.PushIndex((int)AnimationSoundTag_FieldIndex.STAD);
+                errorMask?.PushIndex((int)AnimationSoundTag_FieldIndex.Sound);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)AnimationSoundTag_FieldIndex.STAD) ?? true))
+                    if ((copyMask?.GetShouldTranslate((int)AnimationSoundTag_FieldIndex.Sound) ?? true))
                     {
-                        item.STAD = rhs.STAD.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)AnimationSoundTag_FieldIndex.STAD),
+                        item.Sound = rhs.Sound.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)AnimationSoundTag_FieldIndex.Sound),
                             errorMask: errorMask);
                     }
                 }
@@ -1063,14 +1049,14 @@ namespace Mutagen.Bethesda.Starfield
         {
             StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Name,
+                item: item.Tag,
                 header: translationParams.ConvertToCustom(RecordTypes.STAE),
                 binaryType: StringBinaryType.NullTerminate);
-            var STADItem = item.STAD;
+            var SoundItem = item.Sound;
             using (HeaderExport.Subrecord(writer, RecordTypes.STAD))
             {
-                ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)STADItem).BinaryWriteTranslator).Write(
-                    item: STADItem,
+                ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)SoundItem).BinaryWriteTranslator).Write(
+                    item: SoundItem,
                     writer: writer,
                     translationParams: translationParams);
             }
@@ -1118,19 +1104,19 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.STAE:
                 {
-                    if (lastParsed.ShortCircuit((int)AnimationSoundTag_FieldIndex.Name, translationParams)) return ParseResult.Stop;
+                    if (lastParsed.ShortCircuit((int)AnimationSoundTag_FieldIndex.Tag, translationParams)) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = StringBinaryTranslation.Instance.Parse(
+                    item.Tag = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)AnimationSoundTag_FieldIndex.Name;
+                    return (int)AnimationSoundTag_FieldIndex.Tag;
                 }
                 case RecordTypeInts.STAD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.STAD = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
-                    return (int)AnimationSoundTag_FieldIndex.STAD;
+                    item.Sound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)AnimationSoundTag_FieldIndex.Sound;
                 }
                 default:
                     return ParseResult.Stop;
@@ -1201,13 +1187,13 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        #region Name
-        private int? _NameLocation;
-        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        #region Tag
+        private int? _TagLocation;
+        public String Tag => _TagLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TagLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
-        #region STAD
-        private ISoundReferenceGetter? _STAD;
-        public ISoundReferenceGetter STAD => _STAD ?? new SoundReference();
+        #region Sound
+        private ISoundReferenceGetter? _Sound;
+        public ISoundReferenceGetter Sound => _Sound ?? new SoundReference();
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1274,18 +1260,18 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.STAE:
                 {
-                    if (lastParsed.ShortCircuit((int)AnimationSoundTag_FieldIndex.Name, translationParams)) return ParseResult.Stop;
-                    _NameLocation = (stream.Position - offset);
-                    return (int)AnimationSoundTag_FieldIndex.Name;
+                    if (lastParsed.ShortCircuit((int)AnimationSoundTag_FieldIndex.Tag, translationParams)) return ParseResult.Stop;
+                    _TagLocation = (stream.Position - offset);
+                    return (int)AnimationSoundTag_FieldIndex.Tag;
                 }
                 case RecordTypeInts.STAD:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
-                    this._STAD = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                    this._Sound = SoundReferenceBinaryOverlay.SoundReferenceFactory(
                         stream: stream,
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());
-                    return (int)AnimationSoundTag_FieldIndex.STAD;
+                    return (int)AnimationSoundTag_FieldIndex.Sound;
                 }
                 default:
                     return ParseResult.Stop;

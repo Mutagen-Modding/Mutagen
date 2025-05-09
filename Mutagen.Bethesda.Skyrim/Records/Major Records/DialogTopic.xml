@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="DialogTopic" recordType="DIAL" objType="Record" resolvedAssets="true" baseClass="SkyrimMajorRecord" customBinaryEnd="Normal">
+  <Object name="DialogTopic" recordType="DIAL" objType="Record" baseClass="SkyrimMajorRecord" customBinaryEnd="Normal">
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
       <Float name="Priority" recordType="PNAM" nullable="False" default="50" />
@@ -19,6 +19,5 @@
       <Int32 name="Unknown" binary="NoGeneration" />
       <RefList name="Responses" binary="NoGeneration" refName="DialogResponses" />
     </Fields>
-    <LinkInterface>IDialog</LinkInterface>
   </Object>
 </Loqui>

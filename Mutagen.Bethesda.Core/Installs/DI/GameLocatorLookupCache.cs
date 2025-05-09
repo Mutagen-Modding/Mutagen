@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 
 namespace Mutagen.Bethesda.Installs.DI;
@@ -59,7 +60,8 @@ public class GameLocatorLookupCache : IGameDirectoryLookup, IDataDirectoryLookup
     {
         if (TryGetGameDirectory(release, out path))
         {
-            path = Path.Combine(path, "Data");
+            var constants = GameConstants.Get(release);
+            path = Path.Combine(path, constants.DataFolderRelativePath);
             return true;
         }
         path = default;
@@ -79,8 +81,9 @@ public class GameLocatorLookupCache : IGameDirectoryLookup, IDataDirectoryLookup
 
     IEnumerable<DirectoryPath> IDataDirectoryLookup.GetAll(GameRelease release)
     {
+        var constants = GameConstants.Get(release);
         return GetAllGameDirectories(release)
-            .Select(path => new DirectoryPath(Path.Combine(path, "Data")));
+            .Select(path => new DirectoryPath(Path.Combine(path, constants.DataFolderRelativePath)));
     }
 
     bool IDataDirectoryLookup.TryGet(GameRelease release, out DirectoryPath path)

@@ -117,11 +117,12 @@ class BsaFileRecord : IArchiveFile
         }
         catch (Exception e)
         {
-            throw ArchiveException.Enrich(
+            ArchiveException.EnrichAndThrow(
                 e,
                 BSA.FilePath,
                 Folder.Path,
                 Path);
+            throw;
         }
     }
 
@@ -196,11 +197,12 @@ class BsaFileRecord : IArchiveFile
         }
         catch (Exception e)
         {
-            throw ArchiveException.Enrich(
+            ArchiveException.EnrichAndThrow(
                 e,
                 BSA.FilePath,
                 Folder.Path,
                 Path);
+            throw;
         }
     }
 

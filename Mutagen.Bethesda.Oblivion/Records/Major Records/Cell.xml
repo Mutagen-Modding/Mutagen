@@ -32,6 +32,8 @@
       <FormLink name="Owner" recordType="XOWN" refName="Faction" />
       <Int32 name="FactionRank" recordType="XRNK" />
       <FormLink name="GlobalVariable" recordType="XGLB" refName="Global" />
+      <ByteArray name="XTLI" recordType="XTLI" unknown="true" />
+      <ByteArray name="XLRL" recordType="XLRL" unknown="true" overflowRecordType="XXXX" />
       <RefDirect name="PathGrid" binary="NoGeneration" refName="PathGrid" />
       <RefDirect name="Landscape" binary="NoGeneration" refName="Landscape" />
       <Int32 name="Timestamp" binary="NoGeneration" />

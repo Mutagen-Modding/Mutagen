@@ -75,26 +75,13 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
         #endregion
         #endregion
-        #region ODTY
-        public Single? ODTY { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? ISoundMarkerGetter.ODTY => this.ODTY;
-        #endregion
-        #region ODRT
-        public Single? ODRT { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? ISoundMarkerGetter.ODRT => this.ODRT;
+        #region DirtinessScale
+        public Percent DirtinessScale { get; set; } = default(Percent);
         #endregion
         #region XALG
+        public UInt64? XALG { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _XALG;
-        public MemorySlice<Byte>? XALG
-        {
-            get => this._XALG;
-            set => this._XALG = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ISoundMarkerGetter.XALG => this.XALG;
+        UInt64? ISoundMarkerGetter.XALG => this.XALG;
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -160,8 +147,7 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
-                this.ODTY = initialValue;
-                this.ODRT = initialValue;
+                this.DirtinessScale = initialValue;
                 this.XALG = initialValue;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.SMLS = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
@@ -178,8 +164,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
                 TItem ObjectBounds,
-                TItem ODTY,
-                TItem ODRT,
+                TItem DirtinessScale,
                 TItem XALG,
                 TItem Keywords,
                 TItem SMLS,
@@ -195,8 +180,7 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
-                this.ODTY = ODTY;
-                this.ODRT = ODRT;
+                this.DirtinessScale = DirtinessScale;
                 this.XALG = XALG;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
                 this.SMLS = new MaskItem<TItem, SoundReference.Mask<TItem>?>(SMLS, new SoundReference.Mask<TItem>(SMLS));
@@ -214,8 +198,7 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
-            public TItem ODTY;
-            public TItem ODRT;
+            public TItem DirtinessScale;
             public TItem XALG;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? SMLS { get; set; }
@@ -235,8 +218,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
-                if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
-                if (!object.Equals(this.ODRT, rhs.ODRT)) return false;
+                if (!object.Equals(this.DirtinessScale, rhs.DirtinessScale)) return false;
                 if (!object.Equals(this.XALG, rhs.XALG)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
                 if (!object.Equals(this.SMLS, rhs.SMLS)) return false;
@@ -248,8 +230,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 var hash = new HashCode();
                 hash.Add(this.ObjectBounds);
-                hash.Add(this.ODTY);
-                hash.Add(this.ODRT);
+                hash.Add(this.DirtinessScale);
                 hash.Add(this.XALG);
                 hash.Add(this.Keywords);
                 hash.Add(this.SMLS);
@@ -270,8 +251,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.ObjectBounds.Overall)) return false;
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
-                if (!eval(this.ODTY)) return false;
-                if (!eval(this.ODRT)) return false;
+                if (!eval(this.DirtinessScale)) return false;
                 if (!eval(this.XALG)) return false;
                 if (this.Keywords != null)
                 {
@@ -304,8 +284,7 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.ObjectBounds.Overall)) return true;
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
-                if (eval(this.ODTY)) return true;
-                if (eval(this.ODRT)) return true;
+                if (eval(this.DirtinessScale)) return true;
                 if (eval(this.XALG)) return true;
                 if (this.Keywords != null)
                 {
@@ -341,8 +320,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
-                obj.ODTY = eval(this.ODTY);
-                obj.ODRT = eval(this.ODRT);
+                obj.DirtinessScale = eval(this.DirtinessScale);
                 obj.XALG = eval(this.XALG);
                 if (Keywords != null)
                 {
@@ -383,13 +361,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         ObjectBounds?.Print(sb);
                     }
-                    if (printMask?.ODTY ?? true)
+                    if (printMask?.DirtinessScale ?? true)
                     {
-                        sb.AppendItem(ODTY, "ODTY");
-                    }
-                    if (printMask?.ODRT ?? true)
-                    {
-                        sb.AppendItem(ODRT, "ODRT");
+                        sb.AppendItem(DirtinessScale, "DirtinessScale");
                     }
                     if (printMask?.XALG ?? true)
                     {
@@ -440,8 +414,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
-            public Exception? ODTY;
-            public Exception? ODRT;
+            public Exception? DirtinessScale;
             public Exception? XALG;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? SMLS;
@@ -457,10 +430,8 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case SoundMarker_FieldIndex.ObjectBounds:
                         return ObjectBounds;
-                    case SoundMarker_FieldIndex.ODTY:
-                        return ODTY;
-                    case SoundMarker_FieldIndex.ODRT:
-                        return ODRT;
+                    case SoundMarker_FieldIndex.DirtinessScale:
+                        return DirtinessScale;
                     case SoundMarker_FieldIndex.XALG:
                         return XALG;
                     case SoundMarker_FieldIndex.Keywords:
@@ -484,11 +455,8 @@ namespace Mutagen.Bethesda.Starfield
                     case SoundMarker_FieldIndex.ObjectBounds:
                         this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
                         break;
-                    case SoundMarker_FieldIndex.ODTY:
-                        this.ODTY = ex;
-                        break;
-                    case SoundMarker_FieldIndex.ODRT:
-                        this.ODRT = ex;
+                    case SoundMarker_FieldIndex.DirtinessScale:
+                        this.DirtinessScale = ex;
                         break;
                     case SoundMarker_FieldIndex.XALG:
                         this.XALG = ex;
@@ -519,11 +487,8 @@ namespace Mutagen.Bethesda.Starfield
                     case SoundMarker_FieldIndex.ObjectBounds:
                         this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
                         break;
-                    case SoundMarker_FieldIndex.ODTY:
-                        this.ODTY = (Exception?)obj;
-                        break;
-                    case SoundMarker_FieldIndex.ODRT:
-                        this.ODRT = (Exception?)obj;
+                    case SoundMarker_FieldIndex.DirtinessScale:
+                        this.DirtinessScale = (Exception?)obj;
                         break;
                     case SoundMarker_FieldIndex.XALG:
                         this.XALG = (Exception?)obj;
@@ -550,8 +515,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (ObjectBounds != null) return true;
-                if (ODTY != null) return true;
-                if (ODRT != null) return true;
+                if (DirtinessScale != null) return true;
                 if (XALG != null) return true;
                 if (Keywords != null) return true;
                 if (SMLS != null) return true;
@@ -585,10 +549,7 @@ namespace Mutagen.Bethesda.Starfield
                 base.PrintFillInternal(sb);
                 ObjectBounds?.Print(sb);
                 {
-                    sb.AppendItem(ODTY, "ODTY");
-                }
-                {
-                    sb.AppendItem(ODRT, "ODRT");
+                    sb.AppendItem(DirtinessScale, "DirtinessScale");
                 }
                 {
                     sb.AppendItem(XALG, "XALG");
@@ -629,8 +590,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
-                ret.ODTY = this.ODTY.Combine(rhs.ODTY);
-                ret.ODRT = this.ODRT.Combine(rhs.ODRT);
+                ret.DirtinessScale = this.DirtinessScale.Combine(rhs.DirtinessScale);
                 ret.XALG = this.XALG.Combine(rhs.XALG);
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.SMLS = this.SMLS.Combine(rhs.SMLS, (l, r) => l.Combine(r));
@@ -659,8 +619,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public ObjectBounds.TranslationMask? ObjectBounds;
-            public bool ODTY;
-            public bool ODRT;
+            public bool DirtinessScale;
             public bool XALG;
             public bool Keywords;
             public SoundReference.TranslationMask? SMLS;
@@ -674,8 +633,7 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.ODTY = defaultOn;
-                this.ODRT = defaultOn;
+                this.DirtinessScale = defaultOn;
                 this.XALG = defaultOn;
                 this.Keywords = defaultOn;
                 this.Unknown = defaultOn;
@@ -688,8 +646,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.GetCrystal(ret);
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
-                ret.Add((ODTY, null));
-                ret.Add((ODRT, null));
+                ret.Add((DirtinessScale, null));
                 ret.Add((XALG, null));
                 ret.Add((Keywords, null));
                 ret.Add((SMLS != null ? SMLS.OnOverall : DefaultOn, SMLS?.GetCrystal()));
@@ -849,9 +806,8 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: IObjectBounded
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
-        new Single? ODTY { get; set; }
-        new Single? ODRT { get; set; }
-        new MemorySlice<Byte>? XALG { get; set; }
+        new Percent DirtinessScale { get; set; }
+        new UInt64? XALG { get; set; }
         /// <summary>
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
@@ -886,9 +842,8 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
-        Single? ODTY { get; }
-        Single? ODRT { get; }
-        ReadOnlyMemorySlice<Byte>? XALG { get; }
+        Percent DirtinessScale { get; }
+        UInt64? XALG { get; }
         #region Keywords
         /// <summary>
         /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
@@ -1075,13 +1030,12 @@ namespace Mutagen.Bethesda.Starfield
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
         ObjectBounds = 7,
-        ODTY = 8,
-        ODRT = 9,
-        XALG = 10,
-        Keywords = 11,
-        SMLS = 12,
-        Unknown = 13,
-        Unknown2 = 14,
+        DirtinessScale = 8,
+        XALG = 9,
+        Keywords = 10,
+        SMLS = 11,
+        Unknown = 12,
+        Unknown2 = 13,
     }
     #endregion
 
@@ -1092,9 +1046,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 8;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(SoundMarker.Mask<>);
 
@@ -1129,7 +1083,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.SOUN,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
-                RecordTypes.ODRT,
                 RecordTypes.XALG,
                 RecordTypes.KWDA,
                 RecordTypes.KSIZ,
@@ -1180,8 +1133,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.ObjectBounds.Clear();
-            item.ODTY = default;
-            item.ODRT = default;
+            item.DirtinessScale = default(Percent);
             item.XALG = default;
             item.Keywords = null;
             item.SMLS = null;
@@ -1274,9 +1226,8 @@ namespace Mutagen.Bethesda.Starfield
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
-            ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
-            ret.ODRT = item.ODRT.EqualsWithin(rhs.ODRT);
-            ret.XALG = MemorySliceExt.SequenceEqual(item.XALG, rhs.XALG);
+            ret.DirtinessScale = item.DirtinessScale.Equals(rhs.DirtinessScale);
+            ret.XALG = item.XALG == rhs.XALG;
             ret.Keywords = item.Keywords.CollectionEqualsHelper(
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
@@ -1341,20 +1292,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ObjectBounds?.Print(sb, "ObjectBounds");
             }
-            if ((printMask?.ODTY ?? true)
-                && item.ODTY is {} ODTYItem)
+            if (printMask?.DirtinessScale ?? true)
             {
-                sb.AppendItem(ODTYItem, "ODTY");
-            }
-            if ((printMask?.ODRT ?? true)
-                && item.ODRT is {} ODRTItem)
-            {
-                sb.AppendItem(ODRTItem, "ODRT");
+                sb.AppendItem(item.DirtinessScale, "DirtinessScale");
             }
             if ((printMask?.XALG ?? true)
                 && item.XALG is {} XALGItem)
             {
-                sb.AppendLine($"XALG => {SpanExt.ToHexString(XALGItem)}");
+                sb.AppendItem(XALGItem, "XALG");
             }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords is {} KeywordsItem)
@@ -1442,17 +1387,13 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.ODTY) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.DirtinessScale) ?? true))
             {
-                if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.ODRT) ?? true))
-            {
-                if (!lhs.ODRT.EqualsWithin(rhs.ODRT)) return false;
+                if (!lhs.DirtinessScale.Equals(rhs.DirtinessScale)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.XALG) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.XALG, rhs.XALG)) return false;
+                if (lhs.XALG != rhs.XALG) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.Keywords) ?? true))
             {
@@ -1503,17 +1444,10 @@ namespace Mutagen.Bethesda.Starfield
         {
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
-            if (item.ODTY is {} ODTYitem)
+            hash.Add(item.DirtinessScale);
+            if (item.XALG is {} XALGitem)
             {
-                hash.Add(ODTYitem);
-            }
-            if (item.ODRT is {} ODRTitem)
-            {
-                hash.Add(ODRTitem);
-            }
-            if (item.XALG is {} XALGItem)
-            {
-                hash.Add(XALGItem);
+                hash.Add(XALGitem);
             }
             hash.Add(item.Keywords);
             if (item.SMLS is {} SMLSitem)
@@ -1661,24 +1595,13 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.ODTY) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.DirtinessScale) ?? true))
             {
-                item.ODTY = rhs.ODTY;
-            }
-            if ((copyMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.ODRT) ?? true))
-            {
-                item.ODRT = rhs.ODRT;
+                item.DirtinessScale = rhs.DirtinessScale;
             }
             if ((copyMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.XALG) ?? true))
             {
-                if(rhs.XALG is {} XALGrhs)
-                {
-                    item.XALG = XALGrhs.ToArray();
-                }
-                else
-                {
-                    item.XALG = default;
-                }
+                item.XALG = rhs.XALG;
             }
             if ((copyMask?.GetShouldTranslate((int)SoundMarker_FieldIndex.Keywords) ?? true))
             {
@@ -1915,15 +1838,12 @@ namespace Mutagen.Bethesda.Starfield
                 item: ObjectBoundsItem,
                 writer: writer,
                 translationParams: translationParams);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            PercentBinaryTranslation.Write(
                 writer: writer,
-                item: item.ODTY,
+                item: item.DirtinessScale,
+                integerType: FloatIntegerType.UInt,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.ODRT,
-                header: translationParams.ConvertToCustom(RecordTypes.ODRT));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            UInt64BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.XALG,
                 header: translationParams.ConvertToCustom(RecordTypes.XALG));
@@ -2032,19 +1952,15 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ODTY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)SoundMarker_FieldIndex.ODTY;
-                }
-                case RecordTypeInts.ODRT:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ODRT = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)SoundMarker_FieldIndex.ODRT;
+                    item.DirtinessScale = PercentBinaryTranslation.Parse(
+                        reader: frame,
+                        integerType: FloatIntegerType.UInt);
+                    return (int)SoundMarker_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.XALG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XALG = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.XALG = frame.ReadUInt64();
                     return (int)SoundMarker_FieldIndex.XALG;
                 }
                 case RecordTypeInts.KSIZ:
@@ -2140,17 +2056,13 @@ namespace Mutagen.Bethesda.Starfield
         private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
-        #region ODTY
-        private int? _ODTYLocation;
-        public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
-        #endregion
-        #region ODRT
-        private int? _ODRTLocation;
-        public Single? ODRT => _ODRTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODRTLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region DirtinessScale
+        private int? _DirtinessScaleLocation;
+        public Percent DirtinessScale => _DirtinessScaleLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DirtinessScaleLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt) : default(Percent);
         #endregion
         #region XALG
         private int? _XALGLocation;
-        public ReadOnlyMemorySlice<Byte>? XALG => _XALGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        public UInt64? XALG => _XALGLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants)) : default(UInt64?);
         #endregion
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
@@ -2244,13 +2156,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ODTY:
                 {
-                    _ODTYLocation = (stream.Position - offset);
-                    return (int)SoundMarker_FieldIndex.ODTY;
-                }
-                case RecordTypeInts.ODRT:
-                {
-                    _ODRTLocation = (stream.Position - offset);
-                    return (int)SoundMarker_FieldIndex.ODRT;
+                    _DirtinessScaleLocation = (stream.Position - offset);
+                    return (int)SoundMarker_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.XALG:
                 {

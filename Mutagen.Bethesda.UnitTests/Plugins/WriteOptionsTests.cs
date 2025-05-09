@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Starfield;
 using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.Testing.AutoData;
+using Noggog;
 using Noggog.Testing.Extensions;
 using Xunit;
 
@@ -306,4 +307,27 @@ public class WriteOptionsTests
             .WithFileSystem(fileSystem)
             .WriteAsync();
     }
+    
+    [Theory, MutagenModAutoData(GameRelease.Oblivion)]
+    public async Task NoSyncOverridesRespected(
+        OblivionMod mod,
+        FormKey fk,
+        FormKey fk2,
+        FormKey fk3,
+        IFileSystem fileSystem,
+        DirectoryPath existingDir)
+    {
+        mod.Npcs.AddNew();
+        mod.Npcs.AddNew(fk);
+        mod.Npcs.AddNew(fk2);
+        mod.Npcs.AddNew(fk3);
+        await mod.BeginWrite
+            .ToPath(Path.Combine(existingDir, mod.ModKey.FileName))
+            .WithLoadOrderFromHeaderMasters()
+            .WithNoDataFolder()
+            .WithMastersListOrdering(MastersListOrderingOption.NoCheck)
+            .WithFileSystem(fileSystem)
+            .WriteAsync();
+    }
+
 }

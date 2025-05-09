@@ -27,4 +27,6 @@ public enum GameRelease
     Starfield = 8,
     [Description("Fallout 4 VR")]
     Fallout4VR = 9,
+    [Description("Oblivion Remastered")]
+    OblivionRE = 10,
 }

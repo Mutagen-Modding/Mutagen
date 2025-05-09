@@ -4,18 +4,16 @@
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <Float name="ODTY" recordType="ODTY" unknown="true" />
-      <RefDirect name="PTTA" refName="PTTA" unknown="true" />
-      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
+      <RefDirect name="ObjectPaletteDefaults" refName="ObjectPaletteDefaults" />
       <RefDirect name="Transforms" refName="Transforms" />
       <FormLink name="SnapTemplate" refName="SnapTemplate" recordType="SNTP" />
       <FormLink name="SnapBehavior" refName="SnapTemplate" recordType="SNBH" />
-      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <UInt64 name="XALG" recordType="XALG" unknown="true" />
       <RefList name="Components" refName="AComponent" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
       <RefDirect name="Destructible" refName="Destructible" />
-      <String name="Description" recordType="DESC" translated="DL" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
@@ -23,21 +21,19 @@
       <List name="ForcedLocations" recordType="FTYP" >
         <FormLink refName="LocationReferenceType" />
       </List>
-      <ByteArray name="PNAM" recordType="PNAM" unknown="true" />
-      <String name="ActivateTextOverride" recordType="ATTX" translated="Normal" />
+      <FormLink name="NativeTerminal" refName="TerminalMenu" recordType="NTRM" />
+      <Color name="MarkerColor" recordType="PNAM" binaryType="Alpha" />
       <RefDirect name="LoopingSound" refName="SoundReference" recordType="ALSH" />
+      <FormLink name="Water" refName="Water" recordType="WTFM" />
+      <String name="ActivateTextOverride" recordType="ATTX" translated="Normal" />
       <Enum name="Flags" enumName="Furniture.Flag" recordType="FNAM" byteLength="2" />
-      <ByteArray name="JNAM" recordType="JNAM" unknown="true" />
-      <Bool name="INAM" boolAsMarker="INAM" />
+      <UInt16 name="ActivationAngleForPlayer" recordType="JNAM" />
+      <Bool name="ActivationAngleInvertFacing" boolAsMarker="INAM" />
+      <RefList name="ContainerItems" counterRecType="COCT" refName="ContainerEntry" />
       <Enum name="MarkerFlags" enumName="FurnitureMarkerFlags" recordType="MNAM" />
-      <ByteArray name="GNAM" recordType="GNAM" unknown="true" />
-      <Data recordType="WBDT">
-        <Fields>
-          <Enum name="BenchType" enumName="Furniture.BenchTypes" byteLength="1" />
-          <Break />
-          <Enum name="UsesSkill" enumName="Skill" byteLength="1" nullable="True" nullableBinaryFallback="-1" />
-        </Fields>
-      </Data>
+      <UInt16 name="ActivationAngleForSittingActor" recordType="GNAM" />
+      <Enum name="BenchType" enumName="Furniture.BenchTypes" recordType="WBDT" byteLength="1" />
+      <FormLink name="AssociatedForm" refName="StarfieldMajorRecord" recordType="NAM1" />
       <FormLink name="FurnitureTemplate" refName="Furniture" recordType="FTMP" />
       <RefList name="MarkerEntryPoints" refName="FurnitureMarkerEntryPoints" />
       <String name="MarkerModel" recordType="XMRK" />
@@ -51,7 +47,7 @@
   <Object name="FurnitureMarkerEntryPoints" objType="Subrecord" recordType="FNPR">
     <Fields>
       <Enum name="Type" enumName="Furniture.AnimationType" byteLength="2" />
-      <Enum name="Points" enumName="Furniture.EntryPointType" byteLength="2" />
+      <Enum name="EntryPoints" enumName="Furniture.EntryPointType" byteLength="2" />
     </Fields>
   </Object>
   <Object name="FurnitureMarkerParameters" objType="Subrecord">
@@ -59,8 +55,8 @@
       <P3Float name="Offset" />
       <Float name="RotationZ" isRotation="true" />
       <FormLink name="Keyword" refName="Keyword" />
-      <Enum name="EntryTypes" byteLength="1" enumName="Furniture.EntryParameterType" />
-      <ByteArray name="Unknown" byteLength="7" nullable="False" />
+      <Enum name="EntryTypes" byteLength="4" enumName="Furniture.EntryParameterType" />
+      <Enum name="ExitTypes" byteLength="4" enumName="Furniture.EntryParameterType" />
     </Fields>
   </Object>
   <Object name="FurnitureMarkerFile" objType="Subrecord">

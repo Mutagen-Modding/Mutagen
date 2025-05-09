@@ -27,7 +27,8 @@ public static class PrimitiveBinaryTranslationExt
         }
         catch (Exception ex)
         {
-            throw SubrecordException.Enrich(ex, header);
+            SubrecordException.EnrichAndThrow(ex, header);
+            throw;
         }
     }
 
@@ -36,11 +37,16 @@ public static class PrimitiveBinaryTranslationExt
         MutagenWriter writer,
         TItem? item,
         RecordType header,
-        Action<MutagenWriter, TItem>? write = null)
+        Action<MutagenWriter, TItem>? write = null,
+        RecordType? markerType = null)
         where TItem : struct
         where TReader : IMutagenReadStream
     {
         if (!item.HasValue) return;
+        if (markerType != null)
+        {
+            using (HeaderExport.Subrecord(writer, markerType.Value)) {}
+        }
         write ??= transl.Write;
         try
         {
@@ -51,7 +57,8 @@ public static class PrimitiveBinaryTranslationExt
         }
         catch (Exception ex)
         {
-            throw SubrecordException.Enrich(ex, header);
+            SubrecordException.EnrichAndThrow(ex, header);
+            throw;
         }
     }
 

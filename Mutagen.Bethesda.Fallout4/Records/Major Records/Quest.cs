@@ -195,7 +195,8 @@ partial class QuestBinaryCreateTranslation
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, obj);
+            RecordException.EnrichAndThrow(ex, obj);
+            throw;
         }
     }
 }
@@ -317,7 +318,8 @@ partial class QuestBinaryWriteTranslation
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, obj);
+            RecordException.EnrichAndThrow(ex, obj);
+            throw;
         }
     }
 }
@@ -518,7 +520,8 @@ partial class QuestBinaryOverlay
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, this);
+            RecordException.EnrichAndThrow(ex, this);
+            throw;
         }
     }
 }

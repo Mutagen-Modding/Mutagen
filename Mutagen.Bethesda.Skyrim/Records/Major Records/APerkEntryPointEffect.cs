@@ -1,7 +1,3 @@
-using Mutagen.Bethesda.Plugins.Binary.Overlay;
-using Mutagen.Bethesda.Plugins.Binary.Streams;
-using Mutagen.Bethesda.Plugins.Binary.Translations;
-
 namespace Mutagen.Bethesda.Skyrim;
 
 /// <summary>
@@ -135,28 +131,5 @@ public partial class APerkEntryPointEffect
         Spell = 5,
         String = 6,
         LString = 7,
-    }
-}
-
-partial class APerkEntryPointEffectBinaryCreateTranslation
-{
-    public static partial ParseResult FillBinaryFunctionParametersCustom(MutagenFrame frame, IAPerkEntryPointEffect item, PreviousParse lastParsed)
-    {
-        return lastParsed;
-    }
-}
-
-partial class APerkEntryPointEffectBinaryWriteTranslation
-{
-    public static partial void WriteBinaryFunctionParametersCustom(MutagenWriter writer, IAPerkEntryPointEffectGetter item)
-    {
-    }
-}
-
-partial class APerkEntryPointEffectBinaryOverlay
-{
-    public partial ParseResult FunctionParametersCustomParse(OverlayStream stream, int offset, PreviousParse lastParsed)
-    {
-        return lastParsed;
     }
 }

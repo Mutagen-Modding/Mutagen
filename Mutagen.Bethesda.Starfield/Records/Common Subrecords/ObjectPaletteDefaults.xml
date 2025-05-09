@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ObjectPaletteDefaults" objType="Subrecord" recordType="OPDS">
+    <Fields>
+      <Enum name="Flags" enumName="ObjectPaletteDefaults.Flag" byteLength="4" />
+      <Float name="SinkMeters" />
+      <Float name="SinkVariance" />
+      <Float name="XYOffsetVariance" />
+      <Enum name="FootprintSize" enumName="ObjectPaletteDefaults.FootprintSizes" byteLength="4" />
+      <Float name="ScalePercent" />
+      <Float name="ScaleVariance" />
+      <Float name="AngleXDegrees" isRotation="true" />
+      <Float name="AngleXVariance" isRotation="true" />
+      <Float name="AngleYDegrees" isRotation="true" />
+      <Float name="AngleYVariance" isRotation="true" />
+      <Float name="AngleZDegrees" isRotation="true" />
+      <Float name="AngleZVariance" isRotation="true" />
+      <Float name="SlopePercent" />
+      <Float name="SlopePercentVariance" />
+      <Float name="Density" />
+      <Float name="FrequencyPercent" divisor="100" />
+      <Float name="SlopeLimit" isRotation="true" />
+      <Float name="DistanceBelowWater" />
+      <Float name="DistanceAboveWater" />
+    </Fields>
+  </Object>
+</Loqui>

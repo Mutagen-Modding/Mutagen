@@ -1,4 +1,5 @@
 using DynamicData.Binding;
+using Noggog.WorkEngine;
 using Noggog.WPF;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -26,12 +27,17 @@ public class RunningTestsVM : ViewModel
 
     public async Task Run(MainVM mvm)
     {
+        var dropoff = new WorkDropoff();
+        using var consumer = new WorkConsumer(
+            new NumWorkThreadsConstant(null),
+            dropoff, dropoff);
+        consumer.Start();
         Groups.AddRange(mvm.Groups
             .Where(g => g.Do)
             .Where(g => g.Passthroughs.Select(p => p.Do).Any())
             .Select(g => new GroupTestVM(this, g)));
         await Task.WhenAll(Groups
             .SelectMany(g => g.Passthroughs.Items)
-            .Select(t => t.Run()));
+            .Select(t => t.Run(dropoff)));
     }
 }

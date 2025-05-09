@@ -37,7 +37,7 @@ These types of goals can be achieved with a builder:
 ```cs
 var outgoing = new SkyrimMod(ModKey.FromFileName("MyMod.esp"), SkyrimRelease.SkyrimSE);
 using var env = GameEnvironment.Typical.Builder<ISkyrimMod, ISkyrimModGetter>(GameRelease.SkyrimSE)
-    .TransformLoadOrder(x => x.Where(x => !x.ModKey.Name.Contains("SkipMe")))
+    .TransformLoadOrderListings(x => x.Where(x => !x.ModKey.Name.Contains("SkipMe")))
     .WithTargetDataFolder(someCustomDataFolderPath)
     .WithOutputMod(outgoing)
     .Build();

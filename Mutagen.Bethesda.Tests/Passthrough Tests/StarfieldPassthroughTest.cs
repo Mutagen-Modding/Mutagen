@@ -10,8 +10,8 @@ namespace Mutagen.Bethesda.Tests;
 
 public class StarfieldPassthroughTest : PassthroughTest
 {
-    public StarfieldPassthroughTest(PassthroughTestParams param)
-        : base(param, GameRelease.Starfield)
+    public StarfieldPassthroughTest(PassthroughTestParams param, GameRelease gameRelease)
+        : base(param, gameRelease)
     {
     }
 
@@ -21,7 +21,7 @@ public class StarfieldPassthroughTest : PassthroughTest
             .FromPath(
                 new ModPath(ModKey, path.Path))
             .WithKnownMasters(MasterFlagsLookup.ListedOrder.ToArray())
-            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .Parallel(parallel: Settings.ParallelModTranslations)
             .WithStringsParameters(stringsParams)
             .ThrowIfUnknownSubrecord()
             .Construct();
@@ -33,7 +33,7 @@ public class StarfieldPassthroughTest : PassthroughTest
             .FromPath(
                 new ModPath(ModKey, path.Path))
             .WithDefaultLoadOrder()
-            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .Parallel(parallel: Settings.ParallelModTranslations)
             .WithStringsParameters(stringsParams)
             .ThrowIfUnknownSubrecord()
             .Mutable()
@@ -50,7 +50,7 @@ public class StarfieldPassthroughTest : PassthroughTest
         return ret;
     }
 
-    protected override Processor ProcessorFactory() => new StarfieldProcessor(Settings.ParallelProcessingSteps, MasterFlagsLookup);
+    protected override Processor ProcessorFactory() => new StarfieldProcessor(WorkDropoff, MasterFlagsLookup);
     
     public override AlignmentRules GetAlignmentRules()
     {

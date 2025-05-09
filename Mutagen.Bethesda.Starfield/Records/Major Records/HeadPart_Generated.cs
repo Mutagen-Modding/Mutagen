@@ -148,15 +148,15 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
-        #region NAM2
-        public String? NAM2 { get; set; }
+        #region ColorMapping
+        public String? ColorMapping { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IHeadPartGetter.NAM2 => this.NAM2;
+        String? IHeadPartGetter.ColorMapping => this.ColorMapping;
         #endregion
-        #region NAM3
-        public String? NAM3 { get; set; }
+        #region PartMask
+        public String? PartMask { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IHeadPartGetter.NAM3 => this.NAM3;
+        String? IHeadPartGetter.PartMask => this.PartMask;
         #endregion
         #region TextureSet
         private readonly IFormLinkNullable<ITextureSetGetter> _TextureSet = new FormLinkNullable<ITextureSetGetter>();
@@ -178,15 +178,29 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IFormListGetter> IHeadPartGetter.ValidRaces => this.ValidRaces;
         #endregion
-        #region MNAM
-        private readonly IFormLinkNullable<IMorphableObjectGetter> _MNAM = new FormLinkNullable<IMorphableObjectGetter>();
-        public IFormLinkNullable<IMorphableObjectGetter> MNAM
+        #region Morph
+        private readonly IFormLinkNullable<IMorphableObjectGetter> _Morph = new FormLinkNullable<IMorphableObjectGetter>();
+        public IFormLinkNullable<IMorphableObjectGetter> Morph
         {
-            get => _MNAM;
-            set => _MNAM.SetTo(value);
+            get => _Morph;
+            set => _Morph.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IMorphableObjectGetter> IHeadPartGetter.MNAM => this.MNAM;
+        IFormLinkNullableGetter<IMorphableObjectGetter> IHeadPartGetter.Morph => this.Morph;
+        #endregion
+        #region Conditions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
+        {
+            get => this._Conditions;
+            init => this._Conditions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConditionGetter> IHeadPartGetter.Conditions => _Conditions;
+        #endregion
+
         #endregion
 
         #region To String
@@ -219,11 +233,12 @@ namespace Mutagen.Bethesda.Starfield
                 this.Flags = initialValue;
                 this.Type = initialValue;
                 this.ExtraParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.NAM2 = initialValue;
-                this.NAM3 = initialValue;
+                this.ColorMapping = initialValue;
+                this.PartMask = initialValue;
                 this.TextureSet = initialValue;
                 this.ValidRaces = initialValue;
-                this.MNAM = initialValue;
+                this.Morph = initialValue;
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -240,11 +255,12 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Flags,
                 TItem Type,
                 TItem ExtraParts,
-                TItem NAM2,
-                TItem NAM3,
+                TItem ColorMapping,
+                TItem PartMask,
                 TItem TextureSet,
                 TItem ValidRaces,
-                TItem MNAM)
+                TItem Morph,
+                TItem Conditions)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -260,11 +276,12 @@ namespace Mutagen.Bethesda.Starfield
                 this.Flags = Flags;
                 this.Type = Type;
                 this.ExtraParts = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ExtraParts, Enumerable.Empty<(int Index, TItem Value)>());
-                this.NAM2 = NAM2;
-                this.NAM3 = NAM3;
+                this.ColorMapping = ColorMapping;
+                this.PartMask = PartMask;
                 this.TextureSet = TextureSet;
                 this.ValidRaces = ValidRaces;
-                this.MNAM = MNAM;
+                this.Morph = Morph;
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -282,11 +299,12 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Flags;
             public TItem Type;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ExtraParts;
-            public TItem NAM2;
-            public TItem NAM3;
+            public TItem ColorMapping;
+            public TItem PartMask;
             public TItem TextureSet;
             public TItem ValidRaces;
-            public TItem MNAM;
+            public TItem Morph;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
             #endregion
 
             #region Equals
@@ -306,11 +324,12 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.Type, rhs.Type)) return false;
                 if (!object.Equals(this.ExtraParts, rhs.ExtraParts)) return false;
-                if (!object.Equals(this.NAM2, rhs.NAM2)) return false;
-                if (!object.Equals(this.NAM3, rhs.NAM3)) return false;
+                if (!object.Equals(this.ColorMapping, rhs.ColorMapping)) return false;
+                if (!object.Equals(this.PartMask, rhs.PartMask)) return false;
                 if (!object.Equals(this.TextureSet, rhs.TextureSet)) return false;
                 if (!object.Equals(this.ValidRaces, rhs.ValidRaces)) return false;
-                if (!object.Equals(this.MNAM, rhs.MNAM)) return false;
+                if (!object.Equals(this.Morph, rhs.Morph)) return false;
+                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -322,11 +341,12 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Flags);
                 hash.Add(this.Type);
                 hash.Add(this.ExtraParts);
-                hash.Add(this.NAM2);
-                hash.Add(this.NAM3);
+                hash.Add(this.ColorMapping);
+                hash.Add(this.PartMask);
                 hash.Add(this.TextureSet);
                 hash.Add(this.ValidRaces);
-                hash.Add(this.MNAM);
+                hash.Add(this.Morph);
+                hash.Add(this.Conditions);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -368,11 +388,23 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (!eval(this.NAM2)) return false;
-                if (!eval(this.NAM3)) return false;
+                if (!eval(this.ColorMapping)) return false;
+                if (!eval(this.PartMask)) return false;
                 if (!eval(this.TextureSet)) return false;
                 if (!eval(this.ValidRaces)) return false;
-                if (!eval(this.MNAM)) return false;
+                if (!eval(this.Morph)) return false;
+                if (this.Conditions != null)
+                {
+                    if (!eval(this.Conditions.Overall)) return false;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -412,11 +444,23 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (eval(this.NAM2)) return true;
-                if (eval(this.NAM3)) return true;
+                if (eval(this.ColorMapping)) return true;
+                if (eval(this.PartMask)) return true;
                 if (eval(this.TextureSet)) return true;
                 if (eval(this.ValidRaces)) return true;
-                if (eval(this.MNAM)) return true;
+                if (eval(this.Morph)) return true;
+                if (this.Conditions != null)
+                {
+                    if (eval(this.Conditions.Overall)) return true;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -465,11 +509,26 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                obj.NAM2 = eval(this.NAM2);
-                obj.NAM3 = eval(this.NAM3);
+                obj.ColorMapping = eval(this.ColorMapping);
+                obj.PartMask = eval(this.PartMask);
                 obj.TextureSet = eval(this.TextureSet);
                 obj.ValidRaces = eval(this.ValidRaces);
-                obj.MNAM = eval(this.MNAM);
+                obj.Morph = eval(this.Morph);
+                if (Conditions != null)
+                {
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (Conditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.Conditions.Specific = l;
+                        foreach (var item in Conditions.Specific)
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -544,13 +603,13 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.NAM2 ?? true)
+                    if (printMask?.ColorMapping ?? true)
                     {
-                        sb.AppendItem(NAM2, "NAM2");
+                        sb.AppendItem(ColorMapping, "ColorMapping");
                     }
-                    if (printMask?.NAM3 ?? true)
+                    if (printMask?.PartMask ?? true)
                     {
-                        sb.AppendItem(NAM3, "NAM3");
+                        sb.AppendItem(PartMask, "PartMask");
                     }
                     if (printMask?.TextureSet ?? true)
                     {
@@ -560,9 +619,28 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(ValidRaces, "ValidRaces");
                     }
-                    if (printMask?.MNAM ?? true)
+                    if (printMask?.Morph ?? true)
                     {
-                        sb.AppendItem(MNAM, "MNAM");
+                        sb.AppendItem(Morph, "Morph");
+                    }
+                    if ((printMask?.Conditions?.Overall ?? true)
+                        && Conditions is {} ConditionsItem)
+                    {
+                        sb.AppendLine("Conditions =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ConditionsItem.Overall);
+                            if (ConditionsItem.Specific != null)
+                            {
+                                foreach (var subItem in ConditionsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -581,11 +659,12 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Flags;
             public Exception? Type;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ExtraParts;
-            public Exception? NAM2;
-            public Exception? NAM3;
+            public Exception? ColorMapping;
+            public Exception? PartMask;
             public Exception? TextureSet;
             public Exception? ValidRaces;
-            public Exception? MNAM;
+            public Exception? Morph;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
             #endregion
 
             #region IErrorMask
@@ -606,16 +685,18 @@ namespace Mutagen.Bethesda.Starfield
                         return Type;
                     case HeadPart_FieldIndex.ExtraParts:
                         return ExtraParts;
-                    case HeadPart_FieldIndex.NAM2:
-                        return NAM2;
-                    case HeadPart_FieldIndex.NAM3:
-                        return NAM3;
+                    case HeadPart_FieldIndex.ColorMapping:
+                        return ColorMapping;
+                    case HeadPart_FieldIndex.PartMask:
+                        return PartMask;
                     case HeadPart_FieldIndex.TextureSet:
                         return TextureSet;
                     case HeadPart_FieldIndex.ValidRaces:
                         return ValidRaces;
-                    case HeadPart_FieldIndex.MNAM:
-                        return MNAM;
+                    case HeadPart_FieldIndex.Morph:
+                        return Morph;
+                    case HeadPart_FieldIndex.Conditions:
+                        return Conditions;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -644,11 +725,11 @@ namespace Mutagen.Bethesda.Starfield
                     case HeadPart_FieldIndex.ExtraParts:
                         this.ExtraParts = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case HeadPart_FieldIndex.NAM2:
-                        this.NAM2 = ex;
+                    case HeadPart_FieldIndex.ColorMapping:
+                        this.ColorMapping = ex;
                         break;
-                    case HeadPart_FieldIndex.NAM3:
-                        this.NAM3 = ex;
+                    case HeadPart_FieldIndex.PartMask:
+                        this.PartMask = ex;
                         break;
                     case HeadPart_FieldIndex.TextureSet:
                         this.TextureSet = ex;
@@ -656,8 +737,11 @@ namespace Mutagen.Bethesda.Starfield
                     case HeadPart_FieldIndex.ValidRaces:
                         this.ValidRaces = ex;
                         break;
-                    case HeadPart_FieldIndex.MNAM:
-                        this.MNAM = ex;
+                    case HeadPart_FieldIndex.Morph:
+                        this.Morph = ex;
+                        break;
+                    case HeadPart_FieldIndex.Conditions:
+                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -688,11 +772,11 @@ namespace Mutagen.Bethesda.Starfield
                     case HeadPart_FieldIndex.ExtraParts:
                         this.ExtraParts = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case HeadPart_FieldIndex.NAM2:
-                        this.NAM2 = (Exception?)obj;
+                    case HeadPart_FieldIndex.ColorMapping:
+                        this.ColorMapping = (Exception?)obj;
                         break;
-                    case HeadPart_FieldIndex.NAM3:
-                        this.NAM3 = (Exception?)obj;
+                    case HeadPart_FieldIndex.PartMask:
+                        this.PartMask = (Exception?)obj;
                         break;
                     case HeadPart_FieldIndex.TextureSet:
                         this.TextureSet = (Exception?)obj;
@@ -700,8 +784,11 @@ namespace Mutagen.Bethesda.Starfield
                     case HeadPart_FieldIndex.ValidRaces:
                         this.ValidRaces = (Exception?)obj;
                         break;
-                    case HeadPart_FieldIndex.MNAM:
-                        this.MNAM = (Exception?)obj;
+                    case HeadPart_FieldIndex.Morph:
+                        this.Morph = (Exception?)obj;
+                        break;
+                    case HeadPart_FieldIndex.Conditions:
+                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -718,11 +805,12 @@ namespace Mutagen.Bethesda.Starfield
                 if (Flags != null) return true;
                 if (Type != null) return true;
                 if (ExtraParts != null) return true;
-                if (NAM2 != null) return true;
-                if (NAM3 != null) return true;
+                if (ColorMapping != null) return true;
+                if (PartMask != null) return true;
                 if (TextureSet != null) return true;
                 if (ValidRaces != null) return true;
-                if (MNAM != null) return true;
+                if (Morph != null) return true;
+                if (Conditions != null) return true;
                 return false;
             }
             #endregion
@@ -798,10 +886,10 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 {
-                    sb.AppendItem(NAM2, "NAM2");
+                    sb.AppendItem(ColorMapping, "ColorMapping");
                 }
                 {
-                    sb.AppendItem(NAM3, "NAM3");
+                    sb.AppendItem(PartMask, "PartMask");
                 }
                 {
                     sb.AppendItem(TextureSet, "TextureSet");
@@ -810,7 +898,25 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(ValidRaces, "ValidRaces");
                 }
                 {
-                    sb.AppendItem(MNAM, "MNAM");
+                    sb.AppendItem(Morph, "Morph");
+                }
+                if (Conditions is {} ConditionsItem)
+                {
+                    sb.AppendLine("Conditions =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ConditionsItem.Overall);
+                        if (ConditionsItem.Specific != null)
+                        {
+                            foreach (var subItem in ConditionsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
                 }
             }
             #endregion
@@ -826,11 +932,12 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Type = this.Type.Combine(rhs.Type);
                 ret.ExtraParts = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ExtraParts?.Overall, rhs.ExtraParts?.Overall), Noggog.ExceptionExt.Combine(this.ExtraParts?.Specific, rhs.ExtraParts?.Specific));
-                ret.NAM2 = this.NAM2.Combine(rhs.NAM2);
-                ret.NAM3 = this.NAM3.Combine(rhs.NAM3);
+                ret.ColorMapping = this.ColorMapping.Combine(rhs.ColorMapping);
+                ret.PartMask = this.PartMask.Combine(rhs.PartMask);
                 ret.TextureSet = this.TextureSet.Combine(rhs.TextureSet);
                 ret.ValidRaces = this.ValidRaces.Combine(rhs.ValidRaces);
-                ret.MNAM = this.MNAM.Combine(rhs.MNAM);
+                ret.Morph = this.Morph.Combine(rhs.Morph);
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -859,11 +966,12 @@ namespace Mutagen.Bethesda.Starfield
             public bool Flags;
             public bool Type;
             public bool ExtraParts;
-            public bool NAM2;
-            public bool NAM3;
+            public bool ColorMapping;
+            public bool PartMask;
             public bool TextureSet;
             public bool ValidRaces;
-            public bool MNAM;
+            public bool Morph;
+            public Condition.TranslationMask? Conditions;
             #endregion
 
             #region Ctors
@@ -876,11 +984,11 @@ namespace Mutagen.Bethesda.Starfield
                 this.Flags = defaultOn;
                 this.Type = defaultOn;
                 this.ExtraParts = defaultOn;
-                this.NAM2 = defaultOn;
-                this.NAM3 = defaultOn;
+                this.ColorMapping = defaultOn;
+                this.PartMask = defaultOn;
                 this.TextureSet = defaultOn;
                 this.ValidRaces = defaultOn;
-                this.MNAM = defaultOn;
+                this.Morph = defaultOn;
             }
 
             #endregion
@@ -894,11 +1002,12 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Flags, null));
                 ret.Add((Type, null));
                 ret.Add((ExtraParts, null));
-                ret.Add((NAM2, null));
-                ret.Add((NAM3, null));
+                ret.Add((ColorMapping, null));
+                ret.Add((PartMask, null));
                 ret.Add((TextureSet, null));
                 ret.Add((ValidRaces, null));
-                ret.Add((MNAM, null));
+                ret.Add((Morph, null));
+                ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1073,11 +1182,12 @@ namespace Mutagen.Bethesda.Starfield
         new HeadPart.Flag Flags { get; set; }
         new HeadPart.TypeEnum? Type { get; set; }
         new ExtendedList<IFormLinkGetter<IHeadPartGetter>> ExtraParts { get; }
-        new String? NAM2 { get; set; }
-        new String? NAM3 { get; set; }
+        new String? ColorMapping { get; set; }
+        new String? PartMask { get; set; }
         new IFormLinkNullable<ITextureSetGetter> TextureSet { get; set; }
         new IFormLinkNullable<IFormListGetter> ValidRaces { get; set; }
-        new IFormLinkNullable<IMorphableObjectGetter> MNAM { get; set; }
+        new IFormLinkNullable<IMorphableObjectGetter> Morph { get; set; }
+        new ExtendedList<Condition> Conditions { get; }
         #region Mutagen
         new HeadPart.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1122,11 +1232,12 @@ namespace Mutagen.Bethesda.Starfield
         HeadPart.Flag Flags { get; }
         HeadPart.TypeEnum? Type { get; }
         IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> ExtraParts { get; }
-        String? NAM2 { get; }
-        String? NAM3 { get; }
+        String? ColorMapping { get; }
+        String? PartMask { get; }
         IFormLinkNullableGetter<ITextureSetGetter> TextureSet { get; }
         IFormLinkNullableGetter<IFormListGetter> ValidRaces { get; }
-        IFormLinkNullableGetter<IMorphableObjectGetter> MNAM { get; }
+        IFormLinkNullableGetter<IMorphableObjectGetter> Morph { get; }
+        IReadOnlyList<IConditionGetter> Conditions { get; }
 
         #region Mutagen
         HeadPart.MajorFlag MajorFlags { get; }
@@ -1313,11 +1424,12 @@ namespace Mutagen.Bethesda.Starfield
         Flags = 10,
         Type = 11,
         ExtraParts = 12,
-        NAM2 = 13,
-        NAM3 = 14,
+        ColorMapping = 13,
+        PartMask = 14,
         TextureSet = 15,
         ValidRaces = 16,
-        MNAM = 17,
+        Morph = 17,
+        Conditions = 18,
     }
     #endregion
 
@@ -1328,9 +1440,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 11;
+        public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(HeadPart.Mask<>);
 
@@ -1369,8 +1481,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MODL,
                 RecordTypes.MODT,
                 RecordTypes.MOLM,
-                RecordTypes.DMDC,
-                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
@@ -1382,7 +1492,11 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.NAM3,
                 RecordTypes.TNAM,
                 RecordTypes.RNAM,
-                RecordTypes.MNAM);
+                RecordTypes.MNAM,
+                RecordTypes.CTDA,
+                RecordTypes.CITC,
+                RecordTypes.CIS1,
+                RecordTypes.CIS2);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -1433,11 +1547,12 @@ namespace Mutagen.Bethesda.Starfield
             item.Flags = default(HeadPart.Flag);
             item.Type = default;
             item.ExtraParts.Clear();
-            item.NAM2 = default;
-            item.NAM3 = default;
+            item.ColorMapping = default;
+            item.PartMask = default;
             item.TextureSet.Clear();
             item.ValidRaces.Clear();
-            item.MNAM.Clear();
+            item.Morph.Clear();
+            item.Conditions.Clear();
             base.Clear(item);
         }
         
@@ -1460,7 +1575,8 @@ namespace Mutagen.Bethesda.Starfield
             obj.ExtraParts.RemapLinks(mapping);
             obj.TextureSet.Relink(mapping);
             obj.ValidRaces.Relink(mapping);
-            obj.MNAM.Relink(mapping);
+            obj.Morph.Relink(mapping);
+            obj.Conditions.RemapLinks(mapping);
         }
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IHeadPart obj)
@@ -1576,11 +1692,15 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.ExtraParts,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.NAM2 = string.Equals(item.NAM2, rhs.NAM2);
-            ret.NAM3 = string.Equals(item.NAM3, rhs.NAM3);
+            ret.ColorMapping = string.Equals(item.ColorMapping, rhs.ColorMapping);
+            ret.PartMask = string.Equals(item.PartMask, rhs.PartMask);
             ret.TextureSet = item.TextureSet.Equals(rhs.TextureSet);
             ret.ValidRaces = item.ValidRaces.Equals(rhs.ValidRaces);
-            ret.MNAM = item.MNAM.Equals(rhs.MNAM);
+            ret.Morph = item.Morph.Equals(rhs.Morph);
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1677,15 +1797,15 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.NAM2 ?? true)
-                && item.NAM2 is {} NAM2Item)
+            if ((printMask?.ColorMapping ?? true)
+                && item.ColorMapping is {} ColorMappingItem)
             {
-                sb.AppendItem(NAM2Item, "NAM2");
+                sb.AppendItem(ColorMappingItem, "ColorMapping");
             }
-            if ((printMask?.NAM3 ?? true)
-                && item.NAM3 is {} NAM3Item)
+            if ((printMask?.PartMask ?? true)
+                && item.PartMask is {} PartMaskItem)
             {
-                sb.AppendItem(NAM3Item, "NAM3");
+                sb.AppendItem(PartMaskItem, "PartMask");
             }
             if (printMask?.TextureSet ?? true)
             {
@@ -1695,9 +1815,23 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.ValidRaces.FormKeyNullable, "ValidRaces");
             }
-            if (printMask?.MNAM ?? true)
+            if (printMask?.Morph ?? true)
             {
-                sb.AppendItem(item.MNAM.FormKeyNullable, "MNAM");
+                sb.AppendItem(item.Morph.FormKeyNullable, "Morph");
+            }
+            if (printMask?.Conditions?.Overall ?? true)
+            {
+                sb.AppendLine("Conditions =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Conditions)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
             }
         }
         
@@ -1777,13 +1911,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.ExtraParts.SequenceEqualNullable(rhs.ExtraParts)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)HeadPart_FieldIndex.NAM2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadPart_FieldIndex.ColorMapping) ?? true))
             {
-                if (!string.Equals(lhs.NAM2, rhs.NAM2)) return false;
+                if (!string.Equals(lhs.ColorMapping, rhs.ColorMapping)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)HeadPart_FieldIndex.NAM3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadPart_FieldIndex.PartMask) ?? true))
             {
-                if (!string.Equals(lhs.NAM3, rhs.NAM3)) return false;
+                if (!string.Equals(lhs.PartMask, rhs.PartMask)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)HeadPart_FieldIndex.TextureSet) ?? true))
             {
@@ -1793,9 +1927,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.ValidRaces.Equals(rhs.ValidRaces)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)HeadPart_FieldIndex.MNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Morph) ?? true))
             {
-                if (!lhs.MNAM.Equals(rhs.MNAM)) return false;
+                if (!lhs.Morph.Equals(rhs.Morph)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)HeadPart_FieldIndex.Conditions)))) return false;
             }
             return true;
         }
@@ -1840,17 +1978,18 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(Typeitem);
             }
             hash.Add(item.ExtraParts);
-            if (item.NAM2 is {} NAM2item)
+            if (item.ColorMapping is {} ColorMappingitem)
             {
-                hash.Add(NAM2item);
+                hash.Add(ColorMappingitem);
             }
-            if (item.NAM3 is {} NAM3item)
+            if (item.PartMask is {} PartMaskitem)
             {
-                hash.Add(NAM3item);
+                hash.Add(PartMaskitem);
             }
             hash.Add(item.TextureSet);
             hash.Add(item.ValidRaces);
-            hash.Add(item.MNAM);
+            hash.Add(item.Morph);
+            hash.Add(item.Conditions);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1904,9 +2043,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return ValidRacesInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.MNAM, out var MNAMInfo))
+            if (FormLinkInformation.TryFactory(obj.Morph, out var MorphInfo))
             {
-                yield return MNAMInfo;
+                yield return MorphInfo;
+            }
+            foreach (var item in obj.Conditions.SelectMany(f => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
             }
             yield break;
         }
@@ -2084,13 +2227,13 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.NAM2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.ColorMapping) ?? true))
             {
-                item.NAM2 = rhs.NAM2;
+                item.ColorMapping = rhs.ColorMapping;
             }
-            if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.NAM3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.PartMask) ?? true))
             {
-                item.NAM3 = rhs.NAM3;
+                item.PartMask = rhs.PartMask;
             }
             if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.TextureSet) ?? true))
             {
@@ -2100,9 +2243,33 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ValidRaces.SetTo(rhs.ValidRaces.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.MNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Morph) ?? true))
             {
-                item.MNAM.SetTo(rhs.MNAM.FormKeyNullable);
+                item.Morph.SetTo(rhs.Morph.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)HeadPart_FieldIndex.Conditions) ?? true))
+            {
+                errorMask?.PushIndex((int)HeadPart_FieldIndex.Conditions);
+                try
+                {
+                    item.Conditions.SetTo(
+                        rhs.Conditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             DeepCopyInCustom(
                 item: item,
@@ -2319,12 +2486,12 @@ namespace Mutagen.Bethesda.Starfield
                 });
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.NAM2,
+                item: item.ColorMapping,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM2),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.NAM3,
+                item: item.PartMask,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM3),
                 binaryType: StringBinaryType.NullTerminate);
             FormLinkBinaryTranslation.Instance.WriteNullable(
@@ -2337,8 +2504,19 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.RNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.MNAM,
+                item: item.Morph,
                 header: translationParams.ConvertToCustom(RecordTypes.MNAM));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
+                writer: writer,
+                items: item.Conditions,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
         }
 
         public void Write(
@@ -2431,8 +2609,6 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -2471,20 +2647,20 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM2 = StringBinaryTranslation.Instance.Parse(
+                    item.ColorMapping = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)HeadPart_FieldIndex.NAM2;
+                    return (int)HeadPart_FieldIndex.ColorMapping;
                 }
                 case RecordTypeInts.NAM3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM3 = StringBinaryTranslation.Instance.Parse(
+                    item.PartMask = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)HeadPart_FieldIndex.NAM3;
+                    return (int)HeadPart_FieldIndex.PartMask;
                 }
                 case RecordTypeInts.TNAM:
                 {
@@ -2501,8 +2677,18 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MNAM.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)HeadPart_FieldIndex.MNAM;
+                    item.Morph.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)HeadPart_FieldIndex.Morph;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: Condition_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: Condition.TryCreateFromBinary));
+                    return (int)HeadPart_FieldIndex.Conditions;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2588,13 +2774,13 @@ namespace Mutagen.Bethesda.Starfield
         public HeadPart.TypeEnum? Type => _TypeLocation.HasValue ? (HeadPart.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TypeLocation!.Value, _package.MetaData.Constants)) : default(HeadPart.TypeEnum?);
         #endregion
         public IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> ExtraParts { get; private set; } = Array.Empty<IFormLinkGetter<IHeadPartGetter>>();
-        #region NAM2
-        private int? _NAM2Location;
-        public String? NAM2 => _NAM2Location.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM2Location.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region ColorMapping
+        private int? _ColorMappingLocation;
+        public String? ColorMapping => _ColorMappingLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ColorMappingLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        #region NAM3
-        private int? _NAM3Location;
-        public String? NAM3 => _NAM3Location.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NAM3Location.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region PartMask
+        private int? _PartMaskLocation;
+        public String? PartMask => _PartMaskLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PartMaskLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region TextureSet
         private int? _TextureSetLocation;
@@ -2604,10 +2790,11 @@ namespace Mutagen.Bethesda.Starfield
         private int? _ValidRacesLocation;
         public IFormLinkNullableGetter<IFormListGetter> ValidRaces => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFormListGetter>(_package, _recordData, _ValidRacesLocation);
         #endregion
-        #region MNAM
-        private int? _MNAMLocation;
-        public IFormLinkNullableGetter<IMorphableObjectGetter> MNAM => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMorphableObjectGetter>(_package, _recordData, _MNAMLocation);
+        #region Morph
+        private int? _MorphLocation;
+        public IFormLinkNullableGetter<IMorphableObjectGetter> Morph => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMorphableObjectGetter>(_package, _recordData, _MorphLocation);
         #endregion
+        public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2694,8 +2881,6 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -2733,13 +2918,13 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.NAM2:
                 {
-                    _NAM2Location = (stream.Position - offset);
-                    return (int)HeadPart_FieldIndex.NAM2;
+                    _ColorMappingLocation = (stream.Position - offset);
+                    return (int)HeadPart_FieldIndex.ColorMapping;
                 }
                 case RecordTypeInts.NAM3:
                 {
-                    _NAM3Location = (stream.Position - offset);
-                    return (int)HeadPart_FieldIndex.NAM3;
+                    _PartMaskLocation = (stream.Position - offset);
+                    return (int)HeadPart_FieldIndex.PartMask;
                 }
                 case RecordTypeInts.TNAM:
                 {
@@ -2753,8 +2938,23 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.MNAM:
                 {
-                    _MNAMLocation = (stream.Position - offset);
-                    return (int)HeadPart_FieldIndex.MNAM;
+                    _MorphLocation = (stream.Position - offset);
+                    return (int)HeadPart_FieldIndex.Morph;
+                }
+                case RecordTypeInts.CTDA:
+                {
+                    this.Conditions = BinaryOverlayList.FactoryByArray<IConditionGetter>(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        translationParams: translationParams,
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: Condition_Registration.TriggerSpecs,
+                            triggersAlwaysAreNewRecords: true,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return (int)HeadPart_FieldIndex.Conditions;
                 }
                 default:
                     return base.FillRecordType(

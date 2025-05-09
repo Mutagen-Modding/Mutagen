@@ -143,7 +143,8 @@ namespace Mutagen.Bethesda.Plugins.Cache
             catch (Exception ex)
             {
                 var rec = Record as IMajorRecordGetter;
-                throw RecordException.Enrich(ex, ModKey, rec);
+                RecordException.EnrichAndThrow(ex, ModKey, rec);
+                throw;
             }
         }
 

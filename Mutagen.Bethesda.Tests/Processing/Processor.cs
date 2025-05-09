@@ -17,11 +17,13 @@ using Mutagen.Bethesda.Plugins.Masters.DI;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Strings.DI;
+using Noggog.WorkEngine;
 
 namespace Mutagen.Bethesda.Tests;
 
 public abstract class Processor
 {
+    public IWorkDropoff WorkDropoff { get; }
     public GameRelease GameRelease { get; }
     public IReadOnlyCache<IModMasterStyledGetter, ModKey> MasterFlagLookup { get; }
     public readonly GameConstants Meta;
@@ -33,7 +35,6 @@ public abstract class Processor
     protected ParsingMeta Bundle;
     protected ModPath SourcePath;
     protected DirectoryPath TempFolder;
-    public bool DoMultithreading = true;
     public ModKey ModKey => SourcePath.ModKey;
     protected DirectoryPath DataFolder => new DirectoryInfo(Path.GetDirectoryName(SourcePath));
 
@@ -51,15 +52,15 @@ public abstract class Processor
     public virtual KeyValuePair<RecordType, FormKey>[] TrimmedRecords =>
         Array.Empty<KeyValuePair<RecordType, FormKey>>();
 
-    public Processor(bool multithread, GameRelease release, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup)
+    public Processor(IWorkDropoff workDropoff, GameRelease release, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup)
     {
+        WorkDropoff = workDropoff;
         GameRelease = release;
         MasterFlagLookup = masterFlagLookup;
         Meta = GameConstants.Get(GameRelease);
-        DoMultithreading = multithread;
         ParallelOptions = new ParallelOptions()
         {
-            MaxDegreeOfParallelism = multithread ? -1 : 1
+            MaxDegreeOfParallelism = -1
         };
     }
 
@@ -103,7 +104,7 @@ public abstract class Processor
         {
             await PreProcessorJobs(streamGetter);
 
-            await Task.WhenAll(ExtraJobs(streamGetter));
+            await WorkDropoff.EnqueueAndWait(ExtraJobs(streamGetter), x => x());
 
             AddDynamicProcessorInstructions();
             Parallel.ForEach(DynamicProcessors.Keys
@@ -118,14 +119,14 @@ public abstract class Processor
 
         var config = Instructions.GetConfig();
 
-        using (var processor = new BinaryFileProcessor(
-                   new FileStream(preprocessedPath, FileMode.Open, FileAccess.Read),
-                   config))
+        await using (var processor = new BinaryFileProcessor(
+                         new FileStream(preprocessedPath, FileMode.Open, FileAccess.Read),
+                         config))
         {
             try
             {
-                using var outStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write);
-                processor.CopyTo(outStream);
+                await using var outStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write);
+                await processor.CopyToAsync(outStream);
             }
             catch (Exception)
             {
@@ -154,26 +155,27 @@ public abstract class Processor
         }
     }
 
-    protected virtual async Task PreProcessorJobs(Func<IMutagenReadStream> streamGetter)
+    protected async virtual Task PreProcessorJobs(Func<IMutagenReadStream> streamGetter)
     {
     }
 
-    protected virtual IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
+    protected virtual IEnumerable<Func<Task>> ExtraJobs(Func<IMutagenReadStream> streamGetter)
     {
-        yield return TaskExt.Run(DoMultithreading, () => RemoveEmptyGroups(streamGetter));
+        yield return async () => RemoveEmptyGroups(streamGetter);
+
+        yield return async () => FixGroupFormIdOverflows(streamGetter);
 
         if (GameRelease.ToCategory().HasLocalization())
         {
-            yield return TaskExt.Run(DoMultithreading, () => RealignStrings(streamGetter));
+            yield return () => RealignStrings(streamGetter);
         }
 
-        yield return TaskExt.Run(DoMultithreading, () => RemoveDeletedContent(streamGetter));
-        // yield return TaskExt.Run(DoMultithreading, () => OrderOverridenForms(streamGetter));
+        yield return async () => RemoveDeletedContent(streamGetter);
+        // yield return () => OrderOverridenForms(streamGetter);
     }
 
     protected virtual void AddDynamicProcessorInstructions()
     {
-        AddDynamicProcessing(RecordType.Null, ProcessEDID);
         AddDynamicProcessing(RecordType.Null, ProcessMajorRecordFormIDOverflow);
         AddDynamicProcessing(RecordType.Null, ProcessCompression);
     }
@@ -242,19 +244,6 @@ public abstract class Processor
         });
     }
 
-    public void ProcessEDID(
-        MajorRecordFrame majorFrame,
-        long fileOffset)
-    {
-        if (majorFrame.IsDeleted) return;
-        if (!majorFrame.TryFindSubrecord("EDID", out var edidFrame)) return;
-        var formKey = FormKey.Factory(Masters, majorFrame.FormID, reference: false);
-        ProcessStringTermination(
-            edidFrame,
-            fileOffset + majorFrame.HeaderLength + edidFrame.Location,
-            formKey);
-    }
-
     public void ProcessMajorRecordFormIDOverflow(
         MajorRecordFrame majorFrame,
         long fileOffset)
@@ -266,23 +255,6 @@ public abstract class Processor
         Instructions.SetSubstitution(
             fileOffset + Meta.MajorConstants.FormIDLocationOffset + 3,
             _numMasters);
-    }
-
-    private bool IsStarfieldMaster(ModKey modKey)
-    {
-        switch (modKey.FileName.String)
-        {
-            case "OldMars.esm":
-            case "Constellation.esm":
-            case "SFBGS003.esm":
-            case "SFBGS004.esm":
-            case "SFBGS006.esm":
-            case "SFBGS007.esm":
-            case "SFBGS008.esm":
-                return true;
-        }
-
-        return false;
     }
 
     public void ProcessCompression(
@@ -360,24 +332,34 @@ public abstract class Processor
         return ProcessFormIDOverflows(pin, offsetLoc, ref loc, amount: pin.ContentLength / 4);
     }
 
-    public void ProcessStringTermination(
-        SubrecordFrame subFrame,
-        long refLoc,
-        FormKey formKey)
+    public void ProcessFormIDOverflowsForRecords(
+        MajorRecordFrame majorFrame,
+        long fileOffset, 
+        params RecordType[] types)
+    {
+        foreach (var type in types)
+        {
+            foreach (var rec in majorFrame.FindEnumerateSubrecords(type))
+            {
+                ProcessFormIDOverflow(rec, fileOffset);
+            }
+        }
+    }
+
+    public int ProcessStringTermination(
+        SubrecordPinFrame subFrame,
+        long fileOffset)
     {
         var nullIndex = MemoryExtensions.IndexOf<byte>(subFrame.Content, default(byte));
         if (nullIndex == -1) throw new ArgumentException();
-        if (nullIndex == subFrame.Content.Length - 1) return;
+        if (nullIndex == subFrame.Content.Length - 1) return 0;
         // Extra content pass null terminator.  Trim 
+        var range = RangeInt64.FromLength(
+            fileOffset + subFrame.Location + subFrame.HeaderLength + nullIndex + 1,
+            subFrame.Content.Length - nullIndex - 1);
         Instructions.SetRemove(
-            section: RangeInt64.FromLength(
-                refLoc + subFrame.HeaderLength + nullIndex + 1,
-                subFrame.Content.Length - nullIndex));
-        ProcessLengths(
-            frame: subFrame,
-            amount: nullIndex + 1,
-            refLoc: refLoc,
-            formKey: formKey);
+            section: range);
+        return checked((int)range.Width);
     }
 
     public void ModifyParentGroupLengths(long amount, FormKey formKey)
@@ -520,6 +502,36 @@ public abstract class Processor
                 sub: lenData);
         }
     }
+    
+    public void ProcessLengths(
+        SubrecordPinFrame subRec,
+        int amount,
+        long refLoc)
+    {
+        if (amount == 0) return;
+        
+        if (subRec.LengthOverrideRecordLocation == null)
+        {
+            var lenData = new byte[2];
+            BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(subRec.ContentLength + amount));
+            Instructions.SetSubstitution(
+                loc: refLoc + subRec.Location + Constants.HeaderLength,
+                sub: lenData);
+        }
+        else
+        {
+            var lenData = new byte[4];
+            BinaryPrimitives.WriteUInt32LittleEndian(lenData.AsSpan(), (uint)(subRec.ContentLength + amount));
+            Instructions.SetSubstitution(
+                loc: refLoc + subRec.LengthOverrideRecordLocation.Value + subRec.HeaderLength,
+                sub: lenData);
+            
+            lenData = new byte[2];
+            Instructions.SetSubstitution(
+                loc: refLoc + subRec.Location + Constants.HeaderLength,
+                sub: lenData);
+        }
+    }
 
     public void ModifyLengths(
         IMutagenReadStream stream,
@@ -607,6 +619,16 @@ public abstract class Processor
         }
     }
 
+    public bool ProcessRotationFloats(SubrecordPinFrame pin, long offsetLoc, ref int loc, int amount, float multiplier = 57.2958f)
+    {
+        for (int i = 0; i < amount; i++)
+        {
+            if (!ProcessRotationFloat(pin, offsetLoc, ref loc, multiplier: multiplier)) return false;
+        }
+
+        return true;
+    }
+
     public bool ProcessRotationFloat(SubrecordPinFrame pin, long offsetLoc, ref int loc, float multiplier = 57.2958f)
     {
         if (loc >= pin.ContentLength) return false;
@@ -616,11 +638,40 @@ public abstract class Processor
         return true;
     }
 
+    public bool ProcessRotationFloatDiv(SubrecordPinFrame pin, long offsetLoc, ref int loc, float divider)
+    {
+        if (loc >= pin.ContentLength) return false;
+        long longLoc = offsetLoc + pin.Location + pin.HeaderLength + loc;
+        ProcessRotationFloatDiv(pin.Content.Slice(loc), ref longLoc, divider);
+        loc += 4;
+        return true;
+    }
+
     public void ProcessRotationFloat(ReadOnlySpan<byte> span, ref long offsetLoc, float multiplier)
     {
         var origFloat = span.Float();
         var multiplied = origFloat * multiplier;
         var newFloat = multiplied / multiplier;
+        if (origFloat != newFloat)
+        {
+            offsetLoc += 4;
+            var b = new byte[4];
+            BinaryPrimitives.WriteSingleLittleEndian(b, newFloat);
+            Instructions.SetSubstitution(
+                offsetLoc - 4,
+                b);
+        }
+        else
+        {
+            ProcessZeroFloat(span, ref offsetLoc);
+        }
+    }
+
+    public void ProcessRotationFloatDiv(ReadOnlySpan<byte> span, ref long offsetLoc, float divider)
+    {
+        var origFloat = span.Float();
+        var multiplied = origFloat / divider;
+        var newFloat = (float)(multiplied * divider);
         if (origFloat != newFloat)
         {
             offsetLoc += 4;
@@ -796,7 +847,7 @@ public abstract class Processor
             offsetLoc + subRec.Location + subRec.HeaderLength + subRec.ContentLength - numBytes, 
             numBytes));
     }
-
+    
     public void RemoveEmptyGroups(Func<IMutagenReadStream> streamGetter)
     {
         using var stream = streamGetter();
@@ -806,6 +857,19 @@ public abstract class Processor
             var groupMeta = stream.ReadGroupHeader();
             if (groupMeta.ContentLength != 0 || groupMeta.GroupType != 0) continue; 
             Instructions.SetRemove(RangeInt64.FromLength(loc, groupMeta.HeaderLength));
+        }
+    }
+    
+    public void FixGroupFormIdOverflows(Func<IMutagenReadStream> streamGetter)
+    {
+        using var stream = streamGetter();
+        foreach (var loc in _alignedFileLocs.GrupLocations.Keys)
+        {
+            stream.Position = loc;
+            var groupMeta = stream.ReadGroupHeader();
+            if (!this.Meta.GroupConstants.HasParentFormId.Contains(groupMeta.GroupType)) continue;
+            var offset = loc + 8;
+            ProcessFormIDOverflow(groupMeta.HeaderData.Slice(8), ref offset);
         }
     }
 
@@ -1086,7 +1150,7 @@ public abstract class Processor
     {
         var folderOverlay = StringsFolderLookupOverlay.TypicalFactory(GameRelease, ModKey, DataFolder, null);
         var sourceDict = folderOverlay.Get(source);
-        if (!sourceDict.TryGetValue(language, out var overlay)) return Array.Empty<StringEntry>();
+        if (!sourceDict.TryGetValue(language, out var overlay)) return [];
         var ret = new List<StringEntry>();
         var stringAlignmentLookup = new Dictionary<RecordType, AStringsAlignment>();
         var stringAlignmentsForAll = new List<AStringsAlignment>();
@@ -1106,7 +1170,7 @@ public abstract class Processor
         var mod = stream.ReadModHeader();
         var localizedIndex = stream.MetaData.Constants.Release.ToCategory().GetLocalizedFlagIndex();
         if (!localizedIndex.HasValue || !Enums.HasFlag(mod.Flags, localizedIndex.Value))
-            return Array.Empty<StringEntry>();
+            return [];
 
         stream.Position = 0;
         var locs = RecordLocator.GetLocations(stream);

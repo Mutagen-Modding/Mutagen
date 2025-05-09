@@ -158,6 +158,26 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(IItem),
                 Getter: typeof(IItemGetter)));
         dict[typeof(IItemGetter)] = dict[typeof(IItem)] with { Setter = false };
+        dict[typeof(IResearchResourceTarget)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                Ammunition_Registration.Instance,
+                Armor_Registration.Instance,
+                Book_Registration.Instance,
+                ConstructibleObject_Registration.Instance,
+                Ingestible_Registration.Instance,
+                Key_Registration.Instance,
+                LeveledItem_Registration.Instance,
+                Light_Registration.Instance,
+                MiscItem_Registration.Instance,
+                Resource_Registration.Instance,
+                Weapon_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IResearchResourceTarget),
+                Getter: typeof(IResearchResourceTargetGetter)));
+        dict[typeof(IResearchResourceTargetGetter)] = dict[typeof(IResearchResourceTarget)] with { Setter = false };
         dict[typeof(IOutfitTarget)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]
@@ -313,17 +333,6 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(ILeveledBaseFormTarget),
                 Getter: typeof(ILeveledBaseFormTargetGetter)));
         dict[typeof(ILeveledBaseFormTargetGetter)] = dict[typeof(ILeveledBaseFormTarget)] with { Setter = false };
-        dict[typeof(IResearchResourceTarget)] = new InterfaceMappingResult(
-            true,
-            new ILoquiRegistration[]
-            {
-                Ingestible_Registration.Instance,
-                Resource_Registration.Instance,
-            },
-            new InterfaceMappingTypes(
-                Setter: typeof(IResearchResourceTarget),
-                Getter: typeof(IResearchResourceTargetGetter)));
-        dict[typeof(IResearchResourceTargetGetter)] = dict[typeof(IResearchResourceTarget)] with { Setter = false };
         dict[typeof(IKeywordLinkedReference)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]
@@ -382,6 +391,18 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(IPlanetContentTarget),
                 Getter: typeof(IPlanetContentTargetGetter)));
         dict[typeof(IPlanetContentTargetGetter)] = dict[typeof(IPlanetContentTarget)] with { Setter = false };
+        dict[typeof(IBiomeObjectPackInTarget)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                LeveledPackIn_Registration.Instance,
+                PackIn_Registration.Instance,
+                PlacedObject_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IBiomeObjectPackInTarget),
+                Getter: typeof(IBiomeObjectPackInTargetGetter)));
+        dict[typeof(IBiomeObjectPackInTargetGetter)] = dict[typeof(IBiomeObjectPackInTarget)] with { Setter = false };
         dict[typeof(IEmittance)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]

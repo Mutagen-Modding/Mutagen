@@ -18,7 +18,8 @@ public class MasterSyncTests
         IFileSystem fileSystem,
         DirectoryPath existingFolder)
     {
-        var masterMod = new OblivionMod(new ModKey("Test", ModType.Master));
+        var masterMod = new OblivionMod(new ModKey("Test", ModType.Master),
+            OblivionRelease.Oblivion);
         var masterPath = Path.Combine(existingFolder, "Test.esp");
         Assert.Throws<ArgumentException>(() =>
         {
@@ -37,7 +38,8 @@ public class MasterSyncTests
         IFileSystem fileSystem,
         DirectoryPath existingFolder)
     {
-        var masterMod = new OblivionMod(new ModKey("Test", ModType.Plugin));
+        var masterMod = new OblivionMod(new ModKey("Test", ModType.Plugin),
+            OblivionRelease.Oblivion);
         var masterPath = Path.Combine(existingFolder, "Test.esm");
         Assert.Throws<ArgumentException>(() =>
         {
@@ -61,9 +63,12 @@ public class MasterSyncTests
         var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
         var knights = ModKey.FromNameAndExtension("Knights.esm");
         var other = ModKey.FromNameAndExtension("Other.esp");
-        var mod = new OblivionMod(obliv);
-        var otherNpc = new Npc(new FormKey(other, 0x123456));
-        mod.Potions.RecordCache.Set(new Potion(new FormKey(obliv, 0x123456)));
+        var mod = new OblivionMod(obliv,
+            OblivionRelease.Oblivion);
+        var otherNpc = new Npc(new FormKey(other, 0x123456),
+            OblivionRelease.Oblivion);
+        mod.Potions.RecordCache.Set(new Potion(new FormKey(obliv, 0x123456),
+            OblivionRelease.Oblivion));
         mod.Npcs.RecordCache.Set(otherNpc);
         otherNpc.Race.FormKey = new FormKey(knights, 0x123456);
         var modPath = Path.Combine(existingFolder, obliv.ToString());
@@ -89,9 +94,12 @@ public class MasterSyncTests
     {
         var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
         var knights = ModKey.FromNameAndExtension("Knights.esm");
-        var mod = new OblivionMod(obliv);
-        mod.Potions.RecordCache.Set(new Potion(new FormKey(obliv, 0x123456)));
-        mod.Npcs.RecordCache.Set(new Npc(new FormKey(knights, 0x123456)));
+        var mod = new OblivionMod(obliv,
+            OblivionRelease.Oblivion);
+        mod.Potions.RecordCache.Set(new Potion(new FormKey(obliv, 0x123456),
+            OblivionRelease.Oblivion));
+        mod.Npcs.RecordCache.Set(new Npc(new FormKey(knights, 0x123456),
+            OblivionRelease.Oblivion));
         mod.ModHeader.MasterReferences.Add(new MasterReference()
         {
             Master = ModKey.FromNameAndExtension("Other.esp")
@@ -122,7 +130,8 @@ public class MasterSyncTests
         DirectoryPath existingFolder)
     {
         var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
-        var mod = new OblivionMod(obliv);
+        var mod = new OblivionMod(obliv,
+            OblivionRelease.Oblivion);
         var npc = mod.Npcs.AddNew();
         npc.Race.Clear();
         var modPath = Path.Combine(existingFolder, obliv.ToString());
@@ -150,10 +159,13 @@ public class MasterSyncTests
         var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
         var knights = ModKey.FromNameAndExtension("Knights.esm");
         var other = ModKey.FromNameAndExtension("Other.esp");
-        var mod = new OblivionMod(obliv);
-        var knightsNpc = new Npc(new FormKey(knights, 0x123456));
+        var mod = new OblivionMod(obliv,
+            OblivionRelease.Oblivion);
+        var knightsNpc = new Npc(new FormKey(knights, 0x123456),
+            OblivionRelease.Oblivion);
         mod.Npcs.RecordCache.Set(knightsNpc);
-        var otherNpc = new Npc(new FormKey(other, 0x123456));
+        var otherNpc = new Npc(new FormKey(other, 0x123456),
+            OblivionRelease.Oblivion);
         mod.Npcs.RecordCache.Set(otherNpc);
         var modPath = Path.Combine(existingFolder, obliv.ToString());
         mod.BeginWrite
@@ -184,10 +196,13 @@ public class MasterSyncTests
         var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
         var first = ModKey.FromNameAndExtension("First.esp");
         var second = ModKey.FromNameAndExtension("Second.esp");
-        var mod = new OblivionMod(obliv);
-        var secondNpc = new Npc(new FormKey(second, 0x123456));
+        var mod = new OblivionMod(obliv,
+            OblivionRelease.Oblivion);
+        var secondNpc = new Npc(new FormKey(second, 0x123456),
+            OblivionRelease.Oblivion);
         mod.Npcs.RecordCache.Set(secondNpc);
-        var firstNpc = new Npc(new FormKey(first, 0x123456));
+        var firstNpc = new Npc(new FormKey(first, 0x123456),
+            OblivionRelease.Oblivion);
         mod.Npcs.RecordCache.Set(firstNpc);
         var modPath = Path.Combine(existingFolder, obliv.ToString());
         mod.BeginWrite
@@ -219,10 +234,13 @@ public class MasterSyncTests
         var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
         var esm = ModKey.FromNameAndExtension("First.esm");
         var esp = ModKey.FromNameAndExtension("Second.esp");
-        var mod = new OblivionMod(obliv);
-        var espNpc = new Npc(new FormKey(esp, 0x123456));
+        var mod = new OblivionMod(obliv,
+            OblivionRelease.Oblivion);
+        var espNpc = new Npc(new FormKey(esp, 0x123456),
+            OblivionRelease.Oblivion);
         mod.Npcs.RecordCache.Set(espNpc);
-        var esmNpc = new Npc(new FormKey(esm, 0x123456));
+        var esmNpc = new Npc(new FormKey(esm, 0x123456),
+            OblivionRelease.Oblivion);
         mod.Npcs.RecordCache.Set(esmNpc);
         var modPath = Path.Combine(existingFolder, obliv.ToString());
         var loadOrder = new ModKey[]

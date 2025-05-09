@@ -1385,6 +1385,13 @@ namespace Mutagen.Bethesda.Starfield
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
+                case "IBiomeObjectPackInTarget":
+                case "IBiomeObjectPackInTargetGetter":
+                    foreach (var subItem in obj.Items)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
                 case "IPlaced":
                 case "IPlacedGetter":
                     foreach (var subItem in obj.Items)
@@ -1999,7 +2006,8 @@ namespace Mutagen.Bethesda.Starfield
                     }
                     catch (Exception ex)
                     {
-                        throw RecordException.Enrich(ex, subItem);
+                        RecordException.EnrichAndThrow(ex, subItem);
+                        throw;
                     }
                 });
         }

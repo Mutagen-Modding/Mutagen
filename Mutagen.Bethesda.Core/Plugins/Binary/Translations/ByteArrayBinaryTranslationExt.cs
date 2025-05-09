@@ -46,7 +46,8 @@ public static class ByteArrayBinaryTranslationExt
         }
         catch (Exception ex)
         {
-            throw SubrecordException.Enrich(ex, header);
+            SubrecordException.EnrichAndThrow(ex, header);
+            throw;
         }
     }
 }

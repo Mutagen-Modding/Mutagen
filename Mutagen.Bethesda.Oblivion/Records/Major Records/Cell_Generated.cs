@@ -165,6 +165,28 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IGlobalGetter> ICellGetter.GlobalVariable => this.GlobalVariable;
         #endregion
+        #region XTLI
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _XTLI;
+        public MemorySlice<Byte>? XTLI
+        {
+            get => this._XTLI;
+            set => this._XTLI = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ICellGetter.XTLI => this.XTLI;
+        #endregion
+        #region XLRL
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected MemorySlice<Byte>? _XLRL;
+        public MemorySlice<Byte>? XLRL
+        {
+            get => this._XLRL;
+            set => this._XLRL = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte>? ICellGetter.XLRL => this.XLRL;
+        #endregion
         #region PathGrid
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private PathGrid? _PathGrid;
@@ -278,6 +300,8 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Owner = initialValue;
                 this.FactionRank = initialValue;
                 this.GlobalVariable = initialValue;
+                this.XTLI = initialValue;
+                this.XLRL = initialValue;
                 this.PathGrid = new MaskItem<TItem, PathGrid.Mask<TItem>?>(initialValue, new PathGrid.Mask<TItem>(initialValue));
                 this.Landscape = new MaskItem<TItem, Landscape.Mask<TItem>?>(initialValue, new Landscape.Mask<TItem>(initialValue));
                 this.Timestamp = initialValue;
@@ -307,6 +331,8 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Owner,
                 TItem FactionRank,
                 TItem GlobalVariable,
+                TItem XTLI,
+                TItem XLRL,
                 TItem PathGrid,
                 TItem Landscape,
                 TItem Timestamp,
@@ -335,6 +361,8 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Owner = Owner;
                 this.FactionRank = FactionRank;
                 this.GlobalVariable = GlobalVariable;
+                this.XTLI = XTLI;
+                this.XLRL = XLRL;
                 this.PathGrid = new MaskItem<TItem, PathGrid.Mask<TItem>?>(PathGrid, new PathGrid.Mask<TItem>(PathGrid));
                 this.Landscape = new MaskItem<TItem, Landscape.Mask<TItem>?>(Landscape, new Landscape.Mask<TItem>(Landscape));
                 this.Timestamp = Timestamp;
@@ -367,6 +395,8 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem Owner;
             public TItem FactionRank;
             public TItem GlobalVariable;
+            public TItem XTLI;
+            public TItem XLRL;
             public MaskItem<TItem, PathGrid.Mask<TItem>?>? PathGrid { get; set; }
             public MaskItem<TItem, Landscape.Mask<TItem>?>? Landscape { get; set; }
             public TItem Timestamp;
@@ -401,6 +431,8 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.Owner, rhs.Owner)) return false;
                 if (!object.Equals(this.FactionRank, rhs.FactionRank)) return false;
                 if (!object.Equals(this.GlobalVariable, rhs.GlobalVariable)) return false;
+                if (!object.Equals(this.XTLI, rhs.XTLI)) return false;
+                if (!object.Equals(this.XLRL, rhs.XLRL)) return false;
                 if (!object.Equals(this.PathGrid, rhs.PathGrid)) return false;
                 if (!object.Equals(this.Landscape, rhs.Landscape)) return false;
                 if (!object.Equals(this.Timestamp, rhs.Timestamp)) return false;
@@ -427,6 +459,8 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.Owner);
                 hash.Add(this.FactionRank);
                 hash.Add(this.GlobalVariable);
+                hash.Add(this.XTLI);
+                hash.Add(this.XLRL);
                 hash.Add(this.PathGrid);
                 hash.Add(this.Landscape);
                 hash.Add(this.Timestamp);
@@ -472,6 +506,8 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!eval(this.Owner)) return false;
                 if (!eval(this.FactionRank)) return false;
                 if (!eval(this.GlobalVariable)) return false;
+                if (!eval(this.XTLI)) return false;
+                if (!eval(this.XLRL)) return false;
                 if (PathGrid != null)
                 {
                     if (!eval(this.PathGrid.Overall)) return false;
@@ -556,6 +592,8 @@ namespace Mutagen.Bethesda.Oblivion
                 if (eval(this.Owner)) return true;
                 if (eval(this.FactionRank)) return true;
                 if (eval(this.GlobalVariable)) return true;
+                if (eval(this.XTLI)) return true;
+                if (eval(this.XLRL)) return true;
                 if (PathGrid != null)
                 {
                     if (eval(this.PathGrid.Overall)) return true;
@@ -646,6 +684,8 @@ namespace Mutagen.Bethesda.Oblivion
                 obj.Owner = eval(this.Owner);
                 obj.FactionRank = eval(this.FactionRank);
                 obj.GlobalVariable = eval(this.GlobalVariable);
+                obj.XTLI = eval(this.XTLI);
+                obj.XLRL = eval(this.XLRL);
                 obj.PathGrid = this.PathGrid == null ? null : new MaskItem<R, PathGrid.Mask<R>?>(eval(this.PathGrid.Overall), this.PathGrid.Specific?.Translate(eval));
                 obj.Landscape = this.Landscape == null ? null : new MaskItem<R, Landscape.Mask<R>?>(eval(this.Landscape.Overall), this.Landscape.Specific?.Translate(eval));
                 obj.Timestamp = eval(this.Timestamp);
@@ -783,6 +823,14 @@ namespace Mutagen.Bethesda.Oblivion
                     {
                         sb.AppendItem(GlobalVariable, "GlobalVariable");
                     }
+                    if (printMask?.XTLI ?? true)
+                    {
+                        sb.AppendItem(XTLI, "XTLI");
+                    }
+                    if (printMask?.XLRL ?? true)
+                    {
+                        sb.AppendItem(XLRL, "XLRL");
+                    }
                     if (printMask?.PathGrid?.Overall ?? true)
                     {
                         PathGrid?.Print(sb);
@@ -887,6 +935,8 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? Owner;
             public Exception? FactionRank;
             public Exception? GlobalVariable;
+            public Exception? XTLI;
+            public Exception? XLRL;
             public MaskItem<Exception?, PathGrid.ErrorMask?>? PathGrid;
             public MaskItem<Exception?, Landscape.ErrorMask?>? Landscape;
             public Exception? Timestamp;
@@ -928,6 +978,10 @@ namespace Mutagen.Bethesda.Oblivion
                         return FactionRank;
                     case Cell_FieldIndex.GlobalVariable:
                         return GlobalVariable;
+                    case Cell_FieldIndex.XTLI:
+                        return XTLI;
+                    case Cell_FieldIndex.XLRL:
+                        return XLRL;
                     case Cell_FieldIndex.PathGrid:
                         return PathGrid;
                     case Cell_FieldIndex.Landscape:
@@ -991,6 +1045,12 @@ namespace Mutagen.Bethesda.Oblivion
                         break;
                     case Cell_FieldIndex.GlobalVariable:
                         this.GlobalVariable = ex;
+                        break;
+                    case Cell_FieldIndex.XTLI:
+                        this.XTLI = ex;
+                        break;
+                    case Cell_FieldIndex.XLRL:
+                        this.XLRL = ex;
                         break;
                     case Cell_FieldIndex.PathGrid:
                         this.PathGrid = new MaskItem<Exception?, PathGrid.ErrorMask?>(ex, null);
@@ -1066,6 +1126,12 @@ namespace Mutagen.Bethesda.Oblivion
                     case Cell_FieldIndex.GlobalVariable:
                         this.GlobalVariable = (Exception?)obj;
                         break;
+                    case Cell_FieldIndex.XTLI:
+                        this.XTLI = (Exception?)obj;
+                        break;
+                    case Cell_FieldIndex.XLRL:
+                        this.XLRL = (Exception?)obj;
+                        break;
                     case Cell_FieldIndex.PathGrid:
                         this.PathGrid = (MaskItem<Exception?, PathGrid.ErrorMask?>?)obj;
                         break;
@@ -1114,6 +1180,8 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Owner != null) return true;
                 if (FactionRank != null) return true;
                 if (GlobalVariable != null) return true;
+                if (XTLI != null) return true;
+                if (XLRL != null) return true;
                 if (PathGrid != null) return true;
                 if (Landscape != null) return true;
                 if (Timestamp != null) return true;
@@ -1199,6 +1267,12 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 {
                     sb.AppendItem(GlobalVariable, "GlobalVariable");
+                }
+                {
+                    sb.AppendItem(XTLI, "XTLI");
+                }
+                {
+                    sb.AppendItem(XLRL, "XLRL");
                 }
                 PathGrid?.Print(sb);
                 Landscape?.Print(sb);
@@ -1288,6 +1362,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Owner = this.Owner.Combine(rhs.Owner);
                 ret.FactionRank = this.FactionRank.Combine(rhs.FactionRank);
                 ret.GlobalVariable = this.GlobalVariable.Combine(rhs.GlobalVariable);
+                ret.XTLI = this.XTLI.Combine(rhs.XTLI);
+                ret.XLRL = this.XLRL.Combine(rhs.XLRL);
                 ret.PathGrid = this.PathGrid.Combine(rhs.PathGrid, (l, r) => l.Combine(r));
                 ret.Landscape = this.Landscape.Combine(rhs.Landscape, (l, r) => l.Combine(r));
                 ret.Timestamp = this.Timestamp.Combine(rhs.Timestamp);
@@ -1331,6 +1407,8 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Owner;
             public bool FactionRank;
             public bool GlobalVariable;
+            public bool XTLI;
+            public bool XLRL;
             public PathGrid.TranslationMask? PathGrid;
             public Landscape.TranslationMask? Landscape;
             public bool Timestamp;
@@ -1359,6 +1437,8 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Owner = defaultOn;
                 this.FactionRank = defaultOn;
                 this.GlobalVariable = defaultOn;
+                this.XTLI = defaultOn;
+                this.XLRL = defaultOn;
                 this.Timestamp = defaultOn;
                 this.PersistentTimestamp = defaultOn;
                 this.Persistent = defaultOn;
@@ -1385,6 +1465,8 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Owner, null));
                 ret.Add((FactionRank, null));
                 ret.Add((GlobalVariable, null));
+                ret.Add((XTLI, null));
+                ret.Add((XLRL, null));
                 ret.Add((PathGrid != null ? PathGrid.OnOverall : DefaultOn, PathGrid?.GetCrystal()));
                 ret.Add((Landscape != null ? Landscape.OnOverall : DefaultOn, Landscape?.GetCrystal()));
                 ret.Add((Timestamp, null));
@@ -1408,7 +1490,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = Cell_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => CellCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CellSetterCommon.Instance.RemapLinks(this, mapping);
-        public Cell(FormKey formKey)
+        public Cell(
+            FormKey formKey,
+            OblivionRelease gameRelease)
         {
             this.FormKey = formKey;
             CustomCtor();
@@ -1423,12 +1507,16 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public Cell(IOblivionMod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.OblivionRelease)
         {
         }
 
         public Cell(IOblivionMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.OblivionRelease)
         {
             this.EditorID = editorID;
         }
@@ -1583,6 +1671,8 @@ namespace Mutagen.Bethesda.Oblivion
         new IFormLinkNullable<IFactionGetter> Owner { get; set; }
         new Int32? FactionRank { get; set; }
         new IFormLinkNullable<IGlobalGetter> GlobalVariable { get; set; }
+        new MemorySlice<Byte>? XTLI { get; set; }
+        new MemorySlice<Byte>? XLRL { get; set; }
         new PathGrid? PathGrid { get; set; }
         new Landscape? Landscape { get; set; }
         new Int32 Timestamp { get; set; }
@@ -1631,6 +1721,8 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<IFactionGetter> Owner { get; }
         Int32? FactionRank { get; }
         IFormLinkNullableGetter<IGlobalGetter> GlobalVariable { get; }
+        ReadOnlyMemorySlice<Byte>? XTLI { get; }
+        ReadOnlyMemorySlice<Byte>? XLRL { get; }
         IPathGridGetter? PathGrid { get; }
         ILandscapeGetter? Landscape { get; }
         Int32 Timestamp { get; }
@@ -2052,15 +2144,17 @@ namespace Mutagen.Bethesda.Oblivion
         Owner = 14,
         FactionRank = 15,
         GlobalVariable = 16,
-        PathGrid = 17,
-        Landscape = 18,
-        Timestamp = 19,
-        PersistentTimestamp = 20,
-        Persistent = 21,
-        TemporaryTimestamp = 22,
-        Temporary = 23,
-        VisibleWhenDistantTimestamp = 24,
-        VisibleWhenDistant = 25,
+        XTLI = 17,
+        XLRL = 18,
+        PathGrid = 19,
+        Landscape = 20,
+        Timestamp = 21,
+        PersistentTimestamp = 22,
+        Persistent = 23,
+        TemporaryTimestamp = 24,
+        Temporary = 25,
+        VisibleWhenDistantTimestamp = 26,
+        VisibleWhenDistant = 27,
     }
     #endregion
 
@@ -2071,9 +2165,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 21;
+        public const ushort AdditionalFieldCount = 23;
 
-        public const ushort FieldCount = 26;
+        public const ushort FieldCount = 28;
 
         public static readonly Type MaskType = typeof(Cell.Mask<>);
 
@@ -2118,6 +2212,9 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.XOWN,
                 RecordTypes.XRNK,
                 RecordTypes.XGLB,
+                RecordTypes.XTLI,
+                RecordTypes.XLRL,
+                RecordTypes.XXXX,
                 RecordTypes.PGRD,
                 RecordTypes.LAND,
                 RecordTypes.ACRE,
@@ -2179,6 +2276,8 @@ namespace Mutagen.Bethesda.Oblivion
             item.Owner.Clear();
             item.FactionRank = default;
             item.GlobalVariable.Clear();
+            item.XTLI = default;
+            item.XLRL = default;
             item.PathGrid = null;
             item.Landscape = null;
             item.Timestamp = default(Int32);
@@ -2469,6 +2568,8 @@ namespace Mutagen.Bethesda.Oblivion
             ret.Owner = item.Owner.Equals(rhs.Owner);
             ret.FactionRank = item.FactionRank == rhs.FactionRank;
             ret.GlobalVariable = item.GlobalVariable.Equals(rhs.GlobalVariable);
+            ret.XTLI = MemorySliceExt.SequenceEqual(item.XTLI, rhs.XTLI);
+            ret.XLRL = MemorySliceExt.SequenceEqual(item.XLRL, rhs.XLRL);
             ret.PathGrid = EqualsMaskHelper.EqualsHelper(
                 item.PathGrid,
                 rhs.PathGrid,
@@ -2609,6 +2710,16 @@ namespace Mutagen.Bethesda.Oblivion
             if (printMask?.GlobalVariable ?? true)
             {
                 sb.AppendItem(item.GlobalVariable.FormKeyNullable, "GlobalVariable");
+            }
+            if ((printMask?.XTLI ?? true)
+                && item.XTLI is {} XTLIItem)
+            {
+                sb.AppendLine($"XTLI => {SpanExt.ToHexString(XTLIItem)}");
+            }
+            if ((printMask?.XLRL ?? true)
+                && item.XLRL is {} XLRLItem)
+            {
+                sb.AppendLine($"XLRL => {SpanExt.ToHexString(XLRLItem)}");
             }
             if ((printMask?.PathGrid?.Overall ?? true)
                 && item.PathGrid is {} PathGridItem)
@@ -2776,6 +2887,14 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!lhs.GlobalVariable.Equals(rhs.GlobalVariable)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.XTLI) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.XTLI, rhs.XTLI)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.XLRL) ?? true))
+            {
+                if (!MemorySliceExt.SequenceEqual(lhs.XLRL, rhs.XLRL)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Cell_FieldIndex.PathGrid) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.PathGrid, rhs.PathGrid, out var lhsPathGrid, out var rhsPathGrid, out var isPathGridEqual))
@@ -2881,6 +3000,14 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(FactionRankitem);
             }
             hash.Add(item.GlobalVariable);
+            if (item.XTLI is {} XTLIItem)
+            {
+                hash.Add(XTLIItem);
+            }
+            if (item.XLRL is {} XLRLItem)
+            {
+                hash.Add(XLRLItem);
+            }
             if (item.PathGrid is {} PathGriditem)
             {
                 hash.Add(PathGriditem);
@@ -3908,7 +4035,7 @@ namespace Mutagen.Bethesda.Oblivion
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Cell(formKey);
+            var newRec = new Cell(formKey, default(OblivionRelease));
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -4065,6 +4192,28 @@ namespace Mutagen.Bethesda.Oblivion
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.GlobalVariable) ?? true))
             {
                 item.GlobalVariable.SetTo(rhs.GlobalVariable.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.XTLI) ?? true))
+            {
+                if(rhs.XTLI is {} XTLIrhs)
+                {
+                    item.XTLI = XTLIrhs.ToArray();
+                }
+                else
+                {
+                    item.XTLI = default;
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.XLRL) ?? true))
+            {
+                if(rhs.XLRL is {} XLRLrhs)
+                {
+                    item.XLRL = XLRLrhs.ToArray();
+                }
+                else
+                {
+                    item.XLRL = default;
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.PathGrid) ?? true))
             {
@@ -4438,6 +4587,15 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 item: item.GlobalVariable,
                 header: translationParams.ConvertToCustom(RecordTypes.XGLB));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.XTLI,
+                header: translationParams.ConvertToCustom(RecordTypes.XTLI));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.XLRL,
+                header: translationParams.ConvertToCustom(RecordTypes.XLRL),
+                overflowRecord: RecordTypes.XXXX);
         }
 
         public static partial void CustomBinaryEndExport(
@@ -4611,6 +4769,23 @@ namespace Mutagen.Bethesda.Oblivion
                     item.GlobalVariable.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Cell_FieldIndex.GlobalVariable;
                 }
+                case RecordTypeInts.XTLI:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XTLI = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Cell_FieldIndex.XTLI;
+                }
+                case RecordTypeInts.XLRL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XLRL = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)Cell_FieldIndex.XLRL;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = frame.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -4736,6 +4911,19 @@ namespace Mutagen.Bethesda.Oblivion
         #region GlobalVariable
         private int? _GlobalVariableLocation;
         public IFormLinkNullableGetter<IGlobalGetter> GlobalVariable => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _GlobalVariableLocation);
+        #endregion
+        #region XTLI
+        private int? _XTLILocation;
+        public ReadOnlyMemorySlice<Byte>? XTLI => _XTLILocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XTLILocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #endregion
+        #region XLRL
+        private int? _XLRLLocation;
+        private int? _XLRLLengthOverride;
+        public ReadOnlyMemorySlice<Byte>? XLRL => PluginUtilityTranslation.ReadByteArrayWithOverflow(
+            _recordData,
+            _package.MetaData.Constants,
+            _XLRLLocation,
+            _XLRLLengthOverride);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -4879,6 +5067,26 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     _GlobalVariableLocation = (stream.Position - offset);
                     return (int)Cell_FieldIndex.GlobalVariable;
+                }
+                case RecordTypeInts.XTLI:
+                {
+                    _XTLILocation = (stream.Position - offset);
+                    return (int)Cell_FieldIndex.XTLI;
+                }
+                case RecordTypeInts.XLRL:
+                {
+                    _XLRLLocation = (stream.Position - offset);
+                    _XLRLLengthOverride = lastParsed.LengthOverride;
+                    if (lastParsed.LengthOverride.HasValue)
+                    {
+                        stream.Position += lastParsed.LengthOverride.Value;
+                    }
+                    return (int)Cell_FieldIndex.XLRL;
+                }
+                case RecordTypeInts.XXXX:
+                {
+                    var overflowHeader = stream.ReadSubrecord();
+                    return ParseResult.OverrideLength(lastParsed, BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                 }
                 default:
                     return base.FillRecordType(

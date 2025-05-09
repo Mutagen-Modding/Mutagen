@@ -62,6 +62,8 @@ public sealed record GameConstants
     
     public StringsLanguageFormat? StringsLanguageFormat { get; init; }
 
+    public string DataFolderRelativePath { get; init; } = "Data";
+
     public bool UsesStrings => StringsLanguageFormat != null;
     
     public bool SeparateMasterLoadOrders { get; init; }
@@ -128,6 +130,7 @@ public sealed record GameConstants
                 CellSubGroupTypes: new[] { 3, 5 }),
             topic: new GroupTopicConstants(7),
             hasSubGroups: new int[] { 1, 2, 4, 6, 7 },
+            hasParentFormId: new int[] { 1, 6, 7, 8, 9, 10 },
             new GroupNesting[]
             {
                 new GroupNesting(2,
@@ -162,7 +165,7 @@ public sealed record GameConstants
             ObjectType.Subrecord,
             headerLength: 6,
             lengthLength: 2),
-        languages: Array.Empty<Language>(),
+        languages: [],
         languageFormat: null,
         hasEnabledMarkers: false,
         defaultFormVersion: null,
@@ -175,6 +178,11 @@ public sealed record GameConstants
         smallMasterFlag: null,
         mediumMasterFlag: null,
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
+
+    public static readonly GameConstants OblivionRE = Oblivion with
+    {
+        DataFolderRelativePath = Path.Combine("OblivionRemastered", "Content", "Dev", "ObvData", "Data")
+    };
 
     /// <summary> 
     /// Readonly singleton of Skyrim LE game constants 
@@ -194,6 +202,7 @@ public sealed record GameConstants
                 CellSubGroupTypes: new[] { 3, 5 }),
             topic: new GroupTopicConstants(7),
             hasSubGroups: new int[] { 1, 2, 4, 6, 7 },
+            hasParentFormId: new int[] {  }, // ToDo
             new GroupNesting[]
             {
                 new GroupNesting(2,
@@ -311,6 +320,7 @@ public sealed record GameConstants
                 CellSubGroupTypes: new[] { 3, 5 }),
             topic: new GroupTopicConstants(7),
             hasSubGroups: new int[] { 1, 2, 4, 6, 7, 10 },
+            hasParentFormId: new int[] {  }, // ToDo
             new GroupNesting[]
             {
                 new GroupNesting(2,
@@ -398,6 +408,7 @@ public sealed record GameConstants
                 CellSubGroupTypes: new[] { 3, 5 }),
             topic: new GroupTopicConstants(7),
             hasSubGroups: new int[] { 1, 2, 4, 6, 7, 10 },
+            hasParentFormId: new int[] {  }, // ToDo
             new GroupNesting[]
             {
                 new GroupNesting(2,
@@ -486,6 +497,7 @@ public sealed record GameConstants
         return release switch
         {
             GameRelease.Oblivion => Oblivion,
+            GameRelease.OblivionRE => OblivionRE,
             GameRelease.SkyrimLE => SkyrimLE,
             GameRelease.EnderalLE => EnderalLE,
             GameRelease.SkyrimSE => SkyrimSE,

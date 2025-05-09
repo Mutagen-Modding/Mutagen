@@ -144,8 +144,8 @@ namespace Mutagen.Bethesda.Starfield
         #region MenuSortOrder
         public Single MenuSortOrder { get; set; } = default(Single);
         #endregion
-        #region TNAM
-        public Byte TNAM { get; set; } = default(Byte);
+        #region Tier
+        public Byte Tier { get; set; } = default(Byte);
         #endregion
         #region CraftingSound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -180,6 +180,20 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ISoundReferenceGetter? IConstructibleObjectGetter.DropdownSound => this.DropdownSound;
         #endregion
+        #region RepairComponents
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ConstructibleObjectComponent>? _RepairComponents;
+        public ExtendedList<ConstructibleObjectComponent>? RepairComponents
+        {
+            get => this._RepairComponents;
+            set => this._RepairComponents = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConstructibleObjectComponentGetter>? IConstructibleObjectGetter.RepairComponents => _RepairComponents;
+        #endregion
+
+        #endregion
         #region LearnMethod
         public ConstructibleObject.LearnMethodEnum? LearnMethod { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -198,27 +212,57 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IArtObjectGetter> IConstructibleObjectGetter.MenuArtObject => this.MenuArtObject;
         #endregion
-        #region BuildLimit
-        private readonly IFormLinkNullable<IGlobalGetter> _BuildLimit = new FormLinkNullable<IGlobalGetter>();
-        public IFormLinkNullable<IGlobalGetter> BuildLimit
+        #region LearnedFrom
+        private readonly IFormLinkNullable<IStarfieldMajorRecordGetter> _LearnedFrom = new FormLinkNullable<IStarfieldMajorRecordGetter>();
+        public IFormLinkNullable<IStarfieldMajorRecordGetter> LearnedFrom
         {
-            get => _BuildLimit;
-            set => _BuildLimit.SetTo(value);
+            get => _LearnedFrom;
+            set => _LearnedFrom.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IGlobalGetter> IConstructibleObjectGetter.BuildLimit => this.BuildLimit;
+        IFormLinkNullableGetter<IStarfieldMajorRecordGetter> IConstructibleObjectGetter.LearnedFrom => this.LearnedFrom;
         #endregion
-        #region Categories
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Categories;
-        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Categories
+        #region BaseReturnScaleTable
+        private readonly IFormLinkNullable<ICurveTableGetter> _BaseReturnScaleTable = new FormLinkNullable<ICurveTableGetter>();
+        public IFormLinkNullable<ICurveTableGetter> BaseReturnScaleTable
         {
-            get => this._Categories;
-            set => this._Categories = value;
+            get => _BaseReturnScaleTable;
+            set => _BaseReturnScaleTable.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ICurveTableGetter> IConstructibleObjectGetter.BaseReturnScaleTable => this.BaseReturnScaleTable;
+        #endregion
+        #region LearnChance
+        private readonly IFormLinkNullable<IGlobalGetter> _LearnChance = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> LearnChance
+        {
+            get => _LearnChance;
+            set => _LearnChance.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IGlobalGetter> IConstructibleObjectGetter.LearnChance => this.LearnChance;
+        #endregion
+        #region MaxBuildCountGlobal
+        private readonly IFormLinkNullable<IGlobalGetter> _MaxBuildCountGlobal = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> MaxBuildCountGlobal
+        {
+            get => _MaxBuildCountGlobal;
+            set => _MaxBuildCountGlobal.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IGlobalGetter> IConstructibleObjectGetter.MaxBuildCountGlobal => this.MaxBuildCountGlobal;
+        #endregion
+        #region RecipeFilters
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _RecipeFilters;
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? RecipeFilters
+        {
+            get => this._RecipeFilters;
+            set => this._RecipeFilters = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IConstructibleObjectGetter.Categories => _Categories;
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IConstructibleObjectGetter.RecipeFilters => _RecipeFilters;
         #endregion
 
         #endregion
@@ -232,10 +276,10 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IKeywordGetter> IConstructibleObjectGetter.InstantiationFilterKeyword => this.InstantiationFilterKeyword;
         #endregion
-        #region RECF
-        public UInt64? RECF { get; set; }
+        #region Flags
+        public ConstructibleObject.Flag? Flags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt64? IConstructibleObjectGetter.RECF => this.RECF;
+        ConstructibleObject.Flag? IConstructibleObjectGetter.Flags => this.Flags;
         #endregion
 
         #region To String
@@ -271,17 +315,21 @@ namespace Mutagen.Bethesda.Starfield
                 this.CreatedObject = initialValue;
                 this.AmountProduced = initialValue;
                 this.MenuSortOrder = initialValue;
-                this.TNAM = initialValue;
+                this.Tier = initialValue;
                 this.CraftingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.PickupSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.DropdownSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.RepairComponents = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>());
                 this.LearnMethod = initialValue;
                 this.Value = initialValue;
                 this.MenuArtObject = initialValue;
-                this.BuildLimit = initialValue;
-                this.Categories = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LearnedFrom = initialValue;
+                this.BaseReturnScaleTable = initialValue;
+                this.LearnChance = initialValue;
+                this.MaxBuildCountGlobal = initialValue;
+                this.RecipeFilters = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.InstantiationFilterKeyword = initialValue;
-                this.RECF = initialValue;
+                this.Flags = initialValue;
             }
 
             public Mask(
@@ -301,17 +349,21 @@ namespace Mutagen.Bethesda.Starfield
                 TItem CreatedObject,
                 TItem AmountProduced,
                 TItem MenuSortOrder,
-                TItem TNAM,
+                TItem Tier,
                 TItem CraftingSound,
                 TItem PickupSound,
                 TItem DropdownSound,
+                TItem RepairComponents,
                 TItem LearnMethod,
                 TItem Value,
                 TItem MenuArtObject,
-                TItem BuildLimit,
-                TItem Categories,
+                TItem LearnedFrom,
+                TItem BaseReturnScaleTable,
+                TItem LearnChance,
+                TItem MaxBuildCountGlobal,
+                TItem RecipeFilters,
                 TItem InstantiationFilterKeyword,
-                TItem RECF)
+                TItem Flags)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -330,17 +382,21 @@ namespace Mutagen.Bethesda.Starfield
                 this.CreatedObject = CreatedObject;
                 this.AmountProduced = AmountProduced;
                 this.MenuSortOrder = MenuSortOrder;
-                this.TNAM = TNAM;
+                this.Tier = Tier;
                 this.CraftingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(CraftingSound, new SoundReference.Mask<TItem>(CraftingSound));
                 this.PickupSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(PickupSound, new SoundReference.Mask<TItem>(PickupSound));
                 this.DropdownSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(DropdownSound, new SoundReference.Mask<TItem>(DropdownSound));
+                this.RepairComponents = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>(RepairComponents, Enumerable.Empty<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>());
                 this.LearnMethod = LearnMethod;
                 this.Value = Value;
                 this.MenuArtObject = MenuArtObject;
-                this.BuildLimit = BuildLimit;
-                this.Categories = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Categories, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LearnedFrom = LearnedFrom;
+                this.BaseReturnScaleTable = BaseReturnScaleTable;
+                this.LearnChance = LearnChance;
+                this.MaxBuildCountGlobal = MaxBuildCountGlobal;
+                this.RecipeFilters = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RecipeFilters, Enumerable.Empty<(int Index, TItem Value)>());
                 this.InstantiationFilterKeyword = InstantiationFilterKeyword;
-                this.RECF = RECF;
+                this.Flags = Flags;
             }
 
             #pragma warning disable CS8618
@@ -361,17 +417,21 @@ namespace Mutagen.Bethesda.Starfield
             public TItem CreatedObject;
             public TItem AmountProduced;
             public TItem MenuSortOrder;
-            public TItem TNAM;
+            public TItem Tier;
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? CraftingSound { get; set; }
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? PickupSound { get; set; }
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? DropdownSound { get; set; }
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ConstructibleObjectComponent.Mask<TItem>?>>?>? RepairComponents;
             public TItem LearnMethod;
             public TItem Value;
             public TItem MenuArtObject;
-            public TItem BuildLimit;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Categories;
+            public TItem LearnedFrom;
+            public TItem BaseReturnScaleTable;
+            public TItem LearnChance;
+            public TItem MaxBuildCountGlobal;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? RecipeFilters;
             public TItem InstantiationFilterKeyword;
-            public TItem RECF;
+            public TItem Flags;
             #endregion
 
             #region Equals
@@ -394,17 +454,21 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.CreatedObject, rhs.CreatedObject)) return false;
                 if (!object.Equals(this.AmountProduced, rhs.AmountProduced)) return false;
                 if (!object.Equals(this.MenuSortOrder, rhs.MenuSortOrder)) return false;
-                if (!object.Equals(this.TNAM, rhs.TNAM)) return false;
+                if (!object.Equals(this.Tier, rhs.Tier)) return false;
                 if (!object.Equals(this.CraftingSound, rhs.CraftingSound)) return false;
                 if (!object.Equals(this.PickupSound, rhs.PickupSound)) return false;
                 if (!object.Equals(this.DropdownSound, rhs.DropdownSound)) return false;
+                if (!object.Equals(this.RepairComponents, rhs.RepairComponents)) return false;
                 if (!object.Equals(this.LearnMethod, rhs.LearnMethod)) return false;
                 if (!object.Equals(this.Value, rhs.Value)) return false;
                 if (!object.Equals(this.MenuArtObject, rhs.MenuArtObject)) return false;
-                if (!object.Equals(this.BuildLimit, rhs.BuildLimit)) return false;
-                if (!object.Equals(this.Categories, rhs.Categories)) return false;
+                if (!object.Equals(this.LearnedFrom, rhs.LearnedFrom)) return false;
+                if (!object.Equals(this.BaseReturnScaleTable, rhs.BaseReturnScaleTable)) return false;
+                if (!object.Equals(this.LearnChance, rhs.LearnChance)) return false;
+                if (!object.Equals(this.MaxBuildCountGlobal, rhs.MaxBuildCountGlobal)) return false;
+                if (!object.Equals(this.RecipeFilters, rhs.RecipeFilters)) return false;
                 if (!object.Equals(this.InstantiationFilterKeyword, rhs.InstantiationFilterKeyword)) return false;
-                if (!object.Equals(this.RECF, rhs.RECF)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -419,17 +483,21 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.CreatedObject);
                 hash.Add(this.AmountProduced);
                 hash.Add(this.MenuSortOrder);
-                hash.Add(this.TNAM);
+                hash.Add(this.Tier);
                 hash.Add(this.CraftingSound);
                 hash.Add(this.PickupSound);
                 hash.Add(this.DropdownSound);
+                hash.Add(this.RepairComponents);
                 hash.Add(this.LearnMethod);
                 hash.Add(this.Value);
                 hash.Add(this.MenuArtObject);
-                hash.Add(this.BuildLimit);
-                hash.Add(this.Categories);
+                hash.Add(this.LearnedFrom);
+                hash.Add(this.BaseReturnScaleTable);
+                hash.Add(this.LearnChance);
+                hash.Add(this.MaxBuildCountGlobal);
+                hash.Add(this.RecipeFilters);
                 hash.Add(this.InstantiationFilterKeyword);
-                hash.Add(this.RECF);
+                hash.Add(this.Flags);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -493,7 +561,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.CreatedObject)) return false;
                 if (!eval(this.AmountProduced)) return false;
                 if (!eval(this.MenuSortOrder)) return false;
-                if (!eval(this.TNAM)) return false;
+                if (!eval(this.Tier)) return false;
                 if (CraftingSound != null)
                 {
                     if (!eval(this.CraftingSound.Overall)) return false;
@@ -509,23 +577,38 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.DropdownSound.Overall)) return false;
                     if (this.DropdownSound.Specific != null && !this.DropdownSound.Specific.All(eval)) return false;
                 }
+                if (this.RepairComponents != null)
+                {
+                    if (!eval(this.RepairComponents.Overall)) return false;
+                    if (this.RepairComponents.Specific != null)
+                    {
+                        foreach (var item in this.RepairComponents.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (!eval(this.LearnMethod)) return false;
                 if (!eval(this.Value)) return false;
                 if (!eval(this.MenuArtObject)) return false;
-                if (!eval(this.BuildLimit)) return false;
-                if (this.Categories != null)
+                if (!eval(this.LearnedFrom)) return false;
+                if (!eval(this.BaseReturnScaleTable)) return false;
+                if (!eval(this.LearnChance)) return false;
+                if (!eval(this.MaxBuildCountGlobal)) return false;
+                if (this.RecipeFilters != null)
                 {
-                    if (!eval(this.Categories.Overall)) return false;
-                    if (this.Categories.Specific != null)
+                    if (!eval(this.RecipeFilters.Overall)) return false;
+                    if (this.RecipeFilters.Specific != null)
                     {
-                        foreach (var item in this.Categories.Specific)
+                        foreach (var item in this.RecipeFilters.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
                 if (!eval(this.InstantiationFilterKeyword)) return false;
-                if (!eval(this.RECF)) return false;
+                if (!eval(this.Flags)) return false;
                 return true;
             }
             #endregion
@@ -587,7 +670,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.CreatedObject)) return true;
                 if (eval(this.AmountProduced)) return true;
                 if (eval(this.MenuSortOrder)) return true;
-                if (eval(this.TNAM)) return true;
+                if (eval(this.Tier)) return true;
                 if (CraftingSound != null)
                 {
                     if (eval(this.CraftingSound.Overall)) return true;
@@ -603,23 +686,38 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.DropdownSound.Overall)) return true;
                     if (this.DropdownSound.Specific != null && this.DropdownSound.Specific.Any(eval)) return true;
                 }
+                if (this.RepairComponents != null)
+                {
+                    if (eval(this.RepairComponents.Overall)) return true;
+                    if (this.RepairComponents.Specific != null)
+                    {
+                        foreach (var item in this.RepairComponents.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (eval(this.LearnMethod)) return true;
                 if (eval(this.Value)) return true;
                 if (eval(this.MenuArtObject)) return true;
-                if (eval(this.BuildLimit)) return true;
-                if (this.Categories != null)
+                if (eval(this.LearnedFrom)) return true;
+                if (eval(this.BaseReturnScaleTable)) return true;
+                if (eval(this.LearnChance)) return true;
+                if (eval(this.MaxBuildCountGlobal)) return true;
+                if (this.RecipeFilters != null)
                 {
-                    if (eval(this.Categories.Overall)) return true;
-                    if (this.Categories.Specific != null)
+                    if (eval(this.RecipeFilters.Overall)) return true;
+                    if (this.RecipeFilters.Specific != null)
                     {
-                        foreach (var item in this.Categories.Specific)
+                        foreach (var item in this.RecipeFilters.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
                 if (eval(this.InstantiationFilterKeyword)) return true;
-                if (eval(this.RECF)) return true;
+                if (eval(this.Flags)) return true;
                 return false;
             }
             #endregion
@@ -700,22 +798,40 @@ namespace Mutagen.Bethesda.Starfield
                 obj.CreatedObject = eval(this.CreatedObject);
                 obj.AmountProduced = eval(this.AmountProduced);
                 obj.MenuSortOrder = eval(this.MenuSortOrder);
-                obj.TNAM = eval(this.TNAM);
+                obj.Tier = eval(this.Tier);
                 obj.CraftingSound = this.CraftingSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.CraftingSound.Overall), this.CraftingSound.Specific?.Translate(eval));
                 obj.PickupSound = this.PickupSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.PickupSound.Overall), this.PickupSound.Specific?.Translate(eval));
                 obj.DropdownSound = this.DropdownSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.DropdownSound.Overall), this.DropdownSound.Specific?.Translate(eval));
+                if (RepairComponents != null)
+                {
+                    obj.RepairComponents = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>>?>(eval(this.RepairComponents.Overall), Enumerable.Empty<MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>>());
+                    if (RepairComponents.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>>();
+                        obj.RepairComponents.Specific = l;
+                        foreach (var item in RepairComponents.Specific)
+                        {
+                            MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ConstructibleObjectComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
                 obj.LearnMethod = eval(this.LearnMethod);
                 obj.Value = eval(this.Value);
                 obj.MenuArtObject = eval(this.MenuArtObject);
-                obj.BuildLimit = eval(this.BuildLimit);
-                if (Categories != null)
+                obj.LearnedFrom = eval(this.LearnedFrom);
+                obj.BaseReturnScaleTable = eval(this.BaseReturnScaleTable);
+                obj.LearnChance = eval(this.LearnChance);
+                obj.MaxBuildCountGlobal = eval(this.MaxBuildCountGlobal);
+                if (RecipeFilters != null)
                 {
-                    obj.Categories = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Categories.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (Categories.Specific != null)
+                    obj.RecipeFilters = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RecipeFilters.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (RecipeFilters.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
-                        obj.Categories.Specific = l;
-                        foreach (var item in Categories.Specific)
+                        obj.RecipeFilters.Specific = l;
+                        foreach (var item in RecipeFilters.Specific)
                         {
                             R mask = eval(item.Value);
                             l.Add((item.Index, mask));
@@ -723,7 +839,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 obj.InstantiationFilterKeyword = eval(this.InstantiationFilterKeyword);
-                obj.RECF = eval(this.RECF);
+                obj.Flags = eval(this.Flags);
             }
             #endregion
 
@@ -838,9 +954,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(MenuSortOrder, "MenuSortOrder");
                     }
-                    if (printMask?.TNAM ?? true)
+                    if (printMask?.Tier ?? true)
                     {
-                        sb.AppendItem(TNAM, "TNAM");
+                        sb.AppendItem(Tier, "Tier");
                     }
                     if (printMask?.CraftingSound?.Overall ?? true)
                     {
@@ -854,6 +970,25 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         DropdownSound?.Print(sb);
                     }
+                    if ((printMask?.RepairComponents?.Overall ?? true)
+                        && RepairComponents is {} RepairComponentsItem)
+                    {
+                        sb.AppendLine("RepairComponents =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(RepairComponentsItem.Overall);
+                            if (RepairComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in RepairComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                     if (printMask?.LearnMethod ?? true)
                     {
                         sb.AppendItem(LearnMethod, "LearnMethod");
@@ -866,20 +1001,32 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(MenuArtObject, "MenuArtObject");
                     }
-                    if (printMask?.BuildLimit ?? true)
+                    if (printMask?.LearnedFrom ?? true)
                     {
-                        sb.AppendItem(BuildLimit, "BuildLimit");
+                        sb.AppendItem(LearnedFrom, "LearnedFrom");
                     }
-                    if ((printMask?.Categories?.Overall ?? true)
-                        && Categories is {} CategoriesItem)
+                    if (printMask?.BaseReturnScaleTable ?? true)
                     {
-                        sb.AppendLine("Categories =>");
+                        sb.AppendItem(BaseReturnScaleTable, "BaseReturnScaleTable");
+                    }
+                    if (printMask?.LearnChance ?? true)
+                    {
+                        sb.AppendItem(LearnChance, "LearnChance");
+                    }
+                    if (printMask?.MaxBuildCountGlobal ?? true)
+                    {
+                        sb.AppendItem(MaxBuildCountGlobal, "MaxBuildCountGlobal");
+                    }
+                    if ((printMask?.RecipeFilters?.Overall ?? true)
+                        && RecipeFilters is {} RecipeFiltersItem)
+                    {
+                        sb.AppendLine("RecipeFilters =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(CategoriesItem.Overall);
-                            if (CategoriesItem.Specific != null)
+                            sb.AppendItem(RecipeFiltersItem.Overall);
+                            if (RecipeFiltersItem.Specific != null)
                             {
-                                foreach (var subItem in CategoriesItem.Specific)
+                                foreach (var subItem in RecipeFiltersItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -895,9 +1042,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(InstantiationFilterKeyword, "InstantiationFilterKeyword");
                     }
-                    if (printMask?.RECF ?? true)
+                    if (printMask?.Flags ?? true)
                     {
-                        sb.AppendItem(RECF, "RECF");
+                        sb.AppendItem(Flags, "Flags");
                     }
                 }
             }
@@ -919,17 +1066,21 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? CreatedObject;
             public Exception? AmountProduced;
             public Exception? MenuSortOrder;
-            public Exception? TNAM;
+            public Exception? Tier;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? CraftingSound;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? PickupSound;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? DropdownSound;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleObjectComponent.ErrorMask?>>?>? RepairComponents;
             public Exception? LearnMethod;
             public Exception? Value;
             public Exception? MenuArtObject;
-            public Exception? BuildLimit;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Categories;
+            public Exception? LearnedFrom;
+            public Exception? BaseReturnScaleTable;
+            public Exception? LearnChance;
+            public Exception? MaxBuildCountGlobal;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? RecipeFilters;
             public Exception? InstantiationFilterKeyword;
-            public Exception? RECF;
+            public Exception? Flags;
             #endregion
 
             #region IErrorMask
@@ -956,28 +1107,36 @@ namespace Mutagen.Bethesda.Starfield
                         return AmountProduced;
                     case ConstructibleObject_FieldIndex.MenuSortOrder:
                         return MenuSortOrder;
-                    case ConstructibleObject_FieldIndex.TNAM:
-                        return TNAM;
+                    case ConstructibleObject_FieldIndex.Tier:
+                        return Tier;
                     case ConstructibleObject_FieldIndex.CraftingSound:
                         return CraftingSound;
                     case ConstructibleObject_FieldIndex.PickupSound:
                         return PickupSound;
                     case ConstructibleObject_FieldIndex.DropdownSound:
                         return DropdownSound;
+                    case ConstructibleObject_FieldIndex.RepairComponents:
+                        return RepairComponents;
                     case ConstructibleObject_FieldIndex.LearnMethod:
                         return LearnMethod;
                     case ConstructibleObject_FieldIndex.Value:
                         return Value;
                     case ConstructibleObject_FieldIndex.MenuArtObject:
                         return MenuArtObject;
-                    case ConstructibleObject_FieldIndex.BuildLimit:
-                        return BuildLimit;
-                    case ConstructibleObject_FieldIndex.Categories:
-                        return Categories;
+                    case ConstructibleObject_FieldIndex.LearnedFrom:
+                        return LearnedFrom;
+                    case ConstructibleObject_FieldIndex.BaseReturnScaleTable:
+                        return BaseReturnScaleTable;
+                    case ConstructibleObject_FieldIndex.LearnChance:
+                        return LearnChance;
+                    case ConstructibleObject_FieldIndex.MaxBuildCountGlobal:
+                        return MaxBuildCountGlobal;
+                    case ConstructibleObject_FieldIndex.RecipeFilters:
+                        return RecipeFilters;
                     case ConstructibleObject_FieldIndex.InstantiationFilterKeyword:
                         return InstantiationFilterKeyword;
-                    case ConstructibleObject_FieldIndex.RECF:
-                        return RECF;
+                    case ConstructibleObject_FieldIndex.Flags:
+                        return Flags;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1015,8 +1174,8 @@ namespace Mutagen.Bethesda.Starfield
                     case ConstructibleObject_FieldIndex.MenuSortOrder:
                         this.MenuSortOrder = ex;
                         break;
-                    case ConstructibleObject_FieldIndex.TNAM:
-                        this.TNAM = ex;
+                    case ConstructibleObject_FieldIndex.Tier:
+                        this.Tier = ex;
                         break;
                     case ConstructibleObject_FieldIndex.CraftingSound:
                         this.CraftingSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
@@ -1027,6 +1186,9 @@ namespace Mutagen.Bethesda.Starfield
                     case ConstructibleObject_FieldIndex.DropdownSound:
                         this.DropdownSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
                         break;
+                    case ConstructibleObject_FieldIndex.RepairComponents:
+                        this.RepairComponents = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleObjectComponent.ErrorMask?>>?>(ex, null);
+                        break;
                     case ConstructibleObject_FieldIndex.LearnMethod:
                         this.LearnMethod = ex;
                         break;
@@ -1036,17 +1198,26 @@ namespace Mutagen.Bethesda.Starfield
                     case ConstructibleObject_FieldIndex.MenuArtObject:
                         this.MenuArtObject = ex;
                         break;
-                    case ConstructibleObject_FieldIndex.BuildLimit:
-                        this.BuildLimit = ex;
+                    case ConstructibleObject_FieldIndex.LearnedFrom:
+                        this.LearnedFrom = ex;
                         break;
-                    case ConstructibleObject_FieldIndex.Categories:
-                        this.Categories = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case ConstructibleObject_FieldIndex.BaseReturnScaleTable:
+                        this.BaseReturnScaleTable = ex;
+                        break;
+                    case ConstructibleObject_FieldIndex.LearnChance:
+                        this.LearnChance = ex;
+                        break;
+                    case ConstructibleObject_FieldIndex.MaxBuildCountGlobal:
+                        this.MaxBuildCountGlobal = ex;
+                        break;
+                    case ConstructibleObject_FieldIndex.RecipeFilters:
+                        this.RecipeFilters = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case ConstructibleObject_FieldIndex.InstantiationFilterKeyword:
                         this.InstantiationFilterKeyword = ex;
                         break;
-                    case ConstructibleObject_FieldIndex.RECF:
-                        this.RECF = ex;
+                    case ConstructibleObject_FieldIndex.Flags:
+                        this.Flags = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1086,8 +1257,8 @@ namespace Mutagen.Bethesda.Starfield
                     case ConstructibleObject_FieldIndex.MenuSortOrder:
                         this.MenuSortOrder = (Exception?)obj;
                         break;
-                    case ConstructibleObject_FieldIndex.TNAM:
-                        this.TNAM = (Exception?)obj;
+                    case ConstructibleObject_FieldIndex.Tier:
+                        this.Tier = (Exception?)obj;
                         break;
                     case ConstructibleObject_FieldIndex.CraftingSound:
                         this.CraftingSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
@@ -1098,6 +1269,9 @@ namespace Mutagen.Bethesda.Starfield
                     case ConstructibleObject_FieldIndex.DropdownSound:
                         this.DropdownSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
                         break;
+                    case ConstructibleObject_FieldIndex.RepairComponents:
+                        this.RepairComponents = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleObjectComponent.ErrorMask?>>?>)obj;
+                        break;
                     case ConstructibleObject_FieldIndex.LearnMethod:
                         this.LearnMethod = (Exception?)obj;
                         break;
@@ -1107,17 +1281,26 @@ namespace Mutagen.Bethesda.Starfield
                     case ConstructibleObject_FieldIndex.MenuArtObject:
                         this.MenuArtObject = (Exception?)obj;
                         break;
-                    case ConstructibleObject_FieldIndex.BuildLimit:
-                        this.BuildLimit = (Exception?)obj;
+                    case ConstructibleObject_FieldIndex.LearnedFrom:
+                        this.LearnedFrom = (Exception?)obj;
                         break;
-                    case ConstructibleObject_FieldIndex.Categories:
-                        this.Categories = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case ConstructibleObject_FieldIndex.BaseReturnScaleTable:
+                        this.BaseReturnScaleTable = (Exception?)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.LearnChance:
+                        this.LearnChance = (Exception?)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.MaxBuildCountGlobal:
+                        this.MaxBuildCountGlobal = (Exception?)obj;
+                        break;
+                    case ConstructibleObject_FieldIndex.RecipeFilters:
+                        this.RecipeFilters = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case ConstructibleObject_FieldIndex.InstantiationFilterKeyword:
                         this.InstantiationFilterKeyword = (Exception?)obj;
                         break;
-                    case ConstructibleObject_FieldIndex.RECF:
-                        this.RECF = (Exception?)obj;
+                    case ConstructibleObject_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -1137,17 +1320,21 @@ namespace Mutagen.Bethesda.Starfield
                 if (CreatedObject != null) return true;
                 if (AmountProduced != null) return true;
                 if (MenuSortOrder != null) return true;
-                if (TNAM != null) return true;
+                if (Tier != null) return true;
                 if (CraftingSound != null) return true;
                 if (PickupSound != null) return true;
                 if (DropdownSound != null) return true;
+                if (RepairComponents != null) return true;
                 if (LearnMethod != null) return true;
                 if (Value != null) return true;
                 if (MenuArtObject != null) return true;
-                if (BuildLimit != null) return true;
-                if (Categories != null) return true;
+                if (LearnedFrom != null) return true;
+                if (BaseReturnScaleTable != null) return true;
+                if (LearnChance != null) return true;
+                if (MaxBuildCountGlobal != null) return true;
+                if (RecipeFilters != null) return true;
                 if (InstantiationFilterKeyword != null) return true;
-                if (RECF != null) return true;
+                if (Flags != null) return true;
                 return false;
             }
             #endregion
@@ -1262,11 +1449,29 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(MenuSortOrder, "MenuSortOrder");
                 }
                 {
-                    sb.AppendItem(TNAM, "TNAM");
+                    sb.AppendItem(Tier, "Tier");
                 }
                 CraftingSound?.Print(sb);
                 PickupSound?.Print(sb);
                 DropdownSound?.Print(sb);
+                if (RepairComponents is {} RepairComponentsItem)
+                {
+                    sb.AppendLine("RepairComponents =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(RepairComponentsItem.Overall);
+                        if (RepairComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in RepairComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
                 {
                     sb.AppendItem(LearnMethod, "LearnMethod");
                 }
@@ -1277,17 +1482,26 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(MenuArtObject, "MenuArtObject");
                 }
                 {
-                    sb.AppendItem(BuildLimit, "BuildLimit");
+                    sb.AppendItem(LearnedFrom, "LearnedFrom");
                 }
-                if (Categories is {} CategoriesItem)
                 {
-                    sb.AppendLine("Categories =>");
+                    sb.AppendItem(BaseReturnScaleTable, "BaseReturnScaleTable");
+                }
+                {
+                    sb.AppendItem(LearnChance, "LearnChance");
+                }
+                {
+                    sb.AppendItem(MaxBuildCountGlobal, "MaxBuildCountGlobal");
+                }
+                if (RecipeFilters is {} RecipeFiltersItem)
+                {
+                    sb.AppendLine("RecipeFilters =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(CategoriesItem.Overall);
-                        if (CategoriesItem.Specific != null)
+                        sb.AppendItem(RecipeFiltersItem.Overall);
+                        if (RecipeFiltersItem.Specific != null)
                         {
-                            foreach (var subItem in CategoriesItem.Specific)
+                            foreach (var subItem in RecipeFiltersItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -1303,7 +1517,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(InstantiationFilterKeyword, "InstantiationFilterKeyword");
                 }
                 {
-                    sb.AppendItem(RECF, "RECF");
+                    sb.AppendItem(Flags, "Flags");
                 }
             }
             #endregion
@@ -1322,17 +1536,21 @@ namespace Mutagen.Bethesda.Starfield
                 ret.CreatedObject = this.CreatedObject.Combine(rhs.CreatedObject);
                 ret.AmountProduced = this.AmountProduced.Combine(rhs.AmountProduced);
                 ret.MenuSortOrder = this.MenuSortOrder.Combine(rhs.MenuSortOrder);
-                ret.TNAM = this.TNAM.Combine(rhs.TNAM);
+                ret.Tier = this.Tier.Combine(rhs.Tier);
                 ret.CraftingSound = this.CraftingSound.Combine(rhs.CraftingSound, (l, r) => l.Combine(r));
                 ret.PickupSound = this.PickupSound.Combine(rhs.PickupSound, (l, r) => l.Combine(r));
                 ret.DropdownSound = this.DropdownSound.Combine(rhs.DropdownSound, (l, r) => l.Combine(r));
+                ret.RepairComponents = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ConstructibleObjectComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.RepairComponents?.Overall, rhs.RepairComponents?.Overall), Noggog.ExceptionExt.Combine(this.RepairComponents?.Specific, rhs.RepairComponents?.Specific));
                 ret.LearnMethod = this.LearnMethod.Combine(rhs.LearnMethod);
                 ret.Value = this.Value.Combine(rhs.Value);
                 ret.MenuArtObject = this.MenuArtObject.Combine(rhs.MenuArtObject);
-                ret.BuildLimit = this.BuildLimit.Combine(rhs.BuildLimit);
-                ret.Categories = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Categories?.Overall, rhs.Categories?.Overall), Noggog.ExceptionExt.Combine(this.Categories?.Specific, rhs.Categories?.Specific));
+                ret.LearnedFrom = this.LearnedFrom.Combine(rhs.LearnedFrom);
+                ret.BaseReturnScaleTable = this.BaseReturnScaleTable.Combine(rhs.BaseReturnScaleTable);
+                ret.LearnChance = this.LearnChance.Combine(rhs.LearnChance);
+                ret.MaxBuildCountGlobal = this.MaxBuildCountGlobal.Combine(rhs.MaxBuildCountGlobal);
+                ret.RecipeFilters = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.RecipeFilters?.Overall, rhs.RecipeFilters?.Overall), Noggog.ExceptionExt.Combine(this.RecipeFilters?.Specific, rhs.RecipeFilters?.Specific));
                 ret.InstantiationFilterKeyword = this.InstantiationFilterKeyword.Combine(rhs.InstantiationFilterKeyword);
-                ret.RECF = this.RECF.Combine(rhs.RECF);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1364,17 +1582,21 @@ namespace Mutagen.Bethesda.Starfield
             public bool CreatedObject;
             public bool AmountProduced;
             public bool MenuSortOrder;
-            public bool TNAM;
+            public bool Tier;
             public SoundReference.TranslationMask? CraftingSound;
             public SoundReference.TranslationMask? PickupSound;
             public SoundReference.TranslationMask? DropdownSound;
+            public ConstructibleObjectComponent.TranslationMask? RepairComponents;
             public bool LearnMethod;
             public bool Value;
             public bool MenuArtObject;
-            public bool BuildLimit;
-            public bool Categories;
+            public bool LearnedFrom;
+            public bool BaseReturnScaleTable;
+            public bool LearnChance;
+            public bool MaxBuildCountGlobal;
+            public bool RecipeFilters;
             public bool InstantiationFilterKeyword;
-            public bool RECF;
+            public bool Flags;
             #endregion
 
             #region Ctors
@@ -1388,14 +1610,17 @@ namespace Mutagen.Bethesda.Starfield
                 this.CreatedObject = defaultOn;
                 this.AmountProduced = defaultOn;
                 this.MenuSortOrder = defaultOn;
-                this.TNAM = defaultOn;
+                this.Tier = defaultOn;
                 this.LearnMethod = defaultOn;
                 this.Value = defaultOn;
                 this.MenuArtObject = defaultOn;
-                this.BuildLimit = defaultOn;
-                this.Categories = defaultOn;
+                this.LearnedFrom = defaultOn;
+                this.BaseReturnScaleTable = defaultOn;
+                this.LearnChance = defaultOn;
+                this.MaxBuildCountGlobal = defaultOn;
+                this.RecipeFilters = defaultOn;
                 this.InstantiationFilterKeyword = defaultOn;
-                this.RECF = defaultOn;
+                this.Flags = defaultOn;
             }
 
             #endregion
@@ -1412,17 +1637,21 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((CreatedObject, null));
                 ret.Add((AmountProduced, null));
                 ret.Add((MenuSortOrder, null));
-                ret.Add((TNAM, null));
+                ret.Add((Tier, null));
                 ret.Add((CraftingSound != null ? CraftingSound.OnOverall : DefaultOn, CraftingSound?.GetCrystal()));
                 ret.Add((PickupSound != null ? PickupSound.OnOverall : DefaultOn, PickupSound?.GetCrystal()));
                 ret.Add((DropdownSound != null ? DropdownSound.OnOverall : DefaultOn, DropdownSound?.GetCrystal()));
+                ret.Add((RepairComponents == null ? DefaultOn : !RepairComponents.GetCrystal().CopyNothing, RepairComponents?.GetCrystal()));
                 ret.Add((LearnMethod, null));
                 ret.Add((Value, null));
                 ret.Add((MenuArtObject, null));
-                ret.Add((BuildLimit, null));
-                ret.Add((Categories, null));
+                ret.Add((LearnedFrom, null));
+                ret.Add((BaseReturnScaleTable, null));
+                ret.Add((LearnChance, null));
+                ret.Add((MaxBuildCountGlobal, null));
+                ret.Add((RecipeFilters, null));
                 ret.Add((InstantiationFilterKeyword, null));
-                ret.Add((RECF, null));
+                ret.Add((Flags, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1486,6 +1715,11 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IConstructibleObject);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => ConstructibleObjectCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => ConstructibleObjectSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => ConstructibleObjectSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
@@ -1574,6 +1808,7 @@ namespace Mutagen.Bethesda.Starfield
         IConstructibleObjectGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IConstructibleObjectInternal>,
+        IResearchResourceTarget,
         IResourceTarget,
         IStarfieldMajorRecordInternal
     {
@@ -1586,17 +1821,25 @@ namespace Mutagen.Bethesda.Starfield
         new IFormLinkNullable<IConstructibleObjectTargetGetter> CreatedObject { get; set; }
         new UInt16 AmountProduced { get; set; }
         new Single MenuSortOrder { get; set; }
-        new Byte TNAM { get; set; }
+        new Byte Tier { get; set; }
         new SoundReference? CraftingSound { get; set; }
         new SoundReference? PickupSound { get; set; }
         new SoundReference? DropdownSound { get; set; }
+        new ExtendedList<ConstructibleObjectComponent>? RepairComponents { get; set; }
         new ConstructibleObject.LearnMethodEnum? LearnMethod { get; set; }
         new UInt32 Value { get; set; }
         new IFormLinkNullable<IArtObjectGetter> MenuArtObject { get; set; }
-        new IFormLinkNullable<IGlobalGetter> BuildLimit { get; set; }
-        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Categories { get; set; }
+        new IFormLinkNullable<IStarfieldMajorRecordGetter> LearnedFrom { get; set; }
+        new IFormLinkNullable<ICurveTableGetter> BaseReturnScaleTable { get; set; }
+        new IFormLinkNullable<IGlobalGetter> LearnChance { get; set; }
+        new IFormLinkNullable<IGlobalGetter> MaxBuildCountGlobal { get; set; }
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? RecipeFilters { get; set; }
         new IFormLinkNullable<IKeywordGetter> InstantiationFilterKeyword { get; set; }
-        new UInt64? RECF { get; set; }
+        new ConstructibleObject.Flag? Flags { get; set; }
+        #region Mutagen
+        new ConstructibleObject.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IConstructibleObjectInternal :
@@ -1615,6 +1858,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkContainerGetter,
         ILoquiObject<IConstructibleObjectGetter>,
         IMapsToGetter<IConstructibleObjectGetter>,
+        IResearchResourceTargetGetter,
         IResourceTargetGetter
     {
         static new ILoquiRegistration StaticRegistration => ConstructibleObject_Registration.Instance;
@@ -1627,17 +1871,25 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<IConstructibleObjectTargetGetter> CreatedObject { get; }
         UInt16 AmountProduced { get; }
         Single MenuSortOrder { get; }
-        Byte TNAM { get; }
+        Byte Tier { get; }
         ISoundReferenceGetter? CraftingSound { get; }
         ISoundReferenceGetter? PickupSound { get; }
         ISoundReferenceGetter? DropdownSound { get; }
+        IReadOnlyList<IConstructibleObjectComponentGetter>? RepairComponents { get; }
         ConstructibleObject.LearnMethodEnum? LearnMethod { get; }
         UInt32 Value { get; }
         IFormLinkNullableGetter<IArtObjectGetter> MenuArtObject { get; }
-        IFormLinkNullableGetter<IGlobalGetter> BuildLimit { get; }
-        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Categories { get; }
+        IFormLinkNullableGetter<IStarfieldMajorRecordGetter> LearnedFrom { get; }
+        IFormLinkNullableGetter<ICurveTableGetter> BaseReturnScaleTable { get; }
+        IFormLinkNullableGetter<IGlobalGetter> LearnChance { get; }
+        IFormLinkNullableGetter<IGlobalGetter> MaxBuildCountGlobal { get; }
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? RecipeFilters { get; }
         IFormLinkNullableGetter<IKeywordGetter> InstantiationFilterKeyword { get; }
-        UInt64? RECF { get; }
+        ConstructibleObject.Flag? Flags { get; }
+
+        #region Mutagen
+        ConstructibleObject.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -1823,17 +2075,21 @@ namespace Mutagen.Bethesda.Starfield
         CreatedObject = 13,
         AmountProduced = 14,
         MenuSortOrder = 15,
-        TNAM = 16,
+        Tier = 16,
         CraftingSound = 17,
         PickupSound = 18,
         DropdownSound = 19,
-        LearnMethod = 20,
-        Value = 21,
-        MenuArtObject = 22,
-        BuildLimit = 23,
-        Categories = 24,
-        InstantiationFilterKeyword = 25,
-        RECF = 26,
+        RepairComponents = 20,
+        LearnMethod = 21,
+        Value = 22,
+        MenuArtObject = 23,
+        LearnedFrom = 24,
+        BaseReturnScaleTable = 25,
+        LearnChance = 26,
+        MaxBuildCountGlobal = 27,
+        RecipeFilters = 28,
+        InstantiationFilterKeyword = 29,
+        Flags = 30,
     }
     #endregion
 
@@ -1844,9 +2100,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 20;
+        public const ushort AdditionalFieldCount = 24;
 
-        public const ushort FieldCount = 27;
+        public const ushort FieldCount = 31;
 
         public static readonly Type MaskType = typeof(ConstructibleObject.Mask<>);
 
@@ -1896,9 +2152,13 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.CUSH,
                 RecordTypes.PUSH,
                 RecordTypes.PDSH,
+                RecordTypes.REPR,
                 RecordTypes.LRNM,
                 RecordTypes.DATA,
                 RecordTypes.ANAM,
+                RecordTypes.GNAM,
+                RecordTypes.CVT0,
+                RecordTypes.LRNC,
                 RecordTypes.JNAM,
                 RecordTypes.FNAM,
                 RecordTypes.CIFK,
@@ -1956,17 +2216,21 @@ namespace Mutagen.Bethesda.Starfield
             item.CreatedObject.Clear();
             item.AmountProduced = default(UInt16);
             item.MenuSortOrder = default(Single);
-            item.TNAM = default(Byte);
+            item.Tier = default(Byte);
             item.CraftingSound = null;
             item.PickupSound = null;
             item.DropdownSound = null;
+            item.RepairComponents = null;
             item.LearnMethod = default;
             item.Value = default(UInt32);
             item.MenuArtObject.Clear();
-            item.BuildLimit.Clear();
-            item.Categories = null;
+            item.LearnedFrom.Clear();
+            item.BaseReturnScaleTable.Clear();
+            item.LearnChance.Clear();
+            item.MaxBuildCountGlobal.Clear();
+            item.RecipeFilters = null;
             item.InstantiationFilterKeyword.Clear();
-            item.RECF = default;
+            item.Flags = default;
             base.Clear(item);
         }
         
@@ -1993,9 +2257,13 @@ namespace Mutagen.Bethesda.Starfield
             obj.CraftingSound?.RemapLinks(mapping);
             obj.PickupSound?.RemapLinks(mapping);
             obj.DropdownSound?.RemapLinks(mapping);
+            obj.RepairComponents?.RemapLinks(mapping);
             obj.MenuArtObject.Relink(mapping);
-            obj.BuildLimit.Relink(mapping);
-            obj.Categories?.RemapLinks(mapping);
+            obj.LearnedFrom.Relink(mapping);
+            obj.BaseReturnScaleTable.Relink(mapping);
+            obj.LearnChance.Relink(mapping);
+            obj.MaxBuildCountGlobal.Relink(mapping);
+            obj.RecipeFilters?.RemapLinks(mapping);
             obj.InstantiationFilterKeyword.Relink(mapping);
         }
         
@@ -2109,7 +2377,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.CreatedObject = item.CreatedObject.Equals(rhs.CreatedObject);
             ret.AmountProduced = item.AmountProduced == rhs.AmountProduced;
             ret.MenuSortOrder = item.MenuSortOrder.EqualsWithin(rhs.MenuSortOrder);
-            ret.TNAM = item.TNAM == rhs.TNAM;
+            ret.Tier = item.Tier == rhs.Tier;
             ret.CraftingSound = EqualsMaskHelper.EqualsHelper(
                 item.CraftingSound,
                 rhs.CraftingSound,
@@ -2125,16 +2393,23 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.DropdownSound,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
+            ret.RepairComponents = item.RepairComponents.CollectionEqualsHelper(
+                rhs.RepairComponents,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             ret.LearnMethod = item.LearnMethod == rhs.LearnMethod;
             ret.Value = item.Value == rhs.Value;
             ret.MenuArtObject = item.MenuArtObject.Equals(rhs.MenuArtObject);
-            ret.BuildLimit = item.BuildLimit.Equals(rhs.BuildLimit);
-            ret.Categories = item.Categories.CollectionEqualsHelper(
-                rhs.Categories,
+            ret.LearnedFrom = item.LearnedFrom.Equals(rhs.LearnedFrom);
+            ret.BaseReturnScaleTable = item.BaseReturnScaleTable.Equals(rhs.BaseReturnScaleTable);
+            ret.LearnChance = item.LearnChance.Equals(rhs.LearnChance);
+            ret.MaxBuildCountGlobal = item.MaxBuildCountGlobal.Equals(rhs.MaxBuildCountGlobal);
+            ret.RecipeFilters = item.RecipeFilters.CollectionEqualsHelper(
+                rhs.RecipeFilters,
                 (l, r) => object.Equals(l, r),
                 include);
             ret.InstantiationFilterKeyword = item.InstantiationFilterKeyword.Equals(rhs.InstantiationFilterKeyword);
-            ret.RECF = item.RECF == rhs.RECF;
+            ret.Flags = item.Flags == rhs.Flags;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2263,9 +2538,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.MenuSortOrder, "MenuSortOrder");
             }
-            if (printMask?.TNAM ?? true)
+            if (printMask?.Tier ?? true)
             {
-                sb.AppendItem(item.TNAM, "TNAM");
+                sb.AppendItem(item.Tier, "Tier");
             }
             if ((printMask?.CraftingSound?.Overall ?? true)
                 && item.CraftingSound is {} CraftingSoundItem)
@@ -2282,6 +2557,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 DropdownSoundItem?.Print(sb, "DropdownSound");
             }
+            if ((printMask?.RepairComponents?.Overall ?? true)
+                && item.RepairComponents is {} RepairComponentsItem)
+            {
+                sb.AppendLine("RepairComponents =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in RepairComponentsItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
             if ((printMask?.LearnMethod ?? true)
                 && item.LearnMethod is {} LearnMethodItem)
             {
@@ -2295,17 +2585,29 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.MenuArtObject.FormKeyNullable, "MenuArtObject");
             }
-            if (printMask?.BuildLimit ?? true)
+            if (printMask?.LearnedFrom ?? true)
             {
-                sb.AppendItem(item.BuildLimit.FormKeyNullable, "BuildLimit");
+                sb.AppendItem(item.LearnedFrom.FormKeyNullable, "LearnedFrom");
             }
-            if ((printMask?.Categories?.Overall ?? true)
-                && item.Categories is {} CategoriesItem)
+            if (printMask?.BaseReturnScaleTable ?? true)
             {
-                sb.AppendLine("Categories =>");
+                sb.AppendItem(item.BaseReturnScaleTable.FormKeyNullable, "BaseReturnScaleTable");
+            }
+            if (printMask?.LearnChance ?? true)
+            {
+                sb.AppendItem(item.LearnChance.FormKeyNullable, "LearnChance");
+            }
+            if (printMask?.MaxBuildCountGlobal ?? true)
+            {
+                sb.AppendItem(item.MaxBuildCountGlobal.FormKeyNullable, "MaxBuildCountGlobal");
+            }
+            if ((printMask?.RecipeFilters?.Overall ?? true)
+                && item.RecipeFilters is {} RecipeFiltersItem)
+            {
+                sb.AppendLine("RecipeFilters =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in CategoriesItem)
+                    foreach (var subItem in RecipeFiltersItem)
                     {
                         using (sb.Brace())
                         {
@@ -2318,10 +2620,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.InstantiationFilterKeyword.FormKeyNullable, "InstantiationFilterKeyword");
             }
-            if ((printMask?.RECF ?? true)
-                && item.RECF is {} RECFItem)
+            if ((printMask?.Flags ?? true)
+                && item.Flags is {} FlagsItem)
             {
-                sb.AppendItem(RECFItem, "RECF");
+                sb.AppendItem(FlagsItem, "Flags");
             }
         }
         
@@ -2409,9 +2711,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.MenuSortOrder.EqualsWithin(rhs.MenuSortOrder)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.TNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Tier) ?? true))
             {
-                if (lhs.TNAM != rhs.TNAM) return false;
+                if (lhs.Tier != rhs.Tier) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CraftingSound) ?? true))
             {
@@ -2437,6 +2739,10 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isDropdownSoundEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.RepairComponents) ?? true))
+            {
+                if (!lhs.RepairComponents.SequenceEqualNullable(rhs.RepairComponents, (l, r) => ((ConstructibleObjectComponentCommon)((IConstructibleObjectComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)ConstructibleObject_FieldIndex.RepairComponents)))) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.LearnMethod) ?? true))
             {
                 if (lhs.LearnMethod != rhs.LearnMethod) return false;
@@ -2449,21 +2755,33 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.MenuArtObject.Equals(rhs.MenuArtObject)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.BuildLimit) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.LearnedFrom) ?? true))
             {
-                if (!lhs.BuildLimit.Equals(rhs.BuildLimit)) return false;
+                if (!lhs.LearnedFrom.Equals(rhs.LearnedFrom)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Categories) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.BaseReturnScaleTable) ?? true))
             {
-                if (!lhs.Categories.SequenceEqualNullable(rhs.Categories)) return false;
+                if (!lhs.BaseReturnScaleTable.Equals(rhs.BaseReturnScaleTable)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.LearnChance) ?? true))
+            {
+                if (!lhs.LearnChance.Equals(rhs.LearnChance)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.MaxBuildCountGlobal) ?? true))
+            {
+                if (!lhs.MaxBuildCountGlobal.Equals(rhs.MaxBuildCountGlobal)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.RecipeFilters) ?? true))
+            {
+                if (!lhs.RecipeFilters.SequenceEqualNullable(rhs.RecipeFilters)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.InstantiationFilterKeyword) ?? true))
             {
                 if (!lhs.InstantiationFilterKeyword.Equals(rhs.InstantiationFilterKeyword)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.RECF) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Flags) ?? true))
             {
-                if (lhs.RECF != rhs.RECF) return false;
+                if (lhs.Flags != rhs.Flags) return false;
             }
             return true;
         }
@@ -2505,7 +2823,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.CreatedObject);
             hash.Add(item.AmountProduced);
             hash.Add(item.MenuSortOrder);
-            hash.Add(item.TNAM);
+            hash.Add(item.Tier);
             if (item.CraftingSound is {} CraftingSounditem)
             {
                 hash.Add(CraftingSounditem);
@@ -2518,18 +2836,22 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(DropdownSounditem);
             }
+            hash.Add(item.RepairComponents);
             if (item.LearnMethod is {} LearnMethoditem)
             {
                 hash.Add(LearnMethoditem);
             }
             hash.Add(item.Value);
             hash.Add(item.MenuArtObject);
-            hash.Add(item.BuildLimit);
-            hash.Add(item.Categories);
+            hash.Add(item.LearnedFrom);
+            hash.Add(item.BaseReturnScaleTable);
+            hash.Add(item.LearnChance);
+            hash.Add(item.MaxBuildCountGlobal);
+            hash.Add(item.RecipeFilters);
             hash.Add(item.InstantiationFilterKeyword);
-            if (item.RECF is {} RECFitem)
+            if (item.Flags is {} Flagsitem)
             {
-                hash.Add(RECFitem);
+                hash.Add(Flagsitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -2612,17 +2934,36 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.RepairComponents is {} RepairComponentsItem)
+            {
+                foreach (var item in RepairComponentsItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
             if (FormLinkInformation.TryFactory(obj.MenuArtObject, out var MenuArtObjectInfo))
             {
                 yield return MenuArtObjectInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.BuildLimit, out var BuildLimitInfo))
+            if (FormLinkInformation.TryFactory(obj.LearnedFrom, out var LearnedFromInfo))
             {
-                yield return BuildLimitInfo;
+                yield return LearnedFromInfo;
             }
-            if (obj.Categories is {} CategoriesItem)
+            if (FormLinkInformation.TryFactory(obj.BaseReturnScaleTable, out var BaseReturnScaleTableInfo))
             {
-                foreach (var item in CategoriesItem)
+                yield return BaseReturnScaleTableInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.LearnChance, out var LearnChanceInfo))
+            {
+                yield return LearnChanceInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.MaxBuildCountGlobal, out var MaxBuildCountGlobalInfo))
+            {
+                yield return MaxBuildCountGlobalInfo;
+            }
+            if (obj.RecipeFilters is {} RecipeFiltersItem)
+            {
+                foreach (var item in RecipeFiltersItem)
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -2851,9 +3192,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.MenuSortOrder = rhs.MenuSortOrder;
             }
-            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.TNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Tier) ?? true))
             {
-                item.TNAM = rhs.TNAM;
+                item.Tier = rhs.Tier;
             }
             if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CraftingSound) ?? true))
             {
@@ -2933,6 +3274,38 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.RepairComponents) ?? true))
+            {
+                errorMask?.PushIndex((int)ConstructibleObject_FieldIndex.RepairComponents);
+                try
+                {
+                    if ((rhs.RepairComponents != null))
+                    {
+                        item.RepairComponents = 
+                            rhs.RepairComponents
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ConstructibleObjectComponent>();
+                    }
+                    else
+                    {
+                        item.RepairComponents = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.LearnMethod) ?? true))
             {
                 item.LearnMethod = rhs.LearnMethod;
@@ -2945,25 +3318,37 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.MenuArtObject.SetTo(rhs.MenuArtObject.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.BuildLimit) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.LearnedFrom) ?? true))
             {
-                item.BuildLimit.SetTo(rhs.BuildLimit.FormKeyNullable);
+                item.LearnedFrom.SetTo(rhs.LearnedFrom.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Categories) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.BaseReturnScaleTable) ?? true))
             {
-                errorMask?.PushIndex((int)ConstructibleObject_FieldIndex.Categories);
+                item.BaseReturnScaleTable.SetTo(rhs.BaseReturnScaleTable.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.LearnChance) ?? true))
+            {
+                item.LearnChance.SetTo(rhs.LearnChance.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.MaxBuildCountGlobal) ?? true))
+            {
+                item.MaxBuildCountGlobal.SetTo(rhs.MaxBuildCountGlobal.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.RecipeFilters) ?? true))
+            {
+                errorMask?.PushIndex((int)ConstructibleObject_FieldIndex.RecipeFilters);
                 try
                 {
-                    if ((rhs.Categories != null))
+                    if ((rhs.RecipeFilters != null))
                     {
-                        item.Categories = 
-                            rhs.Categories
+                        item.RecipeFilters = 
+                            rhs.RecipeFilters
                                 .Select(b => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
                     {
-                        item.Categories = null;
+                        item.RecipeFilters = null;
                     }
                 }
                 catch (Exception ex)
@@ -2980,9 +3365,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.InstantiationFilterKeyword.SetTo(rhs.InstantiationFilterKeyword.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.RECF) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Flags) ?? true))
             {
-                item.RECF = rhs.RECF;
+                item.Flags = rhs.Flags;
             }
             DeepCopyInCustom(
                 item: item,
@@ -3223,7 +3608,7 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.SNAM));
             ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.TNAM,
+                item: item.Tier,
                 header: translationParams.ConvertToCustom(RecordTypes.TNAM));
             if (item.CraftingSound is {} CraftingSoundItem)
             {
@@ -3255,6 +3640,18 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams);
                 }
             }
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConstructibleObjectComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.RepairComponents,
+                recordType: translationParams.ConvertToCustom(RecordTypes.REPR),
+                transl: (MutagenWriter subWriter, IConstructibleObjectComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ConstructibleObjectComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
             EnumBinaryTranslation<ConstructibleObject.LearnMethodEnum, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.LearnMethod,
@@ -3270,11 +3667,23 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.ANAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.BuildLimit,
+                item: item.LearnedFrom,
+                header: translationParams.ConvertToCustom(RecordTypes.GNAM));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.BaseReturnScaleTable,
+                header: translationParams.ConvertToCustom(RecordTypes.CVT0));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.LearnChance,
+                header: translationParams.ConvertToCustom(RecordTypes.LRNC));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.MaxBuildCountGlobal,
                 header: translationParams.ConvertToCustom(RecordTypes.JNAM));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
                 writer: writer,
-                items: item.Categories,
+                items: item.RecipeFilters,
                 recordType: translationParams.ConvertToCustom(RecordTypes.FNAM),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, TypedWriteParams conv) =>
                 {
@@ -3286,9 +3695,10 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.InstantiationFilterKeyword,
                 header: translationParams.ConvertToCustom(RecordTypes.CIFK));
-            UInt64BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.RECF,
+            EnumBinaryTranslation<ConstructibleObject.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Flags,
+                length: 8,
                 header: translationParams.ConvertToCustom(RecordTypes.RECF));
         }
 
@@ -3436,8 +3846,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TNAM = frame.ReadUInt8();
-                    return (int)ConstructibleObject_FieldIndex.TNAM;
+                    item.Tier = frame.ReadUInt8();
+                    return (int)ConstructibleObject_FieldIndex.Tier;
                 }
                 case RecordTypeInts.CUSH:
                 {
@@ -3456,6 +3866,16 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
                     item.DropdownSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
                     return (int)ConstructibleObject_FieldIndex.DropdownSound;
+                }
+                case RecordTypeInts.REPR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.RepairComponents = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ConstructibleObjectComponent>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: ConstructibleObjectComponent.TryCreateFromBinary)
+                        .CastExtendedList<ConstructibleObjectComponent>();
+                    return (int)ConstructibleObject_FieldIndex.RepairComponents;
                 }
                 case RecordTypeInts.LRNM:
                 {
@@ -3477,21 +3897,39 @@ namespace Mutagen.Bethesda.Starfield
                     item.MenuArtObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)ConstructibleObject_FieldIndex.MenuArtObject;
                 }
+                case RecordTypeInts.GNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LearnedFrom.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ConstructibleObject_FieldIndex.LearnedFrom;
+                }
+                case RecordTypeInts.CVT0:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.BaseReturnScaleTable.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ConstructibleObject_FieldIndex.BaseReturnScaleTable;
+                }
+                case RecordTypeInts.LRNC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LearnChance.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ConstructibleObject_FieldIndex.LearnChance;
+                }
                 case RecordTypeInts.JNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BuildLimit.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)ConstructibleObject_FieldIndex.BuildLimit;
+                    item.MaxBuildCountGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)ConstructibleObject_FieldIndex.MaxBuildCountGlobal;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Categories = 
+                    item.RecipeFilters = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
-                    return (int)ConstructibleObject_FieldIndex.Categories;
+                    return (int)ConstructibleObject_FieldIndex.RecipeFilters;
                 }
                 case RecordTypeInts.CIFK:
                 {
@@ -3502,8 +3940,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.RECF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RECF = frame.ReadUInt64();
-                    return (int)ConstructibleObject_FieldIndex.RECF;
+                    item.Flags = EnumBinaryTranslation<ConstructibleObject.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)ConstructibleObject_FieldIndex.Flags;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3564,6 +4004,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         protected override Type LinkType => typeof(IConstructibleObject);
 
+        public ConstructibleObject.MajorFlag MajorFlags => (ConstructibleObject.MajorFlag)this.MajorRecordFlagsRaw;
 
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         #region Description
@@ -3589,13 +4030,14 @@ namespace Mutagen.Bethesda.Starfield
         private int? _MenuSortOrderLocation;
         public Single MenuSortOrder => _MenuSortOrderLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MenuSortOrderLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
-        #region TNAM
-        private int? _TNAMLocation;
-        public Byte TNAM => _TNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TNAMLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
+        #region Tier
+        private int? _TierLocation;
+        public Byte Tier => _TierLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _TierLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
         #endregion
         public ISoundReferenceGetter? CraftingSound { get; private set; }
         public ISoundReferenceGetter? PickupSound { get; private set; }
         public ISoundReferenceGetter? DropdownSound { get; private set; }
+        public IReadOnlyList<IConstructibleObjectComponentGetter>? RepairComponents { get; private set; }
         #region LearnMethod
         private int? _LearnMethodLocation;
         public ConstructibleObject.LearnMethodEnum? LearnMethod => _LearnMethodLocation.HasValue ? (ConstructibleObject.LearnMethodEnum)HeaderTranslation.ExtractSubrecordMemory(_recordData, _LearnMethodLocation!.Value, _package.MetaData.Constants)[0] : default(ConstructibleObject.LearnMethodEnum?);
@@ -3608,18 +4050,30 @@ namespace Mutagen.Bethesda.Starfield
         private int? _MenuArtObjectLocation;
         public IFormLinkNullableGetter<IArtObjectGetter> MenuArtObject => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IArtObjectGetter>(_package, _recordData, _MenuArtObjectLocation);
         #endregion
-        #region BuildLimit
-        private int? _BuildLimitLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> BuildLimit => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _BuildLimitLocation);
+        #region LearnedFrom
+        private int? _LearnedFromLocation;
+        public IFormLinkNullableGetter<IStarfieldMajorRecordGetter> LearnedFrom => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IStarfieldMajorRecordGetter>(_package, _recordData, _LearnedFromLocation);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Categories { get; private set; }
+        #region BaseReturnScaleTable
+        private int? _BaseReturnScaleTableLocation;
+        public IFormLinkNullableGetter<ICurveTableGetter> BaseReturnScaleTable => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ICurveTableGetter>(_package, _recordData, _BaseReturnScaleTableLocation);
+        #endregion
+        #region LearnChance
+        private int? _LearnChanceLocation;
+        public IFormLinkNullableGetter<IGlobalGetter> LearnChance => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _LearnChanceLocation);
+        #endregion
+        #region MaxBuildCountGlobal
+        private int? _MaxBuildCountGlobalLocation;
+        public IFormLinkNullableGetter<IGlobalGetter> MaxBuildCountGlobal => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _MaxBuildCountGlobalLocation);
+        #endregion
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? RecipeFilters { get; private set; }
         #region InstantiationFilterKeyword
         private int? _InstantiationFilterKeywordLocation;
         public IFormLinkNullableGetter<IKeywordGetter> InstantiationFilterKeyword => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IKeywordGetter>(_package, _recordData, _InstantiationFilterKeywordLocation);
         #endregion
-        #region RECF
-        private int? _RECFLocation;
-        public UInt64? RECF => _RECFLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _RECFLocation.Value, _package.MetaData.Constants)) : default(UInt64?);
+        #region Flags
+        private int? _FlagsLocation;
+        public ConstructibleObject.Flag? Flags => _FlagsLocation.HasValue ? (ConstructibleObject.Flag)BinaryPrimitives.ReadInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(ConstructibleObject.Flag?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3761,8 +4215,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _TNAMLocation = (stream.Position - offset);
-                    return (int)ConstructibleObject_FieldIndex.TNAM;
+                    _TierLocation = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.Tier;
                 }
                 case RecordTypeInts.CUSH:
                 {
@@ -3791,6 +4245,16 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)ConstructibleObject_FieldIndex.DropdownSound;
                 }
+                case RecordTypeInts.REPR:
+                {
+                    this.RepairComponents = BinaryOverlayList.FactoryByStartIndexWithTrigger<IConstructibleObjectComponentGetter>(
+                        stream: stream,
+                        package: _package,
+                        finalPos: finalPos,
+                        itemLength: 12,
+                        getter: (s, p) => ConstructibleObjectComponentBinaryOverlay.ConstructibleObjectComponentFactory(s, p));
+                    return (int)ConstructibleObject_FieldIndex.RepairComponents;
+                }
                 case RecordTypeInts.LRNM:
                 {
                     _LearnMethodLocation = (stream.Position - offset);
@@ -3806,20 +4270,35 @@ namespace Mutagen.Bethesda.Starfield
                     _MenuArtObjectLocation = (stream.Position - offset);
                     return (int)ConstructibleObject_FieldIndex.MenuArtObject;
                 }
+                case RecordTypeInts.GNAM:
+                {
+                    _LearnedFromLocation = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.LearnedFrom;
+                }
+                case RecordTypeInts.CVT0:
+                {
+                    _BaseReturnScaleTableLocation = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.BaseReturnScaleTable;
+                }
+                case RecordTypeInts.LRNC:
+                {
+                    _LearnChanceLocation = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.LearnChance;
+                }
                 case RecordTypeInts.JNAM:
                 {
-                    _BuildLimitLocation = (stream.Position - offset);
-                    return (int)ConstructibleObject_FieldIndex.BuildLimit;
+                    _MaxBuildCountGlobalLocation = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.MaxBuildCountGlobal;
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    this.Categories = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IKeywordGetter>>(
+                    this.RecipeFilters = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IKeywordGetter>>(
                         stream: stream,
                         package: _package,
                         finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
-                    return (int)ConstructibleObject_FieldIndex.Categories;
+                    return (int)ConstructibleObject_FieldIndex.RecipeFilters;
                 }
                 case RecordTypeInts.CIFK:
                 {
@@ -3828,8 +4307,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.RECF:
                 {
-                    _RECFLocation = (stream.Position - offset);
-                    return (int)ConstructibleObject_FieldIndex.RECF;
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)ConstructibleObject_FieldIndex.Flags;
                 }
                 default:
                     return base.FillRecordType(

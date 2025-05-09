@@ -115,12 +115,18 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem Rank,
                 TItem Priority,
                 TItem Conditions,
+                TItem PerkEntryID,
+                TItem ButtonLabel,
+                TItem Flags,
                 TItem Quest,
                 TItem Stage)
             : base(
                 Rank: Rank,
                 Priority: Priority,
-                Conditions: Conditions)
+                Conditions: Conditions,
+                PerkEntryID: PerkEntryID,
+                ButtonLabel: ButtonLabel,
+                Flags: Flags)
             {
                 this.Quest = Quest;
                 this.Stage = Stage;
@@ -615,8 +621,11 @@ namespace Mutagen.Bethesda.Fallout4
         Rank = 0,
         Priority = 1,
         Conditions = 2,
-        Quest = 3,
-        Stage = 4,
+        PerkEntryID = 3,
+        ButtonLabel = 4,
+        Flags = 5,
+        Quest = 6,
+        Stage = 7,
     }
     #endregion
 
@@ -629,7 +638,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(PerkQuestEffect.Mask<>);
 
@@ -843,6 +852,12 @@ namespace Mutagen.Bethesda.Fallout4
                 case APerkEffect_FieldIndex.Priority:
                     return (PerkQuestEffect_FieldIndex)((int)index);
                 case APerkEffect_FieldIndex.Conditions:
+                    return (PerkQuestEffect_FieldIndex)((int)index);
+                case APerkEffect_FieldIndex.PerkEntryID:
+                    return (PerkQuestEffect_FieldIndex)((int)index);
+                case APerkEffect_FieldIndex.ButtonLabel:
+                    return (PerkQuestEffect_FieldIndex)((int)index);
+                case APerkEffect_FieldIndex.Flags:
                     return (PerkQuestEffect_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");

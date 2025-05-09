@@ -4,9 +4,9 @@
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <Float name="ODTY" recordType="ODTY" unknown="true" />
+      <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
       <RefDirect name="Transforms" refName="Transforms" />
-      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <UInt64 name="XALG" recordType="XALG" unknown="true" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
@@ -21,5 +21,6 @@
       <UInt32 name="Flags" recordType="FLAG" />
     </Fields>
     <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IResearchResourceTarget</LinkInterface>
   </Object>
 </Loqui>

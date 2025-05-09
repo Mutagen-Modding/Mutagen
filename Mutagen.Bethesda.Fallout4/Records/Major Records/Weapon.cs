@@ -1,3 +1,5 @@
+using Mutagen.Bethesda.Plugins;
+
 namespace Mutagen.Bethesda.Fallout4;
 
 public partial class Weapon
@@ -172,4 +174,6 @@ public partial class Weapon
         HasChargingAttack = 93,
         ActorValues = 94,
     }
+    
+    IFormLinkNullableGetter<IObjectEffectGetter> IEnchantableGetter.ObjectEffect => this.ObjectEffect;
 }

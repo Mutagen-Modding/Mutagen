@@ -1,6 +1,8 @@
 using Loqui.Generation;
 using Noggog;
 using Mutagen.Bethesda.Generation.Fields;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog.StructuredStrings;
 using Noggog.StructuredStrings.CSharp;
 
@@ -116,7 +118,16 @@ public abstract class BinaryTranslationGeneration : TranslationGeneration
         switch (typeGen.GetFieldData().BinaryOverlayFallback)
         {
             case BinaryGenerationType.Normal:
+                var data = typeGen.GetFieldData();
+                if (data.MarkerType.HasValue)
+                {
+                    sb.AppendLine($"stream.ReadSubrecord(); // Skip marker");
+                }
                 sb.AppendLine($"_{typeGen.Name}Location = {locationAccessor};");
+                if (data.MarkerType.HasValue)
+                {
+                    sb.AppendLine($"stream.ReadSubrecord(); // Skip record");
+                }
                 break;
             case BinaryGenerationType.Custom:
                 using (var args = sb.Call(

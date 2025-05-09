@@ -71,28 +71,31 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
-        #region EOVR
+        #region MasterWorldspaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _EOVR;
-        public MemorySlice<Byte>? EOVR
+        private ExtendedList<MasterWorldspace>? _MasterWorldspaces;
+        public ExtendedList<MasterWorldspace>? MasterWorldspaces
         {
-            get => this._EOVR;
-            set => this._EOVR = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IPlanetGetter.EOVR => this.EOVR;
-        #endregion
-        #region Worldspaces
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<PlanetWorldspace>? _Worldspaces;
-        public ExtendedList<PlanetWorldspace>? Worldspaces
-        {
-            get => this._Worldspaces;
-            set => this._Worldspaces = value;
+            get => this._MasterWorldspaces;
+            set => this._MasterWorldspaces = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IPlanetWorldspaceGetter>? IPlanetGetter.Worldspaces => _Worldspaces;
+        IReadOnlyList<IMasterWorldspaceGetter>? IPlanetGetter.MasterWorldspaces => _MasterWorldspaces;
+        #endregion
+
+        #endregion
+        #region AddedWorldspaces
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AddedWorldspace>? _AddedWorldspaces;
+        public ExtendedList<AddedWorldspace>? AddedWorldspaces
+        {
+            get => this._AddedWorldspaces;
+            set => this._AddedWorldspaces = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAddedWorldspaceGetter>? IPlanetGetter.AddedWorldspaces => _AddedWorldspaces;
         #endregion
 
         #endregion
@@ -120,83 +123,62 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISurfaceTreeGetter> IPlanetGetter.SurfaceTree => this.SurfaceTree;
         #endregion
-        #region GNAM
+        #region ScanWorldspaceMultiplier
+        public Single? ScanWorldspaceMultiplier { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _GNAM;
-        public MemorySlice<Byte>? GNAM
-        {
-            get => this._GNAM;
-            set => this._GNAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IPlanetGetter.GNAM => this.GNAM;
+        Single? IPlanetGetter.ScanWorldspaceMultiplier => this.ScanWorldspaceMultiplier;
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamedRequired
         /// </summary>
-        public String? Name { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IPlanetGetter.Name => this.Name;
-        #region Aspects
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequired.Name
-        {
-            get => this.Name ?? string.Empty;
-            set => this.Name = value;
-        }
+        public String Name { get; set; } = string.Empty;
         #endregion
+        #region EnvironmentMap
+        public String? EnvironmentMap { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IPlanetGetter.EnvironmentMap => this.EnvironmentMap;
         #endregion
         #region BodyType
-        public Planet.BodyTypeEnum? BodyType { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Planet.BodyTypeEnum? IPlanetGetter.BodyType => this.BodyType;
+        public Planet.BodyTypeEnum BodyType { get; set; } = default(Planet.BodyTypeEnum);
         #endregion
-        #region DNAM
+        #region SpaceCell
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _DNAM;
-        public MemorySlice<Byte>? DNAM
+        private SpaceCell? _SpaceCell;
+        public SpaceCell? SpaceCell
         {
-            get => this._DNAM;
-            set => this._DNAM = value;
+            get => _SpaceCell;
+            set => _SpaceCell = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IPlanetGetter.DNAM => this.DNAM;
+        ISpaceCellGetter? IPlanetGetter.SpaceCell => this.SpaceCell;
         #endregion
-        #region ENAM
+        #region OrbitalData
+        public OrbitalData OrbitalData { get; set; } = new OrbitalData();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _ENAM;
-        public MemorySlice<Byte>? ENAM
+        IOrbitalDataGetter IPlanetGetter.OrbitalData => OrbitalData;
+        #endregion
+        #region OrbitedData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private OrbitedData? _OrbitedData;
+        public OrbitedData? OrbitedData
         {
-            get => this._ENAM;
-            set => this._ENAM = value;
+            get => _OrbitedData;
+            set => _OrbitedData = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IPlanetGetter.ENAM => this.ENAM;
+        IOrbitedDataGetter? IPlanetGetter.OrbitedData => this.OrbitedData;
         #endregion
-        #region FNAM
+        #region GalaxyData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private PlanetFNAM? _FNAM;
-        public PlanetFNAM? FNAM
+        private GalaxyData? _GalaxyData;
+        public GalaxyData? GalaxyData
         {
-            get => _FNAM;
-            set => _FNAM = value;
+            get => _GalaxyData;
+            set => _GalaxyData = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPlanetFNAMGetter? IPlanetGetter.FNAM => this.FNAM;
-        #endregion
-        #region IDs
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private PlanetIds? _IDs;
-        public PlanetIds? IDs
-        {
-            get => _IDs;
-            set => _IDs = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPlanetIdsGetter? IPlanetGetter.IDs => this.IDs;
+        IGalaxyDataGetter? IPlanetGetter.GalaxyData => this.GalaxyData;
         #endregion
         #region Details
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -209,38 +191,32 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IPlanetDetailsGetter? IPlanetGetter.Details => this.Details;
         #endregion
-        #region INAM
+        #region AtmosphereData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private PlanetINAM? _INAM;
-        public PlanetINAM? INAM
+        private AtmosphereData? _AtmosphereData;
+        public AtmosphereData? AtmosphereData
         {
-            get => _INAM;
-            set => _INAM = value;
+            get => _AtmosphereData;
+            set => _AtmosphereData = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPlanetINAMGetter? IPlanetGetter.INAM => this.INAM;
+        IAtmosphereDataGetter? IPlanetGetter.AtmosphereData => this.AtmosphereData;
         #endregion
-        #region KNAM
+        #region BiomeNoise
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _KNAM;
-        public MemorySlice<Byte>? KNAM
+        private BiomeNoise? _BiomeNoise;
+        public BiomeNoise? BiomeNoise
         {
-            get => this._KNAM;
-            set => this._KNAM = value;
+            get => _BiomeNoise;
+            set => _BiomeNoise = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IPlanetGetter.KNAM => this.KNAM;
+        IBiomeNoiseGetter? IPlanetGetter.BiomeNoise => this.BiomeNoise;
         #endregion
-        #region NNAM
+        #region PlayerKnowledge
+        public Planet.PlayerKnowledgeFlag? PlayerKnowledge { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _NNAM;
-        public MemorySlice<Byte>? NNAM
-        {
-            get => this._NNAM;
-            set => this._NNAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IPlanetGetter.NNAM => this.NNAM;
+        Planet.PlayerKnowledgeFlag? IPlanetGetter.PlayerKnowledge => this.PlayerKnowledge;
         #endregion
         #region Temperature
         public Single? Temperature { get; set; }
@@ -257,16 +233,10 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IPlanetGetter.PerihelionAngleDegrees => this.PerihelionAngleDegrees;
         #endregion
-        #region RSCS
+        #region ResourceCreationSeed
+        public Int32? ResourceCreationSeed { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _RSCS;
-        public MemorySlice<Byte>? RSCS
-        {
-            get => this._RSCS;
-            set => this._RSCS = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IPlanetGetter.RSCS => this.RSCS;
+        Int32? IPlanetGetter.ResourceCreationSeed => this.ResourceCreationSeed;
         #endregion
 
         #region To String
@@ -294,25 +264,26 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
-                this.EOVR = initialValue;
-                this.Worldspaces = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetWorldspace.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PlanetWorldspace.Mask<TItem>?>>());
+                this.MasterWorldspaces = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterWorldspace.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MasterWorldspace.Mask<TItem>?>>());
+                this.AddedWorldspaces = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AddedWorldspace.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AddedWorldspace.Mask<TItem>?>>());
                 this.Biomes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetBiome.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PlanetBiome.Mask<TItem>?>>());
                 this.SurfaceTree = initialValue;
-                this.GNAM = initialValue;
+                this.ScanWorldspaceMultiplier = initialValue;
                 this.Name = initialValue;
+                this.EnvironmentMap = initialValue;
                 this.BodyType = initialValue;
-                this.DNAM = initialValue;
-                this.ENAM = initialValue;
-                this.FNAM = new MaskItem<TItem, PlanetFNAM.Mask<TItem>?>(initialValue, new PlanetFNAM.Mask<TItem>(initialValue));
-                this.IDs = new MaskItem<TItem, PlanetIds.Mask<TItem>?>(initialValue, new PlanetIds.Mask<TItem>(initialValue));
+                this.SpaceCell = new MaskItem<TItem, SpaceCell.Mask<TItem>?>(initialValue, new SpaceCell.Mask<TItem>(initialValue));
+                this.OrbitalData = new MaskItem<TItem, OrbitalData.Mask<TItem>?>(initialValue, new OrbitalData.Mask<TItem>(initialValue));
+                this.OrbitedData = new MaskItem<TItem, OrbitedData.Mask<TItem>?>(initialValue, new OrbitedData.Mask<TItem>(initialValue));
+                this.GalaxyData = new MaskItem<TItem, GalaxyData.Mask<TItem>?>(initialValue, new GalaxyData.Mask<TItem>(initialValue));
                 this.Details = new MaskItem<TItem, PlanetDetails.Mask<TItem>?>(initialValue, new PlanetDetails.Mask<TItem>(initialValue));
-                this.INAM = new MaskItem<TItem, PlanetINAM.Mask<TItem>?>(initialValue, new PlanetINAM.Mask<TItem>(initialValue));
-                this.KNAM = initialValue;
-                this.NNAM = initialValue;
+                this.AtmosphereData = new MaskItem<TItem, AtmosphereData.Mask<TItem>?>(initialValue, new AtmosphereData.Mask<TItem>(initialValue));
+                this.BiomeNoise = new MaskItem<TItem, BiomeNoise.Mask<TItem>?>(initialValue, new BiomeNoise.Mask<TItem>(initialValue));
+                this.PlayerKnowledge = initialValue;
                 this.Temperature = initialValue;
                 this.Density = initialValue;
                 this.PerihelionAngleDegrees = initialValue;
-                this.RSCS = initialValue;
+                this.ResourceCreationSeed = initialValue;
             }
 
             public Mask(
@@ -324,25 +295,26 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
                 TItem Components,
-                TItem EOVR,
-                TItem Worldspaces,
+                TItem MasterWorldspaces,
+                TItem AddedWorldspaces,
                 TItem Biomes,
                 TItem SurfaceTree,
-                TItem GNAM,
+                TItem ScanWorldspaceMultiplier,
                 TItem Name,
+                TItem EnvironmentMap,
                 TItem BodyType,
-                TItem DNAM,
-                TItem ENAM,
-                TItem FNAM,
-                TItem IDs,
+                TItem SpaceCell,
+                TItem OrbitalData,
+                TItem OrbitedData,
+                TItem GalaxyData,
                 TItem Details,
-                TItem INAM,
-                TItem KNAM,
-                TItem NNAM,
+                TItem AtmosphereData,
+                TItem BiomeNoise,
+                TItem PlayerKnowledge,
                 TItem Temperature,
                 TItem Density,
                 TItem PerihelionAngleDegrees,
-                TItem RSCS)
+                TItem ResourceCreationSeed)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -353,25 +325,26 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
-                this.EOVR = EOVR;
-                this.Worldspaces = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetWorldspace.Mask<TItem>?>>?>(Worldspaces, Enumerable.Empty<MaskItemIndexed<TItem, PlanetWorldspace.Mask<TItem>?>>());
+                this.MasterWorldspaces = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterWorldspace.Mask<TItem>?>>?>(MasterWorldspaces, Enumerable.Empty<MaskItemIndexed<TItem, MasterWorldspace.Mask<TItem>?>>());
+                this.AddedWorldspaces = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AddedWorldspace.Mask<TItem>?>>?>(AddedWorldspaces, Enumerable.Empty<MaskItemIndexed<TItem, AddedWorldspace.Mask<TItem>?>>());
                 this.Biomes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetBiome.Mask<TItem>?>>?>(Biomes, Enumerable.Empty<MaskItemIndexed<TItem, PlanetBiome.Mask<TItem>?>>());
                 this.SurfaceTree = SurfaceTree;
-                this.GNAM = GNAM;
+                this.ScanWorldspaceMultiplier = ScanWorldspaceMultiplier;
                 this.Name = Name;
+                this.EnvironmentMap = EnvironmentMap;
                 this.BodyType = BodyType;
-                this.DNAM = DNAM;
-                this.ENAM = ENAM;
-                this.FNAM = new MaskItem<TItem, PlanetFNAM.Mask<TItem>?>(FNAM, new PlanetFNAM.Mask<TItem>(FNAM));
-                this.IDs = new MaskItem<TItem, PlanetIds.Mask<TItem>?>(IDs, new PlanetIds.Mask<TItem>(IDs));
+                this.SpaceCell = new MaskItem<TItem, SpaceCell.Mask<TItem>?>(SpaceCell, new SpaceCell.Mask<TItem>(SpaceCell));
+                this.OrbitalData = new MaskItem<TItem, OrbitalData.Mask<TItem>?>(OrbitalData, new OrbitalData.Mask<TItem>(OrbitalData));
+                this.OrbitedData = new MaskItem<TItem, OrbitedData.Mask<TItem>?>(OrbitedData, new OrbitedData.Mask<TItem>(OrbitedData));
+                this.GalaxyData = new MaskItem<TItem, GalaxyData.Mask<TItem>?>(GalaxyData, new GalaxyData.Mask<TItem>(GalaxyData));
                 this.Details = new MaskItem<TItem, PlanetDetails.Mask<TItem>?>(Details, new PlanetDetails.Mask<TItem>(Details));
-                this.INAM = new MaskItem<TItem, PlanetINAM.Mask<TItem>?>(INAM, new PlanetINAM.Mask<TItem>(INAM));
-                this.KNAM = KNAM;
-                this.NNAM = NNAM;
+                this.AtmosphereData = new MaskItem<TItem, AtmosphereData.Mask<TItem>?>(AtmosphereData, new AtmosphereData.Mask<TItem>(AtmosphereData));
+                this.BiomeNoise = new MaskItem<TItem, BiomeNoise.Mask<TItem>?>(BiomeNoise, new BiomeNoise.Mask<TItem>(BiomeNoise));
+                this.PlayerKnowledge = PlayerKnowledge;
                 this.Temperature = Temperature;
                 this.Density = Density;
                 this.PerihelionAngleDegrees = PerihelionAngleDegrees;
-                this.RSCS = RSCS;
+                this.ResourceCreationSeed = ResourceCreationSeed;
             }
 
             #pragma warning disable CS8618
@@ -384,25 +357,26 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
-            public TItem EOVR;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetWorldspace.Mask<TItem>?>>?>? Worldspaces;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterWorldspace.Mask<TItem>?>>?>? MasterWorldspaces;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AddedWorldspace.Mask<TItem>?>>?>? AddedWorldspaces;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PlanetBiome.Mask<TItem>?>>?>? Biomes;
             public TItem SurfaceTree;
-            public TItem GNAM;
+            public TItem ScanWorldspaceMultiplier;
             public TItem Name;
+            public TItem EnvironmentMap;
             public TItem BodyType;
-            public TItem DNAM;
-            public TItem ENAM;
-            public MaskItem<TItem, PlanetFNAM.Mask<TItem>?>? FNAM { get; set; }
-            public MaskItem<TItem, PlanetIds.Mask<TItem>?>? IDs { get; set; }
+            public MaskItem<TItem, SpaceCell.Mask<TItem>?>? SpaceCell { get; set; }
+            public MaskItem<TItem, OrbitalData.Mask<TItem>?>? OrbitalData { get; set; }
+            public MaskItem<TItem, OrbitedData.Mask<TItem>?>? OrbitedData { get; set; }
+            public MaskItem<TItem, GalaxyData.Mask<TItem>?>? GalaxyData { get; set; }
             public MaskItem<TItem, PlanetDetails.Mask<TItem>?>? Details { get; set; }
-            public MaskItem<TItem, PlanetINAM.Mask<TItem>?>? INAM { get; set; }
-            public TItem KNAM;
-            public TItem NNAM;
+            public MaskItem<TItem, AtmosphereData.Mask<TItem>?>? AtmosphereData { get; set; }
+            public MaskItem<TItem, BiomeNoise.Mask<TItem>?>? BiomeNoise { get; set; }
+            public TItem PlayerKnowledge;
             public TItem Temperature;
             public TItem Density;
             public TItem PerihelionAngleDegrees;
-            public TItem RSCS;
+            public TItem ResourceCreationSeed;
             #endregion
 
             #region Equals
@@ -417,50 +391,52 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
-                if (!object.Equals(this.EOVR, rhs.EOVR)) return false;
-                if (!object.Equals(this.Worldspaces, rhs.Worldspaces)) return false;
+                if (!object.Equals(this.MasterWorldspaces, rhs.MasterWorldspaces)) return false;
+                if (!object.Equals(this.AddedWorldspaces, rhs.AddedWorldspaces)) return false;
                 if (!object.Equals(this.Biomes, rhs.Biomes)) return false;
                 if (!object.Equals(this.SurfaceTree, rhs.SurfaceTree)) return false;
-                if (!object.Equals(this.GNAM, rhs.GNAM)) return false;
+                if (!object.Equals(this.ScanWorldspaceMultiplier, rhs.ScanWorldspaceMultiplier)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.EnvironmentMap, rhs.EnvironmentMap)) return false;
                 if (!object.Equals(this.BodyType, rhs.BodyType)) return false;
-                if (!object.Equals(this.DNAM, rhs.DNAM)) return false;
-                if (!object.Equals(this.ENAM, rhs.ENAM)) return false;
-                if (!object.Equals(this.FNAM, rhs.FNAM)) return false;
-                if (!object.Equals(this.IDs, rhs.IDs)) return false;
+                if (!object.Equals(this.SpaceCell, rhs.SpaceCell)) return false;
+                if (!object.Equals(this.OrbitalData, rhs.OrbitalData)) return false;
+                if (!object.Equals(this.OrbitedData, rhs.OrbitedData)) return false;
+                if (!object.Equals(this.GalaxyData, rhs.GalaxyData)) return false;
                 if (!object.Equals(this.Details, rhs.Details)) return false;
-                if (!object.Equals(this.INAM, rhs.INAM)) return false;
-                if (!object.Equals(this.KNAM, rhs.KNAM)) return false;
-                if (!object.Equals(this.NNAM, rhs.NNAM)) return false;
+                if (!object.Equals(this.AtmosphereData, rhs.AtmosphereData)) return false;
+                if (!object.Equals(this.BiomeNoise, rhs.BiomeNoise)) return false;
+                if (!object.Equals(this.PlayerKnowledge, rhs.PlayerKnowledge)) return false;
                 if (!object.Equals(this.Temperature, rhs.Temperature)) return false;
                 if (!object.Equals(this.Density, rhs.Density)) return false;
                 if (!object.Equals(this.PerihelionAngleDegrees, rhs.PerihelionAngleDegrees)) return false;
-                if (!object.Equals(this.RSCS, rhs.RSCS)) return false;
+                if (!object.Equals(this.ResourceCreationSeed, rhs.ResourceCreationSeed)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Components);
-                hash.Add(this.EOVR);
-                hash.Add(this.Worldspaces);
+                hash.Add(this.MasterWorldspaces);
+                hash.Add(this.AddedWorldspaces);
                 hash.Add(this.Biomes);
                 hash.Add(this.SurfaceTree);
-                hash.Add(this.GNAM);
+                hash.Add(this.ScanWorldspaceMultiplier);
                 hash.Add(this.Name);
+                hash.Add(this.EnvironmentMap);
                 hash.Add(this.BodyType);
-                hash.Add(this.DNAM);
-                hash.Add(this.ENAM);
-                hash.Add(this.FNAM);
-                hash.Add(this.IDs);
+                hash.Add(this.SpaceCell);
+                hash.Add(this.OrbitalData);
+                hash.Add(this.OrbitedData);
+                hash.Add(this.GalaxyData);
                 hash.Add(this.Details);
-                hash.Add(this.INAM);
-                hash.Add(this.KNAM);
-                hash.Add(this.NNAM);
+                hash.Add(this.AtmosphereData);
+                hash.Add(this.BiomeNoise);
+                hash.Add(this.PlayerKnowledge);
                 hash.Add(this.Temperature);
                 hash.Add(this.Density);
                 hash.Add(this.PerihelionAngleDegrees);
-                hash.Add(this.RSCS);
+                hash.Add(this.ResourceCreationSeed);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -483,13 +459,24 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (!eval(this.EOVR)) return false;
-                if (this.Worldspaces != null)
+                if (this.MasterWorldspaces != null)
                 {
-                    if (!eval(this.Worldspaces.Overall)) return false;
-                    if (this.Worldspaces.Specific != null)
+                    if (!eval(this.MasterWorldspaces.Overall)) return false;
+                    if (this.MasterWorldspaces.Specific != null)
                     {
-                        foreach (var item in this.Worldspaces.Specific)
+                        foreach (var item in this.MasterWorldspaces.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.AddedWorldspaces != null)
+                {
+                    if (!eval(this.AddedWorldspaces.Overall)) return false;
+                    if (this.AddedWorldspaces.Specific != null)
+                    {
+                        foreach (var item in this.AddedWorldspaces.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -509,37 +496,50 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (!eval(this.SurfaceTree)) return false;
-                if (!eval(this.GNAM)) return false;
+                if (!eval(this.ScanWorldspaceMultiplier)) return false;
                 if (!eval(this.Name)) return false;
+                if (!eval(this.EnvironmentMap)) return false;
                 if (!eval(this.BodyType)) return false;
-                if (!eval(this.DNAM)) return false;
-                if (!eval(this.ENAM)) return false;
-                if (FNAM != null)
+                if (SpaceCell != null)
                 {
-                    if (!eval(this.FNAM.Overall)) return false;
-                    if (this.FNAM.Specific != null && !this.FNAM.Specific.All(eval)) return false;
+                    if (!eval(this.SpaceCell.Overall)) return false;
+                    if (this.SpaceCell.Specific != null && !this.SpaceCell.Specific.All(eval)) return false;
                 }
-                if (IDs != null)
+                if (OrbitalData != null)
                 {
-                    if (!eval(this.IDs.Overall)) return false;
-                    if (this.IDs.Specific != null && !this.IDs.Specific.All(eval)) return false;
+                    if (!eval(this.OrbitalData.Overall)) return false;
+                    if (this.OrbitalData.Specific != null && !this.OrbitalData.Specific.All(eval)) return false;
+                }
+                if (OrbitedData != null)
+                {
+                    if (!eval(this.OrbitedData.Overall)) return false;
+                    if (this.OrbitedData.Specific != null && !this.OrbitedData.Specific.All(eval)) return false;
+                }
+                if (GalaxyData != null)
+                {
+                    if (!eval(this.GalaxyData.Overall)) return false;
+                    if (this.GalaxyData.Specific != null && !this.GalaxyData.Specific.All(eval)) return false;
                 }
                 if (Details != null)
                 {
                     if (!eval(this.Details.Overall)) return false;
                     if (this.Details.Specific != null && !this.Details.Specific.All(eval)) return false;
                 }
-                if (INAM != null)
+                if (AtmosphereData != null)
                 {
-                    if (!eval(this.INAM.Overall)) return false;
-                    if (this.INAM.Specific != null && !this.INAM.Specific.All(eval)) return false;
+                    if (!eval(this.AtmosphereData.Overall)) return false;
+                    if (this.AtmosphereData.Specific != null && !this.AtmosphereData.Specific.All(eval)) return false;
                 }
-                if (!eval(this.KNAM)) return false;
-                if (!eval(this.NNAM)) return false;
+                if (BiomeNoise != null)
+                {
+                    if (!eval(this.BiomeNoise.Overall)) return false;
+                    if (this.BiomeNoise.Specific != null && !this.BiomeNoise.Specific.All(eval)) return false;
+                }
+                if (!eval(this.PlayerKnowledge)) return false;
                 if (!eval(this.Temperature)) return false;
                 if (!eval(this.Density)) return false;
                 if (!eval(this.PerihelionAngleDegrees)) return false;
-                if (!eval(this.RSCS)) return false;
+                if (!eval(this.ResourceCreationSeed)) return false;
                 return true;
             }
             #endregion
@@ -560,13 +560,24 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (eval(this.EOVR)) return true;
-                if (this.Worldspaces != null)
+                if (this.MasterWorldspaces != null)
                 {
-                    if (eval(this.Worldspaces.Overall)) return true;
-                    if (this.Worldspaces.Specific != null)
+                    if (eval(this.MasterWorldspaces.Overall)) return true;
+                    if (this.MasterWorldspaces.Specific != null)
                     {
-                        foreach (var item in this.Worldspaces.Specific)
+                        foreach (var item in this.MasterWorldspaces.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.AddedWorldspaces != null)
+                {
+                    if (eval(this.AddedWorldspaces.Overall)) return true;
+                    if (this.AddedWorldspaces.Specific != null)
+                    {
+                        foreach (var item in this.AddedWorldspaces.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -586,37 +597,50 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (eval(this.SurfaceTree)) return true;
-                if (eval(this.GNAM)) return true;
+                if (eval(this.ScanWorldspaceMultiplier)) return true;
                 if (eval(this.Name)) return true;
+                if (eval(this.EnvironmentMap)) return true;
                 if (eval(this.BodyType)) return true;
-                if (eval(this.DNAM)) return true;
-                if (eval(this.ENAM)) return true;
-                if (FNAM != null)
+                if (SpaceCell != null)
                 {
-                    if (eval(this.FNAM.Overall)) return true;
-                    if (this.FNAM.Specific != null && this.FNAM.Specific.Any(eval)) return true;
+                    if (eval(this.SpaceCell.Overall)) return true;
+                    if (this.SpaceCell.Specific != null && this.SpaceCell.Specific.Any(eval)) return true;
                 }
-                if (IDs != null)
+                if (OrbitalData != null)
                 {
-                    if (eval(this.IDs.Overall)) return true;
-                    if (this.IDs.Specific != null && this.IDs.Specific.Any(eval)) return true;
+                    if (eval(this.OrbitalData.Overall)) return true;
+                    if (this.OrbitalData.Specific != null && this.OrbitalData.Specific.Any(eval)) return true;
+                }
+                if (OrbitedData != null)
+                {
+                    if (eval(this.OrbitedData.Overall)) return true;
+                    if (this.OrbitedData.Specific != null && this.OrbitedData.Specific.Any(eval)) return true;
+                }
+                if (GalaxyData != null)
+                {
+                    if (eval(this.GalaxyData.Overall)) return true;
+                    if (this.GalaxyData.Specific != null && this.GalaxyData.Specific.Any(eval)) return true;
                 }
                 if (Details != null)
                 {
                     if (eval(this.Details.Overall)) return true;
                     if (this.Details.Specific != null && this.Details.Specific.Any(eval)) return true;
                 }
-                if (INAM != null)
+                if (AtmosphereData != null)
                 {
-                    if (eval(this.INAM.Overall)) return true;
-                    if (this.INAM.Specific != null && this.INAM.Specific.Any(eval)) return true;
+                    if (eval(this.AtmosphereData.Overall)) return true;
+                    if (this.AtmosphereData.Specific != null && this.AtmosphereData.Specific.Any(eval)) return true;
                 }
-                if (eval(this.KNAM)) return true;
-                if (eval(this.NNAM)) return true;
+                if (BiomeNoise != null)
+                {
+                    if (eval(this.BiomeNoise.Overall)) return true;
+                    if (this.BiomeNoise.Specific != null && this.BiomeNoise.Specific.Any(eval)) return true;
+                }
+                if (eval(this.PlayerKnowledge)) return true;
                 if (eval(this.Temperature)) return true;
                 if (eval(this.Density)) return true;
                 if (eval(this.PerihelionAngleDegrees)) return true;
-                if (eval(this.RSCS)) return true;
+                if (eval(this.ResourceCreationSeed)) return true;
                 return false;
             }
             #endregion
@@ -647,17 +671,31 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                obj.EOVR = eval(this.EOVR);
-                if (Worldspaces != null)
+                if (MasterWorldspaces != null)
                 {
-                    obj.Worldspaces = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PlanetWorldspace.Mask<R>?>>?>(eval(this.Worldspaces.Overall), Enumerable.Empty<MaskItemIndexed<R, PlanetWorldspace.Mask<R>?>>());
-                    if (Worldspaces.Specific != null)
+                    obj.MasterWorldspaces = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MasterWorldspace.Mask<R>?>>?>(eval(this.MasterWorldspaces.Overall), Enumerable.Empty<MaskItemIndexed<R, MasterWorldspace.Mask<R>?>>());
+                    if (MasterWorldspaces.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, PlanetWorldspace.Mask<R>?>>();
-                        obj.Worldspaces.Specific = l;
-                        foreach (var item in Worldspaces.Specific)
+                        var l = new List<MaskItemIndexed<R, MasterWorldspace.Mask<R>?>>();
+                        obj.MasterWorldspaces.Specific = l;
+                        foreach (var item in MasterWorldspaces.Specific)
                         {
-                            MaskItemIndexed<R, PlanetWorldspace.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, PlanetWorldspace.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, MasterWorldspace.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, MasterWorldspace.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (AddedWorldspaces != null)
+                {
+                    obj.AddedWorldspaces = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AddedWorldspace.Mask<R>?>>?>(eval(this.AddedWorldspaces.Overall), Enumerable.Empty<MaskItemIndexed<R, AddedWorldspace.Mask<R>?>>());
+                    if (AddedWorldspaces.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AddedWorldspace.Mask<R>?>>();
+                        obj.AddedWorldspaces.Specific = l;
+                        foreach (var item in AddedWorldspaces.Specific)
+                        {
+                            MaskItemIndexed<R, AddedWorldspace.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AddedWorldspace.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -679,21 +717,22 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 obj.SurfaceTree = eval(this.SurfaceTree);
-                obj.GNAM = eval(this.GNAM);
+                obj.ScanWorldspaceMultiplier = eval(this.ScanWorldspaceMultiplier);
                 obj.Name = eval(this.Name);
+                obj.EnvironmentMap = eval(this.EnvironmentMap);
                 obj.BodyType = eval(this.BodyType);
-                obj.DNAM = eval(this.DNAM);
-                obj.ENAM = eval(this.ENAM);
-                obj.FNAM = this.FNAM == null ? null : new MaskItem<R, PlanetFNAM.Mask<R>?>(eval(this.FNAM.Overall), this.FNAM.Specific?.Translate(eval));
-                obj.IDs = this.IDs == null ? null : new MaskItem<R, PlanetIds.Mask<R>?>(eval(this.IDs.Overall), this.IDs.Specific?.Translate(eval));
+                obj.SpaceCell = this.SpaceCell == null ? null : new MaskItem<R, SpaceCell.Mask<R>?>(eval(this.SpaceCell.Overall), this.SpaceCell.Specific?.Translate(eval));
+                obj.OrbitalData = this.OrbitalData == null ? null : new MaskItem<R, OrbitalData.Mask<R>?>(eval(this.OrbitalData.Overall), this.OrbitalData.Specific?.Translate(eval));
+                obj.OrbitedData = this.OrbitedData == null ? null : new MaskItem<R, OrbitedData.Mask<R>?>(eval(this.OrbitedData.Overall), this.OrbitedData.Specific?.Translate(eval));
+                obj.GalaxyData = this.GalaxyData == null ? null : new MaskItem<R, GalaxyData.Mask<R>?>(eval(this.GalaxyData.Overall), this.GalaxyData.Specific?.Translate(eval));
                 obj.Details = this.Details == null ? null : new MaskItem<R, PlanetDetails.Mask<R>?>(eval(this.Details.Overall), this.Details.Specific?.Translate(eval));
-                obj.INAM = this.INAM == null ? null : new MaskItem<R, PlanetINAM.Mask<R>?>(eval(this.INAM.Overall), this.INAM.Specific?.Translate(eval));
-                obj.KNAM = eval(this.KNAM);
-                obj.NNAM = eval(this.NNAM);
+                obj.AtmosphereData = this.AtmosphereData == null ? null : new MaskItem<R, AtmosphereData.Mask<R>?>(eval(this.AtmosphereData.Overall), this.AtmosphereData.Specific?.Translate(eval));
+                obj.BiomeNoise = this.BiomeNoise == null ? null : new MaskItem<R, BiomeNoise.Mask<R>?>(eval(this.BiomeNoise.Overall), this.BiomeNoise.Specific?.Translate(eval));
+                obj.PlayerKnowledge = eval(this.PlayerKnowledge);
                 obj.Temperature = eval(this.Temperature);
                 obj.Density = eval(this.Density);
                 obj.PerihelionAngleDegrees = eval(this.PerihelionAngleDegrees);
-                obj.RSCS = eval(this.RSCS);
+                obj.ResourceCreationSeed = eval(this.ResourceCreationSeed);
             }
             #endregion
 
@@ -731,20 +770,35 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.EOVR ?? true)
+                    if ((printMask?.MasterWorldspaces?.Overall ?? true)
+                        && MasterWorldspaces is {} MasterWorldspacesItem)
                     {
-                        sb.AppendItem(EOVR, "EOVR");
-                    }
-                    if ((printMask?.Worldspaces?.Overall ?? true)
-                        && Worldspaces is {} WorldspacesItem)
-                    {
-                        sb.AppendLine("Worldspaces =>");
+                        sb.AppendLine("MasterWorldspaces =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(WorldspacesItem.Overall);
-                            if (WorldspacesItem.Specific != null)
+                            sb.AppendItem(MasterWorldspacesItem.Overall);
+                            if (MasterWorldspacesItem.Specific != null)
                             {
-                                foreach (var subItem in WorldspacesItem.Specific)
+                                foreach (var subItem in MasterWorldspacesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.AddedWorldspaces?.Overall ?? true)
+                        && AddedWorldspaces is {} AddedWorldspacesItem)
+                    {
+                        sb.AppendLine("AddedWorldspaces =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(AddedWorldspacesItem.Overall);
+                            if (AddedWorldspacesItem.Specific != null)
+                            {
+                                foreach (var subItem in AddedWorldspacesItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -777,49 +831,53 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(SurfaceTree, "SurfaceTree");
                     }
-                    if (printMask?.GNAM ?? true)
+                    if (printMask?.ScanWorldspaceMultiplier ?? true)
                     {
-                        sb.AppendItem(GNAM, "GNAM");
+                        sb.AppendItem(ScanWorldspaceMultiplier, "ScanWorldspaceMultiplier");
                     }
                     if (printMask?.Name ?? true)
                     {
                         sb.AppendItem(Name, "Name");
                     }
+                    if (printMask?.EnvironmentMap ?? true)
+                    {
+                        sb.AppendItem(EnvironmentMap, "EnvironmentMap");
+                    }
                     if (printMask?.BodyType ?? true)
                     {
                         sb.AppendItem(BodyType, "BodyType");
                     }
-                    if (printMask?.DNAM ?? true)
+                    if (printMask?.SpaceCell?.Overall ?? true)
                     {
-                        sb.AppendItem(DNAM, "DNAM");
+                        SpaceCell?.Print(sb);
                     }
-                    if (printMask?.ENAM ?? true)
+                    if (printMask?.OrbitalData?.Overall ?? true)
                     {
-                        sb.AppendItem(ENAM, "ENAM");
+                        OrbitalData?.Print(sb);
                     }
-                    if (printMask?.FNAM?.Overall ?? true)
+                    if (printMask?.OrbitedData?.Overall ?? true)
                     {
-                        FNAM?.Print(sb);
+                        OrbitedData?.Print(sb);
                     }
-                    if (printMask?.IDs?.Overall ?? true)
+                    if (printMask?.GalaxyData?.Overall ?? true)
                     {
-                        IDs?.Print(sb);
+                        GalaxyData?.Print(sb);
                     }
                     if (printMask?.Details?.Overall ?? true)
                     {
                         Details?.Print(sb);
                     }
-                    if (printMask?.INAM?.Overall ?? true)
+                    if (printMask?.AtmosphereData?.Overall ?? true)
                     {
-                        INAM?.Print(sb);
+                        AtmosphereData?.Print(sb);
                     }
-                    if (printMask?.KNAM ?? true)
+                    if (printMask?.BiomeNoise?.Overall ?? true)
                     {
-                        sb.AppendItem(KNAM, "KNAM");
+                        BiomeNoise?.Print(sb);
                     }
-                    if (printMask?.NNAM ?? true)
+                    if (printMask?.PlayerKnowledge ?? true)
                     {
-                        sb.AppendItem(NNAM, "NNAM");
+                        sb.AppendItem(PlayerKnowledge, "PlayerKnowledge");
                     }
                     if (printMask?.Temperature ?? true)
                     {
@@ -833,9 +891,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(PerihelionAngleDegrees, "PerihelionAngleDegrees");
                     }
-                    if (printMask?.RSCS ?? true)
+                    if (printMask?.ResourceCreationSeed ?? true)
                     {
-                        sb.AppendItem(RSCS, "RSCS");
+                        sb.AppendItem(ResourceCreationSeed, "ResourceCreationSeed");
                     }
                 }
             }
@@ -849,25 +907,26 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
-            public Exception? EOVR;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetWorldspace.ErrorMask?>>?>? Worldspaces;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterWorldspace.ErrorMask?>>?>? MasterWorldspaces;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AddedWorldspace.ErrorMask?>>?>? AddedWorldspaces;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetBiome.ErrorMask?>>?>? Biomes;
             public Exception? SurfaceTree;
-            public Exception? GNAM;
+            public Exception? ScanWorldspaceMultiplier;
             public Exception? Name;
+            public Exception? EnvironmentMap;
             public Exception? BodyType;
-            public Exception? DNAM;
-            public Exception? ENAM;
-            public MaskItem<Exception?, PlanetFNAM.ErrorMask?>? FNAM;
-            public MaskItem<Exception?, PlanetIds.ErrorMask?>? IDs;
+            public MaskItem<Exception?, SpaceCell.ErrorMask?>? SpaceCell;
+            public MaskItem<Exception?, OrbitalData.ErrorMask?>? OrbitalData;
+            public MaskItem<Exception?, OrbitedData.ErrorMask?>? OrbitedData;
+            public MaskItem<Exception?, GalaxyData.ErrorMask?>? GalaxyData;
             public MaskItem<Exception?, PlanetDetails.ErrorMask?>? Details;
-            public MaskItem<Exception?, PlanetINAM.ErrorMask?>? INAM;
-            public Exception? KNAM;
-            public Exception? NNAM;
+            public MaskItem<Exception?, AtmosphereData.ErrorMask?>? AtmosphereData;
+            public MaskItem<Exception?, BiomeNoise.ErrorMask?>? BiomeNoise;
+            public Exception? PlayerKnowledge;
             public Exception? Temperature;
             public Exception? Density;
             public Exception? PerihelionAngleDegrees;
-            public Exception? RSCS;
+            public Exception? ResourceCreationSeed;
             #endregion
 
             #region IErrorMask
@@ -878,44 +937,46 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case Planet_FieldIndex.Components:
                         return Components;
-                    case Planet_FieldIndex.EOVR:
-                        return EOVR;
-                    case Planet_FieldIndex.Worldspaces:
-                        return Worldspaces;
+                    case Planet_FieldIndex.MasterWorldspaces:
+                        return MasterWorldspaces;
+                    case Planet_FieldIndex.AddedWorldspaces:
+                        return AddedWorldspaces;
                     case Planet_FieldIndex.Biomes:
                         return Biomes;
                     case Planet_FieldIndex.SurfaceTree:
                         return SurfaceTree;
-                    case Planet_FieldIndex.GNAM:
-                        return GNAM;
+                    case Planet_FieldIndex.ScanWorldspaceMultiplier:
+                        return ScanWorldspaceMultiplier;
                     case Planet_FieldIndex.Name:
                         return Name;
+                    case Planet_FieldIndex.EnvironmentMap:
+                        return EnvironmentMap;
                     case Planet_FieldIndex.BodyType:
                         return BodyType;
-                    case Planet_FieldIndex.DNAM:
-                        return DNAM;
-                    case Planet_FieldIndex.ENAM:
-                        return ENAM;
-                    case Planet_FieldIndex.FNAM:
-                        return FNAM;
-                    case Planet_FieldIndex.IDs:
-                        return IDs;
+                    case Planet_FieldIndex.SpaceCell:
+                        return SpaceCell;
+                    case Planet_FieldIndex.OrbitalData:
+                        return OrbitalData;
+                    case Planet_FieldIndex.OrbitedData:
+                        return OrbitedData;
+                    case Planet_FieldIndex.GalaxyData:
+                        return GalaxyData;
                     case Planet_FieldIndex.Details:
                         return Details;
-                    case Planet_FieldIndex.INAM:
-                        return INAM;
-                    case Planet_FieldIndex.KNAM:
-                        return KNAM;
-                    case Planet_FieldIndex.NNAM:
-                        return NNAM;
+                    case Planet_FieldIndex.AtmosphereData:
+                        return AtmosphereData;
+                    case Planet_FieldIndex.BiomeNoise:
+                        return BiomeNoise;
+                    case Planet_FieldIndex.PlayerKnowledge:
+                        return PlayerKnowledge;
                     case Planet_FieldIndex.Temperature:
                         return Temperature;
                     case Planet_FieldIndex.Density:
                         return Density;
                     case Planet_FieldIndex.PerihelionAngleDegrees:
                         return PerihelionAngleDegrees;
-                    case Planet_FieldIndex.RSCS:
-                        return RSCS;
+                    case Planet_FieldIndex.ResourceCreationSeed:
+                        return ResourceCreationSeed;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -929,11 +990,11 @@ namespace Mutagen.Bethesda.Starfield
                     case Planet_FieldIndex.Components:
                         this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
                         break;
-                    case Planet_FieldIndex.EOVR:
-                        this.EOVR = ex;
+                    case Planet_FieldIndex.MasterWorldspaces:
+                        this.MasterWorldspaces = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterWorldspace.ErrorMask?>>?>(ex, null);
                         break;
-                    case Planet_FieldIndex.Worldspaces:
-                        this.Worldspaces = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetWorldspace.ErrorMask?>>?>(ex, null);
+                    case Planet_FieldIndex.AddedWorldspaces:
+                        this.AddedWorldspaces = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AddedWorldspace.ErrorMask?>>?>(ex, null);
                         break;
                     case Planet_FieldIndex.Biomes:
                         this.Biomes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetBiome.ErrorMask?>>?>(ex, null);
@@ -941,38 +1002,41 @@ namespace Mutagen.Bethesda.Starfield
                     case Planet_FieldIndex.SurfaceTree:
                         this.SurfaceTree = ex;
                         break;
-                    case Planet_FieldIndex.GNAM:
-                        this.GNAM = ex;
+                    case Planet_FieldIndex.ScanWorldspaceMultiplier:
+                        this.ScanWorldspaceMultiplier = ex;
                         break;
                     case Planet_FieldIndex.Name:
                         this.Name = ex;
                         break;
+                    case Planet_FieldIndex.EnvironmentMap:
+                        this.EnvironmentMap = ex;
+                        break;
                     case Planet_FieldIndex.BodyType:
                         this.BodyType = ex;
                         break;
-                    case Planet_FieldIndex.DNAM:
-                        this.DNAM = ex;
+                    case Planet_FieldIndex.SpaceCell:
+                        this.SpaceCell = new MaskItem<Exception?, SpaceCell.ErrorMask?>(ex, null);
                         break;
-                    case Planet_FieldIndex.ENAM:
-                        this.ENAM = ex;
+                    case Planet_FieldIndex.OrbitalData:
+                        this.OrbitalData = new MaskItem<Exception?, OrbitalData.ErrorMask?>(ex, null);
                         break;
-                    case Planet_FieldIndex.FNAM:
-                        this.FNAM = new MaskItem<Exception?, PlanetFNAM.ErrorMask?>(ex, null);
+                    case Planet_FieldIndex.OrbitedData:
+                        this.OrbitedData = new MaskItem<Exception?, OrbitedData.ErrorMask?>(ex, null);
                         break;
-                    case Planet_FieldIndex.IDs:
-                        this.IDs = new MaskItem<Exception?, PlanetIds.ErrorMask?>(ex, null);
+                    case Planet_FieldIndex.GalaxyData:
+                        this.GalaxyData = new MaskItem<Exception?, GalaxyData.ErrorMask?>(ex, null);
                         break;
                     case Planet_FieldIndex.Details:
                         this.Details = new MaskItem<Exception?, PlanetDetails.ErrorMask?>(ex, null);
                         break;
-                    case Planet_FieldIndex.INAM:
-                        this.INAM = new MaskItem<Exception?, PlanetINAM.ErrorMask?>(ex, null);
+                    case Planet_FieldIndex.AtmosphereData:
+                        this.AtmosphereData = new MaskItem<Exception?, AtmosphereData.ErrorMask?>(ex, null);
                         break;
-                    case Planet_FieldIndex.KNAM:
-                        this.KNAM = ex;
+                    case Planet_FieldIndex.BiomeNoise:
+                        this.BiomeNoise = new MaskItem<Exception?, BiomeNoise.ErrorMask?>(ex, null);
                         break;
-                    case Planet_FieldIndex.NNAM:
-                        this.NNAM = ex;
+                    case Planet_FieldIndex.PlayerKnowledge:
+                        this.PlayerKnowledge = ex;
                         break;
                     case Planet_FieldIndex.Temperature:
                         this.Temperature = ex;
@@ -983,8 +1047,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Planet_FieldIndex.PerihelionAngleDegrees:
                         this.PerihelionAngleDegrees = ex;
                         break;
-                    case Planet_FieldIndex.RSCS:
-                        this.RSCS = ex;
+                    case Planet_FieldIndex.ResourceCreationSeed:
+                        this.ResourceCreationSeed = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1000,11 +1064,11 @@ namespace Mutagen.Bethesda.Starfield
                     case Planet_FieldIndex.Components:
                         this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
                         break;
-                    case Planet_FieldIndex.EOVR:
-                        this.EOVR = (Exception?)obj;
+                    case Planet_FieldIndex.MasterWorldspaces:
+                        this.MasterWorldspaces = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterWorldspace.ErrorMask?>>?>)obj;
                         break;
-                    case Planet_FieldIndex.Worldspaces:
-                        this.Worldspaces = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetWorldspace.ErrorMask?>>?>)obj;
+                    case Planet_FieldIndex.AddedWorldspaces:
+                        this.AddedWorldspaces = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AddedWorldspace.ErrorMask?>>?>)obj;
                         break;
                     case Planet_FieldIndex.Biomes:
                         this.Biomes = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetBiome.ErrorMask?>>?>)obj;
@@ -1012,38 +1076,41 @@ namespace Mutagen.Bethesda.Starfield
                     case Planet_FieldIndex.SurfaceTree:
                         this.SurfaceTree = (Exception?)obj;
                         break;
-                    case Planet_FieldIndex.GNAM:
-                        this.GNAM = (Exception?)obj;
+                    case Planet_FieldIndex.ScanWorldspaceMultiplier:
+                        this.ScanWorldspaceMultiplier = (Exception?)obj;
                         break;
                     case Planet_FieldIndex.Name:
                         this.Name = (Exception?)obj;
                         break;
+                    case Planet_FieldIndex.EnvironmentMap:
+                        this.EnvironmentMap = (Exception?)obj;
+                        break;
                     case Planet_FieldIndex.BodyType:
                         this.BodyType = (Exception?)obj;
                         break;
-                    case Planet_FieldIndex.DNAM:
-                        this.DNAM = (Exception?)obj;
+                    case Planet_FieldIndex.SpaceCell:
+                        this.SpaceCell = (MaskItem<Exception?, SpaceCell.ErrorMask?>?)obj;
                         break;
-                    case Planet_FieldIndex.ENAM:
-                        this.ENAM = (Exception?)obj;
+                    case Planet_FieldIndex.OrbitalData:
+                        this.OrbitalData = (MaskItem<Exception?, OrbitalData.ErrorMask?>?)obj;
                         break;
-                    case Planet_FieldIndex.FNAM:
-                        this.FNAM = (MaskItem<Exception?, PlanetFNAM.ErrorMask?>?)obj;
+                    case Planet_FieldIndex.OrbitedData:
+                        this.OrbitedData = (MaskItem<Exception?, OrbitedData.ErrorMask?>?)obj;
                         break;
-                    case Planet_FieldIndex.IDs:
-                        this.IDs = (MaskItem<Exception?, PlanetIds.ErrorMask?>?)obj;
+                    case Planet_FieldIndex.GalaxyData:
+                        this.GalaxyData = (MaskItem<Exception?, GalaxyData.ErrorMask?>?)obj;
                         break;
                     case Planet_FieldIndex.Details:
                         this.Details = (MaskItem<Exception?, PlanetDetails.ErrorMask?>?)obj;
                         break;
-                    case Planet_FieldIndex.INAM:
-                        this.INAM = (MaskItem<Exception?, PlanetINAM.ErrorMask?>?)obj;
+                    case Planet_FieldIndex.AtmosphereData:
+                        this.AtmosphereData = (MaskItem<Exception?, AtmosphereData.ErrorMask?>?)obj;
                         break;
-                    case Planet_FieldIndex.KNAM:
-                        this.KNAM = (Exception?)obj;
+                    case Planet_FieldIndex.BiomeNoise:
+                        this.BiomeNoise = (MaskItem<Exception?, BiomeNoise.ErrorMask?>?)obj;
                         break;
-                    case Planet_FieldIndex.NNAM:
-                        this.NNAM = (Exception?)obj;
+                    case Planet_FieldIndex.PlayerKnowledge:
+                        this.PlayerKnowledge = (Exception?)obj;
                         break;
                     case Planet_FieldIndex.Temperature:
                         this.Temperature = (Exception?)obj;
@@ -1054,8 +1121,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Planet_FieldIndex.PerihelionAngleDegrees:
                         this.PerihelionAngleDegrees = (Exception?)obj;
                         break;
-                    case Planet_FieldIndex.RSCS:
-                        this.RSCS = (Exception?)obj;
+                    case Planet_FieldIndex.ResourceCreationSeed:
+                        this.ResourceCreationSeed = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -1067,25 +1134,26 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (Components != null) return true;
-                if (EOVR != null) return true;
-                if (Worldspaces != null) return true;
+                if (MasterWorldspaces != null) return true;
+                if (AddedWorldspaces != null) return true;
                 if (Biomes != null) return true;
                 if (SurfaceTree != null) return true;
-                if (GNAM != null) return true;
+                if (ScanWorldspaceMultiplier != null) return true;
                 if (Name != null) return true;
+                if (EnvironmentMap != null) return true;
                 if (BodyType != null) return true;
-                if (DNAM != null) return true;
-                if (ENAM != null) return true;
-                if (FNAM != null) return true;
-                if (IDs != null) return true;
+                if (SpaceCell != null) return true;
+                if (OrbitalData != null) return true;
+                if (OrbitedData != null) return true;
+                if (GalaxyData != null) return true;
                 if (Details != null) return true;
-                if (INAM != null) return true;
-                if (KNAM != null) return true;
-                if (NNAM != null) return true;
+                if (AtmosphereData != null) return true;
+                if (BiomeNoise != null) return true;
+                if (PlayerKnowledge != null) return true;
                 if (Temperature != null) return true;
                 if (Density != null) return true;
                 if (PerihelionAngleDegrees != null) return true;
-                if (RSCS != null) return true;
+                if (ResourceCreationSeed != null) return true;
                 return false;
             }
             #endregion
@@ -1130,18 +1198,33 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (MasterWorldspaces is {} MasterWorldspacesItem)
                 {
-                    sb.AppendItem(EOVR, "EOVR");
-                }
-                if (Worldspaces is {} WorldspacesItem)
-                {
-                    sb.AppendLine("Worldspaces =>");
+                    sb.AppendLine("MasterWorldspaces =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(WorldspacesItem.Overall);
-                        if (WorldspacesItem.Specific != null)
+                        sb.AppendItem(MasterWorldspacesItem.Overall);
+                        if (MasterWorldspacesItem.Specific != null)
                         {
-                            foreach (var subItem in WorldspacesItem.Specific)
+                            foreach (var subItem in MasterWorldspacesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (AddedWorldspaces is {} AddedWorldspacesItem)
+                {
+                    sb.AppendLine("AddedWorldspaces =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(AddedWorldspacesItem.Overall);
+                        if (AddedWorldspacesItem.Specific != null)
+                        {
+                            foreach (var subItem in AddedWorldspacesItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -1173,29 +1256,26 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(SurfaceTree, "SurfaceTree");
                 }
                 {
-                    sb.AppendItem(GNAM, "GNAM");
+                    sb.AppendItem(ScanWorldspaceMultiplier, "ScanWorldspaceMultiplier");
                 }
                 {
                     sb.AppendItem(Name, "Name");
                 }
                 {
+                    sb.AppendItem(EnvironmentMap, "EnvironmentMap");
+                }
+                {
                     sb.AppendItem(BodyType, "BodyType");
                 }
-                {
-                    sb.AppendItem(DNAM, "DNAM");
-                }
-                {
-                    sb.AppendItem(ENAM, "ENAM");
-                }
-                FNAM?.Print(sb);
-                IDs?.Print(sb);
+                SpaceCell?.Print(sb);
+                OrbitalData?.Print(sb);
+                OrbitedData?.Print(sb);
+                GalaxyData?.Print(sb);
                 Details?.Print(sb);
-                INAM?.Print(sb);
+                AtmosphereData?.Print(sb);
+                BiomeNoise?.Print(sb);
                 {
-                    sb.AppendItem(KNAM, "KNAM");
-                }
-                {
-                    sb.AppendItem(NNAM, "NNAM");
+                    sb.AppendItem(PlayerKnowledge, "PlayerKnowledge");
                 }
                 {
                     sb.AppendItem(Temperature, "Temperature");
@@ -1207,7 +1287,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(PerihelionAngleDegrees, "PerihelionAngleDegrees");
                 }
                 {
-                    sb.AppendItem(RSCS, "RSCS");
+                    sb.AppendItem(ResourceCreationSeed, "ResourceCreationSeed");
                 }
             }
             #endregion
@@ -1218,25 +1298,26 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
-                ret.EOVR = this.EOVR.Combine(rhs.EOVR);
-                ret.Worldspaces = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetWorldspace.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Worldspaces?.Overall, rhs.Worldspaces?.Overall), Noggog.ExceptionExt.Combine(this.Worldspaces?.Specific, rhs.Worldspaces?.Specific));
+                ret.MasterWorldspaces = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterWorldspace.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.MasterWorldspaces?.Overall, rhs.MasterWorldspaces?.Overall), Noggog.ExceptionExt.Combine(this.MasterWorldspaces?.Specific, rhs.MasterWorldspaces?.Specific));
+                ret.AddedWorldspaces = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AddedWorldspace.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.AddedWorldspaces?.Overall, rhs.AddedWorldspaces?.Overall), Noggog.ExceptionExt.Combine(this.AddedWorldspaces?.Specific, rhs.AddedWorldspaces?.Specific));
                 ret.Biomes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PlanetBiome.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Biomes?.Overall, rhs.Biomes?.Overall), Noggog.ExceptionExt.Combine(this.Biomes?.Specific, rhs.Biomes?.Specific));
                 ret.SurfaceTree = this.SurfaceTree.Combine(rhs.SurfaceTree);
-                ret.GNAM = this.GNAM.Combine(rhs.GNAM);
+                ret.ScanWorldspaceMultiplier = this.ScanWorldspaceMultiplier.Combine(rhs.ScanWorldspaceMultiplier);
                 ret.Name = this.Name.Combine(rhs.Name);
+                ret.EnvironmentMap = this.EnvironmentMap.Combine(rhs.EnvironmentMap);
                 ret.BodyType = this.BodyType.Combine(rhs.BodyType);
-                ret.DNAM = this.DNAM.Combine(rhs.DNAM);
-                ret.ENAM = this.ENAM.Combine(rhs.ENAM);
-                ret.FNAM = this.FNAM.Combine(rhs.FNAM, (l, r) => l.Combine(r));
-                ret.IDs = this.IDs.Combine(rhs.IDs, (l, r) => l.Combine(r));
+                ret.SpaceCell = this.SpaceCell.Combine(rhs.SpaceCell, (l, r) => l.Combine(r));
+                ret.OrbitalData = this.OrbitalData.Combine(rhs.OrbitalData, (l, r) => l.Combine(r));
+                ret.OrbitedData = this.OrbitedData.Combine(rhs.OrbitedData, (l, r) => l.Combine(r));
+                ret.GalaxyData = this.GalaxyData.Combine(rhs.GalaxyData, (l, r) => l.Combine(r));
                 ret.Details = this.Details.Combine(rhs.Details, (l, r) => l.Combine(r));
-                ret.INAM = this.INAM.Combine(rhs.INAM, (l, r) => l.Combine(r));
-                ret.KNAM = this.KNAM.Combine(rhs.KNAM);
-                ret.NNAM = this.NNAM.Combine(rhs.NNAM);
+                ret.AtmosphereData = this.AtmosphereData.Combine(rhs.AtmosphereData, (l, r) => l.Combine(r));
+                ret.BiomeNoise = this.BiomeNoise.Combine(rhs.BiomeNoise, (l, r) => l.Combine(r));
+                ret.PlayerKnowledge = this.PlayerKnowledge.Combine(rhs.PlayerKnowledge);
                 ret.Temperature = this.Temperature.Combine(rhs.Temperature);
                 ret.Density = this.Density.Combine(rhs.Density);
                 ret.PerihelionAngleDegrees = this.PerihelionAngleDegrees.Combine(rhs.PerihelionAngleDegrees);
-                ret.RSCS = this.RSCS.Combine(rhs.RSCS);
+                ret.ResourceCreationSeed = this.ResourceCreationSeed.Combine(rhs.ResourceCreationSeed);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1260,25 +1341,26 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public AComponent.TranslationMask? Components;
-            public bool EOVR;
-            public PlanetWorldspace.TranslationMask? Worldspaces;
+            public MasterWorldspace.TranslationMask? MasterWorldspaces;
+            public AddedWorldspace.TranslationMask? AddedWorldspaces;
             public PlanetBiome.TranslationMask? Biomes;
             public bool SurfaceTree;
-            public bool GNAM;
+            public bool ScanWorldspaceMultiplier;
             public bool Name;
+            public bool EnvironmentMap;
             public bool BodyType;
-            public bool DNAM;
-            public bool ENAM;
-            public PlanetFNAM.TranslationMask? FNAM;
-            public PlanetIds.TranslationMask? IDs;
+            public SpaceCell.TranslationMask? SpaceCell;
+            public OrbitalData.TranslationMask? OrbitalData;
+            public OrbitedData.TranslationMask? OrbitedData;
+            public GalaxyData.TranslationMask? GalaxyData;
             public PlanetDetails.TranslationMask? Details;
-            public PlanetINAM.TranslationMask? INAM;
-            public bool KNAM;
-            public bool NNAM;
+            public AtmosphereData.TranslationMask? AtmosphereData;
+            public BiomeNoise.TranslationMask? BiomeNoise;
+            public bool PlayerKnowledge;
             public bool Temperature;
             public bool Density;
             public bool PerihelionAngleDegrees;
-            public bool RSCS;
+            public bool ResourceCreationSeed;
             #endregion
 
             #region Ctors
@@ -1287,19 +1369,16 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.EOVR = defaultOn;
                 this.SurfaceTree = defaultOn;
-                this.GNAM = defaultOn;
+                this.ScanWorldspaceMultiplier = defaultOn;
                 this.Name = defaultOn;
+                this.EnvironmentMap = defaultOn;
                 this.BodyType = defaultOn;
-                this.DNAM = defaultOn;
-                this.ENAM = defaultOn;
-                this.KNAM = defaultOn;
-                this.NNAM = defaultOn;
+                this.PlayerKnowledge = defaultOn;
                 this.Temperature = defaultOn;
                 this.Density = defaultOn;
                 this.PerihelionAngleDegrees = defaultOn;
-                this.RSCS = defaultOn;
+                this.ResourceCreationSeed = defaultOn;
             }
 
             #endregion
@@ -1308,25 +1387,26 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.GetCrystal(ret);
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
-                ret.Add((EOVR, null));
-                ret.Add((Worldspaces == null ? DefaultOn : !Worldspaces.GetCrystal().CopyNothing, Worldspaces?.GetCrystal()));
+                ret.Add((MasterWorldspaces == null ? DefaultOn : !MasterWorldspaces.GetCrystal().CopyNothing, MasterWorldspaces?.GetCrystal()));
+                ret.Add((AddedWorldspaces == null ? DefaultOn : !AddedWorldspaces.GetCrystal().CopyNothing, AddedWorldspaces?.GetCrystal()));
                 ret.Add((Biomes == null ? DefaultOn : !Biomes.GetCrystal().CopyNothing, Biomes?.GetCrystal()));
                 ret.Add((SurfaceTree, null));
-                ret.Add((GNAM, null));
+                ret.Add((ScanWorldspaceMultiplier, null));
                 ret.Add((Name, null));
+                ret.Add((EnvironmentMap, null));
                 ret.Add((BodyType, null));
-                ret.Add((DNAM, null));
-                ret.Add((ENAM, null));
-                ret.Add((FNAM != null ? FNAM.OnOverall : DefaultOn, FNAM?.GetCrystal()));
-                ret.Add((IDs != null ? IDs.OnOverall : DefaultOn, IDs?.GetCrystal()));
+                ret.Add((SpaceCell != null ? SpaceCell.OnOverall : DefaultOn, SpaceCell?.GetCrystal()));
+                ret.Add((OrbitalData != null ? OrbitalData.OnOverall : DefaultOn, OrbitalData?.GetCrystal()));
+                ret.Add((OrbitedData != null ? OrbitedData.OnOverall : DefaultOn, OrbitedData?.GetCrystal()));
+                ret.Add((GalaxyData != null ? GalaxyData.OnOverall : DefaultOn, GalaxyData?.GetCrystal()));
                 ret.Add((Details != null ? Details.OnOverall : DefaultOn, Details?.GetCrystal()));
-                ret.Add((INAM != null ? INAM.OnOverall : DefaultOn, INAM?.GetCrystal()));
-                ret.Add((KNAM, null));
-                ret.Add((NNAM, null));
+                ret.Add((AtmosphereData != null ? AtmosphereData.OnOverall : DefaultOn, AtmosphereData?.GetCrystal()));
+                ret.Add((BiomeNoise != null ? BiomeNoise.OnOverall : DefaultOn, BiomeNoise?.GetCrystal()));
+                ret.Add((PlayerKnowledge, null));
                 ret.Add((Temperature, null));
                 ret.Add((Density, null));
                 ret.Add((PerihelionAngleDegrees, null));
-                ret.Add((RSCS, null));
+                ret.Add((ResourceCreationSeed, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1476,34 +1556,34 @@ namespace Mutagen.Bethesda.Starfield
         IAssetLinkContainer,
         IFormLinkContainer,
         ILoquiObjectSetter<IPlanetInternal>,
-        INamed,
         INamedRequired,
         IPlanetGetter,
         IStarfieldMajorRecordInternal
     {
         new ExtendedList<AComponent> Components { get; }
-        new MemorySlice<Byte>? EOVR { get; set; }
-        new ExtendedList<PlanetWorldspace>? Worldspaces { get; set; }
+        new ExtendedList<MasterWorldspace>? MasterWorldspaces { get; set; }
+        new ExtendedList<AddedWorldspace>? AddedWorldspaces { get; set; }
         new ExtendedList<PlanetBiome> Biomes { get; }
         new IFormLinkNullable<ISurfaceTreeGetter> SurfaceTree { get; set; }
-        new MemorySlice<Byte>? GNAM { get; set; }
+        new Single? ScanWorldspaceMultiplier { get; set; }
         /// <summary>
-        /// Aspects: INamed, INamedRequired
+        /// Aspects: INamedRequired
         /// </summary>
-        new String? Name { get; set; }
-        new Planet.BodyTypeEnum? BodyType { get; set; }
-        new MemorySlice<Byte>? DNAM { get; set; }
-        new MemorySlice<Byte>? ENAM { get; set; }
-        new PlanetFNAM? FNAM { get; set; }
-        new PlanetIds? IDs { get; set; }
+        new String Name { get; set; }
+        new String? EnvironmentMap { get; set; }
+        new Planet.BodyTypeEnum BodyType { get; set; }
+        new SpaceCell? SpaceCell { get; set; }
+        new OrbitalData OrbitalData { get; set; }
+        new OrbitedData? OrbitedData { get; set; }
+        new GalaxyData? GalaxyData { get; set; }
         new PlanetDetails? Details { get; set; }
-        new PlanetINAM? INAM { get; set; }
-        new MemorySlice<Byte>? KNAM { get; set; }
-        new MemorySlice<Byte>? NNAM { get; set; }
+        new AtmosphereData? AtmosphereData { get; set; }
+        new BiomeNoise? BiomeNoise { get; set; }
+        new Planet.PlayerKnowledgeFlag? PlayerKnowledge { get; set; }
         new Single? Temperature { get; set; }
         new Single? Density { get; set; }
         new Single? PerihelionAngleDegrees { get; set; }
-        new MemorySlice<Byte>? RSCS { get; set; }
+        new Int32? ResourceCreationSeed { get; set; }
     }
 
     public partial interface IPlanetInternal :
@@ -1521,35 +1601,35 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkContainerGetter,
         ILoquiObject<IPlanetGetter>,
         IMapsToGetter<IPlanetGetter>,
-        INamedGetter,
         INamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Planet_Registration.Instance;
         IReadOnlyList<IAComponentGetter> Components { get; }
-        ReadOnlyMemorySlice<Byte>? EOVR { get; }
-        IReadOnlyList<IPlanetWorldspaceGetter>? Worldspaces { get; }
+        IReadOnlyList<IMasterWorldspaceGetter>? MasterWorldspaces { get; }
+        IReadOnlyList<IAddedWorldspaceGetter>? AddedWorldspaces { get; }
         IReadOnlyList<IPlanetBiomeGetter> Biomes { get; }
         IFormLinkNullableGetter<ISurfaceTreeGetter> SurfaceTree { get; }
-        ReadOnlyMemorySlice<Byte>? GNAM { get; }
+        Single? ScanWorldspaceMultiplier { get; }
         #region Name
         /// <summary>
-        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// Aspects: INamedRequiredGetter
         /// </summary>
-        String? Name { get; }
+        String Name { get; }
         #endregion
-        Planet.BodyTypeEnum? BodyType { get; }
-        ReadOnlyMemorySlice<Byte>? DNAM { get; }
-        ReadOnlyMemorySlice<Byte>? ENAM { get; }
-        IPlanetFNAMGetter? FNAM { get; }
-        IPlanetIdsGetter? IDs { get; }
+        String? EnvironmentMap { get; }
+        Planet.BodyTypeEnum BodyType { get; }
+        ISpaceCellGetter? SpaceCell { get; }
+        IOrbitalDataGetter OrbitalData { get; }
+        IOrbitedDataGetter? OrbitedData { get; }
+        IGalaxyDataGetter? GalaxyData { get; }
         IPlanetDetailsGetter? Details { get; }
-        IPlanetINAMGetter? INAM { get; }
-        ReadOnlyMemorySlice<Byte>? KNAM { get; }
-        ReadOnlyMemorySlice<Byte>? NNAM { get; }
+        IAtmosphereDataGetter? AtmosphereData { get; }
+        IBiomeNoiseGetter? BiomeNoise { get; }
+        Planet.PlayerKnowledgeFlag? PlayerKnowledge { get; }
         Single? Temperature { get; }
         Single? Density { get; }
         Single? PerihelionAngleDegrees { get; }
-        ReadOnlyMemorySlice<Byte>? RSCS { get; }
+        Int32? ResourceCreationSeed { get; }
 
     }
 
@@ -1727,25 +1807,26 @@ namespace Mutagen.Bethesda.Starfield
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
         Components = 7,
-        EOVR = 8,
-        Worldspaces = 9,
+        MasterWorldspaces = 8,
+        AddedWorldspaces = 9,
         Biomes = 10,
         SurfaceTree = 11,
-        GNAM = 12,
+        ScanWorldspaceMultiplier = 12,
         Name = 13,
-        BodyType = 14,
-        DNAM = 15,
-        ENAM = 16,
-        FNAM = 17,
-        IDs = 18,
-        Details = 19,
-        INAM = 20,
-        KNAM = 21,
-        NNAM = 22,
-        Temperature = 23,
-        Density = 24,
-        PerihelionAngleDegrees = 25,
-        RSCS = 26,
+        EnvironmentMap = 14,
+        BodyType = 15,
+        SpaceCell = 16,
+        OrbitalData = 17,
+        OrbitedData = 18,
+        GalaxyData = 19,
+        Details = 20,
+        AtmosphereData = 21,
+        BiomeNoise = 22,
+        PlayerKnowledge = 23,
+        Temperature = 24,
+        Density = 25,
+        PerihelionAngleDegrees = 26,
+        ResourceCreationSeed = 27,
     }
     #endregion
 
@@ -1756,9 +1837,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 20;
+        public const ushort AdditionalFieldCount = 21;
 
-        public const ushort FieldCount = 27;
+        public const ushort FieldCount = 28;
 
         public static readonly Type MaskType = typeof(Planet.Mask<>);
 
@@ -1793,13 +1874,14 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.PNDT,
                 RecordTypes.BFCB,
                 RecordTypes.BFCE,
-                RecordTypes.EOVR,
                 RecordTypes.CNAM,
+                RecordTypes.EOVR,
                 RecordTypes.PPBD,
                 RecordTypes.FNAM,
                 RecordTypes.GNAM,
                 RecordTypes.BDST,
                 RecordTypes.ANAM,
+                RecordTypes.XEMP,
                 RecordTypes.DNAM,
                 RecordTypes.ENAM,
                 RecordTypes.HNAM,
@@ -1856,25 +1938,26 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Components.Clear();
-            item.EOVR = default;
-            item.Worldspaces = null;
+            item.MasterWorldspaces = null;
+            item.AddedWorldspaces = null;
             item.Biomes.Clear();
             item.SurfaceTree.Clear();
-            item.GNAM = default;
-            item.Name = default;
-            item.BodyType = default;
-            item.DNAM = default;
-            item.ENAM = default;
-            item.FNAM = null;
-            item.IDs = null;
+            item.ScanWorldspaceMultiplier = default;
+            item.Name = string.Empty;
+            item.EnvironmentMap = default;
+            item.BodyType = default(Planet.BodyTypeEnum);
+            item.SpaceCell = null;
+            item.OrbitalData.Clear();
+            item.OrbitedData = null;
+            item.GalaxyData = null;
             item.Details = null;
-            item.INAM = null;
-            item.KNAM = default;
-            item.NNAM = default;
+            item.AtmosphereData = null;
+            item.BiomeNoise = null;
+            item.PlayerKnowledge = default;
             item.Temperature = default;
             item.Density = default;
             item.PerihelionAngleDegrees = default;
-            item.RSCS = default;
+            item.ResourceCreationSeed = default;
             base.Clear(item);
         }
         
@@ -1893,9 +1976,11 @@ namespace Mutagen.Bethesda.Starfield
         {
             base.RemapLinks(obj, mapping);
             obj.Components.RemapLinks(mapping);
-            obj.Worldspaces?.RemapLinks(mapping);
+            obj.MasterWorldspaces?.RemapLinks(mapping);
+            obj.AddedWorldspaces?.RemapLinks(mapping);
             obj.Biomes.RemapLinks(mapping);
             obj.SurfaceTree.Relink(mapping);
+            obj.AtmosphereData?.RemapLinks(mapping);
         }
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IPlanet obj)
@@ -1991,9 +2076,12 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Components,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.EOVR = MemorySliceExt.SequenceEqual(item.EOVR, rhs.EOVR);
-            ret.Worldspaces = item.Worldspaces.CollectionEqualsHelper(
-                rhs.Worldspaces,
+            ret.MasterWorldspaces = item.MasterWorldspaces.CollectionEqualsHelper(
+                rhs.MasterWorldspaces,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.AddedWorldspaces = item.AddedWorldspaces.CollectionEqualsHelper(
+                rhs.AddedWorldspaces,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.Biomes = item.Biomes.CollectionEqualsHelper(
@@ -2001,19 +2089,24 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.SurfaceTree = item.SurfaceTree.Equals(rhs.SurfaceTree);
-            ret.GNAM = MemorySliceExt.SequenceEqual(item.GNAM, rhs.GNAM);
+            ret.ScanWorldspaceMultiplier = item.ScanWorldspaceMultiplier.EqualsWithin(rhs.ScanWorldspaceMultiplier);
             ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.EnvironmentMap = string.Equals(item.EnvironmentMap, rhs.EnvironmentMap);
             ret.BodyType = item.BodyType == rhs.BodyType;
-            ret.DNAM = MemorySliceExt.SequenceEqual(item.DNAM, rhs.DNAM);
-            ret.ENAM = MemorySliceExt.SequenceEqual(item.ENAM, rhs.ENAM);
-            ret.FNAM = EqualsMaskHelper.EqualsHelper(
-                item.FNAM,
-                rhs.FNAM,
+            ret.SpaceCell = EqualsMaskHelper.EqualsHelper(
+                item.SpaceCell,
+                rhs.SpaceCell,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.IDs = EqualsMaskHelper.EqualsHelper(
-                item.IDs,
-                rhs.IDs,
+            ret.OrbitalData = MaskItemExt.Factory(item.OrbitalData.GetEqualsMask(rhs.OrbitalData, include), include);
+            ret.OrbitedData = EqualsMaskHelper.EqualsHelper(
+                item.OrbitedData,
+                rhs.OrbitedData,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.GalaxyData = EqualsMaskHelper.EqualsHelper(
+                item.GalaxyData,
+                rhs.GalaxyData,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.Details = EqualsMaskHelper.EqualsHelper(
@@ -2021,17 +2114,21 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Details,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.INAM = EqualsMaskHelper.EqualsHelper(
-                item.INAM,
-                rhs.INAM,
+            ret.AtmosphereData = EqualsMaskHelper.EqualsHelper(
+                item.AtmosphereData,
+                rhs.AtmosphereData,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.KNAM = MemorySliceExt.SequenceEqual(item.KNAM, rhs.KNAM);
-            ret.NNAM = MemorySliceExt.SequenceEqual(item.NNAM, rhs.NNAM);
+            ret.BiomeNoise = EqualsMaskHelper.EqualsHelper(
+                item.BiomeNoise,
+                rhs.BiomeNoise,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.PlayerKnowledge = item.PlayerKnowledge == rhs.PlayerKnowledge;
             ret.Temperature = item.Temperature.EqualsWithin(rhs.Temperature);
             ret.Density = item.Density.EqualsWithin(rhs.Density);
             ret.PerihelionAngleDegrees = item.PerihelionAngleDegrees.EqualsWithin(rhs.PerihelionAngleDegrees);
-            ret.RSCS = MemorySliceExt.SequenceEqual(item.RSCS, rhs.RSCS);
+            ret.ResourceCreationSeed = item.ResourceCreationSeed == rhs.ResourceCreationSeed;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2095,18 +2192,28 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.EOVR ?? true)
-                && item.EOVR is {} EOVRItem)
+            if ((printMask?.MasterWorldspaces?.Overall ?? true)
+                && item.MasterWorldspaces is {} MasterWorldspacesItem)
             {
-                sb.AppendLine($"EOVR => {SpanExt.ToHexString(EOVRItem)}");
-            }
-            if ((printMask?.Worldspaces?.Overall ?? true)
-                && item.Worldspaces is {} WorldspacesItem)
-            {
-                sb.AppendLine("Worldspaces =>");
+                sb.AppendLine("MasterWorldspaces =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in WorldspacesItem)
+                    foreach (var subItem in MasterWorldspacesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.AddedWorldspaces?.Overall ?? true)
+                && item.AddedWorldspaces is {} AddedWorldspacesItem)
+            {
+                sb.AppendLine("AddedWorldspaces =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in AddedWorldspacesItem)
                     {
                         using (sb.Brace())
                         {
@@ -2133,60 +2240,62 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.SurfaceTree.FormKeyNullable, "SurfaceTree");
             }
-            if ((printMask?.GNAM ?? true)
-                && item.GNAM is {} GNAMItem)
+            if ((printMask?.ScanWorldspaceMultiplier ?? true)
+                && item.ScanWorldspaceMultiplier is {} ScanWorldspaceMultiplierItem)
             {
-                sb.AppendLine($"GNAM => {SpanExt.ToHexString(GNAMItem)}");
+                sb.AppendItem(ScanWorldspaceMultiplierItem, "ScanWorldspaceMultiplier");
             }
-            if ((printMask?.Name ?? true)
-                && item.Name is {} NameItem)
+            if (printMask?.Name ?? true)
             {
-                sb.AppendItem(NameItem, "Name");
+                sb.AppendItem(item.Name, "Name");
             }
-            if ((printMask?.BodyType ?? true)
-                && item.BodyType is {} BodyTypeItem)
+            if ((printMask?.EnvironmentMap ?? true)
+                && item.EnvironmentMap is {} EnvironmentMapItem)
             {
-                sb.AppendItem(BodyTypeItem, "BodyType");
+                sb.AppendItem(EnvironmentMapItem, "EnvironmentMap");
             }
-            if ((printMask?.DNAM ?? true)
-                && item.DNAM is {} DNAMItem)
+            if (printMask?.BodyType ?? true)
             {
-                sb.AppendLine($"DNAM => {SpanExt.ToHexString(DNAMItem)}");
+                sb.AppendItem(item.BodyType, "BodyType");
             }
-            if ((printMask?.ENAM ?? true)
-                && item.ENAM is {} ENAMItem)
+            if ((printMask?.SpaceCell?.Overall ?? true)
+                && item.SpaceCell is {} SpaceCellItem)
             {
-                sb.AppendLine($"ENAM => {SpanExt.ToHexString(ENAMItem)}");
+                SpaceCellItem?.Print(sb, "SpaceCell");
             }
-            if ((printMask?.FNAM?.Overall ?? true)
-                && item.FNAM is {} FNAMItem)
+            if (printMask?.OrbitalData?.Overall ?? true)
             {
-                FNAMItem?.Print(sb, "FNAM");
+                item.OrbitalData?.Print(sb, "OrbitalData");
             }
-            if ((printMask?.IDs?.Overall ?? true)
-                && item.IDs is {} IDsItem)
+            if ((printMask?.OrbitedData?.Overall ?? true)
+                && item.OrbitedData is {} OrbitedDataItem)
             {
-                IDsItem?.Print(sb, "IDs");
+                OrbitedDataItem?.Print(sb, "OrbitedData");
+            }
+            if ((printMask?.GalaxyData?.Overall ?? true)
+                && item.GalaxyData is {} GalaxyDataItem)
+            {
+                GalaxyDataItem?.Print(sb, "GalaxyData");
             }
             if ((printMask?.Details?.Overall ?? true)
                 && item.Details is {} DetailsItem)
             {
                 DetailsItem?.Print(sb, "Details");
             }
-            if ((printMask?.INAM?.Overall ?? true)
-                && item.INAM is {} INAMItem)
+            if ((printMask?.AtmosphereData?.Overall ?? true)
+                && item.AtmosphereData is {} AtmosphereDataItem)
             {
-                INAMItem?.Print(sb, "INAM");
+                AtmosphereDataItem?.Print(sb, "AtmosphereData");
             }
-            if ((printMask?.KNAM ?? true)
-                && item.KNAM is {} KNAMItem)
+            if ((printMask?.BiomeNoise?.Overall ?? true)
+                && item.BiomeNoise is {} BiomeNoiseItem)
             {
-                sb.AppendLine($"KNAM => {SpanExt.ToHexString(KNAMItem)}");
+                BiomeNoiseItem?.Print(sb, "BiomeNoise");
             }
-            if ((printMask?.NNAM ?? true)
-                && item.NNAM is {} NNAMItem)
+            if ((printMask?.PlayerKnowledge ?? true)
+                && item.PlayerKnowledge is {} PlayerKnowledgeItem)
             {
-                sb.AppendLine($"NNAM => {SpanExt.ToHexString(NNAMItem)}");
+                sb.AppendItem(PlayerKnowledgeItem, "PlayerKnowledge");
             }
             if ((printMask?.Temperature ?? true)
                 && item.Temperature is {} TemperatureItem)
@@ -2203,10 +2312,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(PerihelionAngleDegreesItem, "PerihelionAngleDegrees");
             }
-            if ((printMask?.RSCS ?? true)
-                && item.RSCS is {} RSCSItem)
+            if ((printMask?.ResourceCreationSeed ?? true)
+                && item.ResourceCreationSeed is {} ResourceCreationSeedItem)
             {
-                sb.AppendLine($"RSCS => {SpanExt.ToHexString(RSCSItem)}");
+                sb.AppendItem(ResourceCreationSeedItem, "ResourceCreationSeed");
             }
         }
         
@@ -2262,13 +2371,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Planet_FieldIndex.Components)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.EOVR) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.MasterWorldspaces) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.EOVR, rhs.EOVR)) return false;
+                if (!lhs.MasterWorldspaces.SequenceEqualNullable(rhs.MasterWorldspaces, (l, r) => ((MasterWorldspaceCommon)((IMasterWorldspaceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Planet_FieldIndex.MasterWorldspaces)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.Worldspaces) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.AddedWorldspaces) ?? true))
             {
-                if (!lhs.Worldspaces.SequenceEqualNullable(rhs.Worldspaces, (l, r) => ((PlanetWorldspaceCommon)((IPlanetWorldspaceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Planet_FieldIndex.Worldspaces)))) return false;
+                if (!lhs.AddedWorldspaces.SequenceEqualNullable(rhs.AddedWorldspaces, (l, r) => ((AddedWorldspaceCommon)((IAddedWorldspaceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Planet_FieldIndex.AddedWorldspaces)))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.Biomes) ?? true))
             {
@@ -2278,41 +2387,53 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.SurfaceTree.Equals(rhs.SurfaceTree)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.GNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.ScanWorldspaceMultiplier) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.GNAM, rhs.GNAM)) return false;
+                if (!lhs.ScanWorldspaceMultiplier.EqualsWithin(rhs.ScanWorldspaceMultiplier)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.EnvironmentMap) ?? true))
+            {
+                if (!string.Equals(lhs.EnvironmentMap, rhs.EnvironmentMap)) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.BodyType) ?? true))
             {
                 if (lhs.BodyType != rhs.BodyType) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.DNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.SpaceCell) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.DNAM, rhs.DNAM)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.ENAM) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.ENAM, rhs.ENAM)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.FNAM) ?? true))
-            {
-                if (EqualsMaskHelper.RefEquality(lhs.FNAM, rhs.FNAM, out var lhsFNAM, out var rhsFNAM, out var isFNAMEqual))
+                if (EqualsMaskHelper.RefEquality(lhs.SpaceCell, rhs.SpaceCell, out var lhsSpaceCell, out var rhsSpaceCell, out var isSpaceCellEqual))
                 {
-                    if (!((PlanetFNAMCommon)((IPlanetFNAMGetter)lhsFNAM).CommonInstance()!).Equals(lhsFNAM, rhsFNAM, equalsMask?.GetSubCrystal((int)Planet_FieldIndex.FNAM))) return false;
+                    if (!((SpaceCellCommon)((ISpaceCellGetter)lhsSpaceCell).CommonInstance()!).Equals(lhsSpaceCell, rhsSpaceCell, equalsMask?.GetSubCrystal((int)Planet_FieldIndex.SpaceCell))) return false;
                 }
-                else if (!isFNAMEqual) return false;
+                else if (!isSpaceCellEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.IDs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.OrbitalData) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.IDs, rhs.IDs, out var lhsIDs, out var rhsIDs, out var isIDsEqual))
+                if (EqualsMaskHelper.RefEquality(lhs.OrbitalData, rhs.OrbitalData, out var lhsOrbitalData, out var rhsOrbitalData, out var isOrbitalDataEqual))
                 {
-                    if (!((PlanetIdsCommon)((IPlanetIdsGetter)lhsIDs).CommonInstance()!).Equals(lhsIDs, rhsIDs, equalsMask?.GetSubCrystal((int)Planet_FieldIndex.IDs))) return false;
+                    if (!((OrbitalDataCommon)((IOrbitalDataGetter)lhsOrbitalData).CommonInstance()!).Equals(lhsOrbitalData, rhsOrbitalData, equalsMask?.GetSubCrystal((int)Planet_FieldIndex.OrbitalData))) return false;
                 }
-                else if (!isIDsEqual) return false;
+                else if (!isOrbitalDataEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.OrbitedData) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.OrbitedData, rhs.OrbitedData, out var lhsOrbitedData, out var rhsOrbitedData, out var isOrbitedDataEqual))
+                {
+                    if (!((OrbitedDataCommon)((IOrbitedDataGetter)lhsOrbitedData).CommonInstance()!).Equals(lhsOrbitedData, rhsOrbitedData, equalsMask?.GetSubCrystal((int)Planet_FieldIndex.OrbitedData))) return false;
+                }
+                else if (!isOrbitedDataEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.GalaxyData) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.GalaxyData, rhs.GalaxyData, out var lhsGalaxyData, out var rhsGalaxyData, out var isGalaxyDataEqual))
+                {
+                    if (!((GalaxyDataCommon)((IGalaxyDataGetter)lhsGalaxyData).CommonInstance()!).Equals(lhsGalaxyData, rhsGalaxyData, equalsMask?.GetSubCrystal((int)Planet_FieldIndex.GalaxyData))) return false;
+                }
+                else if (!isGalaxyDataEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.Details) ?? true))
             {
@@ -2322,21 +2443,25 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isDetailsEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.INAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.AtmosphereData) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.INAM, rhs.INAM, out var lhsINAM, out var rhsINAM, out var isINAMEqual))
+                if (EqualsMaskHelper.RefEquality(lhs.AtmosphereData, rhs.AtmosphereData, out var lhsAtmosphereData, out var rhsAtmosphereData, out var isAtmosphereDataEqual))
                 {
-                    if (!((PlanetINAMCommon)((IPlanetINAMGetter)lhsINAM).CommonInstance()!).Equals(lhsINAM, rhsINAM, equalsMask?.GetSubCrystal((int)Planet_FieldIndex.INAM))) return false;
+                    if (!((AtmosphereDataCommon)((IAtmosphereDataGetter)lhsAtmosphereData).CommonInstance()!).Equals(lhsAtmosphereData, rhsAtmosphereData, equalsMask?.GetSubCrystal((int)Planet_FieldIndex.AtmosphereData))) return false;
                 }
-                else if (!isINAMEqual) return false;
+                else if (!isAtmosphereDataEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.KNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.BiomeNoise) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.KNAM, rhs.KNAM)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.BiomeNoise, rhs.BiomeNoise, out var lhsBiomeNoise, out var rhsBiomeNoise, out var isBiomeNoiseEqual))
+                {
+                    if (!((BiomeNoiseCommon)((IBiomeNoiseGetter)lhsBiomeNoise).CommonInstance()!).Equals(lhsBiomeNoise, rhsBiomeNoise, equalsMask?.GetSubCrystal((int)Planet_FieldIndex.BiomeNoise))) return false;
+                }
+                else if (!isBiomeNoiseEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.NNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.PlayerKnowledge) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.NNAM, rhs.NNAM)) return false;
+                if (lhs.PlayerKnowledge != rhs.PlayerKnowledge) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.Temperature) ?? true))
             {
@@ -2350,9 +2475,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.PerihelionAngleDegrees.EqualsWithin(rhs.PerihelionAngleDegrees)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.RSCS) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Planet_FieldIndex.ResourceCreationSeed) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.RSCS, rhs.RSCS)) return false;
+                if (lhs.ResourceCreationSeed != rhs.ResourceCreationSeed) return false;
             }
             return true;
         }
@@ -2383,56 +2508,48 @@ namespace Mutagen.Bethesda.Starfield
         {
             var hash = new HashCode();
             hash.Add(item.Components);
-            if (item.EOVR is {} EOVRItem)
-            {
-                hash.Add(EOVRItem);
-            }
-            hash.Add(item.Worldspaces);
+            hash.Add(item.MasterWorldspaces);
+            hash.Add(item.AddedWorldspaces);
             hash.Add(item.Biomes);
             hash.Add(item.SurfaceTree);
-            if (item.GNAM is {} GNAMItem)
+            if (item.ScanWorldspaceMultiplier is {} ScanWorldspaceMultiplieritem)
             {
-                hash.Add(GNAMItem);
+                hash.Add(ScanWorldspaceMultiplieritem);
             }
-            if (item.Name is {} Nameitem)
+            hash.Add(item.Name);
+            if (item.EnvironmentMap is {} EnvironmentMapitem)
             {
-                hash.Add(Nameitem);
+                hash.Add(EnvironmentMapitem);
             }
-            if (item.BodyType is {} BodyTypeitem)
+            hash.Add(item.BodyType);
+            if (item.SpaceCell is {} SpaceCellitem)
             {
-                hash.Add(BodyTypeitem);
+                hash.Add(SpaceCellitem);
             }
-            if (item.DNAM is {} DNAMItem)
+            hash.Add(item.OrbitalData);
+            if (item.OrbitedData is {} OrbitedDataitem)
             {
-                hash.Add(DNAMItem);
+                hash.Add(OrbitedDataitem);
             }
-            if (item.ENAM is {} ENAMItem)
+            if (item.GalaxyData is {} GalaxyDataitem)
             {
-                hash.Add(ENAMItem);
-            }
-            if (item.FNAM is {} FNAMitem)
-            {
-                hash.Add(FNAMitem);
-            }
-            if (item.IDs is {} IDsitem)
-            {
-                hash.Add(IDsitem);
+                hash.Add(GalaxyDataitem);
             }
             if (item.Details is {} Detailsitem)
             {
                 hash.Add(Detailsitem);
             }
-            if (item.INAM is {} INAMitem)
+            if (item.AtmosphereData is {} AtmosphereDataitem)
             {
-                hash.Add(INAMitem);
+                hash.Add(AtmosphereDataitem);
             }
-            if (item.KNAM is {} KNAMItem)
+            if (item.BiomeNoise is {} BiomeNoiseitem)
             {
-                hash.Add(KNAMItem);
+                hash.Add(BiomeNoiseitem);
             }
-            if (item.NNAM is {} NNAMItem)
+            if (item.PlayerKnowledge is {} PlayerKnowledgeitem)
             {
-                hash.Add(NNAMItem);
+                hash.Add(PlayerKnowledgeitem);
             }
             if (item.Temperature is {} Temperatureitem)
             {
@@ -2446,9 +2563,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(PerihelionAngleDegreesitem);
             }
-            if (item.RSCS is {} RSCSItem)
+            if (item.ResourceCreationSeed is {} ResourceCreationSeeditem)
             {
-                hash.Add(RSCSItem);
+                hash.Add(ResourceCreationSeeditem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -2484,9 +2601,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.Worldspaces is {} WorldspacesItem)
+            if (obj.MasterWorldspaces is {} MasterWorldspacesItem)
             {
-                foreach (var item in WorldspacesItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in MasterWorldspacesItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.AddedWorldspaces is {} AddedWorldspacesItem)
+            {
+                foreach (var item in AddedWorldspacesItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -2498,6 +2622,13 @@ namespace Mutagen.Bethesda.Starfield
             if (FormLinkInformation.TryFactory(obj.SurfaceTree, out var SurfaceTreeInfo))
             {
                 yield return SurfaceTreeInfo;
+            }
+            if (obj.AtmosphereData is {} AtmosphereDataItems)
+            {
+                foreach (var item in AtmosphereDataItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -2611,37 +2742,58 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.EOVR) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.MasterWorldspaces) ?? true))
             {
-                if(rhs.EOVR is {} EOVRrhs)
-                {
-                    item.EOVR = EOVRrhs.ToArray();
-                }
-                else
-                {
-                    item.EOVR = default;
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.Worldspaces) ?? true))
-            {
-                errorMask?.PushIndex((int)Planet_FieldIndex.Worldspaces);
+                errorMask?.PushIndex((int)Planet_FieldIndex.MasterWorldspaces);
                 try
                 {
-                    if ((rhs.Worldspaces != null))
+                    if ((rhs.MasterWorldspaces != null))
                     {
-                        item.Worldspaces = 
-                            rhs.Worldspaces
+                        item.MasterWorldspaces = 
+                            rhs.MasterWorldspaces
                             .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
                             })
-                            .ToExtendedList<PlanetWorldspace>();
+                            .ToExtendedList<MasterWorldspace>();
                     }
                     else
                     {
-                        item.Worldspaces = null;
+                        item.MasterWorldspaces = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.AddedWorldspaces) ?? true))
+            {
+                errorMask?.PushIndex((int)Planet_FieldIndex.AddedWorldspaces);
+                try
+                {
+                    if ((rhs.AddedWorldspaces != null))
+                    {
+                        item.AddedWorldspaces = 
+                            rhs.AddedWorldspaces
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<AddedWorldspace>();
+                    }
+                    else
+                    {
+                        item.AddedWorldspaces = null;
                     }
                 }
                 catch (Exception ex)
@@ -2682,61 +2834,36 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.SurfaceTree.SetTo(rhs.SurfaceTree.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.GNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.ScanWorldspaceMultiplier) ?? true))
             {
-                if(rhs.GNAM is {} GNAMrhs)
-                {
-                    item.GNAM = GNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.GNAM = default;
-                }
+                item.ScanWorldspaceMultiplier = rhs.ScanWorldspaceMultiplier;
             }
             if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.Name) ?? true))
             {
                 item.Name = rhs.Name;
             }
+            if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.EnvironmentMap) ?? true))
+            {
+                item.EnvironmentMap = rhs.EnvironmentMap;
+            }
             if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.BodyType) ?? true))
             {
                 item.BodyType = rhs.BodyType;
             }
-            if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.DNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.SpaceCell) ?? true))
             {
-                if(rhs.DNAM is {} DNAMrhs)
-                {
-                    item.DNAM = DNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.DNAM = default;
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.ENAM) ?? true))
-            {
-                if(rhs.ENAM is {} ENAMrhs)
-                {
-                    item.ENAM = ENAMrhs.ToArray();
-                }
-                else
-                {
-                    item.ENAM = default;
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.FNAM) ?? true))
-            {
-                errorMask?.PushIndex((int)Planet_FieldIndex.FNAM);
+                errorMask?.PushIndex((int)Planet_FieldIndex.SpaceCell);
                 try
                 {
-                    if(rhs.FNAM is {} rhsFNAM)
+                    if(rhs.SpaceCell is {} rhsSpaceCell)
                     {
-                        item.FNAM = rhsFNAM.DeepCopy(
+                        item.SpaceCell = rhsSpaceCell.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Planet_FieldIndex.FNAM));
+                            copyMask?.GetSubCrystal((int)Planet_FieldIndex.SpaceCell));
                     }
                     else
                     {
-                        item.FNAM = default;
+                        item.SpaceCell = default;
                     }
                 }
                 catch (Exception ex)
@@ -2749,20 +2876,68 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.IDs) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.OrbitalData) ?? true))
             {
-                errorMask?.PushIndex((int)Planet_FieldIndex.IDs);
+                errorMask?.PushIndex((int)Planet_FieldIndex.OrbitalData);
                 try
                 {
-                    if(rhs.IDs is {} rhsIDs)
+                    if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.OrbitalData) ?? true))
                     {
-                        item.IDs = rhsIDs.DeepCopy(
+                        item.OrbitalData = rhs.OrbitalData.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)Planet_FieldIndex.OrbitalData),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.OrbitedData) ?? true))
+            {
+                errorMask?.PushIndex((int)Planet_FieldIndex.OrbitedData);
+                try
+                {
+                    if(rhs.OrbitedData is {} rhsOrbitedData)
+                    {
+                        item.OrbitedData = rhsOrbitedData.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Planet_FieldIndex.IDs));
+                            copyMask?.GetSubCrystal((int)Planet_FieldIndex.OrbitedData));
                     }
                     else
                     {
-                        item.IDs = default;
+                        item.OrbitedData = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.GalaxyData) ?? true))
+            {
+                errorMask?.PushIndex((int)Planet_FieldIndex.GalaxyData);
+                try
+                {
+                    if(rhs.GalaxyData is {} rhsGalaxyData)
+                    {
+                        item.GalaxyData = rhsGalaxyData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Planet_FieldIndex.GalaxyData));
+                    }
+                    else
+                    {
+                        item.GalaxyData = default;
                     }
                 }
                 catch (Exception ex)
@@ -2801,20 +2976,20 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.INAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.AtmosphereData) ?? true))
             {
-                errorMask?.PushIndex((int)Planet_FieldIndex.INAM);
+                errorMask?.PushIndex((int)Planet_FieldIndex.AtmosphereData);
                 try
                 {
-                    if(rhs.INAM is {} rhsINAM)
+                    if(rhs.AtmosphereData is {} rhsAtmosphereData)
                     {
-                        item.INAM = rhsINAM.DeepCopy(
+                        item.AtmosphereData = rhsAtmosphereData.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Planet_FieldIndex.INAM));
+                            copyMask?.GetSubCrystal((int)Planet_FieldIndex.AtmosphereData));
                     }
                     else
                     {
-                        item.INAM = default;
+                        item.AtmosphereData = default;
                     }
                 }
                 catch (Exception ex)
@@ -2827,27 +3002,35 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.KNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.BiomeNoise) ?? true))
             {
-                if(rhs.KNAM is {} KNAMrhs)
+                errorMask?.PushIndex((int)Planet_FieldIndex.BiomeNoise);
+                try
                 {
-                    item.KNAM = KNAMrhs.ToArray();
+                    if(rhs.BiomeNoise is {} rhsBiomeNoise)
+                    {
+                        item.BiomeNoise = rhsBiomeNoise.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Planet_FieldIndex.BiomeNoise));
+                    }
+                    else
+                    {
+                        item.BiomeNoise = default;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.KNAM = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.NNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.PlayerKnowledge) ?? true))
             {
-                if(rhs.NNAM is {} NNAMrhs)
-                {
-                    item.NNAM = NNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.NNAM = default;
-                }
+                item.PlayerKnowledge = rhs.PlayerKnowledge;
             }
             if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.Temperature) ?? true))
             {
@@ -2861,16 +3044,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.PerihelionAngleDegrees = rhs.PerihelionAngleDegrees;
             }
-            if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.RSCS) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Planet_FieldIndex.ResourceCreationSeed) ?? true))
             {
-                if(rhs.RSCS is {} RSCSrhs)
-                {
-                    item.RSCS = RSCSrhs.ToArray();
-                }
-                else
-                {
-                    item.RSCS = default;
-                }
+                item.ResourceCreationSeed = rhs.ResourceCreationSeed;
             }
             DeepCopyInCustom(
                 item: item,
@@ -3052,18 +3228,26 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IMasterWorldspaceGetter>.Instance.Write(
                 writer: writer,
-                item: item.EOVR,
-                header: translationParams.ConvertToCustom(RecordTypes.EOVR));
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IPlanetWorldspaceGetter>.Instance.Write(
-                writer: writer,
-                items: item.Worldspaces,
+                items: item.MasterWorldspaces,
                 recordType: translationParams.ConvertToCustom(RecordTypes.CNAM),
-                transl: (MutagenWriter subWriter, IPlanetWorldspaceGetter subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, IMasterWorldspaceGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
-                    ((PlanetWorldspaceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((MasterWorldspaceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAddedWorldspaceGetter>.Instance.Write(
+                writer: writer,
+                items: item.AddedWorldspaces,
+                recordType: translationParams.ConvertToCustom(RecordTypes.EOVR),
+                transl: (MutagenWriter subWriter, IAddedWorldspaceGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AddedWorldspaceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
@@ -3083,40 +3267,49 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.SurfaceTree,
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.GNAM,
+                item: item.ScanWorldspaceMultiplier,
                 header: translationParams.ConvertToCustom(RecordTypes.GNAM));
             using (HeaderExport.Subrecord(writer, RecordTypes.BDST)) { }
-            StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Name,
                 header: translationParams.ConvertToCustom(RecordTypes.ANAM),
                 binaryType: StringBinaryType.NullTerminate);
-            EnumBinaryTranslation<Planet.BodyTypeEnum, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.EnvironmentMap,
+                header: translationParams.ConvertToCustom(RecordTypes.XEMP),
+                binaryType: StringBinaryType.NullTerminate);
+            EnumBinaryTranslation<Planet.BodyTypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.BodyType,
                 length: 1,
                 header: translationParams.ConvertToCustom(RecordTypes.CNAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.DNAM,
-                header: translationParams.ConvertToCustom(RecordTypes.DNAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.ENAM,
-                header: translationParams.ConvertToCustom(RecordTypes.ENAM));
-            if (item.FNAM is {} FNAMItem)
+            if (item.SpaceCell is {} SpaceCellItem)
             {
-                ((PlanetFNAMBinaryWriteTranslation)((IBinaryItem)FNAMItem).BinaryWriteTranslator).Write(
-                    item: FNAMItem,
+                ((SpaceCellBinaryWriteTranslation)((IBinaryItem)SpaceCellItem).BinaryWriteTranslator).Write(
+                    item: SpaceCellItem,
                     writer: writer,
                     translationParams: translationParams);
             }
-            if (item.IDs is {} IDsItem)
+            var OrbitalDataItem = item.OrbitalData;
+            ((OrbitalDataBinaryWriteTranslation)((IBinaryItem)OrbitalDataItem).BinaryWriteTranslator).Write(
+                item: OrbitalDataItem,
+                writer: writer,
+                translationParams: translationParams);
+            if (item.OrbitedData is {} OrbitedDataItem)
             {
-                ((PlanetIdsBinaryWriteTranslation)((IBinaryItem)IDsItem).BinaryWriteTranslator).Write(
-                    item: IDsItem,
+                ((OrbitedDataBinaryWriteTranslation)((IBinaryItem)OrbitedDataItem).BinaryWriteTranslator).Write(
+                    item: OrbitedDataItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.GalaxyData is {} GalaxyDataItem)
+            {
+                ((GalaxyDataBinaryWriteTranslation)((IBinaryItem)GalaxyDataItem).BinaryWriteTranslator).Write(
+                    item: GalaxyDataItem,
                     writer: writer,
                     translationParams: translationParams);
             }
@@ -3127,20 +3320,24 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     translationParams: translationParams);
             }
-            if (item.INAM is {} INAMItem)
+            if (item.AtmosphereData is {} AtmosphereDataItem)
             {
-                ((PlanetINAMBinaryWriteTranslation)((IBinaryItem)INAMItem).BinaryWriteTranslator).Write(
-                    item: INAMItem,
+                ((AtmosphereDataBinaryWriteTranslation)((IBinaryItem)AtmosphereDataItem).BinaryWriteTranslator).Write(
+                    item: AtmosphereDataItem,
                     writer: writer,
                     translationParams: translationParams);
             }
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.KNAM,
-                header: translationParams.ConvertToCustom(RecordTypes.KNAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.NNAM,
+            if (item.BiomeNoise is {} BiomeNoiseItem)
+            {
+                ((BiomeNoiseBinaryWriteTranslation)((IBinaryItem)BiomeNoiseItem).BinaryWriteTranslator).Write(
+                    item: BiomeNoiseItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            EnumBinaryTranslation<Planet.PlayerKnowledgeFlag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.PlayerKnowledge,
+                length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.NNAM));
             using (HeaderExport.Subrecord(writer, RecordTypes.BDED)) { }
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
@@ -3155,9 +3352,9 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.PerihelionAngleDegrees,
                 header: translationParams.ConvertToCustom(RecordTypes.PHLA));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.RSCS,
+                item: item.ResourceCreationSeed,
                 header: translationParams.ConvertToCustom(RecordTypes.RSCS));
         }
 
@@ -3237,26 +3434,20 @@ namespace Mutagen.Bethesda.Starfield
                             transl: AComponent.TryCreateFromBinary));
                     return (int)Planet_FieldIndex.Components;
                 }
-                case RecordTypeInts.EOVR:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EOVR = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Planet_FieldIndex.EOVR;
-                }
                 case RecordTypeInts.CNAM:
                 {
                     if (!lastParsed.ParsedIndex.HasValue
-                        || lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.EOVR)
+                        || lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.Components)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.Worldspaces = 
-                            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<PlanetWorldspace>.Instance.Parse(
+                        item.MasterWorldspaces = 
+                            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MasterWorldspace>.Instance.Parse(
                                 reader: frame.SpawnWithLength(contentLength),
-                                transl: PlanetWorldspace.TryCreateFromBinary)
-                            .CastExtendedList<PlanetWorldspace>();
-                        return new ParseResult((int)Planet_FieldIndex.Worldspaces, nextRecordType);
+                                transl: MasterWorldspace.TryCreateFromBinary)
+                            .CastExtendedList<MasterWorldspace>();
+                        return new ParseResult((int)Planet_FieldIndex.MasterWorldspaces, nextRecordType);
                     }
-                    else if (lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.Name)
+                    else if (lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.EnvironmentMap)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                         item.BodyType = EnumBinaryTranslation<Planet.BodyTypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
@@ -3270,12 +3461,12 @@ namespace Mutagen.Bethesda.Starfield
                         {
                             case 0:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                                item.Worldspaces = 
-                                    Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<PlanetWorldspace>.Instance.Parse(
+                                item.MasterWorldspaces = 
+                                    Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MasterWorldspace>.Instance.Parse(
                                         reader: frame.SpawnWithLength(contentLength),
-                                        transl: PlanetWorldspace.TryCreateFromBinary)
-                                    .CastExtendedList<PlanetWorldspace>();
-                                return new ParseResult((int)Planet_FieldIndex.Worldspaces, nextRecordType);
+                                        transl: MasterWorldspace.TryCreateFromBinary)
+                                    .CastExtendedList<MasterWorldspace>();
+                                return new ParseResult((int)Planet_FieldIndex.MasterWorldspaces, nextRecordType);
                             case 1:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                                 item.BodyType = EnumBinaryTranslation<Planet.BodyTypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
@@ -3286,6 +3477,16 @@ namespace Mutagen.Bethesda.Starfield
                                 throw new NotImplementedException();
                         }
                     }
+                }
+                case RecordTypeInts.EOVR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.AddedWorldspaces = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AddedWorldspace>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: AddedWorldspace.TryCreateFromBinary)
+                        .CastExtendedList<AddedWorldspace>();
+                    return (int)Planet_FieldIndex.AddedWorldspaces;
                 }
                 case RecordTypeInts.PPBD:
                 {
@@ -3306,10 +3507,10 @@ namespace Mutagen.Bethesda.Starfield
                         item.SurfaceTree.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                         return new ParseResult((int)Planet_FieldIndex.SurfaceTree, nextRecordType);
                     }
-                    else if (lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.ENAM)
+                    else if (lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.OrbitalData)
                     {
-                        item.FNAM = Mutagen.Bethesda.Starfield.PlanetFNAM.CreateFromBinary(frame: frame);
-                        return new ParseResult((int)Planet_FieldIndex.FNAM, nextRecordType);
+                        item.OrbitedData = Mutagen.Bethesda.Starfield.OrbitedData.CreateFromBinary(frame: frame);
+                        return new ParseResult((int)Planet_FieldIndex.OrbitedData, nextRecordType);
                     }
                     else
                     {
@@ -3320,8 +3521,8 @@ namespace Mutagen.Bethesda.Starfield
                                 item.SurfaceTree.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                                 return new ParseResult((int)Planet_FieldIndex.SurfaceTree, nextRecordType);
                             case 1:
-                                item.FNAM = Mutagen.Bethesda.Starfield.PlanetFNAM.CreateFromBinary(frame: frame);
-                                return new ParseResult((int)Planet_FieldIndex.FNAM, nextRecordType);
+                                item.OrbitedData = Mutagen.Bethesda.Starfield.OrbitedData.CreateFromBinary(frame: frame);
+                                return new ParseResult((int)Planet_FieldIndex.OrbitedData, nextRecordType);
                             default:
                                 throw new NotImplementedException();
                         }
@@ -3333,13 +3534,13 @@ namespace Mutagen.Bethesda.Starfield
                         || lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.SurfaceTree)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.GNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                        return new ParseResult((int)Planet_FieldIndex.GNAM, nextRecordType);
+                        item.ScanWorldspaceMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                        return new ParseResult((int)Planet_FieldIndex.ScanWorldspaceMultiplier, nextRecordType);
                     }
-                    else if (lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.FNAM)
+                    else if (lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.OrbitedData)
                     {
-                        item.IDs = Mutagen.Bethesda.Starfield.PlanetIds.CreateFromBinary(frame: frame);
-                        return new ParseResult((int)Planet_FieldIndex.IDs, nextRecordType);
+                        item.GalaxyData = Mutagen.Bethesda.Starfield.GalaxyData.CreateFromBinary(frame: frame);
+                        return new ParseResult((int)Planet_FieldIndex.GalaxyData, nextRecordType);
                     }
                     else
                     {
@@ -3347,11 +3548,11 @@ namespace Mutagen.Bethesda.Starfield
                         {
                             case 0:
                                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                                item.GNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                                return new ParseResult((int)Planet_FieldIndex.GNAM, nextRecordType);
+                                item.ScanWorldspaceMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                                return new ParseResult((int)Planet_FieldIndex.ScanWorldspaceMultiplier, nextRecordType);
                             case 1:
-                                item.IDs = Mutagen.Bethesda.Starfield.PlanetIds.CreateFromBinary(frame: frame);
-                                return new ParseResult((int)Planet_FieldIndex.IDs, nextRecordType);
+                                item.GalaxyData = Mutagen.Bethesda.Starfield.GalaxyData.CreateFromBinary(frame: frame);
+                                return new ParseResult((int)Planet_FieldIndex.GalaxyData, nextRecordType);
                             default:
                                 throw new NotImplementedException();
                         }
@@ -3371,17 +3572,24 @@ namespace Mutagen.Bethesda.Starfield
                         parseWhole: true);
                     return (int)Planet_FieldIndex.Name;
                 }
-                case RecordTypeInts.DNAM:
+                case RecordTypeInts.XEMP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Planet_FieldIndex.DNAM;
+                    item.EnvironmentMap = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
+                    return (int)Planet_FieldIndex.EnvironmentMap;
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    item.SpaceCell = Mutagen.Bethesda.Starfield.SpaceCell.CreateFromBinary(frame: frame);
+                    return (int)Planet_FieldIndex.SpaceCell;
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ENAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Planet_FieldIndex.ENAM;
+                    item.OrbitalData = Mutagen.Bethesda.Starfield.OrbitalData.CreateFromBinary(frame: frame);
+                    return (int)Planet_FieldIndex.OrbitalData;
                 }
                 case RecordTypeInts.HNAM:
                 {
@@ -3390,20 +3598,21 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.INAM:
                 {
-                    item.INAM = Mutagen.Bethesda.Starfield.PlanetINAM.CreateFromBinary(frame: frame);
-                    return (int)Planet_FieldIndex.INAM;
+                    item.AtmosphereData = Mutagen.Bethesda.Starfield.AtmosphereData.CreateFromBinary(frame: frame);
+                    return (int)Planet_FieldIndex.AtmosphereData;
                 }
                 case RecordTypeInts.KNAM:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.KNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Planet_FieldIndex.KNAM;
+                    item.BiomeNoise = Mutagen.Bethesda.Starfield.BiomeNoise.CreateFromBinary(frame: frame);
+                    return (int)Planet_FieldIndex.BiomeNoise;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Planet_FieldIndex.NNAM;
+                    item.PlayerKnowledge = EnumBinaryTranslation<Planet.PlayerKnowledgeFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)Planet_FieldIndex.PlayerKnowledge;
                 }
                 case RecordTypeInts.BDED:
                 {
@@ -3431,8 +3640,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.RSCS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RSCS = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Planet_FieldIndex.RSCS;
+                    item.ResourceCreationSeed = frame.ReadInt32();
+                    return (int)Planet_FieldIndex.ResourceCreationSeed;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3495,63 +3704,61 @@ namespace Mutagen.Bethesda.Starfield
 
 
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
-        #region EOVR
-        private int? _EOVRLocation;
-        public ReadOnlyMemorySlice<Byte>? EOVR => _EOVRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _EOVRLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        public IReadOnlyList<IPlanetWorldspaceGetter>? Worldspaces { get; private set; }
+        public IReadOnlyList<IMasterWorldspaceGetter>? MasterWorldspaces { get; private set; }
+        public IReadOnlyList<IAddedWorldspaceGetter>? AddedWorldspaces { get; private set; }
         public IReadOnlyList<IPlanetBiomeGetter> Biomes { get; private set; } = Array.Empty<IPlanetBiomeGetter>();
         #region SurfaceTree
         private int? _SurfaceTreeLocation;
         public IFormLinkNullableGetter<ISurfaceTreeGetter> SurfaceTree => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISurfaceTreeGetter>(_package, _recordData, _SurfaceTreeLocation);
         #endregion
-        #region GNAM
-        private int? _GNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? GNAM => _GNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _GNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region ScanWorldspaceMultiplier
+        private int? _ScanWorldspaceMultiplierLocation;
+        public Single? ScanWorldspaceMultiplier => _ScanWorldspaceMultiplierLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ScanWorldspaceMultiplierLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
-        #region Aspects
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
+        #region EnvironmentMap
+        private int? _EnvironmentMapLocation;
+        public String? EnvironmentMap => _EnvironmentMapLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _EnvironmentMapLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region BodyType
         private int? _BodyTypeLocation;
-        public Planet.BodyTypeEnum? BodyType => _BodyTypeLocation.HasValue ? (Planet.BodyTypeEnum)HeaderTranslation.ExtractSubrecordMemory(_recordData, _BodyTypeLocation!.Value, _package.MetaData.Constants)[0] : default(Planet.BodyTypeEnum?);
+        public Planet.BodyTypeEnum BodyType => _BodyTypeLocation.HasValue ? (Planet.BodyTypeEnum)HeaderTranslation.ExtractSubrecordMemory(_recordData, _BodyTypeLocation!.Value, _package.MetaData.Constants)[0] : default(Planet.BodyTypeEnum);
         #endregion
-        #region DNAM
-        private int? _DNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? DNAM => _DNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region SpaceCell
+        private RangeInt32? _SpaceCellLocation;
+        public ISpaceCellGetter? SpaceCell => _SpaceCellLocation.HasValue ? SpaceCellBinaryOverlay.SpaceCellFactory(_recordData.Slice(_SpaceCellLocation!.Value.Min), _package) : default;
         #endregion
-        #region ENAM
-        private int? _ENAMLocation;
-        public ReadOnlyMemorySlice<Byte>? ENAM => _ENAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ENAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region OrbitalData
+        private RangeInt32? _OrbitalDataLocation;
+        private IOrbitalDataGetter? _OrbitalData => _OrbitalDataLocation.HasValue ? OrbitalDataBinaryOverlay.OrbitalDataFactory(_recordData.Slice(_OrbitalDataLocation!.Value.Min), _package) : default;
+        public IOrbitalDataGetter OrbitalData => _OrbitalData ?? new OrbitalData();
         #endregion
-        #region FNAM
-        private RangeInt32? _FNAMLocation;
-        public IPlanetFNAMGetter? FNAM => _FNAMLocation.HasValue ? PlanetFNAMBinaryOverlay.PlanetFNAMFactory(_recordData.Slice(_FNAMLocation!.Value.Min), _package) : default;
+        #region OrbitedData
+        private RangeInt32? _OrbitedDataLocation;
+        public IOrbitedDataGetter? OrbitedData => _OrbitedDataLocation.HasValue ? OrbitedDataBinaryOverlay.OrbitedDataFactory(_recordData.Slice(_OrbitedDataLocation!.Value.Min), _package) : default;
         #endregion
-        #region IDs
-        private RangeInt32? _IDsLocation;
-        public IPlanetIdsGetter? IDs => _IDsLocation.HasValue ? PlanetIdsBinaryOverlay.PlanetIdsFactory(_recordData.Slice(_IDsLocation!.Value.Min), _package) : default;
+        #region GalaxyData
+        private RangeInt32? _GalaxyDataLocation;
+        public IGalaxyDataGetter? GalaxyData => _GalaxyDataLocation.HasValue ? GalaxyDataBinaryOverlay.GalaxyDataFactory(_recordData.Slice(_GalaxyDataLocation!.Value.Min), _package) : default;
         #endregion
         #region Details
         private RangeInt32? _DetailsLocation;
         public IPlanetDetailsGetter? Details => _DetailsLocation.HasValue ? PlanetDetailsBinaryOverlay.PlanetDetailsFactory(_recordData.Slice(_DetailsLocation!.Value.Min), _package) : default;
         #endregion
-        #region INAM
-        private RangeInt32? _INAMLocation;
-        public IPlanetINAMGetter? INAM => _INAMLocation.HasValue ? PlanetINAMBinaryOverlay.PlanetINAMFactory(_recordData.Slice(_INAMLocation!.Value.Min), _package) : default;
+        #region AtmosphereData
+        private RangeInt32? _AtmosphereDataLocation;
+        public IAtmosphereDataGetter? AtmosphereData => _AtmosphereDataLocation.HasValue ? AtmosphereDataBinaryOverlay.AtmosphereDataFactory(_recordData.Slice(_AtmosphereDataLocation!.Value.Min), _package) : default;
         #endregion
-        #region KNAM
-        private int? _KNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? KNAM => _KNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _KNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region BiomeNoise
+        private RangeInt32? _BiomeNoiseLocation;
+        public IBiomeNoiseGetter? BiomeNoise => _BiomeNoiseLocation.HasValue ? BiomeNoiseBinaryOverlay.BiomeNoiseFactory(_recordData.Slice(_BiomeNoiseLocation!.Value.Min), _package) : default;
         #endregion
-        #region NNAM
-        private int? _NNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? NNAM => _NNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _NNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region PlayerKnowledge
+        private int? _PlayerKnowledgeLocation;
+        public Planet.PlayerKnowledgeFlag? PlayerKnowledge => _PlayerKnowledgeLocation.HasValue ? (Planet.PlayerKnowledgeFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _PlayerKnowledgeLocation!.Value, _package.MetaData.Constants)) : default(Planet.PlayerKnowledgeFlag?);
         #endregion
         #region Temperature
         private int? _TemperatureLocation;
@@ -3565,9 +3772,9 @@ namespace Mutagen.Bethesda.Starfield
         private int? _PerihelionAngleDegreesLocation;
         public Single? PerihelionAngleDegrees => _PerihelionAngleDegreesLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _PerihelionAngleDegreesLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
-        #region RSCS
-        private int? _RSCSLocation;
-        public ReadOnlyMemorySlice<Byte>? RSCS => _RSCSLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _RSCSLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region ResourceCreationSeed
+        private int? _ResourceCreationSeedLocation;
+        public Int32? ResourceCreationSeed => _ResourceCreationSeedLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ResourceCreationSeedLocation.Value, _package.MetaData.Constants)) : default(Int32?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3647,25 +3854,20 @@ namespace Mutagen.Bethesda.Starfield
                         factory: AComponentBinaryOverlay.AComponentFactory);
                     return (int)Planet_FieldIndex.Components;
                 }
-                case RecordTypeInts.EOVR:
-                {
-                    _EOVRLocation = (stream.Position - offset);
-                    return (int)Planet_FieldIndex.EOVR;
-                }
                 case RecordTypeInts.CNAM:
                 {
                     if (!lastParsed.ParsedIndex.HasValue
-                        || lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.EOVR)
+                        || lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.Components)
                     {
-                        this.Worldspaces = BinaryOverlayList.FactoryByStartIndexWithTrigger<IPlanetWorldspaceGetter>(
+                        this.MasterWorldspaces = BinaryOverlayList.FactoryByStartIndexWithTrigger<IMasterWorldspaceGetter>(
                             stream: stream,
                             package: _package,
                             finalPos: finalPos,
                             itemLength: 20,
-                            getter: (s, p) => PlanetWorldspaceBinaryOverlay.PlanetWorldspaceFactory(s, p));
-                        return new ParseResult((int)Planet_FieldIndex.Worldspaces, type);
+                            getter: (s, p) => MasterWorldspaceBinaryOverlay.MasterWorldspaceFactory(s, p));
+                        return new ParseResult((int)Planet_FieldIndex.MasterWorldspaces, type);
                     }
-                    else if (lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.Name)
+                    else if (lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.EnvironmentMap)
                     {
                         _BodyTypeLocation = (stream.Position - offset);
                         return new ParseResult((int)Planet_FieldIndex.BodyType, type);
@@ -3676,13 +3878,13 @@ namespace Mutagen.Bethesda.Starfield
                         {
                             case 0:
                             {
-                                this.Worldspaces = BinaryOverlayList.FactoryByStartIndexWithTrigger<IPlanetWorldspaceGetter>(
+                                this.MasterWorldspaces = BinaryOverlayList.FactoryByStartIndexWithTrigger<IMasterWorldspaceGetter>(
                                     stream: stream,
                                     package: _package,
                                     finalPos: finalPos,
                                     itemLength: 20,
-                                    getter: (s, p) => PlanetWorldspaceBinaryOverlay.PlanetWorldspaceFactory(s, p));
-                                return new ParseResult((int)Planet_FieldIndex.Worldspaces, type);
+                                    getter: (s, p) => MasterWorldspaceBinaryOverlay.MasterWorldspaceFactory(s, p));
+                                return new ParseResult((int)Planet_FieldIndex.MasterWorldspaces, type);
                             }
                             case 1:
                             {
@@ -3693,6 +3895,16 @@ namespace Mutagen.Bethesda.Starfield
                                 throw new NotImplementedException();
                         }
                     }
+                }
+                case RecordTypeInts.EOVR:
+                {
+                    this.AddedWorldspaces = BinaryOverlayList.FactoryByStartIndexWithTrigger<IAddedWorldspaceGetter>(
+                        stream: stream,
+                        package: _package,
+                        finalPos: finalPos,
+                        itemLength: 21,
+                        getter: (s, p) => AddedWorldspaceBinaryOverlay.AddedWorldspaceFactory(s, p));
+                    return (int)Planet_FieldIndex.AddedWorldspaces;
                 }
                 case RecordTypeInts.PPBD:
                 {
@@ -3717,10 +3929,10 @@ namespace Mutagen.Bethesda.Starfield
                         _SurfaceTreeLocation = (stream.Position - offset);
                         return new ParseResult((int)Planet_FieldIndex.SurfaceTree, type);
                     }
-                    else if (lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.ENAM)
+                    else if (lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.OrbitalData)
                     {
-                        _FNAMLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                        return new ParseResult((int)Planet_FieldIndex.FNAM, type);
+                        _OrbitedDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                        return new ParseResult((int)Planet_FieldIndex.OrbitedData, type);
                     }
                     else
                     {
@@ -3733,8 +3945,8 @@ namespace Mutagen.Bethesda.Starfield
                             }
                             case 1:
                             {
-                                _FNAMLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                                return new ParseResult((int)Planet_FieldIndex.FNAM, type);
+                                _OrbitedDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                                return new ParseResult((int)Planet_FieldIndex.OrbitedData, type);
                             }
                             default:
                                 throw new NotImplementedException();
@@ -3746,13 +3958,13 @@ namespace Mutagen.Bethesda.Starfield
                     if (!lastParsed.ParsedIndex.HasValue
                         || lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.SurfaceTree)
                     {
-                        _GNAMLocation = (stream.Position - offset);
-                        return new ParseResult((int)Planet_FieldIndex.GNAM, type);
+                        _ScanWorldspaceMultiplierLocation = (stream.Position - offset);
+                        return new ParseResult((int)Planet_FieldIndex.ScanWorldspaceMultiplier, type);
                     }
-                    else if (lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.FNAM)
+                    else if (lastParsed.ParsedIndex.Value <= (int)Planet_FieldIndex.OrbitedData)
                     {
-                        _IDsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                        return new ParseResult((int)Planet_FieldIndex.IDs, type);
+                        _GalaxyDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                        return new ParseResult((int)Planet_FieldIndex.GalaxyData, type);
                     }
                     else
                     {
@@ -3760,13 +3972,13 @@ namespace Mutagen.Bethesda.Starfield
                         {
                             case 0:
                             {
-                                _GNAMLocation = (stream.Position - offset);
-                                return new ParseResult((int)Planet_FieldIndex.GNAM, type);
+                                _ScanWorldspaceMultiplierLocation = (stream.Position - offset);
+                                return new ParseResult((int)Planet_FieldIndex.ScanWorldspaceMultiplier, type);
                             }
                             case 1:
                             {
-                                _IDsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                                return new ParseResult((int)Planet_FieldIndex.IDs, type);
+                                _GalaxyDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                                return new ParseResult((int)Planet_FieldIndex.GalaxyData, type);
                             }
                             default:
                                 throw new NotImplementedException();
@@ -3783,15 +3995,20 @@ namespace Mutagen.Bethesda.Starfield
                     _NameLocation = (stream.Position - offset);
                     return (int)Planet_FieldIndex.Name;
                 }
+                case RecordTypeInts.XEMP:
+                {
+                    _EnvironmentMapLocation = (stream.Position - offset);
+                    return (int)Planet_FieldIndex.EnvironmentMap;
+                }
                 case RecordTypeInts.DNAM:
                 {
-                    _DNAMLocation = (stream.Position - offset);
-                    return (int)Planet_FieldIndex.DNAM;
+                    _SpaceCellLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Planet_FieldIndex.SpaceCell;
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    _ENAMLocation = (stream.Position - offset);
-                    return (int)Planet_FieldIndex.ENAM;
+                    _OrbitalDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Planet_FieldIndex.OrbitalData;
                 }
                 case RecordTypeInts.HNAM:
                 {
@@ -3800,18 +4017,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _INAMLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                    return (int)Planet_FieldIndex.INAM;
+                    _AtmosphereDataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Planet_FieldIndex.AtmosphereData;
                 }
                 case RecordTypeInts.KNAM:
                 {
-                    _KNAMLocation = (stream.Position - offset);
-                    return (int)Planet_FieldIndex.KNAM;
+                    _BiomeNoiseLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Planet_FieldIndex.BiomeNoise;
                 }
                 case RecordTypeInts.NNAM:
                 {
-                    _NNAMLocation = (stream.Position - offset);
-                    return (int)Planet_FieldIndex.NNAM;
+                    _PlayerKnowledgeLocation = (stream.Position - offset);
+                    return (int)Planet_FieldIndex.PlayerKnowledge;
                 }
                 case RecordTypeInts.BDED:
                 {
@@ -3835,8 +4052,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.RSCS:
                 {
-                    _RSCSLocation = (stream.Position - offset);
-                    return (int)Planet_FieldIndex.RSCS;
+                    _ResourceCreationSeedLocation = (stream.Position - offset);
+                    return (int)Planet_FieldIndex.ResourceCreationSeed;
                 }
                 default:
                     return base.FillRecordType(

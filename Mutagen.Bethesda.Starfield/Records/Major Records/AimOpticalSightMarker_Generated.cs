@@ -7,8 +7,10 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -54,71 +56,82 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region HideBeamByDefault
-        public Boolean HideBeamByDefault { get; set; } = default(Boolean);
-        #endregion
-        #region UnknownOldField
-        public UInt32 UnknownOldField { get; set; } = default(UInt32);
-        #endregion
-        #region NodeName
-        public String NodeName { get; set; } = string.Empty;
-        #endregion
-        #region BeamReactivationDelayAfterEquipOrReloadSeconds
-        public Single BeamReactivationDelayAfterEquipOrReloadSeconds { get; set; } = default(Single);
-        #endregion
-        #region BeamDeactivationDelayAfterReloadSeconds
-        public Single BeamDeactivationDelayAfterReloadSeconds { get; set; } = default(Single);
-        #endregion
-        #region Light
-        private readonly IFormLink<ILightGetter> _Light = new FormLink<ILightGetter>();
-        public IFormLink<ILightGetter> Light
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
         {
-            get => _Light;
-            set => _Light.SetTo(value);
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> IAimOpticalSightMarkerGetter.Components => _Components;
+        #endregion
+
+        #endregion
+        #region ActivateSightOnSightedMode
+        public Boolean ActivateSightOnSightedMode { get; set; } = default(Boolean);
+        #endregion
+        #region OpticalSightAttachNode
+        public String OpticalSightAttachNode { get; set; } = string.Empty;
+        #endregion
+        #region DelayBeforeSightActivation
+        public Single DelayBeforeSightActivation { get; set; } = default(Single);
+        #endregion
+        #region DelayBeforeSightDeactivation
+        public Single DelayBeforeSightDeactivation { get; set; } = default(Single);
+        #endregion
+        #region OpticalSightLight
+        private readonly IFormLink<ILightGetter> _OpticalSightLight = new FormLink<ILightGetter>();
+        public IFormLink<ILightGetter> OpticalSightLight
+        {
+            get => _OpticalSightLight;
+            set => _OpticalSightLight.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ILightGetter> IAimOpticalSightMarkerGetter.Light => this.Light;
+        IFormLinkGetter<ILightGetter> IAimOpticalSightMarkerGetter.OpticalSightLight => this.OpticalSightLight;
         #endregion
-        #region Unknown1
-        public Single Unknown1 { get; set; } = default(Single);
+        #region FocalPointDistance
+        public Single FocalPointDistance { get; set; } = default(Single);
         #endregion
-        #region Unknown2
-        public Single Unknown2 { get; set; } = default(Single);
+        #region FocalPointDistanceDuringAiming
+        public Single FocalPointDistanceDuringAiming { get; set; } = default(Single);
         #endregion
-        #region BeamReactivationDelayAfterFiringSeconds
-        public Single BeamReactivationDelayAfterFiringSeconds { get; set; } = default(Single);
+        #region DelayBetweenShots
+        public Single DelayBetweenShots { get; set; } = default(Single);
         #endregion
-        #region BeamArtObject
-        private readonly IFormLink<IArtObjectGetter> _BeamArtObject = new FormLink<IArtObjectGetter>();
-        public IFormLink<IArtObjectGetter> BeamArtObject
+        #region LaserArtObject
+        private readonly IFormLink<IArtObjectGetter> _LaserArtObject = new FormLink<IArtObjectGetter>();
+        public IFormLink<IArtObjectGetter> LaserArtObject
         {
-            get => _BeamArtObject;
-            set => _BeamArtObject.SetTo(value);
+            get => _LaserArtObject;
+            set => _LaserArtObject.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IArtObjectGetter> IAimOpticalSightMarkerGetter.BeamArtObject => this.BeamArtObject;
+        IFormLinkGetter<IArtObjectGetter> IAimOpticalSightMarkerGetter.LaserArtObject => this.LaserArtObject;
         #endregion
-        #region DotArtObject
-        private readonly IFormLink<IArtObjectGetter> _DotArtObject = new FormLink<IArtObjectGetter>();
-        public IFormLink<IArtObjectGetter> DotArtObject
+        #region LaserDotArtObject
+        private readonly IFormLink<IArtObjectGetter> _LaserDotArtObject = new FormLink<IArtObjectGetter>();
+        public IFormLink<IArtObjectGetter> LaserDotArtObject
         {
-            get => _DotArtObject;
-            set => _DotArtObject.SetTo(value);
+            get => _LaserDotArtObject;
+            set => _LaserDotArtObject.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IArtObjectGetter> IAimOpticalSightMarkerGetter.DotArtObject => this.DotArtObject;
+        IFormLinkGetter<IArtObjectGetter> IAimOpticalSightMarkerGetter.LaserDotArtObject => this.LaserDotArtObject;
         #endregion
-        #region Unknown3
-        public Single Unknown3 { get; set; } = default(Single);
+        #region MaxLaserPointerDistance
+        public Single MaxLaserPointerDistance { get; set; } = default(Single);
         #endregion
-        #region Unknown4
-        public Boolean Unknown4 { get; set; } = default(Boolean);
+        #region SightControlsFiringDirection
+        public Boolean SightControlsFiringDirection { get; set; } = default(Boolean);
         #endregion
-        #region ShowBeamAtHip
-        public Boolean ShowBeamAtHip { get; set; } = default(Boolean);
+        #region ActivateSightOnNonSightedMode
+        public Boolean ActivateSightOnNonSightedMode { get; set; } = default(Boolean);
         #endregion
-        #region Unknown5
-        public Boolean Unknown5 { get; set; } = default(Boolean);
+        #region ActivateSightOnScopedMode
+        public Boolean ActivateSightOnScopedMode { get; set; } = default(Boolean);
         #endregion
 
         #region To String
@@ -145,21 +158,21 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.HideBeamByDefault = initialValue;
-                this.UnknownOldField = initialValue;
-                this.NodeName = initialValue;
-                this.BeamReactivationDelayAfterEquipOrReloadSeconds = initialValue;
-                this.BeamDeactivationDelayAfterReloadSeconds = initialValue;
-                this.Light = initialValue;
-                this.Unknown1 = initialValue;
-                this.Unknown2 = initialValue;
-                this.BeamReactivationDelayAfterFiringSeconds = initialValue;
-                this.BeamArtObject = initialValue;
-                this.DotArtObject = initialValue;
-                this.Unknown3 = initialValue;
-                this.Unknown4 = initialValue;
-                this.ShowBeamAtHip = initialValue;
-                this.Unknown5 = initialValue;
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.ActivateSightOnSightedMode = initialValue;
+                this.OpticalSightAttachNode = initialValue;
+                this.DelayBeforeSightActivation = initialValue;
+                this.DelayBeforeSightDeactivation = initialValue;
+                this.OpticalSightLight = initialValue;
+                this.FocalPointDistance = initialValue;
+                this.FocalPointDistanceDuringAiming = initialValue;
+                this.DelayBetweenShots = initialValue;
+                this.LaserArtObject = initialValue;
+                this.LaserDotArtObject = initialValue;
+                this.MaxLaserPointerDistance = initialValue;
+                this.SightControlsFiringDirection = initialValue;
+                this.ActivateSightOnNonSightedMode = initialValue;
+                this.ActivateSightOnScopedMode = initialValue;
             }
 
             public Mask(
@@ -170,21 +183,21 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
-                TItem HideBeamByDefault,
-                TItem UnknownOldField,
-                TItem NodeName,
-                TItem BeamReactivationDelayAfterEquipOrReloadSeconds,
-                TItem BeamDeactivationDelayAfterReloadSeconds,
-                TItem Light,
-                TItem Unknown1,
-                TItem Unknown2,
-                TItem BeamReactivationDelayAfterFiringSeconds,
-                TItem BeamArtObject,
-                TItem DotArtObject,
-                TItem Unknown3,
-                TItem Unknown4,
-                TItem ShowBeamAtHip,
-                TItem Unknown5)
+                TItem Components,
+                TItem ActivateSightOnSightedMode,
+                TItem OpticalSightAttachNode,
+                TItem DelayBeforeSightActivation,
+                TItem DelayBeforeSightDeactivation,
+                TItem OpticalSightLight,
+                TItem FocalPointDistance,
+                TItem FocalPointDistanceDuringAiming,
+                TItem DelayBetweenShots,
+                TItem LaserArtObject,
+                TItem LaserDotArtObject,
+                TItem MaxLaserPointerDistance,
+                TItem SightControlsFiringDirection,
+                TItem ActivateSightOnNonSightedMode,
+                TItem ActivateSightOnScopedMode)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -194,21 +207,21 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.HideBeamByDefault = HideBeamByDefault;
-                this.UnknownOldField = UnknownOldField;
-                this.NodeName = NodeName;
-                this.BeamReactivationDelayAfterEquipOrReloadSeconds = BeamReactivationDelayAfterEquipOrReloadSeconds;
-                this.BeamDeactivationDelayAfterReloadSeconds = BeamDeactivationDelayAfterReloadSeconds;
-                this.Light = Light;
-                this.Unknown1 = Unknown1;
-                this.Unknown2 = Unknown2;
-                this.BeamReactivationDelayAfterFiringSeconds = BeamReactivationDelayAfterFiringSeconds;
-                this.BeamArtObject = BeamArtObject;
-                this.DotArtObject = DotArtObject;
-                this.Unknown3 = Unknown3;
-                this.Unknown4 = Unknown4;
-                this.ShowBeamAtHip = ShowBeamAtHip;
-                this.Unknown5 = Unknown5;
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
+                this.ActivateSightOnSightedMode = ActivateSightOnSightedMode;
+                this.OpticalSightAttachNode = OpticalSightAttachNode;
+                this.DelayBeforeSightActivation = DelayBeforeSightActivation;
+                this.DelayBeforeSightDeactivation = DelayBeforeSightDeactivation;
+                this.OpticalSightLight = OpticalSightLight;
+                this.FocalPointDistance = FocalPointDistance;
+                this.FocalPointDistanceDuringAiming = FocalPointDistanceDuringAiming;
+                this.DelayBetweenShots = DelayBetweenShots;
+                this.LaserArtObject = LaserArtObject;
+                this.LaserDotArtObject = LaserDotArtObject;
+                this.MaxLaserPointerDistance = MaxLaserPointerDistance;
+                this.SightControlsFiringDirection = SightControlsFiringDirection;
+                this.ActivateSightOnNonSightedMode = ActivateSightOnNonSightedMode;
+                this.ActivateSightOnScopedMode = ActivateSightOnScopedMode;
             }
 
             #pragma warning disable CS8618
@@ -220,21 +233,21 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem HideBeamByDefault;
-            public TItem UnknownOldField;
-            public TItem NodeName;
-            public TItem BeamReactivationDelayAfterEquipOrReloadSeconds;
-            public TItem BeamDeactivationDelayAfterReloadSeconds;
-            public TItem Light;
-            public TItem Unknown1;
-            public TItem Unknown2;
-            public TItem BeamReactivationDelayAfterFiringSeconds;
-            public TItem BeamArtObject;
-            public TItem DotArtObject;
-            public TItem Unknown3;
-            public TItem Unknown4;
-            public TItem ShowBeamAtHip;
-            public TItem Unknown5;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
+            public TItem ActivateSightOnSightedMode;
+            public TItem OpticalSightAttachNode;
+            public TItem DelayBeforeSightActivation;
+            public TItem DelayBeforeSightDeactivation;
+            public TItem OpticalSightLight;
+            public TItem FocalPointDistance;
+            public TItem FocalPointDistanceDuringAiming;
+            public TItem DelayBetweenShots;
+            public TItem LaserArtObject;
+            public TItem LaserDotArtObject;
+            public TItem MaxLaserPointerDistance;
+            public TItem SightControlsFiringDirection;
+            public TItem ActivateSightOnNonSightedMode;
+            public TItem ActivateSightOnScopedMode;
             #endregion
 
             #region Equals
@@ -248,41 +261,41 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.HideBeamByDefault, rhs.HideBeamByDefault)) return false;
-                if (!object.Equals(this.UnknownOldField, rhs.UnknownOldField)) return false;
-                if (!object.Equals(this.NodeName, rhs.NodeName)) return false;
-                if (!object.Equals(this.BeamReactivationDelayAfterEquipOrReloadSeconds, rhs.BeamReactivationDelayAfterEquipOrReloadSeconds)) return false;
-                if (!object.Equals(this.BeamDeactivationDelayAfterReloadSeconds, rhs.BeamDeactivationDelayAfterReloadSeconds)) return false;
-                if (!object.Equals(this.Light, rhs.Light)) return false;
-                if (!object.Equals(this.Unknown1, rhs.Unknown1)) return false;
-                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
-                if (!object.Equals(this.BeamReactivationDelayAfterFiringSeconds, rhs.BeamReactivationDelayAfterFiringSeconds)) return false;
-                if (!object.Equals(this.BeamArtObject, rhs.BeamArtObject)) return false;
-                if (!object.Equals(this.DotArtObject, rhs.DotArtObject)) return false;
-                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
-                if (!object.Equals(this.Unknown4, rhs.Unknown4)) return false;
-                if (!object.Equals(this.ShowBeamAtHip, rhs.ShowBeamAtHip)) return false;
-                if (!object.Equals(this.Unknown5, rhs.Unknown5)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
+                if (!object.Equals(this.ActivateSightOnSightedMode, rhs.ActivateSightOnSightedMode)) return false;
+                if (!object.Equals(this.OpticalSightAttachNode, rhs.OpticalSightAttachNode)) return false;
+                if (!object.Equals(this.DelayBeforeSightActivation, rhs.DelayBeforeSightActivation)) return false;
+                if (!object.Equals(this.DelayBeforeSightDeactivation, rhs.DelayBeforeSightDeactivation)) return false;
+                if (!object.Equals(this.OpticalSightLight, rhs.OpticalSightLight)) return false;
+                if (!object.Equals(this.FocalPointDistance, rhs.FocalPointDistance)) return false;
+                if (!object.Equals(this.FocalPointDistanceDuringAiming, rhs.FocalPointDistanceDuringAiming)) return false;
+                if (!object.Equals(this.DelayBetweenShots, rhs.DelayBetweenShots)) return false;
+                if (!object.Equals(this.LaserArtObject, rhs.LaserArtObject)) return false;
+                if (!object.Equals(this.LaserDotArtObject, rhs.LaserDotArtObject)) return false;
+                if (!object.Equals(this.MaxLaserPointerDistance, rhs.MaxLaserPointerDistance)) return false;
+                if (!object.Equals(this.SightControlsFiringDirection, rhs.SightControlsFiringDirection)) return false;
+                if (!object.Equals(this.ActivateSightOnNonSightedMode, rhs.ActivateSightOnNonSightedMode)) return false;
+                if (!object.Equals(this.ActivateSightOnScopedMode, rhs.ActivateSightOnScopedMode)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.HideBeamByDefault);
-                hash.Add(this.UnknownOldField);
-                hash.Add(this.NodeName);
-                hash.Add(this.BeamReactivationDelayAfterEquipOrReloadSeconds);
-                hash.Add(this.BeamDeactivationDelayAfterReloadSeconds);
-                hash.Add(this.Light);
-                hash.Add(this.Unknown1);
-                hash.Add(this.Unknown2);
-                hash.Add(this.BeamReactivationDelayAfterFiringSeconds);
-                hash.Add(this.BeamArtObject);
-                hash.Add(this.DotArtObject);
-                hash.Add(this.Unknown3);
-                hash.Add(this.Unknown4);
-                hash.Add(this.ShowBeamAtHip);
-                hash.Add(this.Unknown5);
+                hash.Add(this.Components);
+                hash.Add(this.ActivateSightOnSightedMode);
+                hash.Add(this.OpticalSightAttachNode);
+                hash.Add(this.DelayBeforeSightActivation);
+                hash.Add(this.DelayBeforeSightDeactivation);
+                hash.Add(this.OpticalSightLight);
+                hash.Add(this.FocalPointDistance);
+                hash.Add(this.FocalPointDistanceDuringAiming);
+                hash.Add(this.DelayBetweenShots);
+                hash.Add(this.LaserArtObject);
+                hash.Add(this.LaserDotArtObject);
+                hash.Add(this.MaxLaserPointerDistance);
+                hash.Add(this.SightControlsFiringDirection);
+                hash.Add(this.ActivateSightOnNonSightedMode);
+                hash.Add(this.ActivateSightOnScopedMode);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -293,21 +306,32 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.HideBeamByDefault)) return false;
-                if (!eval(this.UnknownOldField)) return false;
-                if (!eval(this.NodeName)) return false;
-                if (!eval(this.BeamReactivationDelayAfterEquipOrReloadSeconds)) return false;
-                if (!eval(this.BeamDeactivationDelayAfterReloadSeconds)) return false;
-                if (!eval(this.Light)) return false;
-                if (!eval(this.Unknown1)) return false;
-                if (!eval(this.Unknown2)) return false;
-                if (!eval(this.BeamReactivationDelayAfterFiringSeconds)) return false;
-                if (!eval(this.BeamArtObject)) return false;
-                if (!eval(this.DotArtObject)) return false;
-                if (!eval(this.Unknown3)) return false;
-                if (!eval(this.Unknown4)) return false;
-                if (!eval(this.ShowBeamAtHip)) return false;
-                if (!eval(this.Unknown5)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.ActivateSightOnSightedMode)) return false;
+                if (!eval(this.OpticalSightAttachNode)) return false;
+                if (!eval(this.DelayBeforeSightActivation)) return false;
+                if (!eval(this.DelayBeforeSightDeactivation)) return false;
+                if (!eval(this.OpticalSightLight)) return false;
+                if (!eval(this.FocalPointDistance)) return false;
+                if (!eval(this.FocalPointDistanceDuringAiming)) return false;
+                if (!eval(this.DelayBetweenShots)) return false;
+                if (!eval(this.LaserArtObject)) return false;
+                if (!eval(this.LaserDotArtObject)) return false;
+                if (!eval(this.MaxLaserPointerDistance)) return false;
+                if (!eval(this.SightControlsFiringDirection)) return false;
+                if (!eval(this.ActivateSightOnNonSightedMode)) return false;
+                if (!eval(this.ActivateSightOnScopedMode)) return false;
                 return true;
             }
             #endregion
@@ -316,21 +340,32 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.HideBeamByDefault)) return true;
-                if (eval(this.UnknownOldField)) return true;
-                if (eval(this.NodeName)) return true;
-                if (eval(this.BeamReactivationDelayAfterEquipOrReloadSeconds)) return true;
-                if (eval(this.BeamDeactivationDelayAfterReloadSeconds)) return true;
-                if (eval(this.Light)) return true;
-                if (eval(this.Unknown1)) return true;
-                if (eval(this.Unknown2)) return true;
-                if (eval(this.BeamReactivationDelayAfterFiringSeconds)) return true;
-                if (eval(this.BeamArtObject)) return true;
-                if (eval(this.DotArtObject)) return true;
-                if (eval(this.Unknown3)) return true;
-                if (eval(this.Unknown4)) return true;
-                if (eval(this.ShowBeamAtHip)) return true;
-                if (eval(this.Unknown5)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.ActivateSightOnSightedMode)) return true;
+                if (eval(this.OpticalSightAttachNode)) return true;
+                if (eval(this.DelayBeforeSightActivation)) return true;
+                if (eval(this.DelayBeforeSightDeactivation)) return true;
+                if (eval(this.OpticalSightLight)) return true;
+                if (eval(this.FocalPointDistance)) return true;
+                if (eval(this.FocalPointDistanceDuringAiming)) return true;
+                if (eval(this.DelayBetweenShots)) return true;
+                if (eval(this.LaserArtObject)) return true;
+                if (eval(this.LaserDotArtObject)) return true;
+                if (eval(this.MaxLaserPointerDistance)) return true;
+                if (eval(this.SightControlsFiringDirection)) return true;
+                if (eval(this.ActivateSightOnNonSightedMode)) return true;
+                if (eval(this.ActivateSightOnScopedMode)) return true;
                 return false;
             }
             #endregion
@@ -346,21 +381,35 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.HideBeamByDefault = eval(this.HideBeamByDefault);
-                obj.UnknownOldField = eval(this.UnknownOldField);
-                obj.NodeName = eval(this.NodeName);
-                obj.BeamReactivationDelayAfterEquipOrReloadSeconds = eval(this.BeamReactivationDelayAfterEquipOrReloadSeconds);
-                obj.BeamDeactivationDelayAfterReloadSeconds = eval(this.BeamDeactivationDelayAfterReloadSeconds);
-                obj.Light = eval(this.Light);
-                obj.Unknown1 = eval(this.Unknown1);
-                obj.Unknown2 = eval(this.Unknown2);
-                obj.BeamReactivationDelayAfterFiringSeconds = eval(this.BeamReactivationDelayAfterFiringSeconds);
-                obj.BeamArtObject = eval(this.BeamArtObject);
-                obj.DotArtObject = eval(this.DotArtObject);
-                obj.Unknown3 = eval(this.Unknown3);
-                obj.Unknown4 = eval(this.Unknown4);
-                obj.ShowBeamAtHip = eval(this.ShowBeamAtHip);
-                obj.Unknown5 = eval(this.Unknown5);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.ActivateSightOnSightedMode = eval(this.ActivateSightOnSightedMode);
+                obj.OpticalSightAttachNode = eval(this.OpticalSightAttachNode);
+                obj.DelayBeforeSightActivation = eval(this.DelayBeforeSightActivation);
+                obj.DelayBeforeSightDeactivation = eval(this.DelayBeforeSightDeactivation);
+                obj.OpticalSightLight = eval(this.OpticalSightLight);
+                obj.FocalPointDistance = eval(this.FocalPointDistance);
+                obj.FocalPointDistanceDuringAiming = eval(this.FocalPointDistanceDuringAiming);
+                obj.DelayBetweenShots = eval(this.DelayBetweenShots);
+                obj.LaserArtObject = eval(this.LaserArtObject);
+                obj.LaserDotArtObject = eval(this.LaserDotArtObject);
+                obj.MaxLaserPointerDistance = eval(this.MaxLaserPointerDistance);
+                obj.SightControlsFiringDirection = eval(this.SightControlsFiringDirection);
+                obj.ActivateSightOnNonSightedMode = eval(this.ActivateSightOnNonSightedMode);
+                obj.ActivateSightOnScopedMode = eval(this.ActivateSightOnScopedMode);
             }
             #endregion
 
@@ -379,65 +428,80 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(AimOpticalSightMarker.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.HideBeamByDefault ?? true)
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
                     {
-                        sb.AppendItem(HideBeamByDefault, "HideBeamByDefault");
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
                     }
-                    if (printMask?.UnknownOldField ?? true)
+                    if (printMask?.ActivateSightOnSightedMode ?? true)
                     {
-                        sb.AppendItem(UnknownOldField, "UnknownOldField");
+                        sb.AppendItem(ActivateSightOnSightedMode, "ActivateSightOnSightedMode");
                     }
-                    if (printMask?.NodeName ?? true)
+                    if (printMask?.OpticalSightAttachNode ?? true)
                     {
-                        sb.AppendItem(NodeName, "NodeName");
+                        sb.AppendItem(OpticalSightAttachNode, "OpticalSightAttachNode");
                     }
-                    if (printMask?.BeamReactivationDelayAfterEquipOrReloadSeconds ?? true)
+                    if (printMask?.DelayBeforeSightActivation ?? true)
                     {
-                        sb.AppendItem(BeamReactivationDelayAfterEquipOrReloadSeconds, "BeamReactivationDelayAfterEquipOrReloadSeconds");
+                        sb.AppendItem(DelayBeforeSightActivation, "DelayBeforeSightActivation");
                     }
-                    if (printMask?.BeamDeactivationDelayAfterReloadSeconds ?? true)
+                    if (printMask?.DelayBeforeSightDeactivation ?? true)
                     {
-                        sb.AppendItem(BeamDeactivationDelayAfterReloadSeconds, "BeamDeactivationDelayAfterReloadSeconds");
+                        sb.AppendItem(DelayBeforeSightDeactivation, "DelayBeforeSightDeactivation");
                     }
-                    if (printMask?.Light ?? true)
+                    if (printMask?.OpticalSightLight ?? true)
                     {
-                        sb.AppendItem(Light, "Light");
+                        sb.AppendItem(OpticalSightLight, "OpticalSightLight");
                     }
-                    if (printMask?.Unknown1 ?? true)
+                    if (printMask?.FocalPointDistance ?? true)
                     {
-                        sb.AppendItem(Unknown1, "Unknown1");
+                        sb.AppendItem(FocalPointDistance, "FocalPointDistance");
                     }
-                    if (printMask?.Unknown2 ?? true)
+                    if (printMask?.FocalPointDistanceDuringAiming ?? true)
                     {
-                        sb.AppendItem(Unknown2, "Unknown2");
+                        sb.AppendItem(FocalPointDistanceDuringAiming, "FocalPointDistanceDuringAiming");
                     }
-                    if (printMask?.BeamReactivationDelayAfterFiringSeconds ?? true)
+                    if (printMask?.DelayBetweenShots ?? true)
                     {
-                        sb.AppendItem(BeamReactivationDelayAfterFiringSeconds, "BeamReactivationDelayAfterFiringSeconds");
+                        sb.AppendItem(DelayBetweenShots, "DelayBetweenShots");
                     }
-                    if (printMask?.BeamArtObject ?? true)
+                    if (printMask?.LaserArtObject ?? true)
                     {
-                        sb.AppendItem(BeamArtObject, "BeamArtObject");
+                        sb.AppendItem(LaserArtObject, "LaserArtObject");
                     }
-                    if (printMask?.DotArtObject ?? true)
+                    if (printMask?.LaserDotArtObject ?? true)
                     {
-                        sb.AppendItem(DotArtObject, "DotArtObject");
+                        sb.AppendItem(LaserDotArtObject, "LaserDotArtObject");
                     }
-                    if (printMask?.Unknown3 ?? true)
+                    if (printMask?.MaxLaserPointerDistance ?? true)
                     {
-                        sb.AppendItem(Unknown3, "Unknown3");
+                        sb.AppendItem(MaxLaserPointerDistance, "MaxLaserPointerDistance");
                     }
-                    if (printMask?.Unknown4 ?? true)
+                    if (printMask?.SightControlsFiringDirection ?? true)
                     {
-                        sb.AppendItem(Unknown4, "Unknown4");
+                        sb.AppendItem(SightControlsFiringDirection, "SightControlsFiringDirection");
                     }
-                    if (printMask?.ShowBeamAtHip ?? true)
+                    if (printMask?.ActivateSightOnNonSightedMode ?? true)
                     {
-                        sb.AppendItem(ShowBeamAtHip, "ShowBeamAtHip");
+                        sb.AppendItem(ActivateSightOnNonSightedMode, "ActivateSightOnNonSightedMode");
                     }
-                    if (printMask?.Unknown5 ?? true)
+                    if (printMask?.ActivateSightOnScopedMode ?? true)
                     {
-                        sb.AppendItem(Unknown5, "Unknown5");
+                        sb.AppendItem(ActivateSightOnScopedMode, "ActivateSightOnScopedMode");
                     }
                 }
             }
@@ -450,21 +514,21 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? HideBeamByDefault;
-            public Exception? UnknownOldField;
-            public Exception? NodeName;
-            public Exception? BeamReactivationDelayAfterEquipOrReloadSeconds;
-            public Exception? BeamDeactivationDelayAfterReloadSeconds;
-            public Exception? Light;
-            public Exception? Unknown1;
-            public Exception? Unknown2;
-            public Exception? BeamReactivationDelayAfterFiringSeconds;
-            public Exception? BeamArtObject;
-            public Exception? DotArtObject;
-            public Exception? Unknown3;
-            public Exception? Unknown4;
-            public Exception? ShowBeamAtHip;
-            public Exception? Unknown5;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
+            public Exception? ActivateSightOnSightedMode;
+            public Exception? OpticalSightAttachNode;
+            public Exception? DelayBeforeSightActivation;
+            public Exception? DelayBeforeSightDeactivation;
+            public Exception? OpticalSightLight;
+            public Exception? FocalPointDistance;
+            public Exception? FocalPointDistanceDuringAiming;
+            public Exception? DelayBetweenShots;
+            public Exception? LaserArtObject;
+            public Exception? LaserDotArtObject;
+            public Exception? MaxLaserPointerDistance;
+            public Exception? SightControlsFiringDirection;
+            public Exception? ActivateSightOnNonSightedMode;
+            public Exception? ActivateSightOnScopedMode;
             #endregion
 
             #region IErrorMask
@@ -473,36 +537,36 @@ namespace Mutagen.Bethesda.Starfield
                 AimOpticalSightMarker_FieldIndex enu = (AimOpticalSightMarker_FieldIndex)index;
                 switch (enu)
                 {
-                    case AimOpticalSightMarker_FieldIndex.HideBeamByDefault:
-                        return HideBeamByDefault;
-                    case AimOpticalSightMarker_FieldIndex.UnknownOldField:
-                        return UnknownOldField;
-                    case AimOpticalSightMarker_FieldIndex.NodeName:
-                        return NodeName;
-                    case AimOpticalSightMarker_FieldIndex.BeamReactivationDelayAfterEquipOrReloadSeconds:
-                        return BeamReactivationDelayAfterEquipOrReloadSeconds;
-                    case AimOpticalSightMarker_FieldIndex.BeamDeactivationDelayAfterReloadSeconds:
-                        return BeamDeactivationDelayAfterReloadSeconds;
-                    case AimOpticalSightMarker_FieldIndex.Light:
-                        return Light;
-                    case AimOpticalSightMarker_FieldIndex.Unknown1:
-                        return Unknown1;
-                    case AimOpticalSightMarker_FieldIndex.Unknown2:
-                        return Unknown2;
-                    case AimOpticalSightMarker_FieldIndex.BeamReactivationDelayAfterFiringSeconds:
-                        return BeamReactivationDelayAfterFiringSeconds;
-                    case AimOpticalSightMarker_FieldIndex.BeamArtObject:
-                        return BeamArtObject;
-                    case AimOpticalSightMarker_FieldIndex.DotArtObject:
-                        return DotArtObject;
-                    case AimOpticalSightMarker_FieldIndex.Unknown3:
-                        return Unknown3;
-                    case AimOpticalSightMarker_FieldIndex.Unknown4:
-                        return Unknown4;
-                    case AimOpticalSightMarker_FieldIndex.ShowBeamAtHip:
-                        return ShowBeamAtHip;
-                    case AimOpticalSightMarker_FieldIndex.Unknown5:
-                        return Unknown5;
+                    case AimOpticalSightMarker_FieldIndex.Components:
+                        return Components;
+                    case AimOpticalSightMarker_FieldIndex.ActivateSightOnSightedMode:
+                        return ActivateSightOnSightedMode;
+                    case AimOpticalSightMarker_FieldIndex.OpticalSightAttachNode:
+                        return OpticalSightAttachNode;
+                    case AimOpticalSightMarker_FieldIndex.DelayBeforeSightActivation:
+                        return DelayBeforeSightActivation;
+                    case AimOpticalSightMarker_FieldIndex.DelayBeforeSightDeactivation:
+                        return DelayBeforeSightDeactivation;
+                    case AimOpticalSightMarker_FieldIndex.OpticalSightLight:
+                        return OpticalSightLight;
+                    case AimOpticalSightMarker_FieldIndex.FocalPointDistance:
+                        return FocalPointDistance;
+                    case AimOpticalSightMarker_FieldIndex.FocalPointDistanceDuringAiming:
+                        return FocalPointDistanceDuringAiming;
+                    case AimOpticalSightMarker_FieldIndex.DelayBetweenShots:
+                        return DelayBetweenShots;
+                    case AimOpticalSightMarker_FieldIndex.LaserArtObject:
+                        return LaserArtObject;
+                    case AimOpticalSightMarker_FieldIndex.LaserDotArtObject:
+                        return LaserDotArtObject;
+                    case AimOpticalSightMarker_FieldIndex.MaxLaserPointerDistance:
+                        return MaxLaserPointerDistance;
+                    case AimOpticalSightMarker_FieldIndex.SightControlsFiringDirection:
+                        return SightControlsFiringDirection;
+                    case AimOpticalSightMarker_FieldIndex.ActivateSightOnNonSightedMode:
+                        return ActivateSightOnNonSightedMode;
+                    case AimOpticalSightMarker_FieldIndex.ActivateSightOnScopedMode:
+                        return ActivateSightOnScopedMode;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -513,50 +577,50 @@ namespace Mutagen.Bethesda.Starfield
                 AimOpticalSightMarker_FieldIndex enu = (AimOpticalSightMarker_FieldIndex)index;
                 switch (enu)
                 {
-                    case AimOpticalSightMarker_FieldIndex.HideBeamByDefault:
-                        this.HideBeamByDefault = ex;
+                    case AimOpticalSightMarker_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
                         break;
-                    case AimOpticalSightMarker_FieldIndex.UnknownOldField:
-                        this.UnknownOldField = ex;
+                    case AimOpticalSightMarker_FieldIndex.ActivateSightOnSightedMode:
+                        this.ActivateSightOnSightedMode = ex;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.NodeName:
-                        this.NodeName = ex;
+                    case AimOpticalSightMarker_FieldIndex.OpticalSightAttachNode:
+                        this.OpticalSightAttachNode = ex;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.BeamReactivationDelayAfterEquipOrReloadSeconds:
-                        this.BeamReactivationDelayAfterEquipOrReloadSeconds = ex;
+                    case AimOpticalSightMarker_FieldIndex.DelayBeforeSightActivation:
+                        this.DelayBeforeSightActivation = ex;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.BeamDeactivationDelayAfterReloadSeconds:
-                        this.BeamDeactivationDelayAfterReloadSeconds = ex;
+                    case AimOpticalSightMarker_FieldIndex.DelayBeforeSightDeactivation:
+                        this.DelayBeforeSightDeactivation = ex;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.Light:
-                        this.Light = ex;
+                    case AimOpticalSightMarker_FieldIndex.OpticalSightLight:
+                        this.OpticalSightLight = ex;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.Unknown1:
-                        this.Unknown1 = ex;
+                    case AimOpticalSightMarker_FieldIndex.FocalPointDistance:
+                        this.FocalPointDistance = ex;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.Unknown2:
-                        this.Unknown2 = ex;
+                    case AimOpticalSightMarker_FieldIndex.FocalPointDistanceDuringAiming:
+                        this.FocalPointDistanceDuringAiming = ex;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.BeamReactivationDelayAfterFiringSeconds:
-                        this.BeamReactivationDelayAfterFiringSeconds = ex;
+                    case AimOpticalSightMarker_FieldIndex.DelayBetweenShots:
+                        this.DelayBetweenShots = ex;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.BeamArtObject:
-                        this.BeamArtObject = ex;
+                    case AimOpticalSightMarker_FieldIndex.LaserArtObject:
+                        this.LaserArtObject = ex;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.DotArtObject:
-                        this.DotArtObject = ex;
+                    case AimOpticalSightMarker_FieldIndex.LaserDotArtObject:
+                        this.LaserDotArtObject = ex;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.Unknown3:
-                        this.Unknown3 = ex;
+                    case AimOpticalSightMarker_FieldIndex.MaxLaserPointerDistance:
+                        this.MaxLaserPointerDistance = ex;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.Unknown4:
-                        this.Unknown4 = ex;
+                    case AimOpticalSightMarker_FieldIndex.SightControlsFiringDirection:
+                        this.SightControlsFiringDirection = ex;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.ShowBeamAtHip:
-                        this.ShowBeamAtHip = ex;
+                    case AimOpticalSightMarker_FieldIndex.ActivateSightOnNonSightedMode:
+                        this.ActivateSightOnNonSightedMode = ex;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.Unknown5:
-                        this.Unknown5 = ex;
+                    case AimOpticalSightMarker_FieldIndex.ActivateSightOnScopedMode:
+                        this.ActivateSightOnScopedMode = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -569,50 +633,50 @@ namespace Mutagen.Bethesda.Starfield
                 AimOpticalSightMarker_FieldIndex enu = (AimOpticalSightMarker_FieldIndex)index;
                 switch (enu)
                 {
-                    case AimOpticalSightMarker_FieldIndex.HideBeamByDefault:
-                        this.HideBeamByDefault = (Exception?)obj;
+                    case AimOpticalSightMarker_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.UnknownOldField:
-                        this.UnknownOldField = (Exception?)obj;
+                    case AimOpticalSightMarker_FieldIndex.ActivateSightOnSightedMode:
+                        this.ActivateSightOnSightedMode = (Exception?)obj;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.NodeName:
-                        this.NodeName = (Exception?)obj;
+                    case AimOpticalSightMarker_FieldIndex.OpticalSightAttachNode:
+                        this.OpticalSightAttachNode = (Exception?)obj;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.BeamReactivationDelayAfterEquipOrReloadSeconds:
-                        this.BeamReactivationDelayAfterEquipOrReloadSeconds = (Exception?)obj;
+                    case AimOpticalSightMarker_FieldIndex.DelayBeforeSightActivation:
+                        this.DelayBeforeSightActivation = (Exception?)obj;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.BeamDeactivationDelayAfterReloadSeconds:
-                        this.BeamDeactivationDelayAfterReloadSeconds = (Exception?)obj;
+                    case AimOpticalSightMarker_FieldIndex.DelayBeforeSightDeactivation:
+                        this.DelayBeforeSightDeactivation = (Exception?)obj;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.Light:
-                        this.Light = (Exception?)obj;
+                    case AimOpticalSightMarker_FieldIndex.OpticalSightLight:
+                        this.OpticalSightLight = (Exception?)obj;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.Unknown1:
-                        this.Unknown1 = (Exception?)obj;
+                    case AimOpticalSightMarker_FieldIndex.FocalPointDistance:
+                        this.FocalPointDistance = (Exception?)obj;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.Unknown2:
-                        this.Unknown2 = (Exception?)obj;
+                    case AimOpticalSightMarker_FieldIndex.FocalPointDistanceDuringAiming:
+                        this.FocalPointDistanceDuringAiming = (Exception?)obj;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.BeamReactivationDelayAfterFiringSeconds:
-                        this.BeamReactivationDelayAfterFiringSeconds = (Exception?)obj;
+                    case AimOpticalSightMarker_FieldIndex.DelayBetweenShots:
+                        this.DelayBetweenShots = (Exception?)obj;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.BeamArtObject:
-                        this.BeamArtObject = (Exception?)obj;
+                    case AimOpticalSightMarker_FieldIndex.LaserArtObject:
+                        this.LaserArtObject = (Exception?)obj;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.DotArtObject:
-                        this.DotArtObject = (Exception?)obj;
+                    case AimOpticalSightMarker_FieldIndex.LaserDotArtObject:
+                        this.LaserDotArtObject = (Exception?)obj;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.Unknown3:
-                        this.Unknown3 = (Exception?)obj;
+                    case AimOpticalSightMarker_FieldIndex.MaxLaserPointerDistance:
+                        this.MaxLaserPointerDistance = (Exception?)obj;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.Unknown4:
-                        this.Unknown4 = (Exception?)obj;
+                    case AimOpticalSightMarker_FieldIndex.SightControlsFiringDirection:
+                        this.SightControlsFiringDirection = (Exception?)obj;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.ShowBeamAtHip:
-                        this.ShowBeamAtHip = (Exception?)obj;
+                    case AimOpticalSightMarker_FieldIndex.ActivateSightOnNonSightedMode:
+                        this.ActivateSightOnNonSightedMode = (Exception?)obj;
                         break;
-                    case AimOpticalSightMarker_FieldIndex.Unknown5:
-                        this.Unknown5 = (Exception?)obj;
+                    case AimOpticalSightMarker_FieldIndex.ActivateSightOnScopedMode:
+                        this.ActivateSightOnScopedMode = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -623,21 +687,21 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (HideBeamByDefault != null) return true;
-                if (UnknownOldField != null) return true;
-                if (NodeName != null) return true;
-                if (BeamReactivationDelayAfterEquipOrReloadSeconds != null) return true;
-                if (BeamDeactivationDelayAfterReloadSeconds != null) return true;
-                if (Light != null) return true;
-                if (Unknown1 != null) return true;
-                if (Unknown2 != null) return true;
-                if (BeamReactivationDelayAfterFiringSeconds != null) return true;
-                if (BeamArtObject != null) return true;
-                if (DotArtObject != null) return true;
-                if (Unknown3 != null) return true;
-                if (Unknown4 != null) return true;
-                if (ShowBeamAtHip != null) return true;
-                if (Unknown5 != null) return true;
+                if (Components != null) return true;
+                if (ActivateSightOnSightedMode != null) return true;
+                if (OpticalSightAttachNode != null) return true;
+                if (DelayBeforeSightActivation != null) return true;
+                if (DelayBeforeSightDeactivation != null) return true;
+                if (OpticalSightLight != null) return true;
+                if (FocalPointDistance != null) return true;
+                if (FocalPointDistanceDuringAiming != null) return true;
+                if (DelayBetweenShots != null) return true;
+                if (LaserArtObject != null) return true;
+                if (LaserDotArtObject != null) return true;
+                if (MaxLaserPointerDistance != null) return true;
+                if (SightControlsFiringDirection != null) return true;
+                if (ActivateSightOnNonSightedMode != null) return true;
+                if (ActivateSightOnScopedMode != null) return true;
                 return false;
             }
             #endregion
@@ -664,50 +728,65 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
+                if (Components is {} ComponentsItem)
                 {
-                    sb.AppendItem(HideBeamByDefault, "HideBeamByDefault");
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
                 }
                 {
-                    sb.AppendItem(UnknownOldField, "UnknownOldField");
+                    sb.AppendItem(ActivateSightOnSightedMode, "ActivateSightOnSightedMode");
                 }
                 {
-                    sb.AppendItem(NodeName, "NodeName");
+                    sb.AppendItem(OpticalSightAttachNode, "OpticalSightAttachNode");
                 }
                 {
-                    sb.AppendItem(BeamReactivationDelayAfterEquipOrReloadSeconds, "BeamReactivationDelayAfterEquipOrReloadSeconds");
+                    sb.AppendItem(DelayBeforeSightActivation, "DelayBeforeSightActivation");
                 }
                 {
-                    sb.AppendItem(BeamDeactivationDelayAfterReloadSeconds, "BeamDeactivationDelayAfterReloadSeconds");
+                    sb.AppendItem(DelayBeforeSightDeactivation, "DelayBeforeSightDeactivation");
                 }
                 {
-                    sb.AppendItem(Light, "Light");
+                    sb.AppendItem(OpticalSightLight, "OpticalSightLight");
                 }
                 {
-                    sb.AppendItem(Unknown1, "Unknown1");
+                    sb.AppendItem(FocalPointDistance, "FocalPointDistance");
                 }
                 {
-                    sb.AppendItem(Unknown2, "Unknown2");
+                    sb.AppendItem(FocalPointDistanceDuringAiming, "FocalPointDistanceDuringAiming");
                 }
                 {
-                    sb.AppendItem(BeamReactivationDelayAfterFiringSeconds, "BeamReactivationDelayAfterFiringSeconds");
+                    sb.AppendItem(DelayBetweenShots, "DelayBetweenShots");
                 }
                 {
-                    sb.AppendItem(BeamArtObject, "BeamArtObject");
+                    sb.AppendItem(LaserArtObject, "LaserArtObject");
                 }
                 {
-                    sb.AppendItem(DotArtObject, "DotArtObject");
+                    sb.AppendItem(LaserDotArtObject, "LaserDotArtObject");
                 }
                 {
-                    sb.AppendItem(Unknown3, "Unknown3");
+                    sb.AppendItem(MaxLaserPointerDistance, "MaxLaserPointerDistance");
                 }
                 {
-                    sb.AppendItem(Unknown4, "Unknown4");
+                    sb.AppendItem(SightControlsFiringDirection, "SightControlsFiringDirection");
                 }
                 {
-                    sb.AppendItem(ShowBeamAtHip, "ShowBeamAtHip");
+                    sb.AppendItem(ActivateSightOnNonSightedMode, "ActivateSightOnNonSightedMode");
                 }
                 {
-                    sb.AppendItem(Unknown5, "Unknown5");
+                    sb.AppendItem(ActivateSightOnScopedMode, "ActivateSightOnScopedMode");
                 }
             }
             #endregion
@@ -717,21 +796,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.HideBeamByDefault = this.HideBeamByDefault.Combine(rhs.HideBeamByDefault);
-                ret.UnknownOldField = this.UnknownOldField.Combine(rhs.UnknownOldField);
-                ret.NodeName = this.NodeName.Combine(rhs.NodeName);
-                ret.BeamReactivationDelayAfterEquipOrReloadSeconds = this.BeamReactivationDelayAfterEquipOrReloadSeconds.Combine(rhs.BeamReactivationDelayAfterEquipOrReloadSeconds);
-                ret.BeamDeactivationDelayAfterReloadSeconds = this.BeamDeactivationDelayAfterReloadSeconds.Combine(rhs.BeamDeactivationDelayAfterReloadSeconds);
-                ret.Light = this.Light.Combine(rhs.Light);
-                ret.Unknown1 = this.Unknown1.Combine(rhs.Unknown1);
-                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
-                ret.BeamReactivationDelayAfterFiringSeconds = this.BeamReactivationDelayAfterFiringSeconds.Combine(rhs.BeamReactivationDelayAfterFiringSeconds);
-                ret.BeamArtObject = this.BeamArtObject.Combine(rhs.BeamArtObject);
-                ret.DotArtObject = this.DotArtObject.Combine(rhs.DotArtObject);
-                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
-                ret.Unknown4 = this.Unknown4.Combine(rhs.Unknown4);
-                ret.ShowBeamAtHip = this.ShowBeamAtHip.Combine(rhs.ShowBeamAtHip);
-                ret.Unknown5 = this.Unknown5.Combine(rhs.Unknown5);
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
+                ret.ActivateSightOnSightedMode = this.ActivateSightOnSightedMode.Combine(rhs.ActivateSightOnSightedMode);
+                ret.OpticalSightAttachNode = this.OpticalSightAttachNode.Combine(rhs.OpticalSightAttachNode);
+                ret.DelayBeforeSightActivation = this.DelayBeforeSightActivation.Combine(rhs.DelayBeforeSightActivation);
+                ret.DelayBeforeSightDeactivation = this.DelayBeforeSightDeactivation.Combine(rhs.DelayBeforeSightDeactivation);
+                ret.OpticalSightLight = this.OpticalSightLight.Combine(rhs.OpticalSightLight);
+                ret.FocalPointDistance = this.FocalPointDistance.Combine(rhs.FocalPointDistance);
+                ret.FocalPointDistanceDuringAiming = this.FocalPointDistanceDuringAiming.Combine(rhs.FocalPointDistanceDuringAiming);
+                ret.DelayBetweenShots = this.DelayBetweenShots.Combine(rhs.DelayBetweenShots);
+                ret.LaserArtObject = this.LaserArtObject.Combine(rhs.LaserArtObject);
+                ret.LaserDotArtObject = this.LaserDotArtObject.Combine(rhs.LaserDotArtObject);
+                ret.MaxLaserPointerDistance = this.MaxLaserPointerDistance.Combine(rhs.MaxLaserPointerDistance);
+                ret.SightControlsFiringDirection = this.SightControlsFiringDirection.Combine(rhs.SightControlsFiringDirection);
+                ret.ActivateSightOnNonSightedMode = this.ActivateSightOnNonSightedMode.Combine(rhs.ActivateSightOnNonSightedMode);
+                ret.ActivateSightOnScopedMode = this.ActivateSightOnScopedMode.Combine(rhs.ActivateSightOnScopedMode);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -754,21 +833,21 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
-            public bool HideBeamByDefault;
-            public bool UnknownOldField;
-            public bool NodeName;
-            public bool BeamReactivationDelayAfterEquipOrReloadSeconds;
-            public bool BeamDeactivationDelayAfterReloadSeconds;
-            public bool Light;
-            public bool Unknown1;
-            public bool Unknown2;
-            public bool BeamReactivationDelayAfterFiringSeconds;
-            public bool BeamArtObject;
-            public bool DotArtObject;
-            public bool Unknown3;
-            public bool Unknown4;
-            public bool ShowBeamAtHip;
-            public bool Unknown5;
+            public AComponent.TranslationMask? Components;
+            public bool ActivateSightOnSightedMode;
+            public bool OpticalSightAttachNode;
+            public bool DelayBeforeSightActivation;
+            public bool DelayBeforeSightDeactivation;
+            public bool OpticalSightLight;
+            public bool FocalPointDistance;
+            public bool FocalPointDistanceDuringAiming;
+            public bool DelayBetweenShots;
+            public bool LaserArtObject;
+            public bool LaserDotArtObject;
+            public bool MaxLaserPointerDistance;
+            public bool SightControlsFiringDirection;
+            public bool ActivateSightOnNonSightedMode;
+            public bool ActivateSightOnScopedMode;
             #endregion
 
             #region Ctors
@@ -777,21 +856,20 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.HideBeamByDefault = defaultOn;
-                this.UnknownOldField = defaultOn;
-                this.NodeName = defaultOn;
-                this.BeamReactivationDelayAfterEquipOrReloadSeconds = defaultOn;
-                this.BeamDeactivationDelayAfterReloadSeconds = defaultOn;
-                this.Light = defaultOn;
-                this.Unknown1 = defaultOn;
-                this.Unknown2 = defaultOn;
-                this.BeamReactivationDelayAfterFiringSeconds = defaultOn;
-                this.BeamArtObject = defaultOn;
-                this.DotArtObject = defaultOn;
-                this.Unknown3 = defaultOn;
-                this.Unknown4 = defaultOn;
-                this.ShowBeamAtHip = defaultOn;
-                this.Unknown5 = defaultOn;
+                this.ActivateSightOnSightedMode = defaultOn;
+                this.OpticalSightAttachNode = defaultOn;
+                this.DelayBeforeSightActivation = defaultOn;
+                this.DelayBeforeSightDeactivation = defaultOn;
+                this.OpticalSightLight = defaultOn;
+                this.FocalPointDistance = defaultOn;
+                this.FocalPointDistanceDuringAiming = defaultOn;
+                this.DelayBetweenShots = defaultOn;
+                this.LaserArtObject = defaultOn;
+                this.LaserDotArtObject = defaultOn;
+                this.MaxLaserPointerDistance = defaultOn;
+                this.SightControlsFiringDirection = defaultOn;
+                this.ActivateSightOnNonSightedMode = defaultOn;
+                this.ActivateSightOnScopedMode = defaultOn;
             }
 
             #endregion
@@ -799,21 +877,21 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((HideBeamByDefault, null));
-                ret.Add((UnknownOldField, null));
-                ret.Add((NodeName, null));
-                ret.Add((BeamReactivationDelayAfterEquipOrReloadSeconds, null));
-                ret.Add((BeamDeactivationDelayAfterReloadSeconds, null));
-                ret.Add((Light, null));
-                ret.Add((Unknown1, null));
-                ret.Add((Unknown2, null));
-                ret.Add((BeamReactivationDelayAfterFiringSeconds, null));
-                ret.Add((BeamArtObject, null));
-                ret.Add((DotArtObject, null));
-                ret.Add((Unknown3, null));
-                ret.Add((Unknown4, null));
-                ret.Add((ShowBeamAtHip, null));
-                ret.Add((Unknown5, null));
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
+                ret.Add((ActivateSightOnSightedMode, null));
+                ret.Add((OpticalSightAttachNode, null));
+                ret.Add((DelayBeforeSightActivation, null));
+                ret.Add((DelayBeforeSightDeactivation, null));
+                ret.Add((OpticalSightLight, null));
+                ret.Add((FocalPointDistance, null));
+                ret.Add((FocalPointDistanceDuringAiming, null));
+                ret.Add((DelayBetweenShots, null));
+                ret.Add((LaserArtObject, null));
+                ret.Add((LaserDotArtObject, null));
+                ret.Add((MaxLaserPointerDistance, null));
+                ret.Add((SightControlsFiringDirection, null));
+                ret.Add((ActivateSightOnNonSightedMode, null));
+                ret.Add((ActivateSightOnScopedMode, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -877,6 +955,10 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(IAimOpticalSightMarker);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => AimOpticalSightMarkerCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => AimOpticalSightMarkerSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => AimOpticalSightMarkerSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => AimOpticalSightMarkerSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -957,25 +1039,26 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface IAimOpticalSightMarker :
         IAimOpticalSightMarkerGetter,
+        IAssetLinkContainer,
         IFormLinkContainer,
         ILoquiObjectSetter<IAimOpticalSightMarkerInternal>,
         IStarfieldMajorRecordInternal
     {
-        new Boolean HideBeamByDefault { get; set; }
-        new UInt32 UnknownOldField { get; set; }
-        new String NodeName { get; set; }
-        new Single BeamReactivationDelayAfterEquipOrReloadSeconds { get; set; }
-        new Single BeamDeactivationDelayAfterReloadSeconds { get; set; }
-        new IFormLink<ILightGetter> Light { get; set; }
-        new Single Unknown1 { get; set; }
-        new Single Unknown2 { get; set; }
-        new Single BeamReactivationDelayAfterFiringSeconds { get; set; }
-        new IFormLink<IArtObjectGetter> BeamArtObject { get; set; }
-        new IFormLink<IArtObjectGetter> DotArtObject { get; set; }
-        new Single Unknown3 { get; set; }
-        new Boolean Unknown4 { get; set; }
-        new Boolean ShowBeamAtHip { get; set; }
-        new Boolean Unknown5 { get; set; }
+        new ExtendedList<AComponent> Components { get; }
+        new Boolean ActivateSightOnSightedMode { get; set; }
+        new String OpticalSightAttachNode { get; set; }
+        new Single DelayBeforeSightActivation { get; set; }
+        new Single DelayBeforeSightDeactivation { get; set; }
+        new IFormLink<ILightGetter> OpticalSightLight { get; set; }
+        new Single FocalPointDistance { get; set; }
+        new Single FocalPointDistanceDuringAiming { get; set; }
+        new Single DelayBetweenShots { get; set; }
+        new IFormLink<IArtObjectGetter> LaserArtObject { get; set; }
+        new IFormLink<IArtObjectGetter> LaserDotArtObject { get; set; }
+        new Single MaxLaserPointerDistance { get; set; }
+        new Boolean SightControlsFiringDirection { get; set; }
+        new Boolean ActivateSightOnNonSightedMode { get; set; }
+        new Boolean ActivateSightOnScopedMode { get; set; }
     }
 
     public partial interface IAimOpticalSightMarkerInternal :
@@ -988,27 +1071,28 @@ namespace Mutagen.Bethesda.Starfield
     [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Starfield.Internals.RecordTypeInts.AOPS)]
     public partial interface IAimOpticalSightMarkerGetter :
         IStarfieldMajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IAimOpticalSightMarkerGetter>,
         IMapsToGetter<IAimOpticalSightMarkerGetter>
     {
         static new ILoquiRegistration StaticRegistration => AimOpticalSightMarker_Registration.Instance;
-        Boolean HideBeamByDefault { get; }
-        UInt32 UnknownOldField { get; }
-        String NodeName { get; }
-        Single BeamReactivationDelayAfterEquipOrReloadSeconds { get; }
-        Single BeamDeactivationDelayAfterReloadSeconds { get; }
-        IFormLinkGetter<ILightGetter> Light { get; }
-        Single Unknown1 { get; }
-        Single Unknown2 { get; }
-        Single BeamReactivationDelayAfterFiringSeconds { get; }
-        IFormLinkGetter<IArtObjectGetter> BeamArtObject { get; }
-        IFormLinkGetter<IArtObjectGetter> DotArtObject { get; }
-        Single Unknown3 { get; }
-        Boolean Unknown4 { get; }
-        Boolean ShowBeamAtHip { get; }
-        Boolean Unknown5 { get; }
+        IReadOnlyList<IAComponentGetter> Components { get; }
+        Boolean ActivateSightOnSightedMode { get; }
+        String OpticalSightAttachNode { get; }
+        Single DelayBeforeSightActivation { get; }
+        Single DelayBeforeSightDeactivation { get; }
+        IFormLinkGetter<ILightGetter> OpticalSightLight { get; }
+        Single FocalPointDistance { get; }
+        Single FocalPointDistanceDuringAiming { get; }
+        Single DelayBetweenShots { get; }
+        IFormLinkGetter<IArtObjectGetter> LaserArtObject { get; }
+        IFormLinkGetter<IArtObjectGetter> LaserDotArtObject { get; }
+        Single MaxLaserPointerDistance { get; }
+        Boolean SightControlsFiringDirection { get; }
+        Boolean ActivateSightOnNonSightedMode { get; }
+        Boolean ActivateSightOnScopedMode { get; }
 
     }
 
@@ -1185,21 +1269,21 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        HideBeamByDefault = 7,
-        UnknownOldField = 8,
-        NodeName = 9,
-        BeamReactivationDelayAfterEquipOrReloadSeconds = 10,
-        BeamDeactivationDelayAfterReloadSeconds = 11,
-        Light = 12,
-        Unknown1 = 13,
-        Unknown2 = 14,
-        BeamReactivationDelayAfterFiringSeconds = 15,
-        BeamArtObject = 16,
-        DotArtObject = 17,
-        Unknown3 = 18,
-        Unknown4 = 19,
-        ShowBeamAtHip = 20,
-        Unknown5 = 21,
+        Components = 7,
+        ActivateSightOnSightedMode = 8,
+        OpticalSightAttachNode = 9,
+        DelayBeforeSightActivation = 10,
+        DelayBeforeSightDeactivation = 11,
+        OpticalSightLight = 12,
+        FocalPointDistance = 13,
+        FocalPointDistanceDuringAiming = 14,
+        DelayBetweenShots = 15,
+        LaserArtObject = 16,
+        LaserDotArtObject = 17,
+        MaxLaserPointerDistance = 18,
+        SightControlsFiringDirection = 19,
+        ActivateSightOnNonSightedMode = 20,
+        ActivateSightOnScopedMode = 21,
     }
     #endregion
 
@@ -1245,6 +1329,8 @@ namespace Mutagen.Bethesda.Starfield
             var triggers = RecordCollection.Factory(RecordTypes.AOPS);
             var all = RecordCollection.Factory(
                 RecordTypes.AOPS,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
                 RecordTypes.ANAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
@@ -1290,21 +1376,21 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IAimOpticalSightMarkerInternal item)
         {
             ClearPartial();
-            item.HideBeamByDefault = default(Boolean);
-            item.UnknownOldField = default(UInt32);
-            item.NodeName = string.Empty;
-            item.BeamReactivationDelayAfterEquipOrReloadSeconds = default(Single);
-            item.BeamDeactivationDelayAfterReloadSeconds = default(Single);
-            item.Light.Clear();
-            item.Unknown1 = default(Single);
-            item.Unknown2 = default(Single);
-            item.BeamReactivationDelayAfterFiringSeconds = default(Single);
-            item.BeamArtObject.Clear();
-            item.DotArtObject.Clear();
-            item.Unknown3 = default(Single);
-            item.Unknown4 = default(Boolean);
-            item.ShowBeamAtHip = default(Boolean);
-            item.Unknown5 = default(Boolean);
+            item.Components.Clear();
+            item.ActivateSightOnSightedMode = default(Boolean);
+            item.OpticalSightAttachNode = string.Empty;
+            item.DelayBeforeSightActivation = default(Single);
+            item.DelayBeforeSightDeactivation = default(Single);
+            item.OpticalSightLight.Clear();
+            item.FocalPointDistance = default(Single);
+            item.FocalPointDistanceDuringAiming = default(Single);
+            item.DelayBetweenShots = default(Single);
+            item.LaserArtObject.Clear();
+            item.LaserDotArtObject.Clear();
+            item.MaxLaserPointerDistance = default(Single);
+            item.SightControlsFiringDirection = default(Boolean);
+            item.ActivateSightOnNonSightedMode = default(Boolean);
+            item.ActivateSightOnScopedMode = default(Boolean);
             base.Clear(item);
         }
         
@@ -1322,9 +1408,34 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IAimOpticalSightMarker obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Light.Relink(mapping);
-            obj.BeamArtObject.Relink(mapping);
-            obj.DotArtObject.Relink(mapping);
+            obj.Components.RemapLinks(mapping);
+            obj.OpticalSightLight.Relink(mapping);
+            obj.LaserArtObject.Relink(mapping);
+            obj.LaserDotArtObject.Relink(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IAimOpticalSightMarker obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IAimOpticalSightMarker obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
         }
         
         #endregion
@@ -1392,21 +1503,24 @@ namespace Mutagen.Bethesda.Starfield
             AimOpticalSightMarker.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.HideBeamByDefault = item.HideBeamByDefault == rhs.HideBeamByDefault;
-            ret.UnknownOldField = item.UnknownOldField == rhs.UnknownOldField;
-            ret.NodeName = string.Equals(item.NodeName, rhs.NodeName);
-            ret.BeamReactivationDelayAfterEquipOrReloadSeconds = item.BeamReactivationDelayAfterEquipOrReloadSeconds.EqualsWithin(rhs.BeamReactivationDelayAfterEquipOrReloadSeconds);
-            ret.BeamDeactivationDelayAfterReloadSeconds = item.BeamDeactivationDelayAfterReloadSeconds.EqualsWithin(rhs.BeamDeactivationDelayAfterReloadSeconds);
-            ret.Light = item.Light.Equals(rhs.Light);
-            ret.Unknown1 = item.Unknown1.EqualsWithin(rhs.Unknown1);
-            ret.Unknown2 = item.Unknown2.EqualsWithin(rhs.Unknown2);
-            ret.BeamReactivationDelayAfterFiringSeconds = item.BeamReactivationDelayAfterFiringSeconds.EqualsWithin(rhs.BeamReactivationDelayAfterFiringSeconds);
-            ret.BeamArtObject = item.BeamArtObject.Equals(rhs.BeamArtObject);
-            ret.DotArtObject = item.DotArtObject.Equals(rhs.DotArtObject);
-            ret.Unknown3 = item.Unknown3.EqualsWithin(rhs.Unknown3);
-            ret.Unknown4 = item.Unknown4 == rhs.Unknown4;
-            ret.ShowBeamAtHip = item.ShowBeamAtHip == rhs.ShowBeamAtHip;
-            ret.Unknown5 = item.Unknown5 == rhs.Unknown5;
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.ActivateSightOnSightedMode = item.ActivateSightOnSightedMode == rhs.ActivateSightOnSightedMode;
+            ret.OpticalSightAttachNode = string.Equals(item.OpticalSightAttachNode, rhs.OpticalSightAttachNode);
+            ret.DelayBeforeSightActivation = item.DelayBeforeSightActivation.EqualsWithin(rhs.DelayBeforeSightActivation);
+            ret.DelayBeforeSightDeactivation = item.DelayBeforeSightDeactivation.EqualsWithin(rhs.DelayBeforeSightDeactivation);
+            ret.OpticalSightLight = item.OpticalSightLight.Equals(rhs.OpticalSightLight);
+            ret.FocalPointDistance = item.FocalPointDistance.EqualsWithin(rhs.FocalPointDistance);
+            ret.FocalPointDistanceDuringAiming = item.FocalPointDistanceDuringAiming.EqualsWithin(rhs.FocalPointDistanceDuringAiming);
+            ret.DelayBetweenShots = item.DelayBetweenShots.EqualsWithin(rhs.DelayBetweenShots);
+            ret.LaserArtObject = item.LaserArtObject.Equals(rhs.LaserArtObject);
+            ret.LaserDotArtObject = item.LaserDotArtObject.Equals(rhs.LaserDotArtObject);
+            ret.MaxLaserPointerDistance = item.MaxLaserPointerDistance.EqualsWithin(rhs.MaxLaserPointerDistance);
+            ret.SightControlsFiringDirection = item.SightControlsFiringDirection == rhs.SightControlsFiringDirection;
+            ret.ActivateSightOnNonSightedMode = item.ActivateSightOnNonSightedMode == rhs.ActivateSightOnNonSightedMode;
+            ret.ActivateSightOnScopedMode = item.ActivateSightOnScopedMode == rhs.ActivateSightOnScopedMode;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1456,65 +1570,75 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.HideBeamByDefault ?? true)
+            if (printMask?.Components?.Overall ?? true)
             {
-                sb.AppendItem(item.HideBeamByDefault, "HideBeamByDefault");
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
             }
-            if (printMask?.UnknownOldField ?? true)
+            if (printMask?.ActivateSightOnSightedMode ?? true)
             {
-                sb.AppendItem(item.UnknownOldField, "UnknownOldField");
+                sb.AppendItem(item.ActivateSightOnSightedMode, "ActivateSightOnSightedMode");
             }
-            if (printMask?.NodeName ?? true)
+            if (printMask?.OpticalSightAttachNode ?? true)
             {
-                sb.AppendItem(item.NodeName, "NodeName");
+                sb.AppendItem(item.OpticalSightAttachNode, "OpticalSightAttachNode");
             }
-            if (printMask?.BeamReactivationDelayAfterEquipOrReloadSeconds ?? true)
+            if (printMask?.DelayBeforeSightActivation ?? true)
             {
-                sb.AppendItem(item.BeamReactivationDelayAfterEquipOrReloadSeconds, "BeamReactivationDelayAfterEquipOrReloadSeconds");
+                sb.AppendItem(item.DelayBeforeSightActivation, "DelayBeforeSightActivation");
             }
-            if (printMask?.BeamDeactivationDelayAfterReloadSeconds ?? true)
+            if (printMask?.DelayBeforeSightDeactivation ?? true)
             {
-                sb.AppendItem(item.BeamDeactivationDelayAfterReloadSeconds, "BeamDeactivationDelayAfterReloadSeconds");
+                sb.AppendItem(item.DelayBeforeSightDeactivation, "DelayBeforeSightDeactivation");
             }
-            if (printMask?.Light ?? true)
+            if (printMask?.OpticalSightLight ?? true)
             {
-                sb.AppendItem(item.Light.FormKey, "Light");
+                sb.AppendItem(item.OpticalSightLight.FormKey, "OpticalSightLight");
             }
-            if (printMask?.Unknown1 ?? true)
+            if (printMask?.FocalPointDistance ?? true)
             {
-                sb.AppendItem(item.Unknown1, "Unknown1");
+                sb.AppendItem(item.FocalPointDistance, "FocalPointDistance");
             }
-            if (printMask?.Unknown2 ?? true)
+            if (printMask?.FocalPointDistanceDuringAiming ?? true)
             {
-                sb.AppendItem(item.Unknown2, "Unknown2");
+                sb.AppendItem(item.FocalPointDistanceDuringAiming, "FocalPointDistanceDuringAiming");
             }
-            if (printMask?.BeamReactivationDelayAfterFiringSeconds ?? true)
+            if (printMask?.DelayBetweenShots ?? true)
             {
-                sb.AppendItem(item.BeamReactivationDelayAfterFiringSeconds, "BeamReactivationDelayAfterFiringSeconds");
+                sb.AppendItem(item.DelayBetweenShots, "DelayBetweenShots");
             }
-            if (printMask?.BeamArtObject ?? true)
+            if (printMask?.LaserArtObject ?? true)
             {
-                sb.AppendItem(item.BeamArtObject.FormKey, "BeamArtObject");
+                sb.AppendItem(item.LaserArtObject.FormKey, "LaserArtObject");
             }
-            if (printMask?.DotArtObject ?? true)
+            if (printMask?.LaserDotArtObject ?? true)
             {
-                sb.AppendItem(item.DotArtObject.FormKey, "DotArtObject");
+                sb.AppendItem(item.LaserDotArtObject.FormKey, "LaserDotArtObject");
             }
-            if (printMask?.Unknown3 ?? true)
+            if (printMask?.MaxLaserPointerDistance ?? true)
             {
-                sb.AppendItem(item.Unknown3, "Unknown3");
+                sb.AppendItem(item.MaxLaserPointerDistance, "MaxLaserPointerDistance");
             }
-            if (printMask?.Unknown4 ?? true)
+            if (printMask?.SightControlsFiringDirection ?? true)
             {
-                sb.AppendItem(item.Unknown4, "Unknown4");
+                sb.AppendItem(item.SightControlsFiringDirection, "SightControlsFiringDirection");
             }
-            if (printMask?.ShowBeamAtHip ?? true)
+            if (printMask?.ActivateSightOnNonSightedMode ?? true)
             {
-                sb.AppendItem(item.ShowBeamAtHip, "ShowBeamAtHip");
+                sb.AppendItem(item.ActivateSightOnNonSightedMode, "ActivateSightOnNonSightedMode");
             }
-            if (printMask?.Unknown5 ?? true)
+            if (printMask?.ActivateSightOnScopedMode ?? true)
             {
-                sb.AppendItem(item.Unknown5, "Unknown5");
+                sb.AppendItem(item.ActivateSightOnScopedMode, "ActivateSightOnScopedMode");
             }
         }
         
@@ -1566,65 +1690,65 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.HideBeamByDefault) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.Components) ?? true))
             {
-                if (lhs.HideBeamByDefault != rhs.HideBeamByDefault) return false;
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)AimOpticalSightMarker_FieldIndex.Components)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.UnknownOldField) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.ActivateSightOnSightedMode) ?? true))
             {
-                if (lhs.UnknownOldField != rhs.UnknownOldField) return false;
+                if (lhs.ActivateSightOnSightedMode != rhs.ActivateSightOnSightedMode) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.NodeName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.OpticalSightAttachNode) ?? true))
             {
-                if (!string.Equals(lhs.NodeName, rhs.NodeName)) return false;
+                if (!string.Equals(lhs.OpticalSightAttachNode, rhs.OpticalSightAttachNode)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.BeamReactivationDelayAfterEquipOrReloadSeconds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.DelayBeforeSightActivation) ?? true))
             {
-                if (!lhs.BeamReactivationDelayAfterEquipOrReloadSeconds.EqualsWithin(rhs.BeamReactivationDelayAfterEquipOrReloadSeconds)) return false;
+                if (!lhs.DelayBeforeSightActivation.EqualsWithin(rhs.DelayBeforeSightActivation)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.BeamDeactivationDelayAfterReloadSeconds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.DelayBeforeSightDeactivation) ?? true))
             {
-                if (!lhs.BeamDeactivationDelayAfterReloadSeconds.EqualsWithin(rhs.BeamDeactivationDelayAfterReloadSeconds)) return false;
+                if (!lhs.DelayBeforeSightDeactivation.EqualsWithin(rhs.DelayBeforeSightDeactivation)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.Light) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.OpticalSightLight) ?? true))
             {
-                if (!lhs.Light.Equals(rhs.Light)) return false;
+                if (!lhs.OpticalSightLight.Equals(rhs.OpticalSightLight)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.Unknown1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.FocalPointDistance) ?? true))
             {
-                if (!lhs.Unknown1.EqualsWithin(rhs.Unknown1)) return false;
+                if (!lhs.FocalPointDistance.EqualsWithin(rhs.FocalPointDistance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.Unknown2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.FocalPointDistanceDuringAiming) ?? true))
             {
-                if (!lhs.Unknown2.EqualsWithin(rhs.Unknown2)) return false;
+                if (!lhs.FocalPointDistanceDuringAiming.EqualsWithin(rhs.FocalPointDistanceDuringAiming)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.BeamReactivationDelayAfterFiringSeconds) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.DelayBetweenShots) ?? true))
             {
-                if (!lhs.BeamReactivationDelayAfterFiringSeconds.EqualsWithin(rhs.BeamReactivationDelayAfterFiringSeconds)) return false;
+                if (!lhs.DelayBetweenShots.EqualsWithin(rhs.DelayBetweenShots)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.BeamArtObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.LaserArtObject) ?? true))
             {
-                if (!lhs.BeamArtObject.Equals(rhs.BeamArtObject)) return false;
+                if (!lhs.LaserArtObject.Equals(rhs.LaserArtObject)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.DotArtObject) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.LaserDotArtObject) ?? true))
             {
-                if (!lhs.DotArtObject.Equals(rhs.DotArtObject)) return false;
+                if (!lhs.LaserDotArtObject.Equals(rhs.LaserDotArtObject)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.Unknown3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.MaxLaserPointerDistance) ?? true))
             {
-                if (!lhs.Unknown3.EqualsWithin(rhs.Unknown3)) return false;
+                if (!lhs.MaxLaserPointerDistance.EqualsWithin(rhs.MaxLaserPointerDistance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.Unknown4) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.SightControlsFiringDirection) ?? true))
             {
-                if (lhs.Unknown4 != rhs.Unknown4) return false;
+                if (lhs.SightControlsFiringDirection != rhs.SightControlsFiringDirection) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.ShowBeamAtHip) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.ActivateSightOnNonSightedMode) ?? true))
             {
-                if (lhs.ShowBeamAtHip != rhs.ShowBeamAtHip) return false;
+                if (lhs.ActivateSightOnNonSightedMode != rhs.ActivateSightOnNonSightedMode) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.Unknown5) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.ActivateSightOnScopedMode) ?? true))
             {
-                if (lhs.Unknown5 != rhs.Unknown5) return false;
+                if (lhs.ActivateSightOnScopedMode != rhs.ActivateSightOnScopedMode) return false;
             }
             return true;
         }
@@ -1654,21 +1778,21 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IAimOpticalSightMarkerGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.HideBeamByDefault);
-            hash.Add(item.UnknownOldField);
-            hash.Add(item.NodeName);
-            hash.Add(item.BeamReactivationDelayAfterEquipOrReloadSeconds);
-            hash.Add(item.BeamDeactivationDelayAfterReloadSeconds);
-            hash.Add(item.Light);
-            hash.Add(item.Unknown1);
-            hash.Add(item.Unknown2);
-            hash.Add(item.BeamReactivationDelayAfterFiringSeconds);
-            hash.Add(item.BeamArtObject);
-            hash.Add(item.DotArtObject);
-            hash.Add(item.Unknown3);
-            hash.Add(item.Unknown4);
-            hash.Add(item.ShowBeamAtHip);
-            hash.Add(item.Unknown5);
+            hash.Add(item.Components);
+            hash.Add(item.ActivateSightOnSightedMode);
+            hash.Add(item.OpticalSightAttachNode);
+            hash.Add(item.DelayBeforeSightActivation);
+            hash.Add(item.DelayBeforeSightDeactivation);
+            hash.Add(item.OpticalSightLight);
+            hash.Add(item.FocalPointDistance);
+            hash.Add(item.FocalPointDistanceDuringAiming);
+            hash.Add(item.DelayBetweenShots);
+            hash.Add(item.LaserArtObject);
+            hash.Add(item.LaserDotArtObject);
+            hash.Add(item.MaxLaserPointerDistance);
+            hash.Add(item.SightControlsFiringDirection);
+            hash.Add(item.ActivateSightOnNonSightedMode);
+            hash.Add(item.ActivateSightOnScopedMode);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1698,9 +1822,28 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            yield return FormLinkInformation.Factory(obj.Light);
-            yield return FormLinkInformation.Factory(obj.BeamArtObject);
-            yield return FormLinkInformation.Factory(obj.DotArtObject);
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
+            yield return FormLinkInformation.Factory(obj.OpticalSightLight);
+            yield return FormLinkInformation.Factory(obj.LaserArtObject);
+            yield return FormLinkInformation.Factory(obj.LaserDotArtObject);
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IAimOpticalSightMarkerGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -1775,65 +1918,85 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.HideBeamByDefault) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.Components) ?? true))
             {
-                item.HideBeamByDefault = rhs.HideBeamByDefault;
+                errorMask?.PushIndex((int)AimOpticalSightMarker_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
-            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.UnknownOldField) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.ActivateSightOnSightedMode) ?? true))
             {
-                item.UnknownOldField = rhs.UnknownOldField;
+                item.ActivateSightOnSightedMode = rhs.ActivateSightOnSightedMode;
             }
-            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.NodeName) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.OpticalSightAttachNode) ?? true))
             {
-                item.NodeName = rhs.NodeName;
+                item.OpticalSightAttachNode = rhs.OpticalSightAttachNode;
             }
-            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.BeamReactivationDelayAfterEquipOrReloadSeconds) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.DelayBeforeSightActivation) ?? true))
             {
-                item.BeamReactivationDelayAfterEquipOrReloadSeconds = rhs.BeamReactivationDelayAfterEquipOrReloadSeconds;
+                item.DelayBeforeSightActivation = rhs.DelayBeforeSightActivation;
             }
-            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.BeamDeactivationDelayAfterReloadSeconds) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.DelayBeforeSightDeactivation) ?? true))
             {
-                item.BeamDeactivationDelayAfterReloadSeconds = rhs.BeamDeactivationDelayAfterReloadSeconds;
+                item.DelayBeforeSightDeactivation = rhs.DelayBeforeSightDeactivation;
             }
-            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.Light) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.OpticalSightLight) ?? true))
             {
-                item.Light.SetTo(rhs.Light.FormKey);
+                item.OpticalSightLight.SetTo(rhs.OpticalSightLight.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.Unknown1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.FocalPointDistance) ?? true))
             {
-                item.Unknown1 = rhs.Unknown1;
+                item.FocalPointDistance = rhs.FocalPointDistance;
             }
-            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.Unknown2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.FocalPointDistanceDuringAiming) ?? true))
             {
-                item.Unknown2 = rhs.Unknown2;
+                item.FocalPointDistanceDuringAiming = rhs.FocalPointDistanceDuringAiming;
             }
-            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.BeamReactivationDelayAfterFiringSeconds) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.DelayBetweenShots) ?? true))
             {
-                item.BeamReactivationDelayAfterFiringSeconds = rhs.BeamReactivationDelayAfterFiringSeconds;
+                item.DelayBetweenShots = rhs.DelayBetweenShots;
             }
-            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.BeamArtObject) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.LaserArtObject) ?? true))
             {
-                item.BeamArtObject.SetTo(rhs.BeamArtObject.FormKey);
+                item.LaserArtObject.SetTo(rhs.LaserArtObject.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.DotArtObject) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.LaserDotArtObject) ?? true))
             {
-                item.DotArtObject.SetTo(rhs.DotArtObject.FormKey);
+                item.LaserDotArtObject.SetTo(rhs.LaserDotArtObject.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.Unknown3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.MaxLaserPointerDistance) ?? true))
             {
-                item.Unknown3 = rhs.Unknown3;
+                item.MaxLaserPointerDistance = rhs.MaxLaserPointerDistance;
             }
-            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.Unknown4) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.SightControlsFiringDirection) ?? true))
             {
-                item.Unknown4 = rhs.Unknown4;
+                item.SightControlsFiringDirection = rhs.SightControlsFiringDirection;
             }
-            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.ShowBeamAtHip) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.ActivateSightOnNonSightedMode) ?? true))
             {
-                item.ShowBeamAtHip = rhs.ShowBeamAtHip;
+                item.ActivateSightOnNonSightedMode = rhs.ActivateSightOnNonSightedMode;
             }
-            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.Unknown5) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AimOpticalSightMarker_FieldIndex.ActivateSightOnScopedMode) ?? true))
             {
-                item.Unknown5 = rhs.Unknown5;
+                item.ActivateSightOnScopedMode = rhs.ActivateSightOnScopedMode;
             }
             DeepCopyInCustom(
                 item: item,
@@ -2004,47 +2167,54 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.ANAM)))
             {
-                writer.Write(item.HideBeamByDefault);
-                if (writer.MetaData.FormVersion!.Value < 522)
-                {
-                    writer.Write(item.UnknownOldField);
-                }
+                writer.Write(item.ActivateSightOnSightedMode);
                 StringBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.NodeName,
+                    item: item.OpticalSightAttachNode,
                     binaryType: StringBinaryType.PrependLengthWithNullIfContent);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.BeamReactivationDelayAfterEquipOrReloadSeconds);
+                    item: item.DelayBeforeSightActivation);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.BeamDeactivationDelayAfterReloadSeconds);
+                    item: item.DelayBeforeSightDeactivation);
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Light);
+                    item: item.OpticalSightLight);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.Unknown1);
+                    item: item.FocalPointDistance);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.Unknown2);
+                    item: item.FocalPointDistanceDuringAiming);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.BeamReactivationDelayAfterFiringSeconds);
+                    item: item.DelayBetweenShots);
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.BeamArtObject);
+                    item: item.LaserArtObject);
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.DotArtObject);
+                    item: item.LaserDotArtObject);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.Unknown3);
-                writer.Write(item.Unknown4);
-                writer.Write(item.ShowBeamAtHip);
-                writer.Write(item.Unknown5);
+                    item: item.MaxLaserPointerDistance);
+                writer.Write(item.SightControlsFiringDirection);
+                writer.Write(item.ActivateSightOnNonSightedMode);
+                writer.Write(item.ActivateSightOnScopedMode);
             }
         }
 
@@ -2114,46 +2284,51 @@ namespace Mutagen.Bethesda.Starfield
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)AimOpticalSightMarker_FieldIndex.Components;
+                }
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 1) return null;
-                    item.HideBeamByDefault = dataFrame.ReadBoolean();
-                    if (dataFrame.Remaining < 4) return null;
-                    if (frame.MetaData.FormVersion!.Value < 522)
-                    {
-                        item.UnknownOldField = dataFrame.ReadUInt32();
-                    }
-                    item.NodeName = StringBinaryTranslation.Instance.Parse(
+                    item.ActivateSightOnSightedMode = dataFrame.ReadBoolean();
+                    item.OpticalSightAttachNode = StringBinaryTranslation.Instance.Parse(
                         reader: dataFrame,
                         stringBinaryType: StringBinaryType.PrependLengthWithNullIfContent,
                         parseWhole: true);
                     if (dataFrame.Remaining < 4) return null;
-                    item.BeamReactivationDelayAfterEquipOrReloadSeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.DelayBeforeSightActivation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.BeamDeactivationDelayAfterReloadSeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.DelayBeforeSightDeactivation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.Light.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.OpticalSightLight.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Remaining < 4) return null;
-                    item.Unknown1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FocalPointDistance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.Unknown2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FocalPointDistanceDuringAiming = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.BeamReactivationDelayAfterFiringSeconds = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.DelayBetweenShots = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.BeamArtObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.LaserArtObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Remaining < 4) return null;
-                    item.DotArtObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.LaserDotArtObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Remaining < 4) return null;
-                    item.Unknown3 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.MaxLaserPointerDistance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 1) return null;
-                    item.Unknown4 = dataFrame.ReadBoolean();
+                    item.SightControlsFiringDirection = dataFrame.ReadBoolean();
                     if (dataFrame.Remaining < 1) return null;
-                    item.ShowBeamAtHip = dataFrame.ReadBoolean();
+                    item.ActivateSightOnNonSightedMode = dataFrame.ReadBoolean();
                     if (dataFrame.Remaining < 1) return null;
-                    item.Unknown5 = dataFrame.ReadBoolean();
-                    return (int)AimOpticalSightMarker_FieldIndex.Unknown5;
+                    item.ActivateSightOnScopedMode = dataFrame.ReadBoolean();
+                    return (int)AimOpticalSightMarker_FieldIndex.ActivateSightOnScopedMode;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2200,6 +2375,7 @@ namespace Mutagen.Bethesda.Starfield
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AimOpticalSightMarkerCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => AimOpticalSightMarkerCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AimOpticalSightMarkerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2214,83 +2390,78 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IAimOpticalSightMarker);
 
 
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         private RangeInt32? _ANAMLocation;
-        #region HideBeamByDefault
-        private int _HideBeamByDefaultLocation => _ANAMLocation!.Value.Min;
-        private bool _HideBeamByDefault_IsSet => _ANAMLocation.HasValue;
-        public Boolean HideBeamByDefault => _HideBeamByDefault_IsSet ? _recordData.Slice(_HideBeamByDefaultLocation, 1)[0] >= 1 : default(Boolean);
+        #region ActivateSightOnSightedMode
+        private int _ActivateSightOnSightedModeLocation => _ANAMLocation!.Value.Min;
+        private bool _ActivateSightOnSightedMode_IsSet => _ANAMLocation.HasValue;
+        public Boolean ActivateSightOnSightedMode => _ActivateSightOnSightedMode_IsSet ? _recordData.Slice(_ActivateSightOnSightedModeLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
-        #region UnknownOldField
-        private int _UnknownOldFieldLocation => _ANAMLocation!.Value.Min + 0x1;
-        private bool _UnknownOldField_IsSet => _ANAMLocation.HasValue && _package.FormVersion!.FormVersion!.Value < 522;
-        public UInt32 UnknownOldField => _UnknownOldField_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_recordData.Slice(_UnknownOldFieldLocation, 4)) : default(UInt32);
-        int UnknownOldFieldVersioningOffset => _package.FormVersion!.FormVersion!.Value >= 522 ? -4 : 0;
+        #region OpticalSightAttachNode
+        private int _OpticalSightAttachNodeLocation => _ANAMLocation!.Value.Min + 0x1;
+        private bool _OpticalSightAttachNode_IsSet => _ANAMLocation.HasValue;
+        public String OpticalSightAttachNode => _OpticalSightAttachNode_IsSet ? BinaryStringUtility.ParsePrependedString(_recordData.Slice(_OpticalSightAttachNodeLocation), lengthLength: 4, encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
+        protected int OpticalSightAttachNodeEndingPos;
         #endregion
-        #region NodeName
-        private int _NodeNameLocation => _ANAMLocation!.Value.Min + UnknownOldFieldVersioningOffset + 0x5;
-        private bool _NodeName_IsSet => _ANAMLocation.HasValue;
-        public String NodeName => _NodeName_IsSet ? BinaryStringUtility.ParsePrependedString(_recordData.Slice(_NodeNameLocation), lengthLength: 4, encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
-        protected int NodeNameEndingPos;
+        #region DelayBeforeSightActivation
+        private int _DelayBeforeSightActivationLocation => OpticalSightAttachNodeEndingPos;
+        private bool _DelayBeforeSightActivation_IsSet => _ANAMLocation.HasValue;
+        public Single DelayBeforeSightActivation => _DelayBeforeSightActivation_IsSet ? _recordData.Slice(_DelayBeforeSightActivationLocation, 4).Float() : default(Single);
         #endregion
-        #region BeamReactivationDelayAfterEquipOrReloadSeconds
-        private int _BeamReactivationDelayAfterEquipOrReloadSecondsLocation => NodeNameEndingPos;
-        private bool _BeamReactivationDelayAfterEquipOrReloadSeconds_IsSet => _ANAMLocation.HasValue;
-        public Single BeamReactivationDelayAfterEquipOrReloadSeconds => _BeamReactivationDelayAfterEquipOrReloadSeconds_IsSet ? _recordData.Slice(_BeamReactivationDelayAfterEquipOrReloadSecondsLocation, 4).Float() : default(Single);
+        #region DelayBeforeSightDeactivation
+        private int _DelayBeforeSightDeactivationLocation => OpticalSightAttachNodeEndingPos + 0x4;
+        private bool _DelayBeforeSightDeactivation_IsSet => _ANAMLocation.HasValue;
+        public Single DelayBeforeSightDeactivation => _DelayBeforeSightDeactivation_IsSet ? _recordData.Slice(_DelayBeforeSightDeactivationLocation, 4).Float() : default(Single);
         #endregion
-        #region BeamDeactivationDelayAfterReloadSeconds
-        private int _BeamDeactivationDelayAfterReloadSecondsLocation => NodeNameEndingPos + 0x4;
-        private bool _BeamDeactivationDelayAfterReloadSeconds_IsSet => _ANAMLocation.HasValue;
-        public Single BeamDeactivationDelayAfterReloadSeconds => _BeamDeactivationDelayAfterReloadSeconds_IsSet ? _recordData.Slice(_BeamDeactivationDelayAfterReloadSecondsLocation, 4).Float() : default(Single);
+        #region OpticalSightLight
+        private int _OpticalSightLightLocation => OpticalSightAttachNodeEndingPos + 0x8;
+        private bool _OpticalSightLight_IsSet => _ANAMLocation.HasValue;
+        public IFormLinkGetter<ILightGetter> OpticalSightLight => _OpticalSightLight_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_OpticalSightLightLocation, 0x4), isSet: _OpticalSightLight_IsSet) : FormLink<ILightGetter>.Null;
         #endregion
-        #region Light
-        private int _LightLocation => NodeNameEndingPos + 0x8;
-        private bool _Light_IsSet => _ANAMLocation.HasValue;
-        public IFormLinkGetter<ILightGetter> Light => _Light_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<ILightGetter>(_package, _recordData.Span.Slice(_LightLocation, 0x4), isSet: _Light_IsSet) : FormLink<ILightGetter>.Null;
+        #region FocalPointDistance
+        private int _FocalPointDistanceLocation => OpticalSightAttachNodeEndingPos + 0xC;
+        private bool _FocalPointDistance_IsSet => _ANAMLocation.HasValue;
+        public Single FocalPointDistance => _FocalPointDistance_IsSet ? _recordData.Slice(_FocalPointDistanceLocation, 4).Float() : default(Single);
         #endregion
-        #region Unknown1
-        private int _Unknown1Location => NodeNameEndingPos + 0xC;
-        private bool _Unknown1_IsSet => _ANAMLocation.HasValue;
-        public Single Unknown1 => _Unknown1_IsSet ? _recordData.Slice(_Unknown1Location, 4).Float() : default(Single);
+        #region FocalPointDistanceDuringAiming
+        private int _FocalPointDistanceDuringAimingLocation => OpticalSightAttachNodeEndingPos + 0x10;
+        private bool _FocalPointDistanceDuringAiming_IsSet => _ANAMLocation.HasValue;
+        public Single FocalPointDistanceDuringAiming => _FocalPointDistanceDuringAiming_IsSet ? _recordData.Slice(_FocalPointDistanceDuringAimingLocation, 4).Float() : default(Single);
         #endregion
-        #region Unknown2
-        private int _Unknown2Location => NodeNameEndingPos + 0x10;
-        private bool _Unknown2_IsSet => _ANAMLocation.HasValue;
-        public Single Unknown2 => _Unknown2_IsSet ? _recordData.Slice(_Unknown2Location, 4).Float() : default(Single);
+        #region DelayBetweenShots
+        private int _DelayBetweenShotsLocation => OpticalSightAttachNodeEndingPos + 0x14;
+        private bool _DelayBetweenShots_IsSet => _ANAMLocation.HasValue;
+        public Single DelayBetweenShots => _DelayBetweenShots_IsSet ? _recordData.Slice(_DelayBetweenShotsLocation, 4).Float() : default(Single);
         #endregion
-        #region BeamReactivationDelayAfterFiringSeconds
-        private int _BeamReactivationDelayAfterFiringSecondsLocation => NodeNameEndingPos + 0x14;
-        private bool _BeamReactivationDelayAfterFiringSeconds_IsSet => _ANAMLocation.HasValue;
-        public Single BeamReactivationDelayAfterFiringSeconds => _BeamReactivationDelayAfterFiringSeconds_IsSet ? _recordData.Slice(_BeamReactivationDelayAfterFiringSecondsLocation, 4).Float() : default(Single);
+        #region LaserArtObject
+        private int _LaserArtObjectLocation => OpticalSightAttachNodeEndingPos + 0x18;
+        private bool _LaserArtObject_IsSet => _ANAMLocation.HasValue;
+        public IFormLinkGetter<IArtObjectGetter> LaserArtObject => _LaserArtObject_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_LaserArtObjectLocation, 0x4), isSet: _LaserArtObject_IsSet) : FormLink<IArtObjectGetter>.Null;
         #endregion
-        #region BeamArtObject
-        private int _BeamArtObjectLocation => NodeNameEndingPos + 0x18;
-        private bool _BeamArtObject_IsSet => _ANAMLocation.HasValue;
-        public IFormLinkGetter<IArtObjectGetter> BeamArtObject => _BeamArtObject_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_BeamArtObjectLocation, 0x4), isSet: _BeamArtObject_IsSet) : FormLink<IArtObjectGetter>.Null;
+        #region LaserDotArtObject
+        private int _LaserDotArtObjectLocation => OpticalSightAttachNodeEndingPos + 0x1C;
+        private bool _LaserDotArtObject_IsSet => _ANAMLocation.HasValue;
+        public IFormLinkGetter<IArtObjectGetter> LaserDotArtObject => _LaserDotArtObject_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_LaserDotArtObjectLocation, 0x4), isSet: _LaserDotArtObject_IsSet) : FormLink<IArtObjectGetter>.Null;
         #endregion
-        #region DotArtObject
-        private int _DotArtObjectLocation => NodeNameEndingPos + 0x1C;
-        private bool _DotArtObject_IsSet => _ANAMLocation.HasValue;
-        public IFormLinkGetter<IArtObjectGetter> DotArtObject => _DotArtObject_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IArtObjectGetter>(_package, _recordData.Span.Slice(_DotArtObjectLocation, 0x4), isSet: _DotArtObject_IsSet) : FormLink<IArtObjectGetter>.Null;
+        #region MaxLaserPointerDistance
+        private int _MaxLaserPointerDistanceLocation => OpticalSightAttachNodeEndingPos + 0x20;
+        private bool _MaxLaserPointerDistance_IsSet => _ANAMLocation.HasValue;
+        public Single MaxLaserPointerDistance => _MaxLaserPointerDistance_IsSet ? _recordData.Slice(_MaxLaserPointerDistanceLocation, 4).Float() : default(Single);
         #endregion
-        #region Unknown3
-        private int _Unknown3Location => NodeNameEndingPos + 0x20;
-        private bool _Unknown3_IsSet => _ANAMLocation.HasValue;
-        public Single Unknown3 => _Unknown3_IsSet ? _recordData.Slice(_Unknown3Location, 4).Float() : default(Single);
+        #region SightControlsFiringDirection
+        private int _SightControlsFiringDirectionLocation => OpticalSightAttachNodeEndingPos + 0x24;
+        private bool _SightControlsFiringDirection_IsSet => _ANAMLocation.HasValue;
+        public Boolean SightControlsFiringDirection => _SightControlsFiringDirection_IsSet ? _recordData.Slice(_SightControlsFiringDirectionLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
-        #region Unknown4
-        private int _Unknown4Location => NodeNameEndingPos + 0x24;
-        private bool _Unknown4_IsSet => _ANAMLocation.HasValue;
-        public Boolean Unknown4 => _Unknown4_IsSet ? _recordData.Slice(_Unknown4Location, 1)[0] >= 1 : default(Boolean);
+        #region ActivateSightOnNonSightedMode
+        private int _ActivateSightOnNonSightedModeLocation => OpticalSightAttachNodeEndingPos + 0x25;
+        private bool _ActivateSightOnNonSightedMode_IsSet => _ANAMLocation.HasValue;
+        public Boolean ActivateSightOnNonSightedMode => _ActivateSightOnNonSightedMode_IsSet ? _recordData.Slice(_ActivateSightOnNonSightedModeLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
-        #region ShowBeamAtHip
-        private int _ShowBeamAtHipLocation => NodeNameEndingPos + 0x25;
-        private bool _ShowBeamAtHip_IsSet => _ANAMLocation.HasValue;
-        public Boolean ShowBeamAtHip => _ShowBeamAtHip_IsSet ? _recordData.Slice(_ShowBeamAtHipLocation, 1)[0] >= 1 : default(Boolean);
-        #endregion
-        #region Unknown5
-        private int _Unknown5Location => NodeNameEndingPos + 0x26;
-        private bool _Unknown5_IsSet => _ANAMLocation.HasValue;
-        public Boolean Unknown5 => _Unknown5_IsSet ? _recordData.Slice(_Unknown5Location, 1)[0] >= 1 : default(Boolean);
+        #region ActivateSightOnScopedMode
+        private int _ActivateSightOnScopedModeLocation => OpticalSightAttachNodeEndingPos + 0x26;
+        private bool _ActivateSightOnScopedMode_IsSet => _ANAMLocation.HasValue;
+        public Boolean ActivateSightOnScopedMode => _ActivateSightOnScopedMode_IsSet ? _recordData.Slice(_ActivateSightOnScopedModeLocation, 1)[0] >= 1 : default(Boolean);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2335,7 +2506,7 @@ namespace Mutagen.Bethesda.Starfield
                 offset: offset,
                 translationParams: translationParams,
                 fill: ret.FillRecordType);
-            ret.NodeNameEndingPos = ret._ANAMLocation!.Value.Min + ret.UnknownOldFieldVersioningOffset + 0x5 + BinaryPrimitives.ReadInt32LittleEndian(ret._recordData.Slice(ret._ANAMLocation!.Value.Min + ret.UnknownOldFieldVersioningOffset + 0x5)) + 4;
+            ret.OpticalSightAttachNodeEndingPos = ret._ANAMLocation!.Value.Min + 0x1 + BinaryPrimitives.ReadInt32LittleEndian(ret._recordData.Slice(ret._ANAMLocation!.Value.Min + 0x1)) + 4;
             return ret;
         }
 
@@ -2362,10 +2533,19 @@ namespace Mutagen.Bethesda.Starfield
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)AimOpticalSightMarker_FieldIndex.Components;
+                }
                 case RecordTypeInts.ANAM:
                 {
                     _ANAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)AimOpticalSightMarker_FieldIndex.Unknown5;
+                    return (int)AimOpticalSightMarker_FieldIndex.ActivateSightOnScopedMode;
                 }
                 default:
                     return base.FillRecordType(

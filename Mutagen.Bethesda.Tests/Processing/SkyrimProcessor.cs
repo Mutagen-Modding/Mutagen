@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
 using Noggog;
+using Noggog.WorkEngine;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -25,8 +26,8 @@ public class SkyrimProcessor : Processor
         };
     }
 
-    public SkyrimProcessor(bool multithread, GameRelease release, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup)
-        : base(multithread, release, masterFlagLookup)
+    public SkyrimProcessor(IWorkDropoff workDropoff, GameRelease release, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup)
+        : base(workDropoff, release, masterFlagLookup)
     {
     }
 
@@ -787,10 +788,10 @@ public class SkyrimProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        foreach (var snam in majorFrame.FindEnumerateSubrecords(RecordTypes.SNAM))
-        {
-            ProcessFormIDOverflow(snam, fileOffset);
-        }
+        ProcessFormIDOverflowsForRecords(
+            majorFrame,
+            fileOffset,
+            RecordTypes.SNAM);
     }
 
     private void ProcessStatics(
@@ -890,6 +891,7 @@ public class SkyrimProcessor : Processor
                     new RecordType[] { "SCRL", "FULL" },
                     new RecordType[] { "SLGM", "FULL" },
                     new RecordType[] { "SPEL", "FULL" },
+                    new RecordType[] { "SNDR", "FNAM" },
                     new RecordType[] { "TACT", "FULL" },
                     new RecordType[] { "TREE", "FULL" },
                     new RecordType[] { "WEAP", "FULL" },
@@ -923,6 +925,7 @@ public class SkyrimProcessor : Processor
                     new RecordType[] { "ARMO", "DESC" },
                     new RecordType[] { "ALCH", "DESC" },
                     new RecordType[] { "WEAP", "DESC" },
+                    new RecordType[] { "CLAS", "DESC" },
                     new RecordType[] { "BOOK", "DESC", "CNAM" },
                     new RecordType[] { "QUST", "CNAM" },
                     new RecordType[] { "PERK", "DESC" },

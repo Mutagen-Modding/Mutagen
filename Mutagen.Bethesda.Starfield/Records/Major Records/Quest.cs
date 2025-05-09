@@ -1,5 +1,6 @@
 ﻿using System.Buffers.Binary;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.ExceptionServices;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -162,7 +163,7 @@ partial class QuestBinaryCreateTranslation
                         new FormID(BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)),
                         reference: true) != obj.FormKey)
                 {
-                    throw RecordException.Enrich(
+                    RecordException.EnrichAndThrow(
                         new ArgumentException("Quest children group did not match the FormID of the parent."),
                         obj);
                 }
@@ -198,7 +199,8 @@ partial class QuestBinaryCreateTranslation
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, obj);
+            RecordException.EnrichAndThrow(ex, obj);
+            throw;
         }
     }
 }
@@ -322,7 +324,8 @@ partial class QuestBinaryWriteTranslation
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, obj);
+            RecordException.EnrichAndThrow(ex, obj);
+            throw;
         }
     }
 }
@@ -448,7 +451,7 @@ partial class QuestBinaryOverlay
                 reference: true);
             if (formKey != this.FormKey)
             {
-                throw RecordException.Enrich(
+                RecordException.EnrichAndThrow(
                     new ArgumentException("Quest children group did not match the FormID of the parent."),
                     this);
             }
@@ -480,7 +483,8 @@ partial class QuestBinaryOverlay
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, this);
+            RecordException.EnrichAndThrow(ex, this);
+            throw;
         }
     }
 }

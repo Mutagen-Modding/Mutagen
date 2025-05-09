@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Fields;
 using Mutagen.Bethesda.Plugins;
@@ -89,7 +86,8 @@ public class Array2dBinaryTranslationGeneration : BinaryTranslationGeneration
                             gen.AppendLine("catch (Exception ex)");
                             using (gen.CurlyBrace())
                             {
-                                gen.AppendLine("throw RecordException.Enrich(ex, subItem);");
+                                gen.AppendLine("RecordException.EnrichAndThrow(ex, subItem);");
+                                gen.AppendLine("throw;");
                             }
                         }
                     }

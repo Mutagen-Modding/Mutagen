@@ -7,7 +7,8 @@ public static class GlobalGroupMixIn
     public static GlobalFloat AddNewFloat(this IGroup<Global> globals)
     {
         var ret = new GlobalFloat(
-            globals.SourceMod.GetNextFormKey());
+            globals.SourceMod.GetNextFormKey(),
+            globals.SourceMod.GameRelease.ToOblivionRelease());
         globals.Add(ret);
         return ret;
     }
@@ -15,7 +16,8 @@ public static class GlobalGroupMixIn
     public static GlobalFloat AddNewFloat(this IGroup<Global> globals, string editorId)
     {
         var ret = new GlobalFloat(
-            globals.SourceMod.GetNextFormKey(editorId));
+            globals.SourceMod.GetNextFormKey(editorId),
+            globals.SourceMod.GameRelease.ToOblivionRelease());
         globals.Add(ret);
         return ret;
     }
@@ -23,7 +25,8 @@ public static class GlobalGroupMixIn
     public static GlobalInt AddNewInt(this IGroup<Global> globals)
     {
         var ret = new GlobalInt(
-            globals.SourceMod.GetNextFormKey());
+            globals.SourceMod.GetNextFormKey(),
+            globals.SourceMod.GameRelease.ToOblivionRelease());
         globals.Add(ret);
         return ret;
     }
@@ -31,7 +34,8 @@ public static class GlobalGroupMixIn
     public static GlobalInt AddNewInt(this IGroup<Global> globals, string editorId)
     {
         var ret = new GlobalInt(
-            globals.SourceMod.GetNextFormKey(editorId));
+            globals.SourceMod.GetNextFormKey(editorId),
+            globals.SourceMod.GameRelease.ToOblivionRelease());
         globals.Add(ret);
         return ret;
     }
@@ -39,7 +43,8 @@ public static class GlobalGroupMixIn
     public static GlobalShort AddNewShort(this IGroup<Global> globals)
     {
         var ret = new GlobalShort(
-            globals.SourceMod.GetNextFormKey());
+            globals.SourceMod.GetNextFormKey(),
+            globals.SourceMod.GameRelease.ToOblivionRelease());
         globals.Add(ret);
         return ret;
     }
@@ -47,7 +52,8 @@ public static class GlobalGroupMixIn
     public static GlobalShort AddNewShort(this IGroup<Global> globals, string editorId)
     {
         var ret = new GlobalShort(
-            globals.SourceMod.GetNextFormKey(editorId));
+            globals.SourceMod.GetNextFormKey(editorId),
+            globals.SourceMod.GameRelease.ToOblivionRelease());
         globals.Add(ret);
         return ret;
     }

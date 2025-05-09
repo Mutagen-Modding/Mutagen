@@ -7,13 +7,13 @@
       <List name="LandscapeTextures" >
         <FormLink recordType="LNAM" refName="LandscapeTexture" />
       </List>
-      <Float name="YNAM" recordType="YNAM" unknown="true" />
+      <Float name="PaintedMaterialThreshold" recordType="YNAM" />
     </Fields>
   </Object>
   <Object name="GroundCoverGrass" objType="Subrecord" >
     <Fields>
       <FormLink name="Grass" refName="Grass" recordType="GNAM" />
-      <Int16 name="DNAM" recordType="DNAM" unknown="true" />
+      <Int16 name="OverrideDensity" recordType="DNAM" />
     </Fields>
   </Object>
 </Loqui>

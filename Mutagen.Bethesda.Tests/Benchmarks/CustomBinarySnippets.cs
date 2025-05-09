@@ -5,6 +5,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Newtonsoft.Json;
 using Noggog;
 using Noggog.IO;
+using Noggog.WorkEngine;
 
 namespace Mutagen.Bethesda.Tests.Benchmarks;
 
@@ -25,6 +26,10 @@ public class CustomBinarySnippets
         Settings = JsonConvert.DeserializeObject<TestingSettings>(File.ReadAllText(settingsPath.Path));
         Console.WriteLine("Target settings: " + Settings.ToString());
 
+        var dropoff = new WorkDropoff();
+        using var consumer = new WorkConsumer(
+            new NumWorkThreadsConstant(null),
+            dropoff, dropoff);
         var passthroughSettings = new PassthroughTestParams()
         {
             NicknameSuffix = null,
@@ -35,9 +40,10 @@ public class CustomBinarySnippets
                 Path = $"Oblivion.esm",
                 Do = true,
             },
+            WorkDropoff = dropoff
         };
 
-        var passthrough = new OblivionPassthroughTest(passthroughSettings);
+        var passthrough = new OblivionPassthroughTest(passthroughSettings, GameRelease.Oblivion);
 
         (TempFolder TempFolder, Test Test) = passthrough.SetupProcessedFiles();
         using var tmp = TempFolder;
@@ -60,7 +66,8 @@ public class CustomBinarySnippets
     public PathGrid PathGridImporting()
     {
         PathGridReader.Position = 0;
-        var pathGrid = new PathGrid(FormKey.Null);
+        var pathGrid = new PathGrid(FormKey.Null,
+            OblivionRelease.Oblivion);
         PathGridBinaryCreateTranslation.FillBinaryPointToPointConnections(
             new MutagenFrame(PathGridReader),
             pathGrid);

@@ -4,9 +4,9 @@
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <Float name="ODTY" recordType="ODTY" unknown="true" />
-      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
-      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
+      <RefDirect name="ObjectPaletteDefaults" refName="ObjectPaletteDefaults" />
+      <UInt64 name="XALG" recordType="XALG" unknown="true" />
       <RefDirect name="Transforms" refName="Transforms" />
       <FormLink name="SnapTemplate" refName="SnapTemplate" recordType="SNTP" />
       <FormLink name="SnapBehavior" refName="SnapTemplate" recordType="SNBH" />
@@ -34,7 +34,7 @@
       <Marker name="STOP" recordType="STOP" />
       <RefDirect name="OpenSound" refName="SoundReference" recordType="WED0" />
       <RefDirect name="CloseSound" refName="SoundReference" recordType="WED1" />
-      <FormLink name="DisplayFilter" refName="FormList" recordType="ONAM" />
+      <FormLink name="ContainsOnlyFilter" refName="FormList" recordType="ONAM" />
     </Fields>
     <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IItem</LinkInterface>

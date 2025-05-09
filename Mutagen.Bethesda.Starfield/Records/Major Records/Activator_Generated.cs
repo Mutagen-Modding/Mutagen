@@ -99,37 +99,19 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
         #endregion
         #endregion
-        #region ODTY
-        public Single? ODTY { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IActivatorGetter.ODTY => this.ODTY;
+        #region DirtinessScale
+        public Percent DirtinessScale { get; set; } = default(Percent);
         #endregion
-        #region ODRT
-        public Single? ODRT { get; set; }
+        #region ObjectPaletteDefaults
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IActivatorGetter.ODRT => this.ODRT;
-        #endregion
-        #region ObjectPlacementDefaults
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ObjectPlacementDefaults? _ObjectPlacementDefaults;
-        public ObjectPlacementDefaults? ObjectPlacementDefaults
+        private ObjectPaletteDefaults? _ObjectPaletteDefaults;
+        public ObjectPaletteDefaults? ObjectPaletteDefaults
         {
-            get => _ObjectPlacementDefaults;
-            set => _ObjectPlacementDefaults = value;
+            get => _ObjectPaletteDefaults;
+            set => _ObjectPaletteDefaults = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectPlacementDefaultsGetter? IActivatorGetter.ObjectPlacementDefaults => this.ObjectPlacementDefaults;
-        #endregion
-        #region XALG
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _XALG;
-        public MemorySlice<Byte>? XALG
-        {
-            get => this._XALG;
-            set => this._XALG = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IActivatorGetter.XALG => this.XALG;
+        IObjectPaletteDefaultsGetter? IActivatorGetter.ObjectPaletteDefaults => this.ObjectPaletteDefaults;
         #endregion
         #region Transforms
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -161,6 +143,21 @@ namespace Mutagen.Bethesda.Starfield
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISnapTemplateGetter> IActivatorGetter.SnapBehavior => this.SnapBehavior;
+        #endregion
+        #region DefaultLayer
+        private readonly IFormLinkNullable<ILayerGetter> _DefaultLayer = new FormLinkNullable<ILayerGetter>();
+        public IFormLinkNullable<ILayerGetter> DefaultLayer
+        {
+            get => _DefaultLayer;
+            set => _DefaultLayer.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILayerGetter> IActivatorGetter.DefaultLayer => this.DefaultLayer;
+        #endregion
+        #region XALG
+        public UInt64? XALG { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt64? IActivatorGetter.XALG => this.XALG;
         #endregion
         #region Components
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -212,17 +209,6 @@ namespace Mutagen.Bethesda.Starfield
         }
         #endregion
         #endregion
-        #region PTTA
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private PTTA? _PTTA;
-        public PTTA? PTTA
-        {
-            get => _PTTA;
-            set => _PTTA = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPTTAGetter? IActivatorGetter.PTTA => this.PTTA;
-        #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
@@ -244,6 +230,9 @@ namespace Mutagen.Bethesda.Starfield
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Destructible? _Destructible;
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         public Destructible? Destructible
         {
             get => _Destructible;
@@ -251,6 +240,10 @@ namespace Mutagen.Bethesda.Starfield
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDestructibleGetter? IActivatorGetter.Destructible => this.Destructible;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
+        #endregion
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -368,16 +361,8 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         UInt16? IActivatorGetter.ActivationAngle => this.ActivationAngle;
         #endregion
-        #region INAM
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _INAM;
-        public MemorySlice<Byte>? INAM
-        {
-            get => this._INAM;
-            set => this._INAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IActivatorGetter.INAM => this.INAM;
+        #region InvertFacing
+        public Boolean InvertFacing { get; set; } = default(Boolean);
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -431,16 +416,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
-                this.ODTY = initialValue;
-                this.ODRT = initialValue;
-                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(initialValue, new ObjectPlacementDefaults.Mask<TItem>(initialValue));
-                this.XALG = initialValue;
+                this.DirtinessScale = initialValue;
+                this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(initialValue, new ObjectPaletteDefaults.Mask<TItem>(initialValue));
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
                 this.SnapTemplate = initialValue;
                 this.SnapBehavior = initialValue;
+                this.DefaultLayer = initialValue;
+                this.XALG = initialValue;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Name = initialValue;
-                this.PTTA = new MaskItem<TItem, PTTA.Mask<TItem>?>(initialValue, new PTTA.Mask<TItem>(initialValue));
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
@@ -455,7 +439,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Water = initialValue;
                 this.Flags = initialValue;
                 this.ActivationAngle = initialValue;
-                this.INAM = initialValue;
+                this.InvertFacing = initialValue;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.NavmeshGeometry = new MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>(initialValue, new NavmeshGeometry.Mask<TItem>(initialValue));
             }
@@ -470,16 +454,15 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
-                TItem ODTY,
-                TItem ODRT,
-                TItem ObjectPlacementDefaults,
-                TItem XALG,
+                TItem DirtinessScale,
+                TItem ObjectPaletteDefaults,
                 TItem Transforms,
                 TItem SnapTemplate,
                 TItem SnapBehavior,
+                TItem DefaultLayer,
+                TItem XALG,
                 TItem Components,
                 TItem Name,
-                TItem PTTA,
                 TItem Model,
                 TItem Destructible,
                 TItem Keywords,
@@ -494,7 +477,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Water,
                 TItem Flags,
                 TItem ActivationAngle,
-                TItem INAM,
+                TItem InvertFacing,
                 TItem Conditions,
                 TItem NavmeshGeometry)
             : base(
@@ -508,16 +491,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
-                this.ODTY = ODTY;
-                this.ODRT = ODRT;
-                this.ObjectPlacementDefaults = new MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>(ObjectPlacementDefaults, new ObjectPlacementDefaults.Mask<TItem>(ObjectPlacementDefaults));
-                this.XALG = XALG;
+                this.DirtinessScale = DirtinessScale;
+                this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(ObjectPaletteDefaults, new ObjectPaletteDefaults.Mask<TItem>(ObjectPaletteDefaults));
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
                 this.SnapTemplate = SnapTemplate;
                 this.SnapBehavior = SnapBehavior;
+                this.DefaultLayer = DefaultLayer;
+                this.XALG = XALG;
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Name = Name;
-                this.PTTA = new MaskItem<TItem, PTTA.Mask<TItem>?>(PTTA, new PTTA.Mask<TItem>(PTTA));
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
@@ -532,7 +514,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Water = Water;
                 this.Flags = Flags;
                 this.ActivationAngle = ActivationAngle;
-                this.INAM = INAM;
+                this.InvertFacing = InvertFacing;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.NavmeshGeometry = new MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>(NavmeshGeometry, new NavmeshGeometry.Mask<TItem>(NavmeshGeometry));
             }
@@ -548,16 +530,15 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
-            public TItem ODTY;
-            public TItem ODRT;
-            public MaskItem<TItem, ObjectPlacementDefaults.Mask<TItem>?>? ObjectPlacementDefaults { get; set; }
-            public TItem XALG;
+            public TItem DirtinessScale;
+            public MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>? ObjectPaletteDefaults { get; set; }
             public MaskItem<TItem, Transforms.Mask<TItem>?>? Transforms { get; set; }
             public TItem SnapTemplate;
             public TItem SnapBehavior;
+            public TItem DefaultLayer;
+            public TItem XALG;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public TItem Name;
-            public MaskItem<TItem, PTTA.Mask<TItem>?>? PTTA { get; set; }
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
@@ -572,7 +553,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Water;
             public TItem Flags;
             public TItem ActivationAngle;
-            public TItem INAM;
+            public TItem InvertFacing;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
             public MaskItem<TItem, NavmeshGeometry.Mask<TItem>?>? NavmeshGeometry { get; set; }
             #endregion
@@ -590,16 +571,15 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
-                if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
-                if (!object.Equals(this.ODRT, rhs.ODRT)) return false;
-                if (!object.Equals(this.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults)) return false;
-                if (!object.Equals(this.XALG, rhs.XALG)) return false;
+                if (!object.Equals(this.DirtinessScale, rhs.DirtinessScale)) return false;
+                if (!object.Equals(this.ObjectPaletteDefaults, rhs.ObjectPaletteDefaults)) return false;
                 if (!object.Equals(this.Transforms, rhs.Transforms)) return false;
                 if (!object.Equals(this.SnapTemplate, rhs.SnapTemplate)) return false;
                 if (!object.Equals(this.SnapBehavior, rhs.SnapBehavior)) return false;
+                if (!object.Equals(this.DefaultLayer, rhs.DefaultLayer)) return false;
+                if (!object.Equals(this.XALG, rhs.XALG)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
-                if (!object.Equals(this.PTTA, rhs.PTTA)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
@@ -614,7 +594,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Water, rhs.Water)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.ActivationAngle, rhs.ActivationAngle)) return false;
-                if (!object.Equals(this.INAM, rhs.INAM)) return false;
+                if (!object.Equals(this.InvertFacing, rhs.InvertFacing)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
                 if (!object.Equals(this.NavmeshGeometry, rhs.NavmeshGeometry)) return false;
                 return true;
@@ -624,16 +604,15 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.ObjectBounds);
-                hash.Add(this.ODTY);
-                hash.Add(this.ODRT);
-                hash.Add(this.ObjectPlacementDefaults);
-                hash.Add(this.XALG);
+                hash.Add(this.DirtinessScale);
+                hash.Add(this.ObjectPaletteDefaults);
                 hash.Add(this.Transforms);
                 hash.Add(this.SnapTemplate);
                 hash.Add(this.SnapBehavior);
+                hash.Add(this.DefaultLayer);
+                hash.Add(this.XALG);
                 hash.Add(this.Components);
                 hash.Add(this.Name);
-                hash.Add(this.PTTA);
                 hash.Add(this.Model);
                 hash.Add(this.Destructible);
                 hash.Add(this.Keywords);
@@ -648,7 +627,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Water);
                 hash.Add(this.Flags);
                 hash.Add(this.ActivationAngle);
-                hash.Add(this.INAM);
+                hash.Add(this.InvertFacing);
                 hash.Add(this.Conditions);
                 hash.Add(this.NavmeshGeometry);
                 hash.Add(base.GetHashCode());
@@ -671,14 +650,12 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.ObjectBounds.Overall)) return false;
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
-                if (!eval(this.ODTY)) return false;
-                if (!eval(this.ODRT)) return false;
-                if (ObjectPlacementDefaults != null)
+                if (!eval(this.DirtinessScale)) return false;
+                if (ObjectPaletteDefaults != null)
                 {
-                    if (!eval(this.ObjectPlacementDefaults.Overall)) return false;
-                    if (this.ObjectPlacementDefaults.Specific != null && !this.ObjectPlacementDefaults.Specific.All(eval)) return false;
+                    if (!eval(this.ObjectPaletteDefaults.Overall)) return false;
+                    if (this.ObjectPaletteDefaults.Specific != null && !this.ObjectPaletteDefaults.Specific.All(eval)) return false;
                 }
-                if (!eval(this.XALG)) return false;
                 if (Transforms != null)
                 {
                     if (!eval(this.Transforms.Overall)) return false;
@@ -686,6 +663,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (!eval(this.SnapTemplate)) return false;
                 if (!eval(this.SnapBehavior)) return false;
+                if (!eval(this.DefaultLayer)) return false;
+                if (!eval(this.XALG)) return false;
                 if (this.Components != null)
                 {
                     if (!eval(this.Components.Overall)) return false;
@@ -699,11 +678,6 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (!eval(this.Name)) return false;
-                if (PTTA != null)
-                {
-                    if (!eval(this.PTTA.Overall)) return false;
-                    if (this.PTTA.Specific != null && !this.PTTA.Specific.All(eval)) return false;
-                }
                 if (Model != null)
                 {
                     if (!eval(this.Model.Overall)) return false;
@@ -765,7 +739,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.Water)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.ActivationAngle)) return false;
-                if (!eval(this.INAM)) return false;
+                if (!eval(this.InvertFacing)) return false;
                 if (this.Conditions != null)
                 {
                     if (!eval(this.Conditions.Overall)) return false;
@@ -801,14 +775,12 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.ObjectBounds.Overall)) return true;
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
-                if (eval(this.ODTY)) return true;
-                if (eval(this.ODRT)) return true;
-                if (ObjectPlacementDefaults != null)
+                if (eval(this.DirtinessScale)) return true;
+                if (ObjectPaletteDefaults != null)
                 {
-                    if (eval(this.ObjectPlacementDefaults.Overall)) return true;
-                    if (this.ObjectPlacementDefaults.Specific != null && this.ObjectPlacementDefaults.Specific.Any(eval)) return true;
+                    if (eval(this.ObjectPaletteDefaults.Overall)) return true;
+                    if (this.ObjectPaletteDefaults.Specific != null && this.ObjectPaletteDefaults.Specific.Any(eval)) return true;
                 }
-                if (eval(this.XALG)) return true;
                 if (Transforms != null)
                 {
                     if (eval(this.Transforms.Overall)) return true;
@@ -816,6 +788,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (eval(this.SnapTemplate)) return true;
                 if (eval(this.SnapBehavior)) return true;
+                if (eval(this.DefaultLayer)) return true;
+                if (eval(this.XALG)) return true;
                 if (this.Components != null)
                 {
                     if (eval(this.Components.Overall)) return true;
@@ -829,11 +803,6 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (eval(this.Name)) return true;
-                if (PTTA != null)
-                {
-                    if (eval(this.PTTA.Overall)) return true;
-                    if (this.PTTA.Specific != null && this.PTTA.Specific.Any(eval)) return true;
-                }
                 if (Model != null)
                 {
                     if (eval(this.Model.Overall)) return true;
@@ -895,7 +864,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.Water)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.ActivationAngle)) return true;
-                if (eval(this.INAM)) return true;
+                if (eval(this.InvertFacing)) return true;
                 if (this.Conditions != null)
                 {
                     if (eval(this.Conditions.Overall)) return true;
@@ -930,13 +899,13 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
-                obj.ODTY = eval(this.ODTY);
-                obj.ODRT = eval(this.ODRT);
-                obj.ObjectPlacementDefaults = this.ObjectPlacementDefaults == null ? null : new MaskItem<R, ObjectPlacementDefaults.Mask<R>?>(eval(this.ObjectPlacementDefaults.Overall), this.ObjectPlacementDefaults.Specific?.Translate(eval));
-                obj.XALG = eval(this.XALG);
+                obj.DirtinessScale = eval(this.DirtinessScale);
+                obj.ObjectPaletteDefaults = this.ObjectPaletteDefaults == null ? null : new MaskItem<R, ObjectPaletteDefaults.Mask<R>?>(eval(this.ObjectPaletteDefaults.Overall), this.ObjectPaletteDefaults.Specific?.Translate(eval));
                 obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Transforms.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
                 obj.SnapTemplate = eval(this.SnapTemplate);
                 obj.SnapBehavior = eval(this.SnapBehavior);
+                obj.DefaultLayer = eval(this.DefaultLayer);
+                obj.XALG = eval(this.XALG);
                 if (Components != null)
                 {
                     obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
@@ -953,7 +922,6 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 obj.Name = eval(this.Name);
-                obj.PTTA = this.PTTA == null ? null : new MaskItem<R, PTTA.Mask<R>?>(eval(this.PTTA.Overall), this.PTTA.Specific?.Translate(eval));
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
                 if (Keywords != null)
@@ -1008,7 +976,7 @@ namespace Mutagen.Bethesda.Starfield
                 obj.Water = eval(this.Water);
                 obj.Flags = eval(this.Flags);
                 obj.ActivationAngle = eval(this.ActivationAngle);
-                obj.INAM = eval(this.INAM);
+                obj.InvertFacing = eval(this.InvertFacing);
                 if (Conditions != null)
                 {
                     obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
@@ -1051,21 +1019,13 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         ObjectBounds?.Print(sb);
                     }
-                    if (printMask?.ODTY ?? true)
+                    if (printMask?.DirtinessScale ?? true)
                     {
-                        sb.AppendItem(ODTY, "ODTY");
+                        sb.AppendItem(DirtinessScale, "DirtinessScale");
                     }
-                    if (printMask?.ODRT ?? true)
+                    if (printMask?.ObjectPaletteDefaults?.Overall ?? true)
                     {
-                        sb.AppendItem(ODRT, "ODRT");
-                    }
-                    if (printMask?.ObjectPlacementDefaults?.Overall ?? true)
-                    {
-                        ObjectPlacementDefaults?.Print(sb);
-                    }
-                    if (printMask?.XALG ?? true)
-                    {
-                        sb.AppendItem(XALG, "XALG");
+                        ObjectPaletteDefaults?.Print(sb);
                     }
                     if (printMask?.Transforms?.Overall ?? true)
                     {
@@ -1078,6 +1038,14 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.SnapBehavior ?? true)
                     {
                         sb.AppendItem(SnapBehavior, "SnapBehavior");
+                    }
+                    if (printMask?.DefaultLayer ?? true)
+                    {
+                        sb.AppendItem(DefaultLayer, "DefaultLayer");
+                    }
+                    if (printMask?.XALG ?? true)
+                    {
+                        sb.AppendItem(XALG, "XALG");
                     }
                     if ((printMask?.Components?.Overall ?? true)
                         && Components is {} ComponentsItem)
@@ -1101,10 +1069,6 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.Name ?? true)
                     {
                         sb.AppendItem(Name, "Name");
-                    }
-                    if (printMask?.PTTA?.Overall ?? true)
-                    {
-                        PTTA?.Print(sb);
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
@@ -1211,9 +1175,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(ActivationAngle, "ActivationAngle");
                     }
-                    if (printMask?.INAM ?? true)
+                    if (printMask?.InvertFacing ?? true)
                     {
-                        sb.AppendItem(INAM, "INAM");
+                        sb.AppendItem(InvertFacing, "InvertFacing");
                     }
                     if ((printMask?.Conditions?.Overall ?? true)
                         && Conditions is {} ConditionsItem)
@@ -1251,16 +1215,15 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
-            public Exception? ODTY;
-            public Exception? ODRT;
-            public MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>? ObjectPlacementDefaults;
-            public Exception? XALG;
+            public Exception? DirtinessScale;
+            public MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>? ObjectPaletteDefaults;
             public MaskItem<Exception?, Transforms.ErrorMask?>? Transforms;
             public Exception? SnapTemplate;
             public Exception? SnapBehavior;
+            public Exception? DefaultLayer;
+            public Exception? XALG;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public Exception? Name;
-            public MaskItem<Exception?, PTTA.ErrorMask?>? PTTA;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
@@ -1275,7 +1238,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Water;
             public Exception? Flags;
             public Exception? ActivationAngle;
-            public Exception? INAM;
+            public Exception? InvertFacing;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
             public MaskItem<Exception?, NavmeshGeometry.ErrorMask?>? NavmeshGeometry;
             #endregion
@@ -1290,26 +1253,24 @@ namespace Mutagen.Bethesda.Starfield
                         return VirtualMachineAdapter;
                     case Activator_FieldIndex.ObjectBounds:
                         return ObjectBounds;
-                    case Activator_FieldIndex.ODTY:
-                        return ODTY;
-                    case Activator_FieldIndex.ODRT:
-                        return ODRT;
-                    case Activator_FieldIndex.ObjectPlacementDefaults:
-                        return ObjectPlacementDefaults;
-                    case Activator_FieldIndex.XALG:
-                        return XALG;
+                    case Activator_FieldIndex.DirtinessScale:
+                        return DirtinessScale;
+                    case Activator_FieldIndex.ObjectPaletteDefaults:
+                        return ObjectPaletteDefaults;
                     case Activator_FieldIndex.Transforms:
                         return Transforms;
                     case Activator_FieldIndex.SnapTemplate:
                         return SnapTemplate;
                     case Activator_FieldIndex.SnapBehavior:
                         return SnapBehavior;
+                    case Activator_FieldIndex.DefaultLayer:
+                        return DefaultLayer;
+                    case Activator_FieldIndex.XALG:
+                        return XALG;
                     case Activator_FieldIndex.Components:
                         return Components;
                     case Activator_FieldIndex.Name:
                         return Name;
-                    case Activator_FieldIndex.PTTA:
-                        return PTTA;
                     case Activator_FieldIndex.Model:
                         return Model;
                     case Activator_FieldIndex.Destructible:
@@ -1338,8 +1299,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Flags;
                     case Activator_FieldIndex.ActivationAngle:
                         return ActivationAngle;
-                    case Activator_FieldIndex.INAM:
-                        return INAM;
+                    case Activator_FieldIndex.InvertFacing:
+                        return InvertFacing;
                     case Activator_FieldIndex.Conditions:
                         return Conditions;
                     case Activator_FieldIndex.NavmeshGeometry:
@@ -1360,17 +1321,11 @@ namespace Mutagen.Bethesda.Starfield
                     case Activator_FieldIndex.ObjectBounds:
                         this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
                         break;
-                    case Activator_FieldIndex.ODTY:
-                        this.ODTY = ex;
+                    case Activator_FieldIndex.DirtinessScale:
+                        this.DirtinessScale = ex;
                         break;
-                    case Activator_FieldIndex.ODRT:
-                        this.ODRT = ex;
-                        break;
-                    case Activator_FieldIndex.ObjectPlacementDefaults:
-                        this.ObjectPlacementDefaults = new MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>(ex, null);
-                        break;
-                    case Activator_FieldIndex.XALG:
-                        this.XALG = ex;
+                    case Activator_FieldIndex.ObjectPaletteDefaults:
+                        this.ObjectPaletteDefaults = new MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>(ex, null);
                         break;
                     case Activator_FieldIndex.Transforms:
                         this.Transforms = new MaskItem<Exception?, Transforms.ErrorMask?>(ex, null);
@@ -1381,14 +1336,17 @@ namespace Mutagen.Bethesda.Starfield
                     case Activator_FieldIndex.SnapBehavior:
                         this.SnapBehavior = ex;
                         break;
+                    case Activator_FieldIndex.DefaultLayer:
+                        this.DefaultLayer = ex;
+                        break;
+                    case Activator_FieldIndex.XALG:
+                        this.XALG = ex;
+                        break;
                     case Activator_FieldIndex.Components:
                         this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
                         break;
                     case Activator_FieldIndex.Name:
                         this.Name = ex;
-                        break;
-                    case Activator_FieldIndex.PTTA:
-                        this.PTTA = new MaskItem<Exception?, PTTA.ErrorMask?>(ex, null);
                         break;
                     case Activator_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
@@ -1432,8 +1390,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Activator_FieldIndex.ActivationAngle:
                         this.ActivationAngle = ex;
                         break;
-                    case Activator_FieldIndex.INAM:
-                        this.INAM = ex;
+                    case Activator_FieldIndex.InvertFacing:
+                        this.InvertFacing = ex;
                         break;
                     case Activator_FieldIndex.Conditions:
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
@@ -1458,17 +1416,11 @@ namespace Mutagen.Bethesda.Starfield
                     case Activator_FieldIndex.ObjectBounds:
                         this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
                         break;
-                    case Activator_FieldIndex.ODTY:
-                        this.ODTY = (Exception?)obj;
+                    case Activator_FieldIndex.DirtinessScale:
+                        this.DirtinessScale = (Exception?)obj;
                         break;
-                    case Activator_FieldIndex.ODRT:
-                        this.ODRT = (Exception?)obj;
-                        break;
-                    case Activator_FieldIndex.ObjectPlacementDefaults:
-                        this.ObjectPlacementDefaults = (MaskItem<Exception?, ObjectPlacementDefaults.ErrorMask?>?)obj;
-                        break;
-                    case Activator_FieldIndex.XALG:
-                        this.XALG = (Exception?)obj;
+                    case Activator_FieldIndex.ObjectPaletteDefaults:
+                        this.ObjectPaletteDefaults = (MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>?)obj;
                         break;
                     case Activator_FieldIndex.Transforms:
                         this.Transforms = (MaskItem<Exception?, Transforms.ErrorMask?>?)obj;
@@ -1479,14 +1431,17 @@ namespace Mutagen.Bethesda.Starfield
                     case Activator_FieldIndex.SnapBehavior:
                         this.SnapBehavior = (Exception?)obj;
                         break;
+                    case Activator_FieldIndex.DefaultLayer:
+                        this.DefaultLayer = (Exception?)obj;
+                        break;
+                    case Activator_FieldIndex.XALG:
+                        this.XALG = (Exception?)obj;
+                        break;
                     case Activator_FieldIndex.Components:
                         this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
                         break;
                     case Activator_FieldIndex.Name:
                         this.Name = (Exception?)obj;
-                        break;
-                    case Activator_FieldIndex.PTTA:
-                        this.PTTA = (MaskItem<Exception?, PTTA.ErrorMask?>?)obj;
                         break;
                     case Activator_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
@@ -1530,8 +1485,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Activator_FieldIndex.ActivationAngle:
                         this.ActivationAngle = (Exception?)obj;
                         break;
-                    case Activator_FieldIndex.INAM:
-                        this.INAM = (Exception?)obj;
+                    case Activator_FieldIndex.InvertFacing:
+                        this.InvertFacing = (Exception?)obj;
                         break;
                     case Activator_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
@@ -1550,16 +1505,15 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (VirtualMachineAdapter != null) return true;
                 if (ObjectBounds != null) return true;
-                if (ODTY != null) return true;
-                if (ODRT != null) return true;
-                if (ObjectPlacementDefaults != null) return true;
-                if (XALG != null) return true;
+                if (DirtinessScale != null) return true;
+                if (ObjectPaletteDefaults != null) return true;
                 if (Transforms != null) return true;
                 if (SnapTemplate != null) return true;
                 if (SnapBehavior != null) return true;
+                if (DefaultLayer != null) return true;
+                if (XALG != null) return true;
                 if (Components != null) return true;
                 if (Name != null) return true;
-                if (PTTA != null) return true;
                 if (Model != null) return true;
                 if (Destructible != null) return true;
                 if (Keywords != null) return true;
@@ -1574,7 +1528,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Water != null) return true;
                 if (Flags != null) return true;
                 if (ActivationAngle != null) return true;
-                if (INAM != null) return true;
+                if (InvertFacing != null) return true;
                 if (Conditions != null) return true;
                 if (NavmeshGeometry != null) return true;
                 return false;
@@ -1606,21 +1560,21 @@ namespace Mutagen.Bethesda.Starfield
                 VirtualMachineAdapter?.Print(sb);
                 ObjectBounds?.Print(sb);
                 {
-                    sb.AppendItem(ODTY, "ODTY");
+                    sb.AppendItem(DirtinessScale, "DirtinessScale");
                 }
-                {
-                    sb.AppendItem(ODRT, "ODRT");
-                }
-                ObjectPlacementDefaults?.Print(sb);
-                {
-                    sb.AppendItem(XALG, "XALG");
-                }
+                ObjectPaletteDefaults?.Print(sb);
                 Transforms?.Print(sb);
                 {
                     sb.AppendItem(SnapTemplate, "SnapTemplate");
                 }
                 {
                     sb.AppendItem(SnapBehavior, "SnapBehavior");
+                }
+                {
+                    sb.AppendItem(DefaultLayer, "DefaultLayer");
+                }
+                {
+                    sb.AppendItem(XALG, "XALG");
                 }
                 if (Components is {} ComponentsItem)
                 {
@@ -1643,7 +1597,6 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(Name, "Name");
                 }
-                PTTA?.Print(sb);
                 Model?.Print(sb);
                 Destructible?.Print(sb);
                 if (Keywords is {} KeywordsItem)
@@ -1728,7 +1681,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(ActivationAngle, "ActivationAngle");
                 }
                 {
-                    sb.AppendItem(INAM, "INAM");
+                    sb.AppendItem(InvertFacing, "InvertFacing");
                 }
                 if (Conditions is {} ConditionsItem)
                 {
@@ -1759,16 +1712,15 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
-                ret.ODTY = this.ODTY.Combine(rhs.ODTY);
-                ret.ODRT = this.ODRT.Combine(rhs.ODRT);
-                ret.ObjectPlacementDefaults = this.ObjectPlacementDefaults.Combine(rhs.ObjectPlacementDefaults, (l, r) => l.Combine(r));
-                ret.XALG = this.XALG.Combine(rhs.XALG);
+                ret.DirtinessScale = this.DirtinessScale.Combine(rhs.DirtinessScale);
+                ret.ObjectPaletteDefaults = this.ObjectPaletteDefaults.Combine(rhs.ObjectPaletteDefaults, (l, r) => l.Combine(r));
                 ret.Transforms = this.Transforms.Combine(rhs.Transforms, (l, r) => l.Combine(r));
                 ret.SnapTemplate = this.SnapTemplate.Combine(rhs.SnapTemplate);
                 ret.SnapBehavior = this.SnapBehavior.Combine(rhs.SnapBehavior);
+                ret.DefaultLayer = this.DefaultLayer.Combine(rhs.DefaultLayer);
+                ret.XALG = this.XALG.Combine(rhs.XALG);
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Name = this.Name.Combine(rhs.Name);
-                ret.PTTA = this.PTTA.Combine(rhs.PTTA, (l, r) => l.Combine(r));
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
@@ -1783,7 +1735,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Water = this.Water.Combine(rhs.Water);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.ActivationAngle = this.ActivationAngle.Combine(rhs.ActivationAngle);
-                ret.INAM = this.INAM.Combine(rhs.INAM);
+                ret.InvertFacing = this.InvertFacing.Combine(rhs.InvertFacing);
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.NavmeshGeometry = this.NavmeshGeometry.Combine(rhs.NavmeshGeometry, (l, r) => l.Combine(r));
                 return ret;
@@ -1810,16 +1762,15 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public ObjectBounds.TranslationMask? ObjectBounds;
-            public bool ODTY;
-            public bool ODRT;
-            public ObjectPlacementDefaults.TranslationMask? ObjectPlacementDefaults;
-            public bool XALG;
+            public bool DirtinessScale;
+            public ObjectPaletteDefaults.TranslationMask? ObjectPaletteDefaults;
             public Transforms.TranslationMask? Transforms;
             public bool SnapTemplate;
             public bool SnapBehavior;
+            public bool DefaultLayer;
+            public bool XALG;
             public AComponent.TranslationMask? Components;
             public bool Name;
-            public PTTA.TranslationMask? PTTA;
             public Model.TranslationMask? Model;
             public Destructible.TranslationMask? Destructible;
             public bool Keywords;
@@ -1834,7 +1785,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Water;
             public bool Flags;
             public bool ActivationAngle;
-            public bool INAM;
+            public bool InvertFacing;
             public Condition.TranslationMask? Conditions;
             public NavmeshGeometry.TranslationMask? NavmeshGeometry;
             #endregion
@@ -1845,11 +1796,11 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.ODTY = defaultOn;
-                this.ODRT = defaultOn;
-                this.XALG = defaultOn;
+                this.DirtinessScale = defaultOn;
                 this.SnapTemplate = defaultOn;
                 this.SnapBehavior = defaultOn;
+                this.DefaultLayer = defaultOn;
+                this.XALG = defaultOn;
                 this.Name = defaultOn;
                 this.Keywords = defaultOn;
                 this.ForcedLocations = defaultOn;
@@ -1860,7 +1811,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Water = defaultOn;
                 this.Flags = defaultOn;
                 this.ActivationAngle = defaultOn;
-                this.INAM = defaultOn;
+                this.InvertFacing = defaultOn;
             }
 
             #endregion
@@ -1870,16 +1821,15 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
-                ret.Add((ODTY, null));
-                ret.Add((ODRT, null));
-                ret.Add((ObjectPlacementDefaults != null ? ObjectPlacementDefaults.OnOverall : DefaultOn, ObjectPlacementDefaults?.GetCrystal()));
-                ret.Add((XALG, null));
+                ret.Add((DirtinessScale, null));
+                ret.Add((ObjectPaletteDefaults != null ? ObjectPaletteDefaults.OnOverall : DefaultOn, ObjectPaletteDefaults?.GetCrystal()));
                 ret.Add((Transforms != null ? Transforms.OnOverall : DefaultOn, Transforms?.GetCrystal()));
                 ret.Add((SnapTemplate, null));
                 ret.Add((SnapBehavior, null));
+                ret.Add((DefaultLayer, null));
+                ret.Add((XALG, null));
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((Name, null));
-                ret.Add((PTTA != null ? PTTA.OnOverall : DefaultOn, PTTA?.GetCrystal()));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
                 ret.Add((Destructible != null ? Destructible.OnOverall : DefaultOn, Destructible?.GetCrystal()));
                 ret.Add((Keywords, null));
@@ -1894,7 +1844,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Water, null));
                 ret.Add((Flags, null));
                 ret.Add((ActivationAngle, null));
-                ret.Add((INAM, null));
+                ret.Add((InvertFacing, null));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
                 ret.Add((NavmeshGeometry != null ? NavmeshGeometry.OnOverall : DefaultOn, NavmeshGeometry?.GetCrystal()));
             }
@@ -2053,6 +2003,7 @@ namespace Mutagen.Bethesda.Starfield
         IBaseObject,
         IConstructibleObjectTarget,
         IFormLinkContainer,
+        IHasDestructible,
         IHaveVirtualMachineAdapter,
         IItem,
         IKeyworded<IKeywordGetter>,
@@ -2075,23 +2026,25 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: IObjectBounded
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
-        new Single? ODTY { get; set; }
-        new Single? ODRT { get; set; }
-        new ObjectPlacementDefaults? ObjectPlacementDefaults { get; set; }
-        new MemorySlice<Byte>? XALG { get; set; }
+        new Percent DirtinessScale { get; set; }
+        new ObjectPaletteDefaults? ObjectPaletteDefaults { get; set; }
         new Transforms? Transforms { get; set; }
         new IFormLinkNullable<ISnapTemplateGetter> SnapTemplate { get; set; }
         new IFormLinkNullable<ISnapTemplateGetter> SnapBehavior { get; set; }
+        new IFormLinkNullable<ILayerGetter> DefaultLayer { get; set; }
+        new UInt64? XALG { get; set; }
         new ExtendedList<AComponent> Components { get; }
         /// <summary>
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
-        new PTTA? PTTA { get; set; }
         /// <summary>
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         new Destructible? Destructible { get; set; }
         /// <summary>
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
@@ -2108,7 +2061,7 @@ namespace Mutagen.Bethesda.Starfield
         new IFormLinkNullable<IWaterGetter> Water { get; set; }
         new Activator.Flag? Flags { get; set; }
         new UInt16? ActivationAngle { get; set; }
-        new MemorySlice<Byte>? INAM { get; set; }
+        new Boolean InvertFacing { get; set; }
         new ExtendedList<Condition>? Conditions { get; set; }
         new NavmeshGeometry? NavmeshGeometry { get; set; }
         #region Mutagen
@@ -2132,6 +2085,7 @@ namespace Mutagen.Bethesda.Starfield
         IBinaryItem,
         IConstructibleObjectTargetGetter,
         IFormLinkContainerGetter,
+        IHasDestructibleGetter,
         IHaveVirtualMachineAdapterGetter,
         IItemGetter,
         IKeywordedGetter<IKeywordGetter>,
@@ -2159,13 +2113,13 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
-        Single? ODTY { get; }
-        Single? ODRT { get; }
-        IObjectPlacementDefaultsGetter? ObjectPlacementDefaults { get; }
-        ReadOnlyMemorySlice<Byte>? XALG { get; }
+        Percent DirtinessScale { get; }
+        IObjectPaletteDefaultsGetter? ObjectPaletteDefaults { get; }
         ITransformsGetter? Transforms { get; }
         IFormLinkNullableGetter<ISnapTemplateGetter> SnapTemplate { get; }
         IFormLinkNullableGetter<ISnapTemplateGetter> SnapBehavior { get; }
+        IFormLinkNullableGetter<ILayerGetter> DefaultLayer { get; }
+        UInt64? XALG { get; }
         IReadOnlyList<IAComponentGetter> Components { get; }
         #region Name
         /// <summary>
@@ -2173,14 +2127,18 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion
-        IPTTAGetter? PTTA { get; }
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
+        #region Destructible
+        /// <summary>
+        /// Aspects: IHasDestructibleGetter
+        /// </summary>
         IDestructibleGetter? Destructible { get; }
+        #endregion
         #region Keywords
         /// <summary>
         /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
@@ -2198,7 +2156,7 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<IWaterGetter> Water { get; }
         Activator.Flag? Flags { get; }
         UInt16? ActivationAngle { get; }
-        ReadOnlyMemorySlice<Byte>? INAM { get; }
+        Boolean InvertFacing { get; }
         IReadOnlyList<IConditionGetter>? Conditions { get; }
         INavmeshGeometryGetter? NavmeshGeometry { get; }
 
@@ -2383,33 +2341,32 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         VirtualMachineAdapter = 7,
         ObjectBounds = 8,
-        ODTY = 9,
-        ODRT = 10,
-        ObjectPlacementDefaults = 11,
-        XALG = 12,
-        Transforms = 13,
-        SnapTemplate = 14,
-        SnapBehavior = 15,
+        DirtinessScale = 9,
+        ObjectPaletteDefaults = 10,
+        Transforms = 11,
+        SnapTemplate = 12,
+        SnapBehavior = 13,
+        DefaultLayer = 14,
+        XALG = 15,
         Components = 16,
         Name = 17,
-        PTTA = 18,
-        Model = 19,
-        Destructible = 20,
-        Keywords = 21,
-        Properties = 22,
-        ForcedLocations = 23,
-        NativeTerminal = 24,
-        MarkerColor = 25,
-        WaterMaterial = 26,
-        LoopingSound = 27,
-        ActivateSound = 28,
-        ActivateTextOverride = 29,
-        Water = 30,
-        Flags = 31,
-        ActivationAngle = 32,
-        INAM = 33,
-        Conditions = 34,
-        NavmeshGeometry = 35,
+        Model = 18,
+        Destructible = 19,
+        Keywords = 20,
+        Properties = 21,
+        ForcedLocations = 22,
+        NativeTerminal = 23,
+        MarkerColor = 24,
+        WaterMaterial = 25,
+        LoopingSound = 26,
+        ActivateSound = 27,
+        ActivateTextOverride = 28,
+        Water = 29,
+        Flags = 30,
+        ActivationAngle = 31,
+        InvertFacing = 32,
+        Conditions = 33,
+        NavmeshGeometry = 34,
     }
     #endregion
 
@@ -2420,9 +2377,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 29;
+        public const ushort AdditionalFieldCount = 28;
 
-        public const ushort FieldCount = 36;
+        public const ushort FieldCount = 35;
 
         public static readonly Type MaskType = typeof(Activator.Mask<>);
 
@@ -2459,21 +2416,18 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XXXX,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
-                RecordTypes.ODRT,
                 RecordTypes.OPDS,
-                RecordTypes.XALG,
                 RecordTypes.PTT2,
                 RecordTypes.SNTP,
                 RecordTypes.SNBH,
+                RecordTypes.DEFL,
+                RecordTypes.XALG,
                 RecordTypes.BFCB,
                 RecordTypes.BFCE,
                 RecordTypes.FULL,
-                RecordTypes.PTTA,
                 RecordTypes.MODL,
                 RecordTypes.MODT,
                 RecordTypes.MOLM,
-                RecordTypes.DMDC,
-                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
@@ -2547,16 +2501,15 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.VirtualMachineAdapter = null;
             item.ObjectBounds.Clear();
-            item.ODTY = default;
-            item.ODRT = default;
-            item.ObjectPlacementDefaults = null;
-            item.XALG = default;
+            item.DirtinessScale = default(Percent);
+            item.ObjectPaletteDefaults = null;
             item.Transforms = null;
             item.SnapTemplate.Clear();
             item.SnapBehavior.Clear();
+            item.DefaultLayer.Clear();
+            item.XALG = default;
             item.Components.Clear();
             item.Name = default;
-            item.PTTA = null;
             item.Model = null;
             item.Destructible = null;
             item.Keywords = null;
@@ -2571,7 +2524,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Water.Clear();
             item.Flags = default;
             item.ActivationAngle = default;
-            item.INAM = default;
+            item.InvertFacing = default(Boolean);
             item.Conditions = null;
             item.NavmeshGeometry = null;
             base.Clear(item);
@@ -2595,8 +2548,8 @@ namespace Mutagen.Bethesda.Starfield
             obj.Transforms?.RemapLinks(mapping);
             obj.SnapTemplate.Relink(mapping);
             obj.SnapBehavior.Relink(mapping);
+            obj.DefaultLayer.Relink(mapping);
             obj.Components.RemapLinks(mapping);
-            obj.PTTA?.RemapLinks(mapping);
             obj.Model?.RemapLinks(mapping);
             obj.Destructible?.RemapLinks(mapping);
             obj.Keywords?.RemapLinks(mapping);
@@ -2721,14 +2674,12 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
-            ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
-            ret.ODRT = item.ODRT.EqualsWithin(rhs.ODRT);
-            ret.ObjectPlacementDefaults = EqualsMaskHelper.EqualsHelper(
-                item.ObjectPlacementDefaults,
-                rhs.ObjectPlacementDefaults,
+            ret.DirtinessScale = item.DirtinessScale.Equals(rhs.DirtinessScale);
+            ret.ObjectPaletteDefaults = EqualsMaskHelper.EqualsHelper(
+                item.ObjectPaletteDefaults,
+                rhs.ObjectPaletteDefaults,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.XALG = MemorySliceExt.SequenceEqual(item.XALG, rhs.XALG);
             ret.Transforms = EqualsMaskHelper.EqualsHelper(
                 item.Transforms,
                 rhs.Transforms,
@@ -2736,16 +2687,13 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.SnapTemplate = item.SnapTemplate.Equals(rhs.SnapTemplate);
             ret.SnapBehavior = item.SnapBehavior.Equals(rhs.SnapBehavior);
+            ret.DefaultLayer = item.DefaultLayer.Equals(rhs.DefaultLayer);
+            ret.XALG = item.XALG == rhs.XALG;
             ret.Components = item.Components.CollectionEqualsHelper(
                 rhs.Components,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.Name = object.Equals(item.Name, rhs.Name);
-            ret.PTTA = EqualsMaskHelper.EqualsHelper(
-                item.PTTA,
-                rhs.PTTA,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
@@ -2785,7 +2733,7 @@ namespace Mutagen.Bethesda.Starfield
             ret.Water = item.Water.Equals(rhs.Water);
             ret.Flags = item.Flags == rhs.Flags;
             ret.ActivationAngle = item.ActivationAngle == rhs.ActivationAngle;
-            ret.INAM = MemorySliceExt.SequenceEqual(item.INAM, rhs.INAM);
+            ret.InvertFacing = item.InvertFacing == rhs.InvertFacing;
             ret.Conditions = item.Conditions.CollectionEqualsHelper(
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -2853,25 +2801,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ObjectBounds?.Print(sb, "ObjectBounds");
             }
-            if ((printMask?.ODTY ?? true)
-                && item.ODTY is {} ODTYItem)
+            if (printMask?.DirtinessScale ?? true)
             {
-                sb.AppendItem(ODTYItem, "ODTY");
+                sb.AppendItem(item.DirtinessScale, "DirtinessScale");
             }
-            if ((printMask?.ODRT ?? true)
-                && item.ODRT is {} ODRTItem)
+            if ((printMask?.ObjectPaletteDefaults?.Overall ?? true)
+                && item.ObjectPaletteDefaults is {} ObjectPaletteDefaultsItem)
             {
-                sb.AppendItem(ODRTItem, "ODRT");
-            }
-            if ((printMask?.ObjectPlacementDefaults?.Overall ?? true)
-                && item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
-            {
-                ObjectPlacementDefaultsItem?.Print(sb, "ObjectPlacementDefaults");
-            }
-            if ((printMask?.XALG ?? true)
-                && item.XALG is {} XALGItem)
-            {
-                sb.AppendLine($"XALG => {SpanExt.ToHexString(XALGItem)}");
+                ObjectPaletteDefaultsItem?.Print(sb, "ObjectPaletteDefaults");
             }
             if ((printMask?.Transforms?.Overall ?? true)
                 && item.Transforms is {} TransformsItem)
@@ -2885,6 +2822,15 @@ namespace Mutagen.Bethesda.Starfield
             if (printMask?.SnapBehavior ?? true)
             {
                 sb.AppendItem(item.SnapBehavior.FormKeyNullable, "SnapBehavior");
+            }
+            if (printMask?.DefaultLayer ?? true)
+            {
+                sb.AppendItem(item.DefaultLayer.FormKeyNullable, "DefaultLayer");
+            }
+            if ((printMask?.XALG ?? true)
+                && item.XALG is {} XALGItem)
+            {
+                sb.AppendItem(XALGItem, "XALG");
             }
             if (printMask?.Components?.Overall ?? true)
             {
@@ -2904,11 +2850,6 @@ namespace Mutagen.Bethesda.Starfield
                 && item.Name is {} NameItem)
             {
                 sb.AppendItem(NameItem, "Name");
-            }
-            if ((printMask?.PTTA?.Overall ?? true)
-                && item.PTTA is {} PTTAItem)
-            {
-                PTTAItem?.Print(sb, "PTTA");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
@@ -3008,10 +2949,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(ActivationAngleItem, "ActivationAngle");
             }
-            if ((printMask?.INAM ?? true)
-                && item.INAM is {} INAMItem)
+            if (printMask?.InvertFacing ?? true)
             {
-                sb.AppendLine($"INAM => {SpanExt.ToHexString(INAMItem)}");
+                sb.AppendItem(item.InvertFacing, "InvertFacing");
             }
             if ((printMask?.Conditions?.Overall ?? true)
                 && item.Conditions is {} ConditionsItem)
@@ -3099,25 +3039,17 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.ODTY) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.DirtinessScale) ?? true))
             {
-                if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
+                if (!lhs.DirtinessScale.Equals(rhs.DirtinessScale)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.ODRT) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.ObjectPaletteDefaults) ?? true))
             {
-                if (!lhs.ODRT.EqualsWithin(rhs.ODRT)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.ObjectPlacementDefaults) ?? true))
-            {
-                if (EqualsMaskHelper.RefEquality(lhs.ObjectPlacementDefaults, rhs.ObjectPlacementDefaults, out var lhsObjectPlacementDefaults, out var rhsObjectPlacementDefaults, out var isObjectPlacementDefaultsEqual))
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectPaletteDefaults, rhs.ObjectPaletteDefaults, out var lhsObjectPaletteDefaults, out var rhsObjectPaletteDefaults, out var isObjectPaletteDefaultsEqual))
                 {
-                    if (!((ObjectPlacementDefaultsCommon)((IObjectPlacementDefaultsGetter)lhsObjectPlacementDefaults).CommonInstance()!).Equals(lhsObjectPlacementDefaults, rhsObjectPlacementDefaults, equalsMask?.GetSubCrystal((int)Activator_FieldIndex.ObjectPlacementDefaults))) return false;
+                    if (!((ObjectPaletteDefaultsCommon)((IObjectPaletteDefaultsGetter)lhsObjectPaletteDefaults).CommonInstance()!).Equals(lhsObjectPaletteDefaults, rhsObjectPaletteDefaults, equalsMask?.GetSubCrystal((int)Activator_FieldIndex.ObjectPaletteDefaults))) return false;
                 }
-                else if (!isObjectPlacementDefaultsEqual) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.XALG) ?? true))
-            {
-                if (!MemorySliceExt.SequenceEqual(lhs.XALG, rhs.XALG)) return false;
+                else if (!isObjectPaletteDefaultsEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.Transforms) ?? true))
             {
@@ -3135,6 +3067,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.SnapBehavior.Equals(rhs.SnapBehavior)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.DefaultLayer) ?? true))
+            {
+                if (!lhs.DefaultLayer.Equals(rhs.DefaultLayer)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.XALG) ?? true))
+            {
+                if (lhs.XALG != rhs.XALG) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.Components) ?? true))
             {
                 if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Activator_FieldIndex.Components)))) return false;
@@ -3142,14 +3082,6 @@ namespace Mutagen.Bethesda.Starfield
             if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.Name) ?? true))
             {
                 if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.PTTA) ?? true))
-            {
-                if (EqualsMaskHelper.RefEquality(lhs.PTTA, rhs.PTTA, out var lhsPTTA, out var rhsPTTA, out var isPTTAEqual))
-                {
-                    if (!((PTTACommon)((IPTTAGetter)lhsPTTA).CommonInstance()!).Equals(lhsPTTA, rhsPTTA, equalsMask?.GetSubCrystal((int)Activator_FieldIndex.PTTA))) return false;
-                }
-                else if (!isPTTAEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.Model) ?? true))
             {
@@ -3223,9 +3155,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.ActivationAngle != rhs.ActivationAngle) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.INAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.InvertFacing) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.INAM, rhs.INAM)) return false;
+                if (lhs.InvertFacing != rhs.InvertFacing) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Activator_FieldIndex.Conditions) ?? true))
             {
@@ -3272,21 +3204,10 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(VirtualMachineAdapteritem);
             }
             hash.Add(item.ObjectBounds);
-            if (item.ODTY is {} ODTYitem)
+            hash.Add(item.DirtinessScale);
+            if (item.ObjectPaletteDefaults is {} ObjectPaletteDefaultsitem)
             {
-                hash.Add(ODTYitem);
-            }
-            if (item.ODRT is {} ODRTitem)
-            {
-                hash.Add(ODRTitem);
-            }
-            if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsitem)
-            {
-                hash.Add(ObjectPlacementDefaultsitem);
-            }
-            if (item.XALG is {} XALGItem)
-            {
-                hash.Add(XALGItem);
+                hash.Add(ObjectPaletteDefaultsitem);
             }
             if (item.Transforms is {} Transformsitem)
             {
@@ -3294,14 +3215,15 @@ namespace Mutagen.Bethesda.Starfield
             }
             hash.Add(item.SnapTemplate);
             hash.Add(item.SnapBehavior);
+            hash.Add(item.DefaultLayer);
+            if (item.XALG is {} XALGitem)
+            {
+                hash.Add(XALGitem);
+            }
             hash.Add(item.Components);
             if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
-            }
-            if (item.PTTA is {} PTTAitem)
-            {
-                hash.Add(PTTAitem);
             }
             if (item.Model is {} Modelitem)
             {
@@ -3344,10 +3266,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(ActivationAngleitem);
             }
-            if (item.INAM is {} INAMItem)
-            {
-                hash.Add(INAMItem);
-            }
+            hash.Add(item.InvertFacing);
             hash.Add(item.Conditions);
             if (item.NavmeshGeometry is {} NavmeshGeometryitem)
             {
@@ -3404,17 +3323,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return SnapBehaviorInfo;
             }
+            if (FormLinkInformation.TryFactory(obj.DefaultLayer, out var DefaultLayerInfo))
+            {
+                yield return DefaultLayerInfo;
+            }
             foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
-            }
-            if (obj.PTTA is {} PTTAItems)
-            {
-                foreach (var item in PTTAItems.EnumerateFormLinks())
-                {
-                    yield return item;
-                }
             }
             if (obj.Model is {} ModelItems)
             {
@@ -3637,28 +3553,24 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.ODTY) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.DirtinessScale) ?? true))
             {
-                item.ODTY = rhs.ODTY;
+                item.DirtinessScale = rhs.DirtinessScale;
             }
-            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.ODRT) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.ObjectPaletteDefaults) ?? true))
             {
-                item.ODRT = rhs.ODRT;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.ObjectPlacementDefaults) ?? true))
-            {
-                errorMask?.PushIndex((int)Activator_FieldIndex.ObjectPlacementDefaults);
+                errorMask?.PushIndex((int)Activator_FieldIndex.ObjectPaletteDefaults);
                 try
                 {
-                    if(rhs.ObjectPlacementDefaults is {} rhsObjectPlacementDefaults)
+                    if(rhs.ObjectPaletteDefaults is {} rhsObjectPaletteDefaults)
                     {
-                        item.ObjectPlacementDefaults = rhsObjectPlacementDefaults.DeepCopy(
+                        item.ObjectPaletteDefaults = rhsObjectPaletteDefaults.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Activator_FieldIndex.ObjectPlacementDefaults));
+                            copyMask?.GetSubCrystal((int)Activator_FieldIndex.ObjectPaletteDefaults));
                     }
                     else
                     {
-                        item.ObjectPlacementDefaults = default;
+                        item.ObjectPaletteDefaults = default;
                     }
                 }
                 catch (Exception ex)
@@ -3669,17 +3581,6 @@ namespace Mutagen.Bethesda.Starfield
                 finally
                 {
                     errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.XALG) ?? true))
-            {
-                if(rhs.XALG is {} XALGrhs)
-                {
-                    item.XALG = XALGrhs.ToArray();
-                }
-                else
-                {
-                    item.XALG = default;
                 }
             }
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.Transforms) ?? true))
@@ -3716,6 +3617,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.SnapBehavior.SetTo(rhs.SnapBehavior.FormKeyNullable);
             }
+            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.DefaultLayer) ?? true))
+            {
+                item.DefaultLayer.SetTo(rhs.DefaultLayer.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.XALG) ?? true))
+            {
+                item.XALG = rhs.XALG;
+            }
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.Components) ?? true))
             {
                 errorMask?.PushIndex((int)Activator_FieldIndex.Components);
@@ -3743,32 +3652,6 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.Name) ?? true))
             {
                 item.Name = rhs.Name?.DeepCopy();
-            }
-            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.PTTA) ?? true))
-            {
-                errorMask?.PushIndex((int)Activator_FieldIndex.PTTA);
-                try
-                {
-                    if(rhs.PTTA is {} rhsPTTA)
-                    {
-                        item.PTTA = rhsPTTA.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)Activator_FieldIndex.PTTA));
-                    }
-                    else
-                    {
-                        item.PTTA = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
             }
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.Model) ?? true))
             {
@@ -3988,16 +3871,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ActivationAngle = rhs.ActivationAngle;
             }
-            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.INAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.InvertFacing) ?? true))
             {
-                if(rhs.INAM is {} INAMrhs)
-                {
-                    item.INAM = INAMrhs.ToArray();
-                }
-                else
-                {
-                    item.INAM = default;
-                }
+                item.InvertFacing = rhs.InvertFacing;
             }
             if ((copyMask?.GetShouldTranslate((int)Activator_FieldIndex.Conditions) ?? true))
             {
@@ -4238,25 +4114,18 @@ namespace Mutagen.Bethesda.Starfield
                 item: ObjectBoundsItem,
                 writer: writer,
                 translationParams: translationParams);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            PercentBinaryTranslation.Write(
                 writer: writer,
-                item: item.ODTY,
+                item: item.DirtinessScale,
+                integerType: FloatIntegerType.UInt,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.ODRT,
-                header: translationParams.ConvertToCustom(RecordTypes.ODRT));
-            if (item.ObjectPlacementDefaults is {} ObjectPlacementDefaultsItem)
+            if (item.ObjectPaletteDefaults is {} ObjectPaletteDefaultsItem)
             {
-                ((ObjectPlacementDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPlacementDefaultsItem).BinaryWriteTranslator).Write(
-                    item: ObjectPlacementDefaultsItem,
+                ((ObjectPaletteDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPaletteDefaultsItem).BinaryWriteTranslator).Write(
+                    item: ObjectPaletteDefaultsItem,
                     writer: writer,
                     translationParams: translationParams);
             }
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.XALG,
-                header: translationParams.ConvertToCustom(RecordTypes.XALG));
             if (item.Transforms is {} TransformsItem)
             {
                 ((TransformsBinaryWriteTranslation)((IBinaryItem)TransformsItem).BinaryWriteTranslator).Write(
@@ -4272,6 +4141,14 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.SnapBehavior,
                 header: translationParams.ConvertToCustom(RecordTypes.SNBH));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.DefaultLayer,
+                header: translationParams.ConvertToCustom(RecordTypes.DEFL));
+            UInt64BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.XALG,
+                header: translationParams.ConvertToCustom(RecordTypes.XALG));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
                 writer: writer,
                 items: item.Components,
@@ -4289,13 +4166,6 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            if (item.PTTA is {} PTTAItem)
-            {
-                ((PTTABinaryWriteTranslation)((IBinaryItem)PTTAItem).BinaryWriteTranslator).Write(
-                    item: PTTAItem,
-                    writer: writer,
-                    translationParams: translationParams);
-            }
             if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
@@ -4396,9 +4266,9 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.ActivationAngle,
                 header: translationParams.ConvertToCustom(RecordTypes.JNAM));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteAsMarker(
                 writer: writer,
-                item: item.INAM,
+                item: item.InvertFacing,
                 header: translationParams.ConvertToCustom(RecordTypes.INAM));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.WriteWithCounter(
                 writer: writer,
@@ -4503,25 +4373,15 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ODTY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Activator_FieldIndex.ODTY;
-                }
-                case RecordTypeInts.ODRT:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ODRT = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Activator_FieldIndex.ODRT;
+                    item.DirtinessScale = PercentBinaryTranslation.Parse(
+                        reader: frame,
+                        integerType: FloatIntegerType.UInt);
+                    return (int)Activator_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.OPDS:
                 {
-                    item.ObjectPlacementDefaults = Mutagen.Bethesda.Starfield.ObjectPlacementDefaults.CreateFromBinary(frame: frame);
-                    return (int)Activator_FieldIndex.ObjectPlacementDefaults;
-                }
-                case RecordTypeInts.XALG:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XALG = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Activator_FieldIndex.XALG;
+                    item.ObjectPaletteDefaults = Mutagen.Bethesda.Starfield.ObjectPaletteDefaults.CreateFromBinary(frame: frame);
+                    return (int)Activator_FieldIndex.ObjectPaletteDefaults;
                 }
                 case RecordTypeInts.PTT2:
                 {
@@ -4539,6 +4399,18 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SnapBehavior.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Activator_FieldIndex.SnapBehavior;
+                }
+                case RecordTypeInts.DEFL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DefaultLayer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Activator_FieldIndex.DefaultLayer;
+                }
+                case RecordTypeInts.XALG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XALG = frame.ReadUInt64();
+                    return (int)Activator_FieldIndex.XALG;
                 }
                 case RecordTypeInts.BFCB:
                 {
@@ -4561,16 +4433,9 @@ namespace Mutagen.Bethesda.Starfield
                         parseWhole: true);
                     return (int)Activator_FieldIndex.Name;
                 }
-                case RecordTypeInts.PTTA:
-                {
-                    item.PTTA = Mutagen.Bethesda.Starfield.PTTA.CreateFromBinary(frame: frame);
-                    return (int)Activator_FieldIndex.PTTA;
-                }
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -4690,9 +4555,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.INAM:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.INAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)Activator_FieldIndex.INAM;
+                    item.InvertFacing = true;
+                    return (int)Activator_FieldIndex.InvertFacing;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
@@ -4790,21 +4654,13 @@ namespace Mutagen.Bethesda.Starfield
         private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
-        #region ODTY
-        private int? _ODTYLocation;
-        public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region DirtinessScale
+        private int? _DirtinessScaleLocation;
+        public Percent DirtinessScale => _DirtinessScaleLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DirtinessScaleLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region ODRT
-        private int? _ODRTLocation;
-        public Single? ODRT => _ODRTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODRTLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
-        #endregion
-        #region ObjectPlacementDefaults
-        private RangeInt32? _ObjectPlacementDefaultsLocation;
-        public IObjectPlacementDefaultsGetter? ObjectPlacementDefaults => _ObjectPlacementDefaultsLocation.HasValue ? ObjectPlacementDefaultsBinaryOverlay.ObjectPlacementDefaultsFactory(_recordData.Slice(_ObjectPlacementDefaultsLocation!.Value.Min), _package) : default;
-        #endregion
-        #region XALG
-        private int? _XALGLocation;
-        public ReadOnlyMemorySlice<Byte>? XALG => _XALGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region ObjectPaletteDefaults
+        private RangeInt32? _ObjectPaletteDefaultsLocation;
+        public IObjectPaletteDefaultsGetter? ObjectPaletteDefaults => _ObjectPaletteDefaultsLocation.HasValue ? ObjectPaletteDefaultsBinaryOverlay.ObjectPaletteDefaultsFactory(_recordData.Slice(_ObjectPaletteDefaultsLocation!.Value.Min), _package) : default;
         #endregion
         #region Transforms
         private RangeInt32? _TransformsLocation;
@@ -4818,6 +4674,14 @@ namespace Mutagen.Bethesda.Starfield
         private int? _SnapBehaviorLocation;
         public IFormLinkNullableGetter<ISnapTemplateGetter> SnapBehavior => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISnapTemplateGetter>(_package, _recordData, _SnapBehaviorLocation);
         #endregion
+        #region DefaultLayer
+        private int? _DefaultLayerLocation;
+        public IFormLinkNullableGetter<ILayerGetter> DefaultLayer => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILayerGetter>(_package, _recordData, _DefaultLayerLocation);
+        #endregion
+        #region XALG
+        private int? _XALGLocation;
+        public UInt64? XALG => _XALGLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants)) : default(UInt64?);
+        #endregion
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         #region Name
         private int? _NameLocation;
@@ -4830,10 +4694,6 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter ITranslatedNamedRequiredGetter.Name => this.Name ?? TranslatedString.Empty;
         #endregion
-        #endregion
-        #region PTTA
-        private RangeInt32? _PTTALocation;
-        public IPTTAGetter? PTTA => _PTTALocation.HasValue ? PTTABinaryOverlay.PTTAFactory(_recordData.Slice(_PTTALocation!.Value.Min), _package) : default;
         #endregion
         public IModelGetter? Model { get; private set; }
         public IDestructibleGetter? Destructible { get; private set; }
@@ -4873,9 +4733,9 @@ namespace Mutagen.Bethesda.Starfield
         private int? _ActivationAngleLocation;
         public UInt16? ActivationAngle => _ActivationAngleLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActivationAngleLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
         #endregion
-        #region INAM
-        private int? _INAMLocation;
-        public ReadOnlyMemorySlice<Byte>? INAM => _INAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _INAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region InvertFacing
+        private int? _InvertFacingLocation;
+        public Boolean InvertFacing => _InvertFacingLocation.HasValue ? true : default(Boolean);
         #endregion
         public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }
         #region NavmeshGeometry
@@ -4968,23 +4828,13 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ODTY:
                 {
-                    _ODTYLocation = (stream.Position - offset);
-                    return (int)Activator_FieldIndex.ODTY;
-                }
-                case RecordTypeInts.ODRT:
-                {
-                    _ODRTLocation = (stream.Position - offset);
-                    return (int)Activator_FieldIndex.ODRT;
+                    _DirtinessScaleLocation = (stream.Position - offset);
+                    return (int)Activator_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.OPDS:
                 {
-                    _ObjectPlacementDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                    return (int)Activator_FieldIndex.ObjectPlacementDefaults;
-                }
-                case RecordTypeInts.XALG:
-                {
-                    _XALGLocation = (stream.Position - offset);
-                    return (int)Activator_FieldIndex.XALG;
+                    _ObjectPaletteDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Activator_FieldIndex.ObjectPaletteDefaults;
                 }
                 case RecordTypeInts.PTT2:
                 {
@@ -5001,6 +4851,16 @@ namespace Mutagen.Bethesda.Starfield
                     _SnapBehaviorLocation = (stream.Position - offset);
                     return (int)Activator_FieldIndex.SnapBehavior;
                 }
+                case RecordTypeInts.DEFL:
+                {
+                    _DefaultLayerLocation = (stream.Position - offset);
+                    return (int)Activator_FieldIndex.DefaultLayer;
+                }
+                case RecordTypeInts.XALG:
+                {
+                    _XALGLocation = (stream.Position - offset);
+                    return (int)Activator_FieldIndex.XALG;
+                }
                 case RecordTypeInts.BFCB:
                 {
                     this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
@@ -5015,16 +4875,9 @@ namespace Mutagen.Bethesda.Starfield
                     _NameLocation = (stream.Position - offset);
                     return (int)Activator_FieldIndex.Name;
                 }
-                case RecordTypeInts.PTTA:
-                {
-                    _PTTALocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                    return (int)Activator_FieldIndex.PTTA;
-                }
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -5135,8 +4988,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.INAM:
                 {
-                    _INAMLocation = (stream.Position - offset);
-                    return (int)Activator_FieldIndex.INAM;
+                    _InvertFacingLocation = (stream.Position - offset);
+                    return (int)Activator_FieldIndex.InvertFacing;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:

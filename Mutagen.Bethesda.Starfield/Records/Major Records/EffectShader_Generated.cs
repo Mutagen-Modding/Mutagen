@@ -82,55 +82,55 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IEffectSequenceGetter> IEffectShaderGetter.EffectSequence => this.EffectSequence;
         #endregion
-        #region DNAMFloat1
-        public Single DNAMFloat1 { get; set; } = default(Single);
+        #region EdgeEffectFallOff
+        public Single EdgeEffectFallOff { get; set; } = default(Single);
         #endregion
-        #region DNAMColor
-        public Color DNAMColor { get; set; } = default(Color);
+        #region EdgeEffectColor
+        public Color EdgeEffectColor { get; set; } = default(Color);
         #endregion
-        #region DNAMFloat2
-        public Single DNAMFloat2 { get; set; } = default(Single);
+        #region EdgeEffectAlphaFadeInTime
+        public Single EdgeEffectAlphaFadeInTime { get; set; } = default(Single);
         #endregion
-        #region DNAMFloat3
-        public Single DNAMFloat3 { get; set; } = default(Single);
+        #region EdgeEffectFullAlphaTime
+        public Single EdgeEffectFullAlphaTime { get; set; } = default(Single);
         #endregion
-        #region DNAMFloat4
-        public Single DNAMFloat4 { get; set; } = default(Single);
+        #region EdgeEffectAlphaFadeOutTime
+        public Single EdgeEffectAlphaFadeOutTime { get; set; } = default(Single);
         #endregion
-        #region DNAMFloat5
-        public Single DNAMFloat5 { get; set; } = default(Single);
+        #region EdgeEffectPersistentAlphaRatio
+        public Percent EdgeEffectPersistentAlphaRatio { get; set; } = default(Percent);
         #endregion
-        #region DNAMFloat6
-        public Single DNAMFloat6 { get; set; } = default(Single);
+        #region EdgeEffectAlphaPulseAmplitude
+        public Single EdgeEffectAlphaPulseAmplitude { get; set; } = default(Single);
         #endregion
-        #region DNAMFloat8
-        public Single DNAMFloat8 { get; set; } = default(Single);
+        #region EdgeEffectAlphaPulseFrequency
+        public Single EdgeEffectAlphaPulseFrequency { get; set; } = default(Single);
         #endregion
-        #region DNAMFloat9
-        public Single DNAMFloat9 { get; set; } = default(Single);
+        #region EdgeEffectFullAlphaRatio
+        public Percent EdgeEffectFullAlphaRatio { get; set; } = default(Percent);
         #endregion
-        #region DNAMFloat10
-        public Single DNAMFloat10 { get; set; } = default(Single);
+        #region HolesAlphaTestAnimationStartTime
+        public Single HolesAlphaTestAnimationStartTime { get; set; } = default(Single);
         #endregion
-        #region DNAMFloat11
-        public Single DNAMFloat11 { get; set; } = default(Single);
+        #region HolesAlphaTestAnimationStopTime
+        public Single HolesAlphaTestAnimationStopTime { get; set; } = default(Single);
         #endregion
-        #region DNAMFloat12
-        public Single DNAMFloat12 { get; set; } = default(Single);
+        #region HolesAlphaTestAnimationStartValue
+        public Single HolesAlphaTestAnimationStartValue { get; set; } = default(Single);
         #endregion
-        #region DNAMFloat13
-        public Single DNAMFloat13 { get; set; } = default(Single);
+        #region HolesAlphaTestAnimationStopValue
+        public Single HolesAlphaTestAnimationStopValue { get; set; } = default(Single);
         #endregion
-        #region DNAMSound
-        public SoundReference DNAMSound { get; set; } = new SoundReference();
+        #region Sounds
+        public SoundReference Sounds { get; set; } = new SoundReference();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISoundReferenceGetter IEffectShaderGetter.DNAMSound => DNAMSound;
+        ISoundReferenceGetter IEffectShaderGetter.Sounds => Sounds;
         #endregion
-        #region DNAMInt1
-        public Int32 DNAMInt1 { get; set; } = default(Int32);
+        #region BoneDepth
+        public SByte BoneDepth { get; set; } = default(SByte);
         #endregion
-        #region DNAMInt2
-        public SByte DNAMInt2 { get; set; } = default(SByte);
+        #region Flags
+        public EffectShader.Flag Flags { get; set; } = default(EffectShader.Flag);
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -177,22 +177,22 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.EffectSequence = initialValue;
-                this.DNAMFloat1 = initialValue;
-                this.DNAMColor = initialValue;
-                this.DNAMFloat2 = initialValue;
-                this.DNAMFloat3 = initialValue;
-                this.DNAMFloat4 = initialValue;
-                this.DNAMFloat5 = initialValue;
-                this.DNAMFloat6 = initialValue;
-                this.DNAMFloat8 = initialValue;
-                this.DNAMFloat9 = initialValue;
-                this.DNAMFloat10 = initialValue;
-                this.DNAMFloat11 = initialValue;
-                this.DNAMFloat12 = initialValue;
-                this.DNAMFloat13 = initialValue;
-                this.DNAMSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
-                this.DNAMInt1 = initialValue;
-                this.DNAMInt2 = initialValue;
+                this.EdgeEffectFallOff = initialValue;
+                this.EdgeEffectColor = initialValue;
+                this.EdgeEffectAlphaFadeInTime = initialValue;
+                this.EdgeEffectFullAlphaTime = initialValue;
+                this.EdgeEffectAlphaFadeOutTime = initialValue;
+                this.EdgeEffectPersistentAlphaRatio = initialValue;
+                this.EdgeEffectAlphaPulseAmplitude = initialValue;
+                this.EdgeEffectAlphaPulseFrequency = initialValue;
+                this.EdgeEffectFullAlphaRatio = initialValue;
+                this.HolesAlphaTestAnimationStartTime = initialValue;
+                this.HolesAlphaTestAnimationStopTime = initialValue;
+                this.HolesAlphaTestAnimationStartValue = initialValue;
+                this.HolesAlphaTestAnimationStopValue = initialValue;
+                this.Sounds = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.BoneDepth = initialValue;
+                this.Flags = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
             }
 
@@ -206,22 +206,22 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem Components,
                 TItem EffectSequence,
-                TItem DNAMFloat1,
-                TItem DNAMColor,
-                TItem DNAMFloat2,
-                TItem DNAMFloat3,
-                TItem DNAMFloat4,
-                TItem DNAMFloat5,
-                TItem DNAMFloat6,
-                TItem DNAMFloat8,
-                TItem DNAMFloat9,
-                TItem DNAMFloat10,
-                TItem DNAMFloat11,
-                TItem DNAMFloat12,
-                TItem DNAMFloat13,
-                TItem DNAMSound,
-                TItem DNAMInt1,
-                TItem DNAMInt2,
+                TItem EdgeEffectFallOff,
+                TItem EdgeEffectColor,
+                TItem EdgeEffectAlphaFadeInTime,
+                TItem EdgeEffectFullAlphaTime,
+                TItem EdgeEffectAlphaFadeOutTime,
+                TItem EdgeEffectPersistentAlphaRatio,
+                TItem EdgeEffectAlphaPulseAmplitude,
+                TItem EdgeEffectAlphaPulseFrequency,
+                TItem EdgeEffectFullAlphaRatio,
+                TItem HolesAlphaTestAnimationStartTime,
+                TItem HolesAlphaTestAnimationStopTime,
+                TItem HolesAlphaTestAnimationStartValue,
+                TItem HolesAlphaTestAnimationStopValue,
+                TItem Sounds,
+                TItem BoneDepth,
+                TItem Flags,
                 TItem Model)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -234,22 +234,22 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.EffectSequence = EffectSequence;
-                this.DNAMFloat1 = DNAMFloat1;
-                this.DNAMColor = DNAMColor;
-                this.DNAMFloat2 = DNAMFloat2;
-                this.DNAMFloat3 = DNAMFloat3;
-                this.DNAMFloat4 = DNAMFloat4;
-                this.DNAMFloat5 = DNAMFloat5;
-                this.DNAMFloat6 = DNAMFloat6;
-                this.DNAMFloat8 = DNAMFloat8;
-                this.DNAMFloat9 = DNAMFloat9;
-                this.DNAMFloat10 = DNAMFloat10;
-                this.DNAMFloat11 = DNAMFloat11;
-                this.DNAMFloat12 = DNAMFloat12;
-                this.DNAMFloat13 = DNAMFloat13;
-                this.DNAMSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(DNAMSound, new SoundReference.Mask<TItem>(DNAMSound));
-                this.DNAMInt1 = DNAMInt1;
-                this.DNAMInt2 = DNAMInt2;
+                this.EdgeEffectFallOff = EdgeEffectFallOff;
+                this.EdgeEffectColor = EdgeEffectColor;
+                this.EdgeEffectAlphaFadeInTime = EdgeEffectAlphaFadeInTime;
+                this.EdgeEffectFullAlphaTime = EdgeEffectFullAlphaTime;
+                this.EdgeEffectAlphaFadeOutTime = EdgeEffectAlphaFadeOutTime;
+                this.EdgeEffectPersistentAlphaRatio = EdgeEffectPersistentAlphaRatio;
+                this.EdgeEffectAlphaPulseAmplitude = EdgeEffectAlphaPulseAmplitude;
+                this.EdgeEffectAlphaPulseFrequency = EdgeEffectAlphaPulseFrequency;
+                this.EdgeEffectFullAlphaRatio = EdgeEffectFullAlphaRatio;
+                this.HolesAlphaTestAnimationStartTime = HolesAlphaTestAnimationStartTime;
+                this.HolesAlphaTestAnimationStopTime = HolesAlphaTestAnimationStopTime;
+                this.HolesAlphaTestAnimationStartValue = HolesAlphaTestAnimationStartValue;
+                this.HolesAlphaTestAnimationStopValue = HolesAlphaTestAnimationStopValue;
+                this.Sounds = new MaskItem<TItem, SoundReference.Mask<TItem>?>(Sounds, new SoundReference.Mask<TItem>(Sounds));
+                this.BoneDepth = BoneDepth;
+                this.Flags = Flags;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
             }
 
@@ -264,22 +264,22 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public TItem EffectSequence;
-            public TItem DNAMFloat1;
-            public TItem DNAMColor;
-            public TItem DNAMFloat2;
-            public TItem DNAMFloat3;
-            public TItem DNAMFloat4;
-            public TItem DNAMFloat5;
-            public TItem DNAMFloat6;
-            public TItem DNAMFloat8;
-            public TItem DNAMFloat9;
-            public TItem DNAMFloat10;
-            public TItem DNAMFloat11;
-            public TItem DNAMFloat12;
-            public TItem DNAMFloat13;
-            public MaskItem<TItem, SoundReference.Mask<TItem>?>? DNAMSound { get; set; }
-            public TItem DNAMInt1;
-            public TItem DNAMInt2;
+            public TItem EdgeEffectFallOff;
+            public TItem EdgeEffectColor;
+            public TItem EdgeEffectAlphaFadeInTime;
+            public TItem EdgeEffectFullAlphaTime;
+            public TItem EdgeEffectAlphaFadeOutTime;
+            public TItem EdgeEffectPersistentAlphaRatio;
+            public TItem EdgeEffectAlphaPulseAmplitude;
+            public TItem EdgeEffectAlphaPulseFrequency;
+            public TItem EdgeEffectFullAlphaRatio;
+            public TItem HolesAlphaTestAnimationStartTime;
+            public TItem HolesAlphaTestAnimationStopTime;
+            public TItem HolesAlphaTestAnimationStartValue;
+            public TItem HolesAlphaTestAnimationStopValue;
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? Sounds { get; set; }
+            public TItem BoneDepth;
+            public TItem Flags;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             #endregion
 
@@ -296,22 +296,22 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.EffectSequence, rhs.EffectSequence)) return false;
-                if (!object.Equals(this.DNAMFloat1, rhs.DNAMFloat1)) return false;
-                if (!object.Equals(this.DNAMColor, rhs.DNAMColor)) return false;
-                if (!object.Equals(this.DNAMFloat2, rhs.DNAMFloat2)) return false;
-                if (!object.Equals(this.DNAMFloat3, rhs.DNAMFloat3)) return false;
-                if (!object.Equals(this.DNAMFloat4, rhs.DNAMFloat4)) return false;
-                if (!object.Equals(this.DNAMFloat5, rhs.DNAMFloat5)) return false;
-                if (!object.Equals(this.DNAMFloat6, rhs.DNAMFloat6)) return false;
-                if (!object.Equals(this.DNAMFloat8, rhs.DNAMFloat8)) return false;
-                if (!object.Equals(this.DNAMFloat9, rhs.DNAMFloat9)) return false;
-                if (!object.Equals(this.DNAMFloat10, rhs.DNAMFloat10)) return false;
-                if (!object.Equals(this.DNAMFloat11, rhs.DNAMFloat11)) return false;
-                if (!object.Equals(this.DNAMFloat12, rhs.DNAMFloat12)) return false;
-                if (!object.Equals(this.DNAMFloat13, rhs.DNAMFloat13)) return false;
-                if (!object.Equals(this.DNAMSound, rhs.DNAMSound)) return false;
-                if (!object.Equals(this.DNAMInt1, rhs.DNAMInt1)) return false;
-                if (!object.Equals(this.DNAMInt2, rhs.DNAMInt2)) return false;
+                if (!object.Equals(this.EdgeEffectFallOff, rhs.EdgeEffectFallOff)) return false;
+                if (!object.Equals(this.EdgeEffectColor, rhs.EdgeEffectColor)) return false;
+                if (!object.Equals(this.EdgeEffectAlphaFadeInTime, rhs.EdgeEffectAlphaFadeInTime)) return false;
+                if (!object.Equals(this.EdgeEffectFullAlphaTime, rhs.EdgeEffectFullAlphaTime)) return false;
+                if (!object.Equals(this.EdgeEffectAlphaFadeOutTime, rhs.EdgeEffectAlphaFadeOutTime)) return false;
+                if (!object.Equals(this.EdgeEffectPersistentAlphaRatio, rhs.EdgeEffectPersistentAlphaRatio)) return false;
+                if (!object.Equals(this.EdgeEffectAlphaPulseAmplitude, rhs.EdgeEffectAlphaPulseAmplitude)) return false;
+                if (!object.Equals(this.EdgeEffectAlphaPulseFrequency, rhs.EdgeEffectAlphaPulseFrequency)) return false;
+                if (!object.Equals(this.EdgeEffectFullAlphaRatio, rhs.EdgeEffectFullAlphaRatio)) return false;
+                if (!object.Equals(this.HolesAlphaTestAnimationStartTime, rhs.HolesAlphaTestAnimationStartTime)) return false;
+                if (!object.Equals(this.HolesAlphaTestAnimationStopTime, rhs.HolesAlphaTestAnimationStopTime)) return false;
+                if (!object.Equals(this.HolesAlphaTestAnimationStartValue, rhs.HolesAlphaTestAnimationStartValue)) return false;
+                if (!object.Equals(this.HolesAlphaTestAnimationStopValue, rhs.HolesAlphaTestAnimationStopValue)) return false;
+                if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
+                if (!object.Equals(this.BoneDepth, rhs.BoneDepth)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 return true;
             }
@@ -320,22 +320,22 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.Components);
                 hash.Add(this.EffectSequence);
-                hash.Add(this.DNAMFloat1);
-                hash.Add(this.DNAMColor);
-                hash.Add(this.DNAMFloat2);
-                hash.Add(this.DNAMFloat3);
-                hash.Add(this.DNAMFloat4);
-                hash.Add(this.DNAMFloat5);
-                hash.Add(this.DNAMFloat6);
-                hash.Add(this.DNAMFloat8);
-                hash.Add(this.DNAMFloat9);
-                hash.Add(this.DNAMFloat10);
-                hash.Add(this.DNAMFloat11);
-                hash.Add(this.DNAMFloat12);
-                hash.Add(this.DNAMFloat13);
-                hash.Add(this.DNAMSound);
-                hash.Add(this.DNAMInt1);
-                hash.Add(this.DNAMInt2);
+                hash.Add(this.EdgeEffectFallOff);
+                hash.Add(this.EdgeEffectColor);
+                hash.Add(this.EdgeEffectAlphaFadeInTime);
+                hash.Add(this.EdgeEffectFullAlphaTime);
+                hash.Add(this.EdgeEffectAlphaFadeOutTime);
+                hash.Add(this.EdgeEffectPersistentAlphaRatio);
+                hash.Add(this.EdgeEffectAlphaPulseAmplitude);
+                hash.Add(this.EdgeEffectAlphaPulseFrequency);
+                hash.Add(this.EdgeEffectFullAlphaRatio);
+                hash.Add(this.HolesAlphaTestAnimationStartTime);
+                hash.Add(this.HolesAlphaTestAnimationStopTime);
+                hash.Add(this.HolesAlphaTestAnimationStartValue);
+                hash.Add(this.HolesAlphaTestAnimationStopValue);
+                hash.Add(this.Sounds);
+                hash.Add(this.BoneDepth);
+                hash.Add(this.Flags);
                 hash.Add(this.Model);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -360,26 +360,26 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (!eval(this.EffectSequence)) return false;
-                if (!eval(this.DNAMFloat1)) return false;
-                if (!eval(this.DNAMColor)) return false;
-                if (!eval(this.DNAMFloat2)) return false;
-                if (!eval(this.DNAMFloat3)) return false;
-                if (!eval(this.DNAMFloat4)) return false;
-                if (!eval(this.DNAMFloat5)) return false;
-                if (!eval(this.DNAMFloat6)) return false;
-                if (!eval(this.DNAMFloat8)) return false;
-                if (!eval(this.DNAMFloat9)) return false;
-                if (!eval(this.DNAMFloat10)) return false;
-                if (!eval(this.DNAMFloat11)) return false;
-                if (!eval(this.DNAMFloat12)) return false;
-                if (!eval(this.DNAMFloat13)) return false;
-                if (DNAMSound != null)
+                if (!eval(this.EdgeEffectFallOff)) return false;
+                if (!eval(this.EdgeEffectColor)) return false;
+                if (!eval(this.EdgeEffectAlphaFadeInTime)) return false;
+                if (!eval(this.EdgeEffectFullAlphaTime)) return false;
+                if (!eval(this.EdgeEffectAlphaFadeOutTime)) return false;
+                if (!eval(this.EdgeEffectPersistentAlphaRatio)) return false;
+                if (!eval(this.EdgeEffectAlphaPulseAmplitude)) return false;
+                if (!eval(this.EdgeEffectAlphaPulseFrequency)) return false;
+                if (!eval(this.EdgeEffectFullAlphaRatio)) return false;
+                if (!eval(this.HolesAlphaTestAnimationStartTime)) return false;
+                if (!eval(this.HolesAlphaTestAnimationStopTime)) return false;
+                if (!eval(this.HolesAlphaTestAnimationStartValue)) return false;
+                if (!eval(this.HolesAlphaTestAnimationStopValue)) return false;
+                if (Sounds != null)
                 {
-                    if (!eval(this.DNAMSound.Overall)) return false;
-                    if (this.DNAMSound.Specific != null && !this.DNAMSound.Specific.All(eval)) return false;
+                    if (!eval(this.Sounds.Overall)) return false;
+                    if (this.Sounds.Specific != null && !this.Sounds.Specific.All(eval)) return false;
                 }
-                if (!eval(this.DNAMInt1)) return false;
-                if (!eval(this.DNAMInt2)) return false;
+                if (!eval(this.BoneDepth)) return false;
+                if (!eval(this.Flags)) return false;
                 if (Model != null)
                 {
                     if (!eval(this.Model.Overall)) return false;
@@ -406,26 +406,26 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (eval(this.EffectSequence)) return true;
-                if (eval(this.DNAMFloat1)) return true;
-                if (eval(this.DNAMColor)) return true;
-                if (eval(this.DNAMFloat2)) return true;
-                if (eval(this.DNAMFloat3)) return true;
-                if (eval(this.DNAMFloat4)) return true;
-                if (eval(this.DNAMFloat5)) return true;
-                if (eval(this.DNAMFloat6)) return true;
-                if (eval(this.DNAMFloat8)) return true;
-                if (eval(this.DNAMFloat9)) return true;
-                if (eval(this.DNAMFloat10)) return true;
-                if (eval(this.DNAMFloat11)) return true;
-                if (eval(this.DNAMFloat12)) return true;
-                if (eval(this.DNAMFloat13)) return true;
-                if (DNAMSound != null)
+                if (eval(this.EdgeEffectFallOff)) return true;
+                if (eval(this.EdgeEffectColor)) return true;
+                if (eval(this.EdgeEffectAlphaFadeInTime)) return true;
+                if (eval(this.EdgeEffectFullAlphaTime)) return true;
+                if (eval(this.EdgeEffectAlphaFadeOutTime)) return true;
+                if (eval(this.EdgeEffectPersistentAlphaRatio)) return true;
+                if (eval(this.EdgeEffectAlphaPulseAmplitude)) return true;
+                if (eval(this.EdgeEffectAlphaPulseFrequency)) return true;
+                if (eval(this.EdgeEffectFullAlphaRatio)) return true;
+                if (eval(this.HolesAlphaTestAnimationStartTime)) return true;
+                if (eval(this.HolesAlphaTestAnimationStopTime)) return true;
+                if (eval(this.HolesAlphaTestAnimationStartValue)) return true;
+                if (eval(this.HolesAlphaTestAnimationStopValue)) return true;
+                if (Sounds != null)
                 {
-                    if (eval(this.DNAMSound.Overall)) return true;
-                    if (this.DNAMSound.Specific != null && this.DNAMSound.Specific.Any(eval)) return true;
+                    if (eval(this.Sounds.Overall)) return true;
+                    if (this.Sounds.Specific != null && this.Sounds.Specific.Any(eval)) return true;
                 }
-                if (eval(this.DNAMInt1)) return true;
-                if (eval(this.DNAMInt2)) return true;
+                if (eval(this.BoneDepth)) return true;
+                if (eval(this.Flags)) return true;
                 if (Model != null)
                 {
                     if (eval(this.Model.Overall)) return true;
@@ -462,22 +462,22 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 obj.EffectSequence = eval(this.EffectSequence);
-                obj.DNAMFloat1 = eval(this.DNAMFloat1);
-                obj.DNAMColor = eval(this.DNAMColor);
-                obj.DNAMFloat2 = eval(this.DNAMFloat2);
-                obj.DNAMFloat3 = eval(this.DNAMFloat3);
-                obj.DNAMFloat4 = eval(this.DNAMFloat4);
-                obj.DNAMFloat5 = eval(this.DNAMFloat5);
-                obj.DNAMFloat6 = eval(this.DNAMFloat6);
-                obj.DNAMFloat8 = eval(this.DNAMFloat8);
-                obj.DNAMFloat9 = eval(this.DNAMFloat9);
-                obj.DNAMFloat10 = eval(this.DNAMFloat10);
-                obj.DNAMFloat11 = eval(this.DNAMFloat11);
-                obj.DNAMFloat12 = eval(this.DNAMFloat12);
-                obj.DNAMFloat13 = eval(this.DNAMFloat13);
-                obj.DNAMSound = this.DNAMSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.DNAMSound.Overall), this.DNAMSound.Specific?.Translate(eval));
-                obj.DNAMInt1 = eval(this.DNAMInt1);
-                obj.DNAMInt2 = eval(this.DNAMInt2);
+                obj.EdgeEffectFallOff = eval(this.EdgeEffectFallOff);
+                obj.EdgeEffectColor = eval(this.EdgeEffectColor);
+                obj.EdgeEffectAlphaFadeInTime = eval(this.EdgeEffectAlphaFadeInTime);
+                obj.EdgeEffectFullAlphaTime = eval(this.EdgeEffectFullAlphaTime);
+                obj.EdgeEffectAlphaFadeOutTime = eval(this.EdgeEffectAlphaFadeOutTime);
+                obj.EdgeEffectPersistentAlphaRatio = eval(this.EdgeEffectPersistentAlphaRatio);
+                obj.EdgeEffectAlphaPulseAmplitude = eval(this.EdgeEffectAlphaPulseAmplitude);
+                obj.EdgeEffectAlphaPulseFrequency = eval(this.EdgeEffectAlphaPulseFrequency);
+                obj.EdgeEffectFullAlphaRatio = eval(this.EdgeEffectFullAlphaRatio);
+                obj.HolesAlphaTestAnimationStartTime = eval(this.HolesAlphaTestAnimationStartTime);
+                obj.HolesAlphaTestAnimationStopTime = eval(this.HolesAlphaTestAnimationStopTime);
+                obj.HolesAlphaTestAnimationStartValue = eval(this.HolesAlphaTestAnimationStartValue);
+                obj.HolesAlphaTestAnimationStopValue = eval(this.HolesAlphaTestAnimationStopValue);
+                obj.Sounds = this.Sounds == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.Sounds.Overall), this.Sounds.Specific?.Translate(eval));
+                obj.BoneDepth = eval(this.BoneDepth);
+                obj.Flags = eval(this.Flags);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
             }
             #endregion
@@ -520,69 +520,69 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(EffectSequence, "EffectSequence");
                     }
-                    if (printMask?.DNAMFloat1 ?? true)
+                    if (printMask?.EdgeEffectFallOff ?? true)
                     {
-                        sb.AppendItem(DNAMFloat1, "DNAMFloat1");
+                        sb.AppendItem(EdgeEffectFallOff, "EdgeEffectFallOff");
                     }
-                    if (printMask?.DNAMColor ?? true)
+                    if (printMask?.EdgeEffectColor ?? true)
                     {
-                        sb.AppendItem(DNAMColor, "DNAMColor");
+                        sb.AppendItem(EdgeEffectColor, "EdgeEffectColor");
                     }
-                    if (printMask?.DNAMFloat2 ?? true)
+                    if (printMask?.EdgeEffectAlphaFadeInTime ?? true)
                     {
-                        sb.AppendItem(DNAMFloat2, "DNAMFloat2");
+                        sb.AppendItem(EdgeEffectAlphaFadeInTime, "EdgeEffectAlphaFadeInTime");
                     }
-                    if (printMask?.DNAMFloat3 ?? true)
+                    if (printMask?.EdgeEffectFullAlphaTime ?? true)
                     {
-                        sb.AppendItem(DNAMFloat3, "DNAMFloat3");
+                        sb.AppendItem(EdgeEffectFullAlphaTime, "EdgeEffectFullAlphaTime");
                     }
-                    if (printMask?.DNAMFloat4 ?? true)
+                    if (printMask?.EdgeEffectAlphaFadeOutTime ?? true)
                     {
-                        sb.AppendItem(DNAMFloat4, "DNAMFloat4");
+                        sb.AppendItem(EdgeEffectAlphaFadeOutTime, "EdgeEffectAlphaFadeOutTime");
                     }
-                    if (printMask?.DNAMFloat5 ?? true)
+                    if (printMask?.EdgeEffectPersistentAlphaRatio ?? true)
                     {
-                        sb.AppendItem(DNAMFloat5, "DNAMFloat5");
+                        sb.AppendItem(EdgeEffectPersistentAlphaRatio, "EdgeEffectPersistentAlphaRatio");
                     }
-                    if (printMask?.DNAMFloat6 ?? true)
+                    if (printMask?.EdgeEffectAlphaPulseAmplitude ?? true)
                     {
-                        sb.AppendItem(DNAMFloat6, "DNAMFloat6");
+                        sb.AppendItem(EdgeEffectAlphaPulseAmplitude, "EdgeEffectAlphaPulseAmplitude");
                     }
-                    if (printMask?.DNAMFloat8 ?? true)
+                    if (printMask?.EdgeEffectAlphaPulseFrequency ?? true)
                     {
-                        sb.AppendItem(DNAMFloat8, "DNAMFloat8");
+                        sb.AppendItem(EdgeEffectAlphaPulseFrequency, "EdgeEffectAlphaPulseFrequency");
                     }
-                    if (printMask?.DNAMFloat9 ?? true)
+                    if (printMask?.EdgeEffectFullAlphaRatio ?? true)
                     {
-                        sb.AppendItem(DNAMFloat9, "DNAMFloat9");
+                        sb.AppendItem(EdgeEffectFullAlphaRatio, "EdgeEffectFullAlphaRatio");
                     }
-                    if (printMask?.DNAMFloat10 ?? true)
+                    if (printMask?.HolesAlphaTestAnimationStartTime ?? true)
                     {
-                        sb.AppendItem(DNAMFloat10, "DNAMFloat10");
+                        sb.AppendItem(HolesAlphaTestAnimationStartTime, "HolesAlphaTestAnimationStartTime");
                     }
-                    if (printMask?.DNAMFloat11 ?? true)
+                    if (printMask?.HolesAlphaTestAnimationStopTime ?? true)
                     {
-                        sb.AppendItem(DNAMFloat11, "DNAMFloat11");
+                        sb.AppendItem(HolesAlphaTestAnimationStopTime, "HolesAlphaTestAnimationStopTime");
                     }
-                    if (printMask?.DNAMFloat12 ?? true)
+                    if (printMask?.HolesAlphaTestAnimationStartValue ?? true)
                     {
-                        sb.AppendItem(DNAMFloat12, "DNAMFloat12");
+                        sb.AppendItem(HolesAlphaTestAnimationStartValue, "HolesAlphaTestAnimationStartValue");
                     }
-                    if (printMask?.DNAMFloat13 ?? true)
+                    if (printMask?.HolesAlphaTestAnimationStopValue ?? true)
                     {
-                        sb.AppendItem(DNAMFloat13, "DNAMFloat13");
+                        sb.AppendItem(HolesAlphaTestAnimationStopValue, "HolesAlphaTestAnimationStopValue");
                     }
-                    if (printMask?.DNAMSound?.Overall ?? true)
+                    if (printMask?.Sounds?.Overall ?? true)
                     {
-                        DNAMSound?.Print(sb);
+                        Sounds?.Print(sb);
                     }
-                    if (printMask?.DNAMInt1 ?? true)
+                    if (printMask?.BoneDepth ?? true)
                     {
-                        sb.AppendItem(DNAMInt1, "DNAMInt1");
+                        sb.AppendItem(BoneDepth, "BoneDepth");
                     }
-                    if (printMask?.DNAMInt2 ?? true)
+                    if (printMask?.Flags ?? true)
                     {
-                        sb.AppendItem(DNAMInt2, "DNAMInt2");
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
@@ -601,22 +601,22 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public Exception? EffectSequence;
-            public Exception? DNAMFloat1;
-            public Exception? DNAMColor;
-            public Exception? DNAMFloat2;
-            public Exception? DNAMFloat3;
-            public Exception? DNAMFloat4;
-            public Exception? DNAMFloat5;
-            public Exception? DNAMFloat6;
-            public Exception? DNAMFloat8;
-            public Exception? DNAMFloat9;
-            public Exception? DNAMFloat10;
-            public Exception? DNAMFloat11;
-            public Exception? DNAMFloat12;
-            public Exception? DNAMFloat13;
-            public MaskItem<Exception?, SoundReference.ErrorMask?>? DNAMSound;
-            public Exception? DNAMInt1;
-            public Exception? DNAMInt2;
+            public Exception? EdgeEffectFallOff;
+            public Exception? EdgeEffectColor;
+            public Exception? EdgeEffectAlphaFadeInTime;
+            public Exception? EdgeEffectFullAlphaTime;
+            public Exception? EdgeEffectAlphaFadeOutTime;
+            public Exception? EdgeEffectPersistentAlphaRatio;
+            public Exception? EdgeEffectAlphaPulseAmplitude;
+            public Exception? EdgeEffectAlphaPulseFrequency;
+            public Exception? EdgeEffectFullAlphaRatio;
+            public Exception? HolesAlphaTestAnimationStartTime;
+            public Exception? HolesAlphaTestAnimationStopTime;
+            public Exception? HolesAlphaTestAnimationStartValue;
+            public Exception? HolesAlphaTestAnimationStopValue;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? Sounds;
+            public Exception? BoneDepth;
+            public Exception? Flags;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             #endregion
 
@@ -630,38 +630,38 @@ namespace Mutagen.Bethesda.Starfield
                         return Components;
                     case EffectShader_FieldIndex.EffectSequence:
                         return EffectSequence;
-                    case EffectShader_FieldIndex.DNAMFloat1:
-                        return DNAMFloat1;
-                    case EffectShader_FieldIndex.DNAMColor:
-                        return DNAMColor;
-                    case EffectShader_FieldIndex.DNAMFloat2:
-                        return DNAMFloat2;
-                    case EffectShader_FieldIndex.DNAMFloat3:
-                        return DNAMFloat3;
-                    case EffectShader_FieldIndex.DNAMFloat4:
-                        return DNAMFloat4;
-                    case EffectShader_FieldIndex.DNAMFloat5:
-                        return DNAMFloat5;
-                    case EffectShader_FieldIndex.DNAMFloat6:
-                        return DNAMFloat6;
-                    case EffectShader_FieldIndex.DNAMFloat8:
-                        return DNAMFloat8;
-                    case EffectShader_FieldIndex.DNAMFloat9:
-                        return DNAMFloat9;
-                    case EffectShader_FieldIndex.DNAMFloat10:
-                        return DNAMFloat10;
-                    case EffectShader_FieldIndex.DNAMFloat11:
-                        return DNAMFloat11;
-                    case EffectShader_FieldIndex.DNAMFloat12:
-                        return DNAMFloat12;
-                    case EffectShader_FieldIndex.DNAMFloat13:
-                        return DNAMFloat13;
-                    case EffectShader_FieldIndex.DNAMSound:
-                        return DNAMSound;
-                    case EffectShader_FieldIndex.DNAMInt1:
-                        return DNAMInt1;
-                    case EffectShader_FieldIndex.DNAMInt2:
-                        return DNAMInt2;
+                    case EffectShader_FieldIndex.EdgeEffectFallOff:
+                        return EdgeEffectFallOff;
+                    case EffectShader_FieldIndex.EdgeEffectColor:
+                        return EdgeEffectColor;
+                    case EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime:
+                        return EdgeEffectAlphaFadeInTime;
+                    case EffectShader_FieldIndex.EdgeEffectFullAlphaTime:
+                        return EdgeEffectFullAlphaTime;
+                    case EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime:
+                        return EdgeEffectAlphaFadeOutTime;
+                    case EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio:
+                        return EdgeEffectPersistentAlphaRatio;
+                    case EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude:
+                        return EdgeEffectAlphaPulseAmplitude;
+                    case EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency:
+                        return EdgeEffectAlphaPulseFrequency;
+                    case EffectShader_FieldIndex.EdgeEffectFullAlphaRatio:
+                        return EdgeEffectFullAlphaRatio;
+                    case EffectShader_FieldIndex.HolesAlphaTestAnimationStartTime:
+                        return HolesAlphaTestAnimationStartTime;
+                    case EffectShader_FieldIndex.HolesAlphaTestAnimationStopTime:
+                        return HolesAlphaTestAnimationStopTime;
+                    case EffectShader_FieldIndex.HolesAlphaTestAnimationStartValue:
+                        return HolesAlphaTestAnimationStartValue;
+                    case EffectShader_FieldIndex.HolesAlphaTestAnimationStopValue:
+                        return HolesAlphaTestAnimationStopValue;
+                    case EffectShader_FieldIndex.Sounds:
+                        return Sounds;
+                    case EffectShader_FieldIndex.BoneDepth:
+                        return BoneDepth;
+                    case EffectShader_FieldIndex.Flags:
+                        return Flags;
                     case EffectShader_FieldIndex.Model:
                         return Model;
                     default:
@@ -680,53 +680,53 @@ namespace Mutagen.Bethesda.Starfield
                     case EffectShader_FieldIndex.EffectSequence:
                         this.EffectSequence = ex;
                         break;
-                    case EffectShader_FieldIndex.DNAMFloat1:
-                        this.DNAMFloat1 = ex;
+                    case EffectShader_FieldIndex.EdgeEffectFallOff:
+                        this.EdgeEffectFallOff = ex;
                         break;
-                    case EffectShader_FieldIndex.DNAMColor:
-                        this.DNAMColor = ex;
+                    case EffectShader_FieldIndex.EdgeEffectColor:
+                        this.EdgeEffectColor = ex;
                         break;
-                    case EffectShader_FieldIndex.DNAMFloat2:
-                        this.DNAMFloat2 = ex;
+                    case EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime:
+                        this.EdgeEffectAlphaFadeInTime = ex;
                         break;
-                    case EffectShader_FieldIndex.DNAMFloat3:
-                        this.DNAMFloat3 = ex;
+                    case EffectShader_FieldIndex.EdgeEffectFullAlphaTime:
+                        this.EdgeEffectFullAlphaTime = ex;
                         break;
-                    case EffectShader_FieldIndex.DNAMFloat4:
-                        this.DNAMFloat4 = ex;
+                    case EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime:
+                        this.EdgeEffectAlphaFadeOutTime = ex;
                         break;
-                    case EffectShader_FieldIndex.DNAMFloat5:
-                        this.DNAMFloat5 = ex;
+                    case EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio:
+                        this.EdgeEffectPersistentAlphaRatio = ex;
                         break;
-                    case EffectShader_FieldIndex.DNAMFloat6:
-                        this.DNAMFloat6 = ex;
+                    case EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude:
+                        this.EdgeEffectAlphaPulseAmplitude = ex;
                         break;
-                    case EffectShader_FieldIndex.DNAMFloat8:
-                        this.DNAMFloat8 = ex;
+                    case EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency:
+                        this.EdgeEffectAlphaPulseFrequency = ex;
                         break;
-                    case EffectShader_FieldIndex.DNAMFloat9:
-                        this.DNAMFloat9 = ex;
+                    case EffectShader_FieldIndex.EdgeEffectFullAlphaRatio:
+                        this.EdgeEffectFullAlphaRatio = ex;
                         break;
-                    case EffectShader_FieldIndex.DNAMFloat10:
-                        this.DNAMFloat10 = ex;
+                    case EffectShader_FieldIndex.HolesAlphaTestAnimationStartTime:
+                        this.HolesAlphaTestAnimationStartTime = ex;
                         break;
-                    case EffectShader_FieldIndex.DNAMFloat11:
-                        this.DNAMFloat11 = ex;
+                    case EffectShader_FieldIndex.HolesAlphaTestAnimationStopTime:
+                        this.HolesAlphaTestAnimationStopTime = ex;
                         break;
-                    case EffectShader_FieldIndex.DNAMFloat12:
-                        this.DNAMFloat12 = ex;
+                    case EffectShader_FieldIndex.HolesAlphaTestAnimationStartValue:
+                        this.HolesAlphaTestAnimationStartValue = ex;
                         break;
-                    case EffectShader_FieldIndex.DNAMFloat13:
-                        this.DNAMFloat13 = ex;
+                    case EffectShader_FieldIndex.HolesAlphaTestAnimationStopValue:
+                        this.HolesAlphaTestAnimationStopValue = ex;
                         break;
-                    case EffectShader_FieldIndex.DNAMSound:
-                        this.DNAMSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                    case EffectShader_FieldIndex.Sounds:
+                        this.Sounds = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
                         break;
-                    case EffectShader_FieldIndex.DNAMInt1:
-                        this.DNAMInt1 = ex;
+                    case EffectShader_FieldIndex.BoneDepth:
+                        this.BoneDepth = ex;
                         break;
-                    case EffectShader_FieldIndex.DNAMInt2:
-                        this.DNAMInt2 = ex;
+                    case EffectShader_FieldIndex.Flags:
+                        this.Flags = ex;
                         break;
                     case EffectShader_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
@@ -748,53 +748,53 @@ namespace Mutagen.Bethesda.Starfield
                     case EffectShader_FieldIndex.EffectSequence:
                         this.EffectSequence = (Exception?)obj;
                         break;
-                    case EffectShader_FieldIndex.DNAMFloat1:
-                        this.DNAMFloat1 = (Exception?)obj;
+                    case EffectShader_FieldIndex.EdgeEffectFallOff:
+                        this.EdgeEffectFallOff = (Exception?)obj;
                         break;
-                    case EffectShader_FieldIndex.DNAMColor:
-                        this.DNAMColor = (Exception?)obj;
+                    case EffectShader_FieldIndex.EdgeEffectColor:
+                        this.EdgeEffectColor = (Exception?)obj;
                         break;
-                    case EffectShader_FieldIndex.DNAMFloat2:
-                        this.DNAMFloat2 = (Exception?)obj;
+                    case EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime:
+                        this.EdgeEffectAlphaFadeInTime = (Exception?)obj;
                         break;
-                    case EffectShader_FieldIndex.DNAMFloat3:
-                        this.DNAMFloat3 = (Exception?)obj;
+                    case EffectShader_FieldIndex.EdgeEffectFullAlphaTime:
+                        this.EdgeEffectFullAlphaTime = (Exception?)obj;
                         break;
-                    case EffectShader_FieldIndex.DNAMFloat4:
-                        this.DNAMFloat4 = (Exception?)obj;
+                    case EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime:
+                        this.EdgeEffectAlphaFadeOutTime = (Exception?)obj;
                         break;
-                    case EffectShader_FieldIndex.DNAMFloat5:
-                        this.DNAMFloat5 = (Exception?)obj;
+                    case EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio:
+                        this.EdgeEffectPersistentAlphaRatio = (Exception?)obj;
                         break;
-                    case EffectShader_FieldIndex.DNAMFloat6:
-                        this.DNAMFloat6 = (Exception?)obj;
+                    case EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude:
+                        this.EdgeEffectAlphaPulseAmplitude = (Exception?)obj;
                         break;
-                    case EffectShader_FieldIndex.DNAMFloat8:
-                        this.DNAMFloat8 = (Exception?)obj;
+                    case EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency:
+                        this.EdgeEffectAlphaPulseFrequency = (Exception?)obj;
                         break;
-                    case EffectShader_FieldIndex.DNAMFloat9:
-                        this.DNAMFloat9 = (Exception?)obj;
+                    case EffectShader_FieldIndex.EdgeEffectFullAlphaRatio:
+                        this.EdgeEffectFullAlphaRatio = (Exception?)obj;
                         break;
-                    case EffectShader_FieldIndex.DNAMFloat10:
-                        this.DNAMFloat10 = (Exception?)obj;
+                    case EffectShader_FieldIndex.HolesAlphaTestAnimationStartTime:
+                        this.HolesAlphaTestAnimationStartTime = (Exception?)obj;
                         break;
-                    case EffectShader_FieldIndex.DNAMFloat11:
-                        this.DNAMFloat11 = (Exception?)obj;
+                    case EffectShader_FieldIndex.HolesAlphaTestAnimationStopTime:
+                        this.HolesAlphaTestAnimationStopTime = (Exception?)obj;
                         break;
-                    case EffectShader_FieldIndex.DNAMFloat12:
-                        this.DNAMFloat12 = (Exception?)obj;
+                    case EffectShader_FieldIndex.HolesAlphaTestAnimationStartValue:
+                        this.HolesAlphaTestAnimationStartValue = (Exception?)obj;
                         break;
-                    case EffectShader_FieldIndex.DNAMFloat13:
-                        this.DNAMFloat13 = (Exception?)obj;
+                    case EffectShader_FieldIndex.HolesAlphaTestAnimationStopValue:
+                        this.HolesAlphaTestAnimationStopValue = (Exception?)obj;
                         break;
-                    case EffectShader_FieldIndex.DNAMSound:
-                        this.DNAMSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                    case EffectShader_FieldIndex.Sounds:
+                        this.Sounds = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
                         break;
-                    case EffectShader_FieldIndex.DNAMInt1:
-                        this.DNAMInt1 = (Exception?)obj;
+                    case EffectShader_FieldIndex.BoneDepth:
+                        this.BoneDepth = (Exception?)obj;
                         break;
-                    case EffectShader_FieldIndex.DNAMInt2:
-                        this.DNAMInt2 = (Exception?)obj;
+                    case EffectShader_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
                         break;
                     case EffectShader_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
@@ -810,22 +810,22 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (Components != null) return true;
                 if (EffectSequence != null) return true;
-                if (DNAMFloat1 != null) return true;
-                if (DNAMColor != null) return true;
-                if (DNAMFloat2 != null) return true;
-                if (DNAMFloat3 != null) return true;
-                if (DNAMFloat4 != null) return true;
-                if (DNAMFloat5 != null) return true;
-                if (DNAMFloat6 != null) return true;
-                if (DNAMFloat8 != null) return true;
-                if (DNAMFloat9 != null) return true;
-                if (DNAMFloat10 != null) return true;
-                if (DNAMFloat11 != null) return true;
-                if (DNAMFloat12 != null) return true;
-                if (DNAMFloat13 != null) return true;
-                if (DNAMSound != null) return true;
-                if (DNAMInt1 != null) return true;
-                if (DNAMInt2 != null) return true;
+                if (EdgeEffectFallOff != null) return true;
+                if (EdgeEffectColor != null) return true;
+                if (EdgeEffectAlphaFadeInTime != null) return true;
+                if (EdgeEffectFullAlphaTime != null) return true;
+                if (EdgeEffectAlphaFadeOutTime != null) return true;
+                if (EdgeEffectPersistentAlphaRatio != null) return true;
+                if (EdgeEffectAlphaPulseAmplitude != null) return true;
+                if (EdgeEffectAlphaPulseFrequency != null) return true;
+                if (EdgeEffectFullAlphaRatio != null) return true;
+                if (HolesAlphaTestAnimationStartTime != null) return true;
+                if (HolesAlphaTestAnimationStopTime != null) return true;
+                if (HolesAlphaTestAnimationStartValue != null) return true;
+                if (HolesAlphaTestAnimationStopValue != null) return true;
+                if (Sounds != null) return true;
+                if (BoneDepth != null) return true;
+                if (Flags != null) return true;
                 if (Model != null) return true;
                 return false;
             }
@@ -875,50 +875,50 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(EffectSequence, "EffectSequence");
                 }
                 {
-                    sb.AppendItem(DNAMFloat1, "DNAMFloat1");
+                    sb.AppendItem(EdgeEffectFallOff, "EdgeEffectFallOff");
                 }
                 {
-                    sb.AppendItem(DNAMColor, "DNAMColor");
+                    sb.AppendItem(EdgeEffectColor, "EdgeEffectColor");
                 }
                 {
-                    sb.AppendItem(DNAMFloat2, "DNAMFloat2");
+                    sb.AppendItem(EdgeEffectAlphaFadeInTime, "EdgeEffectAlphaFadeInTime");
                 }
                 {
-                    sb.AppendItem(DNAMFloat3, "DNAMFloat3");
+                    sb.AppendItem(EdgeEffectFullAlphaTime, "EdgeEffectFullAlphaTime");
                 }
                 {
-                    sb.AppendItem(DNAMFloat4, "DNAMFloat4");
+                    sb.AppendItem(EdgeEffectAlphaFadeOutTime, "EdgeEffectAlphaFadeOutTime");
                 }
                 {
-                    sb.AppendItem(DNAMFloat5, "DNAMFloat5");
+                    sb.AppendItem(EdgeEffectPersistentAlphaRatio, "EdgeEffectPersistentAlphaRatio");
                 }
                 {
-                    sb.AppendItem(DNAMFloat6, "DNAMFloat6");
+                    sb.AppendItem(EdgeEffectAlphaPulseAmplitude, "EdgeEffectAlphaPulseAmplitude");
                 }
                 {
-                    sb.AppendItem(DNAMFloat8, "DNAMFloat8");
+                    sb.AppendItem(EdgeEffectAlphaPulseFrequency, "EdgeEffectAlphaPulseFrequency");
                 }
                 {
-                    sb.AppendItem(DNAMFloat9, "DNAMFloat9");
+                    sb.AppendItem(EdgeEffectFullAlphaRatio, "EdgeEffectFullAlphaRatio");
                 }
                 {
-                    sb.AppendItem(DNAMFloat10, "DNAMFloat10");
+                    sb.AppendItem(HolesAlphaTestAnimationStartTime, "HolesAlphaTestAnimationStartTime");
                 }
                 {
-                    sb.AppendItem(DNAMFloat11, "DNAMFloat11");
+                    sb.AppendItem(HolesAlphaTestAnimationStopTime, "HolesAlphaTestAnimationStopTime");
                 }
                 {
-                    sb.AppendItem(DNAMFloat12, "DNAMFloat12");
+                    sb.AppendItem(HolesAlphaTestAnimationStartValue, "HolesAlphaTestAnimationStartValue");
                 }
                 {
-                    sb.AppendItem(DNAMFloat13, "DNAMFloat13");
+                    sb.AppendItem(HolesAlphaTestAnimationStopValue, "HolesAlphaTestAnimationStopValue");
                 }
-                DNAMSound?.Print(sb);
+                Sounds?.Print(sb);
                 {
-                    sb.AppendItem(DNAMInt1, "DNAMInt1");
+                    sb.AppendItem(BoneDepth, "BoneDepth");
                 }
                 {
-                    sb.AppendItem(DNAMInt2, "DNAMInt2");
+                    sb.AppendItem(Flags, "Flags");
                 }
                 Model?.Print(sb);
             }
@@ -931,22 +931,22 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.EffectSequence = this.EffectSequence.Combine(rhs.EffectSequence);
-                ret.DNAMFloat1 = this.DNAMFloat1.Combine(rhs.DNAMFloat1);
-                ret.DNAMColor = this.DNAMColor.Combine(rhs.DNAMColor);
-                ret.DNAMFloat2 = this.DNAMFloat2.Combine(rhs.DNAMFloat2);
-                ret.DNAMFloat3 = this.DNAMFloat3.Combine(rhs.DNAMFloat3);
-                ret.DNAMFloat4 = this.DNAMFloat4.Combine(rhs.DNAMFloat4);
-                ret.DNAMFloat5 = this.DNAMFloat5.Combine(rhs.DNAMFloat5);
-                ret.DNAMFloat6 = this.DNAMFloat6.Combine(rhs.DNAMFloat6);
-                ret.DNAMFloat8 = this.DNAMFloat8.Combine(rhs.DNAMFloat8);
-                ret.DNAMFloat9 = this.DNAMFloat9.Combine(rhs.DNAMFloat9);
-                ret.DNAMFloat10 = this.DNAMFloat10.Combine(rhs.DNAMFloat10);
-                ret.DNAMFloat11 = this.DNAMFloat11.Combine(rhs.DNAMFloat11);
-                ret.DNAMFloat12 = this.DNAMFloat12.Combine(rhs.DNAMFloat12);
-                ret.DNAMFloat13 = this.DNAMFloat13.Combine(rhs.DNAMFloat13);
-                ret.DNAMSound = this.DNAMSound.Combine(rhs.DNAMSound, (l, r) => l.Combine(r));
-                ret.DNAMInt1 = this.DNAMInt1.Combine(rhs.DNAMInt1);
-                ret.DNAMInt2 = this.DNAMInt2.Combine(rhs.DNAMInt2);
+                ret.EdgeEffectFallOff = this.EdgeEffectFallOff.Combine(rhs.EdgeEffectFallOff);
+                ret.EdgeEffectColor = this.EdgeEffectColor.Combine(rhs.EdgeEffectColor);
+                ret.EdgeEffectAlphaFadeInTime = this.EdgeEffectAlphaFadeInTime.Combine(rhs.EdgeEffectAlphaFadeInTime);
+                ret.EdgeEffectFullAlphaTime = this.EdgeEffectFullAlphaTime.Combine(rhs.EdgeEffectFullAlphaTime);
+                ret.EdgeEffectAlphaFadeOutTime = this.EdgeEffectAlphaFadeOutTime.Combine(rhs.EdgeEffectAlphaFadeOutTime);
+                ret.EdgeEffectPersistentAlphaRatio = this.EdgeEffectPersistentAlphaRatio.Combine(rhs.EdgeEffectPersistentAlphaRatio);
+                ret.EdgeEffectAlphaPulseAmplitude = this.EdgeEffectAlphaPulseAmplitude.Combine(rhs.EdgeEffectAlphaPulseAmplitude);
+                ret.EdgeEffectAlphaPulseFrequency = this.EdgeEffectAlphaPulseFrequency.Combine(rhs.EdgeEffectAlphaPulseFrequency);
+                ret.EdgeEffectFullAlphaRatio = this.EdgeEffectFullAlphaRatio.Combine(rhs.EdgeEffectFullAlphaRatio);
+                ret.HolesAlphaTestAnimationStartTime = this.HolesAlphaTestAnimationStartTime.Combine(rhs.HolesAlphaTestAnimationStartTime);
+                ret.HolesAlphaTestAnimationStopTime = this.HolesAlphaTestAnimationStopTime.Combine(rhs.HolesAlphaTestAnimationStopTime);
+                ret.HolesAlphaTestAnimationStartValue = this.HolesAlphaTestAnimationStartValue.Combine(rhs.HolesAlphaTestAnimationStartValue);
+                ret.HolesAlphaTestAnimationStopValue = this.HolesAlphaTestAnimationStopValue.Combine(rhs.HolesAlphaTestAnimationStopValue);
+                ret.Sounds = this.Sounds.Combine(rhs.Sounds, (l, r) => l.Combine(r));
+                ret.BoneDepth = this.BoneDepth.Combine(rhs.BoneDepth);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 return ret;
             }
@@ -972,22 +972,22 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public AComponent.TranslationMask? Components;
             public bool EffectSequence;
-            public bool DNAMFloat1;
-            public bool DNAMColor;
-            public bool DNAMFloat2;
-            public bool DNAMFloat3;
-            public bool DNAMFloat4;
-            public bool DNAMFloat5;
-            public bool DNAMFloat6;
-            public bool DNAMFloat8;
-            public bool DNAMFloat9;
-            public bool DNAMFloat10;
-            public bool DNAMFloat11;
-            public bool DNAMFloat12;
-            public bool DNAMFloat13;
-            public SoundReference.TranslationMask? DNAMSound;
-            public bool DNAMInt1;
-            public bool DNAMInt2;
+            public bool EdgeEffectFallOff;
+            public bool EdgeEffectColor;
+            public bool EdgeEffectAlphaFadeInTime;
+            public bool EdgeEffectFullAlphaTime;
+            public bool EdgeEffectAlphaFadeOutTime;
+            public bool EdgeEffectPersistentAlphaRatio;
+            public bool EdgeEffectAlphaPulseAmplitude;
+            public bool EdgeEffectAlphaPulseFrequency;
+            public bool EdgeEffectFullAlphaRatio;
+            public bool HolesAlphaTestAnimationStartTime;
+            public bool HolesAlphaTestAnimationStopTime;
+            public bool HolesAlphaTestAnimationStartValue;
+            public bool HolesAlphaTestAnimationStopValue;
+            public SoundReference.TranslationMask? Sounds;
+            public bool BoneDepth;
+            public bool Flags;
             public Model.TranslationMask? Model;
             #endregion
 
@@ -998,21 +998,21 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.EffectSequence = defaultOn;
-                this.DNAMFloat1 = defaultOn;
-                this.DNAMColor = defaultOn;
-                this.DNAMFloat2 = defaultOn;
-                this.DNAMFloat3 = defaultOn;
-                this.DNAMFloat4 = defaultOn;
-                this.DNAMFloat5 = defaultOn;
-                this.DNAMFloat6 = defaultOn;
-                this.DNAMFloat8 = defaultOn;
-                this.DNAMFloat9 = defaultOn;
-                this.DNAMFloat10 = defaultOn;
-                this.DNAMFloat11 = defaultOn;
-                this.DNAMFloat12 = defaultOn;
-                this.DNAMFloat13 = defaultOn;
-                this.DNAMInt1 = defaultOn;
-                this.DNAMInt2 = defaultOn;
+                this.EdgeEffectFallOff = defaultOn;
+                this.EdgeEffectColor = defaultOn;
+                this.EdgeEffectAlphaFadeInTime = defaultOn;
+                this.EdgeEffectFullAlphaTime = defaultOn;
+                this.EdgeEffectAlphaFadeOutTime = defaultOn;
+                this.EdgeEffectPersistentAlphaRatio = defaultOn;
+                this.EdgeEffectAlphaPulseAmplitude = defaultOn;
+                this.EdgeEffectAlphaPulseFrequency = defaultOn;
+                this.EdgeEffectFullAlphaRatio = defaultOn;
+                this.HolesAlphaTestAnimationStartTime = defaultOn;
+                this.HolesAlphaTestAnimationStopTime = defaultOn;
+                this.HolesAlphaTestAnimationStartValue = defaultOn;
+                this.HolesAlphaTestAnimationStopValue = defaultOn;
+                this.BoneDepth = defaultOn;
+                this.Flags = defaultOn;
             }
 
             #endregion
@@ -1022,22 +1022,22 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((EffectSequence, null));
-                ret.Add((DNAMFloat1, null));
-                ret.Add((DNAMColor, null));
-                ret.Add((DNAMFloat2, null));
-                ret.Add((DNAMFloat3, null));
-                ret.Add((DNAMFloat4, null));
-                ret.Add((DNAMFloat5, null));
-                ret.Add((DNAMFloat6, null));
-                ret.Add((DNAMFloat8, null));
-                ret.Add((DNAMFloat9, null));
-                ret.Add((DNAMFloat10, null));
-                ret.Add((DNAMFloat11, null));
-                ret.Add((DNAMFloat12, null));
-                ret.Add((DNAMFloat13, null));
-                ret.Add((DNAMSound != null ? DNAMSound.OnOverall : DefaultOn, DNAMSound?.GetCrystal()));
-                ret.Add((DNAMInt1, null));
-                ret.Add((DNAMInt2, null));
+                ret.Add((EdgeEffectFallOff, null));
+                ret.Add((EdgeEffectColor, null));
+                ret.Add((EdgeEffectAlphaFadeInTime, null));
+                ret.Add((EdgeEffectFullAlphaTime, null));
+                ret.Add((EdgeEffectAlphaFadeOutTime, null));
+                ret.Add((EdgeEffectPersistentAlphaRatio, null));
+                ret.Add((EdgeEffectAlphaPulseAmplitude, null));
+                ret.Add((EdgeEffectAlphaPulseFrequency, null));
+                ret.Add((EdgeEffectFullAlphaRatio, null));
+                ret.Add((HolesAlphaTestAnimationStartTime, null));
+                ret.Add((HolesAlphaTestAnimationStopTime, null));
+                ret.Add((HolesAlphaTestAnimationStartValue, null));
+                ret.Add((HolesAlphaTestAnimationStopValue, null));
+                ret.Add((Sounds != null ? Sounds.OnOverall : DefaultOn, Sounds?.GetCrystal()));
+                ret.Add((BoneDepth, null));
+                ret.Add((Flags, null));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
             }
 
@@ -1194,22 +1194,22 @@ namespace Mutagen.Bethesda.Starfield
     {
         new ExtendedList<AComponent> Components { get; }
         new IFormLinkNullable<IEffectSequenceGetter> EffectSequence { get; set; }
-        new Single DNAMFloat1 { get; set; }
-        new Color DNAMColor { get; set; }
-        new Single DNAMFloat2 { get; set; }
-        new Single DNAMFloat3 { get; set; }
-        new Single DNAMFloat4 { get; set; }
-        new Single DNAMFloat5 { get; set; }
-        new Single DNAMFloat6 { get; set; }
-        new Single DNAMFloat8 { get; set; }
-        new Single DNAMFloat9 { get; set; }
-        new Single DNAMFloat10 { get; set; }
-        new Single DNAMFloat11 { get; set; }
-        new Single DNAMFloat12 { get; set; }
-        new Single DNAMFloat13 { get; set; }
-        new SoundReference DNAMSound { get; set; }
-        new Int32 DNAMInt1 { get; set; }
-        new SByte DNAMInt2 { get; set; }
+        new Single EdgeEffectFallOff { get; set; }
+        new Color EdgeEffectColor { get; set; }
+        new Single EdgeEffectAlphaFadeInTime { get; set; }
+        new Single EdgeEffectFullAlphaTime { get; set; }
+        new Single EdgeEffectAlphaFadeOutTime { get; set; }
+        new Percent EdgeEffectPersistentAlphaRatio { get; set; }
+        new Single EdgeEffectAlphaPulseAmplitude { get; set; }
+        new Single EdgeEffectAlphaPulseFrequency { get; set; }
+        new Percent EdgeEffectFullAlphaRatio { get; set; }
+        new Single HolesAlphaTestAnimationStartTime { get; set; }
+        new Single HolesAlphaTestAnimationStopTime { get; set; }
+        new Single HolesAlphaTestAnimationStartValue { get; set; }
+        new Single HolesAlphaTestAnimationStopValue { get; set; }
+        new SoundReference Sounds { get; set; }
+        new SByte BoneDepth { get; set; }
+        new EffectShader.Flag Flags { get; set; }
         /// <summary>
         /// Aspects: IModeled
         /// </summary>
@@ -1236,22 +1236,22 @@ namespace Mutagen.Bethesda.Starfield
         static new ILoquiRegistration StaticRegistration => EffectShader_Registration.Instance;
         IReadOnlyList<IAComponentGetter> Components { get; }
         IFormLinkNullableGetter<IEffectSequenceGetter> EffectSequence { get; }
-        Single DNAMFloat1 { get; }
-        Color DNAMColor { get; }
-        Single DNAMFloat2 { get; }
-        Single DNAMFloat3 { get; }
-        Single DNAMFloat4 { get; }
-        Single DNAMFloat5 { get; }
-        Single DNAMFloat6 { get; }
-        Single DNAMFloat8 { get; }
-        Single DNAMFloat9 { get; }
-        Single DNAMFloat10 { get; }
-        Single DNAMFloat11 { get; }
-        Single DNAMFloat12 { get; }
-        Single DNAMFloat13 { get; }
-        ISoundReferenceGetter DNAMSound { get; }
-        Int32 DNAMInt1 { get; }
-        SByte DNAMInt2 { get; }
+        Single EdgeEffectFallOff { get; }
+        Color EdgeEffectColor { get; }
+        Single EdgeEffectAlphaFadeInTime { get; }
+        Single EdgeEffectFullAlphaTime { get; }
+        Single EdgeEffectAlphaFadeOutTime { get; }
+        Percent EdgeEffectPersistentAlphaRatio { get; }
+        Single EdgeEffectAlphaPulseAmplitude { get; }
+        Single EdgeEffectAlphaPulseFrequency { get; }
+        Percent EdgeEffectFullAlphaRatio { get; }
+        Single HolesAlphaTestAnimationStartTime { get; }
+        Single HolesAlphaTestAnimationStopTime { get; }
+        Single HolesAlphaTestAnimationStartValue { get; }
+        Single HolesAlphaTestAnimationStopValue { get; }
+        ISoundReferenceGetter Sounds { get; }
+        SByte BoneDepth { get; }
+        EffectShader.Flag Flags { get; }
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter
@@ -1436,22 +1436,22 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         Components = 7,
         EffectSequence = 8,
-        DNAMFloat1 = 9,
-        DNAMColor = 10,
-        DNAMFloat2 = 11,
-        DNAMFloat3 = 12,
-        DNAMFloat4 = 13,
-        DNAMFloat5 = 14,
-        DNAMFloat6 = 15,
-        DNAMFloat8 = 16,
-        DNAMFloat9 = 17,
-        DNAMFloat10 = 18,
-        DNAMFloat11 = 19,
-        DNAMFloat12 = 20,
-        DNAMFloat13 = 21,
-        DNAMSound = 22,
-        DNAMInt1 = 23,
-        DNAMInt2 = 24,
+        EdgeEffectFallOff = 9,
+        EdgeEffectColor = 10,
+        EdgeEffectAlphaFadeInTime = 11,
+        EdgeEffectFullAlphaTime = 12,
+        EdgeEffectAlphaFadeOutTime = 13,
+        EdgeEffectPersistentAlphaRatio = 14,
+        EdgeEffectAlphaPulseAmplitude = 15,
+        EdgeEffectAlphaPulseFrequency = 16,
+        EdgeEffectFullAlphaRatio = 17,
+        HolesAlphaTestAnimationStartTime = 18,
+        HolesAlphaTestAnimationStopTime = 19,
+        HolesAlphaTestAnimationStartValue = 20,
+        HolesAlphaTestAnimationStopValue = 21,
+        Sounds = 22,
+        BoneDepth = 23,
+        Flags = 24,
         Model = 25,
     }
     #endregion
@@ -1506,8 +1506,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MODL,
                 RecordTypes.MODT,
                 RecordTypes.MOLM,
-                RecordTypes.DMDC,
-                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
@@ -1558,22 +1556,22 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.Components.Clear();
             item.EffectSequence.Clear();
-            item.DNAMFloat1 = default(Single);
-            item.DNAMColor = default(Color);
-            item.DNAMFloat2 = default(Single);
-            item.DNAMFloat3 = default(Single);
-            item.DNAMFloat4 = default(Single);
-            item.DNAMFloat5 = default(Single);
-            item.DNAMFloat6 = default(Single);
-            item.DNAMFloat8 = default(Single);
-            item.DNAMFloat9 = default(Single);
-            item.DNAMFloat10 = default(Single);
-            item.DNAMFloat11 = default(Single);
-            item.DNAMFloat12 = default(Single);
-            item.DNAMFloat13 = default(Single);
-            item.DNAMSound.Clear();
-            item.DNAMInt1 = default(Int32);
-            item.DNAMInt2 = default(SByte);
+            item.EdgeEffectFallOff = default(Single);
+            item.EdgeEffectColor = default(Color);
+            item.EdgeEffectAlphaFadeInTime = default(Single);
+            item.EdgeEffectFullAlphaTime = default(Single);
+            item.EdgeEffectAlphaFadeOutTime = default(Single);
+            item.EdgeEffectPersistentAlphaRatio = default(Percent);
+            item.EdgeEffectAlphaPulseAmplitude = default(Single);
+            item.EdgeEffectAlphaPulseFrequency = default(Single);
+            item.EdgeEffectFullAlphaRatio = default(Percent);
+            item.HolesAlphaTestAnimationStartTime = default(Single);
+            item.HolesAlphaTestAnimationStopTime = default(Single);
+            item.HolesAlphaTestAnimationStartValue = default(Single);
+            item.HolesAlphaTestAnimationStopValue = default(Single);
+            item.Sounds.Clear();
+            item.BoneDepth = default(SByte);
+            item.Flags = default(EffectShader.Flag);
             item.Model = null;
             base.Clear(item);
         }
@@ -1594,7 +1592,7 @@ namespace Mutagen.Bethesda.Starfield
             base.RemapLinks(obj, mapping);
             obj.Components.RemapLinks(mapping);
             obj.EffectSequence.Relink(mapping);
-            obj.DNAMSound.RemapLinks(mapping);
+            obj.Sounds.RemapLinks(mapping);
             obj.Model?.RemapLinks(mapping);
         }
         
@@ -1700,22 +1698,22 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.EffectSequence = item.EffectSequence.Equals(rhs.EffectSequence);
-            ret.DNAMFloat1 = item.DNAMFloat1.EqualsWithin(rhs.DNAMFloat1);
-            ret.DNAMColor = item.DNAMColor.ColorOnlyEquals(rhs.DNAMColor);
-            ret.DNAMFloat2 = item.DNAMFloat2.EqualsWithin(rhs.DNAMFloat2);
-            ret.DNAMFloat3 = item.DNAMFloat3.EqualsWithin(rhs.DNAMFloat3);
-            ret.DNAMFloat4 = item.DNAMFloat4.EqualsWithin(rhs.DNAMFloat4);
-            ret.DNAMFloat5 = item.DNAMFloat5.EqualsWithin(rhs.DNAMFloat5);
-            ret.DNAMFloat6 = item.DNAMFloat6.EqualsWithin(rhs.DNAMFloat6);
-            ret.DNAMFloat8 = item.DNAMFloat8.EqualsWithin(rhs.DNAMFloat8);
-            ret.DNAMFloat9 = item.DNAMFloat9.EqualsWithin(rhs.DNAMFloat9);
-            ret.DNAMFloat10 = item.DNAMFloat10.EqualsWithin(rhs.DNAMFloat10);
-            ret.DNAMFloat11 = item.DNAMFloat11.EqualsWithin(rhs.DNAMFloat11);
-            ret.DNAMFloat12 = item.DNAMFloat12.EqualsWithin(rhs.DNAMFloat12);
-            ret.DNAMFloat13 = item.DNAMFloat13.EqualsWithin(rhs.DNAMFloat13);
-            ret.DNAMSound = MaskItemExt.Factory(item.DNAMSound.GetEqualsMask(rhs.DNAMSound, include), include);
-            ret.DNAMInt1 = item.DNAMInt1 == rhs.DNAMInt1;
-            ret.DNAMInt2 = item.DNAMInt2 == rhs.DNAMInt2;
+            ret.EdgeEffectFallOff = item.EdgeEffectFallOff.EqualsWithin(rhs.EdgeEffectFallOff);
+            ret.EdgeEffectColor = item.EdgeEffectColor.ColorOnlyEquals(rhs.EdgeEffectColor);
+            ret.EdgeEffectAlphaFadeInTime = item.EdgeEffectAlphaFadeInTime.EqualsWithin(rhs.EdgeEffectAlphaFadeInTime);
+            ret.EdgeEffectFullAlphaTime = item.EdgeEffectFullAlphaTime.EqualsWithin(rhs.EdgeEffectFullAlphaTime);
+            ret.EdgeEffectAlphaFadeOutTime = item.EdgeEffectAlphaFadeOutTime.EqualsWithin(rhs.EdgeEffectAlphaFadeOutTime);
+            ret.EdgeEffectPersistentAlphaRatio = item.EdgeEffectPersistentAlphaRatio.Equals(rhs.EdgeEffectPersistentAlphaRatio);
+            ret.EdgeEffectAlphaPulseAmplitude = item.EdgeEffectAlphaPulseAmplitude.EqualsWithin(rhs.EdgeEffectAlphaPulseAmplitude);
+            ret.EdgeEffectAlphaPulseFrequency = item.EdgeEffectAlphaPulseFrequency.EqualsWithin(rhs.EdgeEffectAlphaPulseFrequency);
+            ret.EdgeEffectFullAlphaRatio = item.EdgeEffectFullAlphaRatio.Equals(rhs.EdgeEffectFullAlphaRatio);
+            ret.HolesAlphaTestAnimationStartTime = item.HolesAlphaTestAnimationStartTime.EqualsWithin(rhs.HolesAlphaTestAnimationStartTime);
+            ret.HolesAlphaTestAnimationStopTime = item.HolesAlphaTestAnimationStopTime.EqualsWithin(rhs.HolesAlphaTestAnimationStopTime);
+            ret.HolesAlphaTestAnimationStartValue = item.HolesAlphaTestAnimationStartValue.EqualsWithin(rhs.HolesAlphaTestAnimationStartValue);
+            ret.HolesAlphaTestAnimationStopValue = item.HolesAlphaTestAnimationStopValue.EqualsWithin(rhs.HolesAlphaTestAnimationStopValue);
+            ret.Sounds = MaskItemExt.Factory(item.Sounds.GetEqualsMask(rhs.Sounds, include), include);
+            ret.BoneDepth = item.BoneDepth == rhs.BoneDepth;
+            ret.Flags = item.Flags == rhs.Flags;
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
@@ -1788,69 +1786,69 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.EffectSequence.FormKeyNullable, "EffectSequence");
             }
-            if (printMask?.DNAMFloat1 ?? true)
+            if (printMask?.EdgeEffectFallOff ?? true)
             {
-                sb.AppendItem(item.DNAMFloat1, "DNAMFloat1");
+                sb.AppendItem(item.EdgeEffectFallOff, "EdgeEffectFallOff");
             }
-            if (printMask?.DNAMColor ?? true)
+            if (printMask?.EdgeEffectColor ?? true)
             {
-                sb.AppendItem(item.DNAMColor, "DNAMColor");
+                sb.AppendItem(item.EdgeEffectColor, "EdgeEffectColor");
             }
-            if (printMask?.DNAMFloat2 ?? true)
+            if (printMask?.EdgeEffectAlphaFadeInTime ?? true)
             {
-                sb.AppendItem(item.DNAMFloat2, "DNAMFloat2");
+                sb.AppendItem(item.EdgeEffectAlphaFadeInTime, "EdgeEffectAlphaFadeInTime");
             }
-            if (printMask?.DNAMFloat3 ?? true)
+            if (printMask?.EdgeEffectFullAlphaTime ?? true)
             {
-                sb.AppendItem(item.DNAMFloat3, "DNAMFloat3");
+                sb.AppendItem(item.EdgeEffectFullAlphaTime, "EdgeEffectFullAlphaTime");
             }
-            if (printMask?.DNAMFloat4 ?? true)
+            if (printMask?.EdgeEffectAlphaFadeOutTime ?? true)
             {
-                sb.AppendItem(item.DNAMFloat4, "DNAMFloat4");
+                sb.AppendItem(item.EdgeEffectAlphaFadeOutTime, "EdgeEffectAlphaFadeOutTime");
             }
-            if (printMask?.DNAMFloat5 ?? true)
+            if (printMask?.EdgeEffectPersistentAlphaRatio ?? true)
             {
-                sb.AppendItem(item.DNAMFloat5, "DNAMFloat5");
+                sb.AppendItem(item.EdgeEffectPersistentAlphaRatio, "EdgeEffectPersistentAlphaRatio");
             }
-            if (printMask?.DNAMFloat6 ?? true)
+            if (printMask?.EdgeEffectAlphaPulseAmplitude ?? true)
             {
-                sb.AppendItem(item.DNAMFloat6, "DNAMFloat6");
+                sb.AppendItem(item.EdgeEffectAlphaPulseAmplitude, "EdgeEffectAlphaPulseAmplitude");
             }
-            if (printMask?.DNAMFloat8 ?? true)
+            if (printMask?.EdgeEffectAlphaPulseFrequency ?? true)
             {
-                sb.AppendItem(item.DNAMFloat8, "DNAMFloat8");
+                sb.AppendItem(item.EdgeEffectAlphaPulseFrequency, "EdgeEffectAlphaPulseFrequency");
             }
-            if (printMask?.DNAMFloat9 ?? true)
+            if (printMask?.EdgeEffectFullAlphaRatio ?? true)
             {
-                sb.AppendItem(item.DNAMFloat9, "DNAMFloat9");
+                sb.AppendItem(item.EdgeEffectFullAlphaRatio, "EdgeEffectFullAlphaRatio");
             }
-            if (printMask?.DNAMFloat10 ?? true)
+            if (printMask?.HolesAlphaTestAnimationStartTime ?? true)
             {
-                sb.AppendItem(item.DNAMFloat10, "DNAMFloat10");
+                sb.AppendItem(item.HolesAlphaTestAnimationStartTime, "HolesAlphaTestAnimationStartTime");
             }
-            if (printMask?.DNAMFloat11 ?? true)
+            if (printMask?.HolesAlphaTestAnimationStopTime ?? true)
             {
-                sb.AppendItem(item.DNAMFloat11, "DNAMFloat11");
+                sb.AppendItem(item.HolesAlphaTestAnimationStopTime, "HolesAlphaTestAnimationStopTime");
             }
-            if (printMask?.DNAMFloat12 ?? true)
+            if (printMask?.HolesAlphaTestAnimationStartValue ?? true)
             {
-                sb.AppendItem(item.DNAMFloat12, "DNAMFloat12");
+                sb.AppendItem(item.HolesAlphaTestAnimationStartValue, "HolesAlphaTestAnimationStartValue");
             }
-            if (printMask?.DNAMFloat13 ?? true)
+            if (printMask?.HolesAlphaTestAnimationStopValue ?? true)
             {
-                sb.AppendItem(item.DNAMFloat13, "DNAMFloat13");
+                sb.AppendItem(item.HolesAlphaTestAnimationStopValue, "HolesAlphaTestAnimationStopValue");
             }
-            if (printMask?.DNAMSound?.Overall ?? true)
+            if (printMask?.Sounds?.Overall ?? true)
             {
-                item.DNAMSound?.Print(sb, "DNAMSound");
+                item.Sounds?.Print(sb, "Sounds");
             }
-            if (printMask?.DNAMInt1 ?? true)
+            if (printMask?.BoneDepth ?? true)
             {
-                sb.AppendItem(item.DNAMInt1, "DNAMInt1");
+                sb.AppendItem(item.BoneDepth, "BoneDepth");
             }
-            if (printMask?.DNAMInt2 ?? true)
+            if (printMask?.Flags ?? true)
             {
-                sb.AppendItem(item.DNAMInt2, "DNAMInt2");
+                sb.AppendItem(item.Flags, "Flags");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
@@ -1915,73 +1913,73 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.EffectSequence.Equals(rhs.EffectSequence)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFallOff) ?? true))
             {
-                if (!lhs.DNAMFloat1.EqualsWithin(rhs.DNAMFloat1)) return false;
+                if (!lhs.EdgeEffectFallOff.EqualsWithin(rhs.EdgeEffectFallOff)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMColor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectColor) ?? true))
             {
-                if (!lhs.DNAMColor.ColorOnlyEquals(rhs.DNAMColor)) return false;
+                if (!lhs.EdgeEffectColor.ColorOnlyEquals(rhs.EdgeEffectColor)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime) ?? true))
             {
-                if (!lhs.DNAMFloat2.EqualsWithin(rhs.DNAMFloat2)) return false;
+                if (!lhs.EdgeEffectAlphaFadeInTime.EqualsWithin(rhs.EdgeEffectAlphaFadeInTime)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat3) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFullAlphaTime) ?? true))
             {
-                if (!lhs.DNAMFloat3.EqualsWithin(rhs.DNAMFloat3)) return false;
+                if (!lhs.EdgeEffectFullAlphaTime.EqualsWithin(rhs.EdgeEffectFullAlphaTime)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat4) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime) ?? true))
             {
-                if (!lhs.DNAMFloat4.EqualsWithin(rhs.DNAMFloat4)) return false;
+                if (!lhs.EdgeEffectAlphaFadeOutTime.EqualsWithin(rhs.EdgeEffectAlphaFadeOutTime)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat5) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio) ?? true))
             {
-                if (!lhs.DNAMFloat5.EqualsWithin(rhs.DNAMFloat5)) return false;
+                if (!lhs.EdgeEffectPersistentAlphaRatio.Equals(rhs.EdgeEffectPersistentAlphaRatio)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat6) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude) ?? true))
             {
-                if (!lhs.DNAMFloat6.EqualsWithin(rhs.DNAMFloat6)) return false;
+                if (!lhs.EdgeEffectAlphaPulseAmplitude.EqualsWithin(rhs.EdgeEffectAlphaPulseAmplitude)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat8) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency) ?? true))
             {
-                if (!lhs.DNAMFloat8.EqualsWithin(rhs.DNAMFloat8)) return false;
+                if (!lhs.EdgeEffectAlphaPulseFrequency.EqualsWithin(rhs.EdgeEffectAlphaPulseFrequency)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat9) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFullAlphaRatio) ?? true))
             {
-                if (!lhs.DNAMFloat9.EqualsWithin(rhs.DNAMFloat9)) return false;
+                if (!lhs.EdgeEffectFullAlphaRatio.Equals(rhs.EdgeEffectFullAlphaRatio)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat10) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesAlphaTestAnimationStartTime) ?? true))
             {
-                if (!lhs.DNAMFloat10.EqualsWithin(rhs.DNAMFloat10)) return false;
+                if (!lhs.HolesAlphaTestAnimationStartTime.EqualsWithin(rhs.HolesAlphaTestAnimationStartTime)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat11) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesAlphaTestAnimationStopTime) ?? true))
             {
-                if (!lhs.DNAMFloat11.EqualsWithin(rhs.DNAMFloat11)) return false;
+                if (!lhs.HolesAlphaTestAnimationStopTime.EqualsWithin(rhs.HolesAlphaTestAnimationStopTime)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat12) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesAlphaTestAnimationStartValue) ?? true))
             {
-                if (!lhs.DNAMFloat12.EqualsWithin(rhs.DNAMFloat12)) return false;
+                if (!lhs.HolesAlphaTestAnimationStartValue.EqualsWithin(rhs.HolesAlphaTestAnimationStartValue)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat13) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesAlphaTestAnimationStopValue) ?? true))
             {
-                if (!lhs.DNAMFloat13.EqualsWithin(rhs.DNAMFloat13)) return false;
+                if (!lhs.HolesAlphaTestAnimationStopValue.EqualsWithin(rhs.HolesAlphaTestAnimationStopValue)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMSound) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Sounds) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.DNAMSound, rhs.DNAMSound, out var lhsDNAMSound, out var rhsDNAMSound, out var isDNAMSoundEqual))
+                if (EqualsMaskHelper.RefEquality(lhs.Sounds, rhs.Sounds, out var lhsSounds, out var rhsSounds, out var isSoundsEqual))
                 {
-                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsDNAMSound).CommonInstance()!).Equals(lhsDNAMSound, rhsDNAMSound, equalsMask?.GetSubCrystal((int)EffectShader_FieldIndex.DNAMSound))) return false;
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsSounds).CommonInstance()!).Equals(lhsSounds, rhsSounds, equalsMask?.GetSubCrystal((int)EffectShader_FieldIndex.Sounds))) return false;
                 }
-                else if (!isDNAMSoundEqual) return false;
+                else if (!isSoundsEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMInt1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.BoneDepth) ?? true))
             {
-                if (lhs.DNAMInt1 != rhs.DNAMInt1) return false;
+                if (lhs.BoneDepth != rhs.BoneDepth) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMInt2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Flags) ?? true))
             {
-                if (lhs.DNAMInt2 != rhs.DNAMInt2) return false;
+                if (lhs.Flags != rhs.Flags) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Model) ?? true))
             {
@@ -2021,22 +2019,22 @@ namespace Mutagen.Bethesda.Starfield
             var hash = new HashCode();
             hash.Add(item.Components);
             hash.Add(item.EffectSequence);
-            hash.Add(item.DNAMFloat1);
-            hash.Add(item.DNAMColor);
-            hash.Add(item.DNAMFloat2);
-            hash.Add(item.DNAMFloat3);
-            hash.Add(item.DNAMFloat4);
-            hash.Add(item.DNAMFloat5);
-            hash.Add(item.DNAMFloat6);
-            hash.Add(item.DNAMFloat8);
-            hash.Add(item.DNAMFloat9);
-            hash.Add(item.DNAMFloat10);
-            hash.Add(item.DNAMFloat11);
-            hash.Add(item.DNAMFloat12);
-            hash.Add(item.DNAMFloat13);
-            hash.Add(item.DNAMSound);
-            hash.Add(item.DNAMInt1);
-            hash.Add(item.DNAMInt2);
+            hash.Add(item.EdgeEffectFallOff);
+            hash.Add(item.EdgeEffectColor);
+            hash.Add(item.EdgeEffectAlphaFadeInTime);
+            hash.Add(item.EdgeEffectFullAlphaTime);
+            hash.Add(item.EdgeEffectAlphaFadeOutTime);
+            hash.Add(item.EdgeEffectPersistentAlphaRatio);
+            hash.Add(item.EdgeEffectAlphaPulseAmplitude);
+            hash.Add(item.EdgeEffectAlphaPulseFrequency);
+            hash.Add(item.EdgeEffectFullAlphaRatio);
+            hash.Add(item.HolesAlphaTestAnimationStartTime);
+            hash.Add(item.HolesAlphaTestAnimationStopTime);
+            hash.Add(item.HolesAlphaTestAnimationStartValue);
+            hash.Add(item.HolesAlphaTestAnimationStopValue);
+            hash.Add(item.Sounds);
+            hash.Add(item.BoneDepth);
+            hash.Add(item.Flags);
             if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
@@ -2079,7 +2077,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return EffectSequenceInfo;
             }
-            foreach (var item in obj.DNAMSound.EnumerateFormLinks())
+            foreach (var item in obj.Sounds.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -2213,67 +2211,67 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.EffectSequence.SetTo(rhs.EffectSequence.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFallOff) ?? true))
             {
-                item.DNAMFloat1 = rhs.DNAMFloat1;
+                item.EdgeEffectFallOff = rhs.EdgeEffectFallOff;
             }
-            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMColor) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectColor) ?? true))
             {
-                item.DNAMColor = rhs.DNAMColor;
+                item.EdgeEffectColor = rhs.EdgeEffectColor;
             }
-            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime) ?? true))
             {
-                item.DNAMFloat2 = rhs.DNAMFloat2;
+                item.EdgeEffectAlphaFadeInTime = rhs.EdgeEffectAlphaFadeInTime;
             }
-            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat3) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFullAlphaTime) ?? true))
             {
-                item.DNAMFloat3 = rhs.DNAMFloat3;
+                item.EdgeEffectFullAlphaTime = rhs.EdgeEffectFullAlphaTime;
             }
-            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat4) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime) ?? true))
             {
-                item.DNAMFloat4 = rhs.DNAMFloat4;
+                item.EdgeEffectAlphaFadeOutTime = rhs.EdgeEffectAlphaFadeOutTime;
             }
-            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat5) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio) ?? true))
             {
-                item.DNAMFloat5 = rhs.DNAMFloat5;
+                item.EdgeEffectPersistentAlphaRatio = rhs.EdgeEffectPersistentAlphaRatio;
             }
-            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat6) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude) ?? true))
             {
-                item.DNAMFloat6 = rhs.DNAMFloat6;
+                item.EdgeEffectAlphaPulseAmplitude = rhs.EdgeEffectAlphaPulseAmplitude;
             }
-            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat8) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency) ?? true))
             {
-                item.DNAMFloat8 = rhs.DNAMFloat8;
+                item.EdgeEffectAlphaPulseFrequency = rhs.EdgeEffectAlphaPulseFrequency;
             }
-            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat9) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFullAlphaRatio) ?? true))
             {
-                item.DNAMFloat9 = rhs.DNAMFloat9;
+                item.EdgeEffectFullAlphaRatio = rhs.EdgeEffectFullAlphaRatio;
             }
-            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat10) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesAlphaTestAnimationStartTime) ?? true))
             {
-                item.DNAMFloat10 = rhs.DNAMFloat10;
+                item.HolesAlphaTestAnimationStartTime = rhs.HolesAlphaTestAnimationStartTime;
             }
-            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat11) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesAlphaTestAnimationStopTime) ?? true))
             {
-                item.DNAMFloat11 = rhs.DNAMFloat11;
+                item.HolesAlphaTestAnimationStopTime = rhs.HolesAlphaTestAnimationStopTime;
             }
-            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat12) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesAlphaTestAnimationStartValue) ?? true))
             {
-                item.DNAMFloat12 = rhs.DNAMFloat12;
+                item.HolesAlphaTestAnimationStartValue = rhs.HolesAlphaTestAnimationStartValue;
             }
-            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMFloat13) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesAlphaTestAnimationStopValue) ?? true))
             {
-                item.DNAMFloat13 = rhs.DNAMFloat13;
+                item.HolesAlphaTestAnimationStopValue = rhs.HolesAlphaTestAnimationStopValue;
             }
-            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMSound) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Sounds) ?? true))
             {
-                errorMask?.PushIndex((int)EffectShader_FieldIndex.DNAMSound);
+                errorMask?.PushIndex((int)EffectShader_FieldIndex.Sounds);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMSound) ?? true))
+                    if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Sounds) ?? true))
                     {
-                        item.DNAMSound = rhs.DNAMSound.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)EffectShader_FieldIndex.DNAMSound),
+                        item.Sounds = rhs.Sounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)EffectShader_FieldIndex.Sounds),
                             errorMask: errorMask);
                     }
                 }
@@ -2287,13 +2285,13 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMInt1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.BoneDepth) ?? true))
             {
-                item.DNAMInt1 = rhs.DNAMInt1;
+                item.BoneDepth = rhs.BoneDepth;
             }
-            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.DNAMInt2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Flags) ?? true))
             {
-                item.DNAMInt2 = rhs.DNAMInt2;
+                item.Flags = rhs.Flags;
             }
             if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.Model) ?? true))
             {
@@ -2510,50 +2508,55 @@ namespace Mutagen.Bethesda.Starfield
             {
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.DNAMFloat1);
+                    item: item.EdgeEffectFallOff);
                 ColorBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.DNAMColor);
+                    item: item.EdgeEffectColor);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.DNAMFloat2);
+                    item: item.EdgeEffectAlphaFadeInTime);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.DNAMFloat3);
+                    item: item.EdgeEffectFullAlphaTime);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.DNAMFloat4);
+                    item: item.EdgeEffectAlphaFadeOutTime);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.EdgeEffectPersistentAlphaRatio,
+                    integerType: FloatIntegerType.UInt);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.DNAMFloat5);
+                    item: item.EdgeEffectAlphaPulseAmplitude);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.DNAMFloat6);
+                    item: item.EdgeEffectAlphaPulseFrequency);
+                PercentBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.EdgeEffectFullAlphaRatio,
+                    integerType: FloatIntegerType.UInt);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.DNAMFloat8);
+                    item: item.HolesAlphaTestAnimationStartTime);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.DNAMFloat9);
+                    item: item.HolesAlphaTestAnimationStopTime);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.DNAMFloat10);
+                    item: item.HolesAlphaTestAnimationStartValue);
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.DNAMFloat11);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.DNAMFloat12);
-                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                    writer: writer,
-                    item: item.DNAMFloat13);
-                var DNAMSoundItem = item.DNAMSound;
-                ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)DNAMSoundItem).BinaryWriteTranslator).Write(
-                    item: DNAMSoundItem,
+                    item: item.HolesAlphaTestAnimationStopValue);
+                var SoundsItem = item.Sounds;
+                ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)SoundsItem).BinaryWriteTranslator).Write(
+                    item: SoundsItem,
                     writer: writer,
                     translationParams: translationParams);
-                writer.Write(item.DNAMInt1);
-                writer.Write(item.DNAMInt2);
+                writer.Write(item.BoneDepth);
+                EnumBinaryTranslation<EffectShader.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 4);
             }
             if (item.Model is {} ModelItem)
             {
@@ -2656,44 +2659,48 @@ namespace Mutagen.Bethesda.Starfield
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DNAMFloat1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.EdgeEffectFallOff = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DNAMColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.EdgeEffectColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DNAMFloat2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.EdgeEffectAlphaFadeInTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DNAMFloat3 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.EdgeEffectFullAlphaTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DNAMFloat4 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.EdgeEffectAlphaFadeOutTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DNAMFloat5 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.EdgeEffectPersistentAlphaRatio = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DNAMFloat6 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.EdgeEffectAlphaPulseAmplitude = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DNAMFloat8 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.EdgeEffectAlphaPulseFrequency = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DNAMFloat9 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.EdgeEffectFullAlphaRatio = PercentBinaryTranslation.Parse(
+                        reader: dataFrame,
+                        integerType: FloatIntegerType.UInt);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DNAMFloat10 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.HolesAlphaTestAnimationStartTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DNAMFloat11 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.HolesAlphaTestAnimationStopTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DNAMFloat12 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.HolesAlphaTestAnimationStartValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Remaining < 4) return null;
-                    item.DNAMFloat13 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.HolesAlphaTestAnimationStopValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete) return null;
-                    item.DNAMSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: dataFrame);
-                    if (dataFrame.Remaining < 4) return null;
-                    item.DNAMInt1 = dataFrame.ReadInt32();
+                    item.Sounds = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: dataFrame);
                     if (dataFrame.Remaining < 1) return null;
-                    item.DNAMInt2 = dataFrame.ReadInt8();
-                    return (int)EffectShader_FieldIndex.DNAMInt2;
+                    item.BoneDepth = dataFrame.ReadInt8();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.Flags = EnumBinaryTranslation<EffectShader.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    return (int)EffectShader_FieldIndex.Flags;
                 }
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:
@@ -2770,86 +2777,86 @@ namespace Mutagen.Bethesda.Starfield
         public IFormLinkNullableGetter<IEffectSequenceGetter> EffectSequence => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IEffectSequenceGetter>(_package, _recordData, _EffectSequenceLocation);
         #endregion
         private RangeInt32? _DNAMLocation;
-        #region DNAMFloat1
-        private int _DNAMFloat1Location => _DNAMLocation!.Value.Min;
-        private bool _DNAMFloat1_IsSet => _DNAMLocation.HasValue;
-        public Single DNAMFloat1 => _DNAMFloat1_IsSet ? _recordData.Slice(_DNAMFloat1Location, 4).Float() : default(Single);
+        #region EdgeEffectFallOff
+        private int _EdgeEffectFallOffLocation => _DNAMLocation!.Value.Min;
+        private bool _EdgeEffectFallOff_IsSet => _DNAMLocation.HasValue;
+        public Single EdgeEffectFallOff => _EdgeEffectFallOff_IsSet ? _recordData.Slice(_EdgeEffectFallOffLocation, 4).Float() : default(Single);
         #endregion
-        #region DNAMColor
-        private int _DNAMColorLocation => _DNAMLocation!.Value.Min + 0x4;
-        private bool _DNAMColor_IsSet => _DNAMLocation.HasValue;
-        public Color DNAMColor => _DNAMColor_IsSet ? _recordData.Slice(_DNAMColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
+        #region EdgeEffectColor
+        private int _EdgeEffectColorLocation => _DNAMLocation!.Value.Min + 0x4;
+        private bool _EdgeEffectColor_IsSet => _DNAMLocation.HasValue;
+        public Color EdgeEffectColor => _EdgeEffectColor_IsSet ? _recordData.Slice(_EdgeEffectColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
-        #region DNAMFloat2
-        private int _DNAMFloat2Location => _DNAMLocation!.Value.Min + 0x8;
-        private bool _DNAMFloat2_IsSet => _DNAMLocation.HasValue;
-        public Single DNAMFloat2 => _DNAMFloat2_IsSet ? _recordData.Slice(_DNAMFloat2Location, 4).Float() : default(Single);
+        #region EdgeEffectAlphaFadeInTime
+        private int _EdgeEffectAlphaFadeInTimeLocation => _DNAMLocation!.Value.Min + 0x8;
+        private bool _EdgeEffectAlphaFadeInTime_IsSet => _DNAMLocation.HasValue;
+        public Single EdgeEffectAlphaFadeInTime => _EdgeEffectAlphaFadeInTime_IsSet ? _recordData.Slice(_EdgeEffectAlphaFadeInTimeLocation, 4).Float() : default(Single);
         #endregion
-        #region DNAMFloat3
-        private int _DNAMFloat3Location => _DNAMLocation!.Value.Min + 0xC;
-        private bool _DNAMFloat3_IsSet => _DNAMLocation.HasValue;
-        public Single DNAMFloat3 => _DNAMFloat3_IsSet ? _recordData.Slice(_DNAMFloat3Location, 4).Float() : default(Single);
+        #region EdgeEffectFullAlphaTime
+        private int _EdgeEffectFullAlphaTimeLocation => _DNAMLocation!.Value.Min + 0xC;
+        private bool _EdgeEffectFullAlphaTime_IsSet => _DNAMLocation.HasValue;
+        public Single EdgeEffectFullAlphaTime => _EdgeEffectFullAlphaTime_IsSet ? _recordData.Slice(_EdgeEffectFullAlphaTimeLocation, 4).Float() : default(Single);
         #endregion
-        #region DNAMFloat4
-        private int _DNAMFloat4Location => _DNAMLocation!.Value.Min + 0x10;
-        private bool _DNAMFloat4_IsSet => _DNAMLocation.HasValue;
-        public Single DNAMFloat4 => _DNAMFloat4_IsSet ? _recordData.Slice(_DNAMFloat4Location, 4).Float() : default(Single);
+        #region EdgeEffectAlphaFadeOutTime
+        private int _EdgeEffectAlphaFadeOutTimeLocation => _DNAMLocation!.Value.Min + 0x10;
+        private bool _EdgeEffectAlphaFadeOutTime_IsSet => _DNAMLocation.HasValue;
+        public Single EdgeEffectAlphaFadeOutTime => _EdgeEffectAlphaFadeOutTime_IsSet ? _recordData.Slice(_EdgeEffectAlphaFadeOutTimeLocation, 4).Float() : default(Single);
         #endregion
-        #region DNAMFloat5
-        private int _DNAMFloat5Location => _DNAMLocation!.Value.Min + 0x14;
-        private bool _DNAMFloat5_IsSet => _DNAMLocation.HasValue;
-        public Single DNAMFloat5 => _DNAMFloat5_IsSet ? _recordData.Slice(_DNAMFloat5Location, 4).Float() : default(Single);
+        #region EdgeEffectPersistentAlphaRatio
+        private int _EdgeEffectPersistentAlphaRatioLocation => _DNAMLocation!.Value.Min + 0x14;
+        private bool _EdgeEffectPersistentAlphaRatio_IsSet => _DNAMLocation.HasValue;
+        public Percent EdgeEffectPersistentAlphaRatio => _EdgeEffectPersistentAlphaRatio_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_EdgeEffectPersistentAlphaRatioLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region DNAMFloat6
-        private int _DNAMFloat6Location => _DNAMLocation!.Value.Min + 0x18;
-        private bool _DNAMFloat6_IsSet => _DNAMLocation.HasValue;
-        public Single DNAMFloat6 => _DNAMFloat6_IsSet ? _recordData.Slice(_DNAMFloat6Location, 4).Float() : default(Single);
+        #region EdgeEffectAlphaPulseAmplitude
+        private int _EdgeEffectAlphaPulseAmplitudeLocation => _DNAMLocation!.Value.Min + 0x18;
+        private bool _EdgeEffectAlphaPulseAmplitude_IsSet => _DNAMLocation.HasValue;
+        public Single EdgeEffectAlphaPulseAmplitude => _EdgeEffectAlphaPulseAmplitude_IsSet ? _recordData.Slice(_EdgeEffectAlphaPulseAmplitudeLocation, 4).Float() : default(Single);
         #endregion
-        #region DNAMFloat8
-        private int _DNAMFloat8Location => _DNAMLocation!.Value.Min + 0x1C;
-        private bool _DNAMFloat8_IsSet => _DNAMLocation.HasValue;
-        public Single DNAMFloat8 => _DNAMFloat8_IsSet ? _recordData.Slice(_DNAMFloat8Location, 4).Float() : default(Single);
+        #region EdgeEffectAlphaPulseFrequency
+        private int _EdgeEffectAlphaPulseFrequencyLocation => _DNAMLocation!.Value.Min + 0x1C;
+        private bool _EdgeEffectAlphaPulseFrequency_IsSet => _DNAMLocation.HasValue;
+        public Single EdgeEffectAlphaPulseFrequency => _EdgeEffectAlphaPulseFrequency_IsSet ? _recordData.Slice(_EdgeEffectAlphaPulseFrequencyLocation, 4).Float() : default(Single);
         #endregion
-        #region DNAMFloat9
-        private int _DNAMFloat9Location => _DNAMLocation!.Value.Min + 0x20;
-        private bool _DNAMFloat9_IsSet => _DNAMLocation.HasValue;
-        public Single DNAMFloat9 => _DNAMFloat9_IsSet ? _recordData.Slice(_DNAMFloat9Location, 4).Float() : default(Single);
+        #region EdgeEffectFullAlphaRatio
+        private int _EdgeEffectFullAlphaRatioLocation => _DNAMLocation!.Value.Min + 0x20;
+        private bool _EdgeEffectFullAlphaRatio_IsSet => _DNAMLocation.HasValue;
+        public Percent EdgeEffectFullAlphaRatio => _EdgeEffectFullAlphaRatio_IsSet ? PercentBinaryTranslation.GetPercent(_recordData.Slice(_EdgeEffectFullAlphaRatioLocation, 4), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region DNAMFloat10
-        private int _DNAMFloat10Location => _DNAMLocation!.Value.Min + 0x24;
-        private bool _DNAMFloat10_IsSet => _DNAMLocation.HasValue;
-        public Single DNAMFloat10 => _DNAMFloat10_IsSet ? _recordData.Slice(_DNAMFloat10Location, 4).Float() : default(Single);
+        #region HolesAlphaTestAnimationStartTime
+        private int _HolesAlphaTestAnimationStartTimeLocation => _DNAMLocation!.Value.Min + 0x24;
+        private bool _HolesAlphaTestAnimationStartTime_IsSet => _DNAMLocation.HasValue;
+        public Single HolesAlphaTestAnimationStartTime => _HolesAlphaTestAnimationStartTime_IsSet ? _recordData.Slice(_HolesAlphaTestAnimationStartTimeLocation, 4).Float() : default(Single);
         #endregion
-        #region DNAMFloat11
-        private int _DNAMFloat11Location => _DNAMLocation!.Value.Min + 0x28;
-        private bool _DNAMFloat11_IsSet => _DNAMLocation.HasValue;
-        public Single DNAMFloat11 => _DNAMFloat11_IsSet ? _recordData.Slice(_DNAMFloat11Location, 4).Float() : default(Single);
+        #region HolesAlphaTestAnimationStopTime
+        private int _HolesAlphaTestAnimationStopTimeLocation => _DNAMLocation!.Value.Min + 0x28;
+        private bool _HolesAlphaTestAnimationStopTime_IsSet => _DNAMLocation.HasValue;
+        public Single HolesAlphaTestAnimationStopTime => _HolesAlphaTestAnimationStopTime_IsSet ? _recordData.Slice(_HolesAlphaTestAnimationStopTimeLocation, 4).Float() : default(Single);
         #endregion
-        #region DNAMFloat12
-        private int _DNAMFloat12Location => _DNAMLocation!.Value.Min + 0x2C;
-        private bool _DNAMFloat12_IsSet => _DNAMLocation.HasValue;
-        public Single DNAMFloat12 => _DNAMFloat12_IsSet ? _recordData.Slice(_DNAMFloat12Location, 4).Float() : default(Single);
+        #region HolesAlphaTestAnimationStartValue
+        private int _HolesAlphaTestAnimationStartValueLocation => _DNAMLocation!.Value.Min + 0x2C;
+        private bool _HolesAlphaTestAnimationStartValue_IsSet => _DNAMLocation.HasValue;
+        public Single HolesAlphaTestAnimationStartValue => _HolesAlphaTestAnimationStartValue_IsSet ? _recordData.Slice(_HolesAlphaTestAnimationStartValueLocation, 4).Float() : default(Single);
         #endregion
-        #region DNAMFloat13
-        private int _DNAMFloat13Location => _DNAMLocation!.Value.Min + 0x30;
-        private bool _DNAMFloat13_IsSet => _DNAMLocation.HasValue;
-        public Single DNAMFloat13 => _DNAMFloat13_IsSet ? _recordData.Slice(_DNAMFloat13Location, 4).Float() : default(Single);
+        #region HolesAlphaTestAnimationStopValue
+        private int _HolesAlphaTestAnimationStopValueLocation => _DNAMLocation!.Value.Min + 0x30;
+        private bool _HolesAlphaTestAnimationStopValue_IsSet => _DNAMLocation.HasValue;
+        public Single HolesAlphaTestAnimationStopValue => _HolesAlphaTestAnimationStopValue_IsSet ? _recordData.Slice(_HolesAlphaTestAnimationStopValueLocation, 4).Float() : default(Single);
         #endregion
-        #region DNAMSound
-        private int _DNAMSoundLocation => _DNAMLocation!.Value.Min + 0x34;
-        private bool _DNAMSound_IsSet => _DNAMLocation.HasValue;
-        private ISoundReferenceGetter? _DNAMSound => _DNAMSound_IsSet ? SoundReferenceBinaryOverlay.SoundReferenceFactory(_recordData.Slice(_DNAMSoundLocation), _package) : default;
-        public ISoundReferenceGetter DNAMSound => _DNAMSound ?? new SoundReference();
+        #region Sounds
+        private int _SoundsLocation => _DNAMLocation!.Value.Min + 0x34;
+        private bool _Sounds_IsSet => _DNAMLocation.HasValue;
+        private ISoundReferenceGetter? _Sounds => _Sounds_IsSet ? SoundReferenceBinaryOverlay.SoundReferenceFactory(_recordData.Slice(_SoundsLocation), _package) : default;
+        public ISoundReferenceGetter Sounds => _Sounds ?? new SoundReference();
         #endregion
-        #region DNAMInt1
-        private int _DNAMInt1Location => _DNAMLocation!.Value.Min + 0x5C;
-        private bool _DNAMInt1_IsSet => _DNAMLocation.HasValue;
-        public Int32 DNAMInt1 => _DNAMInt1_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_recordData.Slice(_DNAMInt1Location, 4)) : default(Int32);
+        #region BoneDepth
+        private int _BoneDepthLocation => _DNAMLocation!.Value.Min + 0x5C;
+        private bool _BoneDepth_IsSet => _DNAMLocation.HasValue;
+        public SByte BoneDepth => _BoneDepth_IsSet ? (sbyte)_recordData.Slice(_BoneDepthLocation, 1)[0] : default(SByte);
         #endregion
-        #region DNAMInt2
-        private int _DNAMInt2Location => _DNAMLocation!.Value.Min + 0x60;
-        private bool _DNAMInt2_IsSet => _DNAMLocation.HasValue;
-        public SByte DNAMInt2 => _DNAMInt2_IsSet ? (sbyte)_recordData.Slice(_DNAMInt2Location, 1)[0] : default(SByte);
+        #region Flags
+        private int _FlagsLocation => _DNAMLocation!.Value.Min + 0x5D;
+        private bool _Flags_IsSet => _DNAMLocation.HasValue;
+        public EffectShader.Flag Flags => _Flags_IsSet ? (EffectShader.Flag)BinaryPrimitives.ReadInt32LittleEndian(_recordData.Span.Slice(_FlagsLocation, 0x4)) : default;
         #endregion
         public IModelGetter? Model { get; private set; }
         partial void CustomFactoryEnd(
@@ -2943,13 +2950,11 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DNAM:
                 {
                     _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)EffectShader_FieldIndex.DNAMInt2;
+                    return (int)EffectShader_FieldIndex.Flags;
                 }
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 case RecordTypeInts.MODC:

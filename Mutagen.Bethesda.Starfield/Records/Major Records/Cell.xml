@@ -25,17 +25,15 @@
       <Enum name="Flags" enumName="Cell.Flag" byteLength="4" recordType="DATA" />
       <RefDirect name="Grid" refName="CellGrid" />
       <RefDirect name="Lighting" refName="CellLighting" />
-      <ByteArray name="MHDT" recordType="MHDT" unknown="true" />
+      <RefDirect name="MaxHeightData" refName="CellMaxHeightData" />
       <FormLink name="LightingTemplate" refName="LightingTemplate" recordType="LTMP" />
       <Float name="WaterHeight" recordType="XCLW" />
       <Float name="XILS" recordType="XILS" unknown="true" />
-      <FormLink name="XCLR" refName="Npc" recordType="XCLR" unknown="true" />
       <RefList name="XCLAs" refName="CellXCLAItem" />
-      <ByteArray name="XWCN" recordType="XWCN" />
+      <ByteArray name="WaterData" recordType="XWCN" />
       <FormLink name="CellSkyRegion" refName="Region" recordType="XCCM" />
       <RefDirect name="Ownership" refName="Ownership" />
       <FormLink name="Location" refName="Location" recordType="XLCN" />
-      <RefDirect name="XTRV" refName="XTRV" />
       <FormLink name="Water" refName="Water" recordType="XCWT" />
       <String name="WaterType" recordType="XCWM" />
       <RefList name="ShipBlueprintSnapLinks" refName="CellShipBlueprintSnapLink" recordType="XBPS" />
@@ -43,17 +41,16 @@
       <FormLink name="AcousticSpace" refName="AcousticSpace" recordType="XCAS" />
       <FormLink name="ImageSpace" refName="ImageSpace" recordType="XCIM" />
       <String name="WaterEnvironmentMap" recordType="XWEM" />
+      <FormLink name="LockList" recordType="XILL" refName="FormList" />
       <FormLink name="Music" refName="MusicType" recordType="XCMO" />
       <String name="GlobalDirtLayerMaterial" recordType="XCGD" />
-      <Bool name="XCIB" recordType="XCIB" byteLength="1" />
+      <Bool name="GlobalDirtLayerInheritBiomeLayer" recordType="XCIB" byteLength="1" />
       <FormLink name="TimeOfDay" refName="TimeOfDayRecord" recordType="TODD" />
-      <FormLink name="EncounterLocation" refName="Location" recordType="XEZN" />
       <RefList name="LinkedReferences" refName="LinkedReferences" />
       <Bool name="IsLinkedRefTransient" boolAsMarker="XLKT" />
       <String name="EnvironmentMap" recordType="XEMP" />
       <RefList name="Traversals" refName="TraversalReference" recordType="XTV2" overflowRecordType="XXXX" binary="Custom" />
       <UInt32 name="NumTraversalFluffBytes" binary="NoGeneration" />
-      <FormLink name="SourcePackIn" refName="PackIn" recordType="XPCS"/>
       <RefList name="NavigationMeshes" binary="NoGeneration" refName="NavigationMesh" />
       <Int32 name="Timestamp" binary="NoGeneration" />
       <Int32 name="UnknownGroupData" binary="NoGeneration" />
@@ -106,7 +103,7 @@
       <Float name="FogHighFarScale" />
       <Float name="FarHeightMid" />
       <Float name="FarHeightRange" />
-      <Int32 name="Unknown2" unknown="true" />
+      <Enum name="InteriorType" enumName="Cell.InteriorType" byteLength="4" />
     </Fields>
   </Object>
   <Object name="CellWaterVelocity" objType="Subrecord" recordType="XWCU">
@@ -129,6 +126,14 @@
     <Fields>
       <Int32 name="XCLA" recordType="XCLA" unknown="true" />
       <String name="XCLD" recordType="XCLD" unknown="true" />
+    </Fields>
+  </Object>
+  <Object name="CellMaxHeightData" recordType="MHDT" objType="Subrecord">
+    <Fields>
+      <Float name="Offset" />
+      <Array2d name="HeightMap" fixedWidth="50" fixedHeight="50">
+        <UInt8 />
+      </Array2d>
     </Fields>
   </Object>
 </Loqui>

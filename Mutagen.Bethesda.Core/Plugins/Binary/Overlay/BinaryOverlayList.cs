@@ -128,8 +128,7 @@ internal abstract class BinaryOverlayList
             stream.Position += initialHeader.TotalLength;
             if (!stream.TryReadSubrecord(trigger, out var contentFrame))
             {
-                if (count == 0) return Array.Empty<T>();
-                throw new ArgumentException($"List with a non zero {initialHeader.RecordType} counter did not follow up with expected type: {trigger}");
+                return [];
             }
             return new BinaryOverlayListByStartIndex<T>(
                 contentFrame.Content,

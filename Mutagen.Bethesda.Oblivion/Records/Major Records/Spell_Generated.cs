@@ -512,7 +512,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = Spell_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SpellCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SpellSetterCommon.Instance.RemapLinks(this, mapping);
-        public Spell(FormKey formKey)
+        public Spell(
+            FormKey formKey,
+            OblivionRelease gameRelease)
         {
             this.FormKey = formKey;
             CustomCtor();
@@ -527,12 +529,16 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public Spell(IOblivionMod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.OblivionRelease)
         {
         }
 
         public Spell(IOblivionMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.OblivionRelease)
         {
             this.EditorID = editorID;
         }
@@ -1249,7 +1255,7 @@ namespace Mutagen.Bethesda.Oblivion
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Spell(formKey);
+            var newRec = new Spell(formKey, default(OblivionRelease));
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }

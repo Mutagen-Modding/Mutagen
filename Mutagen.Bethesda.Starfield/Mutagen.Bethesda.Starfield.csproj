@@ -50,10 +50,6 @@
       <DefaultPackFolder>none</DefaultPackFolder>
       <BuildAction>None</BuildAction>
     </None>
-    <None Update="Records\Major Records\FFKWRecord.xml">
-      <DefaultPackFolder>none</DefaultPackFolder>
-      <BuildAction>None</BuildAction>
-    </None>
     <None Update="Records\Major Records\GameSetting.xml">
       <DefaultPackFolder>none</DefaultPackFolder>
       <BuildAction>None</BuildAction>
@@ -152,6 +148,12 @@
     <Compile Include="Enums\TimeOfDay.cs" />
     <Compile Include="Enums\TintType.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
+    <Compile Include="Interfaces\Aspect\IEnchantable.cs" />
+    <Compile Include="Interfaces\Aspect\IHasDestructible.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Interfaces\Aspect\IHaveVirtualMachineAdapter.cs" />
     <Compile Include="Interfaces\Aspect\IModeled.cs">
       <CodeLanguage>cs</CodeLanguage>
@@ -1990,6 +1992,9 @@
     <Compile Include="Records\Common Subrecords\ObjectModStringProperty_Generated.cs">
       <DependentUpon>ObjectTemplate.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectPaletteDefaults.cs">
+      <DependentUpon>ObjectPaletteDefaults.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\ObjectTemplate.cs">
       <DependentUpon>ObjectTemplate.xml</DependentUpon>
     </Compile>
@@ -2032,6 +2037,9 @@
     <Compile Include="Records\Common Subrecords\VolumesComponentItem.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AcousticSpace.cs">
+      <DependentUpon>AcousticSpace.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\ActionRecord.cs">
       <DependentUpon>ActionRecord.xml</DependentUpon>
     </Compile>
@@ -2047,8 +2055,14 @@
     <Compile Include="Records\Major Records\AddonNode.cs">
       <DependentUpon>AddonNode.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AffinityEvent.cs">
+      <DependentUpon>AffinityEvent.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\AMagicEffectArchetype.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AmbienceSet.cs">
+      <DependentUpon>AmbienceSet.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Ammunition.cs">
       <DependentUpon>Ammunition.xml</DependentUpon>
@@ -2080,6 +2094,7 @@
     <Compile Include="Records\Major Records\ArmorAddon.cs">
       <DependentUpon>ArmorAddon.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Array2dCopyHelper.cs" />
     <Compile Include="Records\Major Records\ArtObject.cs">
       <DependentUpon>ArtObject.xml</DependentUpon>
     </Compile>
@@ -2088,6 +2103,9 @@
     </Compile>
     <Compile Include="Records\Major Records\AStoryManagerNode.cs">
       <DependentUpon>StoryManagerNodes.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Biome.cs">
+      <DependentUpon>Biome.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\BipedObjectData.cs">
       <DependentUpon>Race.xml</DependentUpon>
@@ -2143,9 +2161,6 @@
     <Compile Include="Records\Major Records\CreateReferenceToObject.cs">
       <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\DefaultObject.cs">
-      <DependentUpon>DefaultObject.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\DialogBranch.cs">
       <DependentUpon>DialogBranch.xml</DependentUpon>
     </Compile>
@@ -2161,8 +2176,14 @@
     <Compile Include="Records\Major Records\Door.cs">
       <DependentUpon>Door.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\EffectShader.cs">
+      <DependentUpon>EffectShader.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\EquipType.cs">
       <DependentUpon>EquipType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Explosion.cs">
+      <DependentUpon>Explosion.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Faction.cs">
       <DependentUpon>Faction.xml</DependentUpon>
@@ -2178,6 +2199,12 @@
     </Compile>
     <Compile Include="Records\Major Records\Furniture.cs">
       <DependentUpon>Furniture.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameplayOption.cs">
+      <DependentUpon>GameplayOption.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameplayOptionsGroup.cs">
+      <DependentUpon>GameplayOptionsGroup.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\GameSetting.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
@@ -2197,8 +2224,14 @@
     <Compile Include="Records\Major Records\GameSettingUInt.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Grass.cs">
+      <DependentUpon>Grass.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Hazard.cs">
       <DependentUpon>Hazard.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\IdleAnimation.cs">
+      <DependentUpon>IdleAnimation.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\IdleMarker.cs">
       <DependentUpon>IdleMarker.xml</DependentUpon>
@@ -2466,6 +2499,9 @@
     </Compile>
     <Compile Include="Records\Major Records\RegionWeather.cs">
       <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ResearchProject.cs">
+      <DependentUpon>ResearchProject.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Resource.cs">
       <DependentUpon>Resource.xml</DependentUpon>
@@ -4398,9 +4434,6 @@
     <Compile Include="Records\Common Subrecords\LocationTargetRadius.cs">
       <DependentUpon>LocationTargetRadius.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\AnimatedObject.cs">
-      <DependentUpon>AnimatedObject.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Global.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
@@ -4462,9 +4495,6 @@
     <Compile Include="Interfaces\Link\IPlacedThing_Generated.cs" />
     <Compile Include="Interfaces\Link\IVoiceTypeOrList_Generated.cs" />
     <Compile Include="Interfaces\Link\ISpellRecord_Generated.cs" />
-    <Compile Include="Records\Major Records\DebrisModel.cs">
-      <DependentUpon>Debris.xml</DependentUpon>
-    </Compile>
     <Compile Include="Interfaces\Link\IItem_Generated.cs" />
     <Compile Include="Records\StarfieldGroup_Generated.cs">
       <DependentUpon>StarfieldGroup.xml</DependentUpon>
@@ -4654,9 +4684,6 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\ObjectBounds_Generated.cs">
       <DependentUpon>ObjectBounds.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\ObjectPlacementDefaults_Generated.cs">
-      <DependentUpon>ObjectPlacementDefaults.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\ObjectProperty_Generated.cs">
       <DependentUpon>ObjectProperty.xml</DependentUpon>
@@ -4907,9 +4934,6 @@
     <Compile Include="Records\Major Records\BiomeMarker_Generated.cs">
       <DependentUpon>BiomeMarker.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\BiomeSwap_Generated.cs">
-      <DependentUpon>BiomeSwap.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\BodyPartData_Generated.cs">
       <DependentUpon>BodyPartData.xml</DependentUpon>
     </Compile>
@@ -5014,9 +5038,6 @@
     </Compile>
     <Compile Include="Records\Major Records\VendorValues_Generated.cs">
       <DependentUpon>Faction.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\FFKWRecord_Generated.cs">
-      <DependentUpon>FFKWRecord.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Flora_Generated.cs">
       <DependentUpon>Flora.xml</DependentUpon>
@@ -5252,16 +5273,7 @@
     <Compile Include="Records\Major Records\PlanetFlora_Generated.cs">
       <DependentUpon>Planet.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PlanetFNAM_Generated.cs">
-      <DependentUpon>Planet.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PlanetIds_Generated.cs">
-      <DependentUpon>Planet.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\PlanetDetails_Generated.cs">
-      <DependentUpon>Planet.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PlanetINAM_Generated.cs">
       <DependentUpon>Planet.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\PlanetContentManagerBranchNode_Generated.cs">
@@ -5682,9 +5694,6 @@
     <Compile Include="Records\Major Records\BookTeachesNothing_Generated.cs">
       <DependentUpon>Book.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ArmorCategoryValue_Generated.cs">
-      <DependentUpon>Armor.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\DisplayCaseComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
@@ -5868,9 +5877,6 @@
     <Compile Include="Records\Major Records\TimerSceneAction_Generated.cs">
       <DependentUpon>Scene.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\HnamHnam_Generated.cs">
-      <DependentUpon>Scene.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\PlayerDialogueSceneActionItem_Generated.cs">
       <DependentUpon>Scene.xml</DependentUpon>
     </Compile>
@@ -5878,9 +5884,6 @@
       <DependentUpon>Scene.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\CameraSceneShot_Generated.cs">
-      <DependentUpon>Scene.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\AnimationSceneItem_Generated.cs">
       <DependentUpon>Scene.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\QuestLocationAliasALPS_Generated.cs">
@@ -6408,9 +6411,6 @@
     <Compile Include="Records\Common Subrecords\Decal_Generated.cs">
       <DependentUpon>Decal.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ImpactHNAM_Generated.cs">
-      <DependentUpon>Impact.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\ImpactData_Generated.cs">
       <DependentUpon>ImpactDataSet.xml</DependentUpon>
     </Compile>
@@ -6453,22 +6453,10 @@
     <Compile Include="Records\Major Records\AnimationSoundTag_Generated.cs">
       <DependentUpon>AnimationSoundTagSet.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\BiomeFNAMItem_Generated.cs">
-      <DependentUpon>Biome.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\BiomeFNAMPackIn_Generated.cs">
-      <DependentUpon>Biome.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\BiomeWaterData_Generated.cs">
       <DependentUpon>Biome.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\BiomeMarkerType_Generated.cs">
-      <DependentUpon>Biome.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\BiomeLNAMItem_Generated.cs">
-      <DependentUpon>Biome.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\BiomeLandItem_Generated.cs">
       <DependentUpon>Biome.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\NavigationMeshObstacleManagerSubObject_Generated.cs">
@@ -6511,9 +6499,6 @@
     <Compile Include="Records\Common Subrecords\BlockCellHeightGridComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\SurfacePatternConfigItem_Generated.cs">
-      <DependentUpon>SurfacePatternConfig.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\BlockHeightAdjustmentComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
@@ -6550,16 +6535,10 @@
     <Compile Include="Records\Common Subrecords\OrbitalDataComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ResearchProjectResource_Generated.cs">
-      <DependentUpon>ResearchProject.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\ResearchProjectRequiredPerk_Generated.cs">
       <DependentUpon>ResearchProject.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IResearchResourceTarget_Generated.cs" />
-    <Compile Include="Records\Major Records\AmbienceSound_Generated.cs">
-      <DependentUpon>AmbienceSet.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\SecondaryDamageItem_Generated.cs">
       <DependentUpon>SecondaryDamageList.xml</DependentUpon>
     </Compile>
@@ -6605,9 +6584,6 @@
     <Compile Include="Records\Major Records\FacialExpression_Generated.cs">
       <DependentUpon>FacialExpression.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\FacialExpressionItem_Generated.cs">
-      <DependentUpon>FacialExpression.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\PTTA_Generated.cs">
       <DependentUpon>PTTA.xml</DependentUpon>
     </Compile>
@@ -6616,15 +6592,6 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\CityMapsUsageComponent_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\GameplayOptions_Generated.cs">
-      <DependentUpon>GameplayOptions.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\GPOD_Generated.cs">
-      <DependentUpon>GameplayOptions.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\SliderEntry_Generated.cs">
-      <DependentUpon>GameplayOptions.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\GameplayOptionsGroup_Generated.cs">
       <DependentUpon>GameplayOptionsGroup.xml</DependentUpon>
@@ -6736,6 +6703,148 @@
       <DependentUpon>SceneCollection.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\VolumesUnknownEnderEmpty_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\OrbitedData_Generated.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GalaxyData_Generated.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AtmosphereData_Generated.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MasterWorldspace_Generated.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AddedWorldspace_Generated.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SpaceCell_Generated.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\OrbitalData_Generated.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BiomeNoise_Generated.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlanetBiomeUnknownItem_Generated.cs">
+      <DependentUpon>Planet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Rank_Generated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FactionHerd_Generated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ResearchProjectRequiredItem_Generated.cs">
+      <DependentUpon>ResearchProject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\HeadTracking_Generated.cs">
+      <DependentUpon>HeadTracking.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AmbientSoundEvent_Generated.cs">
+      <DependentUpon>AmbienceSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AmbientSoundPlanetCustomization_Generated.cs">
+      <DependentUpon>AmbienceSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ArmorSwitch_Generated.cs">
+      <DependentUpon>Armor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ArmorAddonSkinTexture_Generated.cs">
+      <DependentUpon>ArmorAddon.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectPaletteDefaults_Generated.cs">
+      <DependentUpon>ObjectPaletteDefaults.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BiomeObject_Generated.cs">
+      <DependentUpon>Biome.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BiomeTerrain_Generated.cs">
+      <DependentUpon>Biome.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BiomeTerrainData_Generated.cs">
+      <DependentUpon>Biome.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BiomeFootprints_Generated.cs">
+      <DependentUpon>Biome.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BiomeBTPS_Generated.cs">
+      <DependentUpon>Biome.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BiomeBTPSItem_Generated.cs">
+      <DependentUpon>Biome.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BiomeDistantView_Generated.cs">
+      <DependentUpon>Biome.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ObjectSwap_Generated.cs">
+      <DependentUpon>ObjectSwap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IBiomeObjectPackInTarget_Generated.cs" />
+    <Compile Include="Records\Major Records\BiomeProceduralObjectGeneration_Generated.cs">
+      <DependentUpon>Biome.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CellMaxHeightData_Generated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CombatStylePowerWeighting_Generated.cs">
+      <DependentUpon>CombatStyle.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CombatStyleManeuverTiming_Generated.cs">
+      <DependentUpon>CombatStyle.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CombatStyleTemplates_Generated.cs">
+      <DependentUpon>CombatStyle.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Animation_Generated.cs">
+      <DependentUpon>Animation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FacialExpressionMorph_Generated.cs">
+      <DependentUpon>FacialExpression.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FactionPrisons_Generated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameplayOption_Generated.cs">
+      <DependentUpon>GameplayOption.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AGameplayOptionData_Generated.cs">
+      <DependentUpon>GameplayOption.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BoolGameplayOptionData_Generated.cs">
+      <DependentUpon>GameplayOption.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FloatGameplayOptionData_Generated.cs">
+      <DependentUpon>GameplayOption.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameplayOptionReward_Generated.cs">
+      <DependentUpon>GameplayOption.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AGameplayOptionsNode_Generated.cs">
+      <DependentUpon>GameplayOptionsGroup.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameplayOptionsGroupLeaf_Generated.cs">
+      <DependentUpon>GameplayOptionsGroup.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameplayOptionsGroupRoot_Generated.cs">
+      <DependentUpon>GameplayOptionsGroup.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SurfacePatternStyleConfig_Generated.cs">
+      <DependentUpon>SurfacePatternConfig.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SurfacePatternRarityConfig_Generated.cs">
+      <DependentUpon>SurfacePatternConfig.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\SurfaceTreePatternSwapInfoItem_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\OverlayDesignatedPlacementInfoItem_Generated.cs">
+      <DependentUpon>Component.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\SurfaceTreePatternSwapInfoComponentData_Generated.cs">
       <DependentUpon>Component.xml</DependentUpon>
     </Compile>
   </ItemGroup>

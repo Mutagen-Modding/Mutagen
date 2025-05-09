@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -52,16 +53,16 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region DAT2
+        #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _DAT2;
-        public MemorySlice<Byte>? DAT2
+        private SurfaceTreePatternSwapInfoComponentData? _Data;
+        public SurfaceTreePatternSwapInfoComponentData? Data
         {
-            get => this._DAT2;
-            set => this._DAT2 = value;
+            get => _Data;
+            set => _Data = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ISurfaceTreePatternSwapInfoComponentGetter.DAT2 => this.DAT2;
+        ISurfaceTreePatternSwapInfoComponentDataGetter? ISurfaceTreePatternSwapInfoComponentGetter.Data => this.Data;
         #endregion
 
         #region To String
@@ -101,10 +102,10 @@ namespace Mutagen.Bethesda.Starfield
             IMask<TItem>
         {
             #region Ctors
-            public Mask(TItem DAT2)
+            public Mask(TItem Data)
             : base()
             {
-                this.DAT2 = DAT2;
+                this.Data = new MaskItem<TItem, SurfaceTreePatternSwapInfoComponentData.Mask<TItem>?>(Data, new SurfaceTreePatternSwapInfoComponentData.Mask<TItem>(Data));
             }
 
             #pragma warning disable CS8618
@@ -116,7 +117,7 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem DAT2;
+            public MaskItem<TItem, SurfaceTreePatternSwapInfoComponentData.Mask<TItem>?>? Data { get; set; }
             #endregion
 
             #region Equals
@@ -130,13 +131,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.DAT2, rhs.DAT2)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.DAT2);
+                hash.Add(this.Data);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -147,7 +148,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.DAT2)) return false;
+                if (Data != null)
+                {
+                    if (!eval(this.Data.Overall)) return false;
+                    if (this.Data.Specific != null && !this.Data.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -156,7 +161,11 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.DAT2)) return true;
+                if (Data != null)
+                {
+                    if (eval(this.Data.Overall)) return true;
+                    if (this.Data.Specific != null && this.Data.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -172,7 +181,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.DAT2 = eval(this.DAT2);
+                obj.Data = this.Data == null ? null : new MaskItem<R, SurfaceTreePatternSwapInfoComponentData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
             }
             #endregion
 
@@ -191,9 +200,9 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(SurfaceTreePatternSwapInfoComponent.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.DAT2 ?? true)
+                    if (printMask?.Data?.Overall ?? true)
                     {
-                        sb.AppendItem(DAT2, "DAT2");
+                        Data?.Print(sb);
                     }
                 }
             }
@@ -206,7 +215,7 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? DAT2;
+            public MaskItem<Exception?, SurfaceTreePatternSwapInfoComponentData.ErrorMask?>? Data;
             #endregion
 
             #region IErrorMask
@@ -215,8 +224,8 @@ namespace Mutagen.Bethesda.Starfield
                 SurfaceTreePatternSwapInfoComponent_FieldIndex enu = (SurfaceTreePatternSwapInfoComponent_FieldIndex)index;
                 switch (enu)
                 {
-                    case SurfaceTreePatternSwapInfoComponent_FieldIndex.DAT2:
-                        return DAT2;
+                    case SurfaceTreePatternSwapInfoComponent_FieldIndex.Data:
+                        return Data;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -227,8 +236,8 @@ namespace Mutagen.Bethesda.Starfield
                 SurfaceTreePatternSwapInfoComponent_FieldIndex enu = (SurfaceTreePatternSwapInfoComponent_FieldIndex)index;
                 switch (enu)
                 {
-                    case SurfaceTreePatternSwapInfoComponent_FieldIndex.DAT2:
-                        this.DAT2 = ex;
+                    case SurfaceTreePatternSwapInfoComponent_FieldIndex.Data:
+                        this.Data = new MaskItem<Exception?, SurfaceTreePatternSwapInfoComponentData.ErrorMask?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -241,8 +250,8 @@ namespace Mutagen.Bethesda.Starfield
                 SurfaceTreePatternSwapInfoComponent_FieldIndex enu = (SurfaceTreePatternSwapInfoComponent_FieldIndex)index;
                 switch (enu)
                 {
-                    case SurfaceTreePatternSwapInfoComponent_FieldIndex.DAT2:
-                        this.DAT2 = (Exception?)obj;
+                    case SurfaceTreePatternSwapInfoComponent_FieldIndex.Data:
+                        this.Data = (MaskItem<Exception?, SurfaceTreePatternSwapInfoComponentData.ErrorMask?>?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -253,7 +262,7 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (DAT2 != null) return true;
+                if (Data != null) return true;
                 return false;
             }
             #endregion
@@ -280,9 +289,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
-                {
-                    sb.AppendItem(DAT2, "DAT2");
-                }
+                Data?.Print(sb);
             }
             #endregion
 
@@ -291,7 +298,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.DAT2 = this.DAT2.Combine(rhs.DAT2);
+                ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -314,7 +321,7 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
-            public bool DAT2;
+            public SurfaceTreePatternSwapInfoComponentData.TranslationMask? Data;
             #endregion
 
             #region Ctors
@@ -323,7 +330,6 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.DAT2 = defaultOn;
             }
 
             #endregion
@@ -331,7 +337,7 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((DAT2, null));
+                ret.Add((Data != null ? Data.OnOverall : DefaultOn, Data?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -340,6 +346,11 @@ namespace Mutagen.Bethesda.Starfield
             }
 
         }
+        #endregion
+
+        #region Mutagen
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SurfaceTreePatternSwapInfoComponentCommon.Instance.EnumerateFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SurfaceTreePatternSwapInfoComponentSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
@@ -400,19 +411,21 @@ namespace Mutagen.Bethesda.Starfield
     #region Interface
     public partial interface ISurfaceTreePatternSwapInfoComponent :
         IAComponent,
+        IFormLinkContainer,
         ILoquiObjectSetter<ISurfaceTreePatternSwapInfoComponent>,
         ISurfaceTreePatternSwapInfoComponentGetter
     {
-        new MemorySlice<Byte>? DAT2 { get; set; }
+        new SurfaceTreePatternSwapInfoComponentData? Data { get; set; }
     }
 
     public partial interface ISurfaceTreePatternSwapInfoComponentGetter :
         IAComponentGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
         ILoquiObject<ISurfaceTreePatternSwapInfoComponentGetter>
     {
         static new ILoquiRegistration StaticRegistration => SurfaceTreePatternSwapInfoComponent_Registration.Instance;
-        ReadOnlyMemorySlice<Byte>? DAT2 { get; }
+        ISurfaceTreePatternSwapInfoComponentDataGetter? Data { get; }
 
     }
 
@@ -557,7 +570,7 @@ namespace Mutagen.Bethesda.Starfield
     #region Field Index
     internal enum SurfaceTreePatternSwapInfoComponent_FieldIndex
     {
-        DAT2 = 0,
+        Data = 0,
     }
     #endregion
 
@@ -648,7 +661,7 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(ISurfaceTreePatternSwapInfoComponent item)
         {
             ClearPartial();
-            item.DAT2 = default;
+            item.Data = null;
             base.Clear(item);
         }
         
@@ -661,6 +674,7 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ISurfaceTreePatternSwapInfoComponent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Data?.RemapLinks(mapping);
         }
         
         #endregion
@@ -716,7 +730,11 @@ namespace Mutagen.Bethesda.Starfield
             SurfaceTreePatternSwapInfoComponent.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.DAT2 = MemorySliceExt.SequenceEqual(item.DAT2, rhs.DAT2);
+            ret.Data = EqualsMaskHelper.EqualsHelper(
+                item.Data,
+                rhs.Data,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -766,10 +784,10 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.DAT2 ?? true)
-                && item.DAT2 is {} DAT2Item)
+            if ((printMask?.Data?.Overall ?? true)
+                && item.Data is {} DataItem)
             {
-                sb.AppendLine($"DAT2 => {SpanExt.ToHexString(DAT2Item)}");
+                DataItem?.Print(sb, "Data");
             }
         }
         
@@ -790,9 +808,13 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IAComponentGetter)lhs, (IAComponentGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)SurfaceTreePatternSwapInfoComponent_FieldIndex.DAT2) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)SurfaceTreePatternSwapInfoComponent_FieldIndex.Data) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.DAT2, rhs.DAT2)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((SurfaceTreePatternSwapInfoComponentDataCommon)((ISurfaceTreePatternSwapInfoComponentDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, equalsMask?.GetSubCrystal((int)SurfaceTreePatternSwapInfoComponent_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
             }
             return true;
         }
@@ -811,9 +833,9 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(ISurfaceTreePatternSwapInfoComponentGetter item)
         {
             var hash = new HashCode();
-            if (item.DAT2 is {} DAT2Item)
+            if (item.Data is {} Dataitem)
             {
-                hash.Add(DAT2Item);
+                hash.Add(Dataitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -839,6 +861,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            if (obj.Data is {} DataItems)
+            {
+                foreach (var item in DataItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -863,15 +892,30 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)SurfaceTreePatternSwapInfoComponent_FieldIndex.DAT2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SurfaceTreePatternSwapInfoComponent_FieldIndex.Data) ?? true))
             {
-                if(rhs.DAT2 is {} DAT2rhs)
+                errorMask?.PushIndex((int)SurfaceTreePatternSwapInfoComponent_FieldIndex.Data);
+                try
                 {
-                    item.DAT2 = DAT2rhs.ToArray();
+                    if(rhs.Data is {} rhsData)
+                    {
+                        item.Data = rhsData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)SurfaceTreePatternSwapInfoComponent_FieldIndex.Data));
+                    }
+                    else
+                    {
+                        item.Data = default;
+                    }
                 }
-                else
+                catch (Exception ex)
+                when (errorMask != null)
                 {
-                    item.DAT2 = default;
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
                 }
             }
             DeepCopyInCustom(
@@ -999,10 +1043,13 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.DAT2,
-                header: translationParams.ConvertToCustom(RecordTypes.DAT2));
+            if (item.Data is {} DataItem)
+            {
+                ((SurfaceTreePatternSwapInfoComponentDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                    item: DataItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
         }
 
         public void Write(
@@ -1059,9 +1106,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.DAT2:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DAT2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)SurfaceTreePatternSwapInfoComponent_FieldIndex.DAT2;
+                    item.Data = Mutagen.Bethesda.Starfield.SurfaceTreePatternSwapInfoComponentData.CreateFromBinary(frame: frame);
+                    return (int)SurfaceTreePatternSwapInfoComponent_FieldIndex.Data;
                 }
                 default:
                     return AComponentBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1107,6 +1153,7 @@ namespace Mutagen.Bethesda.Starfield
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
+        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => SurfaceTreePatternSwapInfoComponentCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => SurfaceTreePatternSwapInfoComponentBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1119,9 +1166,9 @@ namespace Mutagen.Bethesda.Starfield
                 translationParams: translationParams);
         }
 
-        #region DAT2
-        private int? _DAT2Location;
-        public ReadOnlyMemorySlice<Byte>? DAT2 => _DAT2Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DAT2Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region Data
+        private RangeInt32? _DataLocation;
+        public ISurfaceTreePatternSwapInfoComponentDataGetter? Data => _DataLocation.HasValue ? SurfaceTreePatternSwapInfoComponentDataBinaryOverlay.SurfaceTreePatternSwapInfoComponentDataFactory(_recordData.Slice(_DataLocation!.Value.Min), _package) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1188,8 +1235,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.DAT2:
                 {
-                    _DAT2Location = (stream.Position - offset);
-                    return (int)SurfaceTreePatternSwapInfoComponent_FieldIndex.DAT2;
+                    _DataLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)SurfaceTreePatternSwapInfoComponent_FieldIndex.Data;
                 }
                 default:
                     return base.FillRecordType(

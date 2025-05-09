@@ -152,6 +152,13 @@ public sealed class MutableModLinkCache : ILinkCache
     }
 
     /// <inheritdoc />
+    public bool TryResolve<TMajor>(TMajor record, [MaybeNullWhen(false)] out TMajor majorRec, ResolveTarget target = ResolveTarget.Winner)
+        where TMajor : class, IMajorRecordGetter
+    {
+        return TryResolve<TMajor>(record.FormKey, out majorRec, target);
+    }
+    
+    /// <inheritdoc />
     public bool TryResolve<TMajor>(string editorId, [MaybeNullWhen(false)] out TMajor majorRec)
         where TMajor : class, IMajorRecordQueryableGetter
     {
@@ -313,6 +320,13 @@ public sealed class MutableModLinkCache : ILinkCache
     }
 
     /// <inheritdoc />
+    public TMajor Resolve<TMajor>(TMajor record, ResolveTarget target = ResolveTarget.Winner)
+        where TMajor : class, IMajorRecordGetter
+    {
+        return Resolve<TMajor>(record.FormKey, target);
+    }
+    
+    /// <inheritdoc />
     public TMajor Resolve<TMajor>(string editorId)
         where TMajor : class, IMajorRecordQueryableGetter
     {
@@ -321,12 +335,20 @@ public sealed class MutableModLinkCache : ILinkCache
     }
 
     /// <inheritdoc />
-    public IEnumerable<TMajor> ResolveAll<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner) where TMajor : class, IMajorRecordQueryableGetter
+    public IEnumerable<TMajor> ResolveAll<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner) 
+        where TMajor : class, IMajorRecordQueryableGetter
     {
         if (TryResolve<TMajor>(formKey, out var rec, target))
         {
             yield return rec;
         }
+    }
+    
+    /// <inheritdoc />
+    public IEnumerable<TMajor> ResolveAll<TMajor>(TMajor record, ResolveTarget target = ResolveTarget.Winner)
+        where TMajor : class, IMajorRecordGetter
+    {
+        return ResolveAll<TMajor>(record.FormKey, target);
     }
 
     /// <inheritdoc />
@@ -584,6 +606,13 @@ public sealed class MutableModLinkCache : ILinkCache
     {
         return ResolveSimpleContext(formLink.FormKey, formLink.Type, target);
     }
+    
+    /// <inheritdoc />
+    public IModContext<TMajor> ResolveSimpleContext<TMajor>(TMajor record, ResolveTarget target = ResolveTarget.Winner) 
+        where TMajor : class, IMajorRecordGetter
+    {
+        return ResolveSimpleContext<TMajor>(record.FormKey, target);
+    }
 
     /// <inheritdoc />
     public IModContext<IMajorRecordGetter> ResolveSimpleContext(string editorId, Type type)
@@ -631,6 +660,13 @@ public sealed class MutableModLinkCache : ILinkCache
     public IEnumerable<IModContext<IMajorRecordGetter>> ResolveAllSimpleContexts(IFormLinkIdentifier formLink, ResolveTarget target = ResolveTarget.Winner)
     {
         return ResolveAllSimpleContexts(formLink.FormKey, formLink.Type, target);
+    }
+    
+    /// <inheritdoc />
+    public IEnumerable<IModContext<TMajor>> ResolveAllSimpleContexts<TMajor>(TMajor record, ResolveTarget target = ResolveTarget.Winner)
+        where TMajor : class, IMajorRecordGetter
+    {
+        return ResolveAllSimpleContexts<TMajor>(record.FormKey, target);
     }
 
     /// <inheritdoc />
@@ -1186,6 +1222,13 @@ public sealed class MutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, TMo
     }
 
     /// <inheritdoc />
+    public bool TryResolve<TMajor>(TMajor record, [MaybeNullWhen(false)] out TMajor majorRec, ResolveTarget target = ResolveTarget.Winner) 
+        where TMajor : class, IMajorRecordGetter
+    {
+        return TryResolve<TMajor>(record.FormKey, out majorRec, target);
+    }
+    
+    /// <inheritdoc />
     public bool TryResolve<TMajor>(string editorId, [MaybeNullWhen(false)] out TMajor majorRec)
         where TMajor : class, IMajorRecordQueryableGetter
     {
@@ -1334,6 +1377,13 @@ public sealed class MutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, TMo
         throw new MissingRecordException(formKey, typeof(TMajor));
     }
 
+    /// <inheritdoc />
+    public TMajor Resolve<TMajor>(TMajor record, ResolveTarget target = ResolveTarget.Winner) 
+        where TMajor : class, IMajorRecordGetter
+    {
+        return Resolve<TMajor>(record.FormKey, target);
+    }
+    
     /// <inheritdoc />
     public TMajor Resolve<TMajor>(string editorId)
         where TMajor : class, IMajorRecordQueryableGetter
@@ -1594,6 +1644,14 @@ public sealed class MutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, TMo
     }
 
     /// <inheritdoc />
+    public IModContext<TMod, TModGetter, TMajor, TMajorGetter> ResolveContext<TMajor, TMajorGetter>(TMajor record, ResolveTarget target = ResolveTarget.Winner) 
+        where TMajor : class, IMajorRecord, TMajorGetter
+        where TMajorGetter : class, IMajorRecordGetter
+    {
+        return ResolveContext<TMajor, TMajorGetter>(record.FormKey, target);
+    }
+    
+    /// <inheritdoc />
     public IModContext<TMod, TModGetter, TMajor, TMajorGetter> ResolveContext<TMajor, TMajorGetter>(string editorId)
         where TMajor : class, IMajorRecordQueryable, TMajorGetter
         where TMajorGetter : class, IMajorRecordQueryableGetter
@@ -1610,6 +1668,13 @@ public sealed class MutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, TMo
         {
             yield return rec;
         }
+    }
+    
+    /// <inheritdoc />
+    public IEnumerable<TMajor> ResolveAll<TMajor>(TMajor record, ResolveTarget target = ResolveTarget.Winner)
+        where TMajor : class, IMajorRecordGetter
+    {
+        return ResolveAll<TMajor>(record.FormKey, target);
     }
 
     /// <inheritdoc />
@@ -1789,6 +1854,13 @@ public sealed class MutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, TMo
     {
         return ResolveSimpleContext(formLink.FormKey, formLink.Type, target);
     }
+    
+    /// <inheritdoc />
+    public IModContext<TMajor> ResolveSimpleContext<TMajor>(TMajor record, ResolveTarget target = ResolveTarget.Winner)
+        where TMajor : class, IMajorRecordGetter
+    {
+        return ResolveSimpleContext<TMajor>(record.FormKey, target);
+    }
 
     /// <inheritdoc />
     public IModContext<IMajorRecordGetter> ResolveSimpleContext(string editorId, Type type)
@@ -1836,6 +1908,13 @@ public sealed class MutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, TMo
     {
         return ResolveAllSimpleContexts(formLink, target);
     }
+    
+    /// <inheritdoc />
+    public IEnumerable<IModContext<TMajor>> ResolveAllSimpleContexts<TMajor>(TMajor record, ResolveTarget target = ResolveTarget.Winner) 
+        where TMajor : class, IMajorRecordGetter
+    {
+        return ResolveAllSimpleContexts<TMajor>(record.FormKey, target);
+    }
 
     /// <inheritdoc />
     [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
@@ -1871,6 +1950,22 @@ public sealed class MutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, TMo
     public IEnumerable<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>> ResolveAllContexts(IFormLinkIdentifier formLink, ResolveTarget target = ResolveTarget.Winner)
     {
         return ResolveAllContexts(formLink.FormKey, formLink.Type, target);
+    }
+    
+    /// <inheritdoc />
+    public IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>> ResolveAllContexts<TMajor, TMajorGetter>(TMajor record, ResolveTarget target = ResolveTarget.Winner) 
+        where TMajor : class, IMajorRecord, TMajorGetter
+        where TMajorGetter : class, IMajorRecordGetter
+    {
+        return ResolveAllContexts<TMajor, TMajorGetter>(record.FormKey, target);
+    }
+    
+    /// <inheritdoc />
+    public IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>> ResolveAllContexts<TMajor, TMajorGetter>(TMajorGetter record, ResolveTarget target = ResolveTarget.Winner)
+        where TMajor : class, IMajorRecord, TMajorGetter 
+        where TMajorGetter : class, IMajorRecordGetter
+    {
+        return ResolveAllContexts<TMajor, TMajorGetter>(record.FormKey, target);
     }
 
     /// <inheritdoc />
@@ -2262,6 +2357,14 @@ public sealed class MutableModLinkCache<TMod, TModGetter> : ILinkCache<TMod, TMo
         where TMajorGetter : class, IMajorRecordGetter
     {
         return ResolveContext<TMajor, TMajorGetter>(formLink.FormKey, target);
+    }
+    
+    /// <inheritdoc />
+    public IModContext<TMod, TModGetter, TMajor, TMajorGetter> ResolveContext<TMajor, TMajorGetter>(TMajorGetter record, ResolveTarget target = ResolveTarget.Winner)
+        where TMajor : class, IMajorRecord, TMajorGetter
+        where TMajorGetter : class, IMajorRecordGetter
+    {
+        return ResolveContext<TMajor, TMajorGetter>(record.FormKey, target);
     }
 
     /// <inheritdoc />

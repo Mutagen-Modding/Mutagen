@@ -11,7 +11,7 @@ partial class Hazard
         InheritRadiusFromSpawnSpell = 0x08,
         DropToGround = 0x10,
         TaperEffectivenessByProximity = 0x20,
-        IncreasedGravity = 0x40,
-        ReversedGravity = 0x80
+        GravityPointSource = 0x40,
+        GravityOverride = 0x80
     }
 }

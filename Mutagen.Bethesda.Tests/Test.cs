@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using Noggog.WorkEngine;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -17,11 +18,11 @@ public enum TestState
 public class Test
 {
     private readonly Subject<string> _output = new();
+    private readonly IWorkDropoff _dropoff;
     private readonly Func<Subject<string>, Task> _toDo;
     private readonly CompositeDisposable _disposables = new();
     private readonly BehaviorSubject<TestState> _stateSignal = new(TestState.NotStarted);
     private readonly List<Test> _children = new();
-    private readonly bool _parallel;
 
     public string Name { get; }
     public GameRelease? GameRelease { get; }
@@ -32,13 +33,13 @@ public class Test
     public IReadOnlyList<Test> Children => _children;
     public int ChildCount => _children.Sum(c => c.ChildCount) + _children.Count;
 
-    public Test(string name, bool parallel, Func<Subject<string>, Task> toDo, GameRelease? release = null, FilePath? filePath = null)
+    public Test(string name, IWorkDropoff workDropoff, Func<Subject<string>, Task> toDo, GameRelease? release = null, FilePath? filePath = null)
     {
         Name = name;
         GameRelease = release;
         FilePath = filePath;
+        _dropoff = workDropoff;
         _toDo = toDo;
-        _parallel = parallel;
     }
 
     public async Task Start()
@@ -60,14 +61,11 @@ public class Test
             _output.OnNext($"{sw.ElapsedMilliseconds / 1000d}s");
             _output.OnNext("========================================/");
             _stateSignal.OnNext(TestState.Complete);
-            if (_parallel)
+            await _dropoff.EnqueueAndWait(_children, c =>
             {
-                await Task.WhenAll(_children.Select(c => Task.Run(c.Start)));
-            }
-            else
-            {
-                await Task.WhenAll(_children.Select(c => c.Start()));
-            }
+                Debug.WriteLine($"Enqueuing {c.Name}");
+                return c.Start();
+            });
             _disposables.Dispose();
         }
         catch (Exception ex)

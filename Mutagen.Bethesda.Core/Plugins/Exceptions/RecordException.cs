@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.ExceptionServices;
 using Loqui;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records;
@@ -167,11 +169,150 @@ public class RecordException : Exception
     /// Wraps an exception to associate it with a specific major record
     /// </summary>
     /// <param name="ex">Exception to enrich</param>
+    /// <param name="mod">Mod to mark as containing the record</param>
+    public static RecordException Enrich(Exception ex, IModGetter mod)
+    {
+        return Enrich(ex, mod.ModKey);
+    }
+
+    /// <summary>
+    /// Wraps an exception to associate it with a specific major record
+    /// </summary>
+    /// <param name="ex">Exception to enrich</param>
     /// <param name="majorRecordContext">ModContext to pull information from</param>
     public static RecordException Enrich<TMajor>(Exception ex, IModContext<TMajor> majorRecordContext)
         where TMajor : IMajorRecordGetter
     {
         return Enrich(ex, modKey: majorRecordContext.ModKey, majorRec: majorRecordContext.Record);
+    }
+
+    #endregion
+
+    #region EnrichAndThrow
+    /// <summary>
+    /// Wraps an exception to associate it with a specific major record, and then throws it
+    /// </summary>
+    /// <param name="ex">Exception to enrich</param>
+    /// <param name="majorRec">Major Record to pull information from</param>
+    [DoesNotReturn]
+    public static void EnrichAndThrow(Exception ex, IMajorRecordGetter? majorRec)
+    {
+        EnrichAndThrow(ex, majorRec?.FormKey, majorRec?.Registration.ClassType, majorRec?.EditorID);
+    }
+
+    /// <summary>
+    /// Wraps an exception to associate it with a specific major record, and then throws it
+    /// </summary>
+    /// <param name="ex">Exception to enrich</param>
+    /// <param name="modKey">ModKey to mark as containing the record</param>
+    /// <param name="majorRec">Major Record to pull information from</param>
+    [DoesNotReturn]
+    public static void EnrichAndThrow(Exception ex, ModKey? modKey, IMajorRecordGetter? majorRec)
+    {
+        EnrichAndThrow(ex, majorRec?.FormKey, majorRec?.Registration.ClassType, majorRec?.EditorID, modKey);
+    }
+
+    /// <summary>
+    /// Wraps an exception to associate it with a specific major record, and then throws it
+    /// </summary>
+    /// <param name="ex">Exception to enrich</param>
+    /// <param name="formKey">FormKey to mark the exception to be associated with</param>
+    /// <param name="recordType">C# Type that the record is</param>
+    /// <param name="edid">EditorID to mark the exception to be associated with</param>
+    /// <param name="modKey">ModKey to mark as containing the record</param>
+    [DoesNotReturn]
+    public static void EnrichAndThrow(Exception ex, FormKey? formKey, Type? recordType, string? edid = null, ModKey? modKey = null)
+    {
+        if (ex is RecordException rec)
+        {
+            if (rec.ModKey == null && modKey != null)
+            {
+                rec.ModKey = modKey;
+            }
+
+            if (rec.EditorID == null && rec.FormKey == null)
+            {
+                rec.EditorID = edid;
+                rec.FormKey = formKey;
+            }
+            if (rec.RecordType == null && recordType != null)
+            {
+                rec.RecordType = recordType;
+            }
+            ExceptionDispatchInfo.Capture(rec).Throw();
+        }
+        throw new RecordException(
+            formKey: formKey,
+            modKey: modKey,
+            edid: edid,
+            recordType: recordType,
+            innerException: ex);
+    }
+
+    /// <summary>
+    /// Wraps an exception to associate it with a specific major record, and then throws it
+    /// </summary>
+    /// <param name="ex">Exception to enrich</param>
+    /// <param name="formKey">FormKey to mark the exception to be associated with</param>
+    /// <param name="edid">EditorID to mark the exception to be associated with</param>
+    /// <param name="modKey">ModKey to mark as containing the record</param>
+    [DoesNotReturn]
+    public static void EnrichAndThrow<TMajor>(Exception ex, FormKey? formKey, string? edid, ModKey? modKey = null)
+        where TMajor : IMajorRecordGetter
+    {
+        EnrichAndThrow(
+            ex,
+            formKey,
+            GetRecordType(typeof(TMajor)),
+            edid,
+            modKey);
+    }
+
+    /// <summary>
+    /// Wraps an exception to associate it with a specific major record, and then throws it
+    /// </summary>
+    /// <param name="ex">Exception to enrich</param>
+    /// <param name="modKey">ModKey to mark as containing the record</param>
+    [DoesNotReturn]
+    public static void EnrichAndThrow(Exception ex, ModKey modKey)
+    {
+        if (ex is RecordException rec)
+        {
+            if (rec.ModKey == null)
+            {
+                rec.ModKey = modKey;
+            }
+            ExceptionDispatchInfo.Capture(rec).Throw();
+        }
+        throw new RecordException(
+            formKey: null,
+            modKey: modKey,
+            edid: null,
+            recordType: null,
+            innerException: ex);
+    }
+
+    /// <summary>
+    /// Wraps an exception to associate it with a specific major record, and then throws it
+    /// </summary>
+    /// <param name="ex">Exception to enrich</param>
+    /// <param name="mod">Mod to mark as containing the record</param>
+    [DoesNotReturn]
+    public static void EnrichAndThrow(Exception ex, IModGetter mod)
+    {
+        EnrichAndThrow(ex, mod.ModKey);
+    }
+
+    /// <summary>
+    /// Wraps an exception to associate it with a specific major record, and then throws it
+    /// </summary>
+    /// <param name="ex">Exception to enrich</param>
+    /// <param name="majorRecordContext">ModContext to pull information from</param>
+    [DoesNotReturn]
+    public static void EnrichAndThrow<TMajor>(Exception ex, IModContext<TMajor> majorRecordContext)
+        where TMajor : IMajorRecordGetter
+    {
+        EnrichAndThrow(ex, modKey: majorRecordContext.ModKey, majorRec: majorRecordContext.Record);
     }
 
     #endregion

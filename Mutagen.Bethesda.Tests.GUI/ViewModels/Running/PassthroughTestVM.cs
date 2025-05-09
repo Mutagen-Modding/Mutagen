@@ -9,6 +9,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows.Input;
 using Noggog;
+using Noggog.WorkEngine;
 
 namespace Mutagen.Bethesda.Tests.GUI;
 
@@ -91,7 +92,7 @@ public class PassthroughTestVM : ViewModel
             {
                 try
                 {
-                    Process.Start(new ProcessStartInfo(PassthroughTest.GetTestFolderPath(Name))
+                    Process.Start(new ProcessStartInfo(PassthroughTest.GetTestFolderPath(Name, Group.Settings.GameRelease))
                     {
                         UseShellExecute = true,
                     });
@@ -102,12 +103,13 @@ public class PassthroughTestVM : ViewModel
             });
     }
 
-    public async Task Run()
+    public async Task Run(IWorkDropoff dropoff)
     {
         List<Test> tests = new List<Test>();
         var passthroughSettings = Settings.Parent.Parent.GetPassthroughSettings();
         var passthrough = PassthroughTest.Factory(new PassthroughTestParams()
         {
+            WorkDropoff = dropoff,
             NicknameSuffix = Settings.Parent.NicknameSuffix,
             PassthroughSettings = passthroughSettings,
             Target = new Target()
@@ -127,7 +129,7 @@ public class PassthroughTestVM : ViewModel
         }
         Stopwatch sw = new Stopwatch();
         sw.Start();
-        await Task.WhenAll(tests.Select(t => Task.Run(t.Start)));
+        await dropoff.EnqueueAndWait(tests.Select(t => t), t => t.Start());
         sw.Stop();
         TimeSpent = sw.Elapsed;
     }

@@ -9,6 +9,7 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Strings.DI;
+using Noggog.WorkEngine;
 
 namespace Mutagen.Bethesda.Tests;
 
@@ -16,8 +17,8 @@ public class OblivionProcessor : Processor
 {
     public override bool StrictStrings => true;
     
-    public OblivionProcessor(bool multithread, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup) 
-        : base(multithread, GameRelease.Oblivion, masterFlagLookup)
+    public OblivionProcessor(IWorkDropoff workDropoff, IReadOnlyCache<IModMasterStyledGetter, ModKey> masterFlagLookup) 
+        : base(workDropoff, GameRelease.Oblivion, masterFlagLookup)
     {
     }
 
@@ -48,6 +49,15 @@ public class OblivionProcessor : Processor
         AddDynamicProcessing(RecordTypes.SPEL, ProcessSpell);
         AddDynamicProcessing(RecordTypes.LVLC, ProcessLeveledCreature);
         AddDynamicProcessing(RecordTypes.LVLI, ProcessLeveledItem);
+        AddDynamicProcessing(RecordTypes.LVSP, ProcessLeveledSpells);
+        AddDynamicProcessing(RecordTypes.SCPT, ProcessScripts);
+        AddDynamicProcessing(RecordTypes.ACTI, ProcessActivators);
+        AddDynamicProcessing(RecordTypes.CREA, ProcessCreatures);
+        AddDynamicProcessing(RecordTypes.DOOR, ProcessDoors);
+        AddDynamicProcessing(RecordTypes.CONT, ProcessContainers);
+        AddDynamicProcessing(RecordTypes.QUST, ProcessQuests);
+        AddDynamicProcessing(RecordTypes.BSGN, ProcessBirthsigns);
+        AddDynamicProcessing(RecordTypes.ARMO, ProcessArmors);
     }
 
     protected override AStringsAlignment[] GetStringsFileAlignments(StringsSource source)
@@ -76,6 +86,15 @@ public class OblivionProcessor : Processor
             {
                 new("CNAM")
             });
+        
+        ProcessFormIDOverflowsForRecords(
+            majorFrame,
+            fileOffset,
+            RecordTypes.SNAM,
+            RecordTypes.SCRI,
+            RecordTypes.SPLO,
+            RecordTypes.PKID,
+            RecordTypes.INAM);
     }
 
     private void ProcessLeveledItemDataFields(
@@ -241,10 +260,29 @@ public class OblivionProcessor : Processor
         {
             ProcessZeroFloats(dataRec, fileOffset, 6);
         }
-
+        
+        ProcessFormIDOverflowsForRecords(
+            majorFrame,
+            fileOffset,
+            RecordTypes.XTEL,
+            RecordTypes.NAME,
+            RecordTypes.XESP,
+            RecordTypes.XOWN);
+        
         if (majorFrame.TryFindSubrecord(RecordTypes.XTEL, out var xtelFrame))
         {
-            ProcessZeroFloats(xtelFrame, fileOffset, 6);
+            var loc = 4;
+            ProcessZeroFloats(xtelFrame, fileOffset, ref loc, 6); 
+        } 
+        
+        if (majorFrame.TryFindSubrecord(RecordTypes.XACN, out var xacnFrame))
+        {
+            var stringAmount = ProcessStringTermination(xacnFrame, fileOffset);
+            if (stringAmount > 0)
+            {
+                amount -= stringAmount;
+                ProcessLengths(xacnFrame, -stringAmount, fileOffset);
+            }
         }
 
         ProcessLengths(
@@ -262,6 +300,12 @@ public class OblivionProcessor : Processor
         {
             ProcessZeroFloats(dataRec, fileOffset, 6);
         }
+        
+        ProcessFormIDOverflowsForRecords(
+            majorFrame,
+            fileOffset,
+            RecordTypes.NAME,
+            RecordTypes.XESP);
 
         ProcessLengths(
             majorFrame,
@@ -278,6 +322,12 @@ public class OblivionProcessor : Processor
         {
             ProcessZeroFloats(dataRec, fileOffset, 6);
         }
+
+        ProcessFormIDOverflowsForRecords(
+            majorFrame,
+            fileOffset,
+            RecordTypes.NAME,
+            RecordTypes.XESP);
 
         ProcessLengths(
             majorFrame,
@@ -303,6 +353,11 @@ public class OblivionProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
+        ProcessFormIDOverflowsForRecords(
+            majorFrame,
+            fileOffset,
+            RecordTypes.QSTI);
+        
         var formKey = FormKey.Factory(stream.MetaData.MasterReferences, majorFrame.FormID, reference: false);
         CleanEmptyDialogGroups(
             stream,
@@ -341,6 +396,15 @@ public class OblivionProcessor : Processor
                     locToRemove + diff - 1));
             amount -= diff;
         }
+
+        ProcessFormIDOverflowsForRecords(
+            majorFrame,
+            fileOffset,
+            RecordTypes.QSTI,
+            RecordTypes.SCRO,
+            RecordTypes.PNAM,
+            RecordTypes.TCLT,
+            RecordTypes.NAME);
 
         ProcessLengths(
             majorFrame,
@@ -403,6 +467,12 @@ public class OblivionProcessor : Processor
                 loc: fileOffset + ctdt.Location + 10,
                 addition: new byte[] { second1, 0, 0, 0 });
             amount += 4;
+        }
+        
+        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.PLDT))
+        {
+            var loc = 4;
+            ProcessFormIDOverflow(subRec, fileOffset, ref loc);
         }
 
         ProcessLengths(
@@ -513,7 +583,7 @@ public class OblivionProcessor : Processor
                     sub: new byte[] { 0, 0, 0 }, 
                     loc: fileOffset + dataRec.EndLocation + move); 
             } 
-        } 
+        }
  
         ProcessLengths( 
             majorFrame, 
@@ -544,6 +614,10 @@ public class OblivionProcessor : Processor
             var offset = 2;
             ProcessZeroFloats(dataRec, fileOffset, ref offset, 2);
         }
+        ProcessFormIDOverflowsForRecords(
+            majorFrame,
+            fileOffset,
+            RecordTypes.SCRI);
     }
 
     private void ProcessLights(
@@ -563,10 +637,10 @@ public class OblivionProcessor : Processor
         MajorRecordFrame majorFrame,
         long fileOffset)
     {
-        foreach (var scit in majorFrame.FindEnumerateSubrecords(RecordTypes.SCIT))
-        {
-            ProcessFormIDOverflow(scit, fileOffset);
-        }
+        ProcessFormIDOverflowsForRecords(
+            majorFrame,
+            fileOffset,
+            RecordTypes.SCIT);
     }
 
     private void ProcessLeveledCreature(
@@ -579,6 +653,11 @@ public class OblivionProcessor : Processor
             {
                 Instructions.SetSubstitution(fileOffset + subRec.Location + subRec.HeaderLength, 0);
             }
+        }
+        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.LVLO))
+        {
+            var loc = 4;
+            ProcessFormIDOverflow(subRec, fileOffset, ref loc);
         }
     }
 
@@ -593,6 +672,113 @@ public class OblivionProcessor : Processor
                 Instructions.SetSubstitution(fileOffset + subRec.Location + subRec.HeaderLength, 0);
             }
         }
+        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.LVLO))
+        {
+            var loc = 4;
+            ProcessFormIDOverflow(subRec, fileOffset, ref loc);
+        }
+    }
+
+    private void ProcessLeveledSpells(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.LVLD))
+        {
+            if (subRec.Content[0] > 100)
+            {
+                Instructions.SetSubstitution(fileOffset + subRec.Location + subRec.HeaderLength, 0);
+            }
+        }
+        foreach (var subRec in majorFrame.FindEnumerateSubrecords(RecordTypes.LVLO))
+        {
+            var loc = 4;
+            ProcessFormIDOverflow(subRec, fileOffset, ref loc);
+        }
+    }
+
+    private void ProcessScripts(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        ProcessFormIDOverflowsForRecords(
+            majorFrame,
+            fileOffset,
+            RecordTypes.SCRO);
+    }
+
+    private void ProcessActivators(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        ProcessFormIDOverflowsForRecords(
+            majorFrame,
+            fileOffset,
+            RecordTypes.SCRI,
+            RecordTypes.SNAM);
+    }
+
+    private void ProcessCreatures(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        ProcessFormIDOverflowsForRecords(
+            majorFrame,
+            fileOffset,
+            RecordTypes.CNTO,
+            RecordTypes.SCRI);
+    }
+
+    private void ProcessDoors(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        ProcessFormIDOverflowsForRecords(
+            majorFrame,
+            fileOffset,
+            RecordTypes.SCRI);
+    }
+
+    private void ProcessContainers(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        ProcessFormIDOverflowsForRecords(
+            majorFrame,
+            fileOffset,
+            RecordTypes.CNTO);
+    }
+
+    private void ProcessQuests(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        ProcessFormIDOverflowsForRecords(
+            majorFrame,
+            fileOffset,
+            RecordTypes.SCRI,
+            RecordTypes.SCRO,
+            RecordTypes.QSTA);
+    }
+
+    private void ProcessBirthsigns(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        ProcessFormIDOverflowsForRecords(
+            majorFrame,
+            fileOffset,
+            RecordTypes.SPLO);
+    }
+
+    private void ProcessArmors(
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        ProcessFormIDOverflowsForRecords(
+            majorFrame,
+            fileOffset,
+            RecordTypes.SCRI);
     }
     #endregion
 }

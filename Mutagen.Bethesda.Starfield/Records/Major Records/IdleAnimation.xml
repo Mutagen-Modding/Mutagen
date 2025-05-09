@@ -5,12 +5,17 @@
       <RefList name="Conditions" refName="Condition" />
       <String name="BehaviorGraph" recordType="DNAM" />
       <String name="AnimationEvent" recordType="ENAM" />
-      <List name="RelatedIdles" recordType="ANAM" nullable="False">
-        <FormLink>
-          <Interface>IIdleRelation</Interface>
-        </FormLink>
-      </List>
-      <ByteArray name="FNAM" recordType="FNAM" unknown="true" />
+      <Data recordType="ANAM">
+        <Fields>
+          <FormLink name="ParentAnimation" >
+            <Interface>IIdleRelation</Interface>
+          </FormLink>
+          <FormLink name="PreviousAnimation" >
+            <Interface>IIdleRelation</Interface>
+          </FormLink>
+        </Fields>
+      </Data>
+      <Enum name="Flags" recordType="FNAM" byteLength="1" enumName="IdleAnimation.Flag" />
       <String name="AnimationFile" recordType="GNAM" />
       <String name="Name" recordType="FULL" translated="Normal" />
     </Fields>

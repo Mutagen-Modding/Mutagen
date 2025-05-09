@@ -243,6 +243,9 @@ namespace Mutagen.Bethesda.Fallout4
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Destructible? _Destructible;
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         public Destructible? Destructible
         {
             get => _Destructible;
@@ -250,6 +253,10 @@ namespace Mutagen.Bethesda.Fallout4
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDestructibleGetter? INpcGetter.Destructible => this.Destructible;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
+        #endregion
         #endregion
         #region Skin
         private readonly IFormLinkNullable<IArmorGetter> _Skin = new FormLinkNullable<IArmorGetter>();
@@ -4888,6 +4895,7 @@ namespace Mutagen.Bethesda.Fallout4
         IExplodeSpawn,
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
+        IHasDestructible,
         IHaveVirtualMachineAdapter,
         IKeyworded<IKeywordGetter>,
         ILockList,
@@ -4932,6 +4940,9 @@ namespace Mutagen.Bethesda.Fallout4
         new TemplateActors? TemplateActors { get; set; }
         new IFormLink<IRaceGetter> Race { get; set; }
         new ExtendedList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; set; }
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         new Destructible? Destructible { get; set; }
         new IFormLinkNullable<IArmorGetter> Skin { get; set; }
         new IFormLinkNullable<IArmorGetter> FarAwayModel { get; set; }
@@ -5025,6 +5036,7 @@ namespace Mutagen.Bethesda.Fallout4
         IConstructibleObjectTargetGetter,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
+        IHasDestructibleGetter,
         IHaveVirtualMachineAdapterGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILockListGetter,
@@ -5074,7 +5086,12 @@ namespace Mutagen.Bethesda.Fallout4
         ITemplateActorsGetter? TemplateActors { get; }
         IFormLinkGetter<IRaceGetter> Race { get; }
         IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; }
+        #region Destructible
+        /// <summary>
+        /// Aspects: IHasDestructibleGetter
+        /// </summary>
         IDestructibleGetter? Destructible { get; }
+        #endregion
         IFormLinkNullableGetter<IArmorGetter> Skin { get; }
         IFormLinkNullableGetter<IArmorGetter> FarAwayModel { get; }
         IFormLinkNullableGetter<IRaceGetter> AttackRace { get; }

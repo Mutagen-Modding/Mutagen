@@ -125,15 +125,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LinkTo
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<IDialogGetter>> _LinkTo = new ExtendedList<IFormLinkGetter<IDialogGetter>>();
-        public ExtendedList<IFormLinkGetter<IDialogGetter>> LinkTo
+        private ExtendedList<IFormLinkGetter<IDialogTopicGetter>> _LinkTo = new ExtendedList<IFormLinkGetter<IDialogTopicGetter>>();
+        public ExtendedList<IFormLinkGetter<IDialogTopicGetter>> LinkTo
         {
             get => this._LinkTo;
             init => this._LinkTo = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IDialogGetter>> IDialogResponsesGetter.LinkTo => _LinkTo;
+        IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> IDialogResponsesGetter.LinkTo => _LinkTo;
         #endregion
 
         #endregion
@@ -1342,7 +1342,6 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IDialogResponses :
         IAssetLinkContainer,
-        IDialog,
         IDialogResponsesGetter,
         IFormLinkContainer,
         IHaveVirtualMachineAdapter,
@@ -1358,7 +1357,7 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLinkNullable<IDialogTopicGetter> Topic { get; set; }
         new IFormLinkNullable<IDialogResponsesGetter> PreviousDialog { get; set; }
         new FavorLevel? FavorLevel { get; set; }
-        new ExtendedList<IFormLinkGetter<IDialogGetter>> LinkTo { get; }
+        new ExtendedList<IFormLinkGetter<IDialogTopicGetter>> LinkTo { get; }
         new IFormLinkNullable<IDialogResponsesGetter> ResponseData { get; set; }
         new ExtendedList<DialogResponse> Responses { get; }
         new ExtendedList<Condition> Conditions { get; }
@@ -1385,7 +1384,6 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         IAssetLinkContainerGetter,
         IBinaryItem,
-        IDialogGetter,
         IFormLinkContainerGetter,
         IHaveVirtualMachineAdapterGetter,
         ILoquiObject<IDialogResponsesGetter>,
@@ -1403,7 +1401,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IDialogTopicGetter> Topic { get; }
         IFormLinkNullableGetter<IDialogResponsesGetter> PreviousDialog { get; }
         FavorLevel? FavorLevel { get; }
-        IReadOnlyList<IFormLinkGetter<IDialogGetter>> LinkTo { get; }
+        IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> LinkTo { get; }
         IFormLinkNullableGetter<IDialogResponsesGetter> ResponseData { get; }
         IReadOnlyList<IDialogResponseGetter> Responses { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
@@ -1782,6 +1780,12 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
+        private static partial void RemapResolvedAssetLinks(
+            IDialogResponses obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories);
+        
         public void RemapAssetLinks(
             IDialogResponses obj,
             IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
@@ -1789,6 +1793,7 @@ namespace Mutagen.Bethesda.Skyrim
             AssetLinkQuery queryCategories)
         {
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            RemapResolvedAssetLinks(obj, mapping, linkCache, queryCategories);
             obj.VirtualMachineAdapter?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
@@ -2301,11 +2306,20 @@ namespace Mutagen.Bethesda.Skyrim
             yield break;
         }
         
+        public static partial IEnumerable<IAssetLinkGetter> GetResolvedAssetLinks(IDialogResponsesGetter obj, IAssetLinkCache linkCache, Type? assetType);
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IDialogResponsesGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
             foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
             {
                 yield return item;
+            }
+            if (queryCategories.HasFlag(AssetLinkQuery.Resolved))
+            {
+                if (linkCache == null) throw new ArgumentNullException("No link cache was given on a query interested in resolved assets");
+                foreach (var additional in GetResolvedAssetLinks(obj, linkCache, assetType))
+                {
+                    yield return additional;
+                }
             }
             if (obj.VirtualMachineAdapter is {} VirtualMachineAdapterItems)
             {
@@ -2470,7 +2484,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     item.LinkTo.SetTo(
                         rhs.LinkTo
-                            .Select(b => (IFormLinkGetter<IDialogGetter>)new FormLink<IDialogGetter>(b.FormKey)));
+                            .Select(b => (IFormLinkGetter<IDialogTopicGetter>)new FormLink<IDialogTopicGetter>(b.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2774,10 +2788,10 @@ namespace Mutagen.Bethesda.Skyrim
                 item.FavorLevel,
                 length: 1,
                 header: translationParams.ConvertToCustom(RecordTypes.CNAM));
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDialogGetter>>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDialogTopicGetter>>.Instance.Write(
                 writer: writer,
                 items: item.LinkTo,
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogGetter> subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogTopicGetter> subItem, TypedWriteParams conv) =>
                 {
                     FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2948,7 +2962,7 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.TCLT:
                 {
                     item.LinkTo.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDialogGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDialogTopicGetter>>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: translationParams.ConvertToCustom(RecordTypes.TCLT),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -3113,7 +3127,7 @@ namespace Mutagen.Bethesda.Skyrim
         private int? _FavorLevelLocation;
         public FavorLevel? FavorLevel => _FavorLevelLocation.HasValue ? (FavorLevel)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FavorLevelLocation!.Value, _package.MetaData.Constants)[0] : default(FavorLevel?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IDialogGetter>> LinkTo { get; private set; } = Array.Empty<IFormLinkGetter<IDialogGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IDialogTopicGetter>> LinkTo { get; private set; } = Array.Empty<IFormLinkGetter<IDialogTopicGetter>>();
         #region ResponseData
         private int? _ResponseDataLocation;
         public IFormLinkNullableGetter<IDialogResponsesGetter> ResponseData => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IDialogResponsesGetter>(_package, _recordData, _ResponseDataLocation);
@@ -3243,10 +3257,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 case RecordTypeInts.TCLT:
                 {
-                    this.LinkTo = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IDialogGetter>>(
+                    this.LinkTo = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IDialogTopicGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IDialogGetter>(p, s),
+                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IDialogTopicGetter>(p, s),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,

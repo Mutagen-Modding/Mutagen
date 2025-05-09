@@ -20,6 +20,36 @@ namespace Mutagen.Bethesda.Starfield
         public StarfieldAspectInterfaceMapping()
         {
             var dict = new Dictionary<Type, InterfaceMappingResult>();
+            dict[typeof(IEnchantable)] = new InterfaceMappingResult(
+                true,
+                new ILoquiRegistration[]
+                {
+                    Weapon_Registration.Instance,
+                },
+                new InterfaceMappingTypes(
+                    Setter: typeof(IEnchantable),
+                    Getter: typeof(IEnchantableGetter)));
+            dict[typeof(IEnchantableGetter)] = dict[typeof(IEnchantable)] with { Setter = false };
+            dict[typeof(IHasDestructible)] = new InterfaceMappingResult(
+                true,
+                new ILoquiRegistration[]
+                {
+                    Activator_Registration.Instance,
+                    Armor_Registration.Instance,
+                    Book_Registration.Instance,
+                    Container_Registration.Instance,
+                    DestructibleObjectComponent_Registration.Instance,
+                    Flora_Registration.Instance,
+                    Furniture_Registration.Instance,
+                    Light_Registration.Instance,
+                    MiscItem_Registration.Instance,
+                    MoveableStatic_Registration.Instance,
+                    Projectile_Registration.Instance,
+                },
+                new InterfaceMappingTypes(
+                    Setter: typeof(IHasDestructible),
+                    Getter: typeof(IHasDestructibleGetter)));
+            dict[typeof(IHasDestructibleGetter)] = dict[typeof(IHasDestructible)] with { Setter = false };
             dict[typeof(IHaveVirtualMachineAdapter)] = new InterfaceMappingResult(
                 true,
                 new ILoquiRegistration[]
@@ -97,6 +127,7 @@ namespace Mutagen.Bethesda.Starfield
                     Door_Registration.Instance,
                     Flora_Registration.Instance,
                     Furniture_Registration.Instance,
+                    GameplayOption_Registration.Instance,
                     IdleMarker_Registration.Instance,
                     Ingestible_Registration.Instance,
                     InstanceNamingRule_Registration.Instance,
@@ -197,6 +228,7 @@ namespace Mutagen.Bethesda.Starfield
                 true,
                 new ILoquiRegistration[]
                 {
+                    ActionRecord_Registration.Instance,
                     Activator_Registration.Instance,
                     Activity_Registration.Instance,
                     ActorValueInformation_Registration.Instance,
@@ -225,7 +257,9 @@ namespace Mutagen.Bethesda.Starfield
                     FormList_Registration.Instance,
                     FullNameComponent_Registration.Instance,
                     Furniture_Registration.Instance,
-                    GenericBaseForm_Registration.Instance,
+                    GameplayOption_Registration.Instance,
+                    GameplayOptionReward_Registration.Instance,
+                    GameplayOptionsGroup_Registration.Instance,
                     Hazard_Registration.Instance,
                     HeadPart_Registration.Instance,
                     IdleAnimation_Registration.Instance,
@@ -259,7 +293,6 @@ namespace Mutagen.Bethesda.Starfield
                     PackIn_Registration.Instance,
                     Perk_Registration.Instance,
                     PhotoModeFeature_Registration.Instance,
-                    Planet_Registration.Instance,
                     ProgressionEvaluatorArgument_Registration.Instance,
                     Projectile_Registration.Instance,
                     Quest_Registration.Instance,
@@ -268,7 +301,6 @@ namespace Mutagen.Bethesda.Starfield
                     ResearchProject_Registration.Instance,
                     Resource_Registration.Instance,
                     ScenePhase_Registration.Instance,
-                    SliderEntry_Registration.Instance,
                     Spell_Registration.Instance,
                     Star_Registration.Instance,
                     Static_Registration.Instance,
@@ -289,13 +321,13 @@ namespace Mutagen.Bethesda.Starfield
                 true,
                 new ILoquiRegistration[]
                 {
+                    ActionRecord_Registration.Instance,
                     Activator_Registration.Instance,
                     Activity_Registration.Instance,
                     ActorValueInformation_Registration.Instance,
-                    ActorValueModulation_Registration.Instance,
+                    ActorValueModulationEntry_Registration.Instance,
                     Ammunition_Registration.Instance,
                     AnimationSceneAction_Registration.Instance,
-                    AnimationSoundTag_Registration.Instance,
                     AObjectModification_Registration.Instance,
                     APackageData_Registration.Instance,
                     Armor_Registration.Instance,
@@ -329,7 +361,9 @@ namespace Mutagen.Bethesda.Starfield
                     Furniture_Registration.Instance,
                     FurnitureMarkerFile_Registration.Instance,
                     FxSceneAction_Registration.Instance,
-                    GenericBaseForm_Registration.Instance,
+                    GameplayOption_Registration.Instance,
+                    GameplayOptionReward_Registration.Instance,
+                    GameplayOptionsGroup_Registration.Instance,
                     Hazard_Registration.Instance,
                     HeadPart_Registration.Instance,
                     IdleAnimation_Registration.Instance,
@@ -395,7 +429,6 @@ namespace Mutagen.Bethesda.Starfield
                     ScriptStructProperty_Registration.Instance,
                     ScriptVariableListProperty_Registration.Instance,
                     ScriptVariableProperty_Registration.Instance,
-                    SliderEntry_Registration.Instance,
                     Spell_Registration.Instance,
                     Star_Registration.Instance,
                     StartSceneAction_Registration.Instance,
@@ -419,6 +452,7 @@ namespace Mutagen.Bethesda.Starfield
                 true,
                 new ILoquiRegistration[]
                 {
+                    ActionRecord_Registration.Instance,
                     Activator_Registration.Instance,
                     Activity_Registration.Instance,
                     ActorValueInformation_Registration.Instance,
@@ -446,7 +480,9 @@ namespace Mutagen.Bethesda.Starfield
                     FormList_Registration.Instance,
                     FullNameComponent_Registration.Instance,
                     Furniture_Registration.Instance,
-                    GenericBaseForm_Registration.Instance,
+                    GameplayOption_Registration.Instance,
+                    GameplayOptionReward_Registration.Instance,
+                    GameplayOptionsGroup_Registration.Instance,
                     Hazard_Registration.Instance,
                     HeadPart_Registration.Instance,
                     IdleAnimation_Registration.Instance,
@@ -474,7 +510,6 @@ namespace Mutagen.Bethesda.Starfield
                     Race_Registration.Instance,
                     ResearchProject_Registration.Instance,
                     Resource_Registration.Instance,
-                    SliderEntry_Registration.Instance,
                     Spell_Registration.Instance,
                     Static_Registration.Instance,
                     StaticCollection_Registration.Instance,
@@ -494,6 +529,7 @@ namespace Mutagen.Bethesda.Starfield
                 true,
                 new ILoquiRegistration[]
                 {
+                    ActionRecord_Registration.Instance,
                     Activator_Registration.Instance,
                     Activity_Registration.Instance,
                     ActorValueInformation_Registration.Instance,
@@ -521,7 +557,9 @@ namespace Mutagen.Bethesda.Starfield
                     FormList_Registration.Instance,
                     FullNameComponent_Registration.Instance,
                     Furniture_Registration.Instance,
-                    GenericBaseForm_Registration.Instance,
+                    GameplayOption_Registration.Instance,
+                    GameplayOptionReward_Registration.Instance,
+                    GameplayOptionsGroup_Registration.Instance,
                     Hazard_Registration.Instance,
                     HeadPart_Registration.Instance,
                     IdleAnimation_Registration.Instance,
@@ -550,7 +588,6 @@ namespace Mutagen.Bethesda.Starfield
                     Race_Registration.Instance,
                     ResearchProject_Registration.Instance,
                     Resource_Registration.Instance,
-                    SliderEntry_Registration.Instance,
                     Spell_Registration.Instance,
                     Static_Registration.Instance,
                     StaticCollection_Registration.Instance,

@@ -5,7 +5,7 @@ public class MissingRecordException : Exception
     public FormKey? FormKey { get; }
     public string? EditorID { get; }
     public Type? Type { get; }
-    public Type[] Types { get; } = Array.Empty<Type>();
+    public Type[] Types { get; } = [];
 
     public MissingRecordException(FormKey formKey, Type type)
     {

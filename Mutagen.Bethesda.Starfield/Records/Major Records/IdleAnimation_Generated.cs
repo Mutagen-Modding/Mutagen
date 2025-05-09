@@ -80,30 +80,30 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IIdleAnimationGetter.AnimationEvent => this.AnimationEvent;
         #endregion
-        #region RelatedIdles
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<IIdleRelationGetter>> _RelatedIdles = new ExtendedList<IFormLinkGetter<IIdleRelationGetter>>();
-        public ExtendedList<IFormLinkGetter<IIdleRelationGetter>> RelatedIdles
+        #region ParentAnimation
+        private readonly IFormLink<IIdleRelationGetter> _ParentAnimation = new FormLink<IIdleRelationGetter>();
+        public IFormLink<IIdleRelationGetter> ParentAnimation
         {
-            get => this._RelatedIdles;
-            init => this._RelatedIdles = value;
-        }
-        #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IIdleRelationGetter>> IIdleAnimationGetter.RelatedIdles => _RelatedIdles;
-        #endregion
-
-        #endregion
-        #region FNAM
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _FNAM;
-        public MemorySlice<Byte>? FNAM
-        {
-            get => this._FNAM;
-            set => this._FNAM = value;
+            get => _ParentAnimation;
+            set => _ParentAnimation.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IIdleAnimationGetter.FNAM => this.FNAM;
+        IFormLinkGetter<IIdleRelationGetter> IIdleAnimationGetter.ParentAnimation => this.ParentAnimation;
+        #endregion
+        #region PreviousAnimation
+        private readonly IFormLink<IIdleRelationGetter> _PreviousAnimation = new FormLink<IIdleRelationGetter>();
+        public IFormLink<IIdleRelationGetter> PreviousAnimation
+        {
+            get => _PreviousAnimation;
+            set => _PreviousAnimation.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IIdleRelationGetter> IIdleAnimationGetter.PreviousAnimation => this.PreviousAnimation;
+        #endregion
+        #region Flags
+        public IdleAnimation.Flag? Flags { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IdleAnimation.Flag? IIdleAnimationGetter.Flags => this.Flags;
         #endregion
         #region AnimationFile
         public String? AnimationFile { get; set; }
@@ -174,8 +174,9 @@ namespace Mutagen.Bethesda.Starfield
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.BehaviorGraph = initialValue;
                 this.AnimationEvent = initialValue;
-                this.RelatedIdles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.FNAM = initialValue;
+                this.ParentAnimation = initialValue;
+                this.PreviousAnimation = initialValue;
+                this.Flags = initialValue;
                 this.AnimationFile = initialValue;
                 this.Name = initialValue;
             }
@@ -191,8 +192,9 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Conditions,
                 TItem BehaviorGraph,
                 TItem AnimationEvent,
-                TItem RelatedIdles,
-                TItem FNAM,
+                TItem ParentAnimation,
+                TItem PreviousAnimation,
+                TItem Flags,
                 TItem AnimationFile,
                 TItem Name)
             : base(
@@ -207,8 +209,9 @@ namespace Mutagen.Bethesda.Starfield
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.BehaviorGraph = BehaviorGraph;
                 this.AnimationEvent = AnimationEvent;
-                this.RelatedIdles = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RelatedIdles, Enumerable.Empty<(int Index, TItem Value)>());
-                this.FNAM = FNAM;
+                this.ParentAnimation = ParentAnimation;
+                this.PreviousAnimation = PreviousAnimation;
+                this.Flags = Flags;
                 this.AnimationFile = AnimationFile;
                 this.Name = Name;
             }
@@ -225,8 +228,9 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
             public TItem BehaviorGraph;
             public TItem AnimationEvent;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? RelatedIdles;
-            public TItem FNAM;
+            public TItem ParentAnimation;
+            public TItem PreviousAnimation;
+            public TItem Flags;
             public TItem AnimationFile;
             public TItem Name;
             #endregion
@@ -245,8 +249,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
                 if (!object.Equals(this.BehaviorGraph, rhs.BehaviorGraph)) return false;
                 if (!object.Equals(this.AnimationEvent, rhs.AnimationEvent)) return false;
-                if (!object.Equals(this.RelatedIdles, rhs.RelatedIdles)) return false;
-                if (!object.Equals(this.FNAM, rhs.FNAM)) return false;
+                if (!object.Equals(this.ParentAnimation, rhs.ParentAnimation)) return false;
+                if (!object.Equals(this.PreviousAnimation, rhs.PreviousAnimation)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.AnimationFile, rhs.AnimationFile)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 return true;
@@ -257,8 +262,9 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Conditions);
                 hash.Add(this.BehaviorGraph);
                 hash.Add(this.AnimationEvent);
-                hash.Add(this.RelatedIdles);
-                hash.Add(this.FNAM);
+                hash.Add(this.ParentAnimation);
+                hash.Add(this.PreviousAnimation);
+                hash.Add(this.Flags);
                 hash.Add(this.AnimationFile);
                 hash.Add(this.Name);
                 hash.Add(base.GetHashCode());
@@ -285,18 +291,9 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (!eval(this.BehaviorGraph)) return false;
                 if (!eval(this.AnimationEvent)) return false;
-                if (this.RelatedIdles != null)
-                {
-                    if (!eval(this.RelatedIdles.Overall)) return false;
-                    if (this.RelatedIdles.Specific != null)
-                    {
-                        foreach (var item in this.RelatedIdles.Specific)
-                        {
-                            if (!eval(item.Value)) return false;
-                        }
-                    }
-                }
-                if (!eval(this.FNAM)) return false;
+                if (!eval(this.ParentAnimation)) return false;
+                if (!eval(this.PreviousAnimation)) return false;
+                if (!eval(this.Flags)) return false;
                 if (!eval(this.AnimationFile)) return false;
                 if (!eval(this.Name)) return false;
                 return true;
@@ -321,18 +318,9 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (eval(this.BehaviorGraph)) return true;
                 if (eval(this.AnimationEvent)) return true;
-                if (this.RelatedIdles != null)
-                {
-                    if (eval(this.RelatedIdles.Overall)) return true;
-                    if (this.RelatedIdles.Specific != null)
-                    {
-                        foreach (var item in this.RelatedIdles.Specific)
-                        {
-                            if (!eval(item.Value)) return false;
-                        }
-                    }
-                }
-                if (eval(this.FNAM)) return true;
+                if (eval(this.ParentAnimation)) return true;
+                if (eval(this.PreviousAnimation)) return true;
+                if (eval(this.Flags)) return true;
                 if (eval(this.AnimationFile)) return true;
                 if (eval(this.Name)) return true;
                 return false;
@@ -367,21 +355,9 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 obj.BehaviorGraph = eval(this.BehaviorGraph);
                 obj.AnimationEvent = eval(this.AnimationEvent);
-                if (RelatedIdles != null)
-                {
-                    obj.RelatedIdles = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RelatedIdles.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (RelatedIdles.Specific != null)
-                    {
-                        var l = new List<(int Index, R Item)>();
-                        obj.RelatedIdles.Specific = l;
-                        foreach (var item in RelatedIdles.Specific)
-                        {
-                            R mask = eval(item.Value);
-                            l.Add((item.Index, mask));
-                        }
-                    }
-                }
-                obj.FNAM = eval(this.FNAM);
+                obj.ParentAnimation = eval(this.ParentAnimation);
+                obj.PreviousAnimation = eval(this.PreviousAnimation);
+                obj.Flags = eval(this.Flags);
                 obj.AnimationFile = eval(this.AnimationFile);
                 obj.Name = eval(this.Name);
             }
@@ -429,30 +405,17 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(AnimationEvent, "AnimationEvent");
                     }
-                    if ((printMask?.RelatedIdles?.Overall ?? true)
-                        && RelatedIdles is {} RelatedIdlesItem)
+                    if (printMask?.ParentAnimation ?? true)
                     {
-                        sb.AppendLine("RelatedIdles =>");
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(RelatedIdlesItem.Overall);
-                            if (RelatedIdlesItem.Specific != null)
-                            {
-                                foreach (var subItem in RelatedIdlesItem.Specific)
-                                {
-                                    using (sb.Brace())
-                                    {
-                                        {
-                                            sb.AppendItem(subItem);
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        sb.AppendItem(ParentAnimation, "ParentAnimation");
                     }
-                    if (printMask?.FNAM ?? true)
+                    if (printMask?.PreviousAnimation ?? true)
                     {
-                        sb.AppendItem(FNAM, "FNAM");
+                        sb.AppendItem(PreviousAnimation, "PreviousAnimation");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        sb.AppendItem(Flags, "Flags");
                     }
                     if (printMask?.AnimationFile ?? true)
                     {
@@ -476,8 +439,9 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
             public Exception? BehaviorGraph;
             public Exception? AnimationEvent;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? RelatedIdles;
-            public Exception? FNAM;
+            public Exception? ParentAnimation;
+            public Exception? PreviousAnimation;
+            public Exception? Flags;
             public Exception? AnimationFile;
             public Exception? Name;
             #endregion
@@ -494,10 +458,12 @@ namespace Mutagen.Bethesda.Starfield
                         return BehaviorGraph;
                     case IdleAnimation_FieldIndex.AnimationEvent:
                         return AnimationEvent;
-                    case IdleAnimation_FieldIndex.RelatedIdles:
-                        return RelatedIdles;
-                    case IdleAnimation_FieldIndex.FNAM:
-                        return FNAM;
+                    case IdleAnimation_FieldIndex.ParentAnimation:
+                        return ParentAnimation;
+                    case IdleAnimation_FieldIndex.PreviousAnimation:
+                        return PreviousAnimation;
+                    case IdleAnimation_FieldIndex.Flags:
+                        return Flags;
                     case IdleAnimation_FieldIndex.AnimationFile:
                         return AnimationFile;
                     case IdleAnimation_FieldIndex.Name:
@@ -521,11 +487,14 @@ namespace Mutagen.Bethesda.Starfield
                     case IdleAnimation_FieldIndex.AnimationEvent:
                         this.AnimationEvent = ex;
                         break;
-                    case IdleAnimation_FieldIndex.RelatedIdles:
-                        this.RelatedIdles = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case IdleAnimation_FieldIndex.ParentAnimation:
+                        this.ParentAnimation = ex;
                         break;
-                    case IdleAnimation_FieldIndex.FNAM:
-                        this.FNAM = ex;
+                    case IdleAnimation_FieldIndex.PreviousAnimation:
+                        this.PreviousAnimation = ex;
+                        break;
+                    case IdleAnimation_FieldIndex.Flags:
+                        this.Flags = ex;
                         break;
                     case IdleAnimation_FieldIndex.AnimationFile:
                         this.AnimationFile = ex;
@@ -553,11 +522,14 @@ namespace Mutagen.Bethesda.Starfield
                     case IdleAnimation_FieldIndex.AnimationEvent:
                         this.AnimationEvent = (Exception?)obj;
                         break;
-                    case IdleAnimation_FieldIndex.RelatedIdles:
-                        this.RelatedIdles = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case IdleAnimation_FieldIndex.ParentAnimation:
+                        this.ParentAnimation = (Exception?)obj;
                         break;
-                    case IdleAnimation_FieldIndex.FNAM:
-                        this.FNAM = (Exception?)obj;
+                    case IdleAnimation_FieldIndex.PreviousAnimation:
+                        this.PreviousAnimation = (Exception?)obj;
+                        break;
+                    case IdleAnimation_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
                         break;
                     case IdleAnimation_FieldIndex.AnimationFile:
                         this.AnimationFile = (Exception?)obj;
@@ -577,8 +549,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (Conditions != null) return true;
                 if (BehaviorGraph != null) return true;
                 if (AnimationEvent != null) return true;
-                if (RelatedIdles != null) return true;
-                if (FNAM != null) return true;
+                if (ParentAnimation != null) return true;
+                if (PreviousAnimation != null) return true;
+                if (Flags != null) return true;
                 if (AnimationFile != null) return true;
                 if (Name != null) return true;
                 return false;
@@ -631,28 +604,14 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(AnimationEvent, "AnimationEvent");
                 }
-                if (RelatedIdles is {} RelatedIdlesItem)
                 {
-                    sb.AppendLine("RelatedIdles =>");
-                    using (sb.Brace())
-                    {
-                        sb.AppendItem(RelatedIdlesItem.Overall);
-                        if (RelatedIdlesItem.Specific != null)
-                        {
-                            foreach (var subItem in RelatedIdlesItem.Specific)
-                            {
-                                using (sb.Brace())
-                                {
-                                    {
-                                        sb.AppendItem(subItem);
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    sb.AppendItem(ParentAnimation, "ParentAnimation");
                 }
                 {
-                    sb.AppendItem(FNAM, "FNAM");
+                    sb.AppendItem(PreviousAnimation, "PreviousAnimation");
+                }
+                {
+                    sb.AppendItem(Flags, "Flags");
                 }
                 {
                     sb.AppendItem(AnimationFile, "AnimationFile");
@@ -671,8 +630,9 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.BehaviorGraph = this.BehaviorGraph.Combine(rhs.BehaviorGraph);
                 ret.AnimationEvent = this.AnimationEvent.Combine(rhs.AnimationEvent);
-                ret.RelatedIdles = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.RelatedIdles?.Overall, rhs.RelatedIdles?.Overall), Noggog.ExceptionExt.Combine(this.RelatedIdles?.Specific, rhs.RelatedIdles?.Specific));
-                ret.FNAM = this.FNAM.Combine(rhs.FNAM);
+                ret.ParentAnimation = this.ParentAnimation.Combine(rhs.ParentAnimation);
+                ret.PreviousAnimation = this.PreviousAnimation.Combine(rhs.PreviousAnimation);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.AnimationFile = this.AnimationFile.Combine(rhs.AnimationFile);
                 ret.Name = this.Name.Combine(rhs.Name);
                 return ret;
@@ -700,8 +660,9 @@ namespace Mutagen.Bethesda.Starfield
             public Condition.TranslationMask? Conditions;
             public bool BehaviorGraph;
             public bool AnimationEvent;
-            public bool RelatedIdles;
-            public bool FNAM;
+            public bool ParentAnimation;
+            public bool PreviousAnimation;
+            public bool Flags;
             public bool AnimationFile;
             public bool Name;
             #endregion
@@ -714,8 +675,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.BehaviorGraph = defaultOn;
                 this.AnimationEvent = defaultOn;
-                this.RelatedIdles = defaultOn;
-                this.FNAM = defaultOn;
+                this.ParentAnimation = defaultOn;
+                this.PreviousAnimation = defaultOn;
+                this.Flags = defaultOn;
                 this.AnimationFile = defaultOn;
                 this.Name = defaultOn;
             }
@@ -728,8 +690,9 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
                 ret.Add((BehaviorGraph, null));
                 ret.Add((AnimationEvent, null));
-                ret.Add((RelatedIdles, null));
-                ret.Add((FNAM, null));
+                ret.Add((ParentAnimation, null));
+                ret.Add((PreviousAnimation, null));
+                ret.Add((Flags, null));
                 ret.Add((AnimationFile, null));
                 ret.Add((Name, null));
             }
@@ -886,8 +849,9 @@ namespace Mutagen.Bethesda.Starfield
         new ExtendedList<Condition> Conditions { get; }
         new String? BehaviorGraph { get; set; }
         new String? AnimationEvent { get; set; }
-        new ExtendedList<IFormLinkGetter<IIdleRelationGetter>> RelatedIdles { get; }
-        new MemorySlice<Byte>? FNAM { get; set; }
+        new IFormLink<IIdleRelationGetter> ParentAnimation { get; set; }
+        new IFormLink<IIdleRelationGetter> PreviousAnimation { get; set; }
+        new IdleAnimation.Flag? Flags { get; set; }
         new String? AnimationFile { get; set; }
         /// <summary>
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
@@ -918,8 +882,9 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IConditionGetter> Conditions { get; }
         String? BehaviorGraph { get; }
         String? AnimationEvent { get; }
-        IReadOnlyList<IFormLinkGetter<IIdleRelationGetter>> RelatedIdles { get; }
-        ReadOnlyMemorySlice<Byte>? FNAM { get; }
+        IFormLinkGetter<IIdleRelationGetter> ParentAnimation { get; }
+        IFormLinkGetter<IIdleRelationGetter> PreviousAnimation { get; }
+        IdleAnimation.Flag? Flags { get; }
         String? AnimationFile { get; }
         #region Name
         /// <summary>
@@ -1106,10 +1071,11 @@ namespace Mutagen.Bethesda.Starfield
         Conditions = 7,
         BehaviorGraph = 8,
         AnimationEvent = 9,
-        RelatedIdles = 10,
-        FNAM = 11,
-        AnimationFile = 12,
-        Name = 13,
+        ParentAnimation = 10,
+        PreviousAnimation = 11,
+        Flags = 12,
+        AnimationFile = 13,
+        Name = 14,
     }
     #endregion
 
@@ -1120,9 +1086,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(IdleAnimation.Mask<>);
 
@@ -1212,8 +1178,9 @@ namespace Mutagen.Bethesda.Starfield
             item.Conditions.Clear();
             item.BehaviorGraph = default;
             item.AnimationEvent = default;
-            item.RelatedIdles.Clear();
-            item.FNAM = default;
+            item.ParentAnimation.Clear();
+            item.PreviousAnimation.Clear();
+            item.Flags = default;
             item.AnimationFile = default;
             item.Name = default;
             base.Clear(item);
@@ -1234,7 +1201,8 @@ namespace Mutagen.Bethesda.Starfield
         {
             base.RemapLinks(obj, mapping);
             obj.Conditions.RemapLinks(mapping);
-            obj.RelatedIdles.RemapLinks(mapping);
+            obj.ParentAnimation.Relink(mapping);
+            obj.PreviousAnimation.Relink(mapping);
         }
         
         #endregion
@@ -1308,11 +1276,9 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.BehaviorGraph = string.Equals(item.BehaviorGraph, rhs.BehaviorGraph);
             ret.AnimationEvent = string.Equals(item.AnimationEvent, rhs.AnimationEvent);
-            ret.RelatedIdles = item.RelatedIdles.CollectionEqualsHelper(
-                rhs.RelatedIdles,
-                (l, r) => object.Equals(l, r),
-                include);
-            ret.FNAM = MemorySliceExt.SequenceEqual(item.FNAM, rhs.FNAM);
+            ret.ParentAnimation = item.ParentAnimation.Equals(rhs.ParentAnimation);
+            ret.PreviousAnimation = item.PreviousAnimation.Equals(rhs.PreviousAnimation);
+            ret.Flags = item.Flags == rhs.Flags;
             ret.AnimationFile = string.Equals(item.AnimationFile, rhs.AnimationFile);
             ret.Name = object.Equals(item.Name, rhs.Name);
             base.FillEqualsMask(item, rhs, ret, include);
@@ -1388,24 +1354,18 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(AnimationEventItem, "AnimationEvent");
             }
-            if (printMask?.RelatedIdles?.Overall ?? true)
+            if (printMask?.ParentAnimation ?? true)
             {
-                sb.AppendLine("RelatedIdles =>");
-                using (sb.Brace())
-                {
-                    foreach (var subItem in item.RelatedIdles)
-                    {
-                        using (sb.Brace())
-                        {
-                            sb.AppendItem(subItem.FormKey);
-                        }
-                    }
-                }
+                sb.AppendItem(item.ParentAnimation.FormKey, "ParentAnimation");
             }
-            if ((printMask?.FNAM ?? true)
-                && item.FNAM is {} FNAMItem)
+            if (printMask?.PreviousAnimation ?? true)
             {
-                sb.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
+                sb.AppendItem(item.PreviousAnimation.FormKey, "PreviousAnimation");
+            }
+            if ((printMask?.Flags ?? true)
+                && item.Flags is {} FlagsItem)
+            {
+                sb.AppendItem(FlagsItem, "Flags");
             }
             if ((printMask?.AnimationFile ?? true)
                 && item.AnimationFile is {} AnimationFileItem)
@@ -1479,13 +1439,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!string.Equals(lhs.AnimationEvent, rhs.AnimationEvent)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.RelatedIdles) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.ParentAnimation) ?? true))
             {
-                if (!lhs.RelatedIdles.SequenceEqualNullable(rhs.RelatedIdles)) return false;
+                if (!lhs.ParentAnimation.Equals(rhs.ParentAnimation)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.FNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.PreviousAnimation) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.FNAM, rhs.FNAM)) return false;
+                if (!lhs.PreviousAnimation.Equals(rhs.PreviousAnimation)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationFile) ?? true))
             {
@@ -1532,10 +1496,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(AnimationEventitem);
             }
-            hash.Add(item.RelatedIdles);
-            if (item.FNAM is {} FNAMItem)
+            hash.Add(item.ParentAnimation);
+            hash.Add(item.PreviousAnimation);
+            if (item.Flags is {} Flagsitem)
             {
-                hash.Add(FNAMItem);
+                hash.Add(Flagsitem);
             }
             if (item.AnimationFile is {} AnimationFileitem)
             {
@@ -1578,10 +1543,8 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.RelatedIdles)
-            {
-                yield return FormLinkInformation.Factory(item);
-            }
+            yield return FormLinkInformation.Factory(obj.ParentAnimation);
+            yield return FormLinkInformation.Factory(obj.PreviousAnimation);
             yield break;
         }
         
@@ -1688,35 +1651,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.AnimationEvent = rhs.AnimationEvent;
             }
-            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.RelatedIdles) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.ParentAnimation) ?? true))
             {
-                errorMask?.PushIndex((int)IdleAnimation_FieldIndex.RelatedIdles);
-                try
-                {
-                    item.RelatedIdles.SetTo(
-                        rhs.RelatedIdles
-                            .Select(b => (IFormLinkGetter<IIdleRelationGetter>)new FormLink<IIdleRelationGetter>(b.FormKey)));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.ParentAnimation.SetTo(rhs.ParentAnimation.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.FNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.PreviousAnimation) ?? true))
             {
-                if(rhs.FNAM is {} FNAMrhs)
-                {
-                    item.FNAM = FNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.FNAM = default;
-                }
+                item.PreviousAnimation.SetTo(rhs.PreviousAnimation.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
             }
             if ((copyMask?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationFile) ?? true))
             {
@@ -1916,19 +1861,19 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.AnimationEvent,
                 header: translationParams.ConvertToCustom(RecordTypes.ENAM),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IIdleRelationGetter>>.Instance.Write(
-                writer: writer,
-                items: item.RelatedIdles,
-                recordType: translationParams.ConvertToCustom(RecordTypes.ANAM),
-                transl: (MutagenWriter subWriter, IFormLinkGetter<IIdleRelationGetter> subItem, TypedWriteParams conv) =>
-                {
-                    FormLinkBinaryTranslation.Instance.Write(
-                        writer: subWriter,
-                        item: subItem);
-                });
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.FNAM,
+            using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.ANAM)))
+            {
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ParentAnimation);
+                FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.PreviousAnimation);
+            }
+            EnumBinaryTranslation<IdleAnimation.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Flags,
+                length: 1,
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -2040,17 +1985,20 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RelatedIdles.SetTo(
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IIdleRelationGetter>>.Instance.Parse(
-                            reader: frame.SpawnWithLength(contentLength),
-                            transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return (int)IdleAnimation_FieldIndex.RelatedIdles;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    if (dataFrame.Remaining < 4) return null;
+                    item.ParentAnimation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    if (dataFrame.Remaining < 4) return null;
+                    item.PreviousAnimation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)IdleAnimation_FieldIndex.PreviousAnimation;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)IdleAnimation_FieldIndex.FNAM;
+                    item.Flags = EnumBinaryTranslation<IdleAnimation.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)IdleAnimation_FieldIndex.Flags;
                 }
                 case RecordTypeInts.GNAM:
                 {
@@ -2140,10 +2088,20 @@ namespace Mutagen.Bethesda.Starfield
         private int? _AnimationEventLocation;
         public String? AnimationEvent => _AnimationEventLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _AnimationEventLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        public IReadOnlyList<IFormLinkGetter<IIdleRelationGetter>> RelatedIdles { get; private set; } = Array.Empty<IFormLinkGetter<IIdleRelationGetter>>();
-        #region FNAM
-        private int? _FNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? FNAM => _FNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        private RangeInt32? _ANAMLocation;
+        #region ParentAnimation
+        private int _ParentAnimationLocation => _ANAMLocation!.Value.Min;
+        private bool _ParentAnimation_IsSet => _ANAMLocation.HasValue;
+        public IFormLinkGetter<IIdleRelationGetter> ParentAnimation => _ParentAnimation_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IIdleRelationGetter>(_package, _recordData.Span.Slice(_ParentAnimationLocation, 0x4), isSet: _ParentAnimation_IsSet) : FormLink<IIdleRelationGetter>.Null;
+        #endregion
+        #region PreviousAnimation
+        private int _PreviousAnimationLocation => _ANAMLocation!.Value.Min + 0x4;
+        private bool _PreviousAnimation_IsSet => _ANAMLocation.HasValue;
+        public IFormLinkGetter<IIdleRelationGetter> PreviousAnimation => _PreviousAnimation_IsSet ? FormLinkBinaryTranslation.Instance.OverlayFactory<IIdleRelationGetter>(_package, _recordData.Span.Slice(_PreviousAnimationLocation, 0x4), isSet: _PreviousAnimation_IsSet) : FormLink<IIdleRelationGetter>.Null;
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public IdleAnimation.Flag? Flags => _FlagsLocation.HasValue ? (IdleAnimation.Flag)HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(IdleAnimation.Flag?);
         #endregion
         #region AnimationFile
         private int? _AnimationFileLocation;
@@ -2257,18 +2215,13 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    this.RelatedIdles = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IIdleRelationGetter>>(
-                        stream: stream,
-                        package: _package,
-                        finalPos: finalPos,
-                        itemLength: 4,
-                        getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IIdleRelationGetter>(p, s));
-                    return (int)IdleAnimation_FieldIndex.RelatedIdles;
+                    _ANAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
+                    return (int)IdleAnimation_FieldIndex.PreviousAnimation;
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    _FNAMLocation = (stream.Position - offset);
-                    return (int)IdleAnimation_FieldIndex.FNAM;
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)IdleAnimation_FieldIndex.Flags;
                 }
                 case RecordTypeInts.GNAM:
                 {

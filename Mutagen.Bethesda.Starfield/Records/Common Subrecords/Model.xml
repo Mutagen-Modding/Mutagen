@@ -7,19 +7,16 @@
       <List name="MaterialSwaps" recordType="MOLM" counterLength="2"  >
         <FormLink refName="LayeredMaterialSwap" />
       </List>
-      <Int16 name="DMDC" recordType="DMDC" unknown="true" />
-      <Int16 name="BLMS" recordType="BLMS" unknown="true" />
-      <ByteArray name="FLLD" recordType="FLLD" unknown="true" />
-      <ByteArray name="XFLG" recordType="XFLG" unknown="true" />
+      <UInt32 name="LightLayer" recordType="FLLD" />
+      <Enum name="Flags" recordType="XFLG" enumName="Model.Flag" byteLength="1" />
       <Float name="ColorRemappingIndex" recordType="MODC" />
-      <Enum name="Flags" enumName="Model.Flag" byteLength="1" recordType="MODF" />
+      <Enum name="FlagsVestigial" enumName="Model.Flag" byteLength="1" recordType="MODF" />
     </Fields>
   </Object>
   <Object name="FirstPersonModel" objType="Subrecord">
     <Fields>
       <AssetLink name="File" recordType="MOD4" assetType="StarfieldModel" />
-      <Int16 name="BLMS" recordType="BLMS" unknown="true" />
-      <ByteArray name="FLLD" recordType="FLLD" unknown="true" />
+      <UInt32 name="LightLayer" recordType="FLLD" />
       <FormLink name="MaterialSwap" refName="LayeredMaterialSwap" recordType="MO4S" />
       <Float name="ColorRemappingIndex" recordType="MO4C" />
     </Fields>

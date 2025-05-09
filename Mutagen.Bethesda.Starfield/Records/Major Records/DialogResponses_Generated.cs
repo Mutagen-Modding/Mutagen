@@ -208,9 +208,7 @@ namespace Mutagen.Bethesda.Starfield
         IDialogSetParentQuestStageGetter? IDialogResponsesGetter.SetParentQuestStage => this.SetParentQuestStage;
         #endregion
         #region StartScenePhase
-        public String? StartScenePhase { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IDialogResponsesGetter.StartScenePhase => this.StartScenePhase;
+        public String StartScenePhase { get; set; } = string.Empty;
         #endregion
         #region ResetGlobal
         private readonly IFormLinkNullable<IGlobalGetter> _ResetGlobal = new FormLinkNullable<IGlobalGetter>();
@@ -230,25 +228,15 @@ namespace Mutagen.Bethesda.Starfield
         #region COCT
         public Boolean COCT { get; set; } = default(Boolean);
         #endregion
-        #region NAM8
-        private readonly IFormLinkNullable<IAffinityEventGetter> _NAM8 = new FormLinkNullable<IAffinityEventGetter>();
-        public IFormLinkNullable<IAffinityEventGetter> NAM8
+        #region AffinityEvent
+        private readonly IFormLinkNullable<IAffinityEventGetter> _AffinityEvent = new FormLinkNullable<IAffinityEventGetter>();
+        public IFormLinkNullable<IAffinityEventGetter> AffinityEvent
         {
-            get => _NAM8;
-            set => _NAM8.SetTo(value);
+            get => _AffinityEvent;
+            set => _AffinityEvent.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IAffinityEventGetter> IDialogResponsesGetter.NAM8 => this.NAM8;
-        #endregion
-        #region Perk
-        private readonly IFormLinkNullable<IPerkGetter> _Perk = new FormLinkNullable<IPerkGetter>();
-        public IFormLinkNullable<IPerkGetter> Perk
-        {
-            get => _Perk;
-            set => _Perk.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IPerkGetter> IDialogResponsesGetter.Perk => this.Perk;
+        IFormLinkNullableGetter<IAffinityEventGetter> IDialogResponsesGetter.AffinityEvent => this.AffinityEvent;
         #endregion
         #region SpeechChallenge
         private readonly IFormLinkNullable<ISpeechChallengeGetter> _SpeechChallenge = new FormLinkNullable<ISpeechChallengeGetter>();
@@ -259,6 +247,16 @@ namespace Mutagen.Bethesda.Starfield
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISpeechChallengeGetter> IDialogResponsesGetter.SpeechChallenge => this.SpeechChallenge;
+        #endregion
+        #region Perk
+        private readonly IFormLinkNullable<IPerkGetter> _Perk = new FormLinkNullable<IPerkGetter>();
+        public IFormLinkNullable<IPerkGetter> Perk
+        {
+            get => _Perk;
+            set => _Perk.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPerkGetter> IDialogResponsesGetter.Perk => this.Perk;
         #endregion
 
         #region To String
@@ -302,9 +300,9 @@ namespace Mutagen.Bethesda.Starfield
                 this.ResetGlobal = initialValue;
                 this.SubtitlePriority = initialValue;
                 this.COCT = initialValue;
-                this.NAM8 = initialValue;
-                this.Perk = initialValue;
+                this.AffinityEvent = initialValue;
                 this.SpeechChallenge = initialValue;
+                this.Perk = initialValue;
             }
 
             public Mask(
@@ -332,9 +330,9 @@ namespace Mutagen.Bethesda.Starfield
                 TItem ResetGlobal,
                 TItem SubtitlePriority,
                 TItem COCT,
-                TItem NAM8,
-                TItem Perk,
-                TItem SpeechChallenge)
+                TItem AffinityEvent,
+                TItem SpeechChallenge,
+                TItem Perk)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -361,9 +359,9 @@ namespace Mutagen.Bethesda.Starfield
                 this.ResetGlobal = ResetGlobal;
                 this.SubtitlePriority = SubtitlePriority;
                 this.COCT = COCT;
-                this.NAM8 = NAM8;
-                this.Perk = Perk;
+                this.AffinityEvent = AffinityEvent;
                 this.SpeechChallenge = SpeechChallenge;
+                this.Perk = Perk;
             }
 
             #pragma warning disable CS8618
@@ -392,9 +390,9 @@ namespace Mutagen.Bethesda.Starfield
             public TItem ResetGlobal;
             public TItem SubtitlePriority;
             public TItem COCT;
-            public TItem NAM8;
-            public TItem Perk;
+            public TItem AffinityEvent;
             public TItem SpeechChallenge;
+            public TItem Perk;
             #endregion
 
             #region Equals
@@ -425,9 +423,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.ResetGlobal, rhs.ResetGlobal)) return false;
                 if (!object.Equals(this.SubtitlePriority, rhs.SubtitlePriority)) return false;
                 if (!object.Equals(this.COCT, rhs.COCT)) return false;
-                if (!object.Equals(this.NAM8, rhs.NAM8)) return false;
-                if (!object.Equals(this.Perk, rhs.Perk)) return false;
+                if (!object.Equals(this.AffinityEvent, rhs.AffinityEvent)) return false;
                 if (!object.Equals(this.SpeechChallenge, rhs.SpeechChallenge)) return false;
+                if (!object.Equals(this.Perk, rhs.Perk)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -450,9 +448,9 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.ResetGlobal);
                 hash.Add(this.SubtitlePriority);
                 hash.Add(this.COCT);
-                hash.Add(this.NAM8);
-                hash.Add(this.Perk);
+                hash.Add(this.AffinityEvent);
                 hash.Add(this.SpeechChallenge);
+                hash.Add(this.Perk);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -529,9 +527,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.ResetGlobal)) return false;
                 if (!eval(this.SubtitlePriority)) return false;
                 if (!eval(this.COCT)) return false;
-                if (!eval(this.NAM8)) return false;
-                if (!eval(this.Perk)) return false;
+                if (!eval(this.AffinityEvent)) return false;
                 if (!eval(this.SpeechChallenge)) return false;
+                if (!eval(this.Perk)) return false;
                 return true;
             }
             #endregion
@@ -606,9 +604,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.ResetGlobal)) return true;
                 if (eval(this.SubtitlePriority)) return true;
                 if (eval(this.COCT)) return true;
-                if (eval(this.NAM8)) return true;
-                if (eval(this.Perk)) return true;
+                if (eval(this.AffinityEvent)) return true;
                 if (eval(this.SpeechChallenge)) return true;
+                if (eval(this.Perk)) return true;
                 return false;
             }
             #endregion
@@ -683,9 +681,9 @@ namespace Mutagen.Bethesda.Starfield
                 obj.ResetGlobal = eval(this.ResetGlobal);
                 obj.SubtitlePriority = eval(this.SubtitlePriority);
                 obj.COCT = eval(this.COCT);
-                obj.NAM8 = eval(this.NAM8);
-                obj.Perk = eval(this.Perk);
+                obj.AffinityEvent = eval(this.AffinityEvent);
                 obj.SpeechChallenge = eval(this.SpeechChallenge);
+                obj.Perk = eval(this.Perk);
             }
             #endregion
 
@@ -817,17 +815,17 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(COCT, "COCT");
                     }
-                    if (printMask?.NAM8 ?? true)
+                    if (printMask?.AffinityEvent ?? true)
                     {
-                        sb.AppendItem(NAM8, "NAM8");
-                    }
-                    if (printMask?.Perk ?? true)
-                    {
-                        sb.AppendItem(Perk, "Perk");
+                        sb.AppendItem(AffinityEvent, "AffinityEvent");
                     }
                     if (printMask?.SpeechChallenge ?? true)
                     {
                         sb.AppendItem(SpeechChallenge, "SpeechChallenge");
+                    }
+                    if (printMask?.Perk ?? true)
+                    {
+                        sb.AppendItem(Perk, "Perk");
                     }
                 }
             }
@@ -857,9 +855,9 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? ResetGlobal;
             public Exception? SubtitlePriority;
             public Exception? COCT;
-            public Exception? NAM8;
-            public Exception? Perk;
+            public Exception? AffinityEvent;
             public Exception? SpeechChallenge;
+            public Exception? Perk;
             #endregion
 
             #region IErrorMask
@@ -902,12 +900,12 @@ namespace Mutagen.Bethesda.Starfield
                         return SubtitlePriority;
                     case DialogResponses_FieldIndex.COCT:
                         return COCT;
-                    case DialogResponses_FieldIndex.NAM8:
-                        return NAM8;
-                    case DialogResponses_FieldIndex.Perk:
-                        return Perk;
+                    case DialogResponses_FieldIndex.AffinityEvent:
+                        return AffinityEvent;
                     case DialogResponses_FieldIndex.SpeechChallenge:
                         return SpeechChallenge;
+                    case DialogResponses_FieldIndex.Perk:
+                        return Perk;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -969,14 +967,14 @@ namespace Mutagen.Bethesda.Starfield
                     case DialogResponses_FieldIndex.COCT:
                         this.COCT = ex;
                         break;
-                    case DialogResponses_FieldIndex.NAM8:
-                        this.NAM8 = ex;
-                        break;
-                    case DialogResponses_FieldIndex.Perk:
-                        this.Perk = ex;
+                    case DialogResponses_FieldIndex.AffinityEvent:
+                        this.AffinityEvent = ex;
                         break;
                     case DialogResponses_FieldIndex.SpeechChallenge:
                         this.SpeechChallenge = ex;
+                        break;
+                    case DialogResponses_FieldIndex.Perk:
+                        this.Perk = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1040,14 +1038,14 @@ namespace Mutagen.Bethesda.Starfield
                     case DialogResponses_FieldIndex.COCT:
                         this.COCT = (Exception?)obj;
                         break;
-                    case DialogResponses_FieldIndex.NAM8:
-                        this.NAM8 = (Exception?)obj;
-                        break;
-                    case DialogResponses_FieldIndex.Perk:
-                        this.Perk = (Exception?)obj;
+                    case DialogResponses_FieldIndex.AffinityEvent:
+                        this.AffinityEvent = (Exception?)obj;
                         break;
                     case DialogResponses_FieldIndex.SpeechChallenge:
                         this.SpeechChallenge = (Exception?)obj;
+                        break;
+                    case DialogResponses_FieldIndex.Perk:
+                        this.Perk = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -1075,9 +1073,9 @@ namespace Mutagen.Bethesda.Starfield
                 if (ResetGlobal != null) return true;
                 if (SubtitlePriority != null) return true;
                 if (COCT != null) return true;
-                if (NAM8 != null) return true;
-                if (Perk != null) return true;
+                if (AffinityEvent != null) return true;
                 if (SpeechChallenge != null) return true;
+                if (Perk != null) return true;
                 return false;
             }
             #endregion
@@ -1193,13 +1191,13 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(COCT, "COCT");
                 }
                 {
-                    sb.AppendItem(NAM8, "NAM8");
-                }
-                {
-                    sb.AppendItem(Perk, "Perk");
+                    sb.AppendItem(AffinityEvent, "AffinityEvent");
                 }
                 {
                     sb.AppendItem(SpeechChallenge, "SpeechChallenge");
+                }
+                {
+                    sb.AppendItem(Perk, "Perk");
                 }
             }
             #endregion
@@ -1226,9 +1224,9 @@ namespace Mutagen.Bethesda.Starfield
                 ret.ResetGlobal = this.ResetGlobal.Combine(rhs.ResetGlobal);
                 ret.SubtitlePriority = this.SubtitlePriority.Combine(rhs.SubtitlePriority);
                 ret.COCT = this.COCT.Combine(rhs.COCT);
-                ret.NAM8 = this.NAM8.Combine(rhs.NAM8);
-                ret.Perk = this.Perk.Combine(rhs.Perk);
+                ret.AffinityEvent = this.AffinityEvent.Combine(rhs.AffinityEvent);
                 ret.SpeechChallenge = this.SpeechChallenge.Combine(rhs.SpeechChallenge);
+                ret.Perk = this.Perk.Combine(rhs.Perk);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1268,9 +1266,9 @@ namespace Mutagen.Bethesda.Starfield
             public bool ResetGlobal;
             public bool SubtitlePriority;
             public bool COCT;
-            public bool NAM8;
-            public bool Perk;
+            public bool AffinityEvent;
             public bool SpeechChallenge;
+            public bool Perk;
             #endregion
 
             #region Ctors
@@ -1289,9 +1287,9 @@ namespace Mutagen.Bethesda.Starfield
                 this.ResetGlobal = defaultOn;
                 this.SubtitlePriority = defaultOn;
                 this.COCT = defaultOn;
-                this.NAM8 = defaultOn;
-                this.Perk = defaultOn;
+                this.AffinityEvent = defaultOn;
                 this.SpeechChallenge = defaultOn;
+                this.Perk = defaultOn;
             }
 
             #endregion
@@ -1316,9 +1314,9 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((ResetGlobal, null));
                 ret.Add((SubtitlePriority, null));
                 ret.Add((COCT, null));
-                ret.Add((NAM8, null));
-                ret.Add((Perk, null));
+                ret.Add((AffinityEvent, null));
                 ret.Add((SpeechChallenge, null));
+                ret.Add((Perk, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1493,13 +1491,13 @@ namespace Mutagen.Bethesda.Starfield
         new MemorySlice<Byte>? INTV { get; set; }
         new SoundReference? WED0 { get; set; }
         new DialogSetParentQuestStage? SetParentQuestStage { get; set; }
-        new String? StartScenePhase { get; set; }
+        new String StartScenePhase { get; set; }
         new IFormLinkNullable<IGlobalGetter> ResetGlobal { get; set; }
         new DialogResponses.SubtitlePriorityLevel? SubtitlePriority { get; set; }
         new Boolean COCT { get; set; }
-        new IFormLinkNullable<IAffinityEventGetter> NAM8 { get; set; }
-        new IFormLinkNullable<IPerkGetter> Perk { get; set; }
+        new IFormLinkNullable<IAffinityEventGetter> AffinityEvent { get; set; }
         new IFormLinkNullable<ISpeechChallengeGetter> SpeechChallenge { get; set; }
+        new IFormLinkNullable<IPerkGetter> Perk { get; set; }
         #region Mutagen
         new DialogResponses.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1542,13 +1540,13 @@ namespace Mutagen.Bethesda.Starfield
         ReadOnlyMemorySlice<Byte>? INTV { get; }
         ISoundReferenceGetter? WED0 { get; }
         IDialogSetParentQuestStageGetter? SetParentQuestStage { get; }
-        String? StartScenePhase { get; }
+        String StartScenePhase { get; }
         IFormLinkNullableGetter<IGlobalGetter> ResetGlobal { get; }
         DialogResponses.SubtitlePriorityLevel? SubtitlePriority { get; }
         Boolean COCT { get; }
-        IFormLinkNullableGetter<IAffinityEventGetter> NAM8 { get; }
-        IFormLinkNullableGetter<IPerkGetter> Perk { get; }
+        IFormLinkNullableGetter<IAffinityEventGetter> AffinityEvent { get; }
         IFormLinkNullableGetter<ISpeechChallengeGetter> SpeechChallenge { get; }
+        IFormLinkNullableGetter<IPerkGetter> Perk { get; }
 
         #region Mutagen
         DialogResponses.MajorFlag MajorFlags { get; }
@@ -1746,9 +1744,9 @@ namespace Mutagen.Bethesda.Starfield
         ResetGlobal = 21,
         SubtitlePriority = 22,
         COCT = 23,
-        NAM8 = 24,
-        Perk = 25,
-        SpeechChallenge = 26,
+        AffinityEvent = 24,
+        SpeechChallenge = 25,
+        Perk = 26,
     }
     #endregion
 
@@ -1809,18 +1807,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.NAM4,
                 RecordTypes.NAM9,
                 RecordTypes.BNAM,
-                RecordTypes.STRV,
-                RecordTypes.VCLR,
-                RecordTypes.FLMV,
-                RecordTypes.FLAV,
-                RecordTypes.QUAL,
-                RecordTypes.DOFT,
-                RecordTypes.DPLT,
-                RecordTypes.OCOR,
-                RecordTypes.LVCR,
-                RecordTypes.ATAC,
-                RecordTypes.PLRL,
-                RecordTypes.XNAM,
                 RecordTypes.HNAM,
                 RecordTypes.RVSH,
                 RecordTypes.CTDA,
@@ -1838,8 +1824,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.INAM,
                 RecordTypes.COCT,
                 RecordTypes.NAM8,
-                RecordTypes.PERK,
-                RecordTypes.SCSP);
+                RecordTypes.SCSP,
+                RecordTypes.PERK);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -1897,13 +1883,13 @@ namespace Mutagen.Bethesda.Starfield
             item.INTV = default;
             item.WED0 = null;
             item.SetParentQuestStage = null;
-            item.StartScenePhase = default;
+            item.StartScenePhase = string.Empty;
             item.ResetGlobal.Clear();
             item.SubtitlePriority = default;
             item.COCT = default(Boolean);
-            item.NAM8.Clear();
-            item.Perk.Clear();
+            item.AffinityEvent.Clear();
             item.SpeechChallenge.Clear();
+            item.Perk.Clear();
             base.Clear(item);
         }
         
@@ -1931,9 +1917,9 @@ namespace Mutagen.Bethesda.Starfield
             obj.StartScene.Relink(mapping);
             obj.WED0?.RemapLinks(mapping);
             obj.ResetGlobal.Relink(mapping);
-            obj.NAM8.Relink(mapping);
-            obj.Perk.Relink(mapping);
+            obj.AffinityEvent.Relink(mapping);
             obj.SpeechChallenge.Relink(mapping);
+            obj.Perk.Relink(mapping);
         }
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IDialogResponses obj)
@@ -2067,9 +2053,9 @@ namespace Mutagen.Bethesda.Starfield
             ret.ResetGlobal = item.ResetGlobal.Equals(rhs.ResetGlobal);
             ret.SubtitlePriority = item.SubtitlePriority == rhs.SubtitlePriority;
             ret.COCT = item.COCT == rhs.COCT;
-            ret.NAM8 = item.NAM8.Equals(rhs.NAM8);
-            ret.Perk = item.Perk.Equals(rhs.Perk);
+            ret.AffinityEvent = item.AffinityEvent.Equals(rhs.AffinityEvent);
             ret.SpeechChallenge = item.SpeechChallenge.Equals(rhs.SpeechChallenge);
+            ret.Perk = item.Perk.Equals(rhs.Perk);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -2207,10 +2193,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 SetParentQuestStageItem?.Print(sb, "SetParentQuestStage");
             }
-            if ((printMask?.StartScenePhase ?? true)
-                && item.StartScenePhase is {} StartScenePhaseItem)
+            if (printMask?.StartScenePhase ?? true)
             {
-                sb.AppendItem(StartScenePhaseItem, "StartScenePhase");
+                sb.AppendItem(item.StartScenePhase, "StartScenePhase");
             }
             if (printMask?.ResetGlobal ?? true)
             {
@@ -2225,17 +2210,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.COCT, "COCT");
             }
-            if (printMask?.NAM8 ?? true)
+            if (printMask?.AffinityEvent ?? true)
             {
-                sb.AppendItem(item.NAM8.FormKeyNullable, "NAM8");
-            }
-            if (printMask?.Perk ?? true)
-            {
-                sb.AppendItem(item.Perk.FormKeyNullable, "Perk");
+                sb.AppendItem(item.AffinityEvent.FormKeyNullable, "AffinityEvent");
             }
             if (printMask?.SpeechChallenge ?? true)
             {
                 sb.AppendItem(item.SpeechChallenge.FormKeyNullable, "SpeechChallenge");
+            }
+            if (printMask?.Perk ?? true)
+            {
+                sb.AppendItem(item.Perk.FormKeyNullable, "Perk");
             }
         }
         
@@ -2371,17 +2356,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.COCT != rhs.COCT) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.NAM8) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.AffinityEvent) ?? true))
             {
-                if (!lhs.NAM8.Equals(rhs.NAM8)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Perk) ?? true))
-            {
-                if (!lhs.Perk.Equals(rhs.Perk)) return false;
+                if (!lhs.AffinityEvent.Equals(rhs.AffinityEvent)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.SpeechChallenge) ?? true))
             {
                 if (!lhs.SpeechChallenge.Equals(rhs.SpeechChallenge)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Perk) ?? true))
+            {
+                if (!lhs.Perk.Equals(rhs.Perk)) return false;
             }
             return true;
         }
@@ -2442,19 +2427,16 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(SetParentQuestStageitem);
             }
-            if (item.StartScenePhase is {} StartScenePhaseitem)
-            {
-                hash.Add(StartScenePhaseitem);
-            }
+            hash.Add(item.StartScenePhase);
             hash.Add(item.ResetGlobal);
             if (item.SubtitlePriority is {} SubtitlePriorityitem)
             {
                 hash.Add(SubtitlePriorityitem);
             }
             hash.Add(item.COCT);
-            hash.Add(item.NAM8);
-            hash.Add(item.Perk);
+            hash.Add(item.AffinityEvent);
             hash.Add(item.SpeechChallenge);
+            hash.Add(item.Perk);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -2531,17 +2513,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return ResetGlobalInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.NAM8, out var NAM8Info))
+            if (FormLinkInformation.TryFactory(obj.AffinityEvent, out var AffinityEventInfo))
             {
-                yield return NAM8Info;
-            }
-            if (FormLinkInformation.TryFactory(obj.Perk, out var PerkInfo))
-            {
-                yield return PerkInfo;
+                yield return AffinityEventInfo;
             }
             if (FormLinkInformation.TryFactory(obj.SpeechChallenge, out var SpeechChallengeInfo))
             {
                 yield return SpeechChallengeInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.Perk, out var PerkInfo))
+            {
+                yield return PerkInfo;
             }
             yield break;
         }
@@ -2854,17 +2836,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.COCT = rhs.COCT;
             }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.NAM8) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.AffinityEvent) ?? true))
             {
-                item.NAM8.SetTo(rhs.NAM8.FormKeyNullable);
-            }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Perk) ?? true))
-            {
-                item.Perk.SetTo(rhs.Perk.FormKeyNullable);
+                item.AffinityEvent.SetTo(rhs.AffinityEvent.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.SpeechChallenge) ?? true))
             {
                 item.SpeechChallenge.SetTo(rhs.SpeechChallenge.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)DialogResponses_FieldIndex.Perk) ?? true))
+            {
+                item.Perk.SetTo(rhs.Perk.FormKeyNullable);
             }
             DeepCopyInCustom(
                 item: item,
@@ -3125,7 +3107,7 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     translationParams: translationParams);
             }
-            StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.StartScenePhase,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM0),
@@ -3145,16 +3127,16 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.COCT));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.NAM8,
+                item: item.AffinityEvent,
                 header: translationParams.ConvertToCustom(RecordTypes.NAM8));
-            FormLinkBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.Perk,
-                header: translationParams.ConvertToCustom(RecordTypes.PERK));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.SpeechChallenge,
                 header: translationParams.ConvertToCustom(RecordTypes.SCSP));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Perk,
+                header: translationParams.ConvertToCustom(RecordTypes.PERK));
         }
 
         public void Write(
@@ -3348,20 +3330,20 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.NAM8:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM8.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)DialogResponses_FieldIndex.NAM8;
-                }
-                case RecordTypeInts.PERK:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Perk.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)DialogResponses_FieldIndex.Perk;
+                    item.AffinityEvent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)DialogResponses_FieldIndex.AffinityEvent;
                 }
                 case RecordTypeInts.SCSP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SpeechChallenge.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)DialogResponses_FieldIndex.SpeechChallenge;
+                }
+                case RecordTypeInts.PERK:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Perk.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)DialogResponses_FieldIndex.Perk;
                 }
                 case RecordTypeInts.XXXX:
                 {
@@ -3473,7 +3455,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region StartScenePhase
         private int? _StartScenePhaseLocation;
-        public String? StartScenePhase => _StartScenePhaseLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StartScenePhaseLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        public String StartScenePhase => _StartScenePhaseLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _StartScenePhaseLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : string.Empty;
         #endregion
         #region ResetGlobal
         private int? _ResetGlobalLocation;
@@ -3487,17 +3469,17 @@ namespace Mutagen.Bethesda.Starfield
         private int? _COCTLocation;
         public Boolean COCT => _COCTLocation.HasValue ? true : default(Boolean);
         #endregion
-        #region NAM8
-        private int? _NAM8Location;
-        public IFormLinkNullableGetter<IAffinityEventGetter> NAM8 => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAffinityEventGetter>(_package, _recordData, _NAM8Location);
-        #endregion
-        #region Perk
-        private int? _PerkLocation;
-        public IFormLinkNullableGetter<IPerkGetter> Perk => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPerkGetter>(_package, _recordData, _PerkLocation);
+        #region AffinityEvent
+        private int? _AffinityEventLocation;
+        public IFormLinkNullableGetter<IAffinityEventGetter> AffinityEvent => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAffinityEventGetter>(_package, _recordData, _AffinityEventLocation);
         #endregion
         #region SpeechChallenge
         private int? _SpeechChallengeLocation;
         public IFormLinkNullableGetter<ISpeechChallengeGetter> SpeechChallenge => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ISpeechChallengeGetter>(_package, _recordData, _SpeechChallengeLocation);
+        #endregion
+        #region Perk
+        private int? _PerkLocation;
+        public IFormLinkNullableGetter<IPerkGetter> Perk => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IPerkGetter>(_package, _recordData, _PerkLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -3682,18 +3664,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.NAM8:
                 {
-                    _NAM8Location = (stream.Position - offset);
-                    return (int)DialogResponses_FieldIndex.NAM8;
-                }
-                case RecordTypeInts.PERK:
-                {
-                    _PerkLocation = (stream.Position - offset);
-                    return (int)DialogResponses_FieldIndex.Perk;
+                    _AffinityEventLocation = (stream.Position - offset);
+                    return (int)DialogResponses_FieldIndex.AffinityEvent;
                 }
                 case RecordTypeInts.SCSP:
                 {
                     _SpeechChallengeLocation = (stream.Position - offset);
                     return (int)DialogResponses_FieldIndex.SpeechChallenge;
+                }
+                case RecordTypeInts.PERK:
+                {
+                    _PerkLocation = (stream.Position - offset);
+                    return (int)DialogResponses_FieldIndex.Perk;
                 }
                 case RecordTypeInts.XXXX:
                 {

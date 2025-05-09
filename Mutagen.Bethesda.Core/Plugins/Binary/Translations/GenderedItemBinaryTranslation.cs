@@ -521,7 +521,8 @@ internal sealed class GenderedItemBinaryTranslation
         }
         catch (Exception ex)
         {
-            throw SubrecordException.Enrich(ex, maleMarker);
+            SubrecordException.EnrichAndThrow(ex, maleMarker);
+            throw;
         }
         try
         {
@@ -536,7 +537,8 @@ internal sealed class GenderedItemBinaryTranslation
         }
         catch (Exception ex)
         {
-            throw SubrecordException.Enrich(ex, femaleMarker);
+            SubrecordException.EnrichAndThrow(ex, femaleMarker);
+            throw;
         }
     }
 
@@ -568,7 +570,8 @@ internal sealed class GenderedItemBinaryTranslation
         }
         catch (Exception ex)
         {
-            throw SubrecordException.Enrich(ex, maleMarker);
+            SubrecordException.EnrichAndThrow(ex, maleMarker);
+            throw;
         }
         try
         {
@@ -587,7 +590,8 @@ internal sealed class GenderedItemBinaryTranslation
         }
         catch (Exception ex)
         {
-            throw SubrecordException.Enrich(ex, femaleMarker);
+            SubrecordException.EnrichAndThrow(ex, femaleMarker);
+            throw;
         }
     }
 
@@ -635,7 +639,8 @@ internal sealed class GenderedItemBinaryTranslation
         }
         catch (Exception ex)
         {
-            throw SubrecordException.Enrich(ex, maleMarker);
+            SubrecordException.EnrichAndThrow(ex, maleMarker);
+            throw;
         }
         try
         {
@@ -657,7 +662,8 @@ internal sealed class GenderedItemBinaryTranslation
         }
         catch (Exception ex)
         {
-            throw SubrecordException.Enrich(ex, femaleMarker);
+            SubrecordException.EnrichAndThrow(ex, femaleMarker);
+            throw;
         }
     }
 
@@ -686,7 +692,8 @@ internal sealed class GenderedItemBinaryTranslation
         }
         catch (Exception ex)
         {
-            throw SubrecordException.Enrich(ex, maleMarker);
+            SubrecordException.EnrichAndThrow(ex, maleMarker);
+            throw;
         }
         try
         {
@@ -701,7 +708,8 @@ internal sealed class GenderedItemBinaryTranslation
         }
         catch (Exception ex)
         {
-            throw SubrecordException.Enrich(ex, femaleMarker);
+            SubrecordException.EnrichAndThrow(ex, femaleMarker);
+            throw;
         }
     }
 
@@ -736,7 +744,8 @@ internal sealed class GenderedItemBinaryTranslation
         }
         catch (Exception ex)
         {
-            throw SubrecordException.Enrich(ex, maleMarker);
+            SubrecordException.EnrichAndThrow(ex, maleMarker);
+            throw;
         }
         try
         {
@@ -755,7 +764,8 @@ internal sealed class GenderedItemBinaryTranslation
         }
         catch (Exception ex)
         {
-            throw SubrecordException.Enrich(ex, femaleMarker);
+            SubrecordException.EnrichAndThrow(ex, femaleMarker);
+            throw;
         }
     }
 
@@ -793,7 +803,8 @@ internal sealed class GenderedItemBinaryTranslation
         }
         catch (Exception ex)
         {
-            throw SubrecordException.Enrich(ex, maleMarker);
+            SubrecordException.EnrichAndThrow(ex, maleMarker);
+            throw;
         }
         try
         {
@@ -818,7 +829,8 @@ internal sealed class GenderedItemBinaryTranslation
         }
         catch (Exception ex)
         {
-            throw SubrecordException.Enrich(ex, femaleMarker);
+            SubrecordException.EnrichAndThrow(ex, femaleMarker);
+            throw;
         }
     }
 

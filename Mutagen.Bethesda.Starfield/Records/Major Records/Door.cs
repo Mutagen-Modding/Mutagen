@@ -14,11 +14,20 @@ public partial class Door
     [Flags]
     public enum Flag
     {
+        NoQuestTarget = 0x01,
         Automatic = 0x02,
         Hidden = 0x04,
         MinimalUse = 0x08,
         Sliding = 0x10,
         DoNotOpenInCombatSearch = 0x20,
         NoToText = 0x40,
+        NoDirectActivation = 0x80,
+    }
+    
+    public enum FacingAxisOverrideEnum
+    {
+        UseXAxis,
+        UseYAxis,
+        BasedOnBounds,
     }
 }

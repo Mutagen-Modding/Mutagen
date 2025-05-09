@@ -54,21 +54,13 @@ namespace Mutagen.Bethesda.Starfield
         partial void CustomCtor();
         #endregion
 
-        #region FNAM
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _FNAM = new byte[0];
-        public MemorySlice<Byte> FNAM
-        {
-            get => _FNAM;
-            set => this._FNAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IAffinityEventGetter.FNAM => this.FNAM;
+        #region Flags
+        public AffinityEvent.Flag Flags { get; set; } = default(AffinityEvent.Flag);
         #endregion
-        #region Context
-        public String? Context { get; set; }
+        #region ContextNotes
+        public String? ContextNotes { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IAffinityEventGetter.Context => this.Context;
+        String? IAffinityEventGetter.ContextNotes => this.ContextNotes;
         #endregion
         #region ActorReactions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -94,55 +86,55 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IActorValueInformationGetter> IAffinityEventGetter.ActorValue => this.ActorValue;
         #endregion
-        #region Size
-        private readonly IFormLinkNullable<IGlobalGetter> _Size = new FormLinkNullable<IGlobalGetter>();
-        public IFormLinkNullable<IGlobalGetter> Size
+        #region EventSize
+        private readonly IFormLinkNullable<IGlobalGetter> _EventSize = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> EventSize
         {
-            get => _Size;
-            set => _Size.SetTo(value);
+            get => _EventSize;
+            set => _EventSize.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IGlobalGetter> IAffinityEventGetter.Size => this.Size;
+        IFormLinkNullableGetter<IGlobalGetter> IAffinityEventGetter.EventSize => this.EventSize;
         #endregion
-        #region Distance
-        private readonly IFormLinkNullable<IGlobalGetter> _Distance = new FormLinkNullable<IGlobalGetter>();
-        public IFormLinkNullable<IGlobalGetter> Distance
+        #region DistanceToPlayer
+        private readonly IFormLinkNullable<IGlobalGetter> _DistanceToPlayer = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> DistanceToPlayer
         {
-            get => _Distance;
-            set => _Distance.SetTo(value);
+            get => _DistanceToPlayer;
+            set => _DistanceToPlayer.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IGlobalGetter> IAffinityEventGetter.Distance => this.Distance;
+        IFormLinkNullableGetter<IGlobalGetter> IAffinityEventGetter.DistanceToPlayer => this.DistanceToPlayer;
         #endregion
-        #region Cooldown
-        private readonly IFormLinkNullable<IGlobalGetter> _Cooldown = new FormLinkNullable<IGlobalGetter>();
-        public IFormLinkNullable<IGlobalGetter> Cooldown
+        #region CooldownInMinutes
+        private readonly IFormLinkNullable<IGlobalGetter> _CooldownInMinutes = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> CooldownInMinutes
         {
-            get => _Cooldown;
-            set => _Cooldown.SetTo(value);
+            get => _CooldownInMinutes;
+            set => _CooldownInMinutes.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IGlobalGetter> IAffinityEventGetter.Cooldown => this.Cooldown;
+        IFormLinkNullableGetter<IGlobalGetter> IAffinityEventGetter.CooldownInMinutes => this.CooldownInMinutes;
         #endregion
-        #region Faction
-        private readonly IFormLinkNullable<IFactionGetter> _Faction = new FormLinkNullable<IFactionGetter>();
-        public IFormLinkNullable<IFactionGetter> Faction
+        #region RequiredFaction
+        private readonly IFormLinkNullable<IFactionGetter> _RequiredFaction = new FormLinkNullable<IFactionGetter>();
+        public IFormLinkNullable<IFactionGetter> RequiredFaction
         {
-            get => _Faction;
-            set => _Faction.SetTo(value);
+            get => _RequiredFaction;
+            set => _RequiredFaction.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IFactionGetter> IAffinityEventGetter.Faction => this.Faction;
+        IFormLinkNullableGetter<IFactionGetter> IAffinityEventGetter.RequiredFaction => this.RequiredFaction;
         #endregion
-        #region PNAM
-        private readonly IFormLinkNullable<IAffinityEventGetter> _PNAM = new FormLinkNullable<IAffinityEventGetter>();
-        public IFormLinkNullable<IAffinityEventGetter> PNAM
+        #region AddToEvent
+        private readonly IFormLinkNullable<IAffinityEventGetter> _AddToEvent = new FormLinkNullable<IAffinityEventGetter>();
+        public IFormLinkNullable<IAffinityEventGetter> AddToEvent
         {
-            get => _PNAM;
-            set => _PNAM.SetTo(value);
+            get => _AddToEvent;
+            set => _AddToEvent.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IAffinityEventGetter> IAffinityEventGetter.PNAM => this.PNAM;
+        IFormLinkNullableGetter<IAffinityEventGetter> IAffinityEventGetter.AddToEvent => this.AddToEvent;
         #endregion
 
         #region To String
@@ -169,15 +161,15 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.FNAM = initialValue;
-                this.Context = initialValue;
+                this.Flags = initialValue;
+                this.ContextNotes = initialValue;
                 this.ActorReactions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActorReaction.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ActorReaction.Mask<TItem>?>>());
                 this.ActorValue = initialValue;
-                this.Size = initialValue;
-                this.Distance = initialValue;
-                this.Cooldown = initialValue;
-                this.Faction = initialValue;
-                this.PNAM = initialValue;
+                this.EventSize = initialValue;
+                this.DistanceToPlayer = initialValue;
+                this.CooldownInMinutes = initialValue;
+                this.RequiredFaction = initialValue;
+                this.AddToEvent = initialValue;
             }
 
             public Mask(
@@ -188,15 +180,15 @@ namespace Mutagen.Bethesda.Starfield
                 TItem FormVersion,
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
-                TItem FNAM,
-                TItem Context,
+                TItem Flags,
+                TItem ContextNotes,
                 TItem ActorReactions,
                 TItem ActorValue,
-                TItem Size,
-                TItem Distance,
-                TItem Cooldown,
-                TItem Faction,
-                TItem PNAM)
+                TItem EventSize,
+                TItem DistanceToPlayer,
+                TItem CooldownInMinutes,
+                TItem RequiredFaction,
+                TItem AddToEvent)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -206,15 +198,15 @@ namespace Mutagen.Bethesda.Starfield
                 Version2: Version2,
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
-                this.FNAM = FNAM;
-                this.Context = Context;
+                this.Flags = Flags;
+                this.ContextNotes = ContextNotes;
                 this.ActorReactions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActorReaction.Mask<TItem>?>>?>(ActorReactions, Enumerable.Empty<MaskItemIndexed<TItem, ActorReaction.Mask<TItem>?>>());
                 this.ActorValue = ActorValue;
-                this.Size = Size;
-                this.Distance = Distance;
-                this.Cooldown = Cooldown;
-                this.Faction = Faction;
-                this.PNAM = PNAM;
+                this.EventSize = EventSize;
+                this.DistanceToPlayer = DistanceToPlayer;
+                this.CooldownInMinutes = CooldownInMinutes;
+                this.RequiredFaction = RequiredFaction;
+                this.AddToEvent = AddToEvent;
             }
 
             #pragma warning disable CS8618
@@ -226,15 +218,15 @@ namespace Mutagen.Bethesda.Starfield
             #endregion
 
             #region Members
-            public TItem FNAM;
-            public TItem Context;
+            public TItem Flags;
+            public TItem ContextNotes;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ActorReaction.Mask<TItem>?>>?>? ActorReactions;
             public TItem ActorValue;
-            public TItem Size;
-            public TItem Distance;
-            public TItem Cooldown;
-            public TItem Faction;
-            public TItem PNAM;
+            public TItem EventSize;
+            public TItem DistanceToPlayer;
+            public TItem CooldownInMinutes;
+            public TItem RequiredFaction;
+            public TItem AddToEvent;
             #endregion
 
             #region Equals
@@ -248,29 +240,29 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.FNAM, rhs.FNAM)) return false;
-                if (!object.Equals(this.Context, rhs.Context)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.ContextNotes, rhs.ContextNotes)) return false;
                 if (!object.Equals(this.ActorReactions, rhs.ActorReactions)) return false;
                 if (!object.Equals(this.ActorValue, rhs.ActorValue)) return false;
-                if (!object.Equals(this.Size, rhs.Size)) return false;
-                if (!object.Equals(this.Distance, rhs.Distance)) return false;
-                if (!object.Equals(this.Cooldown, rhs.Cooldown)) return false;
-                if (!object.Equals(this.Faction, rhs.Faction)) return false;
-                if (!object.Equals(this.PNAM, rhs.PNAM)) return false;
+                if (!object.Equals(this.EventSize, rhs.EventSize)) return false;
+                if (!object.Equals(this.DistanceToPlayer, rhs.DistanceToPlayer)) return false;
+                if (!object.Equals(this.CooldownInMinutes, rhs.CooldownInMinutes)) return false;
+                if (!object.Equals(this.RequiredFaction, rhs.RequiredFaction)) return false;
+                if (!object.Equals(this.AddToEvent, rhs.AddToEvent)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.FNAM);
-                hash.Add(this.Context);
+                hash.Add(this.Flags);
+                hash.Add(this.ContextNotes);
                 hash.Add(this.ActorReactions);
                 hash.Add(this.ActorValue);
-                hash.Add(this.Size);
-                hash.Add(this.Distance);
-                hash.Add(this.Cooldown);
-                hash.Add(this.Faction);
-                hash.Add(this.PNAM);
+                hash.Add(this.EventSize);
+                hash.Add(this.DistanceToPlayer);
+                hash.Add(this.CooldownInMinutes);
+                hash.Add(this.RequiredFaction);
+                hash.Add(this.AddToEvent);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -281,8 +273,8 @@ namespace Mutagen.Bethesda.Starfield
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.FNAM)) return false;
-                if (!eval(this.Context)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.ContextNotes)) return false;
                 if (this.ActorReactions != null)
                 {
                     if (!eval(this.ActorReactions.Overall)) return false;
@@ -296,11 +288,11 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (!eval(this.ActorValue)) return false;
-                if (!eval(this.Size)) return false;
-                if (!eval(this.Distance)) return false;
-                if (!eval(this.Cooldown)) return false;
-                if (!eval(this.Faction)) return false;
-                if (!eval(this.PNAM)) return false;
+                if (!eval(this.EventSize)) return false;
+                if (!eval(this.DistanceToPlayer)) return false;
+                if (!eval(this.CooldownInMinutes)) return false;
+                if (!eval(this.RequiredFaction)) return false;
+                if (!eval(this.AddToEvent)) return false;
                 return true;
             }
             #endregion
@@ -309,8 +301,8 @@ namespace Mutagen.Bethesda.Starfield
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.FNAM)) return true;
-                if (eval(this.Context)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.ContextNotes)) return true;
                 if (this.ActorReactions != null)
                 {
                     if (eval(this.ActorReactions.Overall)) return true;
@@ -324,11 +316,11 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 if (eval(this.ActorValue)) return true;
-                if (eval(this.Size)) return true;
-                if (eval(this.Distance)) return true;
-                if (eval(this.Cooldown)) return true;
-                if (eval(this.Faction)) return true;
-                if (eval(this.PNAM)) return true;
+                if (eval(this.EventSize)) return true;
+                if (eval(this.DistanceToPlayer)) return true;
+                if (eval(this.CooldownInMinutes)) return true;
+                if (eval(this.RequiredFaction)) return true;
+                if (eval(this.AddToEvent)) return true;
                 return false;
             }
             #endregion
@@ -344,8 +336,8 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.FNAM = eval(this.FNAM);
-                obj.Context = eval(this.Context);
+                obj.Flags = eval(this.Flags);
+                obj.ContextNotes = eval(this.ContextNotes);
                 if (ActorReactions != null)
                 {
                     obj.ActorReactions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ActorReaction.Mask<R>?>>?>(eval(this.ActorReactions.Overall), Enumerable.Empty<MaskItemIndexed<R, ActorReaction.Mask<R>?>>());
@@ -362,11 +354,11 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 obj.ActorValue = eval(this.ActorValue);
-                obj.Size = eval(this.Size);
-                obj.Distance = eval(this.Distance);
-                obj.Cooldown = eval(this.Cooldown);
-                obj.Faction = eval(this.Faction);
-                obj.PNAM = eval(this.PNAM);
+                obj.EventSize = eval(this.EventSize);
+                obj.DistanceToPlayer = eval(this.DistanceToPlayer);
+                obj.CooldownInMinutes = eval(this.CooldownInMinutes);
+                obj.RequiredFaction = eval(this.RequiredFaction);
+                obj.AddToEvent = eval(this.AddToEvent);
             }
             #endregion
 
@@ -385,13 +377,13 @@ namespace Mutagen.Bethesda.Starfield
                 sb.AppendLine($"{nameof(AffinityEvent.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.FNAM ?? true)
+                    if (printMask?.Flags ?? true)
                     {
-                        sb.AppendItem(FNAM, "FNAM");
+                        sb.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.Context ?? true)
+                    if (printMask?.ContextNotes ?? true)
                     {
-                        sb.AppendItem(Context, "Context");
+                        sb.AppendItem(ContextNotes, "ContextNotes");
                     }
                     if ((printMask?.ActorReactions?.Overall ?? true)
                         && ActorReactions is {} ActorReactionsItem)
@@ -416,25 +408,25 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(ActorValue, "ActorValue");
                     }
-                    if (printMask?.Size ?? true)
+                    if (printMask?.EventSize ?? true)
                     {
-                        sb.AppendItem(Size, "Size");
+                        sb.AppendItem(EventSize, "EventSize");
                     }
-                    if (printMask?.Distance ?? true)
+                    if (printMask?.DistanceToPlayer ?? true)
                     {
-                        sb.AppendItem(Distance, "Distance");
+                        sb.AppendItem(DistanceToPlayer, "DistanceToPlayer");
                     }
-                    if (printMask?.Cooldown ?? true)
+                    if (printMask?.CooldownInMinutes ?? true)
                     {
-                        sb.AppendItem(Cooldown, "Cooldown");
+                        sb.AppendItem(CooldownInMinutes, "CooldownInMinutes");
                     }
-                    if (printMask?.Faction ?? true)
+                    if (printMask?.RequiredFaction ?? true)
                     {
-                        sb.AppendItem(Faction, "Faction");
+                        sb.AppendItem(RequiredFaction, "RequiredFaction");
                     }
-                    if (printMask?.PNAM ?? true)
+                    if (printMask?.AddToEvent ?? true)
                     {
-                        sb.AppendItem(PNAM, "PNAM");
+                        sb.AppendItem(AddToEvent, "AddToEvent");
                     }
                 }
             }
@@ -447,15 +439,15 @@ namespace Mutagen.Bethesda.Starfield
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? FNAM;
-            public Exception? Context;
+            public Exception? Flags;
+            public Exception? ContextNotes;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ActorReaction.ErrorMask?>>?>? ActorReactions;
             public Exception? ActorValue;
-            public Exception? Size;
-            public Exception? Distance;
-            public Exception? Cooldown;
-            public Exception? Faction;
-            public Exception? PNAM;
+            public Exception? EventSize;
+            public Exception? DistanceToPlayer;
+            public Exception? CooldownInMinutes;
+            public Exception? RequiredFaction;
+            public Exception? AddToEvent;
             #endregion
 
             #region IErrorMask
@@ -464,24 +456,24 @@ namespace Mutagen.Bethesda.Starfield
                 AffinityEvent_FieldIndex enu = (AffinityEvent_FieldIndex)index;
                 switch (enu)
                 {
-                    case AffinityEvent_FieldIndex.FNAM:
-                        return FNAM;
-                    case AffinityEvent_FieldIndex.Context:
-                        return Context;
+                    case AffinityEvent_FieldIndex.Flags:
+                        return Flags;
+                    case AffinityEvent_FieldIndex.ContextNotes:
+                        return ContextNotes;
                     case AffinityEvent_FieldIndex.ActorReactions:
                         return ActorReactions;
                     case AffinityEvent_FieldIndex.ActorValue:
                         return ActorValue;
-                    case AffinityEvent_FieldIndex.Size:
-                        return Size;
-                    case AffinityEvent_FieldIndex.Distance:
-                        return Distance;
-                    case AffinityEvent_FieldIndex.Cooldown:
-                        return Cooldown;
-                    case AffinityEvent_FieldIndex.Faction:
-                        return Faction;
-                    case AffinityEvent_FieldIndex.PNAM:
-                        return PNAM;
+                    case AffinityEvent_FieldIndex.EventSize:
+                        return EventSize;
+                    case AffinityEvent_FieldIndex.DistanceToPlayer:
+                        return DistanceToPlayer;
+                    case AffinityEvent_FieldIndex.CooldownInMinutes:
+                        return CooldownInMinutes;
+                    case AffinityEvent_FieldIndex.RequiredFaction:
+                        return RequiredFaction;
+                    case AffinityEvent_FieldIndex.AddToEvent:
+                        return AddToEvent;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -492,11 +484,11 @@ namespace Mutagen.Bethesda.Starfield
                 AffinityEvent_FieldIndex enu = (AffinityEvent_FieldIndex)index;
                 switch (enu)
                 {
-                    case AffinityEvent_FieldIndex.FNAM:
-                        this.FNAM = ex;
+                    case AffinityEvent_FieldIndex.Flags:
+                        this.Flags = ex;
                         break;
-                    case AffinityEvent_FieldIndex.Context:
-                        this.Context = ex;
+                    case AffinityEvent_FieldIndex.ContextNotes:
+                        this.ContextNotes = ex;
                         break;
                     case AffinityEvent_FieldIndex.ActorReactions:
                         this.ActorReactions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ActorReaction.ErrorMask?>>?>(ex, null);
@@ -504,20 +496,20 @@ namespace Mutagen.Bethesda.Starfield
                     case AffinityEvent_FieldIndex.ActorValue:
                         this.ActorValue = ex;
                         break;
-                    case AffinityEvent_FieldIndex.Size:
-                        this.Size = ex;
+                    case AffinityEvent_FieldIndex.EventSize:
+                        this.EventSize = ex;
                         break;
-                    case AffinityEvent_FieldIndex.Distance:
-                        this.Distance = ex;
+                    case AffinityEvent_FieldIndex.DistanceToPlayer:
+                        this.DistanceToPlayer = ex;
                         break;
-                    case AffinityEvent_FieldIndex.Cooldown:
-                        this.Cooldown = ex;
+                    case AffinityEvent_FieldIndex.CooldownInMinutes:
+                        this.CooldownInMinutes = ex;
                         break;
-                    case AffinityEvent_FieldIndex.Faction:
-                        this.Faction = ex;
+                    case AffinityEvent_FieldIndex.RequiredFaction:
+                        this.RequiredFaction = ex;
                         break;
-                    case AffinityEvent_FieldIndex.PNAM:
-                        this.PNAM = ex;
+                    case AffinityEvent_FieldIndex.AddToEvent:
+                        this.AddToEvent = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -530,11 +522,11 @@ namespace Mutagen.Bethesda.Starfield
                 AffinityEvent_FieldIndex enu = (AffinityEvent_FieldIndex)index;
                 switch (enu)
                 {
-                    case AffinityEvent_FieldIndex.FNAM:
-                        this.FNAM = (Exception?)obj;
+                    case AffinityEvent_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
                         break;
-                    case AffinityEvent_FieldIndex.Context:
-                        this.Context = (Exception?)obj;
+                    case AffinityEvent_FieldIndex.ContextNotes:
+                        this.ContextNotes = (Exception?)obj;
                         break;
                     case AffinityEvent_FieldIndex.ActorReactions:
                         this.ActorReactions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ActorReaction.ErrorMask?>>?>)obj;
@@ -542,20 +534,20 @@ namespace Mutagen.Bethesda.Starfield
                     case AffinityEvent_FieldIndex.ActorValue:
                         this.ActorValue = (Exception?)obj;
                         break;
-                    case AffinityEvent_FieldIndex.Size:
-                        this.Size = (Exception?)obj;
+                    case AffinityEvent_FieldIndex.EventSize:
+                        this.EventSize = (Exception?)obj;
                         break;
-                    case AffinityEvent_FieldIndex.Distance:
-                        this.Distance = (Exception?)obj;
+                    case AffinityEvent_FieldIndex.DistanceToPlayer:
+                        this.DistanceToPlayer = (Exception?)obj;
                         break;
-                    case AffinityEvent_FieldIndex.Cooldown:
-                        this.Cooldown = (Exception?)obj;
+                    case AffinityEvent_FieldIndex.CooldownInMinutes:
+                        this.CooldownInMinutes = (Exception?)obj;
                         break;
-                    case AffinityEvent_FieldIndex.Faction:
-                        this.Faction = (Exception?)obj;
+                    case AffinityEvent_FieldIndex.RequiredFaction:
+                        this.RequiredFaction = (Exception?)obj;
                         break;
-                    case AffinityEvent_FieldIndex.PNAM:
-                        this.PNAM = (Exception?)obj;
+                    case AffinityEvent_FieldIndex.AddToEvent:
+                        this.AddToEvent = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -566,15 +558,15 @@ namespace Mutagen.Bethesda.Starfield
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (FNAM != null) return true;
-                if (Context != null) return true;
+                if (Flags != null) return true;
+                if (ContextNotes != null) return true;
                 if (ActorReactions != null) return true;
                 if (ActorValue != null) return true;
-                if (Size != null) return true;
-                if (Distance != null) return true;
-                if (Cooldown != null) return true;
-                if (Faction != null) return true;
-                if (PNAM != null) return true;
+                if (EventSize != null) return true;
+                if (DistanceToPlayer != null) return true;
+                if (CooldownInMinutes != null) return true;
+                if (RequiredFaction != null) return true;
+                if (AddToEvent != null) return true;
                 return false;
             }
             #endregion
@@ -602,10 +594,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(FNAM, "FNAM");
+                    sb.AppendItem(Flags, "Flags");
                 }
                 {
-                    sb.AppendItem(Context, "Context");
+                    sb.AppendItem(ContextNotes, "ContextNotes");
                 }
                 if (ActorReactions is {} ActorReactionsItem)
                 {
@@ -629,19 +621,19 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(ActorValue, "ActorValue");
                 }
                 {
-                    sb.AppendItem(Size, "Size");
+                    sb.AppendItem(EventSize, "EventSize");
                 }
                 {
-                    sb.AppendItem(Distance, "Distance");
+                    sb.AppendItem(DistanceToPlayer, "DistanceToPlayer");
                 }
                 {
-                    sb.AppendItem(Cooldown, "Cooldown");
+                    sb.AppendItem(CooldownInMinutes, "CooldownInMinutes");
                 }
                 {
-                    sb.AppendItem(Faction, "Faction");
+                    sb.AppendItem(RequiredFaction, "RequiredFaction");
                 }
                 {
-                    sb.AppendItem(PNAM, "PNAM");
+                    sb.AppendItem(AddToEvent, "AddToEvent");
                 }
             }
             #endregion
@@ -651,15 +643,15 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.FNAM = this.FNAM.Combine(rhs.FNAM);
-                ret.Context = this.Context.Combine(rhs.Context);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.ContextNotes = this.ContextNotes.Combine(rhs.ContextNotes);
                 ret.ActorReactions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ActorReaction.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ActorReactions?.Overall, rhs.ActorReactions?.Overall), Noggog.ExceptionExt.Combine(this.ActorReactions?.Specific, rhs.ActorReactions?.Specific));
                 ret.ActorValue = this.ActorValue.Combine(rhs.ActorValue);
-                ret.Size = this.Size.Combine(rhs.Size);
-                ret.Distance = this.Distance.Combine(rhs.Distance);
-                ret.Cooldown = this.Cooldown.Combine(rhs.Cooldown);
-                ret.Faction = this.Faction.Combine(rhs.Faction);
-                ret.PNAM = this.PNAM.Combine(rhs.PNAM);
+                ret.EventSize = this.EventSize.Combine(rhs.EventSize);
+                ret.DistanceToPlayer = this.DistanceToPlayer.Combine(rhs.DistanceToPlayer);
+                ret.CooldownInMinutes = this.CooldownInMinutes.Combine(rhs.CooldownInMinutes);
+                ret.RequiredFaction = this.RequiredFaction.Combine(rhs.RequiredFaction);
+                ret.AddToEvent = this.AddToEvent.Combine(rhs.AddToEvent);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -682,15 +674,15 @@ namespace Mutagen.Bethesda.Starfield
             ITranslationMask
         {
             #region Members
-            public bool FNAM;
-            public bool Context;
+            public bool Flags;
+            public bool ContextNotes;
             public ActorReaction.TranslationMask? ActorReactions;
             public bool ActorValue;
-            public bool Size;
-            public bool Distance;
-            public bool Cooldown;
-            public bool Faction;
-            public bool PNAM;
+            public bool EventSize;
+            public bool DistanceToPlayer;
+            public bool CooldownInMinutes;
+            public bool RequiredFaction;
+            public bool AddToEvent;
             #endregion
 
             #region Ctors
@@ -699,14 +691,14 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.FNAM = defaultOn;
-                this.Context = defaultOn;
+                this.Flags = defaultOn;
+                this.ContextNotes = defaultOn;
                 this.ActorValue = defaultOn;
-                this.Size = defaultOn;
-                this.Distance = defaultOn;
-                this.Cooldown = defaultOn;
-                this.Faction = defaultOn;
-                this.PNAM = defaultOn;
+                this.EventSize = defaultOn;
+                this.DistanceToPlayer = defaultOn;
+                this.CooldownInMinutes = defaultOn;
+                this.RequiredFaction = defaultOn;
+                this.AddToEvent = defaultOn;
             }
 
             #endregion
@@ -714,15 +706,15 @@ namespace Mutagen.Bethesda.Starfield
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((FNAM, null));
-                ret.Add((Context, null));
+                ret.Add((Flags, null));
+                ret.Add((ContextNotes, null));
                 ret.Add((ActorReactions == null ? DefaultOn : !ActorReactions.GetCrystal().CopyNothing, ActorReactions?.GetCrystal()));
                 ret.Add((ActorValue, null));
-                ret.Add((Size, null));
-                ret.Add((Distance, null));
-                ret.Add((Cooldown, null));
-                ret.Add((Faction, null));
-                ret.Add((PNAM, null));
+                ret.Add((EventSize, null));
+                ret.Add((DistanceToPlayer, null));
+                ret.Add((CooldownInMinutes, null));
+                ret.Add((RequiredFaction, null));
+                ret.Add((AddToEvent, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -870,15 +862,15 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<IAffinityEventInternal>,
         IStarfieldMajorRecordInternal
     {
-        new MemorySlice<Byte> FNAM { get; set; }
-        new String? Context { get; set; }
+        new AffinityEvent.Flag Flags { get; set; }
+        new String? ContextNotes { get; set; }
         new ExtendedList<ActorReaction> ActorReactions { get; }
         new IFormLinkNullable<IActorValueInformationGetter> ActorValue { get; set; }
-        new IFormLinkNullable<IGlobalGetter> Size { get; set; }
-        new IFormLinkNullable<IGlobalGetter> Distance { get; set; }
-        new IFormLinkNullable<IGlobalGetter> Cooldown { get; set; }
-        new IFormLinkNullable<IFactionGetter> Faction { get; set; }
-        new IFormLinkNullable<IAffinityEventGetter> PNAM { get; set; }
+        new IFormLinkNullable<IGlobalGetter> EventSize { get; set; }
+        new IFormLinkNullable<IGlobalGetter> DistanceToPlayer { get; set; }
+        new IFormLinkNullable<IGlobalGetter> CooldownInMinutes { get; set; }
+        new IFormLinkNullable<IFactionGetter> RequiredFaction { get; set; }
+        new IFormLinkNullable<IAffinityEventGetter> AddToEvent { get; set; }
     }
 
     public partial interface IAffinityEventInternal :
@@ -897,15 +889,15 @@ namespace Mutagen.Bethesda.Starfield
         IMapsToGetter<IAffinityEventGetter>
     {
         static new ILoquiRegistration StaticRegistration => AffinityEvent_Registration.Instance;
-        ReadOnlyMemorySlice<Byte> FNAM { get; }
-        String? Context { get; }
+        AffinityEvent.Flag Flags { get; }
+        String? ContextNotes { get; }
         IReadOnlyList<IActorReactionGetter> ActorReactions { get; }
         IFormLinkNullableGetter<IActorValueInformationGetter> ActorValue { get; }
-        IFormLinkNullableGetter<IGlobalGetter> Size { get; }
-        IFormLinkNullableGetter<IGlobalGetter> Distance { get; }
-        IFormLinkNullableGetter<IGlobalGetter> Cooldown { get; }
-        IFormLinkNullableGetter<IFactionGetter> Faction { get; }
-        IFormLinkNullableGetter<IAffinityEventGetter> PNAM { get; }
+        IFormLinkNullableGetter<IGlobalGetter> EventSize { get; }
+        IFormLinkNullableGetter<IGlobalGetter> DistanceToPlayer { get; }
+        IFormLinkNullableGetter<IGlobalGetter> CooldownInMinutes { get; }
+        IFormLinkNullableGetter<IFactionGetter> RequiredFaction { get; }
+        IFormLinkNullableGetter<IAffinityEventGetter> AddToEvent { get; }
 
     }
 
@@ -1082,15 +1074,15 @@ namespace Mutagen.Bethesda.Starfield
         FormVersion = 4,
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
-        FNAM = 7,
-        Context = 8,
+        Flags = 7,
+        ContextNotes = 8,
         ActorReactions = 9,
         ActorValue = 10,
-        Size = 11,
-        Distance = 12,
-        Cooldown = 13,
-        Faction = 14,
-        PNAM = 15,
+        EventSize = 11,
+        DistanceToPlayer = 12,
+        CooldownInMinutes = 13,
+        RequiredFaction = 14,
+        AddToEvent = 15,
     }
     #endregion
 
@@ -1190,15 +1182,15 @@ namespace Mutagen.Bethesda.Starfield
         public void Clear(IAffinityEventInternal item)
         {
             ClearPartial();
-            item.FNAM = Array.Empty<byte>();
-            item.Context = default;
+            item.Flags = default(AffinityEvent.Flag);
+            item.ContextNotes = default;
             item.ActorReactions.Clear();
             item.ActorValue.Clear();
-            item.Size.Clear();
-            item.Distance.Clear();
-            item.Cooldown.Clear();
-            item.Faction.Clear();
-            item.PNAM.Clear();
+            item.EventSize.Clear();
+            item.DistanceToPlayer.Clear();
+            item.CooldownInMinutes.Clear();
+            item.RequiredFaction.Clear();
+            item.AddToEvent.Clear();
             base.Clear(item);
         }
         
@@ -1218,11 +1210,11 @@ namespace Mutagen.Bethesda.Starfield
             base.RemapLinks(obj, mapping);
             obj.ActorReactions.RemapLinks(mapping);
             obj.ActorValue.Relink(mapping);
-            obj.Size.Relink(mapping);
-            obj.Distance.Relink(mapping);
-            obj.Cooldown.Relink(mapping);
-            obj.Faction.Relink(mapping);
-            obj.PNAM.Relink(mapping);
+            obj.EventSize.Relink(mapping);
+            obj.DistanceToPlayer.Relink(mapping);
+            obj.CooldownInMinutes.Relink(mapping);
+            obj.RequiredFaction.Relink(mapping);
+            obj.AddToEvent.Relink(mapping);
         }
         
         #endregion
@@ -1290,18 +1282,18 @@ namespace Mutagen.Bethesda.Starfield
             AffinityEvent.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.FNAM = MemoryExtensions.SequenceEqual(item.FNAM.Span, rhs.FNAM.Span);
-            ret.Context = string.Equals(item.Context, rhs.Context);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.ContextNotes = string.Equals(item.ContextNotes, rhs.ContextNotes);
             ret.ActorReactions = item.ActorReactions.CollectionEqualsHelper(
                 rhs.ActorReactions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.ActorValue = item.ActorValue.Equals(rhs.ActorValue);
-            ret.Size = item.Size.Equals(rhs.Size);
-            ret.Distance = item.Distance.Equals(rhs.Distance);
-            ret.Cooldown = item.Cooldown.Equals(rhs.Cooldown);
-            ret.Faction = item.Faction.Equals(rhs.Faction);
-            ret.PNAM = item.PNAM.Equals(rhs.PNAM);
+            ret.EventSize = item.EventSize.Equals(rhs.EventSize);
+            ret.DistanceToPlayer = item.DistanceToPlayer.Equals(rhs.DistanceToPlayer);
+            ret.CooldownInMinutes = item.CooldownInMinutes.Equals(rhs.CooldownInMinutes);
+            ret.RequiredFaction = item.RequiredFaction.Equals(rhs.RequiredFaction);
+            ret.AddToEvent = item.AddToEvent.Equals(rhs.AddToEvent);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1351,14 +1343,14 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.FNAM ?? true)
+            if (printMask?.Flags ?? true)
             {
-                sb.AppendLine($"FNAM => {SpanExt.ToHexString(item.FNAM)}");
+                sb.AppendItem(item.Flags, "Flags");
             }
-            if ((printMask?.Context ?? true)
-                && item.Context is {} ContextItem)
+            if ((printMask?.ContextNotes ?? true)
+                && item.ContextNotes is {} ContextNotesItem)
             {
-                sb.AppendItem(ContextItem, "Context");
+                sb.AppendItem(ContextNotesItem, "ContextNotes");
             }
             if (printMask?.ActorReactions?.Overall ?? true)
             {
@@ -1378,25 +1370,25 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.ActorValue.FormKeyNullable, "ActorValue");
             }
-            if (printMask?.Size ?? true)
+            if (printMask?.EventSize ?? true)
             {
-                sb.AppendItem(item.Size.FormKeyNullable, "Size");
+                sb.AppendItem(item.EventSize.FormKeyNullable, "EventSize");
             }
-            if (printMask?.Distance ?? true)
+            if (printMask?.DistanceToPlayer ?? true)
             {
-                sb.AppendItem(item.Distance.FormKeyNullable, "Distance");
+                sb.AppendItem(item.DistanceToPlayer.FormKeyNullable, "DistanceToPlayer");
             }
-            if (printMask?.Cooldown ?? true)
+            if (printMask?.CooldownInMinutes ?? true)
             {
-                sb.AppendItem(item.Cooldown.FormKeyNullable, "Cooldown");
+                sb.AppendItem(item.CooldownInMinutes.FormKeyNullable, "CooldownInMinutes");
             }
-            if (printMask?.Faction ?? true)
+            if (printMask?.RequiredFaction ?? true)
             {
-                sb.AppendItem(item.Faction.FormKeyNullable, "Faction");
+                sb.AppendItem(item.RequiredFaction.FormKeyNullable, "RequiredFaction");
             }
-            if (printMask?.PNAM ?? true)
+            if (printMask?.AddToEvent ?? true)
             {
-                sb.AppendItem(item.PNAM.FormKeyNullable, "PNAM");
+                sb.AppendItem(item.AddToEvent.FormKeyNullable, "AddToEvent");
             }
         }
         
@@ -1448,13 +1440,13 @@ namespace Mutagen.Bethesda.Starfield
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IStarfieldMajorRecordGetter)lhs, (IStarfieldMajorRecordGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.FNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.Flags) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.FNAM.Span, rhs.FNAM.Span)) return false;
+                if (lhs.Flags != rhs.Flags) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.Context) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.ContextNotes) ?? true))
             {
-                if (!string.Equals(lhs.Context, rhs.Context)) return false;
+                if (!string.Equals(lhs.ContextNotes, rhs.ContextNotes)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.ActorReactions) ?? true))
             {
@@ -1464,25 +1456,25 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.ActorValue.Equals(rhs.ActorValue)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.Size) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.EventSize) ?? true))
             {
-                if (!lhs.Size.Equals(rhs.Size)) return false;
+                if (!lhs.EventSize.Equals(rhs.EventSize)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.Distance) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.DistanceToPlayer) ?? true))
             {
-                if (!lhs.Distance.Equals(rhs.Distance)) return false;
+                if (!lhs.DistanceToPlayer.Equals(rhs.DistanceToPlayer)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.Cooldown) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.CooldownInMinutes) ?? true))
             {
-                if (!lhs.Cooldown.Equals(rhs.Cooldown)) return false;
+                if (!lhs.CooldownInMinutes.Equals(rhs.CooldownInMinutes)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.Faction) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.RequiredFaction) ?? true))
             {
-                if (!lhs.Faction.Equals(rhs.Faction)) return false;
+                if (!lhs.RequiredFaction.Equals(rhs.RequiredFaction)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.PNAM) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.AddToEvent) ?? true))
             {
-                if (!lhs.PNAM.Equals(rhs.PNAM)) return false;
+                if (!lhs.AddToEvent.Equals(rhs.AddToEvent)) return false;
             }
             return true;
         }
@@ -1512,18 +1504,18 @@ namespace Mutagen.Bethesda.Starfield
         public virtual int GetHashCode(IAffinityEventGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.FNAM);
-            if (item.Context is {} Contextitem)
+            hash.Add(item.Flags);
+            if (item.ContextNotes is {} ContextNotesitem)
             {
-                hash.Add(Contextitem);
+                hash.Add(ContextNotesitem);
             }
             hash.Add(item.ActorReactions);
             hash.Add(item.ActorValue);
-            hash.Add(item.Size);
-            hash.Add(item.Distance);
-            hash.Add(item.Cooldown);
-            hash.Add(item.Faction);
-            hash.Add(item.PNAM);
+            hash.Add(item.EventSize);
+            hash.Add(item.DistanceToPlayer);
+            hash.Add(item.CooldownInMinutes);
+            hash.Add(item.RequiredFaction);
+            hash.Add(item.AddToEvent);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1561,25 +1553,25 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return ActorValueInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.Size, out var SizeInfo))
+            if (FormLinkInformation.TryFactory(obj.EventSize, out var EventSizeInfo))
             {
-                yield return SizeInfo;
+                yield return EventSizeInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.Distance, out var DistanceInfo))
+            if (FormLinkInformation.TryFactory(obj.DistanceToPlayer, out var DistanceToPlayerInfo))
             {
-                yield return DistanceInfo;
+                yield return DistanceToPlayerInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.Cooldown, out var CooldownInfo))
+            if (FormLinkInformation.TryFactory(obj.CooldownInMinutes, out var CooldownInMinutesInfo))
             {
-                yield return CooldownInfo;
+                yield return CooldownInMinutesInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.Faction, out var FactionInfo))
+            if (FormLinkInformation.TryFactory(obj.RequiredFaction, out var RequiredFactionInfo))
             {
-                yield return FactionInfo;
+                yield return RequiredFactionInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.PNAM, out var PNAMInfo))
+            if (FormLinkInformation.TryFactory(obj.AddToEvent, out var AddToEventInfo))
             {
-                yield return PNAMInfo;
+                yield return AddToEventInfo;
             }
             yield break;
         }
@@ -1655,13 +1647,13 @@ namespace Mutagen.Bethesda.Starfield
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.FNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.Flags) ?? true))
             {
-                item.FNAM = rhs.FNAM.ToArray();
+                item.Flags = rhs.Flags;
             }
-            if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.Context) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.ContextNotes) ?? true))
             {
-                item.Context = rhs.Context;
+                item.ContextNotes = rhs.ContextNotes;
             }
             if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.ActorReactions) ?? true))
             {
@@ -1691,25 +1683,25 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ActorValue.SetTo(rhs.ActorValue.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.Size) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.EventSize) ?? true))
             {
-                item.Size.SetTo(rhs.Size.FormKeyNullable);
+                item.EventSize.SetTo(rhs.EventSize.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.Distance) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.DistanceToPlayer) ?? true))
             {
-                item.Distance.SetTo(rhs.Distance.FormKeyNullable);
+                item.DistanceToPlayer.SetTo(rhs.DistanceToPlayer.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.Cooldown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.CooldownInMinutes) ?? true))
             {
-                item.Cooldown.SetTo(rhs.Cooldown.FormKeyNullable);
+                item.CooldownInMinutes.SetTo(rhs.CooldownInMinutes.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.Faction) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.RequiredFaction) ?? true))
             {
-                item.Faction.SetTo(rhs.Faction.FormKeyNullable);
+                item.RequiredFaction.SetTo(rhs.RequiredFaction.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.PNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AffinityEvent_FieldIndex.AddToEvent) ?? true))
             {
-                item.PNAM.SetTo(rhs.PNAM.FormKeyNullable);
+                item.AddToEvent.SetTo(rhs.AddToEvent.FormKeyNullable);
             }
             DeepCopyInCustom(
                 item: item,
@@ -1880,13 +1872,14 @@ namespace Mutagen.Bethesda.Starfield
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.FNAM,
+            EnumBinaryTranslation<AffinityEvent.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Flags,
+                length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.FNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Context,
+                item: item.ContextNotes,
                 header: translationParams.ConvertToCustom(RecordTypes.NLDT),
                 binaryType: StringBinaryType.NullTerminate);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IActorReactionGetter>.Instance.Write(
@@ -1906,23 +1899,23 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.ANAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Size,
+                item: item.EventSize,
                 header: translationParams.ConvertToCustom(RecordTypes.ENAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Distance,
+                item: item.DistanceToPlayer,
                 header: translationParams.ConvertToCustom(RecordTypes.DNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Cooldown,
+                item: item.CooldownInMinutes,
                 header: translationParams.ConvertToCustom(RecordTypes.CNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Faction,
+                item: item.RequiredFaction,
                 header: translationParams.ConvertToCustom(RecordTypes.BNAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.PNAM,
+                item: item.AddToEvent,
                 header: translationParams.ConvertToCustom(RecordTypes.PNAM));
         }
 
@@ -1995,17 +1988,19 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)AffinityEvent_FieldIndex.FNAM;
+                    item.Flags = EnumBinaryTranslation<AffinityEvent.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)AffinityEvent_FieldIndex.Flags;
                 }
                 case RecordTypeInts.NLDT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Context = StringBinaryTranslation.Instance.Parse(
+                    item.ContextNotes = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)AffinityEvent_FieldIndex.Context;
+                    return (int)AffinityEvent_FieldIndex.ContextNotes;
                 }
                 case RecordTypeInts.NNAM:
                 case RecordTypeInts.RNAM:
@@ -2027,32 +2022,32 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Size.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)AffinityEvent_FieldIndex.Size;
+                    item.EventSize.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)AffinityEvent_FieldIndex.EventSize;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Distance.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)AffinityEvent_FieldIndex.Distance;
+                    item.DistanceToPlayer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)AffinityEvent_FieldIndex.DistanceToPlayer;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Cooldown.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)AffinityEvent_FieldIndex.Cooldown;
+                    item.CooldownInMinutes.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)AffinityEvent_FieldIndex.CooldownInMinutes;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Faction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)AffinityEvent_FieldIndex.Faction;
+                    item.RequiredFaction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)AffinityEvent_FieldIndex.RequiredFaction;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PNAM.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)AffinityEvent_FieldIndex.PNAM;
+                    item.AddToEvent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)AffinityEvent_FieldIndex.AddToEvent;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2113,38 +2108,38 @@ namespace Mutagen.Bethesda.Starfield
         protected override Type LinkType => typeof(IAffinityEvent);
 
 
-        #region FNAM
-        private int? _FNAMLocation;
-        public ReadOnlyMemorySlice<Byte> FNAM => _FNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FNAMLocation.Value, _package.MetaData.Constants) : ReadOnlyMemorySlice<byte>.Empty;
+        #region Flags
+        private int? _FlagsLocation;
+        public AffinityEvent.Flag Flags => _FlagsLocation.HasValue ? (AffinityEvent.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(AffinityEvent.Flag);
         #endregion
-        #region Context
-        private int? _ContextLocation;
-        public String? Context => _ContextLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ContextLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region ContextNotes
+        private int? _ContextNotesLocation;
+        public String? ContextNotes => _ContextNotesLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ContextNotesLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         public IReadOnlyList<IActorReactionGetter> ActorReactions { get; private set; } = Array.Empty<IActorReactionGetter>();
         #region ActorValue
         private int? _ActorValueLocation;
         public IFormLinkNullableGetter<IActorValueInformationGetter> ActorValue => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IActorValueInformationGetter>(_package, _recordData, _ActorValueLocation);
         #endregion
-        #region Size
-        private int? _SizeLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> Size => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _SizeLocation);
+        #region EventSize
+        private int? _EventSizeLocation;
+        public IFormLinkNullableGetter<IGlobalGetter> EventSize => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _EventSizeLocation);
         #endregion
-        #region Distance
-        private int? _DistanceLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> Distance => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _DistanceLocation);
+        #region DistanceToPlayer
+        private int? _DistanceToPlayerLocation;
+        public IFormLinkNullableGetter<IGlobalGetter> DistanceToPlayer => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _DistanceToPlayerLocation);
         #endregion
-        #region Cooldown
-        private int? _CooldownLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> Cooldown => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _CooldownLocation);
+        #region CooldownInMinutes
+        private int? _CooldownInMinutesLocation;
+        public IFormLinkNullableGetter<IGlobalGetter> CooldownInMinutes => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _CooldownInMinutesLocation);
         #endregion
-        #region Faction
-        private int? _FactionLocation;
-        public IFormLinkNullableGetter<IFactionGetter> Faction => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFactionGetter>(_package, _recordData, _FactionLocation);
+        #region RequiredFaction
+        private int? _RequiredFactionLocation;
+        public IFormLinkNullableGetter<IFactionGetter> RequiredFaction => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IFactionGetter>(_package, _recordData, _RequiredFactionLocation);
         #endregion
-        #region PNAM
-        private int? _PNAMLocation;
-        public IFormLinkNullableGetter<IAffinityEventGetter> PNAM => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAffinityEventGetter>(_package, _recordData, _PNAMLocation);
+        #region AddToEvent
+        private int? _AddToEventLocation;
+        public IFormLinkNullableGetter<IAffinityEventGetter> AddToEvent => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAffinityEventGetter>(_package, _recordData, _AddToEventLocation);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2217,13 +2212,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 case RecordTypeInts.FNAM:
                 {
-                    _FNAMLocation = (stream.Position - offset);
-                    return (int)AffinityEvent_FieldIndex.FNAM;
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)AffinityEvent_FieldIndex.Flags;
                 }
                 case RecordTypeInts.NLDT:
                 {
-                    _ContextLocation = (stream.Position - offset);
-                    return (int)AffinityEvent_FieldIndex.Context;
+                    _ContextNotesLocation = (stream.Position - offset);
+                    return (int)AffinityEvent_FieldIndex.ContextNotes;
                 }
                 case RecordTypeInts.NNAM:
                 case RecordTypeInts.RNAM:
@@ -2242,28 +2237,28 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    _SizeLocation = (stream.Position - offset);
-                    return (int)AffinityEvent_FieldIndex.Size;
+                    _EventSizeLocation = (stream.Position - offset);
+                    return (int)AffinityEvent_FieldIndex.EventSize;
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    _DistanceLocation = (stream.Position - offset);
-                    return (int)AffinityEvent_FieldIndex.Distance;
+                    _DistanceToPlayerLocation = (stream.Position - offset);
+                    return (int)AffinityEvent_FieldIndex.DistanceToPlayer;
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    _CooldownLocation = (stream.Position - offset);
-                    return (int)AffinityEvent_FieldIndex.Cooldown;
+                    _CooldownInMinutesLocation = (stream.Position - offset);
+                    return (int)AffinityEvent_FieldIndex.CooldownInMinutes;
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    _FactionLocation = (stream.Position - offset);
-                    return (int)AffinityEvent_FieldIndex.Faction;
+                    _RequiredFactionLocation = (stream.Position - offset);
+                    return (int)AffinityEvent_FieldIndex.RequiredFaction;
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    _PNAMLocation = (stream.Position - offset);
-                    return (int)AffinityEvent_FieldIndex.PNAM;
+                    _AddToEventLocation = (stream.Position - offset);
+                    return (int)AffinityEvent_FieldIndex.AddToEvent;
                 }
                 default:
                     return base.FillRecordType(

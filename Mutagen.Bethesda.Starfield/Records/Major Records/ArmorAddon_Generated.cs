@@ -85,16 +85,23 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IRaceGetter> IArmorAddonGetter.Race => this.Race;
         #endregion
-        #region DNAMData
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _DNAMData = new byte[13];
-        public MemorySlice<Byte> DNAMData
-        {
-            get => _DNAMData;
-            set => this._DNAMData = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> IArmorAddonGetter.DNAMData => this.DNAMData;
+        #region WeaponAdjust
+        public Single WeaponAdjust { get; set; } = default(Single);
+        #endregion
+        #region MalePriority
+        public Byte MalePriority { get; set; } = default(Byte);
+        #endregion
+        #region FemalePriority
+        public Byte FemalePriority { get; set; } = default(Byte);
+        #endregion
+        #region Unknown
+        public UInt16 Unknown { get; set; } = default(UInt16);
+        #endregion
+        #region DetectionSoundValue
+        public Byte DetectionSoundValue { get; set; } = default(Byte);
+        #endregion
+        #region HealthBarOffset
+        public Single HealthBarOffset { get; set; } = default(Single);
         #endregion
         #region WorldModel
         public IGenderedItem<Model?>? WorldModel { get; set; }
@@ -104,27 +111,27 @@ namespace Mutagen.Bethesda.Starfield
         public IGenderedItem<Model?>? FirstPersonModel { get; set; }
         IGenderedItemGetter<IModelGetter?>? IArmorAddonGetter.FirstPersonModel => this.FirstPersonModel;
         #endregion
-        #region Skeleton
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Model? _Skeleton;
-        public Model? Skeleton
-        {
-            get => _Skeleton;
-            set => _Skeleton = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter? IArmorAddonGetter.Skeleton => this.Skeleton;
+        #region AltSkeleton
+        public IGenderedItem<String?>? AltSkeleton { get; set; }
+        IGenderedItemGetter<String?>? IArmorAddonGetter.AltSkeleton => this.AltSkeleton;
         #endregion
-        #region UnknownModel7
+        #region ExtraLightLayers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Model? _UnknownModel7;
-        public Model? UnknownModel7
+        private ExtendedList<UInt32> _ExtraLightLayers = new ExtendedList<UInt32>();
+        public ExtendedList<UInt32> ExtraLightLayers
         {
-            get => _UnknownModel7;
-            set => _UnknownModel7 = value;
+            get => this._ExtraLightLayers;
+            init => this._ExtraLightLayers = value;
         }
+        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModelGetter? IArmorAddonGetter.UnknownModel7 => this.UnknownModel7;
+        IReadOnlyList<UInt32> IArmorAddonGetter.ExtraLightLayers => _ExtraLightLayers;
+        #endregion
+
+        #endregion
+        #region SkinTexture
+        public IGenderedItem<ArmorAddonSkinTexture?>? SkinTexture { get; set; }
+        IGenderedItemGetter<IArmorAddonSkinTextureGetter?>? IArmorAddonGetter.SkinTexture => this.SkinTexture;
         #endregion
         #region Morphs
         public IGenderedItem<ArmorAddonMorph?>? Morphs { get; set; }
@@ -174,23 +181,23 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IBodyPartDataGetter> IArmorAddonGetter.BodyPartData => this.BodyPartData;
         #endregion
-        #region TintType
-        public TintType TintType { get; set; } = default(TintType);
+        #region ActorValueModulationGroupType
+        public ActorValueModulation.GroupType ActorValueModulationGroupType { get; set; } = default(ActorValueModulation.GroupType);
         #endregion
-        #region TintColorMapping
-        public String? TintColorMapping { get; set; }
+        #region ActorValueModulationEntryType
+        public String? ActorValueModulationEntryType { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IArmorAddonGetter.TintColorMapping => this.TintColorMapping;
+        String? IArmorAddonGetter.ActorValueModulationEntryType => this.ActorValueModulationEntryType;
         #endregion
-        #region TintEntryName
-        public String? TintEntryName { get; set; }
+        #region ActorValueModulationSubType
+        public String? ActorValueModulationSubType { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IArmorAddonGetter.TintEntryName => this.TintEntryName;
+        String? IArmorAddonGetter.ActorValueModulationSubType => this.ActorValueModulationSubType;
         #endregion
-        #region TintEntryValue
-        public String? TintEntryValue { get; set; }
+        #region ActorValueModulationEntryValue
+        public String? ActorValueModulationEntryValue { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IArmorAddonGetter.TintEntryValue => this.TintEntryValue;
+        String? IArmorAddonGetter.ActorValueModulationEntryValue => this.ActorValueModulationEntryValue;
         #endregion
         #region BoneDataModifiers
         public IGenderedItem<ExtendedList<IFormLinkGetter<IBoneModifierGetter>>> BoneDataModifiers { get; set; } = new GenderedItem<ExtendedList<IFormLinkGetter<IBoneModifierGetter>>>(new ExtendedList<IFormLinkGetter<IBoneModifierGetter>>(), new ExtendedList<IFormLinkGetter<IBoneModifierGetter>>());
@@ -224,20 +231,26 @@ namespace Mutagen.Bethesda.Starfield
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.FirstPersonFlags = initialValue;
                 this.Race = initialValue;
-                this.DNAMData = initialValue;
+                this.WeaponAdjust = initialValue;
+                this.MalePriority = initialValue;
+                this.FemalePriority = initialValue;
+                this.Unknown = initialValue;
+                this.DetectionSoundValue = initialValue;
+                this.HealthBarOffset = initialValue;
                 this.WorldModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>(initialValue, default);
                 this.FirstPersonModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>(initialValue, default);
-                this.Skeleton = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.UnknownModel7 = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.AltSkeleton = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
+                this.ExtraLightLayers = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SkinTexture = new MaskItem<TItem, GenderedItem<MaskItem<TItem, ArmorAddonSkinTexture.Mask<TItem>?>?>?>(initialValue, default);
                 this.Morphs = new MaskItem<TItem, GenderedItem<MaskItem<TItem, ArmorAddonMorph.Mask<TItem>?>?>?>(initialValue, default);
                 this.AdditionalRaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.FootstepSound = initialValue;
                 this.ArtObject = initialValue;
                 this.BodyPartData = initialValue;
-                this.TintType = initialValue;
-                this.TintColorMapping = initialValue;
-                this.TintEntryName = initialValue;
-                this.TintEntryValue = initialValue;
+                this.ActorValueModulationGroupType = initialValue;
+                this.ActorValueModulationEntryType = initialValue;
+                this.ActorValueModulationSubType = initialValue;
+                this.ActorValueModulationEntryValue = initialValue;
                 this.BoneDataModifiers = new GenderedItem<TItem>(initialValue, initialValue);
             }
 
@@ -252,20 +265,26 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Components,
                 TItem FirstPersonFlags,
                 TItem Race,
-                TItem DNAMData,
+                TItem WeaponAdjust,
+                TItem MalePriority,
+                TItem FemalePriority,
+                TItem Unknown,
+                TItem DetectionSoundValue,
+                TItem HealthBarOffset,
                 TItem WorldModel,
                 TItem FirstPersonModel,
-                TItem Skeleton,
-                TItem UnknownModel7,
+                TItem AltSkeleton,
+                TItem ExtraLightLayers,
+                TItem SkinTexture,
                 TItem Morphs,
                 TItem AdditionalRaces,
                 TItem FootstepSound,
                 TItem ArtObject,
                 TItem BodyPartData,
-                TItem TintType,
-                TItem TintColorMapping,
-                TItem TintEntryName,
-                TItem TintEntryValue,
+                TItem ActorValueModulationGroupType,
+                TItem ActorValueModulationEntryType,
+                TItem ActorValueModulationSubType,
+                TItem ActorValueModulationEntryValue,
                 TItem BoneDataModifiers)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -279,20 +298,26 @@ namespace Mutagen.Bethesda.Starfield
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.FirstPersonFlags = FirstPersonFlags;
                 this.Race = Race;
-                this.DNAMData = DNAMData;
+                this.WeaponAdjust = WeaponAdjust;
+                this.MalePriority = MalePriority;
+                this.FemalePriority = FemalePriority;
+                this.Unknown = Unknown;
+                this.DetectionSoundValue = DetectionSoundValue;
+                this.HealthBarOffset = HealthBarOffset;
                 this.WorldModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>(WorldModel, default);
                 this.FirstPersonModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>(FirstPersonModel, default);
-                this.Skeleton = new MaskItem<TItem, Model.Mask<TItem>?>(Skeleton, new Model.Mask<TItem>(Skeleton));
-                this.UnknownModel7 = new MaskItem<TItem, Model.Mask<TItem>?>(UnknownModel7, new Model.Mask<TItem>(UnknownModel7));
+                this.AltSkeleton = new MaskItem<TItem, GenderedItem<TItem>?>(AltSkeleton, default);
+                this.ExtraLightLayers = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ExtraLightLayers, Enumerable.Empty<(int Index, TItem Value)>());
+                this.SkinTexture = new MaskItem<TItem, GenderedItem<MaskItem<TItem, ArmorAddonSkinTexture.Mask<TItem>?>?>?>(SkinTexture, default);
                 this.Morphs = new MaskItem<TItem, GenderedItem<MaskItem<TItem, ArmorAddonMorph.Mask<TItem>?>?>?>(Morphs, default);
                 this.AdditionalRaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AdditionalRaces, Enumerable.Empty<(int Index, TItem Value)>());
                 this.FootstepSound = FootstepSound;
                 this.ArtObject = ArtObject;
                 this.BodyPartData = BodyPartData;
-                this.TintType = TintType;
-                this.TintColorMapping = TintColorMapping;
-                this.TintEntryName = TintEntryName;
-                this.TintEntryValue = TintEntryValue;
+                this.ActorValueModulationGroupType = ActorValueModulationGroupType;
+                this.ActorValueModulationEntryType = ActorValueModulationEntryType;
+                this.ActorValueModulationSubType = ActorValueModulationSubType;
+                this.ActorValueModulationEntryValue = ActorValueModulationEntryValue;
                 this.BoneDataModifiers = new GenderedItem<TItem>(BoneDataModifiers, BoneDataModifiers);
             }
 
@@ -308,20 +333,26 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public TItem FirstPersonFlags;
             public TItem Race;
-            public TItem DNAMData;
+            public TItem WeaponAdjust;
+            public TItem MalePriority;
+            public TItem FemalePriority;
+            public TItem Unknown;
+            public TItem DetectionSoundValue;
+            public TItem HealthBarOffset;
             public MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>? WorldModel;
             public MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>? FirstPersonModel;
-            public MaskItem<TItem, Model.Mask<TItem>?>? Skeleton { get; set; }
-            public MaskItem<TItem, Model.Mask<TItem>?>? UnknownModel7 { get; set; }
+            public MaskItem<TItem, GenderedItem<TItem>?>? AltSkeleton;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ExtraLightLayers;
+            public MaskItem<TItem, GenderedItem<MaskItem<TItem, ArmorAddonSkinTexture.Mask<TItem>?>?>?>? SkinTexture;
             public MaskItem<TItem, GenderedItem<MaskItem<TItem, ArmorAddonMorph.Mask<TItem>?>?>?>? Morphs;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AdditionalRaces;
             public TItem FootstepSound;
             public TItem ArtObject;
             public TItem BodyPartData;
-            public TItem TintType;
-            public TItem TintColorMapping;
-            public TItem TintEntryName;
-            public TItem TintEntryValue;
+            public TItem ActorValueModulationGroupType;
+            public TItem ActorValueModulationEntryType;
+            public TItem ActorValueModulationSubType;
+            public TItem ActorValueModulationEntryValue;
             public GenderedItem<TItem> BoneDataModifiers;
             #endregion
 
@@ -339,20 +370,26 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.FirstPersonFlags, rhs.FirstPersonFlags)) return false;
                 if (!object.Equals(this.Race, rhs.Race)) return false;
-                if (!object.Equals(this.DNAMData, rhs.DNAMData)) return false;
+                if (!object.Equals(this.WeaponAdjust, rhs.WeaponAdjust)) return false;
+                if (!object.Equals(this.MalePriority, rhs.MalePriority)) return false;
+                if (!object.Equals(this.FemalePriority, rhs.FemalePriority)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.DetectionSoundValue, rhs.DetectionSoundValue)) return false;
+                if (!object.Equals(this.HealthBarOffset, rhs.HealthBarOffset)) return false;
                 if (!object.Equals(this.WorldModel, rhs.WorldModel)) return false;
                 if (!object.Equals(this.FirstPersonModel, rhs.FirstPersonModel)) return false;
-                if (!object.Equals(this.Skeleton, rhs.Skeleton)) return false;
-                if (!object.Equals(this.UnknownModel7, rhs.UnknownModel7)) return false;
+                if (!object.Equals(this.AltSkeleton, rhs.AltSkeleton)) return false;
+                if (!object.Equals(this.ExtraLightLayers, rhs.ExtraLightLayers)) return false;
+                if (!object.Equals(this.SkinTexture, rhs.SkinTexture)) return false;
                 if (!object.Equals(this.Morphs, rhs.Morphs)) return false;
                 if (!object.Equals(this.AdditionalRaces, rhs.AdditionalRaces)) return false;
                 if (!object.Equals(this.FootstepSound, rhs.FootstepSound)) return false;
                 if (!object.Equals(this.ArtObject, rhs.ArtObject)) return false;
                 if (!object.Equals(this.BodyPartData, rhs.BodyPartData)) return false;
-                if (!object.Equals(this.TintType, rhs.TintType)) return false;
-                if (!object.Equals(this.TintColorMapping, rhs.TintColorMapping)) return false;
-                if (!object.Equals(this.TintEntryName, rhs.TintEntryName)) return false;
-                if (!object.Equals(this.TintEntryValue, rhs.TintEntryValue)) return false;
+                if (!object.Equals(this.ActorValueModulationGroupType, rhs.ActorValueModulationGroupType)) return false;
+                if (!object.Equals(this.ActorValueModulationEntryType, rhs.ActorValueModulationEntryType)) return false;
+                if (!object.Equals(this.ActorValueModulationSubType, rhs.ActorValueModulationSubType)) return false;
+                if (!object.Equals(this.ActorValueModulationEntryValue, rhs.ActorValueModulationEntryValue)) return false;
                 if (!object.Equals(this.BoneDataModifiers, rhs.BoneDataModifiers)) return false;
                 return true;
             }
@@ -362,20 +399,26 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Components);
                 hash.Add(this.FirstPersonFlags);
                 hash.Add(this.Race);
-                hash.Add(this.DNAMData);
+                hash.Add(this.WeaponAdjust);
+                hash.Add(this.MalePriority);
+                hash.Add(this.FemalePriority);
+                hash.Add(this.Unknown);
+                hash.Add(this.DetectionSoundValue);
+                hash.Add(this.HealthBarOffset);
                 hash.Add(this.WorldModel);
                 hash.Add(this.FirstPersonModel);
-                hash.Add(this.Skeleton);
-                hash.Add(this.UnknownModel7);
+                hash.Add(this.AltSkeleton);
+                hash.Add(this.ExtraLightLayers);
+                hash.Add(this.SkinTexture);
                 hash.Add(this.Morphs);
                 hash.Add(this.AdditionalRaces);
                 hash.Add(this.FootstepSound);
                 hash.Add(this.ArtObject);
                 hash.Add(this.BodyPartData);
-                hash.Add(this.TintType);
-                hash.Add(this.TintColorMapping);
-                hash.Add(this.TintEntryName);
-                hash.Add(this.TintEntryValue);
+                hash.Add(this.ActorValueModulationGroupType);
+                hash.Add(this.ActorValueModulationEntryType);
+                hash.Add(this.ActorValueModulationSubType);
+                hash.Add(this.ActorValueModulationEntryValue);
                 hash.Add(this.BoneDataModifiers);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -401,23 +444,35 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (!eval(this.FirstPersonFlags)) return false;
                 if (!eval(this.Race)) return false;
-                if (!eval(this.DNAMData)) return false;
+                if (!eval(this.WeaponAdjust)) return false;
+                if (!eval(this.MalePriority)) return false;
+                if (!eval(this.FemalePriority)) return false;
+                if (!eval(this.Unknown)) return false;
+                if (!eval(this.DetectionSoundValue)) return false;
+                if (!eval(this.HealthBarOffset)) return false;
                 if (!GenderedItem.AllMask(
                     this.WorldModel,
                     eval: eval)) return false;
                 if (!GenderedItem.AllMask(
                     this.FirstPersonModel,
                     eval: eval)) return false;
-                if (Skeleton != null)
+                if (!GenderedItem.All(
+                    this.AltSkeleton,
+                    eval: eval)) return false;
+                if (this.ExtraLightLayers != null)
                 {
-                    if (!eval(this.Skeleton.Overall)) return false;
-                    if (this.Skeleton.Specific != null && !this.Skeleton.Specific.All(eval)) return false;
+                    if (!eval(this.ExtraLightLayers.Overall)) return false;
+                    if (this.ExtraLightLayers.Specific != null)
+                    {
+                        foreach (var item in this.ExtraLightLayers.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
                 }
-                if (UnknownModel7 != null)
-                {
-                    if (!eval(this.UnknownModel7.Overall)) return false;
-                    if (this.UnknownModel7.Specific != null && !this.UnknownModel7.Specific.All(eval)) return false;
-                }
+                if (!GenderedItem.AllMask(
+                    this.SkinTexture,
+                    eval: eval)) return false;
                 if (!GenderedItem.AllMask(
                     this.Morphs,
                     eval: eval)) return false;
@@ -435,10 +490,10 @@ namespace Mutagen.Bethesda.Starfield
                 if (!eval(this.FootstepSound)) return false;
                 if (!eval(this.ArtObject)) return false;
                 if (!eval(this.BodyPartData)) return false;
-                if (!eval(this.TintType)) return false;
-                if (!eval(this.TintColorMapping)) return false;
-                if (!eval(this.TintEntryName)) return false;
-                if (!eval(this.TintEntryValue)) return false;
+                if (!eval(this.ActorValueModulationGroupType)) return false;
+                if (!eval(this.ActorValueModulationEntryType)) return false;
+                if (!eval(this.ActorValueModulationSubType)) return false;
+                if (!eval(this.ActorValueModulationEntryValue)) return false;
                 if (!eval(this.BoneDataModifiers.Male) || !eval(this.BoneDataModifiers.Female)) return false;
                 return true;
             }
@@ -462,23 +517,35 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (eval(this.FirstPersonFlags)) return true;
                 if (eval(this.Race)) return true;
-                if (eval(this.DNAMData)) return true;
+                if (eval(this.WeaponAdjust)) return true;
+                if (eval(this.MalePriority)) return true;
+                if (eval(this.FemalePriority)) return true;
+                if (eval(this.Unknown)) return true;
+                if (eval(this.DetectionSoundValue)) return true;
+                if (eval(this.HealthBarOffset)) return true;
                 if (GenderedItem.AnyMask(
                     this.WorldModel,
                     eval: eval)) return true;
                 if (GenderedItem.AnyMask(
                     this.FirstPersonModel,
                     eval: eval)) return true;
-                if (Skeleton != null)
+                if (GenderedItem.Any(
+                    this.AltSkeleton,
+                    eval: eval)) return true;
+                if (this.ExtraLightLayers != null)
                 {
-                    if (eval(this.Skeleton.Overall)) return true;
-                    if (this.Skeleton.Specific != null && this.Skeleton.Specific.Any(eval)) return true;
+                    if (eval(this.ExtraLightLayers.Overall)) return true;
+                    if (this.ExtraLightLayers.Specific != null)
+                    {
+                        foreach (var item in this.ExtraLightLayers.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
                 }
-                if (UnknownModel7 != null)
-                {
-                    if (eval(this.UnknownModel7.Overall)) return true;
-                    if (this.UnknownModel7.Specific != null && this.UnknownModel7.Specific.Any(eval)) return true;
-                }
+                if (GenderedItem.AnyMask(
+                    this.SkinTexture,
+                    eval: eval)) return true;
                 if (GenderedItem.AnyMask(
                     this.Morphs,
                     eval: eval)) return true;
@@ -496,10 +563,10 @@ namespace Mutagen.Bethesda.Starfield
                 if (eval(this.FootstepSound)) return true;
                 if (eval(this.ArtObject)) return true;
                 if (eval(this.BodyPartData)) return true;
-                if (eval(this.TintType)) return true;
-                if (eval(this.TintColorMapping)) return true;
-                if (eval(this.TintEntryName)) return true;
-                if (eval(this.TintEntryValue)) return true;
+                if (eval(this.ActorValueModulationGroupType)) return true;
+                if (eval(this.ActorValueModulationEntryType)) return true;
+                if (eval(this.ActorValueModulationSubType)) return true;
+                if (eval(this.ActorValueModulationEntryValue)) return true;
                 if (eval(this.BoneDataModifiers.Male) || eval(this.BoneDataModifiers.Female)) return true;
                 return false;
             }
@@ -533,7 +600,12 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 obj.FirstPersonFlags = eval(this.FirstPersonFlags);
                 obj.Race = eval(this.Race);
-                obj.DNAMData = eval(this.DNAMData);
+                obj.WeaponAdjust = eval(this.WeaponAdjust);
+                obj.MalePriority = eval(this.MalePriority);
+                obj.FemalePriority = eval(this.FemalePriority);
+                obj.Unknown = eval(this.Unknown);
+                obj.DetectionSoundValue = eval(this.DetectionSoundValue);
+                obj.HealthBarOffset = eval(this.HealthBarOffset);
                 obj.WorldModel = GenderedItem.TranslateHelper(
                     this.WorldModel,
                     eval,
@@ -542,8 +614,27 @@ namespace Mutagen.Bethesda.Starfield
                     this.FirstPersonModel,
                     eval,
                     (m, e) => m?.Translate(e));
-                obj.Skeleton = this.Skeleton == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Skeleton.Overall), this.Skeleton.Specific?.Translate(eval));
-                obj.UnknownModel7 = this.UnknownModel7 == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.UnknownModel7.Overall), this.UnknownModel7.Specific?.Translate(eval));
+                obj.AltSkeleton = GenderedItem.TranslateHelper(
+                    this.AltSkeleton,
+                    eval);
+                if (ExtraLightLayers != null)
+                {
+                    obj.ExtraLightLayers = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ExtraLightLayers.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (ExtraLightLayers.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.ExtraLightLayers.Specific = l;
+                        foreach (var item in ExtraLightLayers.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.SkinTexture = GenderedItem.TranslateHelper(
+                    this.SkinTexture,
+                    eval,
+                    (m, e) => m?.Translate(e));
                 obj.Morphs = GenderedItem.TranslateHelper(
                     this.Morphs,
                     eval,
@@ -565,10 +656,10 @@ namespace Mutagen.Bethesda.Starfield
                 obj.FootstepSound = eval(this.FootstepSound);
                 obj.ArtObject = eval(this.ArtObject);
                 obj.BodyPartData = eval(this.BodyPartData);
-                obj.TintType = eval(this.TintType);
-                obj.TintColorMapping = eval(this.TintColorMapping);
-                obj.TintEntryName = eval(this.TintEntryName);
-                obj.TintEntryValue = eval(this.TintEntryValue);
+                obj.ActorValueModulationGroupType = eval(this.ActorValueModulationGroupType);
+                obj.ActorValueModulationEntryType = eval(this.ActorValueModulationEntryType);
+                obj.ActorValueModulationSubType = eval(this.ActorValueModulationSubType);
+                obj.ActorValueModulationEntryValue = eval(this.ActorValueModulationEntryValue);
                 obj.BoneDataModifiers = new GenderedItem<R>(
                     eval(this.BoneDataModifiers.Male),
                     eval(this.BoneDataModifiers.Female));
@@ -617,9 +708,29 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Race, "Race");
                     }
-                    if (printMask?.DNAMData ?? true)
+                    if (printMask?.WeaponAdjust ?? true)
                     {
-                        sb.AppendItem(DNAMData, "DNAMData");
+                        sb.AppendItem(WeaponAdjust, "WeaponAdjust");
+                    }
+                    if (printMask?.MalePriority ?? true)
+                    {
+                        sb.AppendItem(MalePriority, "MalePriority");
+                    }
+                    if (printMask?.FemalePriority ?? true)
+                    {
+                        sb.AppendItem(FemalePriority, "FemalePriority");
+                    }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        sb.AppendItem(Unknown, "Unknown");
+                    }
+                    if (printMask?.DetectionSoundValue ?? true)
+                    {
+                        sb.AppendItem(DetectionSoundValue, "DetectionSoundValue");
+                    }
+                    if (printMask?.HealthBarOffset ?? true)
+                    {
+                        sb.AppendItem(HealthBarOffset, "HealthBarOffset");
                     }
                     if (WorldModel != null
                         && (printMask?.WorldModel?.Overall ?? true))
@@ -631,13 +742,36 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendLine($"FirstPersonModel => {FirstPersonModel}");
                     }
-                    if (printMask?.Skeleton?.Overall ?? true)
+                    if (AltSkeleton != null
+                        && (printMask?.AltSkeleton?.Overall ?? true))
                     {
-                        Skeleton?.Print(sb);
+                        sb.AppendLine($"AltSkeleton => {AltSkeleton}");
                     }
-                    if (printMask?.UnknownModel7?.Overall ?? true)
+                    if ((printMask?.ExtraLightLayers?.Overall ?? true)
+                        && ExtraLightLayers is {} ExtraLightLayersItem)
                     {
-                        UnknownModel7?.Print(sb);
+                        sb.AppendLine("ExtraLightLayers =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ExtraLightLayersItem.Overall);
+                            if (ExtraLightLayersItem.Specific != null)
+                            {
+                                foreach (var subItem in ExtraLightLayersItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (SkinTexture != null
+                        && (printMask?.SkinTexture?.Overall ?? true))
+                    {
+                        sb.AppendLine($"SkinTexture => {SkinTexture}");
                     }
                     if (Morphs != null
                         && (printMask?.Morphs?.Overall ?? true))
@@ -677,21 +811,21 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(BodyPartData, "BodyPartData");
                     }
-                    if (printMask?.TintType ?? true)
+                    if (printMask?.ActorValueModulationGroupType ?? true)
                     {
-                        sb.AppendItem(TintType, "TintType");
+                        sb.AppendItem(ActorValueModulationGroupType, "ActorValueModulationGroupType");
                     }
-                    if (printMask?.TintColorMapping ?? true)
+                    if (printMask?.ActorValueModulationEntryType ?? true)
                     {
-                        sb.AppendItem(TintColorMapping, "TintColorMapping");
+                        sb.AppendItem(ActorValueModulationEntryType, "ActorValueModulationEntryType");
                     }
-                    if (printMask?.TintEntryName ?? true)
+                    if (printMask?.ActorValueModulationSubType ?? true)
                     {
-                        sb.AppendItem(TintEntryName, "TintEntryName");
+                        sb.AppendItem(ActorValueModulationSubType, "ActorValueModulationSubType");
                     }
-                    if (printMask?.TintEntryValue ?? true)
+                    if (printMask?.ActorValueModulationEntryValue ?? true)
                     {
-                        sb.AppendItem(TintEntryValue, "TintEntryValue");
+                        sb.AppendItem(ActorValueModulationEntryValue, "ActorValueModulationEntryValue");
                     }
                     if ((true))
                     {
@@ -711,20 +845,26 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public Exception? FirstPersonFlags;
             public Exception? Race;
-            public Exception? DNAMData;
+            public Exception? WeaponAdjust;
+            public Exception? MalePriority;
+            public Exception? FemalePriority;
+            public Exception? Unknown;
+            public Exception? DetectionSoundValue;
+            public Exception? HealthBarOffset;
             public MaskItem<Exception?, GenderedItem<Exception?>?>? WorldModel;
             public MaskItem<Exception?, GenderedItem<Exception?>?>? FirstPersonModel;
-            public MaskItem<Exception?, Model.ErrorMask?>? Skeleton;
-            public MaskItem<Exception?, Model.ErrorMask?>? UnknownModel7;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? AltSkeleton;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ExtraLightLayers;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? SkinTexture;
             public MaskItem<Exception?, GenderedItem<Exception?>?>? Morphs;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AdditionalRaces;
             public Exception? FootstepSound;
             public Exception? ArtObject;
             public Exception? BodyPartData;
-            public Exception? TintType;
-            public Exception? TintColorMapping;
-            public Exception? TintEntryName;
-            public Exception? TintEntryValue;
+            public Exception? ActorValueModulationGroupType;
+            public Exception? ActorValueModulationEntryType;
+            public Exception? ActorValueModulationSubType;
+            public Exception? ActorValueModulationEntryValue;
             public MaskItem<Exception?, GenderedItem<Exception?>?>? BoneDataModifiers;
             #endregion
 
@@ -740,16 +880,28 @@ namespace Mutagen.Bethesda.Starfield
                         return FirstPersonFlags;
                     case ArmorAddon_FieldIndex.Race:
                         return Race;
-                    case ArmorAddon_FieldIndex.DNAMData:
-                        return DNAMData;
+                    case ArmorAddon_FieldIndex.WeaponAdjust:
+                        return WeaponAdjust;
+                    case ArmorAddon_FieldIndex.MalePriority:
+                        return MalePriority;
+                    case ArmorAddon_FieldIndex.FemalePriority:
+                        return FemalePriority;
+                    case ArmorAddon_FieldIndex.Unknown:
+                        return Unknown;
+                    case ArmorAddon_FieldIndex.DetectionSoundValue:
+                        return DetectionSoundValue;
+                    case ArmorAddon_FieldIndex.HealthBarOffset:
+                        return HealthBarOffset;
                     case ArmorAddon_FieldIndex.WorldModel:
                         return WorldModel;
                     case ArmorAddon_FieldIndex.FirstPersonModel:
                         return FirstPersonModel;
-                    case ArmorAddon_FieldIndex.Skeleton:
-                        return Skeleton;
-                    case ArmorAddon_FieldIndex.UnknownModel7:
-                        return UnknownModel7;
+                    case ArmorAddon_FieldIndex.AltSkeleton:
+                        return AltSkeleton;
+                    case ArmorAddon_FieldIndex.ExtraLightLayers:
+                        return ExtraLightLayers;
+                    case ArmorAddon_FieldIndex.SkinTexture:
+                        return SkinTexture;
                     case ArmorAddon_FieldIndex.Morphs:
                         return Morphs;
                     case ArmorAddon_FieldIndex.AdditionalRaces:
@@ -760,14 +912,14 @@ namespace Mutagen.Bethesda.Starfield
                         return ArtObject;
                     case ArmorAddon_FieldIndex.BodyPartData:
                         return BodyPartData;
-                    case ArmorAddon_FieldIndex.TintType:
-                        return TintType;
-                    case ArmorAddon_FieldIndex.TintColorMapping:
-                        return TintColorMapping;
-                    case ArmorAddon_FieldIndex.TintEntryName:
-                        return TintEntryName;
-                    case ArmorAddon_FieldIndex.TintEntryValue:
-                        return TintEntryValue;
+                    case ArmorAddon_FieldIndex.ActorValueModulationGroupType:
+                        return ActorValueModulationGroupType;
+                    case ArmorAddon_FieldIndex.ActorValueModulationEntryType:
+                        return ActorValueModulationEntryType;
+                    case ArmorAddon_FieldIndex.ActorValueModulationSubType:
+                        return ActorValueModulationSubType;
+                    case ArmorAddon_FieldIndex.ActorValueModulationEntryValue:
+                        return ActorValueModulationEntryValue;
                     case ArmorAddon_FieldIndex.BoneDataModifiers:
                         return BoneDataModifiers;
                     default:
@@ -789,8 +941,23 @@ namespace Mutagen.Bethesda.Starfield
                     case ArmorAddon_FieldIndex.Race:
                         this.Race = ex;
                         break;
-                    case ArmorAddon_FieldIndex.DNAMData:
-                        this.DNAMData = ex;
+                    case ArmorAddon_FieldIndex.WeaponAdjust:
+                        this.WeaponAdjust = ex;
+                        break;
+                    case ArmorAddon_FieldIndex.MalePriority:
+                        this.MalePriority = ex;
+                        break;
+                    case ArmorAddon_FieldIndex.FemalePriority:
+                        this.FemalePriority = ex;
+                        break;
+                    case ArmorAddon_FieldIndex.Unknown:
+                        this.Unknown = ex;
+                        break;
+                    case ArmorAddon_FieldIndex.DetectionSoundValue:
+                        this.DetectionSoundValue = ex;
+                        break;
+                    case ArmorAddon_FieldIndex.HealthBarOffset:
+                        this.HealthBarOffset = ex;
                         break;
                     case ArmorAddon_FieldIndex.WorldModel:
                         this.WorldModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
@@ -798,11 +965,14 @@ namespace Mutagen.Bethesda.Starfield
                     case ArmorAddon_FieldIndex.FirstPersonModel:
                         this.FirstPersonModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
                         break;
-                    case ArmorAddon_FieldIndex.Skeleton:
-                        this.Skeleton = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                    case ArmorAddon_FieldIndex.AltSkeleton:
+                        this.AltSkeleton = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
                         break;
-                    case ArmorAddon_FieldIndex.UnknownModel7:
-                        this.UnknownModel7 = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                    case ArmorAddon_FieldIndex.ExtraLightLayers:
+                        this.ExtraLightLayers = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case ArmorAddon_FieldIndex.SkinTexture:
+                        this.SkinTexture = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
                         break;
                     case ArmorAddon_FieldIndex.Morphs:
                         this.Morphs = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
@@ -819,17 +989,17 @@ namespace Mutagen.Bethesda.Starfield
                     case ArmorAddon_FieldIndex.BodyPartData:
                         this.BodyPartData = ex;
                         break;
-                    case ArmorAddon_FieldIndex.TintType:
-                        this.TintType = ex;
+                    case ArmorAddon_FieldIndex.ActorValueModulationGroupType:
+                        this.ActorValueModulationGroupType = ex;
                         break;
-                    case ArmorAddon_FieldIndex.TintColorMapping:
-                        this.TintColorMapping = ex;
+                    case ArmorAddon_FieldIndex.ActorValueModulationEntryType:
+                        this.ActorValueModulationEntryType = ex;
                         break;
-                    case ArmorAddon_FieldIndex.TintEntryName:
-                        this.TintEntryName = ex;
+                    case ArmorAddon_FieldIndex.ActorValueModulationSubType:
+                        this.ActorValueModulationSubType = ex;
                         break;
-                    case ArmorAddon_FieldIndex.TintEntryValue:
-                        this.TintEntryValue = ex;
+                    case ArmorAddon_FieldIndex.ActorValueModulationEntryValue:
+                        this.ActorValueModulationEntryValue = ex;
                         break;
                     case ArmorAddon_FieldIndex.BoneDataModifiers:
                         this.BoneDataModifiers = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
@@ -854,8 +1024,23 @@ namespace Mutagen.Bethesda.Starfield
                     case ArmorAddon_FieldIndex.Race:
                         this.Race = (Exception?)obj;
                         break;
-                    case ArmorAddon_FieldIndex.DNAMData:
-                        this.DNAMData = (Exception?)obj;
+                    case ArmorAddon_FieldIndex.WeaponAdjust:
+                        this.WeaponAdjust = (Exception?)obj;
+                        break;
+                    case ArmorAddon_FieldIndex.MalePriority:
+                        this.MalePriority = (Exception?)obj;
+                        break;
+                    case ArmorAddon_FieldIndex.FemalePriority:
+                        this.FemalePriority = (Exception?)obj;
+                        break;
+                    case ArmorAddon_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
+                        break;
+                    case ArmorAddon_FieldIndex.DetectionSoundValue:
+                        this.DetectionSoundValue = (Exception?)obj;
+                        break;
+                    case ArmorAddon_FieldIndex.HealthBarOffset:
+                        this.HealthBarOffset = (Exception?)obj;
                         break;
                     case ArmorAddon_FieldIndex.WorldModel:
                         this.WorldModel = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
@@ -863,11 +1048,14 @@ namespace Mutagen.Bethesda.Starfield
                     case ArmorAddon_FieldIndex.FirstPersonModel:
                         this.FirstPersonModel = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
                         break;
-                    case ArmorAddon_FieldIndex.Skeleton:
-                        this.Skeleton = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                    case ArmorAddon_FieldIndex.AltSkeleton:
+                        this.AltSkeleton = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
                         break;
-                    case ArmorAddon_FieldIndex.UnknownModel7:
-                        this.UnknownModel7 = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                    case ArmorAddon_FieldIndex.ExtraLightLayers:
+                        this.ExtraLightLayers = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case ArmorAddon_FieldIndex.SkinTexture:
+                        this.SkinTexture = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
                         break;
                     case ArmorAddon_FieldIndex.Morphs:
                         this.Morphs = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
@@ -884,17 +1072,17 @@ namespace Mutagen.Bethesda.Starfield
                     case ArmorAddon_FieldIndex.BodyPartData:
                         this.BodyPartData = (Exception?)obj;
                         break;
-                    case ArmorAddon_FieldIndex.TintType:
-                        this.TintType = (Exception?)obj;
+                    case ArmorAddon_FieldIndex.ActorValueModulationGroupType:
+                        this.ActorValueModulationGroupType = (Exception?)obj;
                         break;
-                    case ArmorAddon_FieldIndex.TintColorMapping:
-                        this.TintColorMapping = (Exception?)obj;
+                    case ArmorAddon_FieldIndex.ActorValueModulationEntryType:
+                        this.ActorValueModulationEntryType = (Exception?)obj;
                         break;
-                    case ArmorAddon_FieldIndex.TintEntryName:
-                        this.TintEntryName = (Exception?)obj;
+                    case ArmorAddon_FieldIndex.ActorValueModulationSubType:
+                        this.ActorValueModulationSubType = (Exception?)obj;
                         break;
-                    case ArmorAddon_FieldIndex.TintEntryValue:
-                        this.TintEntryValue = (Exception?)obj;
+                    case ArmorAddon_FieldIndex.ActorValueModulationEntryValue:
+                        this.ActorValueModulationEntryValue = (Exception?)obj;
                         break;
                     case ArmorAddon_FieldIndex.BoneDataModifiers:
                         this.BoneDataModifiers = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
@@ -911,20 +1099,26 @@ namespace Mutagen.Bethesda.Starfield
                 if (Components != null) return true;
                 if (FirstPersonFlags != null) return true;
                 if (Race != null) return true;
-                if (DNAMData != null) return true;
+                if (WeaponAdjust != null) return true;
+                if (MalePriority != null) return true;
+                if (FemalePriority != null) return true;
+                if (Unknown != null) return true;
+                if (DetectionSoundValue != null) return true;
+                if (HealthBarOffset != null) return true;
                 if (WorldModel != null) return true;
                 if (FirstPersonModel != null) return true;
-                if (Skeleton != null) return true;
-                if (UnknownModel7 != null) return true;
+                if (AltSkeleton != null) return true;
+                if (ExtraLightLayers != null) return true;
+                if (SkinTexture != null) return true;
                 if (Morphs != null) return true;
                 if (AdditionalRaces != null) return true;
                 if (FootstepSound != null) return true;
                 if (ArtObject != null) return true;
                 if (BodyPartData != null) return true;
-                if (TintType != null) return true;
-                if (TintColorMapping != null) return true;
-                if (TintEntryName != null) return true;
-                if (TintEntryValue != null) return true;
+                if (ActorValueModulationGroupType != null) return true;
+                if (ActorValueModulationEntryType != null) return true;
+                if (ActorValueModulationSubType != null) return true;
+                if (ActorValueModulationEntryValue != null) return true;
                 if (BoneDataModifiers != null) return true;
                 return false;
             }
@@ -977,7 +1171,22 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Race, "Race");
                 }
                 {
-                    sb.AppendItem(DNAMData, "DNAMData");
+                    sb.AppendItem(WeaponAdjust, "WeaponAdjust");
+                }
+                {
+                    sb.AppendItem(MalePriority, "MalePriority");
+                }
+                {
+                    sb.AppendItem(FemalePriority, "FemalePriority");
+                }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
+                {
+                    sb.AppendItem(DetectionSoundValue, "DetectionSoundValue");
+                }
+                {
+                    sb.AppendItem(HealthBarOffset, "HealthBarOffset");
                 }
                 if (WorldModel != null)
                 {
@@ -987,8 +1196,34 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendLine($"FirstPersonModel => {FirstPersonModel}");
                 }
-                Skeleton?.Print(sb);
-                UnknownModel7?.Print(sb);
+                if (AltSkeleton != null)
+                {
+                    sb.AppendLine($"AltSkeleton => {AltSkeleton}");
+                }
+                if (ExtraLightLayers is {} ExtraLightLayersItem)
+                {
+                    sb.AppendLine("ExtraLightLayers =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ExtraLightLayersItem.Overall);
+                        if (ExtraLightLayersItem.Specific != null)
+                        {
+                            foreach (var subItem in ExtraLightLayersItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (SkinTexture != null)
+                {
+                    sb.AppendLine($"SkinTexture => {SkinTexture}");
+                }
                 if (Morphs != null)
                 {
                     sb.AppendLine($"Morphs => {Morphs}");
@@ -1023,16 +1258,16 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(BodyPartData, "BodyPartData");
                 }
                 {
-                    sb.AppendItem(TintType, "TintType");
+                    sb.AppendItem(ActorValueModulationGroupType, "ActorValueModulationGroupType");
                 }
                 {
-                    sb.AppendItem(TintColorMapping, "TintColorMapping");
+                    sb.AppendItem(ActorValueModulationEntryType, "ActorValueModulationEntryType");
                 }
                 {
-                    sb.AppendItem(TintEntryName, "TintEntryName");
+                    sb.AppendItem(ActorValueModulationSubType, "ActorValueModulationSubType");
                 }
                 {
-                    sb.AppendItem(TintEntryValue, "TintEntryValue");
+                    sb.AppendItem(ActorValueModulationEntryValue, "ActorValueModulationEntryValue");
                 }
                 {
                     sb.AppendLine($"BoneDataModifiers => {BoneDataModifiers}");
@@ -1048,20 +1283,26 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.FirstPersonFlags = this.FirstPersonFlags.Combine(rhs.FirstPersonFlags);
                 ret.Race = this.Race.Combine(rhs.Race);
-                ret.DNAMData = this.DNAMData.Combine(rhs.DNAMData);
+                ret.WeaponAdjust = this.WeaponAdjust.Combine(rhs.WeaponAdjust);
+                ret.MalePriority = this.MalePriority.Combine(rhs.MalePriority);
+                ret.FemalePriority = this.FemalePriority.Combine(rhs.FemalePriority);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.DetectionSoundValue = this.DetectionSoundValue.Combine(rhs.DetectionSoundValue);
+                ret.HealthBarOffset = this.HealthBarOffset.Combine(rhs.HealthBarOffset);
                 ret.WorldModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.WorldModel?.Overall, rhs.WorldModel?.Overall), GenderedItem.Combine(this.WorldModel?.Specific, rhs.WorldModel?.Specific));
                 ret.FirstPersonModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.FirstPersonModel?.Overall, rhs.FirstPersonModel?.Overall), GenderedItem.Combine(this.FirstPersonModel?.Specific, rhs.FirstPersonModel?.Specific));
-                ret.Skeleton = this.Skeleton.Combine(rhs.Skeleton, (l, r) => l.Combine(r));
-                ret.UnknownModel7 = this.UnknownModel7.Combine(rhs.UnknownModel7, (l, r) => l.Combine(r));
+                ret.AltSkeleton = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.AltSkeleton?.Overall, rhs.AltSkeleton?.Overall), GenderedItem.Combine(this.AltSkeleton?.Specific, rhs.AltSkeleton?.Specific));
+                ret.ExtraLightLayers = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ExtraLightLayers?.Overall, rhs.ExtraLightLayers?.Overall), Noggog.ExceptionExt.Combine(this.ExtraLightLayers?.Specific, rhs.ExtraLightLayers?.Specific));
+                ret.SkinTexture = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.SkinTexture?.Overall, rhs.SkinTexture?.Overall), GenderedItem.Combine(this.SkinTexture?.Specific, rhs.SkinTexture?.Specific));
                 ret.Morphs = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.Morphs?.Overall, rhs.Morphs?.Overall), GenderedItem.Combine(this.Morphs?.Specific, rhs.Morphs?.Specific));
                 ret.AdditionalRaces = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.AdditionalRaces?.Overall, rhs.AdditionalRaces?.Overall), Noggog.ExceptionExt.Combine(this.AdditionalRaces?.Specific, rhs.AdditionalRaces?.Specific));
                 ret.FootstepSound = this.FootstepSound.Combine(rhs.FootstepSound);
                 ret.ArtObject = this.ArtObject.Combine(rhs.ArtObject);
                 ret.BodyPartData = this.BodyPartData.Combine(rhs.BodyPartData);
-                ret.TintType = this.TintType.Combine(rhs.TintType);
-                ret.TintColorMapping = this.TintColorMapping.Combine(rhs.TintColorMapping);
-                ret.TintEntryName = this.TintEntryName.Combine(rhs.TintEntryName);
-                ret.TintEntryValue = this.TintEntryValue.Combine(rhs.TintEntryValue);
+                ret.ActorValueModulationGroupType = this.ActorValueModulationGroupType.Combine(rhs.ActorValueModulationGroupType);
+                ret.ActorValueModulationEntryType = this.ActorValueModulationEntryType.Combine(rhs.ActorValueModulationEntryType);
+                ret.ActorValueModulationSubType = this.ActorValueModulationSubType.Combine(rhs.ActorValueModulationSubType);
+                ret.ActorValueModulationEntryValue = this.ActorValueModulationEntryValue.Combine(rhs.ActorValueModulationEntryValue);
                 ret.BoneDataModifiers = new MaskItem<Exception?, GenderedItem<Exception?>?>(Noggog.ExceptionExt.Combine(this.BoneDataModifiers?.Overall, rhs.BoneDataModifiers?.Overall), GenderedItem.Combine(this.BoneDataModifiers?.Specific, rhs.BoneDataModifiers?.Specific));
                 return ret;
             }
@@ -1088,20 +1329,26 @@ namespace Mutagen.Bethesda.Starfield
             public AComponent.TranslationMask? Components;
             public bool FirstPersonFlags;
             public bool Race;
-            public bool DNAMData;
+            public bool WeaponAdjust;
+            public bool MalePriority;
+            public bool FemalePriority;
+            public bool Unknown;
+            public bool DetectionSoundValue;
+            public bool HealthBarOffset;
             public GenderedItem<Model.TranslationMask>? WorldModel;
             public GenderedItem<Model.TranslationMask>? FirstPersonModel;
-            public Model.TranslationMask? Skeleton;
-            public Model.TranslationMask? UnknownModel7;
+            public GenderedItem<bool>? AltSkeleton;
+            public bool ExtraLightLayers;
+            public GenderedItem<ArmorAddonSkinTexture.TranslationMask>? SkinTexture;
             public GenderedItem<ArmorAddonMorph.TranslationMask>? Morphs;
             public bool AdditionalRaces;
             public bool FootstepSound;
             public bool ArtObject;
             public bool BodyPartData;
-            public bool TintType;
-            public bool TintColorMapping;
-            public bool TintEntryName;
-            public bool TintEntryValue;
+            public bool ActorValueModulationGroupType;
+            public bool ActorValueModulationEntryType;
+            public bool ActorValueModulationSubType;
+            public bool ActorValueModulationEntryValue;
             public GenderedItem<bool>? BoneDataModifiers;
             #endregion
 
@@ -1113,15 +1360,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.FirstPersonFlags = defaultOn;
                 this.Race = defaultOn;
-                this.DNAMData = defaultOn;
+                this.WeaponAdjust = defaultOn;
+                this.MalePriority = defaultOn;
+                this.FemalePriority = defaultOn;
+                this.Unknown = defaultOn;
+                this.DetectionSoundValue = defaultOn;
+                this.HealthBarOffset = defaultOn;
+                this.ExtraLightLayers = defaultOn;
                 this.AdditionalRaces = defaultOn;
                 this.FootstepSound = defaultOn;
                 this.ArtObject = defaultOn;
                 this.BodyPartData = defaultOn;
-                this.TintType = defaultOn;
-                this.TintColorMapping = defaultOn;
-                this.TintEntryName = defaultOn;
-                this.TintEntryValue = defaultOn;
+                this.ActorValueModulationGroupType = defaultOn;
+                this.ActorValueModulationEntryType = defaultOn;
+                this.ActorValueModulationSubType = defaultOn;
+                this.ActorValueModulationEntryValue = defaultOn;
             }
 
             #endregion
@@ -1132,20 +1385,26 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((FirstPersonFlags, null));
                 ret.Add((Race, null));
-                ret.Add((DNAMData, null));
+                ret.Add((WeaponAdjust, null));
+                ret.Add((MalePriority, null));
+                ret.Add((FemalePriority, null));
+                ret.Add((Unknown, null));
+                ret.Add((DetectionSoundValue, null));
+                ret.Add((HealthBarOffset, null));
                 ret.Add((WorldModel != null || DefaultOn, null));
                 ret.Add((FirstPersonModel != null || DefaultOn, null));
-                ret.Add((Skeleton != null ? Skeleton.OnOverall : DefaultOn, Skeleton?.GetCrystal()));
-                ret.Add((UnknownModel7 != null ? UnknownModel7.OnOverall : DefaultOn, UnknownModel7?.GetCrystal()));
+                ret.Add((AltSkeleton != null || DefaultOn, null));
+                ret.Add((ExtraLightLayers, null));
+                ret.Add((SkinTexture != null || DefaultOn, null));
                 ret.Add((Morphs != null || DefaultOn, null));
                 ret.Add((AdditionalRaces, null));
                 ret.Add((FootstepSound, null));
                 ret.Add((ArtObject, null));
                 ret.Add((BodyPartData, null));
-                ret.Add((TintType, null));
-                ret.Add((TintColorMapping, null));
-                ret.Add((TintEntryName, null));
-                ret.Add((TintEntryValue, null));
+                ret.Add((ActorValueModulationGroupType, null));
+                ret.Add((ActorValueModulationEntryType, null));
+                ret.Add((ActorValueModulationSubType, null));
+                ret.Add((ActorValueModulationEntryValue, null));
                 ret.Add((BoneDataModifiers != null || DefaultOn, null));
             }
 
@@ -1307,20 +1566,26 @@ namespace Mutagen.Bethesda.Starfield
         new ExtendedList<AComponent> Components { get; }
         new FirstPersonFlag? FirstPersonFlags { get; set; }
         new IFormLinkNullable<IRaceGetter> Race { get; set; }
-        new MemorySlice<Byte> DNAMData { get; set; }
+        new Single WeaponAdjust { get; set; }
+        new Byte MalePriority { get; set; }
+        new Byte FemalePriority { get; set; }
+        new UInt16 Unknown { get; set; }
+        new Byte DetectionSoundValue { get; set; }
+        new Single HealthBarOffset { get; set; }
         new IGenderedItem<Model?>? WorldModel { get; set; }
         new IGenderedItem<Model?>? FirstPersonModel { get; set; }
-        new Model? Skeleton { get; set; }
-        new Model? UnknownModel7 { get; set; }
+        new IGenderedItem<String?>? AltSkeleton { get; set; }
+        new ExtendedList<UInt32> ExtraLightLayers { get; }
+        new IGenderedItem<ArmorAddonSkinTexture?>? SkinTexture { get; set; }
         new IGenderedItem<ArmorAddonMorph?>? Morphs { get; set; }
         new ExtendedList<IFormLinkGetter<IRaceGetter>> AdditionalRaces { get; }
         new IFormLinkNullable<IFootstepSetGetter> FootstepSound { get; set; }
         new IFormLinkNullable<IArtObjectGetter> ArtObject { get; set; }
         new IFormLinkNullable<IBodyPartDataGetter> BodyPartData { get; set; }
-        new TintType TintType { get; set; }
-        new String? TintColorMapping { get; set; }
-        new String? TintEntryName { get; set; }
-        new String? TintEntryValue { get; set; }
+        new ActorValueModulation.GroupType ActorValueModulationGroupType { get; set; }
+        new String? ActorValueModulationEntryType { get; set; }
+        new String? ActorValueModulationSubType { get; set; }
+        new String? ActorValueModulationEntryValue { get; set; }
         new IGenderedItem<ExtendedList<IFormLinkGetter<IBoneModifierGetter>>> BoneDataModifiers { get; set; }
         #region Mutagen
         new ArmorAddon.MajorFlag MajorFlags { get; set; }
@@ -1335,6 +1600,8 @@ namespace Mutagen.Bethesda.Starfield
     {
         new IGenderedItem<Model?>? WorldModel { get; set; }
         new IGenderedItem<Model?>? FirstPersonModel { get; set; }
+        new IGenderedItem<String?>? AltSkeleton { get; set; }
+        new IGenderedItem<ArmorAddonSkinTexture?>? SkinTexture { get; set; }
         new IGenderedItem<ArmorAddonMorph?>? Morphs { get; set; }
         new IGenderedItem<ExtendedList<IFormLinkGetter<IBoneModifierGetter>>> BoneDataModifiers { get; set; }
     }
@@ -1352,20 +1619,26 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IAComponentGetter> Components { get; }
         FirstPersonFlag? FirstPersonFlags { get; }
         IFormLinkNullableGetter<IRaceGetter> Race { get; }
-        ReadOnlyMemorySlice<Byte> DNAMData { get; }
+        Single WeaponAdjust { get; }
+        Byte MalePriority { get; }
+        Byte FemalePriority { get; }
+        UInt16 Unknown { get; }
+        Byte DetectionSoundValue { get; }
+        Single HealthBarOffset { get; }
         IGenderedItemGetter<IModelGetter?>? WorldModel { get; }
         IGenderedItemGetter<IModelGetter?>? FirstPersonModel { get; }
-        IModelGetter? Skeleton { get; }
-        IModelGetter? UnknownModel7 { get; }
+        IGenderedItemGetter<String?>? AltSkeleton { get; }
+        IReadOnlyList<UInt32> ExtraLightLayers { get; }
+        IGenderedItemGetter<IArmorAddonSkinTextureGetter?>? SkinTexture { get; }
         IGenderedItemGetter<IArmorAddonMorphGetter?>? Morphs { get; }
         IReadOnlyList<IFormLinkGetter<IRaceGetter>> AdditionalRaces { get; }
         IFormLinkNullableGetter<IFootstepSetGetter> FootstepSound { get; }
         IFormLinkNullableGetter<IArtObjectGetter> ArtObject { get; }
         IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData { get; }
-        TintType TintType { get; }
-        String? TintColorMapping { get; }
-        String? TintEntryName { get; }
-        String? TintEntryValue { get; }
+        ActorValueModulation.GroupType ActorValueModulationGroupType { get; }
+        String? ActorValueModulationEntryType { get; }
+        String? ActorValueModulationSubType { get; }
+        String? ActorValueModulationEntryValue { get; }
         IGenderedItemGetter<IReadOnlyList<IFormLinkGetter<IBoneModifierGetter>>> BoneDataModifiers { get; }
 
         #region Mutagen
@@ -1550,21 +1823,27 @@ namespace Mutagen.Bethesda.Starfield
         Components = 7,
         FirstPersonFlags = 8,
         Race = 9,
-        DNAMData = 10,
-        WorldModel = 11,
-        FirstPersonModel = 12,
-        Skeleton = 13,
-        UnknownModel7 = 14,
-        Morphs = 15,
-        AdditionalRaces = 16,
-        FootstepSound = 17,
-        ArtObject = 18,
-        BodyPartData = 19,
-        TintType = 20,
-        TintColorMapping = 21,
-        TintEntryName = 22,
-        TintEntryValue = 23,
-        BoneDataModifiers = 24,
+        WeaponAdjust = 10,
+        MalePriority = 11,
+        FemalePriority = 12,
+        Unknown = 13,
+        DetectionSoundValue = 14,
+        HealthBarOffset = 15,
+        WorldModel = 16,
+        FirstPersonModel = 17,
+        AltSkeleton = 18,
+        ExtraLightLayers = 19,
+        SkinTexture = 20,
+        Morphs = 21,
+        AdditionalRaces = 22,
+        FootstepSound = 23,
+        ArtObject = 24,
+        BodyPartData = 25,
+        ActorValueModulationGroupType = 26,
+        ActorValueModulationEntryType = 27,
+        ActorValueModulationSubType = 28,
+        ActorValueModulationEntryValue = 29,
+        BoneDataModifiers = 30,
     }
     #endregion
 
@@ -1575,9 +1854,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 18;
+        public const ushort AdditionalFieldCount = 24;
 
-        public const ushort FieldCount = 25;
+        public const ushort FieldCount = 31;
 
         public static readonly Type MaskType = typeof(ArmorAddon.Mask<>);
 
@@ -1621,8 +1900,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MO3T,
                 RecordTypes.MLM1,
                 RecordTypes.MLM2,
-                RecordTypes.DMDC,
-                RecordTypes.BLMS,
                 RecordTypes.FLLD,
                 RecordTypes.XFLG,
                 RecordTypes.MO2C,
@@ -1640,15 +1917,11 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MO4F,
                 RecordTypes.MO5F,
                 RecordTypes.MOD6,
-                RecordTypes.MO6T,
-                RecordTypes.MLM6,
-                RecordTypes.MO6C,
-                RecordTypes.MO6F,
                 RecordTypes.MOD7,
-                RecordTypes.MO7T,
-                RecordTypes.MLM7,
-                RecordTypes.MO7C,
-                RecordTypes.MO7F,
+                RecordTypes.NAM1,
+                RecordTypes.NAM0,
+                RecordTypes.NAM3,
+                RecordTypes.NAM2,
                 RecordTypes.NAM6,
                 RecordTypes.NAM4,
                 RecordTypes.NAM7,
@@ -1667,38 +1940,6 @@ namespace Mutagen.Bethesda.Starfield
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
         });
-        public static RecordTypeConverter SkeletonConverter = new RecordTypeConverter(
-            new KeyValuePair<RecordType, RecordType>(
-                RecordTypes.MODL,
-                RecordTypes.MOD6),
-            new KeyValuePair<RecordType, RecordType>(
-                RecordTypes.MODT,
-                RecordTypes.MO6T),
-            new KeyValuePair<RecordType, RecordType>(
-                RecordTypes.MOLM,
-                RecordTypes.MLM6),
-            new KeyValuePair<RecordType, RecordType>(
-                RecordTypes.MODC,
-                RecordTypes.MO6C),
-            new KeyValuePair<RecordType, RecordType>(
-                RecordTypes.MODF,
-                RecordTypes.MO6F));
-        public static RecordTypeConverter UnknownModel7Converter = new RecordTypeConverter(
-            new KeyValuePair<RecordType, RecordType>(
-                RecordTypes.MODL,
-                RecordTypes.MOD7),
-            new KeyValuePair<RecordType, RecordType>(
-                RecordTypes.MODT,
-                RecordTypes.MO7T),
-            new KeyValuePair<RecordType, RecordType>(
-                RecordTypes.MOLM,
-                RecordTypes.MLM7),
-            new KeyValuePair<RecordType, RecordType>(
-                RecordTypes.MODC,
-                RecordTypes.MO7C),
-            new KeyValuePair<RecordType, RecordType>(
-                RecordTypes.MODF,
-                RecordTypes.MO7F));
         public static readonly Type BinaryWriteTranslation = typeof(ArmorAddonBinaryWriteTranslation);
         public static RecordTypeConverter WorldModelFemaleConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
@@ -1764,6 +2005,13 @@ namespace Mutagen.Bethesda.Starfield
             new KeyValuePair<RecordType, RecordType>(
                 RecordTypes.MODF,
                 RecordTypes.MO4F));
+        public static RecordTypeConverter SkinTextureFemaleConverter = new RecordTypeConverter(
+            new KeyValuePair<RecordType, RecordType>(
+                RecordTypes.NAM0,
+                RecordTypes.NAM1),
+            new KeyValuePair<RecordType, RecordType>(
+                RecordTypes.NAM2,
+                RecordTypes.NAM3));
         public static RecordTypeConverter MorphsFemaleConverter = new RecordTypeConverter(
             new KeyValuePair<RecordType, RecordType>(
                 RecordTypes.NAM4,
@@ -1813,20 +2061,26 @@ namespace Mutagen.Bethesda.Starfield
             item.Components.Clear();
             item.FirstPersonFlags = default;
             item.Race.Clear();
-            item.DNAMData = new byte[13];
+            item.WeaponAdjust = default(Single);
+            item.MalePriority = default(Byte);
+            item.FemalePriority = default(Byte);
+            item.Unknown = default(UInt16);
+            item.DetectionSoundValue = default(Byte);
+            item.HealthBarOffset = default(Single);
             item.WorldModel = null;
             item.FirstPersonModel = null;
-            item.Skeleton = null;
-            item.UnknownModel7 = null;
+            item.AltSkeleton = null;
+            item.ExtraLightLayers.Clear();
+            item.SkinTexture = null;
             item.Morphs = null;
             item.AdditionalRaces.Clear();
             item.FootstepSound.Clear();
             item.ArtObject.Clear();
             item.BodyPartData.Clear();
-            item.TintType = default(TintType);
-            item.TintColorMapping = default;
-            item.TintEntryName = default;
-            item.TintEntryValue = default;
+            item.ActorValueModulationGroupType = default(ActorValueModulation.GroupType);
+            item.ActorValueModulationEntryType = default;
+            item.ActorValueModulationSubType = default;
+            item.ActorValueModulationEntryValue = default;
             item.BoneDataModifiers.Male.Clear();
             item.BoneDataModifiers.Female.Clear();
             base.Clear(item);
@@ -1850,8 +2104,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Race.Relink(mapping);
             obj.WorldModel?.RemapLinks(mapping);
             obj.FirstPersonModel?.RemapLinks(mapping);
-            obj.Skeleton?.RemapLinks(mapping);
-            obj.UnknownModel7?.RemapLinks(mapping);
+            obj.SkinTexture?.RemapLinks(mapping);
             obj.Morphs?.RemapLinks(mapping);
             obj.AdditionalRaces.RemapLinks(mapping);
             obj.FootstepSound.Relink(mapping);
@@ -1884,20 +2137,6 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
-            if (obj.Skeleton is {} SkeletonItems)
-            {
-                foreach (var item in SkeletonItems.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
-            if (obj.UnknownModel7 is {} UnknownModel7Items)
-            {
-                foreach (var item in UnknownModel7Items.EnumerateListedAssetLinks())
-                {
-                    yield return item;
-                }
-            }
             yield break;
         }
         
@@ -1911,8 +2150,6 @@ namespace Mutagen.Bethesda.Starfield
             obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
             obj.WorldModel?.ForEach(x => x?.RemapAssetLinks(mapping, queryCategories, linkCache));
             obj.FirstPersonModel?.ForEach(x => x?.RemapAssetLinks(mapping, queryCategories, linkCache));
-            obj.Skeleton?.RemapAssetLinks(mapping, queryCategories, linkCache);
-            obj.UnknownModel7?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -1986,7 +2223,12 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.FirstPersonFlags = item.FirstPersonFlags == rhs.FirstPersonFlags;
             ret.Race = item.Race.Equals(rhs.Race);
-            ret.DNAMData = MemoryExtensions.SequenceEqual(item.DNAMData.Span, rhs.DNAMData.Span);
+            ret.WeaponAdjust = item.WeaponAdjust.EqualsWithin(rhs.WeaponAdjust);
+            ret.MalePriority = item.MalePriority == rhs.MalePriority;
+            ret.FemalePriority = item.FemalePriority == rhs.FemalePriority;
+            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.DetectionSoundValue = item.DetectionSoundValue == rhs.DetectionSoundValue;
+            ret.HealthBarOffset = item.HealthBarOffset.EqualsWithin(rhs.HealthBarOffset);
             ret.WorldModel = GenderedItem.EqualityMaskHelper(
                 lhs: item.WorldModel,
                 rhs: rhs.WorldModel,
@@ -1997,16 +2239,20 @@ namespace Mutagen.Bethesda.Starfield
                 rhs: rhs.FirstPersonModel,
                 maskGetter: (l, r, i) => EqualsMaskHelper.EqualsHelper(l, r, (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl), i),
                 include: include);
-            ret.Skeleton = EqualsMaskHelper.EqualsHelper(
-                item.Skeleton,
-                rhs.Skeleton,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+            ret.AltSkeleton = GenderedItem.EqualityMaskHelper(
+                lhs: item.AltSkeleton,
+                rhs: rhs.AltSkeleton,
+                maskGetter: (l, r, i) => EqualityComparer<String?>.Default.Equals(l, r),
+                include: include);
+            ret.ExtraLightLayers = item.ExtraLightLayers.CollectionEqualsHelper(
+                rhs.ExtraLightLayers,
+                (l, r) => l == r,
                 include);
-            ret.UnknownModel7 = EqualsMaskHelper.EqualsHelper(
-                item.UnknownModel7,
-                rhs.UnknownModel7,
-                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
-                include);
+            ret.SkinTexture = GenderedItem.EqualityMaskHelper(
+                lhs: item.SkinTexture,
+                rhs: rhs.SkinTexture,
+                maskGetter: (l, r, i) => EqualsMaskHelper.EqualsHelper(l, r, (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl), i),
+                include: include);
             ret.Morphs = GenderedItem.EqualityMaskHelper(
                 lhs: item.Morphs,
                 rhs: rhs.Morphs,
@@ -2019,10 +2265,10 @@ namespace Mutagen.Bethesda.Starfield
             ret.FootstepSound = item.FootstepSound.Equals(rhs.FootstepSound);
             ret.ArtObject = item.ArtObject.Equals(rhs.ArtObject);
             ret.BodyPartData = item.BodyPartData.Equals(rhs.BodyPartData);
-            ret.TintType = item.TintType == rhs.TintType;
-            ret.TintColorMapping = string.Equals(item.TintColorMapping, rhs.TintColorMapping);
-            ret.TintEntryName = string.Equals(item.TintEntryName, rhs.TintEntryName);
-            ret.TintEntryValue = string.Equals(item.TintEntryValue, rhs.TintEntryValue);
+            ret.ActorValueModulationGroupType = item.ActorValueModulationGroupType == rhs.ActorValueModulationGroupType;
+            ret.ActorValueModulationEntryType = string.Equals(item.ActorValueModulationEntryType, rhs.ActorValueModulationEntryType);
+            ret.ActorValueModulationSubType = string.Equals(item.ActorValueModulationSubType, rhs.ActorValueModulationSubType);
+            ret.ActorValueModulationEntryValue = string.Equals(item.ActorValueModulationEntryValue, rhs.ActorValueModulationEntryValue);
             ret.BoneDataModifiers = new GenderedItem<bool>(
                 male: item.BoneDataModifiers.Male.SequenceEqualNullable(rhs.BoneDataModifiers.Male),
                 female: item.BoneDataModifiers.Female.SequenceEqualNullable(rhs.BoneDataModifiers.Female));
@@ -2098,9 +2344,29 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Race.FormKeyNullable, "Race");
             }
-            if (printMask?.DNAMData ?? true)
+            if (printMask?.WeaponAdjust ?? true)
             {
-                sb.AppendLine($"DNAMData => {SpanExt.ToHexString(item.DNAMData)}");
+                sb.AppendItem(item.WeaponAdjust, "WeaponAdjust");
+            }
+            if (printMask?.MalePriority ?? true)
+            {
+                sb.AppendItem(item.MalePriority, "MalePriority");
+            }
+            if (printMask?.FemalePriority ?? true)
+            {
+                sb.AppendItem(item.FemalePriority, "FemalePriority");
+            }
+            if (printMask?.Unknown ?? true)
+            {
+                sb.AppendItem(item.Unknown, "Unknown");
+            }
+            if (printMask?.DetectionSoundValue ?? true)
+            {
+                sb.AppendItem(item.DetectionSoundValue, "DetectionSoundValue");
+            }
+            if (printMask?.HealthBarOffset ?? true)
+            {
+                sb.AppendItem(item.HealthBarOffset, "HealthBarOffset");
             }
             if ((printMask?.WorldModel?.Overall ?? true)
                 && item.WorldModel is {} WorldModelItem)
@@ -2112,15 +2378,29 @@ namespace Mutagen.Bethesda.Starfield
             {
                 FirstPersonModelItem?.Print(sb, "FirstPersonModel");
             }
-            if ((printMask?.Skeleton?.Overall ?? true)
-                && item.Skeleton is {} SkeletonItem)
+            if ((printMask?.AltSkeleton?.Overall ?? true)
+                && item.AltSkeleton is {} AltSkeletonItem)
             {
-                SkeletonItem?.Print(sb, "Skeleton");
+                AltSkeletonItem?.Print(sb, "AltSkeleton");
             }
-            if ((printMask?.UnknownModel7?.Overall ?? true)
-                && item.UnknownModel7 is {} UnknownModel7Item)
+            if (printMask?.ExtraLightLayers?.Overall ?? true)
             {
-                UnknownModel7Item?.Print(sb, "UnknownModel7");
+                sb.AppendLine("ExtraLightLayers =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.ExtraLightLayers)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem);
+                        }
+                    }
+                }
+            }
+            if ((printMask?.SkinTexture?.Overall ?? true)
+                && item.SkinTexture is {} SkinTextureItem)
+            {
+                SkinTextureItem?.Print(sb, "SkinTexture");
             }
             if ((printMask?.Morphs?.Overall ?? true)
                 && item.Morphs is {} MorphsItem)
@@ -2153,24 +2433,24 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.BodyPartData.FormKeyNullable, "BodyPartData");
             }
-            if (printMask?.TintType ?? true)
+            if (printMask?.ActorValueModulationGroupType ?? true)
             {
-                sb.AppendItem(item.TintType, "TintType");
+                sb.AppendItem(item.ActorValueModulationGroupType, "ActorValueModulationGroupType");
             }
-            if ((printMask?.TintColorMapping ?? true)
-                && item.TintColorMapping is {} TintColorMappingItem)
+            if ((printMask?.ActorValueModulationEntryType ?? true)
+                && item.ActorValueModulationEntryType is {} ActorValueModulationEntryTypeItem)
             {
-                sb.AppendItem(TintColorMappingItem, "TintColorMapping");
+                sb.AppendItem(ActorValueModulationEntryTypeItem, "ActorValueModulationEntryType");
             }
-            if ((printMask?.TintEntryName ?? true)
-                && item.TintEntryName is {} TintEntryNameItem)
+            if ((printMask?.ActorValueModulationSubType ?? true)
+                && item.ActorValueModulationSubType is {} ActorValueModulationSubTypeItem)
             {
-                sb.AppendItem(TintEntryNameItem, "TintEntryName");
+                sb.AppendItem(ActorValueModulationSubTypeItem, "ActorValueModulationSubType");
             }
-            if ((printMask?.TintEntryValue ?? true)
-                && item.TintEntryValue is {} TintEntryValueItem)
+            if ((printMask?.ActorValueModulationEntryValue ?? true)
+                && item.ActorValueModulationEntryValue is {} ActorValueModulationEntryValueItem)
             {
-                sb.AppendItem(TintEntryValueItem, "TintEntryValue");
+                sb.AppendItem(ActorValueModulationEntryValueItem, "ActorValueModulationEntryValue");
             }
             if (true)
             {
@@ -2238,9 +2518,29 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Race.Equals(rhs.Race)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DNAMData) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.WeaponAdjust) ?? true))
             {
-                if (!MemoryExtensions.SequenceEqual(lhs.DNAMData.Span, rhs.DNAMData.Span)) return false;
+                if (!lhs.WeaponAdjust.EqualsWithin(rhs.WeaponAdjust)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.MalePriority) ?? true))
+            {
+                if (lhs.MalePriority != rhs.MalePriority) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.FemalePriority) ?? true))
+            {
+                if (lhs.FemalePriority != rhs.FemalePriority) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DetectionSoundValue) ?? true))
+            {
+                if (lhs.DetectionSoundValue != rhs.DetectionSoundValue) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.HealthBarOffset) ?? true))
+            {
+                if (!lhs.HealthBarOffset.EqualsWithin(rhs.HealthBarOffset)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.WorldModel) ?? true))
             {
@@ -2250,21 +2550,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!Equals(lhs.FirstPersonModel, rhs.FirstPersonModel)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Skeleton) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.AltSkeleton) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.Skeleton, rhs.Skeleton, out var lhsSkeleton, out var rhsSkeleton, out var isSkeletonEqual))
-                {
-                    if (!((ModelCommon)((IModelGetter)lhsSkeleton).CommonInstance()!).Equals(lhsSkeleton, rhsSkeleton, equalsMask?.GetSubCrystal((int)ArmorAddon_FieldIndex.Skeleton))) return false;
-                }
-                else if (!isSkeletonEqual) return false;
+                if (!Equals(lhs.AltSkeleton, rhs.AltSkeleton)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.UnknownModel7) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.ExtraLightLayers) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.UnknownModel7, rhs.UnknownModel7, out var lhsUnknownModel7, out var rhsUnknownModel7, out var isUnknownModel7Equal))
-                {
-                    if (!((ModelCommon)((IModelGetter)lhsUnknownModel7).CommonInstance()!).Equals(lhsUnknownModel7, rhsUnknownModel7, equalsMask?.GetSubCrystal((int)ArmorAddon_FieldIndex.UnknownModel7))) return false;
-                }
-                else if (!isUnknownModel7Equal) return false;
+                if (!lhs.ExtraLightLayers.SequenceEqualNullable(rhs.ExtraLightLayers)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.SkinTexture) ?? true))
+            {
+                if (!Equals(lhs.SkinTexture, rhs.SkinTexture)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Morphs) ?? true))
             {
@@ -2286,21 +2582,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.BodyPartData.Equals(rhs.BodyPartData)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.TintType) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.ActorValueModulationGroupType) ?? true))
             {
-                if (lhs.TintType != rhs.TintType) return false;
+                if (lhs.ActorValueModulationGroupType != rhs.ActorValueModulationGroupType) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.TintColorMapping) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.ActorValueModulationEntryType) ?? true))
             {
-                if (!string.Equals(lhs.TintColorMapping, rhs.TintColorMapping)) return false;
+                if (!string.Equals(lhs.ActorValueModulationEntryType, rhs.ActorValueModulationEntryType)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.TintEntryName) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.ActorValueModulationSubType) ?? true))
             {
-                if (!string.Equals(lhs.TintEntryName, rhs.TintEntryName)) return false;
+                if (!string.Equals(lhs.ActorValueModulationSubType, rhs.ActorValueModulationSubType)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.TintEntryValue) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.ActorValueModulationEntryValue) ?? true))
             {
-                if (!string.Equals(lhs.TintEntryValue, rhs.TintEntryValue)) return false;
+                if (!string.Equals(lhs.ActorValueModulationEntryValue, rhs.ActorValueModulationEntryValue)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.BoneDataModifiers) ?? true))
             {
@@ -2340,7 +2636,12 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(FirstPersonFlagsitem);
             }
             hash.Add(item.Race);
-            hash.Add(item.DNAMData);
+            hash.Add(item.WeaponAdjust);
+            hash.Add(item.MalePriority);
+            hash.Add(item.FemalePriority);
+            hash.Add(item.Unknown);
+            hash.Add(item.DetectionSoundValue);
+            hash.Add(item.HealthBarOffset);
             if (item.WorldModel is {} WorldModelitem)
             {
                 hash.Add(HashCode.Combine(WorldModelitem.Male, WorldModelitem.Female));
@@ -2349,13 +2650,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(HashCode.Combine(FirstPersonModelitem.Male, FirstPersonModelitem.Female));
             }
-            if (item.Skeleton is {} Skeletonitem)
+            if (item.AltSkeleton is {} AltSkeletonitem)
             {
-                hash.Add(Skeletonitem);
+                hash.Add(HashCode.Combine(AltSkeletonitem.Male, AltSkeletonitem.Female));
             }
-            if (item.UnknownModel7 is {} UnknownModel7item)
+            hash.Add(item.ExtraLightLayers);
+            if (item.SkinTexture is {} SkinTextureitem)
             {
-                hash.Add(UnknownModel7item);
+                hash.Add(HashCode.Combine(SkinTextureitem.Male, SkinTextureitem.Female));
             }
             if (item.Morphs is {} Morphsitem)
             {
@@ -2365,18 +2667,18 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.FootstepSound);
             hash.Add(item.ArtObject);
             hash.Add(item.BodyPartData);
-            hash.Add(item.TintType);
-            if (item.TintColorMapping is {} TintColorMappingitem)
+            hash.Add(item.ActorValueModulationGroupType);
+            if (item.ActorValueModulationEntryType is {} ActorValueModulationEntryTypeitem)
             {
-                hash.Add(TintColorMappingitem);
+                hash.Add(ActorValueModulationEntryTypeitem);
             }
-            if (item.TintEntryName is {} TintEntryNameitem)
+            if (item.ActorValueModulationSubType is {} ActorValueModulationSubTypeitem)
             {
-                hash.Add(TintEntryNameitem);
+                hash.Add(ActorValueModulationSubTypeitem);
             }
-            if (item.TintEntryValue is {} TintEntryValueitem)
+            if (item.ActorValueModulationEntryValue is {} ActorValueModulationEntryValueitem)
             {
-                hash.Add(TintEntryValueitem);
+                hash.Add(ActorValueModulationEntryValueitem);
             }
             hash.Add(HashCode.Combine(item.BoneDataModifiers.Male, item.BoneDataModifiers.Female));
             hash.Add(base.GetHashCode());
@@ -2431,18 +2733,11 @@ namespace Mutagen.Bethesda.Starfield
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.Skeleton is {} SkeletonItems)
+            if (obj.SkinTexture is {} SkinTextureItem)
             {
-                foreach (var item in SkeletonItems.EnumerateFormLinks())
+                foreach (var item in SkinTextureItem.WhereNotNull().SelectMany(f => f.EnumerateFormLinks()))
                 {
-                    yield return item;
-                }
-            }
-            if (obj.UnknownModel7 is {} UnknownModel7Items)
-            {
-                foreach (var item in UnknownModel7Items.EnumerateFormLinks())
-                {
-                    yield return item;
+                    yield return FormLinkInformation.Factory(item);
                 }
             }
             if (obj.Morphs is {} MorphsItem)
@@ -2492,20 +2787,6 @@ namespace Mutagen.Bethesda.Starfield
             if (obj.FirstPersonModel is {} FirstPersonModelItem)
             {
                 foreach (var item in FirstPersonModelItem.WhereNotNull().SelectMany(f => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.Skeleton is {} SkeletonItems)
-            {
-                foreach (var item in SkeletonItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
-                {
-                    yield return item;
-                }
-            }
-            if (obj.UnknownModel7 is {} UnknownModel7Items)
-            {
-                foreach (var item in UnknownModel7Items.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
@@ -2616,9 +2897,29 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Race.SetTo(rhs.Race.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DNAMData) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.WeaponAdjust) ?? true))
             {
-                item.DNAMData = rhs.DNAMData.ToArray();
+                item.WeaponAdjust = rhs.WeaponAdjust;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.MalePriority) ?? true))
+            {
+                item.MalePriority = rhs.MalePriority;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.FemalePriority) ?? true))
+            {
+                item.FemalePriority = rhs.FemalePriority;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Unknown) ?? true))
+            {
+                item.Unknown = rhs.Unknown;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DetectionSoundValue) ?? true))
+            {
+                item.DetectionSoundValue = rhs.DetectionSoundValue;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.HealthBarOffset) ?? true))
+            {
+                item.HealthBarOffset = rhs.HealthBarOffset;
             }
             if (rhs.WorldModel is not {} rhsWorldModelitem)
             {
@@ -2648,21 +2949,22 @@ namespace Mutagen.Bethesda.Starfield
                         errorMask: errorMask,
                         default(TranslationCrystal)));
             }
-            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Skeleton) ?? true))
+            if (rhs.AltSkeleton is not {} rhsAltSkeletonitem)
             {
-                errorMask?.PushIndex((int)ArmorAddon_FieldIndex.Skeleton);
+                item.AltSkeleton = null;
+            }
+            else
+            {
+                item.AltSkeleton = new GenderedItem<String?>(
+                    male: rhsAltSkeletonitem.Male,
+                    female: rhsAltSkeletonitem.Female);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.ExtraLightLayers) ?? true))
+            {
+                errorMask?.PushIndex((int)ArmorAddon_FieldIndex.ExtraLightLayers);
                 try
                 {
-                    if(rhs.Skeleton is {} rhsSkeleton)
-                    {
-                        item.Skeleton = rhsSkeleton.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)ArmorAddon_FieldIndex.Skeleton));
-                    }
-                    else
-                    {
-                        item.Skeleton = default;
-                    }
+                    item.ExtraLightLayers.SetTo(rhs.ExtraLightLayers);
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2674,31 +2976,19 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.UnknownModel7) ?? true))
+            if (rhs.SkinTexture is not {} rhsSkinTextureitem)
             {
-                errorMask?.PushIndex((int)ArmorAddon_FieldIndex.UnknownModel7);
-                try
-                {
-                    if(rhs.UnknownModel7 is {} rhsUnknownModel7)
-                    {
-                        item.UnknownModel7 = rhsUnknownModel7.DeepCopy(
-                            errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)ArmorAddon_FieldIndex.UnknownModel7));
-                    }
-                    else
-                    {
-                        item.UnknownModel7 = default;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.SkinTexture = null;
+            }
+            else
+            {
+                item.SkinTexture = new GenderedItem<ArmorAddonSkinTexture?>(
+                    male: rhsSkinTextureitem.Male?.DeepCopy(
+                        errorMask: errorMask,
+                        default(TranslationCrystal)),
+                    female: rhsSkinTextureitem.Female?.DeepCopy(
+                        errorMask: errorMask,
+                        default(TranslationCrystal)));
             }
             if (rhs.Morphs is not {} rhsMorphsitem)
             {
@@ -2745,21 +3035,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.BodyPartData.SetTo(rhs.BodyPartData.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.TintType) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.ActorValueModulationGroupType) ?? true))
             {
-                item.TintType = rhs.TintType;
+                item.ActorValueModulationGroupType = rhs.ActorValueModulationGroupType;
             }
-            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.TintColorMapping) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.ActorValueModulationEntryType) ?? true))
             {
-                item.TintColorMapping = rhs.TintColorMapping;
+                item.ActorValueModulationEntryType = rhs.ActorValueModulationEntryType;
             }
-            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.TintEntryName) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.ActorValueModulationSubType) ?? true))
             {
-                item.TintEntryName = rhs.TintEntryName;
+                item.ActorValueModulationSubType = rhs.ActorValueModulationSubType;
             }
-            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.TintEntryValue) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.ActorValueModulationEntryValue) ?? true))
             {
-                item.TintEntryValue = rhs.TintEntryValue;
+                item.ActorValueModulationEntryValue = rhs.ActorValueModulationEntryValue;
             }
             item.BoneDataModifiers = new GenderedItem<ExtendedList<IFormLinkGetter<IBoneModifierGetter>>>(
                 male: rhs.BoneDataModifiers.Male.Select(x => new FormLink<IBoneModifierGetter>(x.FormKey)).ToExtendedList<IFormLinkGetter<IBoneModifierGetter>>(),
@@ -2955,9 +3245,16 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.RNAM));
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DNAM)))
             {
-                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
-                    item: item.DNAMData);
+                    item: item.WeaponAdjust);
+                writer.Write(item.MalePriority);
+                writer.Write(item.FemalePriority);
+                writer.Write(item.Unknown);
+                writer.Write(item.DetectionSoundValue);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                    writer: writer,
+                    item: item.HealthBarOffset);
             }
             GenderedItemBinaryTranslation.Write(
                 writer: writer,
@@ -2989,20 +3286,31 @@ namespace Mutagen.Bethesda.Starfield
                             translationParams: conv);
                     }
                 });
-            if (item.Skeleton is {} SkeletonItem)
-            {
-                ((ModelBinaryWriteTranslation)((IBinaryItem)SkeletonItem).BinaryWriteTranslator).Write(
-                    item: SkeletonItem,
-                    writer: writer,
-                    translationParams: translationParams.With(ArmorAddon_Registration.SkeletonConverter));
-            }
-            if (item.UnknownModel7 is {} UnknownModel7Item)
-            {
-                ((ModelBinaryWriteTranslation)((IBinaryItem)UnknownModel7Item).BinaryWriteTranslator).Write(
-                    item: UnknownModel7Item,
-                    writer: writer,
-                    translationParams: translationParams.With(ArmorAddon_Registration.UnknownModel7Converter));
-            }
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.AltSkeleton,
+                maleMarker: RecordTypes.MOD6,
+                femaleMarker: RecordTypes.MOD7,
+                transl: StringBinaryTranslation.Instance.WriteNullable);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<UInt32>.Instance.WritePerItem(
+                writer: writer,
+                items: item.ExtraLightLayers,
+                recordType: translationParams.ConvertToCustom(RecordTypes.FLLD),
+                transl: UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.SkinTexture,
+                femaleRecordConverter: ArmorAddon_Registration.SkinTextureFemaleConverter,
+                transl: (MutagenWriter subWriter, IArmorAddonSkinTextureGetter? subItem, TypedWriteParams conv) =>
+                {
+                    if (subItem is {} Item)
+                    {
+                        ((ArmorAddonSkinTextureBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            translationParams: conv);
+                    }
+                });
             GenderedItemBinaryTranslation.Write(
                 writer: writer,
                 item: item.Morphs,
@@ -3039,24 +3347,24 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.BodyPartData,
                 header: translationParams.ConvertToCustom(RecordTypes.PNAM));
-            EnumBinaryTranslation<TintType, MutagenFrame, MutagenWriter>.Instance.Write(
+            EnumBinaryTranslation<ActorValueModulation.GroupType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
-                item.TintType,
+                item.ActorValueModulationGroupType,
                 length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.MNAM));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.TintColorMapping,
+                item: item.ActorValueModulationEntryType,
                 header: translationParams.ConvertToCustom(RecordTypes.TNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.TintEntryName,
+                item: item.ActorValueModulationSubType,
                 header: translationParams.ConvertToCustom(RecordTypes.SNAM),
                 binaryType: StringBinaryType.NullTerminate);
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.TintEntryValue,
+                item: item.ActorValueModulationEntryValue,
                 header: translationParams.ConvertToCustom(RecordTypes.VNAM),
                 binaryType: StringBinaryType.NullTerminate);
             GenderedItemBinaryTranslation.WriteGenderedEnumRecord(
@@ -3172,8 +3480,19 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.DNAMData = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(13));
-                    return (int)ArmorAddon_FieldIndex.DNAMData;
+                    if (dataFrame.Remaining < 4) return null;
+                    item.WeaponAdjust = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    if (dataFrame.Remaining < 1) return null;
+                    item.MalePriority = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 1) return null;
+                    item.FemalePriority = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 2) return null;
+                    item.Unknown = dataFrame.ReadUInt16();
+                    if (dataFrame.Remaining < 1) return null;
+                    item.DetectionSoundValue = dataFrame.ReadUInt8();
+                    if (dataFrame.Remaining < 4) return null;
+                    item.HealthBarOffset = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    return (int)ArmorAddon_FieldIndex.HealthBarOffset;
                 }
                 case RecordTypeInts.MOD2:
                 case RecordTypeInts.MOD3:
@@ -3185,13 +3504,11 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MO3C:
                 case RecordTypeInts.MO2F:
                 case RecordTypeInts.MO3F:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 {
                     if (!lastParsed.ParsedIndex.HasValue
-                        || lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.DNAMData)
+                        || lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.HealthBarOffset)
                     {
                         item.WorldModel = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Model>(
                             frame: frame,
@@ -3209,19 +3526,14 @@ namespace Mutagen.Bethesda.Starfield
                             transl: Model.TryCreateFromBinary);
                         return new ParseResult((int)ArmorAddon_FieldIndex.FirstPersonModel, nextRecordType);
                     }
-                    else if (lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.FirstPersonModel)
+                    else if (lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.AltSkeleton)
                     {
-                        item.Skeleton = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
-                            frame: frame,
-                            translationParams: translationParams.With(ArmorAddon_Registration.SkeletonConverter));
-                        return new ParseResult((int)ArmorAddon_FieldIndex.Skeleton, nextRecordType);
-                    }
-                    else if (lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.Skeleton)
-                    {
-                        item.UnknownModel7 = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
-                            frame: frame,
-                            translationParams: translationParams.With(ArmorAddon_Registration.UnknownModel7Converter));
-                        return new ParseResult((int)ArmorAddon_FieldIndex.UnknownModel7, nextRecordType);
+                        item.ExtraLightLayers.SetTo(
+                            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<UInt32>.Instance.Parse(
+                                reader: frame,
+                                triggeringRecord: translationParams.ConvertToCustom(RecordTypes.FLLD),
+                                transl: UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
+                        return new ParseResult((int)ArmorAddon_FieldIndex.ExtraLightLayers, nextRecordType);
                     }
                     else
                     {
@@ -3242,15 +3554,12 @@ namespace Mutagen.Bethesda.Starfield
                                     transl: Model.TryCreateFromBinary);
                                 return new ParseResult((int)ArmorAddon_FieldIndex.FirstPersonModel, nextRecordType);
                             case 2:
-                                item.Skeleton = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
-                                    frame: frame,
-                                    translationParams: translationParams.With(ArmorAddon_Registration.SkeletonConverter));
-                                return new ParseResult((int)ArmorAddon_FieldIndex.Skeleton, nextRecordType);
-                            case 3:
-                                item.UnknownModel7 = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
-                                    frame: frame,
-                                    translationParams: translationParams.With(ArmorAddon_Registration.UnknownModel7Converter));
-                                return new ParseResult((int)ArmorAddon_FieldIndex.UnknownModel7, nextRecordType);
+                                item.ExtraLightLayers.SetTo(
+                                    Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<UInt32>.Instance.Parse(
+                                        reader: frame,
+                                        triggeringRecord: translationParams.ConvertToCustom(RecordTypes.FLLD),
+                                        transl: UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
+                                return new ParseResult((int)ArmorAddon_FieldIndex.ExtraLightLayers, nextRecordType);
                             default:
                                 throw new NotImplementedException();
                         }
@@ -3275,26 +3584,27 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)ArmorAddon_FieldIndex.FirstPersonModel;
                 }
                 case RecordTypeInts.MOD6:
-                case RecordTypeInts.MO6T:
-                case RecordTypeInts.MLM6:
-                case RecordTypeInts.MO6C:
-                case RecordTypeInts.MO6F:
-                {
-                    item.Skeleton = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
-                        frame: frame,
-                        translationParams: translationParams.With(ArmorAddon_Registration.SkeletonConverter));
-                    return (int)ArmorAddon_FieldIndex.Skeleton;
-                }
                 case RecordTypeInts.MOD7:
-                case RecordTypeInts.MO7T:
-                case RecordTypeInts.MLM7:
-                case RecordTypeInts.MO7C:
-                case RecordTypeInts.MO7F:
                 {
-                    item.UnknownModel7 = Mutagen.Bethesda.Starfield.Model.CreateFromBinary(
+                    item.AltSkeleton = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<String>(
                         frame: frame,
-                        translationParams: translationParams.With(ArmorAddon_Registration.UnknownModel7Converter));
-                    return (int)ArmorAddon_FieldIndex.UnknownModel7;
+                        maleMarker: RecordTypes.MOD6,
+                        femaleMarker: RecordTypes.MOD7,
+                        transl: StringBinaryTranslation.Instance.Parse,
+                        skipMarker: false);
+                    return (int)ArmorAddon_FieldIndex.AltSkeleton;
+                }
+                case RecordTypeInts.NAM1:
+                case RecordTypeInts.NAM0:
+                case RecordTypeInts.NAM3:
+                case RecordTypeInts.NAM2:
+                {
+                    item.SkinTexture = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<ArmorAddonSkinTexture>(
+                        frame: frame,
+                        femaleRecordConverter: ArmorAddon_Registration.SkinTextureFemaleConverter,
+                        shortCircuit: false,
+                        transl: ArmorAddonSkinTexture.TryCreateFromBinary);
+                    return (int)ArmorAddon_FieldIndex.SkinTexture;
                 }
                 case RecordTypeInts.NAM6:
                 case RecordTypeInts.NAM4:
@@ -3338,37 +3648,37 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TintType = EnumBinaryTranslation<TintType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    item.ActorValueModulationGroupType = EnumBinaryTranslation<ActorValueModulation.GroupType, MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: frame,
                         length: contentLength);
-                    return (int)ArmorAddon_FieldIndex.TintType;
+                    return (int)ArmorAddon_FieldIndex.ActorValueModulationGroupType;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TintColorMapping = StringBinaryTranslation.Instance.Parse(
+                    item.ActorValueModulationEntryType = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)ArmorAddon_FieldIndex.TintColorMapping;
+                    return (int)ArmorAddon_FieldIndex.ActorValueModulationEntryType;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TintEntryName = StringBinaryTranslation.Instance.Parse(
+                    item.ActorValueModulationSubType = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)ArmorAddon_FieldIndex.TintEntryName;
+                    return (int)ArmorAddon_FieldIndex.ActorValueModulationSubType;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TintEntryValue = StringBinaryTranslation.Instance.Parse(
+                    item.ActorValueModulationEntryValue = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
-                    return (int)ArmorAddon_FieldIndex.TintEntryValue;
+                    return (int)ArmorAddon_FieldIndex.ActorValueModulationEntryValue;
                 }
                 case RecordTypeInts.BSMP:
                 {
@@ -3459,10 +3769,35 @@ namespace Mutagen.Bethesda.Starfield
         public IFormLinkNullableGetter<IRaceGetter> Race => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _RaceLocation);
         #endregion
         private RangeInt32? _DNAMLocation;
-        #region DNAMData
-        private int _DNAMDataLocation => _DNAMLocation!.Value.Min;
-        private bool _DNAMData_IsSet => _DNAMLocation.HasValue;
-        public ReadOnlyMemorySlice<Byte> DNAMData => _DNAMData_IsSet ? _recordData.Span.Slice(_DNAMDataLocation, 13).ToArray() : ReadOnlyMemorySlice<byte>.Empty;
+        #region WeaponAdjust
+        private int _WeaponAdjustLocation => _DNAMLocation!.Value.Min;
+        private bool _WeaponAdjust_IsSet => _DNAMLocation.HasValue;
+        public Single WeaponAdjust => _WeaponAdjust_IsSet ? _recordData.Slice(_WeaponAdjustLocation, 4).Float() : default(Single);
+        #endregion
+        #region MalePriority
+        private int _MalePriorityLocation => _DNAMLocation!.Value.Min + 0x4;
+        private bool _MalePriority_IsSet => _DNAMLocation.HasValue;
+        public Byte MalePriority => _MalePriority_IsSet ? _recordData.Span[_MalePriorityLocation] : default;
+        #endregion
+        #region FemalePriority
+        private int _FemalePriorityLocation => _DNAMLocation!.Value.Min + 0x5;
+        private bool _FemalePriority_IsSet => _DNAMLocation.HasValue;
+        public Byte FemalePriority => _FemalePriority_IsSet ? _recordData.Span[_FemalePriorityLocation] : default;
+        #endregion
+        #region Unknown
+        private int _UnknownLocation => _DNAMLocation!.Value.Min + 0x6;
+        private bool _Unknown_IsSet => _DNAMLocation.HasValue;
+        public UInt16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_recordData.Slice(_UnknownLocation, 2)) : default(UInt16);
+        #endregion
+        #region DetectionSoundValue
+        private int _DetectionSoundValueLocation => _DNAMLocation!.Value.Min + 0x8;
+        private bool _DetectionSoundValue_IsSet => _DNAMLocation.HasValue;
+        public Byte DetectionSoundValue => _DetectionSoundValue_IsSet ? _recordData.Span[_DetectionSoundValueLocation] : default;
+        #endregion
+        #region HealthBarOffset
+        private int _HealthBarOffsetLocation => _DNAMLocation!.Value.Min + 0x9;
+        private bool _HealthBarOffset_IsSet => _DNAMLocation.HasValue;
+        public Single HealthBarOffset => _HealthBarOffset_IsSet ? _recordData.Slice(_HealthBarOffsetLocation, 4).Float() : default(Single);
         #endregion
         #region WorldModel
         private IGenderedItemGetter<IModelGetter?>? _WorldModelOverlay;
@@ -3472,8 +3807,15 @@ namespace Mutagen.Bethesda.Starfield
         private IGenderedItemGetter<IModelGetter?>? _FirstPersonModelOverlay;
         public IGenderedItemGetter<IModelGetter?>? FirstPersonModel => _FirstPersonModelOverlay;
         #endregion
-        public IModelGetter? Skeleton { get; private set; }
-        public IModelGetter? UnknownModel7 { get; private set; }
+        #region AltSkeleton
+        private IGenderedItemGetter<String?>? _AltSkeletonOverlay;
+        public IGenderedItemGetter<String?>? AltSkeleton => _AltSkeletonOverlay;
+        #endregion
+        public IReadOnlyList<UInt32> ExtraLightLayers { get; private set; } = Array.Empty<UInt32>();
+        #region SkinTexture
+        private IGenderedItemGetter<IArmorAddonSkinTextureGetter?>? _SkinTextureOverlay;
+        public IGenderedItemGetter<IArmorAddonSkinTextureGetter?>? SkinTexture => _SkinTextureOverlay;
+        #endregion
         #region Morphs
         private IGenderedItemGetter<IArmorAddonMorphGetter?>? _MorphsOverlay;
         public IGenderedItemGetter<IArmorAddonMorphGetter?>? Morphs => _MorphsOverlay;
@@ -3491,21 +3833,21 @@ namespace Mutagen.Bethesda.Starfield
         private int? _BodyPartDataLocation;
         public IFormLinkNullableGetter<IBodyPartDataGetter> BodyPartData => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IBodyPartDataGetter>(_package, _recordData, _BodyPartDataLocation);
         #endregion
-        #region TintType
-        private int? _TintTypeLocation;
-        public TintType TintType => _TintTypeLocation.HasValue ? (TintType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TintTypeLocation!.Value, _package.MetaData.Constants)) : default(TintType);
+        #region ActorValueModulationGroupType
+        private int? _ActorValueModulationGroupTypeLocation;
+        public ActorValueModulation.GroupType ActorValueModulationGroupType => _ActorValueModulationGroupTypeLocation.HasValue ? (ActorValueModulation.GroupType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActorValueModulationGroupTypeLocation!.Value, _package.MetaData.Constants)) : default(ActorValueModulation.GroupType);
         #endregion
-        #region TintColorMapping
-        private int? _TintColorMappingLocation;
-        public String? TintColorMapping => _TintColorMappingLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TintColorMappingLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region ActorValueModulationEntryType
+        private int? _ActorValueModulationEntryTypeLocation;
+        public String? ActorValueModulationEntryType => _ActorValueModulationEntryTypeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActorValueModulationEntryTypeLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        #region TintEntryName
-        private int? _TintEntryNameLocation;
-        public String? TintEntryName => _TintEntryNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TintEntryNameLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region ActorValueModulationSubType
+        private int? _ActorValueModulationSubTypeLocation;
+        public String? ActorValueModulationSubType => _ActorValueModulationSubTypeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActorValueModulationSubTypeLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
-        #region TintEntryValue
-        private int? _TintEntryValueLocation;
-        public String? TintEntryValue => _TintEntryValueLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _TintEntryValueLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
+        #region ActorValueModulationEntryValue
+        private int? _ActorValueModulationEntryValueLocation;
+        public String? ActorValueModulationEntryValue => _ActorValueModulationEntryValueLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ActorValueModulationEntryValueLocation.Value, _package.MetaData.Constants), encoding: _package.MetaData.Encodings.NonTranslated) : default(string?);
         #endregion
         #region BoneDataModifiers
         private int? _BoneDataModifiersLocation;
@@ -3603,7 +3945,7 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.DNAM:
                 {
                     _DNAMLocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
-                    return (int)ArmorAddon_FieldIndex.DNAMData;
+                    return (int)ArmorAddon_FieldIndex.HealthBarOffset;
                 }
                 case RecordTypeInts.MOD2:
                 case RecordTypeInts.MOD3:
@@ -3615,13 +3957,11 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.MO3C:
                 case RecordTypeInts.MO2F:
                 case RecordTypeInts.MO3F:
-                case RecordTypeInts.DMDC:
-                case RecordTypeInts.BLMS:
                 case RecordTypeInts.FLLD:
                 case RecordTypeInts.XFLG:
                 {
                     if (!lastParsed.ParsedIndex.HasValue
-                        || lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.DNAMData)
+                        || lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.HealthBarOffset)
                     {
                         _WorldModelOverlay = GenderedItemBinaryOverlay.Factory<IModelGetter>(
                             package: _package,
@@ -3643,21 +3983,19 @@ namespace Mutagen.Bethesda.Starfield
                             parseNonConvertedItems: true);
                         return new ParseResult((int)ArmorAddon_FieldIndex.FirstPersonModel, type);
                     }
-                    else if (lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.FirstPersonModel)
+                    else if (lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.AltSkeleton)
                     {
-                        this.Skeleton = ModelBinaryOverlay.ModelFactory(
-                            stream: stream,
+                        this.ExtraLightLayers = BinaryOverlayList.FactoryByArray<UInt32>(
+                            mem: stream.RemainingMemory,
                             package: _package,
-                            translationParams: ArmorAddon_Registration.SkeletonConverter);
-                        return new ParseResult((int)ArmorAddon_FieldIndex.Skeleton, type);
-                    }
-                    else if (lastParsed.ParsedIndex.Value <= (int)ArmorAddon_FieldIndex.Skeleton)
-                    {
-                        this.UnknownModel7 = ModelBinaryOverlay.ModelFactory(
-                            stream: stream,
-                            package: _package,
-                            translationParams: ArmorAddon_Registration.UnknownModel7Converter);
-                        return new ParseResult((int)ArmorAddon_FieldIndex.UnknownModel7, type);
+                            getter: (s, p) => BinaryPrimitives.ReadUInt32LittleEndian(s),
+                            locs: ParseRecordLocations(
+                                stream: stream,
+                                constants: _package.MetaData.Constants.SubConstants,
+                                trigger: RecordTypes.FLLD,
+                                skipHeader: true,
+                                translationParams: translationParams));
+                        return new ParseResult((int)ArmorAddon_FieldIndex.ExtraLightLayers, type);
                     }
                     else
                     {
@@ -3687,19 +4025,17 @@ namespace Mutagen.Bethesda.Starfield
                             }
                             case 2:
                             {
-                                this.Skeleton = ModelBinaryOverlay.ModelFactory(
-                                    stream: stream,
+                                this.ExtraLightLayers = BinaryOverlayList.FactoryByArray<UInt32>(
+                                    mem: stream.RemainingMemory,
                                     package: _package,
-                                    translationParams: ArmorAddon_Registration.SkeletonConverter);
-                                return new ParseResult((int)ArmorAddon_FieldIndex.Skeleton, type);
-                            }
-                            case 3:
-                            {
-                                this.UnknownModel7 = ModelBinaryOverlay.ModelFactory(
-                                    stream: stream,
-                                    package: _package,
-                                    translationParams: ArmorAddon_Registration.UnknownModel7Converter);
-                                return new ParseResult((int)ArmorAddon_FieldIndex.UnknownModel7, type);
+                                    getter: (s, p) => BinaryPrimitives.ReadUInt32LittleEndian(s),
+                                    locs: ParseRecordLocations(
+                                        stream: stream,
+                                        constants: _package.MetaData.Constants.SubConstants,
+                                        trigger: RecordTypes.FLLD,
+                                        skipHeader: true,
+                                        translationParams: translationParams));
+                                return new ParseResult((int)ArmorAddon_FieldIndex.ExtraLightLayers, type);
                             }
                             default:
                                 throw new NotImplementedException();
@@ -3727,28 +4063,28 @@ namespace Mutagen.Bethesda.Starfield
                     return (int)ArmorAddon_FieldIndex.FirstPersonModel;
                 }
                 case RecordTypeInts.MOD6:
-                case RecordTypeInts.MO6T:
-                case RecordTypeInts.MLM6:
-                case RecordTypeInts.MO6C:
-                case RecordTypeInts.MO6F:
-                {
-                    this.Skeleton = ModelBinaryOverlay.ModelFactory(
-                        stream: stream,
-                        package: _package,
-                        translationParams: translationParams.With(ArmorAddon_Registration.SkeletonConverter));
-                    return (int)ArmorAddon_FieldIndex.Skeleton;
-                }
                 case RecordTypeInts.MOD7:
-                case RecordTypeInts.MO7T:
-                case RecordTypeInts.MLM7:
-                case RecordTypeInts.MO7C:
-                case RecordTypeInts.MO7F:
                 {
-                    this.UnknownModel7 = ModelBinaryOverlay.ModelFactory(
-                        stream: stream,
+                    _AltSkeletonOverlay = GenderedItemBinaryOverlay.Factory<String>(
                         package: _package,
-                        translationParams: translationParams.With(ArmorAddon_Registration.UnknownModel7Converter));
-                    return (int)ArmorAddon_FieldIndex.UnknownModel7;
+                        male: RecordTypes.MOD6,
+                        female: RecordTypes.MOD7,
+                        stream: stream,
+                        creator: static (m, p) => BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants), encoding: p.MetaData.Encodings.NonTranslated));
+                    return (int)ArmorAddon_FieldIndex.AltSkeleton;
+                }
+                case RecordTypeInts.NAM1:
+                case RecordTypeInts.NAM0:
+                case RecordTypeInts.NAM3:
+                case RecordTypeInts.NAM2:
+                {
+                    _SkinTextureOverlay = GenderedItemBinaryOverlay.Factory<IArmorAddonSkinTextureGetter>(
+                        package: _package,
+                        stream: stream,
+                        creator: static (s, p, r) => ArmorAddonSkinTextureBinaryOverlay.ArmorAddonSkinTextureFactory(s, p, r),
+                        femaleRecordConverter: ArmorAddon_Registration.SkinTextureFemaleConverter,
+                        shortCircuit: false);
+                    return (int)ArmorAddon_FieldIndex.SkinTexture;
                 }
                 case RecordTypeInts.NAM6:
                 case RecordTypeInts.NAM4:
@@ -3794,23 +4130,23 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.MNAM:
                 {
-                    _TintTypeLocation = (stream.Position - offset);
-                    return (int)ArmorAddon_FieldIndex.TintType;
+                    _ActorValueModulationGroupTypeLocation = (stream.Position - offset);
+                    return (int)ArmorAddon_FieldIndex.ActorValueModulationGroupType;
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    _TintColorMappingLocation = (stream.Position - offset);
-                    return (int)ArmorAddon_FieldIndex.TintColorMapping;
+                    _ActorValueModulationEntryTypeLocation = (stream.Position - offset);
+                    return (int)ArmorAddon_FieldIndex.ActorValueModulationEntryType;
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    _TintEntryNameLocation = (stream.Position - offset);
-                    return (int)ArmorAddon_FieldIndex.TintEntryName;
+                    _ActorValueModulationSubTypeLocation = (stream.Position - offset);
+                    return (int)ArmorAddon_FieldIndex.ActorValueModulationSubType;
                 }
                 case RecordTypeInts.VNAM:
                 {
-                    _TintEntryValueLocation = (stream.Position - offset);
-                    return (int)ArmorAddon_FieldIndex.TintEntryValue;
+                    _ActorValueModulationEntryValueLocation = (stream.Position - offset);
+                    return (int)ArmorAddon_FieldIndex.ActorValueModulationEntryValue;
                 }
                 case RecordTypeInts.BSMP:
                 {

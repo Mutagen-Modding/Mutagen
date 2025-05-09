@@ -818,7 +818,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = Armor_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => ArmorCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorSetterCommon.Instance.RemapLinks(this, mapping);
-        public Armor(FormKey formKey)
+        public Armor(
+            FormKey formKey,
+            OblivionRelease gameRelease)
         {
             this.FormKey = formKey;
             CustomCtor();
@@ -833,12 +835,16 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public Armor(IOblivionMod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.OblivionRelease)
         {
         }
 
         public Armor(IOblivionMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.OblivionRelease)
         {
             this.EditorID = editorID;
         }
@@ -1788,7 +1794,7 @@ namespace Mutagen.Bethesda.Oblivion
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Armor(formKey);
+            var newRec = new Armor(formKey, default(OblivionRelease));
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }

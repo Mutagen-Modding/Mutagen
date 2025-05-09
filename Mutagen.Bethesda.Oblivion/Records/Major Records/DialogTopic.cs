@@ -49,7 +49,8 @@ partial class DialogTopicBinaryCreateTranslation
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, obj);
+            RecordException.EnrichAndThrow(ex, obj);
+            throw;
         }
     }
 }
@@ -80,7 +81,8 @@ partial class DialogTopicBinaryWriteTranslation
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, obj);
+            RecordException.EnrichAndThrow(ex, obj);
+            throw;
         }
     }
 }
@@ -98,7 +100,6 @@ partial class DialogTopicBinaryOverlay
         try
         {
             if (stream.Complete) return;
-            var startPos = stream.Position;
             if (!stream.TryGetGroupHeader(out var groupMeta)) return;
             if (groupMeta.GroupType != (int)GroupTypeEnum.TopicChildren) return;
             this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));
@@ -126,7 +127,8 @@ partial class DialogTopicBinaryOverlay
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, this);
+            RecordException.EnrichAndThrow(ex, this);
+            throw;
         }
     }
 }

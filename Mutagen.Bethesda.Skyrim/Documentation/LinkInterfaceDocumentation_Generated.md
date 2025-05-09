@@ -27,9 +27,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - Scroll
 - SoulGem
 - Weapon
-### IDialog
-- DialogResponses
-- DialogTopic
 ### IEffectRecord
 - ObjectEffect
 - Spell
@@ -338,10 +335,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IObjectId
 - IPlaceableObject
 - IReferenceableObject
-### DialogResponses
-- IDialog
-### DialogTopic
-- IDialog
 ### Door
 - IExplodeSpawn
 - IObjectId

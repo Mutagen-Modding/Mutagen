@@ -97,7 +97,8 @@ partial class CellBinaryCreateTranslation
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, obj);
+            RecordException.EnrichAndThrow(ex, obj);
+            throw;
         }
     }
 
@@ -313,7 +314,8 @@ partial class CellBinaryWriteTranslation
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, obj);
+            RecordException.EnrichAndThrow(ex, obj);
+            throw;
         }
     }
 
@@ -423,7 +425,8 @@ partial class CellBinaryOverlay
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, ret);
+            RecordException.EnrichAndThrow(ex, ret);
+            throw;
         }
         return ret;
     }
@@ -431,7 +434,6 @@ partial class CellBinaryOverlay
     partial void CustomEnd(OverlayStream stream, int finalPos, int _)
     {
         if (stream.Complete) return;
-        var startPos = stream.Position;
         if (!stream.TryGetGroupHeader(out var groupMeta)) return;
         var formKey = FormKey.Factory(
             _package.MetaData.MasterReferences, 

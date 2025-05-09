@@ -2,7 +2,7 @@ namespace Mutagen.Bethesda.Starfield;
 
 public partial class ActorValueModulation
 {
-    public enum TypeEnum
+    public enum GroupType
     {
         None,
         Simple,

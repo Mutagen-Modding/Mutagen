@@ -22,7 +22,6 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
-using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
@@ -63,16 +62,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<ISpellGetter> IPerkEntryPointAddActivateChoiceGetter.Spell => this.Spell;
-        #endregion
-        #region ButtonLabel
-        public TranslatedString? ButtonLabel { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ITranslatedStringGetter? IPerkEntryPointAddActivateChoiceGetter.ButtonLabel => this.ButtonLabel;
-        #endregion
-        #region Flags
-        public PerkScriptFlag Flags { get; set; } = new PerkScriptFlag();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPerkScriptFlagGetter IPerkEntryPointAddActivateChoiceGetter.Flags => Flags;
         #endregion
 
         #region To String
@@ -116,29 +105,27 @@ namespace Mutagen.Bethesda.Skyrim
             : base(initialValue)
             {
                 this.Spell = initialValue;
-                this.ButtonLabel = initialValue;
-                this.Flags = new MaskItem<TItem, PerkScriptFlag.Mask<TItem>?>(initialValue, new PerkScriptFlag.Mask<TItem>(initialValue));
             }
 
             public Mask(
                 TItem Rank,
                 TItem Priority,
                 TItem Conditions,
+                TItem ButtonLabel,
+                TItem Flags,
                 TItem EntryPoint,
                 TItem PerkConditionTabCount,
-                TItem Spell,
-                TItem ButtonLabel,
-                TItem Flags)
+                TItem Spell)
             : base(
                 Rank: Rank,
                 Priority: Priority,
                 Conditions: Conditions,
+                ButtonLabel: ButtonLabel,
+                Flags: Flags,
                 EntryPoint: EntryPoint,
                 PerkConditionTabCount: PerkConditionTabCount)
             {
                 this.Spell = Spell;
-                this.ButtonLabel = ButtonLabel;
-                this.Flags = new MaskItem<TItem, PerkScriptFlag.Mask<TItem>?>(Flags, new PerkScriptFlag.Mask<TItem>(Flags));
             }
 
             #pragma warning disable CS8618
@@ -151,8 +138,6 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public TItem Spell;
-            public TItem ButtonLabel;
-            public MaskItem<TItem, PerkScriptFlag.Mask<TItem>?>? Flags { get; set; }
             #endregion
 
             #region Equals
@@ -167,16 +152,12 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.Spell, rhs.Spell)) return false;
-                if (!object.Equals(this.ButtonLabel, rhs.ButtonLabel)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Spell);
-                hash.Add(this.ButtonLabel);
-                hash.Add(this.Flags);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -188,12 +169,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!base.All(eval)) return false;
                 if (!eval(this.Spell)) return false;
-                if (!eval(this.ButtonLabel)) return false;
-                if (Flags != null)
-                {
-                    if (!eval(this.Flags.Overall)) return false;
-                    if (this.Flags.Specific != null && !this.Flags.Specific.All(eval)) return false;
-                }
                 return true;
             }
             #endregion
@@ -203,12 +178,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (base.Any(eval)) return true;
                 if (eval(this.Spell)) return true;
-                if (eval(this.ButtonLabel)) return true;
-                if (Flags != null)
-                {
-                    if (eval(this.Flags.Overall)) return true;
-                    if (this.Flags.Specific != null && this.Flags.Specific.Any(eval)) return true;
-                }
                 return false;
             }
             #endregion
@@ -225,8 +194,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.Spell = eval(this.Spell);
-                obj.ButtonLabel = eval(this.ButtonLabel);
-                obj.Flags = this.Flags == null ? null : new MaskItem<R, PerkScriptFlag.Mask<R>?>(eval(this.Flags.Overall), this.Flags.Specific?.Translate(eval));
             }
             #endregion
 
@@ -249,14 +216,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         sb.AppendItem(Spell, "Spell");
                     }
-                    if (printMask?.ButtonLabel ?? true)
-                    {
-                        sb.AppendItem(ButtonLabel, "ButtonLabel");
-                    }
-                    if (printMask?.Flags?.Overall ?? true)
-                    {
-                        Flags?.Print(sb);
-                    }
                 }
             }
             #endregion
@@ -269,8 +228,6 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public Exception? Spell;
-            public Exception? ButtonLabel;
-            public MaskItem<Exception?, PerkScriptFlag.ErrorMask?>? Flags;
             #endregion
 
             #region IErrorMask
@@ -281,10 +238,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case PerkEntryPointAddActivateChoice_FieldIndex.Spell:
                         return Spell;
-                    case PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel:
-                        return ButtonLabel;
-                    case PerkEntryPointAddActivateChoice_FieldIndex.Flags:
-                        return Flags;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -297,12 +250,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case PerkEntryPointAddActivateChoice_FieldIndex.Spell:
                         this.Spell = ex;
-                        break;
-                    case PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel:
-                        this.ButtonLabel = ex;
-                        break;
-                    case PerkEntryPointAddActivateChoice_FieldIndex.Flags:
-                        this.Flags = new MaskItem<Exception?, PerkScriptFlag.ErrorMask?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -318,12 +265,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case PerkEntryPointAddActivateChoice_FieldIndex.Spell:
                         this.Spell = (Exception?)obj;
                         break;
-                    case PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel:
-                        this.ButtonLabel = (Exception?)obj;
-                        break;
-                    case PerkEntryPointAddActivateChoice_FieldIndex.Flags:
-                        this.Flags = (MaskItem<Exception?, PerkScriptFlag.ErrorMask?>?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -334,8 +275,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (Overall != null) return true;
                 if (Spell != null) return true;
-                if (ButtonLabel != null) return true;
-                if (Flags != null) return true;
                 return false;
             }
             #endregion
@@ -365,10 +304,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     sb.AppendItem(Spell, "Spell");
                 }
-                {
-                    sb.AppendItem(ButtonLabel, "ButtonLabel");
-                }
-                Flags?.Print(sb);
             }
             #endregion
 
@@ -378,8 +313,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Spell = this.Spell.Combine(rhs.Spell);
-                ret.ButtonLabel = this.ButtonLabel.Combine(rhs.ButtonLabel);
-                ret.Flags = this.Flags.Combine(rhs.Flags, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -403,8 +336,6 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             public bool Spell;
-            public bool ButtonLabel;
-            public PerkScriptFlag.TranslationMask? Flags;
             #endregion
 
             #region Ctors
@@ -414,7 +345,6 @@ namespace Mutagen.Bethesda.Skyrim
                 : base(defaultOn, onOverall)
             {
                 this.Spell = defaultOn;
-                this.ButtonLabel = defaultOn;
             }
 
             #endregion
@@ -423,8 +353,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 base.GetCrystal(ret);
                 ret.Add((Spell, null));
-                ret.Add((ButtonLabel, null));
-                ret.Add((Flags != null ? Flags.OnOverall : DefaultOn, Flags?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -503,8 +431,6 @@ namespace Mutagen.Bethesda.Skyrim
         IPerkEntryPointAddActivateChoiceGetter
     {
         new IFormLinkNullable<ISpellGetter> Spell { get; set; }
-        new TranslatedString? ButtonLabel { get; set; }
-        new PerkScriptFlag Flags { get; set; }
     }
 
     public partial interface IPerkEntryPointAddActivateChoiceGetter :
@@ -515,8 +441,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration StaticRegistration => PerkEntryPointAddActivateChoice_Registration.Instance;
         IFormLinkNullableGetter<ISpellGetter> Spell { get; }
-        ITranslatedStringGetter? ButtonLabel { get; }
-        IPerkScriptFlagGetter Flags { get; }
 
     }
 
@@ -664,11 +588,11 @@ namespace Mutagen.Bethesda.Skyrim
         Rank = 0,
         Priority = 1,
         Conditions = 2,
-        EntryPoint = 3,
-        PerkConditionTabCount = 4,
-        Spell = 5,
-        ButtonLabel = 6,
-        Flags = 7,
+        ButtonLabel = 3,
+        Flags = 4,
+        EntryPoint = 5,
+        PerkConditionTabCount = 6,
+        Spell = 7,
     }
     #endregion
 
@@ -679,7 +603,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 1;
 
         public const ushort FieldCount = 8;
 
@@ -711,14 +635,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.PRKE);
-            var all = RecordCollection.Factory(
-                RecordTypes.PRKE,
-                RecordTypes.EPF2,
-                RecordTypes.EPF3);
-            return new RecordTriggerSpecs(
-                allRecordTypes: all,
-                triggeringRecordTypes: triggers);
+            var all = RecordCollection.Factory(RecordTypes.PRKE);
+            return new RecordTriggerSpecs(allRecordTypes: all);
         });
         public static readonly Type BinaryWriteTranslation = typeof(PerkEntryPointAddActivateChoiceBinaryWriteTranslation);
         #region Interface
@@ -761,8 +679,6 @@ namespace Mutagen.Bethesda.Skyrim
         {
             ClearPartial();
             item.Spell.Clear();
-            item.ButtonLabel = default;
-            item.Flags.Clear();
             base.Clear(item);
         }
         
@@ -849,8 +765,6 @@ namespace Mutagen.Bethesda.Skyrim
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Spell = item.Spell.Equals(rhs.Spell);
-            ret.ButtonLabel = object.Equals(item.ButtonLabel, rhs.ButtonLabel);
-            ret.Flags = MaskItemExt.Factory(item.Flags.GetEqualsMask(rhs.Flags, include), include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -904,15 +818,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 sb.AppendItem(item.Spell.FormKeyNullable, "Spell");
             }
-            if ((printMask?.ButtonLabel ?? true)
-                && item.ButtonLabel is {} ButtonLabelItem)
-            {
-                sb.AppendItem(ButtonLabelItem, "ButtonLabel");
-            }
-            if (printMask?.Flags?.Overall ?? true)
-            {
-                item.Flags?.Print(sb, "Flags");
-            }
         }
         
         public static PerkEntryPointAddActivateChoice_FieldIndex ConvertFieldIndex(APerkEntryPointEffect_FieldIndex index)
@@ -924,6 +829,10 @@ namespace Mutagen.Bethesda.Skyrim
                 case APerkEntryPointEffect_FieldIndex.Priority:
                     return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.Conditions:
+                    return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
+                case APerkEntryPointEffect_FieldIndex.ButtonLabel:
+                    return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
+                case APerkEntryPointEffect_FieldIndex.Flags:
                     return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.EntryPoint:
                     return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
@@ -944,6 +853,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
                 case APerkEffect_FieldIndex.Conditions:
                     return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
+                case APerkEffect_FieldIndex.ButtonLabel:
+                    return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
+                case APerkEffect_FieldIndex.Flags:
+                    return (PerkEntryPointAddActivateChoice_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -960,18 +873,6 @@ namespace Mutagen.Bethesda.Skyrim
             if ((equalsMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Spell) ?? true))
             {
                 if (!lhs.Spell.Equals(rhs.Spell)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel) ?? true))
-            {
-                if (!object.Equals(lhs.ButtonLabel, rhs.ButtonLabel)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Flags) ?? true))
-            {
-                if (EqualsMaskHelper.RefEquality(lhs.Flags, rhs.Flags, out var lhsFlags, out var rhsFlags, out var isFlagsEqual))
-                {
-                    if (!((PerkScriptFlagCommon)((IPerkScriptFlagGetter)lhsFlags).CommonInstance()!).Equals(lhsFlags, rhsFlags, equalsMask?.GetSubCrystal((int)PerkEntryPointAddActivateChoice_FieldIndex.Flags))) return false;
-                }
-                else if (!isFlagsEqual) return false;
             }
             return true;
         }
@@ -1002,11 +903,6 @@ namespace Mutagen.Bethesda.Skyrim
         {
             var hash = new HashCode();
             hash.Add(item.Spell);
-            if (item.ButtonLabel is {} ButtonLabelitem)
-            {
-                hash.Add(ButtonLabelitem);
-            }
-            hash.Add(item.Flags);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1067,32 +963,6 @@ namespace Mutagen.Bethesda.Skyrim
             if ((copyMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Spell) ?? true))
             {
                 item.Spell.SetTo(rhs.Spell.FormKeyNullable);
-            }
-            if ((copyMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel) ?? true))
-            {
-                item.ButtonLabel = rhs.ButtonLabel?.DeepCopy();
-            }
-            if ((copyMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Flags) ?? true))
-            {
-                errorMask?.PushIndex((int)PerkEntryPointAddActivateChoice_FieldIndex.Flags);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Flags) ?? true))
-                    {
-                        item.Flags = rhs.Flags.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)PerkEntryPointAddActivateChoice_FieldIndex.Flags),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
             }
             DeepCopyInCustom(
                 item: item,
@@ -1238,28 +1108,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item.Spell);
         }
 
-        public static void WriteRecordTypes(
-            IPerkEntryPointAddActivateChoiceGetter item,
-            MutagenWriter writer,
-            TypedWriteParams translationParams)
-        {
-            APerkEntryPointEffectBinaryWriteTranslation.WriteRecordTypes(
-                item: item,
-                writer: writer,
-                translationParams: translationParams);
-            StringBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.ButtonLabel,
-                header: translationParams.ConvertToCustom(RecordTypes.EPF2),
-                binaryType: StringBinaryType.NullTerminate,
-                source: StringsSource.Normal);
-            var FlagsItem = item.Flags;
-            ((PerkScriptFlagBinaryWriteTranslation)((IBinaryItem)FlagsItem).BinaryWriteTranslator).Write(
-                item: FlagsItem,
-                writer: writer,
-                translationParams: translationParams);
-        }
-
         public void Write(
             MutagenWriter writer,
             IPerkEntryPointAddActivateChoiceGetter item,
@@ -1268,7 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim
             WriteEmbedded(
                 item: item,
                 writer: writer);
-            WriteRecordTypes(
+            APerkEffectBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1325,46 +1173,6 @@ namespace Mutagen.Bethesda.Skyrim
             item.Spell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
-        public static ParseResult FillBinaryRecordTypes(
-            IPerkEntryPointAddActivateChoice item,
-            MutagenFrame frame,
-            PreviousParse lastParsed,
-            Dictionary<RecordType, int>? recordParseCount,
-            RecordType nextRecordType,
-            int contentLength,
-            TypedParseParams translationParams = default)
-        {
-            nextRecordType = translationParams.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case RecordTypeInts.EPF2:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ButtonLabel = StringBinaryTranslation.Instance.Parse(
-                        reader: frame.SpawnWithLength(contentLength),
-                        eager: true,
-                        source: StringsSource.Normal,
-                        stringBinaryType: StringBinaryType.NullTerminate,
-                        parseWhole: true);
-                    return (int)PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel;
-                }
-                case RecordTypeInts.EPF3:
-                {
-                    item.Flags = Mutagen.Bethesda.Skyrim.PerkScriptFlag.CreateFromBinary(frame: frame);
-                    return (int)PerkEntryPointAddActivateChoice_FieldIndex.Flags;
-                }
-                default:
-                    return APerkEntryPointEffectBinaryCreateTranslation.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        lastParsed: lastParsed,
-                        recordParseCount: recordParseCount,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength,
-                        translationParams: translationParams.WithNoConverter());
-            }
-        }
-
     }
 
 }
@@ -1411,15 +1219,6 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public IFormLinkNullableGetter<ISpellGetter> Spell => FormLinkBinaryTranslation.Instance.NullableOverlayFactory<ISpellGetter>(_package, _structData.Span.Slice(0x2, 0x4));
-        #region ButtonLabel
-        private int? _ButtonLabelLocation;
-        public ITranslatedStringGetter? ButtonLabel => _ButtonLabelLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ButtonLabelLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
-        #endregion
-        #region Flags
-        private RangeInt32? _FlagsLocation;
-        private IPerkScriptFlagGetter? _Flags => _FlagsLocation.HasValue ? PerkScriptFlagBinaryOverlay.PerkScriptFlagFactory(_recordData.Slice(_FlagsLocation!.Value.Min), _package) : default;
-        public IPerkScriptFlagGetter Flags => _Flags ?? new PerkScriptFlag();
-        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1471,39 +1270,6 @@ namespace Mutagen.Bethesda.Skyrim
                 translationParams: translationParams);
         }
 
-        public override ParseResult FillRecordType(
-            OverlayStream stream,
-            int finalPos,
-            int offset,
-            RecordType type,
-            PreviousParse lastParsed,
-            Dictionary<RecordType, int>? recordParseCount,
-            TypedParseParams translationParams = default)
-        {
-            type = translationParams.ConvertToStandard(type);
-            switch (type.TypeInt)
-            {
-                case RecordTypeInts.EPF2:
-                {
-                    _ButtonLabelLocation = (stream.Position - offset);
-                    return (int)PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel;
-                }
-                case RecordTypeInts.EPF3:
-                {
-                    _FlagsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
-                    return (int)PerkEntryPointAddActivateChoice_FieldIndex.Flags;
-                }
-                default:
-                    return base.FillRecordType(
-                        stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed,
-                        recordParseCount: recordParseCount,
-                        translationParams: translationParams.WithNoConverter());
-            }
-        }
         #region To String
 
         public override void Print(

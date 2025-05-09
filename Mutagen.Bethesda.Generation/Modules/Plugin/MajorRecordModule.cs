@@ -40,7 +40,7 @@ public class MajorRecordModule : GenerationModule
         using (sb.CurlyBrace())
         {
             sb.AppendLine("this.FormKey = formKey;");
-            if (obj.GetObjectData().HasMultipleReleases)
+            if (obj.GetObjectData().GameCategory?.HasFormVersion() ?? false)
             {
                 sb.AppendLine("this.FormVersion = GameConstants.Get(gameRelease.ToGameRelease()).DefaultFormVersion!.Value;");
             }

@@ -294,7 +294,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = GameSetting_Registration.TriggeringRecordType;
-        public GameSetting(FormKey formKey)
+        public GameSetting(
+            FormKey formKey,
+            OblivionRelease gameRelease)
         {
             this.FormKey = formKey;
             CustomCtor();
@@ -309,12 +311,16 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public GameSetting(IOblivionMod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.OblivionRelease)
         {
         }
 
         public GameSetting(IOblivionMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.OblivionRelease)
         {
             this.EditorID = editorID;
         }

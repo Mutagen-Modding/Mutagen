@@ -3,14 +3,13 @@
   <Object name="Static" recordType="STAT" objType="Record" baseClass="StarfieldMajorRecord" majorFlags="true">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <Float name="ODTY" recordType="ODTY" unknown="true" />
-      <Float name="ODRT" recordType="ODRT" unknown="true" />
+      <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
       <RefDirect name="PTTA" refName="PTTA" unknown="true" />
-      <RefDirect name="ObjectPlacementDefaults" refName="ObjectPlacementDefaults" />
+      <RefDirect name="ObjectPaletteDefaults" refName="ObjectPaletteDefaults" />
       <RefDirect name="Transforms" refName="Transforms" />
       <FormLink name="SnapTemplate" refName="SnapTemplate" recordType="SNTP" />
       <FormLink name="SnapBehavior" refName="SnapTemplate" recordType="SNBH" />
-      <ByteArray name="XALG" recordType="XALG" unknown="true" />
+      <UInt64 name="XALG" recordType="XALG" unknown="true" />
       <FormLink name="DefaultLayer" refName="Layer" recordType="DEFL" />
       <RefList name="Components" refName="AComponent" />
       <List name="ForcedLocations" recordType="FTYP" >

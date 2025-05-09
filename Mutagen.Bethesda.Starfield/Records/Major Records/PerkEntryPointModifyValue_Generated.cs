@@ -109,18 +109,22 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Rank,
                 TItem Priority,
                 TItem Conditions,
+                TItem PerkEntryID,
+                TItem ButtonLabel,
+                TItem Flags,
                 TItem EntryPoint,
                 TItem PerkConditionTabCount,
-                TItem PerkEntryID,
                 TItem Modification,
                 TItem Value)
             : base(
                 Rank: Rank,
                 Priority: Priority,
                 Conditions: Conditions,
+                PerkEntryID: PerkEntryID,
+                ButtonLabel: ButtonLabel,
+                Flags: Flags,
                 EntryPoint: EntryPoint,
-                PerkConditionTabCount: PerkConditionTabCount,
-                PerkEntryID: PerkEntryID)
+                PerkConditionTabCount: PerkConditionTabCount)
             {
                 this.Modification = Modification;
                 this.Value = Value;
@@ -608,11 +612,13 @@ namespace Mutagen.Bethesda.Starfield
         Rank = 0,
         Priority = 1,
         Conditions = 2,
-        EntryPoint = 3,
-        PerkConditionTabCount = 4,
-        PerkEntryID = 5,
-        Modification = 6,
-        Value = 7,
+        PerkEntryID = 3,
+        ButtonLabel = 4,
+        Flags = 5,
+        EntryPoint = 6,
+        PerkConditionTabCount = 7,
+        Modification = 8,
+        Value = 9,
     }
     #endregion
 
@@ -625,7 +631,7 @@ namespace Mutagen.Bethesda.Starfield
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(PerkEntryPointModifyValue.Mask<>);
 
@@ -861,11 +867,15 @@ namespace Mutagen.Bethesda.Starfield
                     return (PerkEntryPointModifyValue_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.Conditions:
                     return (PerkEntryPointModifyValue_FieldIndex)((int)index);
+                case APerkEntryPointEffect_FieldIndex.PerkEntryID:
+                    return (PerkEntryPointModifyValue_FieldIndex)((int)index);
+                case APerkEntryPointEffect_FieldIndex.ButtonLabel:
+                    return (PerkEntryPointModifyValue_FieldIndex)((int)index);
+                case APerkEntryPointEffect_FieldIndex.Flags:
+                    return (PerkEntryPointModifyValue_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.EntryPoint:
                     return (PerkEntryPointModifyValue_FieldIndex)((int)index);
                 case APerkEntryPointEffect_FieldIndex.PerkConditionTabCount:
-                    return (PerkEntryPointModifyValue_FieldIndex)((int)index);
-                case APerkEntryPointEffect_FieldIndex.PerkEntryID:
                     return (PerkEntryPointModifyValue_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -881,6 +891,12 @@ namespace Mutagen.Bethesda.Starfield
                 case APerkEffect_FieldIndex.Priority:
                     return (PerkEntryPointModifyValue_FieldIndex)((int)index);
                 case APerkEffect_FieldIndex.Conditions:
+                    return (PerkEntryPointModifyValue_FieldIndex)((int)index);
+                case APerkEffect_FieldIndex.PerkEntryID:
+                    return (PerkEntryPointModifyValue_FieldIndex)((int)index);
+                case APerkEffect_FieldIndex.ButtonLabel:
+                    return (PerkEntryPointModifyValue_FieldIndex)((int)index);
+                case APerkEffect_FieldIndex.Flags:
                     return (PerkEntryPointModifyValue_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
@@ -1147,7 +1163,7 @@ namespace Mutagen.Bethesda.Starfield
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
-            APerkEntryPointEffectBinaryWriteTranslation.WriteRecordTypes(
+            APerkEffectBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);

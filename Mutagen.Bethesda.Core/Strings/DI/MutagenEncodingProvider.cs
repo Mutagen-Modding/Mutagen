@@ -81,6 +81,7 @@ public static class MutagenEncoding
             case GameRelease.Fallout4:
             case GameRelease.Fallout4VR:
             case GameRelease.Starfield:
+            case GameRelease.OblivionRE:
                 return GetSkyrimSeEncoding(language);
             default:
                 throw new NotImplementedException();

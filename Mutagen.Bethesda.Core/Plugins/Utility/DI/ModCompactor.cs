@@ -6,13 +6,19 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Utility.DI;
 
+public class ModCompactionResults
+{
+    public MasterStyle ResultingStyle { get; init; }
+    public required IReadOnlyDictionary<FormKey, FormKey> RemappedFormKeys { get; init; }
+}
+
 public interface IModCompactor
 {
-    void CompactToSmallMaster(IMod mod);
-    void CompactToMediumMaster(IMod mod);
-    void CompactToFullMaster(IMod mod);
-    void CompactTo(IMod mod, MasterStyle style);
-    void CompactToWithFallback(IMod mod, MasterStyle style);
+    ModCompactionResults CompactToSmallMaster(IMod mod);
+    ModCompactionResults CompactToMediumMaster(IMod mod);
+    ModCompactionResults CompactToFullMaster(IMod mod);
+    ModCompactionResults CompactTo(IMod mod, MasterStyle style);
+    ModCompactionResults CompactToWithFallback(IMod mod, MasterStyle style);
 }
 
 public class ModCompactor : IModCompactor
@@ -26,7 +32,7 @@ public class ModCompactor : IModCompactor
         _methodInfo = typeof(ModCompactor).GetMethod(nameof(DoCompactingGeneric), BindingFlags.NonPublic | BindingFlags.Instance)!;
     }
     
-    public void CompactToSmallMaster(IMod mod)
+    public ModCompactionResults CompactToSmallMaster(IMod mod)
     {
         var range = _compactionCompatibilityDetector.GetSmallMasterRange(mod);
         if (!mod.CanBeSmallMaster || !range.HasValue) throw new ArgumentException("Cannot be small master");
@@ -35,10 +41,15 @@ public class ModCompactor : IModCompactor
         {
             mod.IsMediumMaster = false;
         }
-        DoCompacting(mod, range.Value);
+
+        return new ModCompactionResults()
+        {
+            RemappedFormKeys = DoCompacting(mod, range.Value),
+            ResultingStyle = MasterStyle.Small
+        };
     }
     
-    public void CompactToMediumMaster(IMod mod)
+    public ModCompactionResults CompactToMediumMaster(IMod mod)
     {
         var range = _compactionCompatibilityDetector.GetMediumMasterRange(mod);
         if (!mod.CanBeMediumMaster || !range.HasValue) throw new ArgumentException("Cannot be medium master");
@@ -47,10 +58,15 @@ public class ModCompactor : IModCompactor
             mod.IsSmallMaster = false;
         }
         mod.IsMediumMaster = true;
-        DoCompacting(mod, range.Value);
+
+        return new ModCompactionResults()
+        {
+            RemappedFormKeys = DoCompacting(mod, range.Value),
+            ResultingStyle = MasterStyle.Medium
+        };
     }
     
-    public void CompactToFullMaster(IMod mod)
+    public ModCompactionResults CompactToFullMaster(IMod mod)
     {
         var range = _compactionCompatibilityDetector.GetFullMasterRange(mod, potential: false);
         if (mod.CanBeSmallMaster)
@@ -62,28 +78,30 @@ public class ModCompactor : IModCompactor
         {
             mod.IsMediumMaster = false;
         }
-        DoCompacting(mod, range);
+
+        return new ModCompactionResults()
+        {
+            RemappedFormKeys = DoCompacting(mod, range),
+            ResultingStyle = MasterStyle.Full
+        };
     }
 
-    public void CompactTo(IMod mod, MasterStyle style)
+    public ModCompactionResults CompactTo(IMod mod, MasterStyle style)
     {
         switch (style)
         {
             case MasterStyle.Full:
-                CompactToFullMaster(mod);
-                break;
+                return CompactToFullMaster(mod);
             case MasterStyle.Small:
-                CompactToSmallMaster(mod);
-                break;
+                return CompactToSmallMaster(mod);
             case MasterStyle.Medium:
-                CompactToMediumMaster(mod);
-                break;
+                return CompactToMediumMaster(mod);
             default:
                 throw new ArgumentOutOfRangeException(nameof(style), style, null);
         }
     }
 
-    public void CompactToWithFallback(IMod mod, MasterStyle style)
+    public ModCompactionResults CompactToWithFallback(IMod mod, MasterStyle style)
     {
         var targetStyle = style;
         if (style == MasterStyle.Small)
@@ -92,8 +110,7 @@ public class ModCompactor : IModCompactor
 
             try
             {
-                CompactToSmallMaster(mod);
-                return;
+                return CompactToSmallMaster(mod);
             }
             catch (TargetInvocationException e)
             {
@@ -111,8 +128,7 @@ public class ModCompactor : IModCompactor
         {
             try
             {
-                CompactToMediumMaster(mod);
-                return;
+                return CompactToMediumMaster(mod);
             }
             catch (TargetInvocationException e)
             {
@@ -126,19 +142,19 @@ public class ModCompactor : IModCompactor
             }
         }
         
-        CompactToFullMaster(mod);
+        return CompactToFullMaster(mod);
     }
 
-    private void DoCompacting(IMod mod, RangeUInt32 range)
+    private IReadOnlyDictionary<FormKey, FormKey> DoCompacting(IMod mod, RangeUInt32 range)
     {
-        ModToGenericCallHelper.InvokeFromCategory(
+        return (IReadOnlyDictionary<FormKey, FormKey>)ModToGenericCallHelper.InvokeFromCategory(
             this,
             mod.GameRelease.ToCategory(),
             _methodInfo,
-            new object[] { mod, range });
+            new object[] { mod, range })!;
     }
     
-    private void DoCompactingGeneric<TMod, TModGetter>(TMod mod, RangeUInt32 range)
+    private IReadOnlyDictionary<FormKey, FormKey> DoCompactingGeneric<TMod, TModGetter>(TMod mod, RangeUInt32 range)
         where TModGetter : IModGetter
         where TMod : IMod, TModGetter, IMajorRecordContextEnumerable<TMod, TModGetter>
     {
@@ -150,14 +166,14 @@ public class ModCompactor : IModCompactor
         var outOfRange = originatingRecords.Values
             .Where(x => !range.IsInRange(x.Record.FormKey.ID))
             .ToList();
-        
-        if (outOfRange.Count == 0) return;
+
+        if (outOfRange.Count == 0) return new Dictionary<FormKey, FormKey>();
         
         if (originatingRecords.Count > range.Difference)
         {
             throw new FormIDCompactionOutOfBoundsException(
                 small: mod.IsSmallMaster,
-                Medium: mod.IsMediumMaster,
+                medium: mod.IsMediumMaster,
                 range: range
             );
         }
@@ -176,7 +192,7 @@ public class ModCompactor : IModCompactor
                 {
                     throw new FormIDCompactionOutOfBoundsException(
                         small: mod.IsSmallMaster,
-                        Medium: mod.IsMediumMaster,
+                        medium: mod.IsMediumMaster,
                         range: range
                     );
                 }
@@ -188,5 +204,7 @@ public class ModCompactor : IModCompactor
             
             remapped.Add(rec.Record.FormKey, nextFormKey);
         }
+
+        return remapped;
     }
 }

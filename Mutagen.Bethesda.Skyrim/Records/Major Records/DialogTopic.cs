@@ -144,32 +144,6 @@ public partial class DialogTopic
     }
 }
 
-partial class DialogTopicSetterCommon
-{
-    private static partial void RemapResolvedAssetLinks(
-        IDialogTopic obj,
-        IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
-        IAssetLinkCache? linkCache,
-        AssetLinkQuery queryCategories)
-    {
-        // Nothing to do here, we can't change the form key of the dialogue or any other parameters, like quest editor id
-    }
-}
-
-partial class DialogTopicCommon
-{
-    public static partial IEnumerable<IAssetLinkGetter> GetResolvedAssetLinks(IDialogTopicGetter obj, IAssetLinkCache linkCache, Type? assetType)
-    {
-        if (assetType != null && assetType != typeof(SkyrimSoundAssetType)) yield break;
-        
-        var voiceTypeLookup = linkCache.GetComponent<VoiceTypeAssetLookup>();
-        foreach (var voiceTypePath in voiceTypeLookup.GetVoiceTypePaths(obj))
-        {
-            yield return new AssetLink<SkyrimSoundAssetType>(voiceTypePath);
-        }
-    }
-}
-
 partial class DialogTopicBinaryCreateTranslation
 {
     public static partial void CustomBinaryEndImport(MutagenFrame frame, IDialogTopicInternal obj)
@@ -208,7 +182,8 @@ partial class DialogTopicBinaryCreateTranslation
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, obj);
+            RecordException.EnrichAndThrow(ex, obj);
+            throw;
         }
     }
 
@@ -269,7 +244,8 @@ partial class DialogTopicBinaryWriteTranslation
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, obj);
+            RecordException.EnrichAndThrow(ex, obj);
+            throw;
         }
     }
 }
@@ -289,7 +265,6 @@ partial class DialogTopicBinaryOverlay
         try
         {
             if (stream.Complete) return;
-            var startPos = stream.Position;
             if (!stream.TryGetGroupHeader(out var groupMeta)) return;
             if (groupMeta.GroupType != (int)GroupTypeEnum.TopicChildren) return;
             this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));
@@ -316,7 +291,8 @@ partial class DialogTopicBinaryOverlay
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, this);
+            RecordException.EnrichAndThrow(ex, this);
+            throw;
         }
     }
 

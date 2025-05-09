@@ -175,6 +175,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Destructible
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Destructible? _Destructible;
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         public Destructible? Destructible
         {
             get => _Destructible;
@@ -182,6 +185,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IDestructibleGetter? INpcGetter.Destructible => this.Destructible;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
+        #endregion
         #endregion
         #region WornArmor
         private readonly IFormLinkNullable<IArmorGetter> _WornArmor = new FormLinkNullable<IArmorGetter>();
@@ -2943,6 +2950,7 @@ namespace Mutagen.Bethesda.Skyrim
         IAssetLinkContainer,
         IExplodeSpawn,
         IFormLinkContainer,
+        IHasDestructible,
         IHaveVirtualMachineAdapter,
         IKeyworded<IKeywordGetter>,
         ILockList,
@@ -2976,6 +2984,9 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLinkNullable<INpcSpawnGetter> Template { get; set; }
         new IFormLink<IRaceGetter> Race { get; set; }
         new ExtendedList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; set; }
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
         new Destructible? Destructible { get; set; }
         new IFormLinkNullable<IArmorGetter> WornArmor { get; set; }
         new IFormLinkNullable<IArmorGetter> FarAwayModel { get; set; }
@@ -3039,6 +3050,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IExplodeSpawnGetter,
         IFormLinkContainerGetter,
+        IHasDestructibleGetter,
         IHaveVirtualMachineAdapterGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILockListGetter,
@@ -3076,7 +3088,12 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<INpcSpawnGetter> Template { get; }
         IFormLinkGetter<IRaceGetter> Race { get; }
         IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; }
+        #region Destructible
+        /// <summary>
+        /// Aspects: IHasDestructibleGetter
+        /// </summary>
         IDestructibleGetter? Destructible { get; }
+        #endregion
         IFormLinkNullableGetter<IArmorGetter> WornArmor { get; }
         IFormLinkNullableGetter<IArmorGetter> FarAwayModel { get; }
         IFormLinkNullableGetter<IRaceGetter> AttackRace { get; }

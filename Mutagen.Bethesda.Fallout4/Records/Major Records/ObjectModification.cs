@@ -69,10 +69,11 @@ partial class AObjectModification
         }
         catch (Exception e)
         {
-            throw RecordException.Enrich(
+            RecordException.EnrichAndThrow(
                 e,
                 FormKey.Factory(frame.MetaData.MasterReferences, majorMeta.FormID, reference: false),
                 typeof(AObjectModification));
+            throw;
         }
     }
 }

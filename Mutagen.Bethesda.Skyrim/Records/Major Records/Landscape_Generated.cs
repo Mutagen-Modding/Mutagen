@@ -1756,8 +1756,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if ((rhs.VertexNormals != null))
                     {
                         item.VertexNormals = 
-                            rhs.VertexNormals
-                            .ShallowClone();
+                            rhs.VertexNormals.ShallowClone();
                     }
                     else
                     {
@@ -1808,8 +1807,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if ((rhs.VertexColors != null))
                     {
                         item.VertexColors = 
-                            rhs.VertexColors
-                            .ShallowClone();
+                            rhs.VertexColors.ShallowClone();
                     }
                     else
                     {

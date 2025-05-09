@@ -37,11 +37,13 @@ public class ModCompactorTests
     {
         mod.IsSmallMaster.ShouldBeFalse();
         mod.IsMediumMaster.ShouldBeFalse();
-        sut.Sut.CompactToSmallMaster(mod);
+        var ret = sut.Sut.CompactToSmallMaster(mod);
         mod.IsSmallMaster.ShouldBeTrue();
         mod.IsMediumMaster.ShouldBeFalse();
         mod.Npcs.Records.Select(x => x.FormKey)
             .ShouldEqual(n.FormKey, n2.FormKey);
+        ret.ResultingStyle.ShouldBe(MasterStyle.Small);
+        ret.RemappedFormKeys.ShouldBeEmpty();
     }
     
     [Theory, MutagenModAutoData]
@@ -54,13 +56,17 @@ public class ModCompactorTests
             new SkyrimNpc(FormKey.Factory($"010000:{mod.ModKey.FileName}"), SkyrimRelease.SkyrimSE));
         var n3 = mod.Npcs.AddReturn(
             new SkyrimNpc(FormKey.Factory($"000030:{mod.ModKey.FileName}"), SkyrimRelease.SkyrimSE));
+        var nextId = n.FormKey.ID + 1;
         mod.IsSmallMaster.ShouldBeFalse();
         mod.IsMediumMaster.ShouldBeFalse();
-        sut.Sut.CompactToSmallMaster(mod);
+        var ret = sut.Sut.CompactToSmallMaster(mod);
         mod.IsSmallMaster.ShouldBeTrue();
         mod.IsMediumMaster.ShouldBeFalse();
         mod.Npcs.Records.Select(x => x.FormKey)
-            .ShouldEqual(n.FormKey, new FormKey(n.FormKey.ModKey, n.FormKey.ID + 1), n3.FormKey);
+            .ShouldEqual(n.FormKey, new FormKey(n.FormKey.ModKey, nextId), n3.FormKey);
+        ret.ResultingStyle.ShouldBe(MasterStyle.Small);
+        ret.RemappedFormKeys
+            .ShouldEqual((n2.FormKey, new FormKey(n.FormKey.ModKey, nextId)));
     }
     
     [Theory, MutagenModAutoData]
@@ -90,11 +96,13 @@ public class ModCompactorTests
     {
         mod.IsSmallMaster.ShouldBeFalse();
         mod.IsMediumMaster.ShouldBeFalse();
-        sut.Sut.CompactToMediumMaster(mod);
+        var ret = sut.Sut.CompactToMediumMaster(mod);
         mod.IsSmallMaster.ShouldBeFalse();
         mod.IsMediumMaster.ShouldBeTrue();
         mod.Npcs.Records.Select(x => x.FormKey)
             .ShouldEqual(n.FormKey, n2.FormKey);
+        ret.ResultingStyle.ShouldBe(MasterStyle.Medium);
+        ret.RemappedFormKeys.ShouldBeEmpty();
     }
     
     [Theory, MutagenModAutoData(GameRelease.Starfield)]
@@ -107,13 +115,17 @@ public class ModCompactorTests
             new Starfield.Npc(FormKey.Factory($"080000:{mod.ModKey.FileName}"), StarfieldRelease.Starfield));
         var n3 = mod.Npcs.AddReturn(
             new Starfield.Npc(FormKey.Factory($"000030:{mod.ModKey.FileName}"), StarfieldRelease.Starfield));
+        var nextId = n.FormKey.ID + 1;
         mod.IsSmallMaster.ShouldBeFalse();
         mod.IsMediumMaster.ShouldBeFalse();
-        sut.Sut.CompactToMediumMaster(mod);
+        var ret = sut.Sut.CompactToMediumMaster(mod);
         mod.IsSmallMaster.ShouldBeFalse();
         mod.IsMediumMaster.ShouldBeTrue();
         mod.Npcs.Records.Select(x => x.FormKey)
-            .ShouldEqual(n.FormKey, new FormKey(n.FormKey.ModKey, n.FormKey.ID + 1), n3.FormKey);
+            .ShouldEqual(n.FormKey, new FormKey(n.FormKey.ModKey, nextId), n3.FormKey);
+        ret.ResultingStyle.ShouldBe(MasterStyle.Medium);
+        ret.RemappedFormKeys
+            .ShouldEqual((n2.FormKey, new FormKey(n.FormKey.ModKey, nextId)));
     }
     
     [Theory, MutagenModAutoData(GameRelease.Starfield)]
@@ -143,11 +155,13 @@ public class ModCompactorTests
         var n2 = mod.Npcs.AddNew(FormKey.Factory($"000810:{mod.ModKey.FileName}"));
         mod.IsSmallMaster.ShouldBeFalse();
         mod.IsMediumMaster.ShouldBeFalse();
-        sut.Sut.CompactToFullMaster(mod);
+        var ret = sut.Sut.CompactToFullMaster(mod);
         mod.IsSmallMaster.ShouldBeFalse();
         mod.IsMediumMaster.ShouldBeFalse();
         mod.Npcs.Records.Select(x => x.FormKey)
             .ShouldEqual(n.FormKey, n2.FormKey);
+        ret.ResultingStyle.ShouldBe(MasterStyle.Full);
+        ret.RemappedFormKeys.ShouldBeEmpty();
     }
     
     [Theory, MutagenModAutoData]
@@ -157,13 +171,17 @@ public class ModCompactorTests
         Payload sut)
     {
         var n2 = mod.Npcs.AddNew(FormKey.Factory($"000010:{mod.ModKey.FileName}"));
+        var nextId = n.FormKey.ID + 1;
         mod.IsSmallMaster.ShouldBeFalse();
         mod.IsMediumMaster.ShouldBeFalse();
-        sut.Sut.CompactToFullMaster(mod);
+        var ret = sut.Sut.CompactToFullMaster(mod);
         mod.IsSmallMaster.ShouldBeFalse();
         mod.IsMediumMaster.ShouldBeFalse();
         mod.Npcs.Records.Select(x => x.FormKey)
-            .ShouldEqual(n.FormKey, new FormKey(n.FormKey.ModKey, n.FormKey.ID + 1));
+            .ShouldEqual(n.FormKey, new FormKey(n.FormKey.ModKey, nextId));
+        ret.ResultingStyle.ShouldBe(MasterStyle.Full);
+        ret.RemappedFormKeys
+            .ShouldEqual((n2.FormKey, new FormKey(n.FormKey.ModKey, nextId)));
     }
     
     [Theory, MutagenModAutoData]
@@ -175,13 +193,17 @@ public class ModCompactorTests
         var n2 = mod.Npcs.AddNew(FormKey.Factory($"010000:{mod.ModKey.FileName}"));
         var n3 = mod.Npcs.AddReturn(
             new SkyrimNpc(FormKey.Factory($"000030:{mod.ModKey.FileName}"), SkyrimRelease.SkyrimSE));
+        var nextId = n.FormKey.ID + 1;
         mod.IsSmallMaster.ShouldBeFalse();
         mod.IsMediumMaster.ShouldBeFalse();
-        sut.Sut.CompactToWithFallback(mod, MasterStyle.Small);
+        var ret = sut.Sut.CompactToWithFallback(mod, MasterStyle.Small);
         mod.IsSmallMaster.ShouldBeTrue();
         mod.IsMediumMaster.ShouldBeFalse();
         mod.Npcs.Records.Select(x => x.FormKey)
-            .ShouldEqual(n.FormKey, new FormKey(n.FormKey.ModKey, n.FormKey.ID + 1), n3.FormKey);
+            .ShouldEqual(n.FormKey, new FormKey(n.FormKey.ModKey, nextId), n3.FormKey);
+        ret.ResultingStyle.ShouldBe(MasterStyle.Small);
+        ret.RemappedFormKeys
+            .ShouldEqual((n2.FormKey, new FormKey(n.FormKey.ModKey, nextId)));
     }
     
     [Theory, MutagenModAutoData(GameRelease.Starfield)]
@@ -199,10 +221,13 @@ public class ModCompactorTests
         }
         mod.IsSmallMaster.ShouldBeFalse();
         mod.IsMediumMaster.ShouldBeFalse();
-        sut.Sut.CompactToWithFallback(mod, MasterStyle.Small);
+        var ret = sut.Sut.CompactToWithFallback(mod, MasterStyle.Small);
         mod.IsSmallMaster.ShouldBeFalse();
         mod.IsMediumMaster.ShouldBeTrue();
         mod.Npcs.Records.Count().ShouldBe(4099);
+        ret.ResultingStyle.ShouldBe(MasterStyle.Medium);
+        ret.RemappedFormKeys
+            .ShouldEqual((n2.FormKey, new FormKey(n.FormKey.ModKey, 1801)));
     }
     
     [Theory, MutagenModAutoData]
@@ -220,9 +245,12 @@ public class ModCompactorTests
         }
         mod.IsSmallMaster.ShouldBeFalse();
         mod.IsMediumMaster.ShouldBeFalse();
-        sut.Sut.CompactToWithFallback(mod, MasterStyle.Small);
+        var ret = sut.Sut.CompactToWithFallback(mod, MasterStyle.Small);
         mod.IsSmallMaster.ShouldBeFalse();
         mod.IsMediumMaster.ShouldBeFalse();
         mod.Npcs.Records.Count().ShouldBe(4099);
+        ret.ResultingStyle.ShouldBe(MasterStyle.Full);
+        ret.RemappedFormKeys
+            .ShouldEqual((n2.FormKey, new FormKey(n.FormKey.ModKey, 1801)));
     }
 }

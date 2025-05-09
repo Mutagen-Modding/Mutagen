@@ -205,6 +205,8 @@ internal sealed class ImmutableLoadOrderLinkCacheCategory<TKey>
         // Grab the formkey's list
         ImmutableList<LinkCacheItem>? list;
         int consideredDepth;
+        int iteratedCount;
+        bool more;
         lock (cache)
         {
             if (!cache.TryGetValue(key, out list))
@@ -213,6 +215,8 @@ internal sealed class ImmutableLoadOrderLinkCacheCategory<TKey>
                 cache.Add(key, list);
             }
             consideredDepth = cache.Depth;
+            iteratedCount = list.Count;
+            more = !InternalImmutableLoadOrderLinkCache.ShouldStopQuery(modKey, _listedOrder.Count, cache);
         }
 
         // Return everything we have already
@@ -220,9 +224,6 @@ internal sealed class ImmutableLoadOrderLinkCacheCategory<TKey>
         {
             yield return item;
         }
-
-        int iteratedCount = list.Count;
-        bool more = !InternalImmutableLoadOrderLinkCache.ShouldStopQuery(modKey, _listedOrder.Count, cache);
 
         // While there's more depth to consider
         while (more)
@@ -271,6 +272,13 @@ internal sealed class ImmutableLoadOrderLinkCacheCategory<TKey>
                     else
                     {
                         AddRecords(targetMod, type, throwIfUnknown: true);
+                    }
+                }
+                else
+                {
+                    if (cache.TryGetValue(key, out var requeriedList))
+                    {
+                        list = requeriedList;
                     }
                 }
                 consideredDepth = cache.Depth;

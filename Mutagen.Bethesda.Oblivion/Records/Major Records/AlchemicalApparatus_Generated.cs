@@ -531,7 +531,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = AlchemicalApparatus_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => AlchemicalApparatusCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AlchemicalApparatusSetterCommon.Instance.RemapLinks(this, mapping);
-        public AlchemicalApparatus(FormKey formKey)
+        public AlchemicalApparatus(
+            FormKey formKey,
+            OblivionRelease gameRelease)
         {
             this.FormKey = formKey;
             CustomCtor();
@@ -546,12 +548,16 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public AlchemicalApparatus(IOblivionMod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.OblivionRelease)
         {
         }
 
         public AlchemicalApparatus(IOblivionMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.OblivionRelease)
         {
             this.EditorID = editorID;
         }
@@ -1309,7 +1315,7 @@ namespace Mutagen.Bethesda.Oblivion
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new AlchemicalApparatus(formKey);
+            var newRec = new AlchemicalApparatus(formKey, default(OblivionRelease));
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }

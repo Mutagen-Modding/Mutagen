@@ -107,85 +107,6 @@ public class MainVM : ViewModel
                     {
                         settings = JsonConvert.DeserializeObject<TestingSettings>(File.ReadAllText(x));
                     }
-                    else
-                    {
-                        var gameReleases = Enum.GetValues<GameRelease>();
-                        var locator = new GameLocatorLookupCache();
-                        
-                        // Data folder locations
-                        var dataFolderLocations = new DataFolderLocations();
-                        foreach (var release in gameReleases)
-                        {
-                            try 
-                            {
-                                var dataDir = locator.GetDataDirectory(release);
-                                dataFolderLocations.Set(release, dataDir);
-                            }
-                            catch (NotImplementedException)
-                            {
-                                continue;
-                            }
-                            catch (DirectoryNotFoundException)
-                            {
-                                continue;
-                            }
-                        }
-                        
-                        // Target groups
-                        var targetGroups = gameReleases
-                            .Select(release => new TargetGroup
-                            {
-                                GameRelease = release,
-                                NicknameSuffix = string.Empty,
-                                Do = false,
-                                Targets = Implicits.Get(release).BaseMasters
-                                    .Select(implicitMods =>
-                                    {
-                                        try
-                                        {
-                                            return new Target
-                                            {
-                                                Do = true,
-                                                Path = Path.Combine(locator.GetDataDirectory(release), implicitMods.FileName)
-                                            };
-                                        }
-                                        catch (DirectoryNotFoundException)
-                                        {
-                                            return null;
-                                        }
-                                    })
-                                    .WhereNotNull()
-                                    .ToList()
-                            })
-                            .ToList();
-
-                        settings = new TestingSettings
-                        {
-                            PassthroughSettings = new PassthroughSettings
-                            {
-                                CacheReuse = new CacheReuse(true),
-                                TestNormal = true,
-                                TestBinaryOverlay = true,
-                                DeleteCachesAfter = false,
-                                TestImport = false,
-                                ParallelWriting = false,
-                                TestCopyIn = false,
-                                ParallelProcessingSteps = false,
-                                Trimming = new TrimmingSettings()
-                                {
-                                    Enabled = false
-                                }
-                            },
-                            TargetGroups = targetGroups,
-                            TestFlattenedMod = false,
-                            TestBenchmarks = false,
-                            TestEquality = false,
-                            TestPex = false,
-                            TestGroupMasks = false,
-                            TestRecordEnumerables = false,
-                            DataFolderLocations = dataFolderLocations
-                        };
-                    }
                 }
                 catch (Exception)
                 {
@@ -196,19 +117,8 @@ public class MainVM : ViewModel
             })
             .Select(p =>
             {
-                if (p.Settings != null)
+                if (p.Settings != null && !p.Path.IsNullOrWhitespace())
                 {
-                    if (p.Path.IsNullOrWhitespace())
-                    {
-                        // Put into Tests project
-                        var mutagenFolder = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Directory.GetCurrentDirectory()))));
-                        if (mutagenFolder is not null)
-                        {
-                            var testsFolder = Path.Combine(mutagenFolder, "Mutagen.Bethesda.Tests");
-                            p.Path = SelectedConfigPath.TargetPath = Path.Combine(testsFolder, "TestingSettings.json");
-                        }
-                    }
-
                     Directory.CreateDirectory(Path.GetDirectoryName(p.Path)!);
                     File.WriteAllText(p.Path, JsonConvert.SerializeObject(p.Settings, Formatting.Indented));
                 }
@@ -266,10 +176,12 @@ public class MainVM : ViewModel
         if (SelectedSettings != null)
         {
             SaveToSettings(SelectedSettings);
-            File.WriteAllText(
-                SelectedConfigPath.TargetPath,
-                JsonConvert.SerializeObject(SelectedSettings, Formatting.Indented));
+            SaveSettings(SelectedConfigPath.TargetPath, SelectedSettings);
         }
+    }
+    private static void SaveSettings(string path, TestingSettings settings)
+    {
+        File.WriteAllText(path, JsonConvert.SerializeObject(settings, Formatting.Indented));
     }
 
     public void AddPassthroughGroup()
@@ -296,13 +208,101 @@ public class MainVM : ViewModel
         Groups.Add(groupVM);
     }
 
+    public void FreshInitialize()
+    {
+        var gameReleases = Enum.GetValues<GameRelease>();
+        var locator = new GameLocatorLookupCache();
+
+        // Data folder locations
+        var dataFolderLocations = new DataFolderLocations();
+        foreach (var release in gameReleases)
+        {
+            try
+            {
+                var dataDir = locator.GetDataDirectory(release);
+                dataFolderLocations.Set(release, dataDir);
+            }
+            catch (NotImplementedException)
+            {
+                continue;
+            }
+            catch (DirectoryNotFoundException)
+            {
+                continue;
+            }
+        }
+
+        // Target groups
+        var targetGroups = gameReleases
+            .Where(x => !dataFolderLocations.Get(x).IsNullOrWhitespace())
+            .Select(release => new TargetGroup
+            {
+                GameRelease = release,
+                NicknameSuffix = string.Empty,
+                Do = true,
+                Targets = Implicits.Get(release).BaseMasters
+                    .Select(implicitMods =>
+                    {
+                        try
+                        {
+                            return new Target
+                            {
+                                Do = true,
+                                Path = Path.Combine(locator.GetDataDirectory(release), implicitMods.FileName)
+                            };
+                        }
+                        catch (DirectoryNotFoundException)
+                        {
+                            return null;
+                        }
+                    })
+                    .WhereNotNull()
+                    .ToList()
+            })
+            .ToList();
+
+        var settings = new TestingSettings
+        {
+            PassthroughSettings = new PassthroughSettings
+            {
+                CacheReuse = new CacheReuse(true),
+                TestNormal = true,
+                TestBinaryOverlay = true,
+                DeleteCachesAfter = false,
+                TestImport = false,
+                ParallelModTranslations = false,
+                TestCopyIn = false,
+                Trimming = new TrimmingSettings()
+                {
+                    Enabled = false
+                }
+            },
+            TargetGroups = targetGroups,
+            TestFlattenedMod = false,
+            TestBenchmarks = false,
+            TestEquality = false,
+            TestPex = false,
+            TestGroupMasks = false,
+            TestRecordEnumerables = false,
+            DataFolderLocations = dataFolderLocations
+        };
+        
+        var mutagenFolder = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Directory.GetCurrentDirectory()))));
+        if (mutagenFolder is not null)
+        {
+            var testPath = Path.Combine(mutagenFolder, "Mutagen.Bethesda.Tests", "TestingSettings.json");
+            SaveSettings(testPath, settings);
+            SelectedConfigPath.TargetPath = testPath;
+        }
+    }
+
     public void ReadInSettings(TestingSettings settings)
     {
         this.TestNormal = settings.PassthroughSettings.TestNormal;
         this.TestCopyIn = settings.PassthroughSettings.TestCopyIn;
         this.TestImport = settings.PassthroughSettings.TestImport;
         this.TestOverlay = settings.PassthroughSettings.TestBinaryOverlay;
-        this.TestParallel = settings.PassthroughSettings.ParallelWriting;
+        this.TestParallel = settings.PassthroughSettings.ParallelModTranslations;
         this.TestEquals = settings.TestEquality;
         this.TestPex = settings.TestPex;
 
@@ -325,6 +325,11 @@ public class MainVM : ViewModel
         if (DataFolders.TryGetValue(GameRelease.Oblivion, out var df))
         {
             df.DataFolder.TargetPath = settings.DataFolderLocations.Oblivion;
+        }
+
+        if (DataFolders.TryGetValue(GameRelease.OblivionRE, out df))
+        {
+            df.DataFolder.TargetPath = settings.DataFolderLocations.OblivionRE;
         }
 
         if (DataFolders.TryGetValue(GameRelease.SkyrimLE, out df))
@@ -360,7 +365,7 @@ public class MainVM : ViewModel
         settings.PassthroughSettings.TestImport = this.TestImport;
         settings.PassthroughSettings.TestBinaryOverlay = this.TestOverlay;
         settings.PassthroughSettings.TestCopyIn = this.TestCopyIn;
-        settings.PassthroughSettings.ParallelWriting = this.TestParallel;
+        settings.PassthroughSettings.ParallelModTranslations = this.TestParallel;
         settings.TestEquality = this.TestEquals;
         settings.TestPex = this.TestPex;
 
@@ -393,6 +398,7 @@ public class MainVM : ViewModel
         settings.PassthroughSettings.Trimming.TypesToInclude = InterestingRecordTypes.Select(x => x.RecordType.Type).ToList();
 
         settings.DataFolderLocations.Oblivion = DataFolders.Get(GameRelease.Oblivion).DataFolder.TargetPath;
+        settings.DataFolderLocations.OblivionRE = DataFolders.Get(GameRelease.OblivionRE).DataFolder.TargetPath;
         settings.DataFolderLocations.Skyrim = DataFolders.Get(GameRelease.SkyrimLE).DataFolder.TargetPath;
         settings.DataFolderLocations.SkyrimSpecialEdition = DataFolders.Get(GameRelease.SkyrimSE).DataFolder.TargetPath;
         settings.DataFolderLocations.SkyrimVR = DataFolders.Get(GameRelease.SkyrimVR).DataFolder.TargetPath;
@@ -405,7 +411,6 @@ public class MainVM : ViewModel
         return new PassthroughSettings()
         {
             DeleteCachesAfter = false,
-            ParallelProcessingSteps = false,
             CacheReuse = new CacheReuse()
             {
                 ReuseAlignment = CacheAlignment,
@@ -418,7 +423,7 @@ public class MainVM : ViewModel
             TestCopyIn = TestCopyIn,
             TestImport = TestImport,
             TestNormal = TestNormal,
-            ParallelWriting = TestParallel,
+            ParallelModTranslations = TestParallel,
             Trimming = new TrimmingSettings()
             {
                 TypesToTrim = SkippedRecordTypes.Select(x => x.RecordType.Type).ToList(),

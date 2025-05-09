@@ -75,48 +75,41 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;
         #endregion
         #endregion
-        #region ODTY
-        public Single? ODTY { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IAcousticSpaceGetter.ODTY => this.ODTY;
+        #region DirtinessScale
+        public Percent DirtinessScale { get; set; } = default(Percent);
         #endregion
-        #region ODRT
-        public Single? ODRT { get; set; }
+        #region LoopingSound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IAcousticSpaceGetter.ODRT => this.ODRT;
-        #endregion
-        #region ASLS
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private SoundReference? _ASLS;
-        public SoundReference? ASLS
+        private SoundReference? _LoopingSound;
+        public SoundReference? LoopingSound
         {
-            get => _ASLS;
-            set => _ASLS = value;
+            get => _LoopingSound;
+            set => _LoopingSound = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISoundReferenceGetter? IAcousticSpaceGetter.ASLS => this.ASLS;
+        ISoundReferenceGetter? IAcousticSpaceGetter.LoopingSound => this.LoopingSound;
         #endregion
-        #region WED0
+        #region InteriorSound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private SoundReference? _WED0;
-        public SoundReference? WED0
+        private SoundReference? _InteriorSound;
+        public SoundReference? InteriorSound
         {
-            get => _WED0;
-            set => _WED0 = value;
+            get => _InteriorSound;
+            set => _InteriorSound = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISoundReferenceGetter? IAcousticSpaceGetter.WED0 => this.WED0;
+        ISoundReferenceGetter? IAcousticSpaceGetter.InteriorSound => this.InteriorSound;
         #endregion
-        #region WED1
+        #region ExteriorSound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private SoundReference? _WED1;
-        public SoundReference? WED1
+        private SoundReference? _ExteriorSound;
+        public SoundReference? ExteriorSound
         {
-            get => _WED1;
-            set => _WED1 = value;
+            get => _ExteriorSound;
+            set => _ExteriorSound = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ISoundReferenceGetter? IAcousticSpaceGetter.WED1 => this.WED1;
+        ISoundReferenceGetter? IAcousticSpaceGetter.ExteriorSound => this.ExteriorSound;
         #endregion
         #region AmbientSet
         private readonly IFormLinkNullable<IAmbienceSetGetter> _AmbientSet = new FormLinkNullable<IAmbienceSetGetter>();
@@ -128,15 +121,15 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IAmbienceSetGetter> IAcousticSpaceGetter.AmbientSet => this.AmbientSet;
         #endregion
-        #region Music
-        private readonly IFormLinkNullable<IMusicTypeGetter> _Music = new FormLinkNullable<IMusicTypeGetter>();
-        public IFormLinkNullable<IMusicTypeGetter> Music
+        #region MusicType
+        private readonly IFormLinkNullable<IMusicTypeGetter> _MusicType = new FormLinkNullable<IMusicTypeGetter>();
+        public IFormLinkNullable<IMusicTypeGetter> MusicType
         {
-            get => _Music;
-            set => _Music.SetTo(value);
+            get => _MusicType;
+            set => _MusicType.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IMusicTypeGetter> IAcousticSpaceGetter.Music => this.Music;
+        IFormLinkNullableGetter<IMusicTypeGetter> IAcousticSpaceGetter.MusicType => this.MusicType;
         #endregion
         #region EnvironmentType
         private readonly IFormLinkNullable<IReverbParametersGetter> _EnvironmentType = new FormLinkNullable<IReverbParametersGetter>();
@@ -148,45 +141,29 @@ namespace Mutagen.Bethesda.Starfield
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullableGetter<IReverbParametersGetter> IAcousticSpaceGetter.EnvironmentType => this.EnvironmentType;
         #endregion
-        #region AEAR
-        public Single? AEAR { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IAcousticSpaceGetter.AEAR => this.AEAR;
+        #region ExteriorWeatherAttenuation
+        public Single ExteriorWeatherAttenuation { get; set; } = default(Single);
         #endregion
-        #region FLTV
-        public Single? FLTV { get; set; }
+        #region InteriorExteriorRatio
+        public Single? InteriorExteriorRatio { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IAcousticSpaceGetter.FLTV => this.FLTV;
+        Single? IAcousticSpaceGetter.InteriorExteriorRatio => this.InteriorExteriorRatio;
         #endregion
         #region IsInterior
         public Boolean IsInterior { get; set; } = default(Boolean);
         #endregion
-        #region BOLV
-        public Boolean? BOLV { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Boolean? IAcousticSpaceGetter.BOLV => this.BOLV;
+        #region AllowExterior
+        public Boolean AllowExterior { get; set; } = default(Boolean);
         #endregion
-        #region DEVT
+        #region SoundDetectionLevel
+        public SoundLevel? SoundDetectionLevel { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _DEVT;
-        public MemorySlice<Byte>? DEVT
-        {
-            get => this._DEVT;
-            set => this._DEVT = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IAcousticSpaceGetter.DEVT => this.DEVT;
+        SoundLevel? IAcousticSpaceGetter.SoundDetectionLevel => this.SoundDetectionLevel;
         #endregion
-        #region ASDF
+        #region DisableFlags
+        public SoundLevel? DisableFlags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _ASDF;
-        public MemorySlice<Byte>? ASDF
-        {
-            get => this._ASDF;
-            set => this._ASDF = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IAcousticSpaceGetter.ASDF => this.ASDF;
+        SoundLevel? IAcousticSpaceGetter.DisableFlags => this.DisableFlags;
         #endregion
 
         #region To String
@@ -214,20 +191,19 @@ namespace Mutagen.Bethesda.Starfield
             : base(initialValue)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
-                this.ODTY = initialValue;
-                this.ODRT = initialValue;
-                this.ASLS = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
-                this.WED0 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
-                this.WED1 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.DirtinessScale = initialValue;
+                this.LoopingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.InteriorSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.ExteriorSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.AmbientSet = initialValue;
-                this.Music = initialValue;
+                this.MusicType = initialValue;
                 this.EnvironmentType = initialValue;
-                this.AEAR = initialValue;
-                this.FLTV = initialValue;
+                this.ExteriorWeatherAttenuation = initialValue;
+                this.InteriorExteriorRatio = initialValue;
                 this.IsInterior = initialValue;
-                this.BOLV = initialValue;
-                this.DEVT = initialValue;
-                this.ASDF = initialValue;
+                this.AllowExterior = initialValue;
+                this.SoundDetectionLevel = initialValue;
+                this.DisableFlags = initialValue;
             }
 
             public Mask(
@@ -239,20 +215,19 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Version2,
                 TItem StarfieldMajorRecordFlags,
                 TItem ObjectBounds,
-                TItem ODTY,
-                TItem ODRT,
-                TItem ASLS,
-                TItem WED0,
-                TItem WED1,
+                TItem DirtinessScale,
+                TItem LoopingSound,
+                TItem InteriorSound,
+                TItem ExteriorSound,
                 TItem AmbientSet,
-                TItem Music,
+                TItem MusicType,
                 TItem EnvironmentType,
-                TItem AEAR,
-                TItem FLTV,
+                TItem ExteriorWeatherAttenuation,
+                TItem InteriorExteriorRatio,
                 TItem IsInterior,
-                TItem BOLV,
-                TItem DEVT,
-                TItem ASDF)
+                TItem AllowExterior,
+                TItem SoundDetectionLevel,
+                TItem DisableFlags)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -263,20 +238,19 @@ namespace Mutagen.Bethesda.Starfield
                 StarfieldMajorRecordFlags: StarfieldMajorRecordFlags)
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
-                this.ODTY = ODTY;
-                this.ODRT = ODRT;
-                this.ASLS = new MaskItem<TItem, SoundReference.Mask<TItem>?>(ASLS, new SoundReference.Mask<TItem>(ASLS));
-                this.WED0 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(WED0, new SoundReference.Mask<TItem>(WED0));
-                this.WED1 = new MaskItem<TItem, SoundReference.Mask<TItem>?>(WED1, new SoundReference.Mask<TItem>(WED1));
+                this.DirtinessScale = DirtinessScale;
+                this.LoopingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(LoopingSound, new SoundReference.Mask<TItem>(LoopingSound));
+                this.InteriorSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(InteriorSound, new SoundReference.Mask<TItem>(InteriorSound));
+                this.ExteriorSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(ExteriorSound, new SoundReference.Mask<TItem>(ExteriorSound));
                 this.AmbientSet = AmbientSet;
-                this.Music = Music;
+                this.MusicType = MusicType;
                 this.EnvironmentType = EnvironmentType;
-                this.AEAR = AEAR;
-                this.FLTV = FLTV;
+                this.ExteriorWeatherAttenuation = ExteriorWeatherAttenuation;
+                this.InteriorExteriorRatio = InteriorExteriorRatio;
                 this.IsInterior = IsInterior;
-                this.BOLV = BOLV;
-                this.DEVT = DEVT;
-                this.ASDF = ASDF;
+                this.AllowExterior = AllowExterior;
+                this.SoundDetectionLevel = SoundDetectionLevel;
+                this.DisableFlags = DisableFlags;
             }
 
             #pragma warning disable CS8618
@@ -289,20 +263,19 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
-            public TItem ODTY;
-            public TItem ODRT;
-            public MaskItem<TItem, SoundReference.Mask<TItem>?>? ASLS { get; set; }
-            public MaskItem<TItem, SoundReference.Mask<TItem>?>? WED0 { get; set; }
-            public MaskItem<TItem, SoundReference.Mask<TItem>?>? WED1 { get; set; }
+            public TItem DirtinessScale;
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? LoopingSound { get; set; }
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? InteriorSound { get; set; }
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? ExteriorSound { get; set; }
             public TItem AmbientSet;
-            public TItem Music;
+            public TItem MusicType;
             public TItem EnvironmentType;
-            public TItem AEAR;
-            public TItem FLTV;
+            public TItem ExteriorWeatherAttenuation;
+            public TItem InteriorExteriorRatio;
             public TItem IsInterior;
-            public TItem BOLV;
-            public TItem DEVT;
-            public TItem ASDF;
+            public TItem AllowExterior;
+            public TItem SoundDetectionLevel;
+            public TItem DisableFlags;
             #endregion
 
             #region Equals
@@ -317,40 +290,38 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
-                if (!object.Equals(this.ODTY, rhs.ODTY)) return false;
-                if (!object.Equals(this.ODRT, rhs.ODRT)) return false;
-                if (!object.Equals(this.ASLS, rhs.ASLS)) return false;
-                if (!object.Equals(this.WED0, rhs.WED0)) return false;
-                if (!object.Equals(this.WED1, rhs.WED1)) return false;
+                if (!object.Equals(this.DirtinessScale, rhs.DirtinessScale)) return false;
+                if (!object.Equals(this.LoopingSound, rhs.LoopingSound)) return false;
+                if (!object.Equals(this.InteriorSound, rhs.InteriorSound)) return false;
+                if (!object.Equals(this.ExteriorSound, rhs.ExteriorSound)) return false;
                 if (!object.Equals(this.AmbientSet, rhs.AmbientSet)) return false;
-                if (!object.Equals(this.Music, rhs.Music)) return false;
+                if (!object.Equals(this.MusicType, rhs.MusicType)) return false;
                 if (!object.Equals(this.EnvironmentType, rhs.EnvironmentType)) return false;
-                if (!object.Equals(this.AEAR, rhs.AEAR)) return false;
-                if (!object.Equals(this.FLTV, rhs.FLTV)) return false;
+                if (!object.Equals(this.ExteriorWeatherAttenuation, rhs.ExteriorWeatherAttenuation)) return false;
+                if (!object.Equals(this.InteriorExteriorRatio, rhs.InteriorExteriorRatio)) return false;
                 if (!object.Equals(this.IsInterior, rhs.IsInterior)) return false;
-                if (!object.Equals(this.BOLV, rhs.BOLV)) return false;
-                if (!object.Equals(this.DEVT, rhs.DEVT)) return false;
-                if (!object.Equals(this.ASDF, rhs.ASDF)) return false;
+                if (!object.Equals(this.AllowExterior, rhs.AllowExterior)) return false;
+                if (!object.Equals(this.SoundDetectionLevel, rhs.SoundDetectionLevel)) return false;
+                if (!object.Equals(this.DisableFlags, rhs.DisableFlags)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.ObjectBounds);
-                hash.Add(this.ODTY);
-                hash.Add(this.ODRT);
-                hash.Add(this.ASLS);
-                hash.Add(this.WED0);
-                hash.Add(this.WED1);
+                hash.Add(this.DirtinessScale);
+                hash.Add(this.LoopingSound);
+                hash.Add(this.InteriorSound);
+                hash.Add(this.ExteriorSound);
                 hash.Add(this.AmbientSet);
-                hash.Add(this.Music);
+                hash.Add(this.MusicType);
                 hash.Add(this.EnvironmentType);
-                hash.Add(this.AEAR);
-                hash.Add(this.FLTV);
+                hash.Add(this.ExteriorWeatherAttenuation);
+                hash.Add(this.InteriorExteriorRatio);
                 hash.Add(this.IsInterior);
-                hash.Add(this.BOLV);
-                hash.Add(this.DEVT);
-                hash.Add(this.ASDF);
+                hash.Add(this.AllowExterior);
+                hash.Add(this.SoundDetectionLevel);
+                hash.Add(this.DisableFlags);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -366,32 +337,31 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.ObjectBounds.Overall)) return false;
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
-                if (!eval(this.ODTY)) return false;
-                if (!eval(this.ODRT)) return false;
-                if (ASLS != null)
+                if (!eval(this.DirtinessScale)) return false;
+                if (LoopingSound != null)
                 {
-                    if (!eval(this.ASLS.Overall)) return false;
-                    if (this.ASLS.Specific != null && !this.ASLS.Specific.All(eval)) return false;
+                    if (!eval(this.LoopingSound.Overall)) return false;
+                    if (this.LoopingSound.Specific != null && !this.LoopingSound.Specific.All(eval)) return false;
                 }
-                if (WED0 != null)
+                if (InteriorSound != null)
                 {
-                    if (!eval(this.WED0.Overall)) return false;
-                    if (this.WED0.Specific != null && !this.WED0.Specific.All(eval)) return false;
+                    if (!eval(this.InteriorSound.Overall)) return false;
+                    if (this.InteriorSound.Specific != null && !this.InteriorSound.Specific.All(eval)) return false;
                 }
-                if (WED1 != null)
+                if (ExteriorSound != null)
                 {
-                    if (!eval(this.WED1.Overall)) return false;
-                    if (this.WED1.Specific != null && !this.WED1.Specific.All(eval)) return false;
+                    if (!eval(this.ExteriorSound.Overall)) return false;
+                    if (this.ExteriorSound.Specific != null && !this.ExteriorSound.Specific.All(eval)) return false;
                 }
                 if (!eval(this.AmbientSet)) return false;
-                if (!eval(this.Music)) return false;
+                if (!eval(this.MusicType)) return false;
                 if (!eval(this.EnvironmentType)) return false;
-                if (!eval(this.AEAR)) return false;
-                if (!eval(this.FLTV)) return false;
+                if (!eval(this.ExteriorWeatherAttenuation)) return false;
+                if (!eval(this.InteriorExteriorRatio)) return false;
                 if (!eval(this.IsInterior)) return false;
-                if (!eval(this.BOLV)) return false;
-                if (!eval(this.DEVT)) return false;
-                if (!eval(this.ASDF)) return false;
+                if (!eval(this.AllowExterior)) return false;
+                if (!eval(this.SoundDetectionLevel)) return false;
+                if (!eval(this.DisableFlags)) return false;
                 return true;
             }
             #endregion
@@ -405,32 +375,31 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.ObjectBounds.Overall)) return true;
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
-                if (eval(this.ODTY)) return true;
-                if (eval(this.ODRT)) return true;
-                if (ASLS != null)
+                if (eval(this.DirtinessScale)) return true;
+                if (LoopingSound != null)
                 {
-                    if (eval(this.ASLS.Overall)) return true;
-                    if (this.ASLS.Specific != null && this.ASLS.Specific.Any(eval)) return true;
+                    if (eval(this.LoopingSound.Overall)) return true;
+                    if (this.LoopingSound.Specific != null && this.LoopingSound.Specific.Any(eval)) return true;
                 }
-                if (WED0 != null)
+                if (InteriorSound != null)
                 {
-                    if (eval(this.WED0.Overall)) return true;
-                    if (this.WED0.Specific != null && this.WED0.Specific.Any(eval)) return true;
+                    if (eval(this.InteriorSound.Overall)) return true;
+                    if (this.InteriorSound.Specific != null && this.InteriorSound.Specific.Any(eval)) return true;
                 }
-                if (WED1 != null)
+                if (ExteriorSound != null)
                 {
-                    if (eval(this.WED1.Overall)) return true;
-                    if (this.WED1.Specific != null && this.WED1.Specific.Any(eval)) return true;
+                    if (eval(this.ExteriorSound.Overall)) return true;
+                    if (this.ExteriorSound.Specific != null && this.ExteriorSound.Specific.Any(eval)) return true;
                 }
                 if (eval(this.AmbientSet)) return true;
-                if (eval(this.Music)) return true;
+                if (eval(this.MusicType)) return true;
                 if (eval(this.EnvironmentType)) return true;
-                if (eval(this.AEAR)) return true;
-                if (eval(this.FLTV)) return true;
+                if (eval(this.ExteriorWeatherAttenuation)) return true;
+                if (eval(this.InteriorExteriorRatio)) return true;
                 if (eval(this.IsInterior)) return true;
-                if (eval(this.BOLV)) return true;
-                if (eval(this.DEVT)) return true;
-                if (eval(this.ASDF)) return true;
+                if (eval(this.AllowExterior)) return true;
+                if (eval(this.SoundDetectionLevel)) return true;
+                if (eval(this.DisableFlags)) return true;
                 return false;
             }
             #endregion
@@ -447,20 +416,19 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.Translate_InternalFill(obj, eval);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
-                obj.ODTY = eval(this.ODTY);
-                obj.ODRT = eval(this.ODRT);
-                obj.ASLS = this.ASLS == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.ASLS.Overall), this.ASLS.Specific?.Translate(eval));
-                obj.WED0 = this.WED0 == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.WED0.Overall), this.WED0.Specific?.Translate(eval));
-                obj.WED1 = this.WED1 == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.WED1.Overall), this.WED1.Specific?.Translate(eval));
+                obj.DirtinessScale = eval(this.DirtinessScale);
+                obj.LoopingSound = this.LoopingSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.LoopingSound.Overall), this.LoopingSound.Specific?.Translate(eval));
+                obj.InteriorSound = this.InteriorSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.InteriorSound.Overall), this.InteriorSound.Specific?.Translate(eval));
+                obj.ExteriorSound = this.ExteriorSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.ExteriorSound.Overall), this.ExteriorSound.Specific?.Translate(eval));
                 obj.AmbientSet = eval(this.AmbientSet);
-                obj.Music = eval(this.Music);
+                obj.MusicType = eval(this.MusicType);
                 obj.EnvironmentType = eval(this.EnvironmentType);
-                obj.AEAR = eval(this.AEAR);
-                obj.FLTV = eval(this.FLTV);
+                obj.ExteriorWeatherAttenuation = eval(this.ExteriorWeatherAttenuation);
+                obj.InteriorExteriorRatio = eval(this.InteriorExteriorRatio);
                 obj.IsInterior = eval(this.IsInterior);
-                obj.BOLV = eval(this.BOLV);
-                obj.DEVT = eval(this.DEVT);
-                obj.ASDF = eval(this.ASDF);
+                obj.AllowExterior = eval(this.AllowExterior);
+                obj.SoundDetectionLevel = eval(this.SoundDetectionLevel);
+                obj.DisableFlags = eval(this.DisableFlags);
             }
             #endregion
 
@@ -483,61 +451,57 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         ObjectBounds?.Print(sb);
                     }
-                    if (printMask?.ODTY ?? true)
+                    if (printMask?.DirtinessScale ?? true)
                     {
-                        sb.AppendItem(ODTY, "ODTY");
+                        sb.AppendItem(DirtinessScale, "DirtinessScale");
                     }
-                    if (printMask?.ODRT ?? true)
+                    if (printMask?.LoopingSound?.Overall ?? true)
                     {
-                        sb.AppendItem(ODRT, "ODRT");
+                        LoopingSound?.Print(sb);
                     }
-                    if (printMask?.ASLS?.Overall ?? true)
+                    if (printMask?.InteriorSound?.Overall ?? true)
                     {
-                        ASLS?.Print(sb);
+                        InteriorSound?.Print(sb);
                     }
-                    if (printMask?.WED0?.Overall ?? true)
+                    if (printMask?.ExteriorSound?.Overall ?? true)
                     {
-                        WED0?.Print(sb);
-                    }
-                    if (printMask?.WED1?.Overall ?? true)
-                    {
-                        WED1?.Print(sb);
+                        ExteriorSound?.Print(sb);
                     }
                     if (printMask?.AmbientSet ?? true)
                     {
                         sb.AppendItem(AmbientSet, "AmbientSet");
                     }
-                    if (printMask?.Music ?? true)
+                    if (printMask?.MusicType ?? true)
                     {
-                        sb.AppendItem(Music, "Music");
+                        sb.AppendItem(MusicType, "MusicType");
                     }
                     if (printMask?.EnvironmentType ?? true)
                     {
                         sb.AppendItem(EnvironmentType, "EnvironmentType");
                     }
-                    if (printMask?.AEAR ?? true)
+                    if (printMask?.ExteriorWeatherAttenuation ?? true)
                     {
-                        sb.AppendItem(AEAR, "AEAR");
+                        sb.AppendItem(ExteriorWeatherAttenuation, "ExteriorWeatherAttenuation");
                     }
-                    if (printMask?.FLTV ?? true)
+                    if (printMask?.InteriorExteriorRatio ?? true)
                     {
-                        sb.AppendItem(FLTV, "FLTV");
+                        sb.AppendItem(InteriorExteriorRatio, "InteriorExteriorRatio");
                     }
                     if (printMask?.IsInterior ?? true)
                     {
                         sb.AppendItem(IsInterior, "IsInterior");
                     }
-                    if (printMask?.BOLV ?? true)
+                    if (printMask?.AllowExterior ?? true)
                     {
-                        sb.AppendItem(BOLV, "BOLV");
+                        sb.AppendItem(AllowExterior, "AllowExterior");
                     }
-                    if (printMask?.DEVT ?? true)
+                    if (printMask?.SoundDetectionLevel ?? true)
                     {
-                        sb.AppendItem(DEVT, "DEVT");
+                        sb.AppendItem(SoundDetectionLevel, "SoundDetectionLevel");
                     }
-                    if (printMask?.ASDF ?? true)
+                    if (printMask?.DisableFlags ?? true)
                     {
-                        sb.AppendItem(ASDF, "ASDF");
+                        sb.AppendItem(DisableFlags, "DisableFlags");
                     }
                 }
             }
@@ -551,20 +515,19 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
-            public Exception? ODTY;
-            public Exception? ODRT;
-            public MaskItem<Exception?, SoundReference.ErrorMask?>? ASLS;
-            public MaskItem<Exception?, SoundReference.ErrorMask?>? WED0;
-            public MaskItem<Exception?, SoundReference.ErrorMask?>? WED1;
+            public Exception? DirtinessScale;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? LoopingSound;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? InteriorSound;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? ExteriorSound;
             public Exception? AmbientSet;
-            public Exception? Music;
+            public Exception? MusicType;
             public Exception? EnvironmentType;
-            public Exception? AEAR;
-            public Exception? FLTV;
+            public Exception? ExteriorWeatherAttenuation;
+            public Exception? InteriorExteriorRatio;
             public Exception? IsInterior;
-            public Exception? BOLV;
-            public Exception? DEVT;
-            public Exception? ASDF;
+            public Exception? AllowExterior;
+            public Exception? SoundDetectionLevel;
+            public Exception? DisableFlags;
             #endregion
 
             #region IErrorMask
@@ -575,34 +538,32 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case AcousticSpace_FieldIndex.ObjectBounds:
                         return ObjectBounds;
-                    case AcousticSpace_FieldIndex.ODTY:
-                        return ODTY;
-                    case AcousticSpace_FieldIndex.ODRT:
-                        return ODRT;
-                    case AcousticSpace_FieldIndex.ASLS:
-                        return ASLS;
-                    case AcousticSpace_FieldIndex.WED0:
-                        return WED0;
-                    case AcousticSpace_FieldIndex.WED1:
-                        return WED1;
+                    case AcousticSpace_FieldIndex.DirtinessScale:
+                        return DirtinessScale;
+                    case AcousticSpace_FieldIndex.LoopingSound:
+                        return LoopingSound;
+                    case AcousticSpace_FieldIndex.InteriorSound:
+                        return InteriorSound;
+                    case AcousticSpace_FieldIndex.ExteriorSound:
+                        return ExteriorSound;
                     case AcousticSpace_FieldIndex.AmbientSet:
                         return AmbientSet;
-                    case AcousticSpace_FieldIndex.Music:
-                        return Music;
+                    case AcousticSpace_FieldIndex.MusicType:
+                        return MusicType;
                     case AcousticSpace_FieldIndex.EnvironmentType:
                         return EnvironmentType;
-                    case AcousticSpace_FieldIndex.AEAR:
-                        return AEAR;
-                    case AcousticSpace_FieldIndex.FLTV:
-                        return FLTV;
+                    case AcousticSpace_FieldIndex.ExteriorWeatherAttenuation:
+                        return ExteriorWeatherAttenuation;
+                    case AcousticSpace_FieldIndex.InteriorExteriorRatio:
+                        return InteriorExteriorRatio;
                     case AcousticSpace_FieldIndex.IsInterior:
                         return IsInterior;
-                    case AcousticSpace_FieldIndex.BOLV:
-                        return BOLV;
-                    case AcousticSpace_FieldIndex.DEVT:
-                        return DEVT;
-                    case AcousticSpace_FieldIndex.ASDF:
-                        return ASDF;
+                    case AcousticSpace_FieldIndex.AllowExterior:
+                        return AllowExterior;
+                    case AcousticSpace_FieldIndex.SoundDetectionLevel:
+                        return SoundDetectionLevel;
+                    case AcousticSpace_FieldIndex.DisableFlags:
+                        return DisableFlags;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -616,47 +577,44 @@ namespace Mutagen.Bethesda.Starfield
                     case AcousticSpace_FieldIndex.ObjectBounds:
                         this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
                         break;
-                    case AcousticSpace_FieldIndex.ODTY:
-                        this.ODTY = ex;
+                    case AcousticSpace_FieldIndex.DirtinessScale:
+                        this.DirtinessScale = ex;
                         break;
-                    case AcousticSpace_FieldIndex.ODRT:
-                        this.ODRT = ex;
+                    case AcousticSpace_FieldIndex.LoopingSound:
+                        this.LoopingSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
                         break;
-                    case AcousticSpace_FieldIndex.ASLS:
-                        this.ASLS = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                    case AcousticSpace_FieldIndex.InteriorSound:
+                        this.InteriorSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
                         break;
-                    case AcousticSpace_FieldIndex.WED0:
-                        this.WED0 = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
-                        break;
-                    case AcousticSpace_FieldIndex.WED1:
-                        this.WED1 = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                    case AcousticSpace_FieldIndex.ExteriorSound:
+                        this.ExteriorSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
                         break;
                     case AcousticSpace_FieldIndex.AmbientSet:
                         this.AmbientSet = ex;
                         break;
-                    case AcousticSpace_FieldIndex.Music:
-                        this.Music = ex;
+                    case AcousticSpace_FieldIndex.MusicType:
+                        this.MusicType = ex;
                         break;
                     case AcousticSpace_FieldIndex.EnvironmentType:
                         this.EnvironmentType = ex;
                         break;
-                    case AcousticSpace_FieldIndex.AEAR:
-                        this.AEAR = ex;
+                    case AcousticSpace_FieldIndex.ExteriorWeatherAttenuation:
+                        this.ExteriorWeatherAttenuation = ex;
                         break;
-                    case AcousticSpace_FieldIndex.FLTV:
-                        this.FLTV = ex;
+                    case AcousticSpace_FieldIndex.InteriorExteriorRatio:
+                        this.InteriorExteriorRatio = ex;
                         break;
                     case AcousticSpace_FieldIndex.IsInterior:
                         this.IsInterior = ex;
                         break;
-                    case AcousticSpace_FieldIndex.BOLV:
-                        this.BOLV = ex;
+                    case AcousticSpace_FieldIndex.AllowExterior:
+                        this.AllowExterior = ex;
                         break;
-                    case AcousticSpace_FieldIndex.DEVT:
-                        this.DEVT = ex;
+                    case AcousticSpace_FieldIndex.SoundDetectionLevel:
+                        this.SoundDetectionLevel = ex;
                         break;
-                    case AcousticSpace_FieldIndex.ASDF:
-                        this.ASDF = ex;
+                    case AcousticSpace_FieldIndex.DisableFlags:
+                        this.DisableFlags = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -672,47 +630,44 @@ namespace Mutagen.Bethesda.Starfield
                     case AcousticSpace_FieldIndex.ObjectBounds:
                         this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
                         break;
-                    case AcousticSpace_FieldIndex.ODTY:
-                        this.ODTY = (Exception?)obj;
+                    case AcousticSpace_FieldIndex.DirtinessScale:
+                        this.DirtinessScale = (Exception?)obj;
                         break;
-                    case AcousticSpace_FieldIndex.ODRT:
-                        this.ODRT = (Exception?)obj;
+                    case AcousticSpace_FieldIndex.LoopingSound:
+                        this.LoopingSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
                         break;
-                    case AcousticSpace_FieldIndex.ASLS:
-                        this.ASLS = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                    case AcousticSpace_FieldIndex.InteriorSound:
+                        this.InteriorSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
                         break;
-                    case AcousticSpace_FieldIndex.WED0:
-                        this.WED0 = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
-                        break;
-                    case AcousticSpace_FieldIndex.WED1:
-                        this.WED1 = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                    case AcousticSpace_FieldIndex.ExteriorSound:
+                        this.ExteriorSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
                         break;
                     case AcousticSpace_FieldIndex.AmbientSet:
                         this.AmbientSet = (Exception?)obj;
                         break;
-                    case AcousticSpace_FieldIndex.Music:
-                        this.Music = (Exception?)obj;
+                    case AcousticSpace_FieldIndex.MusicType:
+                        this.MusicType = (Exception?)obj;
                         break;
                     case AcousticSpace_FieldIndex.EnvironmentType:
                         this.EnvironmentType = (Exception?)obj;
                         break;
-                    case AcousticSpace_FieldIndex.AEAR:
-                        this.AEAR = (Exception?)obj;
+                    case AcousticSpace_FieldIndex.ExteriorWeatherAttenuation:
+                        this.ExteriorWeatherAttenuation = (Exception?)obj;
                         break;
-                    case AcousticSpace_FieldIndex.FLTV:
-                        this.FLTV = (Exception?)obj;
+                    case AcousticSpace_FieldIndex.InteriorExteriorRatio:
+                        this.InteriorExteriorRatio = (Exception?)obj;
                         break;
                     case AcousticSpace_FieldIndex.IsInterior:
                         this.IsInterior = (Exception?)obj;
                         break;
-                    case AcousticSpace_FieldIndex.BOLV:
-                        this.BOLV = (Exception?)obj;
+                    case AcousticSpace_FieldIndex.AllowExterior:
+                        this.AllowExterior = (Exception?)obj;
                         break;
-                    case AcousticSpace_FieldIndex.DEVT:
-                        this.DEVT = (Exception?)obj;
+                    case AcousticSpace_FieldIndex.SoundDetectionLevel:
+                        this.SoundDetectionLevel = (Exception?)obj;
                         break;
-                    case AcousticSpace_FieldIndex.ASDF:
-                        this.ASDF = (Exception?)obj;
+                    case AcousticSpace_FieldIndex.DisableFlags:
+                        this.DisableFlags = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -724,20 +679,19 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (ObjectBounds != null) return true;
-                if (ODTY != null) return true;
-                if (ODRT != null) return true;
-                if (ASLS != null) return true;
-                if (WED0 != null) return true;
-                if (WED1 != null) return true;
+                if (DirtinessScale != null) return true;
+                if (LoopingSound != null) return true;
+                if (InteriorSound != null) return true;
+                if (ExteriorSound != null) return true;
                 if (AmbientSet != null) return true;
-                if (Music != null) return true;
+                if (MusicType != null) return true;
                 if (EnvironmentType != null) return true;
-                if (AEAR != null) return true;
-                if (FLTV != null) return true;
+                if (ExteriorWeatherAttenuation != null) return true;
+                if (InteriorExteriorRatio != null) return true;
                 if (IsInterior != null) return true;
-                if (BOLV != null) return true;
-                if (DEVT != null) return true;
-                if (ASDF != null) return true;
+                if (AllowExterior != null) return true;
+                if (SoundDetectionLevel != null) return true;
+                if (DisableFlags != null) return true;
                 return false;
             }
             #endregion
@@ -766,40 +720,37 @@ namespace Mutagen.Bethesda.Starfield
                 base.PrintFillInternal(sb);
                 ObjectBounds?.Print(sb);
                 {
-                    sb.AppendItem(ODTY, "ODTY");
+                    sb.AppendItem(DirtinessScale, "DirtinessScale");
                 }
-                {
-                    sb.AppendItem(ODRT, "ODRT");
-                }
-                ASLS?.Print(sb);
-                WED0?.Print(sb);
-                WED1?.Print(sb);
+                LoopingSound?.Print(sb);
+                InteriorSound?.Print(sb);
+                ExteriorSound?.Print(sb);
                 {
                     sb.AppendItem(AmbientSet, "AmbientSet");
                 }
                 {
-                    sb.AppendItem(Music, "Music");
+                    sb.AppendItem(MusicType, "MusicType");
                 }
                 {
                     sb.AppendItem(EnvironmentType, "EnvironmentType");
                 }
                 {
-                    sb.AppendItem(AEAR, "AEAR");
+                    sb.AppendItem(ExteriorWeatherAttenuation, "ExteriorWeatherAttenuation");
                 }
                 {
-                    sb.AppendItem(FLTV, "FLTV");
+                    sb.AppendItem(InteriorExteriorRatio, "InteriorExteriorRatio");
                 }
                 {
                     sb.AppendItem(IsInterior, "IsInterior");
                 }
                 {
-                    sb.AppendItem(BOLV, "BOLV");
+                    sb.AppendItem(AllowExterior, "AllowExterior");
                 }
                 {
-                    sb.AppendItem(DEVT, "DEVT");
+                    sb.AppendItem(SoundDetectionLevel, "SoundDetectionLevel");
                 }
                 {
-                    sb.AppendItem(ASDF, "ASDF");
+                    sb.AppendItem(DisableFlags, "DisableFlags");
                 }
             }
             #endregion
@@ -810,20 +761,19 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
-                ret.ODTY = this.ODTY.Combine(rhs.ODTY);
-                ret.ODRT = this.ODRT.Combine(rhs.ODRT);
-                ret.ASLS = this.ASLS.Combine(rhs.ASLS, (l, r) => l.Combine(r));
-                ret.WED0 = this.WED0.Combine(rhs.WED0, (l, r) => l.Combine(r));
-                ret.WED1 = this.WED1.Combine(rhs.WED1, (l, r) => l.Combine(r));
+                ret.DirtinessScale = this.DirtinessScale.Combine(rhs.DirtinessScale);
+                ret.LoopingSound = this.LoopingSound.Combine(rhs.LoopingSound, (l, r) => l.Combine(r));
+                ret.InteriorSound = this.InteriorSound.Combine(rhs.InteriorSound, (l, r) => l.Combine(r));
+                ret.ExteriorSound = this.ExteriorSound.Combine(rhs.ExteriorSound, (l, r) => l.Combine(r));
                 ret.AmbientSet = this.AmbientSet.Combine(rhs.AmbientSet);
-                ret.Music = this.Music.Combine(rhs.Music);
+                ret.MusicType = this.MusicType.Combine(rhs.MusicType);
                 ret.EnvironmentType = this.EnvironmentType.Combine(rhs.EnvironmentType);
-                ret.AEAR = this.AEAR.Combine(rhs.AEAR);
-                ret.FLTV = this.FLTV.Combine(rhs.FLTV);
+                ret.ExteriorWeatherAttenuation = this.ExteriorWeatherAttenuation.Combine(rhs.ExteriorWeatherAttenuation);
+                ret.InteriorExteriorRatio = this.InteriorExteriorRatio.Combine(rhs.InteriorExteriorRatio);
                 ret.IsInterior = this.IsInterior.Combine(rhs.IsInterior);
-                ret.BOLV = this.BOLV.Combine(rhs.BOLV);
-                ret.DEVT = this.DEVT.Combine(rhs.DEVT);
-                ret.ASDF = this.ASDF.Combine(rhs.ASDF);
+                ret.AllowExterior = this.AllowExterior.Combine(rhs.AllowExterior);
+                ret.SoundDetectionLevel = this.SoundDetectionLevel.Combine(rhs.SoundDetectionLevel);
+                ret.DisableFlags = this.DisableFlags.Combine(rhs.DisableFlags);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -847,20 +797,19 @@ namespace Mutagen.Bethesda.Starfield
         {
             #region Members
             public ObjectBounds.TranslationMask? ObjectBounds;
-            public bool ODTY;
-            public bool ODRT;
-            public SoundReference.TranslationMask? ASLS;
-            public SoundReference.TranslationMask? WED0;
-            public SoundReference.TranslationMask? WED1;
+            public bool DirtinessScale;
+            public SoundReference.TranslationMask? LoopingSound;
+            public SoundReference.TranslationMask? InteriorSound;
+            public SoundReference.TranslationMask? ExteriorSound;
             public bool AmbientSet;
-            public bool Music;
+            public bool MusicType;
             public bool EnvironmentType;
-            public bool AEAR;
-            public bool FLTV;
+            public bool ExteriorWeatherAttenuation;
+            public bool InteriorExteriorRatio;
             public bool IsInterior;
-            public bool BOLV;
-            public bool DEVT;
-            public bool ASDF;
+            public bool AllowExterior;
+            public bool SoundDetectionLevel;
+            public bool DisableFlags;
             #endregion
 
             #region Ctors
@@ -869,17 +818,16 @@ namespace Mutagen.Bethesda.Starfield
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.ODTY = defaultOn;
-                this.ODRT = defaultOn;
+                this.DirtinessScale = defaultOn;
                 this.AmbientSet = defaultOn;
-                this.Music = defaultOn;
+                this.MusicType = defaultOn;
                 this.EnvironmentType = defaultOn;
-                this.AEAR = defaultOn;
-                this.FLTV = defaultOn;
+                this.ExteriorWeatherAttenuation = defaultOn;
+                this.InteriorExteriorRatio = defaultOn;
                 this.IsInterior = defaultOn;
-                this.BOLV = defaultOn;
-                this.DEVT = defaultOn;
-                this.ASDF = defaultOn;
+                this.AllowExterior = defaultOn;
+                this.SoundDetectionLevel = defaultOn;
+                this.DisableFlags = defaultOn;
             }
 
             #endregion
@@ -888,20 +836,19 @@ namespace Mutagen.Bethesda.Starfield
             {
                 base.GetCrystal(ret);
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
-                ret.Add((ODTY, null));
-                ret.Add((ODRT, null));
-                ret.Add((ASLS != null ? ASLS.OnOverall : DefaultOn, ASLS?.GetCrystal()));
-                ret.Add((WED0 != null ? WED0.OnOverall : DefaultOn, WED0?.GetCrystal()));
-                ret.Add((WED1 != null ? WED1.OnOverall : DefaultOn, WED1?.GetCrystal()));
+                ret.Add((DirtinessScale, null));
+                ret.Add((LoopingSound != null ? LoopingSound.OnOverall : DefaultOn, LoopingSound?.GetCrystal()));
+                ret.Add((InteriorSound != null ? InteriorSound.OnOverall : DefaultOn, InteriorSound?.GetCrystal()));
+                ret.Add((ExteriorSound != null ? ExteriorSound.OnOverall : DefaultOn, ExteriorSound?.GetCrystal()));
                 ret.Add((AmbientSet, null));
-                ret.Add((Music, null));
+                ret.Add((MusicType, null));
                 ret.Add((EnvironmentType, null));
-                ret.Add((AEAR, null));
-                ret.Add((FLTV, null));
+                ret.Add((ExteriorWeatherAttenuation, null));
+                ret.Add((InteriorExteriorRatio, null));
                 ret.Add((IsInterior, null));
-                ret.Add((BOLV, null));
-                ret.Add((DEVT, null));
-                ret.Add((ASDF, null));
+                ret.Add((AllowExterior, null));
+                ret.Add((SoundDetectionLevel, null));
+                ret.Add((DisableFlags, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1055,20 +1002,19 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: IObjectBounded
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
-        new Single? ODTY { get; set; }
-        new Single? ODRT { get; set; }
-        new SoundReference? ASLS { get; set; }
-        new SoundReference? WED0 { get; set; }
-        new SoundReference? WED1 { get; set; }
+        new Percent DirtinessScale { get; set; }
+        new SoundReference? LoopingSound { get; set; }
+        new SoundReference? InteriorSound { get; set; }
+        new SoundReference? ExteriorSound { get; set; }
         new IFormLinkNullable<IAmbienceSetGetter> AmbientSet { get; set; }
-        new IFormLinkNullable<IMusicTypeGetter> Music { get; set; }
+        new IFormLinkNullable<IMusicTypeGetter> MusicType { get; set; }
         new IFormLinkNullable<IReverbParametersGetter> EnvironmentType { get; set; }
-        new Single? AEAR { get; set; }
-        new Single? FLTV { get; set; }
+        new Single ExteriorWeatherAttenuation { get; set; }
+        new Single? InteriorExteriorRatio { get; set; }
         new Boolean IsInterior { get; set; }
-        new Boolean? BOLV { get; set; }
-        new MemorySlice<Byte>? DEVT { get; set; }
-        new MemorySlice<Byte>? ASDF { get; set; }
+        new Boolean AllowExterior { get; set; }
+        new SoundLevel? SoundDetectionLevel { get; set; }
+        new SoundLevel? DisableFlags { get; set; }
     }
 
     public partial interface IAcousticSpaceInternal :
@@ -1095,20 +1041,19 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
-        Single? ODTY { get; }
-        Single? ODRT { get; }
-        ISoundReferenceGetter? ASLS { get; }
-        ISoundReferenceGetter? WED0 { get; }
-        ISoundReferenceGetter? WED1 { get; }
+        Percent DirtinessScale { get; }
+        ISoundReferenceGetter? LoopingSound { get; }
+        ISoundReferenceGetter? InteriorSound { get; }
+        ISoundReferenceGetter? ExteriorSound { get; }
         IFormLinkNullableGetter<IAmbienceSetGetter> AmbientSet { get; }
-        IFormLinkNullableGetter<IMusicTypeGetter> Music { get; }
+        IFormLinkNullableGetter<IMusicTypeGetter> MusicType { get; }
         IFormLinkNullableGetter<IReverbParametersGetter> EnvironmentType { get; }
-        Single? AEAR { get; }
-        Single? FLTV { get; }
+        Single ExteriorWeatherAttenuation { get; }
+        Single? InteriorExteriorRatio { get; }
         Boolean IsInterior { get; }
-        Boolean? BOLV { get; }
-        ReadOnlyMemorySlice<Byte>? DEVT { get; }
-        ReadOnlyMemorySlice<Byte>? ASDF { get; }
+        Boolean AllowExterior { get; }
+        SoundLevel? SoundDetectionLevel { get; }
+        SoundLevel? DisableFlags { get; }
 
     }
 
@@ -1286,20 +1231,19 @@ namespace Mutagen.Bethesda.Starfield
         Version2 = 5,
         StarfieldMajorRecordFlags = 6,
         ObjectBounds = 7,
-        ODTY = 8,
-        ODRT = 9,
-        ASLS = 10,
-        WED0 = 11,
-        WED1 = 12,
-        AmbientSet = 13,
-        Music = 14,
-        EnvironmentType = 15,
-        AEAR = 16,
-        FLTV = 17,
-        IsInterior = 18,
-        BOLV = 19,
-        DEVT = 20,
-        ASDF = 21,
+        DirtinessScale = 8,
+        LoopingSound = 9,
+        InteriorSound = 10,
+        ExteriorSound = 11,
+        AmbientSet = 12,
+        MusicType = 13,
+        EnvironmentType = 14,
+        ExteriorWeatherAttenuation = 15,
+        InteriorExteriorRatio = 16,
+        IsInterior = 17,
+        AllowExterior = 18,
+        SoundDetectionLevel = 19,
+        DisableFlags = 20,
     }
     #endregion
 
@@ -1310,9 +1254,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 15;
+        public const ushort AdditionalFieldCount = 14;
 
-        public const ushort FieldCount = 22;
+        public const ushort FieldCount = 21;
 
         public static readonly Type MaskType = typeof(AcousticSpace.Mask<>);
 
@@ -1347,7 +1291,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.ASPC,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
-                RecordTypes.ODRT,
                 RecordTypes.ASLS,
                 RecordTypes.WED0,
                 RecordTypes.WED1,
@@ -1405,20 +1348,19 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.ObjectBounds.Clear();
-            item.ODTY = default;
-            item.ODRT = default;
-            item.ASLS = null;
-            item.WED0 = null;
-            item.WED1 = null;
+            item.DirtinessScale = default(Percent);
+            item.LoopingSound = null;
+            item.InteriorSound = null;
+            item.ExteriorSound = null;
             item.AmbientSet.Clear();
-            item.Music.Clear();
+            item.MusicType.Clear();
             item.EnvironmentType.Clear();
-            item.AEAR = default;
-            item.FLTV = default;
+            item.ExteriorWeatherAttenuation = default(Single);
+            item.InteriorExteriorRatio = default;
             item.IsInterior = default(Boolean);
-            item.BOLV = default;
-            item.DEVT = default;
-            item.ASDF = default;
+            item.AllowExterior = default(Boolean);
+            item.SoundDetectionLevel = default;
+            item.DisableFlags = default;
             base.Clear(item);
         }
         
@@ -1436,11 +1378,11 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(IAcousticSpace obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.ASLS?.RemapLinks(mapping);
-            obj.WED0?.RemapLinks(mapping);
-            obj.WED1?.RemapLinks(mapping);
+            obj.LoopingSound?.RemapLinks(mapping);
+            obj.InteriorSound?.RemapLinks(mapping);
+            obj.ExteriorSound?.RemapLinks(mapping);
             obj.AmbientSet.Relink(mapping);
-            obj.Music.Relink(mapping);
+            obj.MusicType.Relink(mapping);
             obj.EnvironmentType.Relink(mapping);
         }
         
@@ -1510,32 +1452,31 @@ namespace Mutagen.Bethesda.Starfield
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
-            ret.ODTY = item.ODTY.EqualsWithin(rhs.ODTY);
-            ret.ODRT = item.ODRT.EqualsWithin(rhs.ODRT);
-            ret.ASLS = EqualsMaskHelper.EqualsHelper(
-                item.ASLS,
-                rhs.ASLS,
+            ret.DirtinessScale = item.DirtinessScale.Equals(rhs.DirtinessScale);
+            ret.LoopingSound = EqualsMaskHelper.EqualsHelper(
+                item.LoopingSound,
+                rhs.LoopingSound,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.WED0 = EqualsMaskHelper.EqualsHelper(
-                item.WED0,
-                rhs.WED0,
+            ret.InteriorSound = EqualsMaskHelper.EqualsHelper(
+                item.InteriorSound,
+                rhs.InteriorSound,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.WED1 = EqualsMaskHelper.EqualsHelper(
-                item.WED1,
-                rhs.WED1,
+            ret.ExteriorSound = EqualsMaskHelper.EqualsHelper(
+                item.ExteriorSound,
+                rhs.ExteriorSound,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.AmbientSet = item.AmbientSet.Equals(rhs.AmbientSet);
-            ret.Music = item.Music.Equals(rhs.Music);
+            ret.MusicType = item.MusicType.Equals(rhs.MusicType);
             ret.EnvironmentType = item.EnvironmentType.Equals(rhs.EnvironmentType);
-            ret.AEAR = item.AEAR.EqualsWithin(rhs.AEAR);
-            ret.FLTV = item.FLTV.EqualsWithin(rhs.FLTV);
+            ret.ExteriorWeatherAttenuation = item.ExteriorWeatherAttenuation.EqualsWithin(rhs.ExteriorWeatherAttenuation);
+            ret.InteriorExteriorRatio = item.InteriorExteriorRatio.EqualsWithin(rhs.InteriorExteriorRatio);
             ret.IsInterior = item.IsInterior == rhs.IsInterior;
-            ret.BOLV = item.BOLV == rhs.BOLV;
-            ret.DEVT = MemorySliceExt.SequenceEqual(item.DEVT, rhs.DEVT);
-            ret.ASDF = MemorySliceExt.SequenceEqual(item.ASDF, rhs.ASDF);
+            ret.AllowExterior = item.AllowExterior == rhs.AllowExterior;
+            ret.SoundDetectionLevel = item.SoundDetectionLevel == rhs.SoundDetectionLevel;
+            ret.DisableFlags = item.DisableFlags == rhs.DisableFlags;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1589,71 +1530,63 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.ObjectBounds?.Print(sb, "ObjectBounds");
             }
-            if ((printMask?.ODTY ?? true)
-                && item.ODTY is {} ODTYItem)
+            if (printMask?.DirtinessScale ?? true)
             {
-                sb.AppendItem(ODTYItem, "ODTY");
+                sb.AppendItem(item.DirtinessScale, "DirtinessScale");
             }
-            if ((printMask?.ODRT ?? true)
-                && item.ODRT is {} ODRTItem)
+            if ((printMask?.LoopingSound?.Overall ?? true)
+                && item.LoopingSound is {} LoopingSoundItem)
             {
-                sb.AppendItem(ODRTItem, "ODRT");
+                LoopingSoundItem?.Print(sb, "LoopingSound");
             }
-            if ((printMask?.ASLS?.Overall ?? true)
-                && item.ASLS is {} ASLSItem)
+            if ((printMask?.InteriorSound?.Overall ?? true)
+                && item.InteriorSound is {} InteriorSoundItem)
             {
-                ASLSItem?.Print(sb, "ASLS");
+                InteriorSoundItem?.Print(sb, "InteriorSound");
             }
-            if ((printMask?.WED0?.Overall ?? true)
-                && item.WED0 is {} WED0Item)
+            if ((printMask?.ExteriorSound?.Overall ?? true)
+                && item.ExteriorSound is {} ExteriorSoundItem)
             {
-                WED0Item?.Print(sb, "WED0");
-            }
-            if ((printMask?.WED1?.Overall ?? true)
-                && item.WED1 is {} WED1Item)
-            {
-                WED1Item?.Print(sb, "WED1");
+                ExteriorSoundItem?.Print(sb, "ExteriorSound");
             }
             if (printMask?.AmbientSet ?? true)
             {
                 sb.AppendItem(item.AmbientSet.FormKeyNullable, "AmbientSet");
             }
-            if (printMask?.Music ?? true)
+            if (printMask?.MusicType ?? true)
             {
-                sb.AppendItem(item.Music.FormKeyNullable, "Music");
+                sb.AppendItem(item.MusicType.FormKeyNullable, "MusicType");
             }
             if (printMask?.EnvironmentType ?? true)
             {
                 sb.AppendItem(item.EnvironmentType.FormKeyNullable, "EnvironmentType");
             }
-            if ((printMask?.AEAR ?? true)
-                && item.AEAR is {} AEARItem)
+            if (printMask?.ExteriorWeatherAttenuation ?? true)
             {
-                sb.AppendItem(AEARItem, "AEAR");
+                sb.AppendItem(item.ExteriorWeatherAttenuation, "ExteriorWeatherAttenuation");
             }
-            if ((printMask?.FLTV ?? true)
-                && item.FLTV is {} FLTVItem)
+            if ((printMask?.InteriorExteriorRatio ?? true)
+                && item.InteriorExteriorRatio is {} InteriorExteriorRatioItem)
             {
-                sb.AppendItem(FLTVItem, "FLTV");
+                sb.AppendItem(InteriorExteriorRatioItem, "InteriorExteriorRatio");
             }
             if (printMask?.IsInterior ?? true)
             {
                 sb.AppendItem(item.IsInterior, "IsInterior");
             }
-            if ((printMask?.BOLV ?? true)
-                && item.BOLV is {} BOLVItem)
+            if (printMask?.AllowExterior ?? true)
             {
-                sb.AppendItem(BOLVItem, "BOLV");
+                sb.AppendItem(item.AllowExterior, "AllowExterior");
             }
-            if ((printMask?.DEVT ?? true)
-                && item.DEVT is {} DEVTItem)
+            if ((printMask?.SoundDetectionLevel ?? true)
+                && item.SoundDetectionLevel is {} SoundDetectionLevelItem)
             {
-                sb.AppendLine($"DEVT => {SpanExt.ToHexString(DEVTItem)}");
+                sb.AppendItem(SoundDetectionLevelItem, "SoundDetectionLevel");
             }
-            if ((printMask?.ASDF ?? true)
-                && item.ASDF is {} ASDFItem)
+            if ((printMask?.DisableFlags ?? true)
+                && item.DisableFlags is {} DisableFlagsItem)
             {
-                sb.AppendLine($"ASDF => {SpanExt.ToHexString(ASDFItem)}");
+                sb.AppendItem(DisableFlagsItem, "DisableFlags");
             }
         }
         
@@ -1713,73 +1646,69 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isObjectBoundsEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.ODTY) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.DirtinessScale) ?? true))
             {
-                if (!lhs.ODTY.EqualsWithin(rhs.ODTY)) return false;
+                if (!lhs.DirtinessScale.Equals(rhs.DirtinessScale)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.ODRT) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.LoopingSound) ?? true))
             {
-                if (!lhs.ODRT.EqualsWithin(rhs.ODRT)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.ASLS) ?? true))
-            {
-                if (EqualsMaskHelper.RefEquality(lhs.ASLS, rhs.ASLS, out var lhsASLS, out var rhsASLS, out var isASLSEqual))
+                if (EqualsMaskHelper.RefEquality(lhs.LoopingSound, rhs.LoopingSound, out var lhsLoopingSound, out var rhsLoopingSound, out var isLoopingSoundEqual))
                 {
-                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsASLS).CommonInstance()!).Equals(lhsASLS, rhsASLS, equalsMask?.GetSubCrystal((int)AcousticSpace_FieldIndex.ASLS))) return false;
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsLoopingSound).CommonInstance()!).Equals(lhsLoopingSound, rhsLoopingSound, equalsMask?.GetSubCrystal((int)AcousticSpace_FieldIndex.LoopingSound))) return false;
                 }
-                else if (!isASLSEqual) return false;
+                else if (!isLoopingSoundEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.WED0) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.InteriorSound) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.WED0, rhs.WED0, out var lhsWED0, out var rhsWED0, out var isWED0Equal))
+                if (EqualsMaskHelper.RefEquality(lhs.InteriorSound, rhs.InteriorSound, out var lhsInteriorSound, out var rhsInteriorSound, out var isInteriorSoundEqual))
                 {
-                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsWED0).CommonInstance()!).Equals(lhsWED0, rhsWED0, equalsMask?.GetSubCrystal((int)AcousticSpace_FieldIndex.WED0))) return false;
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsInteriorSound).CommonInstance()!).Equals(lhsInteriorSound, rhsInteriorSound, equalsMask?.GetSubCrystal((int)AcousticSpace_FieldIndex.InteriorSound))) return false;
                 }
-                else if (!isWED0Equal) return false;
+                else if (!isInteriorSoundEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.WED1) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.ExteriorSound) ?? true))
             {
-                if (EqualsMaskHelper.RefEquality(lhs.WED1, rhs.WED1, out var lhsWED1, out var rhsWED1, out var isWED1Equal))
+                if (EqualsMaskHelper.RefEquality(lhs.ExteriorSound, rhs.ExteriorSound, out var lhsExteriorSound, out var rhsExteriorSound, out var isExteriorSoundEqual))
                 {
-                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsWED1).CommonInstance()!).Equals(lhsWED1, rhsWED1, equalsMask?.GetSubCrystal((int)AcousticSpace_FieldIndex.WED1))) return false;
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsExteriorSound).CommonInstance()!).Equals(lhsExteriorSound, rhsExteriorSound, equalsMask?.GetSubCrystal((int)AcousticSpace_FieldIndex.ExteriorSound))) return false;
                 }
-                else if (!isWED1Equal) return false;
+                else if (!isExteriorSoundEqual) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.AmbientSet) ?? true))
             {
                 if (!lhs.AmbientSet.Equals(rhs.AmbientSet)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.Music) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.MusicType) ?? true))
             {
-                if (!lhs.Music.Equals(rhs.Music)) return false;
+                if (!lhs.MusicType.Equals(rhs.MusicType)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.EnvironmentType) ?? true))
             {
                 if (!lhs.EnvironmentType.Equals(rhs.EnvironmentType)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.AEAR) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.ExteriorWeatherAttenuation) ?? true))
             {
-                if (!lhs.AEAR.EqualsWithin(rhs.AEAR)) return false;
+                if (!lhs.ExteriorWeatherAttenuation.EqualsWithin(rhs.ExteriorWeatherAttenuation)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.FLTV) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.InteriorExteriorRatio) ?? true))
             {
-                if (!lhs.FLTV.EqualsWithin(rhs.FLTV)) return false;
+                if (!lhs.InteriorExteriorRatio.EqualsWithin(rhs.InteriorExteriorRatio)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.IsInterior) ?? true))
             {
                 if (lhs.IsInterior != rhs.IsInterior) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.BOLV) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.AllowExterior) ?? true))
             {
-                if (lhs.BOLV != rhs.BOLV) return false;
+                if (lhs.AllowExterior != rhs.AllowExterior) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.DEVT) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.SoundDetectionLevel) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.DEVT, rhs.DEVT)) return false;
+                if (lhs.SoundDetectionLevel != rhs.SoundDetectionLevel) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.ASDF) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.DisableFlags) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.ASDF, rhs.ASDF)) return false;
+                if (lhs.DisableFlags != rhs.DisableFlags) return false;
             }
             return true;
         }
@@ -1810,49 +1739,36 @@ namespace Mutagen.Bethesda.Starfield
         {
             var hash = new HashCode();
             hash.Add(item.ObjectBounds);
-            if (item.ODTY is {} ODTYitem)
+            hash.Add(item.DirtinessScale);
+            if (item.LoopingSound is {} LoopingSounditem)
             {
-                hash.Add(ODTYitem);
+                hash.Add(LoopingSounditem);
             }
-            if (item.ODRT is {} ODRTitem)
+            if (item.InteriorSound is {} InteriorSounditem)
             {
-                hash.Add(ODRTitem);
+                hash.Add(InteriorSounditem);
             }
-            if (item.ASLS is {} ASLSitem)
+            if (item.ExteriorSound is {} ExteriorSounditem)
             {
-                hash.Add(ASLSitem);
-            }
-            if (item.WED0 is {} WED0item)
-            {
-                hash.Add(WED0item);
-            }
-            if (item.WED1 is {} WED1item)
-            {
-                hash.Add(WED1item);
+                hash.Add(ExteriorSounditem);
             }
             hash.Add(item.AmbientSet);
-            hash.Add(item.Music);
+            hash.Add(item.MusicType);
             hash.Add(item.EnvironmentType);
-            if (item.AEAR is {} AEARitem)
+            hash.Add(item.ExteriorWeatherAttenuation);
+            if (item.InteriorExteriorRatio is {} InteriorExteriorRatioitem)
             {
-                hash.Add(AEARitem);
-            }
-            if (item.FLTV is {} FLTVitem)
-            {
-                hash.Add(FLTVitem);
+                hash.Add(InteriorExteriorRatioitem);
             }
             hash.Add(item.IsInterior);
-            if (item.BOLV is {} BOLVitem)
+            hash.Add(item.AllowExterior);
+            if (item.SoundDetectionLevel is {} SoundDetectionLevelitem)
             {
-                hash.Add(BOLVitem);
+                hash.Add(SoundDetectionLevelitem);
             }
-            if (item.DEVT is {} DEVTItem)
+            if (item.DisableFlags is {} DisableFlagsitem)
             {
-                hash.Add(DEVTItem);
-            }
-            if (item.ASDF is {} ASDFItem)
-            {
-                hash.Add(ASDFItem);
+                hash.Add(DisableFlagsitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1883,23 +1799,23 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
-            if (obj.ASLS is {} ASLSItems)
+            if (obj.LoopingSound is {} LoopingSoundItems)
             {
-                foreach (var item in ASLSItems.EnumerateFormLinks())
+                foreach (var item in LoopingSoundItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            if (obj.WED0 is {} WED0Items)
+            if (obj.InteriorSound is {} InteriorSoundItems)
             {
-                foreach (var item in WED0Items.EnumerateFormLinks())
+                foreach (var item in InteriorSoundItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
             }
-            if (obj.WED1 is {} WED1Items)
+            if (obj.ExteriorSound is {} ExteriorSoundItems)
             {
-                foreach (var item in WED1Items.EnumerateFormLinks())
+                foreach (var item in ExteriorSoundItems.EnumerateFormLinks())
                 {
                     yield return item;
                 }
@@ -1908,9 +1824,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return AmbientSetInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.Music, out var MusicInfo))
+            if (FormLinkInformation.TryFactory(obj.MusicType, out var MusicTypeInfo))
             {
-                yield return MusicInfo;
+                yield return MusicTypeInfo;
             }
             if (FormLinkInformation.TryFactory(obj.EnvironmentType, out var EnvironmentTypeInfo))
             {
@@ -2012,28 +1928,24 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.ODTY) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.DirtinessScale) ?? true))
             {
-                item.ODTY = rhs.ODTY;
+                item.DirtinessScale = rhs.DirtinessScale;
             }
-            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.ODRT) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.LoopingSound) ?? true))
             {
-                item.ODRT = rhs.ODRT;
-            }
-            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.ASLS) ?? true))
-            {
-                errorMask?.PushIndex((int)AcousticSpace_FieldIndex.ASLS);
+                errorMask?.PushIndex((int)AcousticSpace_FieldIndex.LoopingSound);
                 try
                 {
-                    if(rhs.ASLS is {} rhsASLS)
+                    if(rhs.LoopingSound is {} rhsLoopingSound)
                     {
-                        item.ASLS = rhsASLS.DeepCopy(
+                        item.LoopingSound = rhsLoopingSound.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)AcousticSpace_FieldIndex.ASLS));
+                            copyMask?.GetSubCrystal((int)AcousticSpace_FieldIndex.LoopingSound));
                     }
                     else
                     {
-                        item.ASLS = default;
+                        item.LoopingSound = default;
                     }
                 }
                 catch (Exception ex)
@@ -2046,20 +1958,20 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.WED0) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.InteriorSound) ?? true))
             {
-                errorMask?.PushIndex((int)AcousticSpace_FieldIndex.WED0);
+                errorMask?.PushIndex((int)AcousticSpace_FieldIndex.InteriorSound);
                 try
                 {
-                    if(rhs.WED0 is {} rhsWED0)
+                    if(rhs.InteriorSound is {} rhsInteriorSound)
                     {
-                        item.WED0 = rhsWED0.DeepCopy(
+                        item.InteriorSound = rhsInteriorSound.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)AcousticSpace_FieldIndex.WED0));
+                            copyMask?.GetSubCrystal((int)AcousticSpace_FieldIndex.InteriorSound));
                     }
                     else
                     {
-                        item.WED0 = default;
+                        item.InteriorSound = default;
                     }
                 }
                 catch (Exception ex)
@@ -2072,20 +1984,20 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.WED1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.ExteriorSound) ?? true))
             {
-                errorMask?.PushIndex((int)AcousticSpace_FieldIndex.WED1);
+                errorMask?.PushIndex((int)AcousticSpace_FieldIndex.ExteriorSound);
                 try
                 {
-                    if(rhs.WED1 is {} rhsWED1)
+                    if(rhs.ExteriorSound is {} rhsExteriorSound)
                     {
-                        item.WED1 = rhsWED1.DeepCopy(
+                        item.ExteriorSound = rhsExteriorSound.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)AcousticSpace_FieldIndex.WED1));
+                            copyMask?.GetSubCrystal((int)AcousticSpace_FieldIndex.ExteriorSound));
                     }
                     else
                     {
-                        item.WED1 = default;
+                        item.ExteriorSound = default;
                     }
                 }
                 catch (Exception ex)
@@ -2102,51 +2014,37 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.AmbientSet.SetTo(rhs.AmbientSet.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.Music) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.MusicType) ?? true))
             {
-                item.Music.SetTo(rhs.Music.FormKeyNullable);
+                item.MusicType.SetTo(rhs.MusicType.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.EnvironmentType) ?? true))
             {
                 item.EnvironmentType.SetTo(rhs.EnvironmentType.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.AEAR) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.ExteriorWeatherAttenuation) ?? true))
             {
-                item.AEAR = rhs.AEAR;
+                item.ExteriorWeatherAttenuation = rhs.ExteriorWeatherAttenuation;
             }
-            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.FLTV) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.InteriorExteriorRatio) ?? true))
             {
-                item.FLTV = rhs.FLTV;
+                item.InteriorExteriorRatio = rhs.InteriorExteriorRatio;
             }
             if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.IsInterior) ?? true))
             {
                 item.IsInterior = rhs.IsInterior;
             }
-            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.BOLV) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.AllowExterior) ?? true))
             {
-                item.BOLV = rhs.BOLV;
+                item.AllowExterior = rhs.AllowExterior;
             }
-            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.DEVT) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.SoundDetectionLevel) ?? true))
             {
-                if(rhs.DEVT is {} DEVTrhs)
-                {
-                    item.DEVT = DEVTrhs.ToArray();
-                }
-                else
-                {
-                    item.DEVT = default;
-                }
+                item.SoundDetectionLevel = rhs.SoundDetectionLevel;
             }
-            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.ASDF) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AcousticSpace_FieldIndex.DisableFlags) ?? true))
             {
-                if(rhs.ASDF is {} ASDFrhs)
-                {
-                    item.ASDF = ASDFrhs.ToArray();
-                }
-                else
-                {
-                    item.ASDF = default;
-                }
+                item.DisableFlags = rhs.DisableFlags;
             }
             DeepCopyInCustom(
                 item: item,
@@ -2322,40 +2220,37 @@ namespace Mutagen.Bethesda.Starfield
                 item: ObjectBoundsItem,
                 writer: writer,
                 translationParams: translationParams);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            PercentBinaryTranslation.Write(
                 writer: writer,
-                item: item.ODTY,
+                item: item.DirtinessScale,
+                integerType: FloatIntegerType.UInt,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.ODRT,
-                header: translationParams.ConvertToCustom(RecordTypes.ODRT));
-            if (item.ASLS is {} ASLSItem)
+            if (item.LoopingSound is {} LoopingSoundItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.ASLS))
                 {
-                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)ASLSItem).BinaryWriteTranslator).Write(
-                        item: ASLSItem,
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)LoopingSoundItem).BinaryWriteTranslator).Write(
+                        item: LoopingSoundItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
             }
-            if (item.WED0 is {} WED0Item)
+            if (item.InteriorSound is {} InteriorSoundItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.WED0))
                 {
-                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)WED0Item).BinaryWriteTranslator).Write(
-                        item: WED0Item,
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)InteriorSoundItem).BinaryWriteTranslator).Write(
+                        item: InteriorSoundItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
             }
-            if (item.WED1 is {} WED1Item)
+            if (item.ExteriorSound is {} ExteriorSoundItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.WED1))
                 {
-                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)WED1Item).BinaryWriteTranslator).Write(
-                        item: WED1Item,
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)ExteriorSoundItem).BinaryWriteTranslator).Write(
+                        item: ExteriorSoundItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -2366,35 +2261,37 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.AAMB));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Music,
+                item: item.MusicType,
                 header: translationParams.ConvertToCustom(RecordTypes.AMUS));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EnvironmentType,
                 header: translationParams.ConvertToCustom(RecordTypes.BNAM));
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
-                item: item.AEAR,
+                item: item.ExteriorWeatherAttenuation,
                 header: translationParams.ConvertToCustom(RecordTypes.AEAR));
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.FLTV,
+                item: item.InteriorExteriorRatio,
                 header: translationParams.ConvertToCustom(RecordTypes.FLTV));
             BooleanBinaryTranslation<MutagenFrame>.Instance.Write(
                 writer: writer,
                 item: item.IsInterior,
                 header: translationParams.ConvertToCustom(RecordTypes.XTRI));
-            BooleanBinaryTranslation<MutagenFrame>.Instance.WriteNullable(
+            BooleanBinaryTranslation<MutagenFrame>.Instance.Write(
                 writer: writer,
-                item: item.BOLV,
+                item: item.AllowExterior,
                 header: translationParams.ConvertToCustom(RecordTypes.BOLV));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.DEVT,
+            EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.SoundDetectionLevel,
+                length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.DEVT));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.ASDF,
+            EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.DisableFlags,
+                length: 8,
                 header: translationParams.ConvertToCustom(RecordTypes.ASDF));
         }
 
@@ -2472,32 +2369,28 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.ODTY:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ODTY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)AcousticSpace_FieldIndex.ODTY;
-                }
-                case RecordTypeInts.ODRT:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ODRT = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)AcousticSpace_FieldIndex.ODRT;
+                    item.DirtinessScale = PercentBinaryTranslation.Parse(
+                        reader: frame,
+                        integerType: FloatIntegerType.UInt);
+                    return (int)AcousticSpace_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.ASLS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.ASLS = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
-                    return (int)AcousticSpace_FieldIndex.ASLS;
+                    item.LoopingSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)AcousticSpace_FieldIndex.LoopingSound;
                 }
                 case RecordTypeInts.WED0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.WED0 = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
-                    return (int)AcousticSpace_FieldIndex.WED0;
+                    item.InteriorSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)AcousticSpace_FieldIndex.InteriorSound;
                 }
                 case RecordTypeInts.WED1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.WED1 = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
-                    return (int)AcousticSpace_FieldIndex.WED1;
+                    item.ExteriorSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)AcousticSpace_FieldIndex.ExteriorSound;
                 }
                 case RecordTypeInts.AAMB:
                 {
@@ -2508,8 +2401,8 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.AMUS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Music.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)AcousticSpace_FieldIndex.Music;
+                    item.MusicType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)AcousticSpace_FieldIndex.MusicType;
                 }
                 case RecordTypeInts.BNAM:
                 {
@@ -2520,14 +2413,14 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.AEAR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AEAR = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)AcousticSpace_FieldIndex.AEAR;
+                    item.ExteriorWeatherAttenuation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)AcousticSpace_FieldIndex.ExteriorWeatherAttenuation;
                 }
                 case RecordTypeInts.FLTV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FLTV = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)AcousticSpace_FieldIndex.FLTV;
+                    item.InteriorExteriorRatio = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)AcousticSpace_FieldIndex.InteriorExteriorRatio;
                 }
                 case RecordTypeInts.XTRI:
                 {
@@ -2538,20 +2431,24 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.BOLV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BOLV = frame.ReadBoolean();
-                    return (int)AcousticSpace_FieldIndex.BOLV;
+                    item.AllowExterior = frame.ReadBoolean();
+                    return (int)AcousticSpace_FieldIndex.AllowExterior;
                 }
                 case RecordTypeInts.DEVT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DEVT = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)AcousticSpace_FieldIndex.DEVT;
+                    item.SoundDetectionLevel = EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)AcousticSpace_FieldIndex.SoundDetectionLevel;
                 }
                 case RecordTypeInts.ASDF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ASDF = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)AcousticSpace_FieldIndex.ASDF;
+                    item.DisableFlags = EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)AcousticSpace_FieldIndex.DisableFlags;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2617,52 +2514,48 @@ namespace Mutagen.Bethesda.Starfield
         private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(_recordData.Slice(_ObjectBoundsLocation!.Value.Min), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
-        #region ODTY
-        private int? _ODTYLocation;
-        public Single? ODTY => _ODTYLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODTYLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region DirtinessScale
+        private int? _DirtinessScaleLocation;
+        public Percent DirtinessScale => _DirtinessScaleLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DirtinessScaleLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt) : default(Percent);
         #endregion
-        #region ODRT
-        private int? _ODRTLocation;
-        public Single? ODRT => _ODRTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ODRTLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
-        #endregion
-        public ISoundReferenceGetter? ASLS { get; private set; }
-        public ISoundReferenceGetter? WED0 { get; private set; }
-        public ISoundReferenceGetter? WED1 { get; private set; }
+        public ISoundReferenceGetter? LoopingSound { get; private set; }
+        public ISoundReferenceGetter? InteriorSound { get; private set; }
+        public ISoundReferenceGetter? ExteriorSound { get; private set; }
         #region AmbientSet
         private int? _AmbientSetLocation;
         public IFormLinkNullableGetter<IAmbienceSetGetter> AmbientSet => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IAmbienceSetGetter>(_package, _recordData, _AmbientSetLocation);
         #endregion
-        #region Music
-        private int? _MusicLocation;
-        public IFormLinkNullableGetter<IMusicTypeGetter> Music => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMusicTypeGetter>(_package, _recordData, _MusicLocation);
+        #region MusicType
+        private int? _MusicTypeLocation;
+        public IFormLinkNullableGetter<IMusicTypeGetter> MusicType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMusicTypeGetter>(_package, _recordData, _MusicTypeLocation);
         #endregion
         #region EnvironmentType
         private int? _EnvironmentTypeLocation;
         public IFormLinkNullableGetter<IReverbParametersGetter> EnvironmentType => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IReverbParametersGetter>(_package, _recordData, _EnvironmentTypeLocation);
         #endregion
-        #region AEAR
-        private int? _AEARLocation;
-        public Single? AEAR => _AEARLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _AEARLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region ExteriorWeatherAttenuation
+        private int? _ExteriorWeatherAttenuationLocation;
+        public Single ExteriorWeatherAttenuation => _ExteriorWeatherAttenuationLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ExteriorWeatherAttenuationLocation.Value, _package.MetaData.Constants).Float() : default(Single);
         #endregion
-        #region FLTV
-        private int? _FLTVLocation;
-        public Single? FLTV => _FLTVLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _FLTVLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        #region InteriorExteriorRatio
+        private int? _InteriorExteriorRatioLocation;
+        public Single? InteriorExteriorRatio => _InteriorExteriorRatioLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _InteriorExteriorRatioLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region IsInterior
         private int? _IsInteriorLocation;
         public Boolean IsInterior => _IsInteriorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _IsInteriorLocation.Value, _package.MetaData.Constants)[0] >= 1 : default(Boolean);
         #endregion
-        #region BOLV
-        private int? _BOLVLocation;
-        public Boolean? BOLV => _BOLVLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _BOLVLocation.Value, _package.MetaData.Constants)[0] >= 1 : default(Boolean?);
+        #region AllowExterior
+        private int? _AllowExteriorLocation;
+        public Boolean AllowExterior => _AllowExteriorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _AllowExteriorLocation.Value, _package.MetaData.Constants)[0] >= 1 : default(Boolean);
         #endregion
-        #region DEVT
-        private int? _DEVTLocation;
-        public ReadOnlyMemorySlice<Byte>? DEVT => _DEVTLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DEVTLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region SoundDetectionLevel
+        private int? _SoundDetectionLevelLocation;
+        public SoundLevel? SoundDetectionLevel => _SoundDetectionLevelLocation.HasValue ? (SoundLevel)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _SoundDetectionLevelLocation!.Value, _package.MetaData.Constants)) : default(SoundLevel?);
         #endregion
-        #region ASDF
-        private int? _ASDFLocation;
-        public ReadOnlyMemorySlice<Byte>? ASDF => _ASDFLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ASDFLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region DisableFlags
+        private int? _DisableFlagsLocation;
+        public SoundLevel? DisableFlags => _DisableFlagsLocation.HasValue ? (SoundLevel)BinaryPrimitives.ReadInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DisableFlagsLocation!.Value, _package.MetaData.Constants)) : default(SoundLevel?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2740,40 +2633,35 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.ODTY:
                 {
-                    _ODTYLocation = (stream.Position - offset);
-                    return (int)AcousticSpace_FieldIndex.ODTY;
-                }
-                case RecordTypeInts.ODRT:
-                {
-                    _ODRTLocation = (stream.Position - offset);
-                    return (int)AcousticSpace_FieldIndex.ODRT;
+                    _DirtinessScaleLocation = (stream.Position - offset);
+                    return (int)AcousticSpace_FieldIndex.DirtinessScale;
                 }
                 case RecordTypeInts.ASLS:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
-                    this.ASLS = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                    this.LoopingSound = SoundReferenceBinaryOverlay.SoundReferenceFactory(
                         stream: stream,
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());
-                    return (int)AcousticSpace_FieldIndex.ASLS;
+                    return (int)AcousticSpace_FieldIndex.LoopingSound;
                 }
                 case RecordTypeInts.WED0:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
-                    this.WED0 = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                    this.InteriorSound = SoundReferenceBinaryOverlay.SoundReferenceFactory(
                         stream: stream,
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());
-                    return (int)AcousticSpace_FieldIndex.WED0;
+                    return (int)AcousticSpace_FieldIndex.InteriorSound;
                 }
                 case RecordTypeInts.WED1:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
-                    this.WED1 = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                    this.ExteriorSound = SoundReferenceBinaryOverlay.SoundReferenceFactory(
                         stream: stream,
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());
-                    return (int)AcousticSpace_FieldIndex.WED1;
+                    return (int)AcousticSpace_FieldIndex.ExteriorSound;
                 }
                 case RecordTypeInts.AAMB:
                 {
@@ -2782,8 +2670,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.AMUS:
                 {
-                    _MusicLocation = (stream.Position - offset);
-                    return (int)AcousticSpace_FieldIndex.Music;
+                    _MusicTypeLocation = (stream.Position - offset);
+                    return (int)AcousticSpace_FieldIndex.MusicType;
                 }
                 case RecordTypeInts.BNAM:
                 {
@@ -2792,13 +2680,13 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.AEAR:
                 {
-                    _AEARLocation = (stream.Position - offset);
-                    return (int)AcousticSpace_FieldIndex.AEAR;
+                    _ExteriorWeatherAttenuationLocation = (stream.Position - offset);
+                    return (int)AcousticSpace_FieldIndex.ExteriorWeatherAttenuation;
                 }
                 case RecordTypeInts.FLTV:
                 {
-                    _FLTVLocation = (stream.Position - offset);
-                    return (int)AcousticSpace_FieldIndex.FLTV;
+                    _InteriorExteriorRatioLocation = (stream.Position - offset);
+                    return (int)AcousticSpace_FieldIndex.InteriorExteriorRatio;
                 }
                 case RecordTypeInts.XTRI:
                 {
@@ -2807,18 +2695,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.BOLV:
                 {
-                    _BOLVLocation = (stream.Position - offset);
-                    return (int)AcousticSpace_FieldIndex.BOLV;
+                    _AllowExteriorLocation = (stream.Position - offset);
+                    return (int)AcousticSpace_FieldIndex.AllowExterior;
                 }
                 case RecordTypeInts.DEVT:
                 {
-                    _DEVTLocation = (stream.Position - offset);
-                    return (int)AcousticSpace_FieldIndex.DEVT;
+                    _SoundDetectionLevelLocation = (stream.Position - offset);
+                    return (int)AcousticSpace_FieldIndex.SoundDetectionLevel;
                 }
                 case RecordTypeInts.ASDF:
                 {
-                    _ASDFLocation = (stream.Position - offset);
-                    return (int)AcousticSpace_FieldIndex.ASDF;
+                    _DisableFlagsLocation = (stream.Position - offset);
+                    return (int)AcousticSpace_FieldIndex.DisableFlags;
                 }
                 default:
                     return base.FillRecordType(

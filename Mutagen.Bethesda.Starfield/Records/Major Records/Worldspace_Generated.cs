@@ -305,31 +305,31 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
-        #region XCLWs
+        #region CellWaterHeightLocations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Single>? _XCLWs;
-        public ExtendedList<Single>? XCLWs
+        private ExtendedList<P2Int16>? _CellWaterHeightLocations;
+        public ExtendedList<P2Int16>? CellWaterHeightLocations
         {
-            get => this._XCLWs;
-            set => this._XCLWs = value;
+            get => this._CellWaterHeightLocations;
+            set => this._CellWaterHeightLocations = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<Single>? IWorldspaceGetter.XCLWs => _XCLWs;
+        IReadOnlyList<P2Int16>? IWorldspaceGetter.CellWaterHeightLocations => _CellWaterHeightLocations;
         #endregion
 
         #endregion
-        #region WHGTs
+        #region WaterHeights
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Single>? _WHGTs;
-        public ExtendedList<Single>? WHGTs
+        private ExtendedList<Single>? _WaterHeights;
+        public ExtendedList<Single>? WaterHeights
         {
-            get => this._WHGTs;
-            set => this._WHGTs = value;
+            get => this._WaterHeights;
+            set => this._WaterHeights = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<Single>? IWorldspaceGetter.WHGTs => _WHGTs;
+        IReadOnlyList<Single>? IWorldspaceGetter.WaterHeights => _WaterHeights;
         #endregion
 
         #endregion
@@ -449,8 +449,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.WaterEnvironmentMap = initialValue;
                 this.GNAM = initialValue;
                 this.LandscapeTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.XCLWs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.WHGTs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.CellWaterHeightLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.WaterHeights = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.HNAM = initialValue;
                 this.OffsetData = initialValue;
                 this.CellSizeData = initialValue;
@@ -495,8 +495,8 @@ namespace Mutagen.Bethesda.Starfield
                 TItem WaterEnvironmentMap,
                 TItem GNAM,
                 TItem LandscapeTextures,
-                TItem XCLWs,
-                TItem WHGTs,
+                TItem CellWaterHeightLocations,
+                TItem WaterHeights,
                 TItem HNAM,
                 TItem OffsetData,
                 TItem CellSizeData,
@@ -540,8 +540,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.WaterEnvironmentMap = WaterEnvironmentMap;
                 this.GNAM = GNAM;
                 this.LandscapeTextures = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LandscapeTextures, Enumerable.Empty<(int Index, TItem Value)>());
-                this.XCLWs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(XCLWs, Enumerable.Empty<(int Index, TItem Value)>());
-                this.WHGTs = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WHGTs, Enumerable.Empty<(int Index, TItem Value)>());
+                this.CellWaterHeightLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CellWaterHeightLocations, Enumerable.Empty<(int Index, TItem Value)>());
+                this.WaterHeights = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WaterHeights, Enumerable.Empty<(int Index, TItem Value)>());
                 this.HNAM = HNAM;
                 this.OffsetData = OffsetData;
                 this.CellSizeData = CellSizeData;
@@ -587,8 +587,8 @@ namespace Mutagen.Bethesda.Starfield
             public TItem WaterEnvironmentMap;
             public TItem GNAM;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? LandscapeTextures;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? XCLWs;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? WHGTs;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? CellWaterHeightLocations;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? WaterHeights;
             public TItem HNAM;
             public TItem OffsetData;
             public TItem CellSizeData;
@@ -636,8 +636,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.WaterEnvironmentMap, rhs.WaterEnvironmentMap)) return false;
                 if (!object.Equals(this.GNAM, rhs.GNAM)) return false;
                 if (!object.Equals(this.LandscapeTextures, rhs.LandscapeTextures)) return false;
-                if (!object.Equals(this.XCLWs, rhs.XCLWs)) return false;
-                if (!object.Equals(this.WHGTs, rhs.WHGTs)) return false;
+                if (!object.Equals(this.CellWaterHeightLocations, rhs.CellWaterHeightLocations)) return false;
+                if (!object.Equals(this.WaterHeights, rhs.WaterHeights)) return false;
                 if (!object.Equals(this.HNAM, rhs.HNAM)) return false;
                 if (!object.Equals(this.OffsetData, rhs.OffsetData)) return false;
                 if (!object.Equals(this.CellSizeData, rhs.CellSizeData)) return false;
@@ -677,8 +677,8 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.WaterEnvironmentMap);
                 hash.Add(this.GNAM);
                 hash.Add(this.LandscapeTextures);
-                hash.Add(this.XCLWs);
-                hash.Add(this.WHGTs);
+                hash.Add(this.CellWaterHeightLocations);
+                hash.Add(this.WaterHeights);
                 hash.Add(this.HNAM);
                 hash.Add(this.OffsetData);
                 hash.Add(this.CellSizeData);
@@ -767,23 +767,23 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (this.XCLWs != null)
+                if (this.CellWaterHeightLocations != null)
                 {
-                    if (!eval(this.XCLWs.Overall)) return false;
-                    if (this.XCLWs.Specific != null)
+                    if (!eval(this.CellWaterHeightLocations.Overall)) return false;
+                    if (this.CellWaterHeightLocations.Specific != null)
                     {
-                        foreach (var item in this.XCLWs.Specific)
+                        foreach (var item in this.CellWaterHeightLocations.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
-                if (this.WHGTs != null)
+                if (this.WaterHeights != null)
                 {
-                    if (!eval(this.WHGTs.Overall)) return false;
-                    if (this.WHGTs.Specific != null)
+                    if (!eval(this.WaterHeights.Overall)) return false;
+                    if (this.WaterHeights.Specific != null)
                     {
-                        foreach (var item in this.WHGTs.Specific)
+                        foreach (var item in this.WaterHeights.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
@@ -890,23 +890,23 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (this.XCLWs != null)
+                if (this.CellWaterHeightLocations != null)
                 {
-                    if (eval(this.XCLWs.Overall)) return true;
-                    if (this.XCLWs.Specific != null)
+                    if (eval(this.CellWaterHeightLocations.Overall)) return true;
+                    if (this.CellWaterHeightLocations.Specific != null)
                     {
-                        foreach (var item in this.XCLWs.Specific)
+                        foreach (var item in this.CellWaterHeightLocations.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
-                if (this.WHGTs != null)
+                if (this.WaterHeights != null)
                 {
-                    if (eval(this.WHGTs.Overall)) return true;
-                    if (this.WHGTs.Specific != null)
+                    if (eval(this.WaterHeights.Overall)) return true;
+                    if (this.WaterHeights.Specific != null)
                     {
-                        foreach (var item in this.WHGTs.Specific)
+                        foreach (var item in this.WaterHeights.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
@@ -1017,28 +1017,28 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (XCLWs != null)
+                if (CellWaterHeightLocations != null)
                 {
-                    obj.XCLWs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.XCLWs.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (XCLWs.Specific != null)
+                    obj.CellWaterHeightLocations = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.CellWaterHeightLocations.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (CellWaterHeightLocations.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
-                        obj.XCLWs.Specific = l;
-                        foreach (var item in XCLWs.Specific)
+                        obj.CellWaterHeightLocations.Specific = l;
+                        foreach (var item in CellWaterHeightLocations.Specific)
                         {
                             R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
                 }
-                if (WHGTs != null)
+                if (WaterHeights != null)
                 {
-                    obj.WHGTs = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.WHGTs.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (WHGTs.Specific != null)
+                    obj.WaterHeights = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.WaterHeights.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (WaterHeights.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
-                        obj.WHGTs.Specific = l;
-                        foreach (var item in WHGTs.Specific)
+                        obj.WaterHeights.Specific = l;
+                        foreach (var item in WaterHeights.Specific)
                         {
                             R mask = eval(item.Value);
                             l.Add((item.Index, mask));
@@ -1239,16 +1239,16 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if ((printMask?.XCLWs?.Overall ?? true)
-                        && XCLWs is {} XCLWsItem)
+                    if ((printMask?.CellWaterHeightLocations?.Overall ?? true)
+                        && CellWaterHeightLocations is {} CellWaterHeightLocationsItem)
                     {
-                        sb.AppendLine("XCLWs =>");
+                        sb.AppendLine("CellWaterHeightLocations =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(XCLWsItem.Overall);
-                            if (XCLWsItem.Specific != null)
+                            sb.AppendItem(CellWaterHeightLocationsItem.Overall);
+                            if (CellWaterHeightLocationsItem.Specific != null)
                             {
-                                foreach (var subItem in XCLWsItem.Specific)
+                                foreach (var subItem in CellWaterHeightLocationsItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1260,16 +1260,16 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if ((printMask?.WHGTs?.Overall ?? true)
-                        && WHGTs is {} WHGTsItem)
+                    if ((printMask?.WaterHeights?.Overall ?? true)
+                        && WaterHeights is {} WaterHeightsItem)
                     {
-                        sb.AppendLine("WHGTs =>");
+                        sb.AppendLine("WaterHeights =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(WHGTsItem.Overall);
-                            if (WHGTsItem.Specific != null)
+                            sb.AppendItem(WaterHeightsItem.Overall);
+                            if (WaterHeightsItem.Specific != null)
                             {
-                                foreach (var subItem in WHGTsItem.Specific)
+                                foreach (var subItem in WaterHeightsItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1362,8 +1362,8 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? WaterEnvironmentMap;
             public Exception? GNAM;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? LandscapeTextures;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? XCLWs;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? WHGTs;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? CellWaterHeightLocations;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? WaterHeights;
             public Exception? HNAM;
             public Exception? OffsetData;
             public Exception? CellSizeData;
@@ -1433,10 +1433,10 @@ namespace Mutagen.Bethesda.Starfield
                         return GNAM;
                     case Worldspace_FieldIndex.LandscapeTextures:
                         return LandscapeTextures;
-                    case Worldspace_FieldIndex.XCLWs:
-                        return XCLWs;
-                    case Worldspace_FieldIndex.WHGTs:
-                        return WHGTs;
+                    case Worldspace_FieldIndex.CellWaterHeightLocations:
+                        return CellWaterHeightLocations;
+                    case Worldspace_FieldIndex.WaterHeights:
+                        return WaterHeights;
                     case Worldspace_FieldIndex.HNAM:
                         return HNAM;
                     case Worldspace_FieldIndex.OffsetData:
@@ -1542,11 +1542,11 @@ namespace Mutagen.Bethesda.Starfield
                     case Worldspace_FieldIndex.LandscapeTextures:
                         this.LandscapeTextures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case Worldspace_FieldIndex.XCLWs:
-                        this.XCLWs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case Worldspace_FieldIndex.CellWaterHeightLocations:
+                        this.CellWaterHeightLocations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case Worldspace_FieldIndex.WHGTs:
-                        this.WHGTs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case Worldspace_FieldIndex.WaterHeights:
+                        this.WaterHeights = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case Worldspace_FieldIndex.HNAM:
                         this.HNAM = ex;
@@ -1661,11 +1661,11 @@ namespace Mutagen.Bethesda.Starfield
                     case Worldspace_FieldIndex.LandscapeTextures:
                         this.LandscapeTextures = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case Worldspace_FieldIndex.XCLWs:
-                        this.XCLWs = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case Worldspace_FieldIndex.CellWaterHeightLocations:
+                        this.CellWaterHeightLocations = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case Worldspace_FieldIndex.WHGTs:
-                        this.WHGTs = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case Worldspace_FieldIndex.WaterHeights:
+                        this.WaterHeights = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case Worldspace_FieldIndex.HNAM:
                         this.HNAM = (Exception?)obj;
@@ -1724,8 +1724,8 @@ namespace Mutagen.Bethesda.Starfield
                 if (WaterEnvironmentMap != null) return true;
                 if (GNAM != null) return true;
                 if (LandscapeTextures != null) return true;
-                if (XCLWs != null) return true;
-                if (WHGTs != null) return true;
+                if (CellWaterHeightLocations != null) return true;
+                if (WaterHeights != null) return true;
                 if (HNAM != null) return true;
                 if (OffsetData != null) return true;
                 if (CellSizeData != null) return true;
@@ -1881,15 +1881,15 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (XCLWs is {} XCLWsItem)
+                if (CellWaterHeightLocations is {} CellWaterHeightLocationsItem)
                 {
-                    sb.AppendLine("XCLWs =>");
+                    sb.AppendLine("CellWaterHeightLocations =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(XCLWsItem.Overall);
-                        if (XCLWsItem.Specific != null)
+                        sb.AppendItem(CellWaterHeightLocationsItem.Overall);
+                        if (CellWaterHeightLocationsItem.Specific != null)
                         {
-                            foreach (var subItem in XCLWsItem.Specific)
+                            foreach (var subItem in CellWaterHeightLocationsItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -1901,15 +1901,15 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (WHGTs is {} WHGTsItem)
+                if (WaterHeights is {} WaterHeightsItem)
                 {
-                    sb.AppendLine("WHGTs =>");
+                    sb.AppendLine("WaterHeights =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(WHGTsItem.Overall);
-                        if (WHGTsItem.Specific != null)
+                        sb.AppendItem(WaterHeightsItem.Overall);
+                        if (WaterHeightsItem.Specific != null)
                         {
-                            foreach (var subItem in WHGTsItem.Specific)
+                            foreach (var subItem in WaterHeightsItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -1990,8 +1990,8 @@ namespace Mutagen.Bethesda.Starfield
                 ret.WaterEnvironmentMap = this.WaterEnvironmentMap.Combine(rhs.WaterEnvironmentMap);
                 ret.GNAM = this.GNAM.Combine(rhs.GNAM);
                 ret.LandscapeTextures = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LandscapeTextures?.Overall, rhs.LandscapeTextures?.Overall), Noggog.ExceptionExt.Combine(this.LandscapeTextures?.Specific, rhs.LandscapeTextures?.Specific));
-                ret.XCLWs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.XCLWs?.Overall, rhs.XCLWs?.Overall), Noggog.ExceptionExt.Combine(this.XCLWs?.Specific, rhs.XCLWs?.Specific));
-                ret.WHGTs = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.WHGTs?.Overall, rhs.WHGTs?.Overall), Noggog.ExceptionExt.Combine(this.WHGTs?.Specific, rhs.WHGTs?.Specific));
+                ret.CellWaterHeightLocations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.CellWaterHeightLocations?.Overall, rhs.CellWaterHeightLocations?.Overall), Noggog.ExceptionExt.Combine(this.CellWaterHeightLocations?.Specific, rhs.CellWaterHeightLocations?.Specific));
+                ret.WaterHeights = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.WaterHeights?.Overall, rhs.WaterHeights?.Overall), Noggog.ExceptionExt.Combine(this.WaterHeights?.Specific, rhs.WaterHeights?.Specific));
                 ret.HNAM = this.HNAM.Combine(rhs.HNAM);
                 ret.OffsetData = this.OffsetData.Combine(rhs.OffsetData);
                 ret.CellSizeData = this.CellSizeData.Combine(rhs.CellSizeData);
@@ -2048,8 +2048,8 @@ namespace Mutagen.Bethesda.Starfield
             public bool WaterEnvironmentMap;
             public bool GNAM;
             public bool LandscapeTextures;
-            public bool XCLWs;
-            public bool WHGTs;
+            public bool CellWaterHeightLocations;
+            public bool WaterHeights;
             public bool HNAM;
             public bool OffsetData;
             public bool CellSizeData;
@@ -2087,8 +2087,8 @@ namespace Mutagen.Bethesda.Starfield
                 this.WaterEnvironmentMap = defaultOn;
                 this.GNAM = defaultOn;
                 this.LandscapeTextures = defaultOn;
-                this.XCLWs = defaultOn;
-                this.WHGTs = defaultOn;
+                this.CellWaterHeightLocations = defaultOn;
+                this.WaterHeights = defaultOn;
                 this.HNAM = defaultOn;
                 this.OffsetData = defaultOn;
                 this.CellSizeData = defaultOn;
@@ -2128,8 +2128,8 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((WaterEnvironmentMap, null));
                 ret.Add((GNAM, null));
                 ret.Add((LandscapeTextures, null));
-                ret.Add((XCLWs, null));
-                ret.Add((WHGTs, null));
+                ret.Add((CellWaterHeightLocations, null));
+                ret.Add((WaterHeights, null));
                 ret.Add((HNAM, null));
                 ret.Add((OffsetData, null));
                 ret.Add((CellSizeData, null));
@@ -2367,8 +2367,8 @@ namespace Mutagen.Bethesda.Starfield
         new String? WaterEnvironmentMap { get; set; }
         new Single? GNAM { get; set; }
         new ExtendedList<IFormLinkGetter<ILandscapeTextureGetter>> LandscapeTextures { get; }
-        new ExtendedList<Single>? XCLWs { get; set; }
-        new ExtendedList<Single>? WHGTs { get; set; }
+        new ExtendedList<P2Int16>? CellWaterHeightLocations { get; set; }
+        new ExtendedList<Single>? WaterHeights { get; set; }
         new MemorySlice<Byte>? HNAM { get; set; }
         new MemorySlice<Byte>? OffsetData { get; set; }
         new MemorySlice<Byte>? CellSizeData { get; set; }
@@ -2438,8 +2438,8 @@ namespace Mutagen.Bethesda.Starfield
         String? WaterEnvironmentMap { get; }
         Single? GNAM { get; }
         IReadOnlyList<IFormLinkGetter<ILandscapeTextureGetter>> LandscapeTextures { get; }
-        IReadOnlyList<Single>? XCLWs { get; }
-        IReadOnlyList<Single>? WHGTs { get; }
+        IReadOnlyList<P2Int16>? CellWaterHeightLocations { get; }
+        IReadOnlyList<Single>? WaterHeights { get; }
         ReadOnlyMemorySlice<Byte>? HNAM { get; }
         ReadOnlyMemorySlice<Byte>? OffsetData { get; }
         ReadOnlyMemorySlice<Byte>? CellSizeData { get; }
@@ -2880,8 +2880,8 @@ namespace Mutagen.Bethesda.Starfield
         WaterEnvironmentMap = 31,
         GNAM = 32,
         LandscapeTextures = 33,
-        XCLWs = 34,
-        WHGTs = 35,
+        CellWaterHeightLocations = 34,
+        WaterHeights = 35,
         HNAM = 36,
         OffsetData = 37,
         CellSizeData = 38,
@@ -2974,19 +2974,18 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.MHDT,
                 RecordTypes.LTMP,
                 RecordTypes.XILS,
-                RecordTypes.XCLR,
                 RecordTypes.XCLA,
                 RecordTypes.XCLD,
                 RecordTypes.XWCN,
                 RecordTypes.XCCM,
                 RecordTypes.XOWN,
-                RecordTypes.XTRV,
                 RecordTypes.XCWT,
                 RecordTypes.XCWM,
                 RecordTypes.XBPS,
                 RecordTypes.XWCU,
                 RecordTypes.XCAS,
                 RecordTypes.XCIM,
+                RecordTypes.XILL,
                 RecordTypes.XCMO,
                 RecordTypes.XCGD,
                 RecordTypes.XCIB,
@@ -2994,7 +2993,6 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XLKR,
                 RecordTypes.XLKT,
                 RecordTypes.XTV2,
-                RecordTypes.XPCS,
                 RecordTypes.NAVM,
                 RecordTypes.VMAD,
                 RecordTypes.NVNM,
@@ -3005,6 +3003,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XEMI,
                 RecordTypes.XRGD,
                 RecordTypes.XRFG,
+                RecordTypes.XPCS,
                 RecordTypes.XIS2,
                 RecordTypes.XRNK,
                 RecordTypes.XLYR,
@@ -3084,8 +3083,8 @@ namespace Mutagen.Bethesda.Starfield
             item.WaterEnvironmentMap = default;
             item.GNAM = default;
             item.LandscapeTextures.Clear();
-            item.XCLWs = null;
-            item.WHGTs = null;
+            item.CellWaterHeightLocations = null;
+            item.WaterHeights = null;
             item.HNAM = default;
             item.OffsetData = default;
             item.CellSizeData = default;
@@ -3552,6 +3551,19 @@ namespace Mutagen.Bethesda.Starfield
                         subItem.Remove(keys, type, throwIfUnknown: false);
                     }
                     break;
+                case "IBiomeObjectPackInTarget":
+                case "IBiomeObjectPackInTargetGetter":
+                    {
+                        if (obj.TopCell is {} TopCellitem)
+                        {
+                            TopCellitem.Remove(keys, type, throwIfUnknown);
+                        }
+                    }
+                    foreach (var subItem in obj.SubCells)
+                    {
+                        subItem.Remove(keys, type, throwIfUnknown: false);
+                    }
+                    break;
                 case "IPlaced":
                 case "IPlacedGetter":
                     {
@@ -3783,12 +3795,12 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.LandscapeTextures,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.XCLWs = item.XCLWs.CollectionEqualsHelper(
-                rhs.XCLWs,
-                (l, r) => l.EqualsWithin(r),
+            ret.CellWaterHeightLocations = item.CellWaterHeightLocations.CollectionEqualsHelper(
+                rhs.CellWaterHeightLocations,
+                (l, r) => l.Equals(r),
                 include);
-            ret.WHGTs = item.WHGTs.CollectionEqualsHelper(
-                rhs.WHGTs,
+            ret.WaterHeights = item.WaterHeights.CollectionEqualsHelper(
+                rhs.WaterHeights,
                 (l, r) => l.EqualsWithin(r),
                 include);
             ret.HNAM = MemorySliceExt.SequenceEqual(item.HNAM, rhs.HNAM);
@@ -4003,13 +4015,13 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.XCLWs?.Overall ?? true)
-                && item.XCLWs is {} XCLWsItem)
+            if ((printMask?.CellWaterHeightLocations?.Overall ?? true)
+                && item.CellWaterHeightLocations is {} CellWaterHeightLocationsItem)
             {
-                sb.AppendLine("XCLWs =>");
+                sb.AppendLine("CellWaterHeightLocations =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in XCLWsItem)
+                    foreach (var subItem in CellWaterHeightLocationsItem)
                     {
                         using (sb.Brace())
                         {
@@ -4018,13 +4030,13 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.WHGTs?.Overall ?? true)
-                && item.WHGTs is {} WHGTsItem)
+            if ((printMask?.WaterHeights?.Overall ?? true)
+                && item.WaterHeights is {} WaterHeightsItem)
             {
-                sb.AppendLine("WHGTs =>");
+                sb.AppendLine("WaterHeights =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in WHGTsItem)
+                    foreach (var subItem in WaterHeightsItem)
                     {
                         using (sb.Brace())
                         {
@@ -4245,13 +4257,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.LandscapeTextures.SequenceEqualNullable(rhs.LandscapeTextures)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.XCLWs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.CellWaterHeightLocations) ?? true))
             {
-                if (!lhs.XCLWs.SequenceEqualNullable(rhs.XCLWs)) return false;
+                if (!lhs.CellWaterHeightLocations.SequenceEqualNullable(rhs.CellWaterHeightLocations)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WHGTs) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WaterHeights) ?? true))
             {
-                if (!lhs.WHGTs.SequenceEqualNullable(rhs.WHGTs)) return false;
+                if (!lhs.WaterHeights.SequenceEqualNullable(rhs.WaterHeights)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Worldspace_FieldIndex.HNAM) ?? true))
             {
@@ -4373,8 +4385,8 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(GNAMitem);
             }
             hash.Add(item.LandscapeTextures);
-            hash.Add(item.XCLWs);
-            hash.Add(item.WHGTs);
+            hash.Add(item.CellWaterHeightLocations);
+            hash.Add(item.WaterHeights);
             if (item.HNAM is {} HNAMItem)
             {
                 hash.Add(HNAMItem);
@@ -5441,20 +5453,20 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.XCLWs) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.CellWaterHeightLocations) ?? true))
             {
-                errorMask?.PushIndex((int)Worldspace_FieldIndex.XCLWs);
+                errorMask?.PushIndex((int)Worldspace_FieldIndex.CellWaterHeightLocations);
                 try
                 {
-                    if ((rhs.XCLWs != null))
+                    if ((rhs.CellWaterHeightLocations != null))
                     {
-                        item.XCLWs = 
-                            rhs.XCLWs
-                            .ToExtendedList<Single>();
+                        item.CellWaterHeightLocations = 
+                            rhs.CellWaterHeightLocations
+                            .ToExtendedList<P2Int16>();
                     }
                     else
                     {
-                        item.XCLWs = null;
+                        item.CellWaterHeightLocations = null;
                     }
                 }
                 catch (Exception ex)
@@ -5467,20 +5479,20 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WHGTs) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Worldspace_FieldIndex.WaterHeights) ?? true))
             {
-                errorMask?.PushIndex((int)Worldspace_FieldIndex.WHGTs);
+                errorMask?.PushIndex((int)Worldspace_FieldIndex.WaterHeights);
                 try
                 {
-                    if ((rhs.WHGTs != null))
+                    if ((rhs.WaterHeights != null))
                     {
-                        item.WHGTs = 
-                            rhs.WHGTs
+                        item.WaterHeights = 
+                            rhs.WaterHeights
                             .ToExtendedList<Single>();
                     }
                     else
                     {
-                        item.WHGTs = null;
+                        item.WaterHeights = null;
                     }
                 }
                 catch (Exception ex)
@@ -5910,14 +5922,14 @@ namespace Mutagen.Bethesda.Starfield
                         item: subItem,
                         header: translationParams.ConvertToCustom(RecordTypes.LNAM));
                 });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Single>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<P2Int16>.Instance.Write(
                 writer: writer,
-                items: item.XCLWs,
+                items: item.CellWaterHeightLocations,
                 recordType: translationParams.ConvertToCustom(RecordTypes.XCLW),
-                transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
+                transl: P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Single>.Instance.Write(
                 writer: writer,
-                items: item.WHGTs,
+                items: item.WaterHeights,
                 recordType: translationParams.ConvertToCustom(RecordTypes.WHGT),
                 transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -6246,22 +6258,22 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.XCLW:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XCLWs = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Single>.Instance.Parse(
+                    item.CellWaterHeightLocations = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<P2Int16>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
-                            transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
-                        .CastExtendedList<Single>();
-                    return (int)Worldspace_FieldIndex.XCLWs;
+                            transl: P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
+                        .CastExtendedList<P2Int16>();
+                    return (int)Worldspace_FieldIndex.CellWaterHeightLocations;
                 }
                 case RecordTypeInts.WHGT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WHGTs = 
+                    item.WaterHeights = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Single>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
                         .CastExtendedList<Single>();
-                    return (int)Worldspace_FieldIndex.WHGTs;
+                    return (int)Worldspace_FieldIndex.WaterHeights;
                 }
                 case RecordTypeInts.HNAM:
                 {
@@ -6485,8 +6497,8 @@ namespace Mutagen.Bethesda.Starfield
         public Single? GNAM => _GNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _GNAMLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ILandscapeTextureGetter>> LandscapeTextures { get; private set; } = Array.Empty<IFormLinkGetter<ILandscapeTextureGetter>>();
-        public IReadOnlyList<Single>? XCLWs { get; private set; }
-        public IReadOnlyList<Single>? WHGTs { get; private set; }
+        public IReadOnlyList<P2Int16>? CellWaterHeightLocations { get; private set; }
+        public IReadOnlyList<Single>? WaterHeights { get; private set; }
         #region HNAM
         private int? _HNAMLocation;
         public ReadOnlyMemorySlice<Byte>? HNAM => _HNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _HNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
@@ -6745,23 +6757,23 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.XCLW:
                 {
-                    this.XCLWs = BinaryOverlayList.FactoryByStartIndexWithTrigger<Single>(
+                    this.CellWaterHeightLocations = BinaryOverlayList.FactoryByStartIndexWithTrigger<P2Int16>(
                         stream: stream,
                         package: _package,
                         finalPos: finalPos,
                         itemLength: 4,
-                        getter: (s, p) => s.Float());
-                    return (int)Worldspace_FieldIndex.XCLWs;
+                        getter: (s, p) => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
+                    return (int)Worldspace_FieldIndex.CellWaterHeightLocations;
                 }
                 case RecordTypeInts.WHGT:
                 {
-                    this.WHGTs = BinaryOverlayList.FactoryByStartIndexWithTrigger<Single>(
+                    this.WaterHeights = BinaryOverlayList.FactoryByStartIndexWithTrigger<Single>(
                         stream: stream,
                         package: _package,
                         finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => s.Float());
-                    return (int)Worldspace_FieldIndex.WHGTs;
+                    return (int)Worldspace_FieldIndex.WaterHeights;
                 }
                 case RecordTypeInts.HNAM:
                 {

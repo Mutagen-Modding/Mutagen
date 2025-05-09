@@ -10,10 +10,10 @@ namespace Mutagen.Bethesda.Tests;
 
 public class OblivionPassthroughTest : PassthroughTest
 {
-    protected override Processor ProcessorFactory() => new OblivionProcessor(Settings.ParallelProcessingSteps, MasterFlagsLookup);
+    protected override Processor ProcessorFactory() => new OblivionProcessor(WorkDropoff, MasterFlagsLookup);
 
-    public OblivionPassthroughTest(PassthroughTestParams param)
-        : base(param, GameRelease.Oblivion)
+    public OblivionPassthroughTest(PassthroughTestParams param, GameRelease release)
+        : base(param, release)
     {
     }
 
@@ -22,7 +22,7 @@ public class OblivionPassthroughTest : PassthroughTest
         return OblivionMod.Create
             .FromPath(
                 new ModPath(ModKey, path.Path))
-            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .Parallel(parallel: Settings.ParallelModTranslations)
             .ThrowIfUnknownSubrecord()
             .WithStringsParameters(stringsParams)
             .Construct();
@@ -33,7 +33,7 @@ public class OblivionPassthroughTest : PassthroughTest
         return OblivionMod.Create
             .FromPath(
                 new ModPath(ModKey, path.Path))
-            .Parallel(parallel: Settings.ParallelProcessingSteps)
+            .Parallel(parallel: Settings.ParallelModTranslations)
             .WithStringsParameters(stringsParams)
             .Mutable()
             .ThrowIfUnknownSubrecord()
@@ -42,8 +42,10 @@ public class OblivionPassthroughTest : PassthroughTest
 
     protected override async Task<IMod> ImportCopyIn(FilePath file)
     {
-        var wrapper = OblivionMod.CreateFromBinaryOverlay(file.Path);
-        var ret = new OblivionMod(ModKey);
+        var wrapper = OblivionMod.CreateFromBinaryOverlay(file.Path,
+            OblivionRelease.Oblivion);
+        var ret = new OblivionMod(ModKey,
+            OblivionRelease.Oblivion);
         ret.DeepCopyIn(wrapper);
         return ret;
     }
@@ -65,7 +67,9 @@ public class OblivionPassthroughTest : PassthroughTest
             new RecordType("XCWT"),
             new RecordType("XOWN"),
             new RecordType("XRNK"),
-            new RecordType("XGLB"));
+            new RecordType("XGLB"),
+            new RecordType("XTLI"),
+            new RecordType("XLRL"));
         ret.AddAlignments(
             RecordTypes.WRLD,
             new RecordType("EDID"),
@@ -114,7 +118,9 @@ public class OblivionPassthroughTest : PassthroughTest
             new RecordType("XRGD"),
             new RecordType("XSCL"),
             new RecordType("XSOL"),
-            new RecordType("DATA"));
+            new RecordType("DATA"),
+            new RecordType("XAAG"),
+            new RecordType("XACN"));
         ret.AddAlignments(
             RecordTypes.ACRE,
             new RecordType("EDID"),

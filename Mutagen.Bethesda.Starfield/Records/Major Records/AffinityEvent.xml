@@ -2,21 +2,21 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="AffinityEvent" recordType="AFFE" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
-      <ByteArray name="FNAM" recordType="FNAM" unknown="true" nullable="false" />
-      <String name="Context" recordType="NLDT" />
+      <Enum name="Flags" recordType="FNAM" enumName="AffinityEvent.Flag" nullable="false" />
+      <String name="ContextNotes" recordType="NLDT" />
       <RefList name="ActorReactions" refName="ActorReaction" />
       <FormLink name="ActorValue" recordType="ANAM" refName="ActorValueInformation" />
-      <FormLink name="Size" recordType="ENAM" refName="Global" />
-      <FormLink name="Distance" recordType="DNAM" refName="Global" />
-      <FormLink name="Cooldown" recordType="CNAM" refName="Global" />
-      <FormLink name="Faction" recordType="BNAM" refName="Faction" />
-      <FormLink name="PNAM" recordType="PNAM" refName="AffinityEvent" unknown="true" />
+      <FormLink name="EventSize" recordType="ENAM" refName="Global" />
+      <FormLink name="DistanceToPlayer" recordType="DNAM" refName="Global" />
+      <FormLink name="CooldownInMinutes" recordType="CNAM" refName="Global" />
+      <FormLink name="RequiredFaction" recordType="BNAM" refName="Faction" />
+      <FormLink name="AddToEvent" recordType="PNAM" refName="AffinityEvent" />
     </Fields>
   </Object>
   <Object name="ActorReaction" objType="Subrecord">
     <Fields>
       <FormLink name="Actor" recordType="NNAM" refName="Npc" />
-      <FormLink name="Reaction" recordType="RNAM" refName="Global" />
+      <FormLink name="ReactionValue" recordType="RNAM" refName="Global" />
     </Fields>
   </Object>
 </Loqui>

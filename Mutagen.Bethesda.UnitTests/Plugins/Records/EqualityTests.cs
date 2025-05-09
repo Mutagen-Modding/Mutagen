@@ -71,6 +71,29 @@ public class EqualityTests
             .ShouldBeTrue();
     }
         
+    [Theory, MutagenModAutoData]
+    public void NpcHeadparts(Npc npc, FormKey fk, FormKey fk2, FormKey fk3)
+    {
+        Npc.TranslationMask _verificationMask = new(defaultOn: false)
+        {
+            HeadParts = true
+        };
+        
+        npc.HeadParts.Add(fk);
+        npc.HeadParts.Add(fk2);
+
+        var other = npc.DeepCopy();
+        other.Name = "TEST";
+
+        npc.Equals(other, _verificationMask)
+            .ShouldBeTrue();
+        
+        other.HeadParts.Add(fk3);
+
+        npc.Equals(other, _verificationMask)
+            .ShouldBeFalse();
+    }
+        
     [Fact]
     public void SelfEquality()
     {

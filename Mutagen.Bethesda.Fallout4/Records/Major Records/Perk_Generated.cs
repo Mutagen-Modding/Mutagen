@@ -1469,7 +1469,11 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypes.FNAM,
                 RecordTypes.PRKE,
                 RecordTypes.PRKF,
-                RecordTypes.PRKC);
+                RecordTypes.PRKC,
+                RecordTypes.EPFB,
+                RecordTypes.EPFT,
+                RecordTypes.EPF2,
+                RecordTypes.EPF3);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);

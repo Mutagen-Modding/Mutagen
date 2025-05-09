@@ -4,8 +4,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Inis;
 
-// Private until API can be made more mature
-internal class Ini
+public static class Ini
 {
     private static readonly IniPathLookup Lookup = new(
         GameLocatorLookupCache.Instance);
@@ -13,5 +12,10 @@ internal class Ini
     public static FilePath GetTypicalPath(GameRelease release)
     {
         return Lookup.Get(release);
+    }
+    
+    public static FilePath? TryGetTypicalPath(GameRelease release)
+    {
+        return Lookup.TryGet(release);
     }
 }

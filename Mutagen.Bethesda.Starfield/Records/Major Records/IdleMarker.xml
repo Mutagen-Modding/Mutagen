@@ -3,8 +3,7 @@
   <Object name="IdleMarker" recordType="IDLM" objType="Record" baseClass="StarfieldMajorRecord" majorFlag="true" >
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <Float name="ODTY" recordType="ODTY" unknown="true" />
-      <Float name="ODRT" recordType="ODRT" unknown="true" />
+      <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
@@ -15,8 +14,9 @@
         <FormLink refName="IdleAnimation" />
       </List>
       <RefDirect name="Model" refName="Model" />
+      <FormLink name="ActorAction" refName="ActionRecord" recordType="RNAM" />
       <FormLink name="AnimationFlavor" refName="Keyword" recordType="QNAM" />
-      <FormLink name="PNAM" refName="Keyword" recordType="PNAM" />
+      <FormLink name="AnimationArchetype" refName="Keyword" recordType="PNAM" />
     </Fields>
     <LinkInterface>IBaseObject</LinkInterface>
   </Object>

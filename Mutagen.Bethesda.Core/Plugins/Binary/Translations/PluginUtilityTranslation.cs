@@ -157,7 +157,8 @@ internal static class PluginUtilityTranslation
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, record);
+            RecordException.EnrichAndThrow(ex, record);
+            throw;
         }
     }
 
@@ -610,7 +611,8 @@ internal static class PluginUtilityTranslation
         }
         catch (Exception ex)
         {
-            throw RecordException.Enrich(ex, item);
+            RecordException.EnrichAndThrow(ex, item);
+            throw;
         }
     }
 }

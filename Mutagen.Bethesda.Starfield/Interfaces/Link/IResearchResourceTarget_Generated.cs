@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Starfield
 {
     /// <summary>
-    /// Implemented by: [Ingestible, Resource]
+    /// Implemented by: [Ammunition, Armor, Book, ConstructibleObject, Ingestible, Key, LeveledItem, Light, MiscItem, Resource, Weapon]
     /// </summary>
     public partial interface IResearchResourceTarget :
         IResearchResourceTargetGetter,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Starfield
     }
 
     /// <summary>
-    /// Implemented by: [Ingestible, Resource]
+    /// Implemented by: [Ammunition, Armor, Book, ConstructibleObject, Ingestible, Key, LeveledItem, Light, MiscItem, Resource, Weapon]
     /// </summary>
     public partial interface IResearchResourceTargetGetter : IStarfieldMajorRecordGetter
     {

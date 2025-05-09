@@ -3,8 +3,7 @@
   <Object name="Ammunition" recordType="AMMO" objType="Record" baseClass="StarfieldMajorRecord" majorFlag="true">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
-      <Float name="ODTY" recordType="ODTY" unknown="true" />
-      <Float name="ODRT" recordType="ODRT" unknown="true" />
+      <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
       <RefDirect name="Transforms" refName="Transforms" />
       <String name="Name" recordType="FULL" translated="Normal" />
       <RefDirect name="Model" refName="Model" />
@@ -30,11 +29,12 @@
       </Data>
       <String name="ShortName" recordType="ONAM" translated="Normal" />
       <String name="CasingModel" recordType="NAM1" />
-      <RefDirect name="NAM2" refName="Model" />
+      <UInt32 name="LightLayer" recordType="FLLD" />
     </Fields>
     <LinkInterface>IStaticTarget</LinkInterface>
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IConstructibleObjectTarget</LinkInterface>
     <LinkInterface>IBaseObject</LinkInterface>
+    <LinkInterface>IResearchResourceTarget</LinkInterface>
   </Object>
 </Loqui>

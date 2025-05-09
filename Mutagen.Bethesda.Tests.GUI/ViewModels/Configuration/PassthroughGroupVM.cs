@@ -23,6 +23,10 @@ public class PassthroughGroupVM : ViewModel
 
     public ReactiveCommand<Unit, Unit> AddPassthroughCommand { get; }
 
+    public ReactiveCommand<Unit, Unit> CheckAllCommand { get; }
+
+    public ReactiveCommand<Unit, Unit> UncheckAllCommand { get; }
+
     public ReactiveCommand<Unit, Unit> DeleteCommand { get; }
 
     public MainVM Parent { get; }
@@ -33,6 +37,14 @@ public class PassthroughGroupVM : ViewModel
         AddPassthroughCommand = ReactiveCommand.Create(() =>
         {
             Passthroughs.Add(new PassthroughVM(this));
+        });
+        CheckAllCommand = ReactiveCommand.Create(() =>
+        {
+            CheckAll(true);
+        });
+        UncheckAllCommand = ReactiveCommand.Create(() =>
+        {
+            CheckAll(false);
         });
         DeleteCommand = ReactiveCommand.Create(() =>
         {
@@ -47,5 +59,13 @@ public class PassthroughGroupVM : ViewModel
         GameRelease = group.GameRelease;
         NicknameSuffix = group.NicknameSuffix;
         Passthroughs.AddRange(group.Targets.Select(t => new PassthroughVM(this, t)));
+    }
+
+    private void CheckAll(bool doIt)
+    {
+        foreach (var x in Passthroughs)
+        {
+            x.Do = doIt;
+        }
     }
 }

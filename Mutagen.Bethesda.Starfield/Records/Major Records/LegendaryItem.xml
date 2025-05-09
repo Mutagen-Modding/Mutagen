@@ -3,8 +3,7 @@
   <Object name="LegendaryItem" recordType="LGDI" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" />
-      <Float name="ODTY" recordType="ODTY" unknown="true" />
-      <Float name="ODRT" recordType="ODRT" unknown="true" />
+      <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
       <RefDirect name="Model" refName="Model" />
       <ByteArray name="DATA" recordType="DATA" unknown="true" />
       <FormLink name="ApplicableItemList" refName="LeveledItem" recordType="ANAM" />

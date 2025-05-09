@@ -165,7 +165,8 @@ internal sealed class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGette
                     }
                     catch (Exception e)
                     {
-                        throw RecordException.Enrich(e, mod.ModKey);
+                        RecordException.EnrichAndThrow(e, mod.ModKey);
+                        throw;
                     }
                 }
 
@@ -213,6 +214,8 @@ internal sealed class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGette
         // Grab the formkey's list
         ImmutableList<IModContext<TMod, TModGetter, IMajorRecord, IMajorRecordGetter>>? list;
         int consideredDepth;
+        int iteratedCount;
+        bool more;
         lock (cache)
         {
             if (!cache.TryGetValue(key, out list))
@@ -221,16 +224,15 @@ internal sealed class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGette
                 cache.Add(key, list);
             }
             consideredDepth = cache.Depth;
+            iteratedCount = list.Count;
+            more = !InternalImmutableLoadOrderLinkCache.ShouldStopQuery(modKey, _listedOrder.Count, cache);
         }
 
-        // Return everyhing we have already
+        // Return everything we have already
         foreach (var item in list)
         {
             yield return item;
         }
-
-        int iteratedCount = list.Count;
-        bool more = !InternalImmutableLoadOrderLinkCache.ShouldStopQuery(modKey, _listedOrder.Count, cache);
 
         // While there's more depth to consider
         while (more)
@@ -268,7 +270,8 @@ internal sealed class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGette
                         }
                         catch (Exception e)
                         {
-                            throw RecordException.Enrich(e, mod.ModKey);
+                            RecordException.EnrichAndThrow(e, mod.ModKey);
+                            throw;
                         }
                     }
 
@@ -283,6 +286,13 @@ internal sealed class ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGette
                     else
                     {
                         AddRecords(targetMod, type, throwIfUnknown: true);
+                    }
+                }
+                else
+                {
+                    if (cache.TryGetValue(key, out var requeriedList))
+                    {
+                        list = requeriedList;
                     }
                 }
                 consideredDepth = cache.Depth;

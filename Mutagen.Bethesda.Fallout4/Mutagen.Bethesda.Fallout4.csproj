@@ -41,7 +41,13 @@
     <Compile Include="Extensions\GameSettingsGroupMixin.cs" />
     <Compile Include="Extensions\GlobalGroupMixin.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
+    <Compile Include="Interfaces\Aspect\IEnchantable.cs" />
     <Compile Include="Interfaces\Aspect\IHarvestable.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Interfaces\Aspect\IHasDestructible.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
@@ -545,9 +551,6 @@
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\PerkAdapter.cs">
-      <DependentUpon>Perk.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PerkEntryPointAddActivateChoice.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\PerkEntryPointModifyActorValue.cs">
