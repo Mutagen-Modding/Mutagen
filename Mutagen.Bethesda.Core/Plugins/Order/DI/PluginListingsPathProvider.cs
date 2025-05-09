@@ -1,4 +1,6 @@
-﻿using Noggog;
+﻿using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Plugins.Meta;
+using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Order.DI;
 
@@ -9,12 +11,19 @@ public interface IPluginListingsPathProvider
 
 public class PluginListingsPathProvider : IPluginListingsPathProvider
 {
+    private readonly IDataDirectoryProvider _dataDirectoryProvider;
+    private const string FileName = "Plugins.txt";
+    
+    public PluginListingsPathProvider(IDataDirectoryProvider dataDirectoryProvider)
+    {
+        _dataDirectoryProvider = dataDirectoryProvider;
+    }
+    
     internal string GetGameFolder(GameRelease release)
     {
         return release switch
         {
             GameRelease.Oblivion => "Oblivion",
-            GameRelease.OblivionRE => "Oblivion Remastered",
             GameRelease.SkyrimLE => "Skyrim",
             GameRelease.EnderalLE => "Enderal",
             GameRelease.SkyrimSE => "Skyrim Special Edition",
@@ -33,10 +42,22 @@ public class PluginListingsPathProvider : IPluginListingsPathProvider
         var gameFolder = GetGameFolder(release);
         return System.IO.Path.Combine(
             gameFolder,
-            "Plugins.txt");
+            FileName);
     }
 
-    public FilePath Get(GameRelease release) => System.IO.Path.Combine(
-        Environment.GetEnvironmentVariable("LocalAppData")!,
-        GetRelativePluginsPath(release));
+    public FilePath Get(GameRelease release)
+    {
+        var constants = GameConstants.Get(release);
+
+        if (constants.PluginsFileInGameFolder)
+        {
+            return Path.Combine(_dataDirectoryProvider.Path, FileName);
+        }
+        else
+        {
+            return System.IO.Path.Combine(
+                Environment.GetEnvironmentVariable("LocalAppData")!,
+                GetRelativePluginsPath(release));
+        }
+    }
 }

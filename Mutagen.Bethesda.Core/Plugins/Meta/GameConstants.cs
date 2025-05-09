@@ -54,6 +54,8 @@ public sealed record GameConstants
     
     public string? MyDocumentsString { get; init; }
     
+    public bool PluginsFileInGameFolder { get; init; }
+    
     public string IniName { get; init; }
     
     public uint DefaultHighRangeFormID { get; init; }
@@ -84,6 +86,7 @@ public sealed record GameConstants
         ushort? defaultFormVersion,
         float? defaultModHeaderVersion,
         string? myDocumentsString,
+        bool pluginsFileInGameFolder,
         string iniName,
         uint defaultHighRangeFormId, 
         float? useLowerRangeFormIdVersion,
@@ -103,6 +106,7 @@ public sealed record GameConstants
         DefaultFormVersion = defaultFormVersion;
         DefaultModHeaderVersion = defaultModHeaderVersion;
         MyDocumentsString = myDocumentsString;
+        PluginsFileInGameFolder = pluginsFileInGameFolder;
         StringsLanguageFormat = languageFormat;
         IniName = iniName;
         DefaultHighRangeFormID = defaultHighRangeFormId;
@@ -175,12 +179,14 @@ public sealed record GameConstants
         myDocumentsString: "Oblivion",
         iniName: "Oblivion",
         separateMasterLoadOrders: false,
+        pluginsFileInGameFolder: false,
         smallMasterFlag: null,
         mediumMasterFlag: null,
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
 
     public static readonly GameConstants OblivionRE = Oblivion with
     {
+        PluginsFileInGameFolder = true,
         DataFolderRelativePath = Path.Combine("OblivionRemastered", "Content", "Dev", "ObvData", "Data")
     };
 
@@ -254,6 +260,7 @@ public sealed record GameConstants
         myDocumentsString: "Skyrim",
         iniName: "Skyrim",
         separateMasterLoadOrders: false,
+        pluginsFileInGameFolder: false,
         smallMasterFlag: 0x0000_0200,
         mediumMasterFlag: null,
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
@@ -379,6 +386,7 @@ public sealed record GameConstants
         myDocumentsString: "Fallout4",
         iniName: "Fallout4",
         separateMasterLoadOrders: false,
+        pluginsFileInGameFolder: false,
         smallMasterFlag: 0x0000_0200,
         mediumMasterFlag: null,
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
@@ -467,6 +475,7 @@ public sealed record GameConstants
         myDocumentsString: null,
         iniName: "Starfield",
         separateMasterLoadOrders: true,
+        pluginsFileInGameFolder: false,
         smallMasterFlag: 0x0000_0100,
         mediumMasterFlag: 0x0000_0400,
         encodings: new(NonTranslated: MutagenEncoding._1252, NonLocalized: MutagenEncoding._1252));
