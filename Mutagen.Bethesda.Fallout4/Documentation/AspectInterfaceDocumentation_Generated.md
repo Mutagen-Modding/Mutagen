@@ -5,6 +5,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ## Interfaces to Concrete Classes
 ### IEnchantable
 - Weapon
+### IHarvestable
+- Flora
+- Tree
 ### IHasDestructible
 - Activator
 - Ammunition
@@ -476,6 +479,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Faction
 - INamed
 ### Flora
+- IHarvestable
 - IHasDestructible
 - IHaveVirtualMachineAdapter
 - IKeyworded
@@ -811,6 +815,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Transform
 - IPositionRotation
 ### Tree
+- IHarvestable
 - IHaveVirtualMachineAdapter
 - IModeled
 - INamed

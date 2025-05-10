@@ -6,6 +6,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### IEnchantable
 - Armor
 - Weapon
+### IHarvestable
+- Flora
+- Tree
 ### IHasDestructible
 - Activator
 - AlchemicalApparatus
@@ -49,6 +52,9 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - RegionWeather
 - SoulGem
 - Weapon
+### IHasVoiceType
+- Npc
+- TalkingActivator
 ### IHaveVirtualMachineAdapter
 - Activator
 - AlchemicalApparatus
@@ -427,6 +433,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### Faction
 - INamed
 ### Flora
+- IHarvestable
 - IHasDestructible
 - IHaveVirtualMachineAdapter
 - IKeyworded
@@ -542,6 +549,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - INamed
 ### Npc
 - IHasDestructible
+- IHasVoiceType
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - INamed
@@ -693,6 +701,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IObjectBounded
 ### TalkingActivator
 - IHasDestructible
+- IHasVoiceType
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - IModeled
@@ -704,6 +713,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ### TextureSet
 - IObjectBounded
 ### Tree
+- IHarvestable
 - IHaveVirtualMachineAdapter
 - IModeled
 - INamed

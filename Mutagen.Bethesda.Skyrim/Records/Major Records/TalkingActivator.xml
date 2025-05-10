@@ -13,7 +13,7 @@
       <Int32 name="PNAM" recordType="PNAM" />
       <FormLink name="LoopingSound" recordType="SNAM" refName="SoundMarker" />
       <Int16 name="FNAM" recordType="FNAM" />
-      <FormLink name="VoiceType" recordType="VNAM" refName="VoiceType" />
+      <FormLink name="Voice" recordType="VNAM" refName="VoiceType" />
     </Fields>
     <LinkInterface>IPlaceableObject</LinkInterface>
     <LinkInterface>IReferenceableObject</LinkInterface>
