@@ -464,6 +464,14 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 }
 
                 break;
+            case IGetFactionRankConditionDataGetter getFactionRank:
+                // Assume the actor can be in any rank as long they are in the faction - they might shift ranks later on
+                if (getFactionRank.Faction.UsesLink() && _factionNPCs.TryGetValue(getFactionRank.Faction.Link.FormKey, out var factionNpcFormKeys2))
+                {
+                    voices = new VoiceContainer(factionNpcFormKeys2.ToDictionary(npc => npc, GetVoiceTypes));
+                }
+
+                break;
             case IGetIsClassConditionDataGetter getIsClass:
                 if (getIsClass.Class.UsesLink() && _classNPCs.TryGetValue(getIsClass.Class.Link.FormKey, out var classNpcFormKeys))
                 {
