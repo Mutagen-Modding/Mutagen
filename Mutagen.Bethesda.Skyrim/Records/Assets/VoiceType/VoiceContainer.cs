@@ -6,9 +6,10 @@ namespace Mutagen.Bethesda.Skyrim.Records.Assets.VoiceType;
 public class VoiceContainer : ICloneable, IEquatable<VoiceContainer>
 {
     /// <summary>
-    /// Voice type names mapped to form keys of npcs using that voice type 
+    /// Voice type names mapped to form keys of npcs or talking activators using that voice type 
     /// </summary>
     private readonly Dictionary<string, HashSet<FormKey>> _voices = new();
+    public IReadOnlyDictionary<string, HashSet<FormKey>> Voices => _voices;
     public bool IsDefault { get; private set; }
 
     #region Constructors

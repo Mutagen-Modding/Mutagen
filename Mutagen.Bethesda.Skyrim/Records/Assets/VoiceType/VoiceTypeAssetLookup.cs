@@ -242,6 +242,34 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         }
     }
 
+    /// <summary>
+    /// Get all NPCs for a given dialog that can speak it based on the conditions of the dialog.
+    /// </summary>
+    /// <param name="responses">Dialog responses to get speakers for</param>
+    /// <returns>List of NPC speakers, including npcs or talking activators</returns>
+    public IEnumerable<IFormLinkGetter<IHasVoiceTypeGetter>> GetSpeakers(IDialogResponsesGetter responses)
+    {
+        var responsesContext = _formLinkCache.ResolveSimpleContext<IDialogResponsesGetter>(responses.FormKey);
+        if (!responsesContext.TryGetParent<IDialogTopicGetter>(out var topic)) yield break;
+
+        var quest = topic.Quest.TryResolve(_formLinkCache);
+        if (quest == null) yield break;
+
+        //Get quest voices
+        var questVoices = GetQuestVoices(topic, quest);
+
+        var voiceContainer = GetDialogVoiceContainer(topic, responses, quest, questVoices);
+        if (voiceContainer.IsDefault)
+        {
+            voiceContainer = GetAllDefaultVoices();
+        }
+
+        foreach (var formKey in voiceContainer.Voices.SelectMany(x => x.Value))
+        {
+            yield return new FormLink<IHasVoiceTypeGetter>(formKey);
+        }
+    }
+
     private IEnumerable<string> GetVoiceTypePaths(
         IDialogTopicGetter topic,
         IDialogResponsesGetter responses,
@@ -250,8 +278,41 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
         string questString,
         string topicString)
     {
+        var voices = GetDialogVoiceContainer(topic, responses, quest, questVoices);
+
+        var responseFormID = responses.FormKey.ID.ToString("X8");
+
+        foreach (var response in responses.Responses)
+        {
+            // Skip responses with sound override
+            if (!response.Sound.IsNull) continue;
+
+            var responseNumber = response.ResponseNumber;
+            foreach (var voiceType in voices.GetVoiceTypes(_defaultVoiceTypes[topic.FormKey.ModKey]))
+            {
+                yield return Path.Combine
+                (
+                    "Sound",
+                    "Voice",
+                    topic.FormKey.ModKey.FileName,
+                    voiceType,
+                    $"{questString}_{topicString}_{responseFormID}_{responseNumber}.fuz"
+                );
+            }
+        }
+    }
+
+    private VoiceContainer GetDialogVoiceContainer(
+        IDialogTopicGetter topic,
+        IDialogResponsesGetter responses,
+        IQuestGetter quest,
+        VoiceContainer questVoices)
+    {
         //Don't process responses with response data
-        if (!responses.ResponseData.IsNull) yield break;
+        if (!responses.ResponseData.IsNull)
+        {
+            return new VoiceContainer();
+        }
 
         //If we have selected default voices, make sure the quest voices are being checked first - they might not be part of default voices
         var voices = GetVoices(topic, responses, quest);
@@ -287,27 +348,7 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
             voices.Merge(userConditions);
         }
 
-
-        var responseFormID = responses.FormKey.ID.ToString("X8");
-
-        foreach (var response in responses.Responses)
-        {
-            // Skip responses with sound override
-            if (!response.Sound.IsNull) continue;
-
-            var responseNumber = response.ResponseNumber;
-            foreach (var voiceType in voices.GetVoiceTypes(_defaultVoiceTypes[topic.FormKey.ModKey]))
-            {
-                yield return Path.Combine
-                (
-                    "Sound",
-                    "Voice",
-                    topic.FormKey.ModKey.FileName,
-                    voiceType,
-                    $"{questString}_{topicString}_{responseFormID}_{responseNumber}.fuz"
-                );
-            }
-        }
+        return voices;
     }
 
     private VoiceContainer GetQuestVoices(IDialogTopicGetter topic, IQuestGetter quest)
@@ -715,6 +756,18 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
 
     private VoiceContainer GetVoices(IQuestGetter quest, ModKey currentMod) => GetVoices(quest.DialogConditions, quest, currentMod);
 
+    private VoiceContainer GetAllDefaultVoices()
+    {
+        var allDefaultVoices = new VoiceContainer();
+
+        foreach (var modKey in _formLinkCache.PriorityOrder.Select(x => x.ModKey))
+        {
+            allDefaultVoices.Insert(GetDefaultVoices(modKey));
+        }
+
+        return allDefaultVoices;
+    }
+
     private VoiceContainer GetDefaultVoices(ModKey mod)
     {
         if (_defaultSpeakerVoices.TryGetValue(mod, out var defaultVoiceTypes)) return defaultVoiceTypes;
@@ -797,10 +850,10 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
     {
         if (_speakerVoices.TryGetValue(talkingActivator.FormKey, out var speakerVoiceTypes)) return speakerVoiceTypes;
 
-        if (!talkingActivator.VoiceType.IsNull)
+        if (!talkingActivator.Voice.IsNull)
         {
-            var voiceTypeGetter = talkingActivator.VoiceType.TryResolve(_formLinkCache);
-            if (voiceTypeGetter is { EditorID: {} })
+            var voiceTypeGetter = talkingActivator.Voice.TryResolve(_formLinkCache);
+            if (voiceTypeGetter is { EditorID: not null })
             {
                 return new HashSet<string> { voiceTypeGetter.EditorID };
             }
