@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Plugins;
 namespace Mutagen.Bethesda.Skyrim;
 
 public partial class TalkingActivator
@@ -9,4 +10,6 @@ public partial class TalkingActivator
         RandomAnimStart = 0x0001_0000,
         RadioStation = 0x0002_0000,
     }
+
+    IFormLinkNullableGetter<IVoiceTypeGetter> IHasVoiceTypeGetter.Voice => Voice;
 }
