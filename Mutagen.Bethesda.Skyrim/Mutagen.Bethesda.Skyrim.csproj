@@ -1488,6 +1488,9 @@
     <Compile Include="Records\Major Records\AMagicEffectArchetype.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Flora.cs">
+      <DependentUpon>Flora.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\GlobalUnknown.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>

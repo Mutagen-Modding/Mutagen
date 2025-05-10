@@ -35,6 +35,7 @@ namespace Mutagen.Bethesda.Skyrim
                 true,
                 new ILoquiRegistration[]
                 {
+                    Flora_Registration.Instance,
                     Tree_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
