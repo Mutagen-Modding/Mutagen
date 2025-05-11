@@ -34,7 +34,7 @@ public class WriteOptionsTests
             .NoModKeySync()
             .WithFileSystem(fileSystem)
             .WriteAsync();
-        using var reimport = OblivionMod.Create
+        using var reimport = OblivionMod.Create(OblivionRelease.Oblivion)
             .FromPath(existingModPath)
             .WithFileSystem(fileSystem)
             .Construct();
@@ -60,7 +60,7 @@ public class WriteOptionsTests
             .WriteAsync();
 
         // Check FormKeys
-        using var reimport = OblivionMod.Create
+        using var reimport = OblivionMod.Create(OblivionRelease.Oblivion)
             .FromPath(existingModPath)
             .WithFileSystem(fileSystem)
             .Construct();

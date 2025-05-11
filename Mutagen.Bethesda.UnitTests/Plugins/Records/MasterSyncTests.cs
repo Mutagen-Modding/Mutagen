@@ -79,7 +79,8 @@ public class MasterSyncTests
             .WithMastersListContent(MastersListContentOption.Iterate)
             .WithFileSystem(fileSystem)
             .Write();
-        using var reimport = OblivionMod.Create.FromPath(modPath)
+        using var reimport = OblivionMod.Create(OblivionRelease.Oblivion)
+            .FromPath(modPath)
             .WithFileSystem(fileSystem)
             .Construct();
         Assert.Equal(2, reimport.MasterReferences.Count);
@@ -112,7 +113,7 @@ public class MasterSyncTests
             .WithMastersListContent(MastersListContentOption.Iterate)
             .WithFileSystem(fileSystem)
             .Write();
-        using var reimport = OblivionMod.Create
+        using var reimport = OblivionMod.Create(OblivionRelease.Oblivion)
             .FromPath(modPath)
             .WithFileSystem(fileSystem)
             .Construct();
@@ -142,7 +143,7 @@ public class MasterSyncTests
             .WithMastersListContent(MastersListContentOption.Iterate)
             .WithFileSystem(fileSystem)
             .Write();
-        using var reimport = OblivionMod.Create
+        using var reimport = OblivionMod.Create(OblivionRelease.Oblivion)
             .FromPath(modPath)
             .WithFileSystem(fileSystem)
             .Construct();
@@ -175,7 +176,7 @@ public class MasterSyncTests
             .WithMastersListContent(MastersListContentOption.Iterate)
             .WithFileSystem(fileSystem)
             .Write();
-        using var reimport = OblivionMod.Create
+        using var reimport = OblivionMod.Create(OblivionRelease.Oblivion)
             .FromPath(modPath)
             .WithFileSystem(fileSystem)
             .Construct();
@@ -213,7 +214,7 @@ public class MasterSyncTests
             .WithMastersListOrdering(MastersListOrderingOption.MastersFirst)
             .WithFileSystem(fileSystem)
             .Write();
-        using var reimport = OblivionMod.Create
+        using var reimport = OblivionMod.Create(OblivionRelease.Oblivion)
             .FromPath(modPath)
             .WithFileSystem(fileSystem)
             .Construct();
@@ -256,7 +257,7 @@ public class MasterSyncTests
             .WithMastersListOrdering(loadOrder)
             .WithFileSystem(fileSystem)
             .Write();
-        using var reimport = OblivionMod.Create
+        using var reimport = OblivionMod.Create(OblivionRelease.Oblivion)
             .FromPath(modPath)
             .WithFileSystem(fileSystem)
             .Construct();

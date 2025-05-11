@@ -124,6 +124,8 @@ public class EnumCompletenessTests
     {
         foreach (var release in Enums<GameRelease>.Values)
         {
+            var constants = Mutagen.Bethesda.Plugins.Meta.GameConstants.Get(release);
+            if (constants.PluginsFileInGameFolder) continue;
             try
             {
                 prov.GetGameFolder(release).ShouldNotBeEmpty();

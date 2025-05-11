@@ -19,7 +19,7 @@ public class OblivionPassthroughTest : PassthroughTest
 
     protected override async Task<IModDisposeGetter> ImportBinaryOverlay(FilePath path, StringsReadParameters stringsParams)
     {
-        return OblivionMod.Create
+        return OblivionMod.Create(OblivionRelease.Oblivion)
             .FromPath(
                 new ModPath(ModKey, path.Path))
             .Parallel(parallel: Settings.ParallelModTranslations)
@@ -30,7 +30,7 @@ public class OblivionPassthroughTest : PassthroughTest
 
     protected override async Task<IMod> ImportBinary(FilePath path, StringsReadParameters stringsParams)
     {
-        return OblivionMod.Create
+        return OblivionMod.Create(OblivionRelease.Oblivion)
             .FromPath(
                 new ModPath(ModKey, path.Path))
             .Parallel(parallel: Settings.ParallelModTranslations)

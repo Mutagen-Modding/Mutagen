@@ -4,6 +4,7 @@ using System.IO.Abstractions;
 using System.Reactive;
 using System.Reactive.Concurrency;
 using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Installs;
 using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
 
@@ -15,8 +16,12 @@ public static class PluginListings
     public static string GetListingsPath(GameRelease game)
     {
         var gameReleaseInjection = new GameReleaseInjection(game);
+        var gameLocator = GameLocatorLookupCache.Instance;
         return new PluginListingsPathContext(
-            new PluginListingsPathProvider(),
+            new PluginListingsPathProvider(
+                new DataDirectoryProvider(
+                    gameReleaseInjection,
+                    gameLocator)),
             gameReleaseInjection).Path;
     }
 
@@ -73,9 +78,13 @@ public static class PluginListings
         bool throwOnMissingMods = true)
     {
         var gameReleaseInjection = new GameReleaseInjection(game);
+        var gameLocator = GameLocatorLookupCache.Instance;
         return LoadOrderListingsFromPath(
             new PluginListingsPathContext(
-                new PluginListingsPathProvider(),
+                new PluginListingsPathProvider(
+                    new DataDirectoryProvider(
+                        gameReleaseInjection,
+                        gameLocator)),
                 gameReleaseInjection).Path,
             game,
             dataPath,
@@ -141,9 +150,13 @@ public static class PluginListings
     public static IObservable<Unit> GetLoadOrderChanged(GameRelease game)
     {
         var gameReleaseInjection = new GameReleaseInjection(game);
+        var gameLocator = GameLocatorLookupCache.Instance;
         return ObservableExt.WatchFile(
             new PluginListingsPathContext(
-                new PluginListingsPathProvider(),
+                new PluginListingsPathProvider(
+                    new DataDirectoryProvider(
+                        gameReleaseInjection,
+                        gameLocator)),
                 gameReleaseInjection).Path);
     }
 
