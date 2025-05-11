@@ -128,8 +128,8 @@ public partial class OblivionMod : AMod
     }
 
     public static BinaryReadBuilderSourceStreamFactoryChoice<IOblivionMod, IOblivionModDisposableGetter, GroupMask> 
-        Create => new(
-        GameRelease.Oblivion, 
+        Create(OblivionRelease release) => new(
+        release.ToGameRelease(), 
         OblivionCreateBuilderInstantiator.Instance,
         needsRecordTypeInfoCacheReader: true);
 
