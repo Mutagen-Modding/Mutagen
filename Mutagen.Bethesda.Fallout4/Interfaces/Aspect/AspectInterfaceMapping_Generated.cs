@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Fallout4
                 true,
                 new ILoquiRegistration[]
                 {
+                    Flora_Registration.Instance,
                     Tree_Registration.Instance,
                 },
                 new InterfaceMappingTypes(

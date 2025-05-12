@@ -113,6 +113,7 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Interfaces\Aspect\IHasVoiceType.cs" />
     <Compile Include="Interfaces\Aspect\IHaveVirtualMachineAdapter.cs" />
     <Compile Include="Interfaces\Aspect\IModeled.cs">
       <CodeLanguage>cs</CodeLanguage>
@@ -1486,6 +1487,9 @@
     </Compile>
     <Compile Include="Records\Major Records\AMagicEffectArchetype.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Flora.cs">
+      <DependentUpon>Flora.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\GlobalUnknown.cs">
       <DependentUpon>Global.xml</DependentUpon>
