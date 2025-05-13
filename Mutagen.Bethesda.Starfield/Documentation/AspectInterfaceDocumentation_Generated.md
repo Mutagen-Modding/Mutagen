@@ -17,6 +17,8 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MiscItem
 - MoveableStatic
 - Projectile
+### IHasVoiceType
+- Npc
 ### IHaveVirtualMachineAdapter
 - Activator
 - APlacedTrap
@@ -694,6 +696,7 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - IScripted
 - IWeightValue
 ### Npc
+- IHasVoiceType
 - IHaveVirtualMachineAdapter
 - IKeyworded
 - INamed

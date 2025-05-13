@@ -50,6 +50,16 @@ namespace Mutagen.Bethesda.Starfield
                     Setter: typeof(IHasDestructible),
                     Getter: typeof(IHasDestructibleGetter)));
             dict[typeof(IHasDestructibleGetter)] = dict[typeof(IHasDestructible)] with { Setter = false };
+            dict[typeof(IHasVoiceType)] = new InterfaceMappingResult(
+                true,
+                new ILoquiRegistration[]
+                {
+                    Npc_Registration.Instance,
+                },
+                new InterfaceMappingTypes(
+                    Setter: typeof(IHasVoiceType),
+                    Getter: typeof(IHasVoiceTypeGetter)));
+            dict[typeof(IHasVoiceTypeGetter)] = dict[typeof(IHasVoiceType)] with { Setter = false };
             dict[typeof(IHaveVirtualMachineAdapter)] = new InterfaceMappingResult(
                 true,
                 new ILoquiRegistration[]
