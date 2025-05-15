@@ -26,6 +26,7 @@ public static class GameReleaseKernelExt
         return release switch
         {
             GameRelease.Oblivion => GameCategory.Oblivion,
+            GameRelease.OblivionRE => GameCategory.Oblivion,
             GameRelease.SkyrimLE => GameCategory.Skyrim,
             GameRelease.SkyrimSE => GameCategory.Skyrim,
             GameRelease.SkyrimSEGog => GameCategory.Skyrim,

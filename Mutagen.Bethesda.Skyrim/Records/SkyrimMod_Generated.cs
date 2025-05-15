@@ -8799,10 +8799,6 @@ namespace Mutagen.Bethesda.Skyrim
                         type: type,
                         keys: keys);
                     break;
-                case "IDialog":
-                case "IDialogGetter":
-                    Remove(obj, keys, typeof(IDialogTopicGetter), throwIfUnknown: throwIfUnknown);
-                    break;
                 case "IOwner":
                 case "IOwnerGetter":
                     Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);

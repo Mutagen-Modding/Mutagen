@@ -5,6 +5,8 @@ using GameFinder.StoreHandlers.Steam;
 using GameFinder.StoreHandlers.Steam.Models.ValueTypes;
 using GameFinder.StoreHandlers.Xbox;
 using Microsoft.Win32;
+using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 using FileSystem = NexusMods.Paths.FileSystem;
 
@@ -107,7 +109,8 @@ public sealed class GameLocator
     {
         if (TryGetGameDirectory(release, out path))
         {
-            path = Path.Combine(path, "Data");
+            var constants = GameConstants.Get(release);
+            path = Path.Combine(path, constants.DataFolderRelativePath);
             return true;
         }
         path = default;
@@ -214,8 +217,6 @@ public sealed class GameLocator
             {
                 GameRelease.Oblivion, new GameMetaData(
                     GameRelease.Oblivion,
-                    NexusName: "oblivion",
-                    NexusGameId: 101,
                     GameSources: new IGameSource[]
                     {
                         new RegistryGameSource()
@@ -238,10 +239,23 @@ public sealed class GameLocator
                     })
             },
             {
+                GameRelease.OblivionRE, new GameMetaData(
+                    GameRelease.OblivionRE,
+                    GameSources: new IGameSource[]
+                    {
+                        new SteamGameSource()
+                        {
+                            Id = 2623190
+                        },
+                    },
+                    RequiredFiles: new string[]
+                    {
+                        "OblivionRemastered.exe"
+                    })
+            },
+            {
                 GameRelease.SkyrimLE, new GameMetaData(
                     GameRelease.SkyrimLE,
-                    NexusName: "skyrim",
-                    NexusGameId: 110,
                     GameSources: new IGameSource[]
                     {
                         new RegistryGameSource()
@@ -262,8 +276,6 @@ public sealed class GameLocator
             {
                 GameRelease.SkyrimSE, new GameMetaData(
                     GameRelease.SkyrimSE,
-                    NexusName: "skyrimspecialedition",
-                    NexusGameId: 1704,
                     GameSources: new IGameSource[]
                     {
                         new RegistryGameSource()
@@ -284,8 +296,6 @@ public sealed class GameLocator
             {
                 GameRelease.Fallout4, new GameMetaData(
                     GameRelease.Fallout4,
-                    NexusName: "fallout4",
-                    NexusGameId: 1151,
                     GameSources: new IGameSource[]
                     {
                         new RegistryGameSource()
@@ -306,8 +316,6 @@ public sealed class GameLocator
             {
                 GameRelease.Fallout4VR, new GameMetaData(
                     GameRelease.Fallout4VR,
-                    NexusName: "fallout4",
-                    NexusGameId: 1151,
                     GameSources: new IGameSource[]
                     {
                         new RegistryGameSource()
@@ -328,8 +336,6 @@ public sealed class GameLocator
             {
                 GameRelease.SkyrimVR, new GameMetaData(
                     GameRelease.SkyrimVR,
-                    NexusName: "skyrimspecialedition",
-                    NexusGameId: 1704,
                     GameSources: new IGameSource[]
                     {
                         new RegistryGameSource()
@@ -350,10 +356,13 @@ public sealed class GameLocator
             {
             GameRelease.Starfield, new GameMetaData(
                 GameRelease.Starfield,
-                NexusName: "starfield",
-                NexusGameId: 4187,
                 GameSources: new IGameSource[]
                 {
+                    new RegistryGameSource()
+                    {
+                        RegistryPath = @"SOFTWARE\WOW6432Node\Bethesda Softworks\Star Field",
+                        RegistryKey = @"installed path"
+                    },
                     new SteamGameSource()
                     {
                         Id = 1716740

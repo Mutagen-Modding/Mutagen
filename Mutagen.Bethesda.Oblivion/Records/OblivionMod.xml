@@ -64,5 +64,7 @@
       <Group name="Waters" refName="Water" />
       <Group name="EffectShaders" refName="EffectShader" />
     </Fields>
+    <GameReleaseOptions>Oblivion</GameReleaseOptions>
+    <GameReleaseOptions>OblivionRE</GameReleaseOptions>
   </Object>
 </Loqui>

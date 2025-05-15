@@ -72,19 +72,12 @@ public sealed class GetFontConfigListing : IGetFontConfigListing
 	public DataRelativePath? Get(Stream iniStream)
 	{
 		// Release exists as parameter, in case future games need different handling
-		Console.WriteLine("GetFontConfigListing.Get");
 		var iniDataParser = new IniDataParser(Config);
-		Console.WriteLine("GetFontConfigListing.GetXX");
 		var parser = new FileIniDataParser(iniDataParser);
-		Console.WriteLine("GetFontConfigListing.Get2");
 		var data = parser.ReadData(new StreamReader(iniStream));
-		Console.WriteLine("GetFontConfigListing.Get3");
 		var basePath = data["Fonts"];
 		var configFile = basePath["sFontConfigFile"];
-		Console.WriteLine("GetFontConfigListing.Get4");
 		if (configFile is null) return null;
-		Console.WriteLine("GetFontConfigListing.Get5");
-		Console.WriteLine("GetFontConfigListing.Get6" + configFile);
 
 		return configFile;
 	}

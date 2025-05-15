@@ -10,8 +10,8 @@ namespace Mutagen.Bethesda.Tests;
 
 public class Fallout4PassthroughTest : PassthroughTest
 {
-    public Fallout4PassthroughTest(PassthroughTestParams param)
-        : base(param, GameRelease.Fallout4)
+    public Fallout4PassthroughTest(PassthroughTestParams param, GameRelease release)
+        : base(param, release)
     {
     }
 

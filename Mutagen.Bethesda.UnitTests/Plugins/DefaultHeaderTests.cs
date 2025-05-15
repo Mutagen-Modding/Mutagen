@@ -22,7 +22,8 @@ public class DefaultHeaderTests
     [Theory, MutagenAutoData]
     public void Oblivion(ModKey modKey)
     {
-        var mod = new OblivionMod(modKey);
+        var mod = new OblivionMod(modKey,
+            OblivionRelease.Oblivion);
         mod.ModHeader.Stats.Version.ShouldBe(1f);
         mod.ModHeader.Stats.NextFormID.ShouldEqual(0xD62);
     }

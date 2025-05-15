@@ -8,6 +8,7 @@ using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Implicit.DI;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Plugins.Records;
@@ -129,7 +130,8 @@ partial class GameEnvironmentProviderContainer<TMod> : IContainer<GameEnvironmen
         DirectoryPath gameDir)
     {
         _release = release;
-        _dataDirectoryProvider = new DataDirectoryInjection(Path.Combine(gameDir, "Data"));
+        var constants = GameConstants.Get(release.Release);
+        _dataDirectoryProvider = new DataDirectoryInjection(Path.Combine(gameDir, constants.DataFolderRelativePath));
         _gameDirectoryProvider = new GameDirectoryInjection(gameDir);
         _gameDirectoryLookup = new GameDirectoryLookupInjection(_release.Release, gameDir.Path);
     }
@@ -295,7 +297,8 @@ partial class GameEnvironmentProviderGenericContainer<TModSetter, TModGetter> : 
         DirectoryPath gameDir)
     {
         _release = release;
-        _dataDirectoryProvider = new DataDirectoryInjection(Path.Combine(gameDir, "Data"));
+        var constants = GameConstants.Get(release.Release);
+        _dataDirectoryProvider = new DataDirectoryInjection(Path.Combine(gameDir, constants.DataFolderRelativePath));
         _gameDirectoryProvider = new GameDirectoryInjection(gameDir);
         _gameDirectoryLookup = new GameDirectoryLookupInjection(_release.Release, gameDir.Path);
     }

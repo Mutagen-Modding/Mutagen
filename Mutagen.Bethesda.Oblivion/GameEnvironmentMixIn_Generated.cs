@@ -8,9 +8,10 @@ namespace Mutagen.Bethesda
     {
         public static IGameEnvironment<IOblivionMod, IOblivionModGetter> Oblivion(
             this GameEnvironment env,
+            OblivionRelease gameRelease,
             LinkCachePreferences? linkCachePrefs = null)
         {
-            return env.Construct<IOblivionMod, IOblivionModGetter>(GameRelease.Oblivion, linkCachePrefs);
+            return env.Construct<IOblivionMod, IOblivionModGetter>(gameRelease.ToGameRelease(), linkCachePrefs);
         }
 
     }

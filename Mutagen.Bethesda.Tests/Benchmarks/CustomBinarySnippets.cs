@@ -43,7 +43,7 @@ public class CustomBinarySnippets
             WorkDropoff = dropoff
         };
 
-        var passthrough = new OblivionPassthroughTest(passthroughSettings);
+        var passthrough = new OblivionPassthroughTest(passthroughSettings, GameRelease.Oblivion);
 
         (TempFolder TempFolder, Test Test) = passthrough.SetupProcessedFiles();
         using var tmp = TempFolder;
@@ -66,7 +66,8 @@ public class CustomBinarySnippets
     public PathGrid PathGridImporting()
     {
         PathGridReader.Position = 0;
-        var pathGrid = new PathGrid(FormKey.Null);
+        var pathGrid = new PathGrid(FormKey.Null,
+            OblivionRelease.Oblivion);
         PathGridBinaryCreateTranslation.FillBinaryPointToPointConnections(
             new MutagenFrame(PathGridReader),
             pathGrid);

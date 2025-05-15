@@ -55,11 +55,15 @@ partial class RegionBinaryCreateTranslation
     {
         var rdatFrame = frame.GetSubrecord();
         RegionData.RegionDataType dataType = (RegionData.RegionDataType)BinaryPrimitives.ReadUInt32LittleEndian(rdatFrame.Content);
-        var subMeta = frame.GetSubrecordHeader(offset: rdatFrame.TotalLength);
         int len = rdatFrame.TotalLength;
-        if (IsExpected(dataType, subMeta.RecordType))
+        var spawn = frame.SpawnAll();
+        if (spawn.Remaining > rdatFrame.TotalLength)
         {
-            len += subMeta.TotalLength;
+            var subMeta = frame.GetSubrecordHeader(offset: rdatFrame.TotalLength);
+            if (IsExpected(dataType, subMeta.RecordType))
+            {
+                len += subMeta.TotalLength;
+            }
         }
         switch (dataType)
         {

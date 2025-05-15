@@ -45,8 +45,7 @@ public class SubrecordException : RecordException
         }
         return new SubrecordException(subRecord, formKey: null, majorRecordType: null, modKey: null, edid: null, innerException: ex);
     }
-
-
+    
     /// <summary>
     /// Wraps an exception to associate it with a specific subrecord
     /// </summary>

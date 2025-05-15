@@ -975,7 +975,9 @@ namespace Mutagen.Bethesda.Oblivion
         public static readonly RecordType GrupRecordType = Worldspace_Registration.TriggeringRecordType;
         public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => WorldspaceCommon.Instance.EnumerateFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceSetterCommon.Instance.RemapLinks(this, mapping);
-        public Worldspace(FormKey formKey)
+        public Worldspace(
+            FormKey formKey,
+            OblivionRelease gameRelease)
         {
             this.FormKey = formKey;
             CustomCtor();
@@ -990,12 +992,16 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public Worldspace(IOblivionMod mod)
-            : this(mod.GetNextFormKey())
+            : this(
+                mod.GetNextFormKey(),
+                mod.OblivionRelease)
         {
         }
 
         public Worldspace(IOblivionMod mod, string editorID)
-            : this(mod.GetNextFormKey(editorID))
+            : this(
+                mod.GetNextFormKey(editorID),
+                mod.OblivionRelease)
         {
             this.EditorID = editorID;
         }
@@ -1682,6 +1688,8 @@ namespace Mutagen.Bethesda.Oblivion
                 RecordTypes.XOWN,
                 RecordTypes.XRNK,
                 RecordTypes.XGLB,
+                RecordTypes.XTLI,
+                RecordTypes.XLRL,
                 RecordTypes.PGRD,
                 RecordTypes.LAND,
                 RecordTypes.ACRE,
@@ -3247,7 +3255,7 @@ namespace Mutagen.Bethesda.Oblivion
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Worldspace(formKey);
+            var newRec = new Worldspace(formKey, default(OblivionRelease));
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }

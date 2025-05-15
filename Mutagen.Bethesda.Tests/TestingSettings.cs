@@ -18,6 +18,7 @@ public record TestingSettings
 public record DataFolderLocations
 {
     public string Oblivion { get; set; } = string.Empty;
+    public string OblivionRE { get; set; } = string.Empty;
     public string Skyrim { get; set; } = string.Empty;
     public string SkyrimSpecialEdition { get; set; } = string.Empty;
     public string SkyrimVR { get; set; } = string.Empty;

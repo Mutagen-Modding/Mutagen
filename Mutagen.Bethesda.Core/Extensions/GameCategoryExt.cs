@@ -37,6 +37,7 @@ public static class GameCategoryExt
         {
             case GameCategory.Oblivion:
                 yield return GameRelease.Oblivion;
+                yield return GameRelease.OblivionRE;
                 yield break;
             case GameCategory.Fallout3:
                 yield return GameRelease.Fallout3;

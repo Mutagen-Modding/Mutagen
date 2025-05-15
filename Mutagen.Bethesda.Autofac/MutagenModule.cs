@@ -2,7 +2,7 @@ using Autofac;
 using Mutagen.Bethesda.Archives.DI;
 using Mutagen.Bethesda.Assets.DI;
 using Mutagen.Bethesda.Environments.DI;
-// using Mutagen.Bethesda.Fonts.DI;
+using Mutagen.Bethesda.Fonts.DI;
 using Mutagen.Bethesda.Inis.DI;
 using Mutagen.Bethesda.Installs.DI;
 using Mutagen.Bethesda.Plugins.Analysis.DI;
@@ -24,7 +24,7 @@ public class MutagenModule : Module
         builder.RegisterAssemblyTypes(typeof(IArchiveReaderProvider).Assembly)
             .InNamespacesOf(
                 typeof(IArchiveReaderProvider),
-                // typeof(IGetFontConfig),
+                typeof(IGetFontConfig),
                 typeof(IDataDirectoryLookup),
                 typeof(IImplicitBaseMasterProvider),
                 typeof(ILoadOrderWriter),
@@ -34,6 +34,7 @@ public class MutagenModule : Module
                 typeof(IModCompactor),
                 typeof(IRecordCompactionCompatibilityDetector),
                 typeof(IMasterReferenceReaderFactory))
+            .Except<FontProvider>()
             .NotInjection()
             .AsMatchingInterface();
         builder.RegisterGeneric(typeof(GameEnvironmentProvider<>))

@@ -194,7 +194,7 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
 
         var pluginPathProvider = Resolve<IPluginListingsPathContext>(
             () => new PluginListingsPathContext(
-                new PluginListingsPathProvider(),
+                new PluginListingsPathProvider(dataDirectory),
                 Release),
             PluginListingsPathContext);
 
@@ -477,7 +477,7 @@ public sealed record GameEnvironmentBuilder
         
         var pluginPathProvider = Resolve<IPluginListingsPathContext>(
             () => new PluginListingsPathContext(
-                new PluginListingsPathProvider(),
+                new PluginListingsPathProvider(dataDirectory),
                 Release),
             PluginListingsPathContext);
         

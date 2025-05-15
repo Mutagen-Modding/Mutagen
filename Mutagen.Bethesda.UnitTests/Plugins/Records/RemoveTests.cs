@@ -9,7 +9,8 @@ public class RemoveTests
     [Fact]
     public void Typeless_Typical()
     {
-        var mod = new OblivionMod(TestConstants.PluginModKey);
+        var mod = new OblivionMod(TestConstants.PluginModKey,
+            OblivionRelease.Oblivion);
         var npc1 = mod.Npcs.AddNew();
         var npc2 = mod.Npcs.AddNew();
         mod.Remove(npc2.FormKey);
@@ -20,8 +21,10 @@ public class RemoveTests
     [Fact]
     public void Typeless_Blocked()
     {
-        var mod = new OblivionMod(TestConstants.PluginModKey);
-        var cell = new Cell(mod.GetNextFormKey());
+        var mod = new OblivionMod(TestConstants.PluginModKey,
+            OblivionRelease.Oblivion);
+        var cell = new Cell(mod.GetNextFormKey(),
+            OblivionRelease.Oblivion);
         var subBlock = new CellSubBlock()
         {
             BlockNumber = 1,
@@ -30,7 +33,8 @@ public class RemoveTests
                 cell
             }
         };
-        var cell2 = new Cell(mod.GetNextFormKey());
+        var cell2 = new Cell(mod.GetNextFormKey(),
+            OblivionRelease.Oblivion);
         var subBlock2 = new CellSubBlock()
         {
             BlockNumber = 2,
@@ -60,10 +64,14 @@ public class RemoveTests
     [Fact]
     public void Typeless_Deep()
     {
-        var mod = new OblivionMod(TestConstants.PluginModKey);
-        var placed1 = new PlacedObject(mod.GetNextFormKey());
-        var placed2 = new PlacedObject(mod.GetNextFormKey());
-        var cell = new Cell(mod.GetNextFormKey());
+        var mod = new OblivionMod(TestConstants.PluginModKey,
+            OblivionRelease.Oblivion);
+        var placed1 = new PlacedObject(mod.GetNextFormKey(),
+            OblivionRelease.Oblivion);
+        var placed2 = new PlacedObject(mod.GetNextFormKey(),
+            OblivionRelease.Oblivion);
+        var cell = new Cell(mod.GetNextFormKey(),
+            OblivionRelease.Oblivion);
         cell.Temporary.Add(placed1);
         cell.Temporary.Add(placed2);
         var subBlock = new CellSubBlock()
@@ -96,7 +104,8 @@ public class RemoveTests
     [Fact]
     public void Typed_Typical()
     {
-        var mod = new OblivionMod(TestConstants.PluginModKey);
+        var mod = new OblivionMod(TestConstants.PluginModKey,
+            OblivionRelease.Oblivion);
         var npc1 = mod.Npcs.AddNew();
         var npc2 = mod.Npcs.AddNew();
         var weapon = mod.Weapons.AddNew();
@@ -110,9 +119,11 @@ public class RemoveTests
     [Fact]
     public void Typed_Blocked()
     {
-        var mod = new OblivionMod(TestConstants.PluginModKey);
+        var mod = new OblivionMod(TestConstants.PluginModKey,
+            OblivionRelease.Oblivion);
         var npc1 = mod.Npcs.AddNew();
-        var cell = new Cell(mod.GetNextFormKey());
+        var cell = new Cell(mod.GetNextFormKey(),
+            OblivionRelease.Oblivion);
         var subBlock = new CellSubBlock()
         {
             BlockNumber = 1,
@@ -121,7 +132,8 @@ public class RemoveTests
                 cell
             }
         };
-        var cell2 = new Cell(mod.GetNextFormKey());
+        var cell2 = new Cell(mod.GetNextFormKey(),
+            OblivionRelease.Oblivion);
         var subBlock2 = new CellSubBlock()
         {
             BlockNumber = 2,
@@ -153,10 +165,14 @@ public class RemoveTests
     [Fact]
     public void Typed_Deep()
     {
-        var mod = new OblivionMod(TestConstants.PluginModKey);
-        var placed1 = new PlacedObject(mod.GetNextFormKey());
-        var placed2 = new PlacedObject(mod.GetNextFormKey());
-        var cell = new Cell(mod.GetNextFormKey());
+        var mod = new OblivionMod(TestConstants.PluginModKey,
+            OblivionRelease.Oblivion);
+        var placed1 = new PlacedObject(mod.GetNextFormKey(),
+            OblivionRelease.Oblivion);
+        var placed2 = new PlacedObject(mod.GetNextFormKey(),
+            OblivionRelease.Oblivion);
+        var cell = new Cell(mod.GetNextFormKey(),
+            OblivionRelease.Oblivion);
         cell.Temporary.Add(placed1);
         cell.Temporary.Add(placed2);
         var subBlock = new CellSubBlock()

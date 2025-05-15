@@ -48,7 +48,8 @@ public class OblivionBinaryTranslation
         BinaryPath = Path.Combine(TempFolder.Dir.Path, "Oblivion.esm");
 
         // Setup
-        Mod = OblivionMod.CreateFromBinary(DataPath);
+        Mod = OblivionMod.CreateFromBinary(DataPath,
+            OblivionRelease.Oblivion);
 
         DataOutput = new MemoryStream(new byte[new FileInfo(DataPath.Path).Length]);
     }
@@ -62,20 +63,23 @@ public class OblivionBinaryTranslation
     [Benchmark]
     public async Task CreateBinary()
     {
-        OblivionMod.CreateFromBinary(DataPath);
+        OblivionMod.CreateFromBinary(DataPath,
+            OblivionRelease.Oblivion);
     }
 
     [Benchmark]
     public void CreateAndWriteBinaryOverlayToDisk()
     {
-        var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath, null);
+        var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath,
+            OblivionRelease.Oblivion, null);
         mod.WriteToBinary(BinaryPath, WriteParametersNoCheck);
     }
 
     [Benchmark]
     public void CreateAndWriteBinaryOverlayToMemory()
     {
-        var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath, null);
+        var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath,
+            OblivionRelease.Oblivion, null);
         DataOutput.Position = 0;
         mod.WriteToBinary(DataOutput, WriteParametersNoCheck);
     }
@@ -83,14 +87,16 @@ public class OblivionBinaryTranslation
     [Benchmark]
     public void CreateAndWriteBinaryOverlayParallelToDisk()
     {
-        var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath, null);
+        var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath,
+            OblivionRelease.Oblivion, null);
         mod.WriteToBinary(BinaryPath, WriteParametersNoCheckParallel);
     }
 
     [Benchmark]
     public void CreateAndWriteBinaryOverlayParallelToMemory()
     {
-        var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath, null);
+        var mod = OblivionModBinaryOverlay.OblivionModFactory(DataPath,
+            OblivionRelease.Oblivion, null);
         DataOutput.Position = 0;
         mod.WriteToBinary(DataOutput, WriteParametersNoCheckParallel);
     }

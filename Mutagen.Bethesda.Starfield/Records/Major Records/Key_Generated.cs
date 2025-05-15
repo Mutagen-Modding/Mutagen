@@ -101,6 +101,17 @@ namespace Mutagen.Bethesda.Starfield
         #region DirtinessScale
         public Percent DirtinessScale { get; set; } = default(Percent);
         #endregion
+        #region ObjectPaletteDefaults
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectPaletteDefaults? _ObjectPaletteDefaults;
+        public ObjectPaletteDefaults? ObjectPaletteDefaults
+        {
+            get => _ObjectPaletteDefaults;
+            set => _ObjectPaletteDefaults = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectPaletteDefaultsGetter? IKeyGetter.ObjectPaletteDefaults => this.ObjectPaletteDefaults;
+        #endregion
         #region Transforms
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Transforms? _Transforms;
@@ -171,6 +182,57 @@ namespace Mutagen.Bethesda.Starfield
         IModelGetter? IModeledGetter.Model => this.Model;
         #endregion
         #endregion
+        #region Destructible
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Destructible? _Destructible;
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
+        public Destructible? Destructible
+        {
+            get => _Destructible;
+            set => _Destructible = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IKeyGetter.Destructible => this.Destructible;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
+        #endregion
+        #endregion
+        #region CraftingSound
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SoundReference? _CraftingSound;
+        public SoundReference? CraftingSound
+        {
+            get => _CraftingSound;
+            set => _CraftingSound = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter? IKeyGetter.CraftingSound => this.CraftingSound;
+        #endregion
+        #region PickupSound
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SoundReference? _PickupSound;
+        public SoundReference? PickupSound
+        {
+            get => _PickupSound;
+            set => _PickupSound = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter? IKeyGetter.PickupSound => this.PickupSound;
+        #endregion
+        #region DropdownSound
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SoundReference? _DropdownSound;
+        public SoundReference? DropdownSound
+        {
+            get => _DropdownSound;
+            set => _DropdownSound = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ISoundReferenceGetter? IKeyGetter.DropdownSound => this.DropdownSound;
+        #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
@@ -192,6 +254,44 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         #endregion
+        #region FeaturedItemMessage
+        private readonly IFormLinkNullable<IMessageGetter> _FeaturedItemMessage = new FormLinkNullable<IMessageGetter>();
+        public IFormLinkNullable<IMessageGetter> FeaturedItemMessage
+        {
+            get => _FeaturedItemMessage;
+            set => _FeaturedItemMessage.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMessageGetter> IKeyGetter.FeaturedItemMessage => this.FeaturedItemMessage;
+        #endregion
+        #region Resources
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ItemResource>? _Resources;
+        public ExtendedList<ItemResource>? Resources
+        {
+            get => this._Resources;
+            set => this._Resources = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IItemResourceGetter>? IKeyGetter.Resources => _Resources;
+        #endregion
+
+        #endregion
+        #region ComponentDisplayIndices
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Byte>? _ComponentDisplayIndices;
+        public ExtendedList<Byte>? ComponentDisplayIndices
+        {
+            get => this._ComponentDisplayIndices;
+            set => this._ComponentDisplayIndices = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<Byte>? IKeyGetter.ComponentDisplayIndices => _ComponentDisplayIndices;
+        #endregion
+
+        #endregion
         #region Value
         public UInt32 Value { get; set; } = default(UInt32);
         #endregion
@@ -199,9 +299,14 @@ namespace Mutagen.Bethesda.Starfield
         public Single Weight { get; set; } = default(Single);
         #endregion
         #region Flags
-        public UInt32? Flags { get; set; }
+        public Key.Flag? Flags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt32? IKeyGetter.Flags => this.Flags;
+        Key.Flag? IKeyGetter.Flags => this.Flags;
+        #endregion
+        #region ShortName
+        public TranslatedString? ShortName { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITranslatedStringGetter? IKeyGetter.ShortName => this.ShortName;
         #endregion
 
         #region To String
@@ -231,14 +336,23 @@ namespace Mutagen.Bethesda.Starfield
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.DirtinessScale = initialValue;
+                this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(initialValue, new ObjectPaletteDefaults.Mask<TItem>(initialValue));
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
                 this.XALG = initialValue;
                 this.Name = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
+                this.CraftingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.PickupSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
+                this.DropdownSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.FeaturedItemMessage = initialValue;
+                this.Resources = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ItemResource.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ItemResource.Mask<TItem>?>>());
+                this.ComponentDisplayIndices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Value = initialValue;
                 this.Weight = initialValue;
                 this.Flags = initialValue;
+                this.ShortName = initialValue;
             }
 
             public Mask(
@@ -252,14 +366,23 @@ namespace Mutagen.Bethesda.Starfield
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem DirtinessScale,
+                TItem ObjectPaletteDefaults,
                 TItem Transforms,
                 TItem XALG,
                 TItem Name,
                 TItem Model,
+                TItem Destructible,
+                TItem CraftingSound,
+                TItem PickupSound,
+                TItem DropdownSound,
                 TItem Keywords,
+                TItem FeaturedItemMessage,
+                TItem Resources,
+                TItem ComponentDisplayIndices,
                 TItem Value,
                 TItem Weight,
-                TItem Flags)
+                TItem Flags,
+                TItem ShortName)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -272,14 +395,23 @@ namespace Mutagen.Bethesda.Starfield
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.DirtinessScale = DirtinessScale;
+                this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(ObjectPaletteDefaults, new ObjectPaletteDefaults.Mask<TItem>(ObjectPaletteDefaults));
                 this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
                 this.XALG = XALG;
                 this.Name = Name;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
+                this.CraftingSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(CraftingSound, new SoundReference.Mask<TItem>(CraftingSound));
+                this.PickupSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(PickupSound, new SoundReference.Mask<TItem>(PickupSound));
+                this.DropdownSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(DropdownSound, new SoundReference.Mask<TItem>(DropdownSound));
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.FeaturedItemMessage = FeaturedItemMessage;
+                this.Resources = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ItemResource.Mask<TItem>?>>?>(Resources, Enumerable.Empty<MaskItemIndexed<TItem, ItemResource.Mask<TItem>?>>());
+                this.ComponentDisplayIndices = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ComponentDisplayIndices, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Value = Value;
                 this.Weight = Weight;
                 this.Flags = Flags;
+                this.ShortName = ShortName;
             }
 
             #pragma warning disable CS8618
@@ -294,14 +426,23 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem DirtinessScale;
+            public MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>? ObjectPaletteDefaults { get; set; }
             public MaskItem<TItem, Transforms.Mask<TItem>?>? Transforms { get; set; }
             public TItem XALG;
             public TItem Name;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? CraftingSound { get; set; }
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? PickupSound { get; set; }
+            public MaskItem<TItem, SoundReference.Mask<TItem>?>? DropdownSound { get; set; }
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
+            public TItem FeaturedItemMessage;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ItemResource.Mask<TItem>?>>?>? Resources;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ComponentDisplayIndices;
             public TItem Value;
             public TItem Weight;
             public TItem Flags;
+            public TItem ShortName;
             #endregion
 
             #region Equals
@@ -318,14 +459,23 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.DirtinessScale, rhs.DirtinessScale)) return false;
+                if (!object.Equals(this.ObjectPaletteDefaults, rhs.ObjectPaletteDefaults)) return false;
                 if (!object.Equals(this.Transforms, rhs.Transforms)) return false;
                 if (!object.Equals(this.XALG, rhs.XALG)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
+                if (!object.Equals(this.CraftingSound, rhs.CraftingSound)) return false;
+                if (!object.Equals(this.PickupSound, rhs.PickupSound)) return false;
+                if (!object.Equals(this.DropdownSound, rhs.DropdownSound)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.FeaturedItemMessage, rhs.FeaturedItemMessage)) return false;
+                if (!object.Equals(this.Resources, rhs.Resources)) return false;
+                if (!object.Equals(this.ComponentDisplayIndices, rhs.ComponentDisplayIndices)) return false;
                 if (!object.Equals(this.Value, rhs.Value)) return false;
                 if (!object.Equals(this.Weight, rhs.Weight)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.ShortName, rhs.ShortName)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -334,14 +484,23 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.DirtinessScale);
+                hash.Add(this.ObjectPaletteDefaults);
                 hash.Add(this.Transforms);
                 hash.Add(this.XALG);
                 hash.Add(this.Name);
                 hash.Add(this.Model);
+                hash.Add(this.Destructible);
+                hash.Add(this.CraftingSound);
+                hash.Add(this.PickupSound);
+                hash.Add(this.DropdownSound);
                 hash.Add(this.Keywords);
+                hash.Add(this.FeaturedItemMessage);
+                hash.Add(this.Resources);
+                hash.Add(this.ComponentDisplayIndices);
                 hash.Add(this.Value);
                 hash.Add(this.Weight);
                 hash.Add(this.Flags);
+                hash.Add(this.ShortName);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -363,6 +522,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (!eval(this.DirtinessScale)) return false;
+                if (ObjectPaletteDefaults != null)
+                {
+                    if (!eval(this.ObjectPaletteDefaults.Overall)) return false;
+                    if (this.ObjectPaletteDefaults.Specific != null && !this.ObjectPaletteDefaults.Specific.All(eval)) return false;
+                }
                 if (Transforms != null)
                 {
                     if (!eval(this.Transforms.Overall)) return false;
@@ -375,6 +539,26 @@ namespace Mutagen.Bethesda.Starfield
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
+                if (Destructible != null)
+                {
+                    if (!eval(this.Destructible.Overall)) return false;
+                    if (this.Destructible.Specific != null && !this.Destructible.Specific.All(eval)) return false;
+                }
+                if (CraftingSound != null)
+                {
+                    if (!eval(this.CraftingSound.Overall)) return false;
+                    if (this.CraftingSound.Specific != null && !this.CraftingSound.Specific.All(eval)) return false;
+                }
+                if (PickupSound != null)
+                {
+                    if (!eval(this.PickupSound.Overall)) return false;
+                    if (this.PickupSound.Specific != null && !this.PickupSound.Specific.All(eval)) return false;
+                }
+                if (DropdownSound != null)
+                {
+                    if (!eval(this.DropdownSound.Overall)) return false;
+                    if (this.DropdownSound.Specific != null && !this.DropdownSound.Specific.All(eval)) return false;
+                }
                 if (this.Keywords != null)
                 {
                     if (!eval(this.Keywords.Overall)) return false;
@@ -386,9 +570,34 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (!eval(this.FeaturedItemMessage)) return false;
+                if (this.Resources != null)
+                {
+                    if (!eval(this.Resources.Overall)) return false;
+                    if (this.Resources.Specific != null)
+                    {
+                        foreach (var item in this.Resources.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.ComponentDisplayIndices != null)
+                {
+                    if (!eval(this.ComponentDisplayIndices.Overall)) return false;
+                    if (this.ComponentDisplayIndices.Specific != null)
+                    {
+                        foreach (var item in this.ComponentDisplayIndices.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (!eval(this.Value)) return false;
                 if (!eval(this.Weight)) return false;
                 if (!eval(this.Flags)) return false;
+                if (!eval(this.ShortName)) return false;
                 return true;
             }
             #endregion
@@ -408,6 +617,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
                 if (eval(this.DirtinessScale)) return true;
+                if (ObjectPaletteDefaults != null)
+                {
+                    if (eval(this.ObjectPaletteDefaults.Overall)) return true;
+                    if (this.ObjectPaletteDefaults.Specific != null && this.ObjectPaletteDefaults.Specific.Any(eval)) return true;
+                }
                 if (Transforms != null)
                 {
                     if (eval(this.Transforms.Overall)) return true;
@@ -420,6 +634,26 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
+                if (Destructible != null)
+                {
+                    if (eval(this.Destructible.Overall)) return true;
+                    if (this.Destructible.Specific != null && this.Destructible.Specific.Any(eval)) return true;
+                }
+                if (CraftingSound != null)
+                {
+                    if (eval(this.CraftingSound.Overall)) return true;
+                    if (this.CraftingSound.Specific != null && this.CraftingSound.Specific.Any(eval)) return true;
+                }
+                if (PickupSound != null)
+                {
+                    if (eval(this.PickupSound.Overall)) return true;
+                    if (this.PickupSound.Specific != null && this.PickupSound.Specific.Any(eval)) return true;
+                }
+                if (DropdownSound != null)
+                {
+                    if (eval(this.DropdownSound.Overall)) return true;
+                    if (this.DropdownSound.Specific != null && this.DropdownSound.Specific.Any(eval)) return true;
+                }
                 if (this.Keywords != null)
                 {
                     if (eval(this.Keywords.Overall)) return true;
@@ -431,9 +665,34 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (eval(this.FeaturedItemMessage)) return true;
+                if (this.Resources != null)
+                {
+                    if (eval(this.Resources.Overall)) return true;
+                    if (this.Resources.Specific != null)
+                    {
+                        foreach (var item in this.Resources.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.ComponentDisplayIndices != null)
+                {
+                    if (eval(this.ComponentDisplayIndices.Overall)) return true;
+                    if (this.ComponentDisplayIndices.Specific != null)
+                    {
+                        foreach (var item in this.ComponentDisplayIndices.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 if (eval(this.Value)) return true;
                 if (eval(this.Weight)) return true;
                 if (eval(this.Flags)) return true;
+                if (eval(this.ShortName)) return true;
                 return false;
             }
             #endregion
@@ -452,10 +711,15 @@ namespace Mutagen.Bethesda.Starfield
                 obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.DirtinessScale = eval(this.DirtinessScale);
+                obj.ObjectPaletteDefaults = this.ObjectPaletteDefaults == null ? null : new MaskItem<R, ObjectPaletteDefaults.Mask<R>?>(eval(this.ObjectPaletteDefaults.Overall), this.ObjectPaletteDefaults.Specific?.Translate(eval));
                 obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Transforms.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
                 obj.XALG = eval(this.XALG);
                 obj.Name = eval(this.Name);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
+                obj.CraftingSound = this.CraftingSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.CraftingSound.Overall), this.CraftingSound.Specific?.Translate(eval));
+                obj.PickupSound = this.PickupSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.PickupSound.Overall), this.PickupSound.Specific?.Translate(eval));
+                obj.DropdownSound = this.DropdownSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.DropdownSound.Overall), this.DropdownSound.Specific?.Translate(eval));
                 if (Keywords != null)
                 {
                     obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
@@ -470,9 +734,40 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                obj.FeaturedItemMessage = eval(this.FeaturedItemMessage);
+                if (Resources != null)
+                {
+                    obj.Resources = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ItemResource.Mask<R>?>>?>(eval(this.Resources.Overall), Enumerable.Empty<MaskItemIndexed<R, ItemResource.Mask<R>?>>());
+                    if (Resources.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ItemResource.Mask<R>?>>();
+                        obj.Resources.Specific = l;
+                        foreach (var item in Resources.Specific)
+                        {
+                            MaskItemIndexed<R, ItemResource.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, ItemResource.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (ComponentDisplayIndices != null)
+                {
+                    obj.ComponentDisplayIndices = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ComponentDisplayIndices.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (ComponentDisplayIndices.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.ComponentDisplayIndices.Specific = l;
+                        foreach (var item in ComponentDisplayIndices.Specific)
+                        {
+                            R mask = eval(item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
                 obj.Value = eval(this.Value);
                 obj.Weight = eval(this.Weight);
                 obj.Flags = eval(this.Flags);
+                obj.ShortName = eval(this.ShortName);
             }
             #endregion
 
@@ -503,6 +798,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(DirtinessScale, "DirtinessScale");
                     }
+                    if (printMask?.ObjectPaletteDefaults?.Overall ?? true)
+                    {
+                        ObjectPaletteDefaults?.Print(sb);
+                    }
                     if (printMask?.Transforms?.Overall ?? true)
                     {
                         Transforms?.Print(sb);
@@ -519,6 +818,22 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         Model?.Print(sb);
                     }
+                    if (printMask?.Destructible?.Overall ?? true)
+                    {
+                        Destructible?.Print(sb);
+                    }
+                    if (printMask?.CraftingSound?.Overall ?? true)
+                    {
+                        CraftingSound?.Print(sb);
+                    }
+                    if (printMask?.PickupSound?.Overall ?? true)
+                    {
+                        PickupSound?.Print(sb);
+                    }
+                    if (printMask?.DropdownSound?.Overall ?? true)
+                    {
+                        DropdownSound?.Print(sb);
+                    }
                     if ((printMask?.Keywords?.Overall ?? true)
                         && Keywords is {} KeywordsItem)
                     {
@@ -529,6 +844,50 @@ namespace Mutagen.Bethesda.Starfield
                             if (KeywordsItem.Specific != null)
                             {
                                 foreach (var subItem in KeywordsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        {
+                                            sb.AppendItem(subItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (printMask?.FeaturedItemMessage ?? true)
+                    {
+                        sb.AppendItem(FeaturedItemMessage, "FeaturedItemMessage");
+                    }
+                    if ((printMask?.Resources?.Overall ?? true)
+                        && Resources is {} ResourcesItem)
+                    {
+                        sb.AppendLine("Resources =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ResourcesItem.Overall);
+                            if (ResourcesItem.Specific != null)
+                            {
+                                foreach (var subItem in ResourcesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if ((printMask?.ComponentDisplayIndices?.Overall ?? true)
+                        && ComponentDisplayIndices is {} ComponentDisplayIndicesItem)
+                    {
+                        sb.AppendLine("ComponentDisplayIndices =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentDisplayIndicesItem.Overall);
+                            if (ComponentDisplayIndicesItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentDisplayIndicesItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -552,6 +911,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Flags, "Flags");
                     }
+                    if (printMask?.ShortName ?? true)
+                    {
+                        sb.AppendItem(ShortName, "ShortName");
+                    }
                 }
             }
             #endregion
@@ -566,14 +929,23 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? DirtinessScale;
+            public MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>? ObjectPaletteDefaults;
             public MaskItem<Exception?, Transforms.ErrorMask?>? Transforms;
             public Exception? XALG;
             public Exception? Name;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? CraftingSound;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? PickupSound;
+            public MaskItem<Exception?, SoundReference.ErrorMask?>? DropdownSound;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            public Exception? FeaturedItemMessage;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemResource.ErrorMask?>>?>? Resources;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ComponentDisplayIndices;
             public Exception? Value;
             public Exception? Weight;
             public Exception? Flags;
+            public Exception? ShortName;
             #endregion
 
             #region IErrorMask
@@ -588,6 +960,8 @@ namespace Mutagen.Bethesda.Starfield
                         return ObjectBounds;
                     case Key_FieldIndex.DirtinessScale:
                         return DirtinessScale;
+                    case Key_FieldIndex.ObjectPaletteDefaults:
+                        return ObjectPaletteDefaults;
                     case Key_FieldIndex.Transforms:
                         return Transforms;
                     case Key_FieldIndex.XALG:
@@ -596,14 +970,30 @@ namespace Mutagen.Bethesda.Starfield
                         return Name;
                     case Key_FieldIndex.Model:
                         return Model;
+                    case Key_FieldIndex.Destructible:
+                        return Destructible;
+                    case Key_FieldIndex.CraftingSound:
+                        return CraftingSound;
+                    case Key_FieldIndex.PickupSound:
+                        return PickupSound;
+                    case Key_FieldIndex.DropdownSound:
+                        return DropdownSound;
                     case Key_FieldIndex.Keywords:
                         return Keywords;
+                    case Key_FieldIndex.FeaturedItemMessage:
+                        return FeaturedItemMessage;
+                    case Key_FieldIndex.Resources:
+                        return Resources;
+                    case Key_FieldIndex.ComponentDisplayIndices:
+                        return ComponentDisplayIndices;
                     case Key_FieldIndex.Value:
                         return Value;
                     case Key_FieldIndex.Weight:
                         return Weight;
                     case Key_FieldIndex.Flags:
                         return Flags;
+                    case Key_FieldIndex.ShortName:
+                        return ShortName;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -623,6 +1013,9 @@ namespace Mutagen.Bethesda.Starfield
                     case Key_FieldIndex.DirtinessScale:
                         this.DirtinessScale = ex;
                         break;
+                    case Key_FieldIndex.ObjectPaletteDefaults:
+                        this.ObjectPaletteDefaults = new MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>(ex, null);
+                        break;
                     case Key_FieldIndex.Transforms:
                         this.Transforms = new MaskItem<Exception?, Transforms.ErrorMask?>(ex, null);
                         break;
@@ -635,8 +1028,29 @@ namespace Mutagen.Bethesda.Starfield
                     case Key_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
+                    case Key_FieldIndex.Destructible:
+                        this.Destructible = new MaskItem<Exception?, Destructible.ErrorMask?>(ex, null);
+                        break;
+                    case Key_FieldIndex.CraftingSound:
+                        this.CraftingSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case Key_FieldIndex.PickupSound:
+                        this.PickupSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
+                    case Key_FieldIndex.DropdownSound:
+                        this.DropdownSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
+                        break;
                     case Key_FieldIndex.Keywords:
                         this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Key_FieldIndex.FeaturedItemMessage:
+                        this.FeaturedItemMessage = ex;
+                        break;
+                    case Key_FieldIndex.Resources:
+                        this.Resources = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemResource.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Key_FieldIndex.ComponentDisplayIndices:
+                        this.ComponentDisplayIndices = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
                     case Key_FieldIndex.Value:
                         this.Value = ex;
@@ -646,6 +1060,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Key_FieldIndex.Flags:
                         this.Flags = ex;
+                        break;
+                    case Key_FieldIndex.ShortName:
+                        this.ShortName = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -667,6 +1084,9 @@ namespace Mutagen.Bethesda.Starfield
                     case Key_FieldIndex.DirtinessScale:
                         this.DirtinessScale = (Exception?)obj;
                         break;
+                    case Key_FieldIndex.ObjectPaletteDefaults:
+                        this.ObjectPaletteDefaults = (MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>?)obj;
+                        break;
                     case Key_FieldIndex.Transforms:
                         this.Transforms = (MaskItem<Exception?, Transforms.ErrorMask?>?)obj;
                         break;
@@ -679,8 +1099,29 @@ namespace Mutagen.Bethesda.Starfield
                     case Key_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
+                    case Key_FieldIndex.Destructible:
+                        this.Destructible = (MaskItem<Exception?, Destructible.ErrorMask?>?)obj;
+                        break;
+                    case Key_FieldIndex.CraftingSound:
+                        this.CraftingSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case Key_FieldIndex.PickupSound:
+                        this.PickupSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
+                    case Key_FieldIndex.DropdownSound:
+                        this.DropdownSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
+                        break;
                     case Key_FieldIndex.Keywords:
                         this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Key_FieldIndex.FeaturedItemMessage:
+                        this.FeaturedItemMessage = (Exception?)obj;
+                        break;
+                    case Key_FieldIndex.Resources:
+                        this.Resources = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemResource.ErrorMask?>>?>)obj;
+                        break;
+                    case Key_FieldIndex.ComponentDisplayIndices:
+                        this.ComponentDisplayIndices = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
                     case Key_FieldIndex.Value:
                         this.Value = (Exception?)obj;
@@ -690,6 +1131,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Key_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
+                        break;
+                    case Key_FieldIndex.ShortName:
+                        this.ShortName = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -703,14 +1147,23 @@ namespace Mutagen.Bethesda.Starfield
                 if (VirtualMachineAdapter != null) return true;
                 if (ObjectBounds != null) return true;
                 if (DirtinessScale != null) return true;
+                if (ObjectPaletteDefaults != null) return true;
                 if (Transforms != null) return true;
                 if (XALG != null) return true;
                 if (Name != null) return true;
                 if (Model != null) return true;
+                if (Destructible != null) return true;
+                if (CraftingSound != null) return true;
+                if (PickupSound != null) return true;
+                if (DropdownSound != null) return true;
                 if (Keywords != null) return true;
+                if (FeaturedItemMessage != null) return true;
+                if (Resources != null) return true;
+                if (ComponentDisplayIndices != null) return true;
                 if (Value != null) return true;
                 if (Weight != null) return true;
                 if (Flags != null) return true;
+                if (ShortName != null) return true;
                 return false;
             }
             #endregion
@@ -742,6 +1195,7 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(DirtinessScale, "DirtinessScale");
                 }
+                ObjectPaletteDefaults?.Print(sb);
                 Transforms?.Print(sb);
                 {
                     sb.AppendItem(XALG, "XALG");
@@ -750,6 +1204,10 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Name, "Name");
                 }
                 Model?.Print(sb);
+                Destructible?.Print(sb);
+                CraftingSound?.Print(sb);
+                PickupSound?.Print(sb);
+                DropdownSound?.Print(sb);
                 if (Keywords is {} KeywordsItem)
                 {
                     sb.AppendLine("Keywords =>");
@@ -771,6 +1229,47 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 {
+                    sb.AppendItem(FeaturedItemMessage, "FeaturedItemMessage");
+                }
+                if (Resources is {} ResourcesItem)
+                {
+                    sb.AppendLine("Resources =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ResourcesItem.Overall);
+                        if (ResourcesItem.Specific != null)
+                        {
+                            foreach (var subItem in ResourcesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (ComponentDisplayIndices is {} ComponentDisplayIndicesItem)
+                {
+                    sb.AppendLine("ComponentDisplayIndices =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentDisplayIndicesItem.Overall);
+                        if (ComponentDisplayIndicesItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentDisplayIndicesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    {
+                                        sb.AppendItem(subItem);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                {
                     sb.AppendItem(Value, "Value");
                 }
                 {
@@ -778,6 +1277,9 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 {
                     sb.AppendItem(Flags, "Flags");
+                }
+                {
+                    sb.AppendItem(ShortName, "ShortName");
                 }
             }
             #endregion
@@ -790,14 +1292,23 @@ namespace Mutagen.Bethesda.Starfield
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.DirtinessScale = this.DirtinessScale.Combine(rhs.DirtinessScale);
+                ret.ObjectPaletteDefaults = this.ObjectPaletteDefaults.Combine(rhs.ObjectPaletteDefaults, (l, r) => l.Combine(r));
                 ret.Transforms = this.Transforms.Combine(rhs.Transforms, (l, r) => l.Combine(r));
                 ret.XALG = this.XALG.Combine(rhs.XALG);
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
+                ret.CraftingSound = this.CraftingSound.Combine(rhs.CraftingSound, (l, r) => l.Combine(r));
+                ret.PickupSound = this.PickupSound.Combine(rhs.PickupSound, (l, r) => l.Combine(r));
+                ret.DropdownSound = this.DropdownSound.Combine(rhs.DropdownSound, (l, r) => l.Combine(r));
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.FeaturedItemMessage = this.FeaturedItemMessage.Combine(rhs.FeaturedItemMessage);
+                ret.Resources = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ItemResource.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Resources?.Overall, rhs.Resources?.Overall), Noggog.ExceptionExt.Combine(this.Resources?.Specific, rhs.Resources?.Specific));
+                ret.ComponentDisplayIndices = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ComponentDisplayIndices?.Overall, rhs.ComponentDisplayIndices?.Overall), Noggog.ExceptionExt.Combine(this.ComponentDisplayIndices?.Specific, rhs.ComponentDisplayIndices?.Specific));
                 ret.Value = this.Value.Combine(rhs.Value);
                 ret.Weight = this.Weight.Combine(rhs.Weight);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.ShortName = this.ShortName.Combine(rhs.ShortName);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -823,14 +1334,23 @@ namespace Mutagen.Bethesda.Starfield
             public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool DirtinessScale;
+            public ObjectPaletteDefaults.TranslationMask? ObjectPaletteDefaults;
             public Transforms.TranslationMask? Transforms;
             public bool XALG;
             public bool Name;
             public Model.TranslationMask? Model;
+            public Destructible.TranslationMask? Destructible;
+            public SoundReference.TranslationMask? CraftingSound;
+            public SoundReference.TranslationMask? PickupSound;
+            public SoundReference.TranslationMask? DropdownSound;
             public bool Keywords;
+            public bool FeaturedItemMessage;
+            public ItemResource.TranslationMask? Resources;
+            public bool ComponentDisplayIndices;
             public bool Value;
             public bool Weight;
             public bool Flags;
+            public bool ShortName;
             #endregion
 
             #region Ctors
@@ -843,9 +1363,12 @@ namespace Mutagen.Bethesda.Starfield
                 this.XALG = defaultOn;
                 this.Name = defaultOn;
                 this.Keywords = defaultOn;
+                this.FeaturedItemMessage = defaultOn;
+                this.ComponentDisplayIndices = defaultOn;
                 this.Value = defaultOn;
                 this.Weight = defaultOn;
                 this.Flags = defaultOn;
+                this.ShortName = defaultOn;
             }
 
             #endregion
@@ -856,14 +1379,23 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((DirtinessScale, null));
+                ret.Add((ObjectPaletteDefaults != null ? ObjectPaletteDefaults.OnOverall : DefaultOn, ObjectPaletteDefaults?.GetCrystal()));
                 ret.Add((Transforms != null ? Transforms.OnOverall : DefaultOn, Transforms?.GetCrystal()));
                 ret.Add((XALG, null));
                 ret.Add((Name, null));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((Destructible != null ? Destructible.OnOverall : DefaultOn, Destructible?.GetCrystal()));
+                ret.Add((CraftingSound != null ? CraftingSound.OnOverall : DefaultOn, CraftingSound?.GetCrystal()));
+                ret.Add((PickupSound != null ? PickupSound.OnOverall : DefaultOn, PickupSound?.GetCrystal()));
+                ret.Add((DropdownSound != null ? DropdownSound.OnOverall : DefaultOn, DropdownSound?.GetCrystal()));
                 ret.Add((Keywords, null));
+                ret.Add((FeaturedItemMessage, null));
+                ret.Add((Resources == null ? DefaultOn : !Resources.GetCrystal().CopyNothing, Resources?.GetCrystal()));
+                ret.Add((ComponentDisplayIndices, null));
                 ret.Add((Value, null));
                 ret.Add((Weight, null));
                 ret.Add((Flags, null));
+                ret.Add((ShortName, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -1012,6 +1544,7 @@ namespace Mutagen.Bethesda.Starfield
     public partial interface IKey :
         IAssetLinkContainer,
         IFormLinkContainer,
+        IHasDestructible,
         IHaveVirtualMachineAdapter,
         IItem,
         IKeyGetter,
@@ -1037,6 +1570,7 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new Percent DirtinessScale { get; set; }
+        new ObjectPaletteDefaults? ObjectPaletteDefaults { get; set; }
         new Transforms? Transforms { get; set; }
         new UInt64? XALG { get; set; }
         /// <summary>
@@ -1048,12 +1582,23 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new Model? Model { get; set; }
         /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
+        new Destructible? Destructible { get; set; }
+        new SoundReference? CraftingSound { get; set; }
+        new SoundReference? PickupSound { get; set; }
+        new SoundReference? DropdownSound { get; set; }
+        /// <summary>
         /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
+        new IFormLinkNullable<IMessageGetter> FeaturedItemMessage { get; set; }
+        new ExtendedList<ItemResource>? Resources { get; set; }
+        new ExtendedList<Byte>? ComponentDisplayIndices { get; set; }
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
-        new UInt32? Flags { get; set; }
+        new Key.Flag? Flags { get; set; }
+        new TranslatedString? ShortName { get; set; }
     }
 
     public partial interface IKeyInternal :
@@ -1069,6 +1614,7 @@ namespace Mutagen.Bethesda.Starfield
         IAssetLinkContainerGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHasDestructibleGetter,
         IHaveVirtualMachineAdapterGetter,
         IItemGetter,
         IKeywordedGetter<IKeywordGetter>,
@@ -1098,6 +1644,7 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
         Percent DirtinessScale { get; }
+        IObjectPaletteDefaultsGetter? ObjectPaletteDefaults { get; }
         ITransformsGetter? Transforms { get; }
         UInt64? XALG { get; }
         #region Name
@@ -1112,15 +1659,28 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
+        #region Destructible
+        /// <summary>
+        /// Aspects: IHasDestructibleGetter
+        /// </summary>
+        IDestructibleGetter? Destructible { get; }
+        #endregion
+        ISoundReferenceGetter? CraftingSound { get; }
+        ISoundReferenceGetter? PickupSound { get; }
+        ISoundReferenceGetter? DropdownSound { get; }
         #region Keywords
         /// <summary>
         /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
         /// </summary>
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         #endregion
+        IFormLinkNullableGetter<IMessageGetter> FeaturedItemMessage { get; }
+        IReadOnlyList<IItemResourceGetter>? Resources { get; }
+        IReadOnlyList<Byte>? ComponentDisplayIndices { get; }
         UInt32 Value { get; }
         Single Weight { get; }
-        UInt32? Flags { get; }
+        Key.Flag? Flags { get; }
+        ITranslatedStringGetter? ShortName { get; }
 
     }
 
@@ -1300,14 +1860,23 @@ namespace Mutagen.Bethesda.Starfield
         VirtualMachineAdapter = 7,
         ObjectBounds = 8,
         DirtinessScale = 9,
-        Transforms = 10,
-        XALG = 11,
-        Name = 12,
-        Model = 13,
-        Keywords = 14,
-        Value = 15,
-        Weight = 16,
-        Flags = 17,
+        ObjectPaletteDefaults = 10,
+        Transforms = 11,
+        XALG = 12,
+        Name = 13,
+        Model = 14,
+        Destructible = 15,
+        CraftingSound = 16,
+        PickupSound = 17,
+        DropdownSound = 18,
+        Keywords = 19,
+        FeaturedItemMessage = 20,
+        Resources = 21,
+        ComponentDisplayIndices = 22,
+        Value = 23,
+        Weight = 24,
+        Flags = 25,
+        ShortName = 26,
     }
     #endregion
 
@@ -1318,9 +1887,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 11;
+        public const ushort AdditionalFieldCount = 20;
 
-        public const ushort FieldCount = 18;
+        public const ushort FieldCount = 27;
 
         public static readonly Type MaskType = typeof(Key.Mask<>);
 
@@ -1357,6 +1926,7 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XXXX,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
+                RecordTypes.OPDS,
                 RecordTypes.PTT2,
                 RecordTypes.XALG,
                 RecordTypes.FULL,
@@ -1367,10 +1937,21 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
                 RecordTypes.MODF,
+                RecordTypes.DEST,
+                RecordTypes.DAMC,
+                RecordTypes.DSDL,
+                RecordTypes.DSTD,
+                RecordTypes.CUSH,
+                RecordTypes.PUSH,
+                RecordTypes.PDSH,
                 RecordTypes.KWDA,
                 RecordTypes.KSIZ,
+                RecordTypes.FIMD,
+                RecordTypes.CVPA,
+                RecordTypes.CDIX,
                 RecordTypes.DATA,
-                RecordTypes.FLAG);
+                RecordTypes.FLAG,
+                RecordTypes.NNAM);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
@@ -1418,14 +1999,23 @@ namespace Mutagen.Bethesda.Starfield
             item.VirtualMachineAdapter = null;
             item.ObjectBounds.Clear();
             item.DirtinessScale = default(Percent);
+            item.ObjectPaletteDefaults = null;
             item.Transforms = null;
             item.XALG = default;
             item.Name = default;
             item.Model = null;
+            item.Destructible = null;
+            item.CraftingSound = null;
+            item.PickupSound = null;
+            item.DropdownSound = null;
             item.Keywords = null;
+            item.FeaturedItemMessage.Clear();
+            item.Resources = null;
+            item.ComponentDisplayIndices = null;
             item.Value = default(UInt32);
             item.Weight = default(Single);
             item.Flags = default;
+            item.ShortName = default;
             base.Clear(item);
         }
         
@@ -1446,7 +2036,13 @@ namespace Mutagen.Bethesda.Starfield
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.Transforms?.RemapLinks(mapping);
             obj.Model?.RemapLinks(mapping);
+            obj.Destructible?.RemapLinks(mapping);
+            obj.CraftingSound?.RemapLinks(mapping);
+            obj.PickupSound?.RemapLinks(mapping);
+            obj.DropdownSound?.RemapLinks(mapping);
             obj.Keywords?.RemapLinks(mapping);
+            obj.FeaturedItemMessage.Relink(mapping);
+            obj.Resources?.RemapLinks(mapping);
         }
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IKey obj)
@@ -1462,6 +2058,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -1473,6 +2076,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
             obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Destructible?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -1547,6 +2151,11 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.DirtinessScale = item.DirtinessScale.Equals(rhs.DirtinessScale);
+            ret.ObjectPaletteDefaults = EqualsMaskHelper.EqualsHelper(
+                item.ObjectPaletteDefaults,
+                rhs.ObjectPaletteDefaults,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Transforms = EqualsMaskHelper.EqualsHelper(
                 item.Transforms,
                 rhs.Transforms,
@@ -1559,13 +2168,43 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
+            ret.Destructible = EqualsMaskHelper.EqualsHelper(
+                item.Destructible,
+                rhs.Destructible,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.CraftingSound = EqualsMaskHelper.EqualsHelper(
+                item.CraftingSound,
+                rhs.CraftingSound,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.PickupSound = EqualsMaskHelper.EqualsHelper(
+                item.PickupSound,
+                rhs.PickupSound,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.DropdownSound = EqualsMaskHelper.EqualsHelper(
+                item.DropdownSound,
+                rhs.DropdownSound,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.Keywords = item.Keywords.CollectionEqualsHelper(
                 rhs.Keywords,
                 (l, r) => object.Equals(l, r),
                 include);
+            ret.FeaturedItemMessage = item.FeaturedItemMessage.Equals(rhs.FeaturedItemMessage);
+            ret.Resources = item.Resources.CollectionEqualsHelper(
+                rhs.Resources,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.ComponentDisplayIndices = item.ComponentDisplayIndices.CollectionEqualsHelper(
+                rhs.ComponentDisplayIndices,
+                (l, r) => l == r,
+                include);
             ret.Value = item.Value == rhs.Value;
             ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.Flags = item.Flags == rhs.Flags;
+            ret.ShortName = object.Equals(item.ShortName, rhs.ShortName);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1628,6 +2267,11 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.DirtinessScale, "DirtinessScale");
             }
+            if ((printMask?.ObjectPaletteDefaults?.Overall ?? true)
+                && item.ObjectPaletteDefaults is {} ObjectPaletteDefaultsItem)
+            {
+                ObjectPaletteDefaultsItem?.Print(sb, "ObjectPaletteDefaults");
+            }
             if ((printMask?.Transforms?.Overall ?? true)
                 && item.Transforms is {} TransformsItem)
             {
@@ -1648,6 +2292,26 @@ namespace Mutagen.Bethesda.Starfield
             {
                 ModelItem?.Print(sb, "Model");
             }
+            if ((printMask?.Destructible?.Overall ?? true)
+                && item.Destructible is {} DestructibleItem)
+            {
+                DestructibleItem?.Print(sb, "Destructible");
+            }
+            if ((printMask?.CraftingSound?.Overall ?? true)
+                && item.CraftingSound is {} CraftingSoundItem)
+            {
+                CraftingSoundItem?.Print(sb, "CraftingSound");
+            }
+            if ((printMask?.PickupSound?.Overall ?? true)
+                && item.PickupSound is {} PickupSoundItem)
+            {
+                PickupSoundItem?.Print(sb, "PickupSound");
+            }
+            if ((printMask?.DropdownSound?.Overall ?? true)
+                && item.DropdownSound is {} DropdownSoundItem)
+            {
+                DropdownSoundItem?.Print(sb, "DropdownSound");
+            }
             if ((printMask?.Keywords?.Overall ?? true)
                 && item.Keywords is {} KeywordsItem)
             {
@@ -1659,6 +2323,40 @@ namespace Mutagen.Bethesda.Starfield
                         using (sb.Brace())
                         {
                             sb.AppendItem(subItem.FormKey);
+                        }
+                    }
+                }
+            }
+            if (printMask?.FeaturedItemMessage ?? true)
+            {
+                sb.AppendItem(item.FeaturedItemMessage.FormKeyNullable, "FeaturedItemMessage");
+            }
+            if ((printMask?.Resources?.Overall ?? true)
+                && item.Resources is {} ResourcesItem)
+            {
+                sb.AppendLine("Resources =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in ResourcesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.ComponentDisplayIndices?.Overall ?? true)
+                && item.ComponentDisplayIndices is {} ComponentDisplayIndicesItem)
+            {
+                sb.AppendLine("ComponentDisplayIndices =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in ComponentDisplayIndicesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(subItem);
                         }
                     }
                 }
@@ -1675,6 +2373,11 @@ namespace Mutagen.Bethesda.Starfield
                 && item.Flags is {} FlagsItem)
             {
                 sb.AppendItem(FlagsItem, "Flags");
+            }
+            if ((printMask?.ShortName ?? true)
+                && item.ShortName is {} ShortNameItem)
+            {
+                sb.AppendItem(ShortNameItem, "ShortName");
             }
         }
         
@@ -1746,6 +2449,14 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.DirtinessScale.Equals(rhs.DirtinessScale)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Key_FieldIndex.ObjectPaletteDefaults) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectPaletteDefaults, rhs.ObjectPaletteDefaults, out var lhsObjectPaletteDefaults, out var rhsObjectPaletteDefaults, out var isObjectPaletteDefaultsEqual))
+                {
+                    if (!((ObjectPaletteDefaultsCommon)((IObjectPaletteDefaultsGetter)lhsObjectPaletteDefaults).CommonInstance()!).Equals(lhsObjectPaletteDefaults, rhsObjectPaletteDefaults, equalsMask?.GetSubCrystal((int)Key_FieldIndex.ObjectPaletteDefaults))) return false;
+                }
+                else if (!isObjectPaletteDefaultsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Key_FieldIndex.Transforms) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Transforms, rhs.Transforms, out var lhsTransforms, out var rhsTransforms, out var isTransformsEqual))
@@ -1770,9 +2481,53 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isModelEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Key_FieldIndex.Destructible) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
+                {
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)Key_FieldIndex.Destructible))) return false;
+                }
+                else if (!isDestructibleEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Key_FieldIndex.CraftingSound) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.CraftingSound, rhs.CraftingSound, out var lhsCraftingSound, out var rhsCraftingSound, out var isCraftingSoundEqual))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsCraftingSound).CommonInstance()!).Equals(lhsCraftingSound, rhsCraftingSound, equalsMask?.GetSubCrystal((int)Key_FieldIndex.CraftingSound))) return false;
+                }
+                else if (!isCraftingSoundEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Key_FieldIndex.PickupSound) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.PickupSound, rhs.PickupSound, out var lhsPickupSound, out var rhsPickupSound, out var isPickupSoundEqual))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsPickupSound).CommonInstance()!).Equals(lhsPickupSound, rhsPickupSound, equalsMask?.GetSubCrystal((int)Key_FieldIndex.PickupSound))) return false;
+                }
+                else if (!isPickupSoundEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Key_FieldIndex.DropdownSound) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.DropdownSound, rhs.DropdownSound, out var lhsDropdownSound, out var rhsDropdownSound, out var isDropdownSoundEqual))
+                {
+                    if (!((SoundReferenceCommon)((ISoundReferenceGetter)lhsDropdownSound).CommonInstance()!).Equals(lhsDropdownSound, rhsDropdownSound, equalsMask?.GetSubCrystal((int)Key_FieldIndex.DropdownSound))) return false;
+                }
+                else if (!isDropdownSoundEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Key_FieldIndex.Keywords) ?? true))
             {
                 if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Key_FieldIndex.FeaturedItemMessage) ?? true))
+            {
+                if (!lhs.FeaturedItemMessage.Equals(rhs.FeaturedItemMessage)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Key_FieldIndex.Resources) ?? true))
+            {
+                if (!lhs.Resources.SequenceEqualNullable(rhs.Resources, (l, r) => ((ItemResourceCommon)((IItemResourceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Key_FieldIndex.Resources)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Key_FieldIndex.ComponentDisplayIndices) ?? true))
+            {
+                if (!lhs.ComponentDisplayIndices.SequenceEqualNullable(rhs.ComponentDisplayIndices)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Key_FieldIndex.Value) ?? true))
             {
@@ -1785,6 +2540,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((equalsMask?.GetShouldTranslate((int)Key_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Key_FieldIndex.ShortName) ?? true))
+            {
+                if (!object.Equals(lhs.ShortName, rhs.ShortName)) return false;
             }
             return true;
         }
@@ -1820,6 +2579,10 @@ namespace Mutagen.Bethesda.Starfield
             }
             hash.Add(item.ObjectBounds);
             hash.Add(item.DirtinessScale);
+            if (item.ObjectPaletteDefaults is {} ObjectPaletteDefaultsitem)
+            {
+                hash.Add(ObjectPaletteDefaultsitem);
+            }
             if (item.Transforms is {} Transformsitem)
             {
                 hash.Add(Transformsitem);
@@ -1836,12 +2599,35 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(Modelitem);
             }
+            if (item.Destructible is {} Destructibleitem)
+            {
+                hash.Add(Destructibleitem);
+            }
+            if (item.CraftingSound is {} CraftingSounditem)
+            {
+                hash.Add(CraftingSounditem);
+            }
+            if (item.PickupSound is {} PickupSounditem)
+            {
+                hash.Add(PickupSounditem);
+            }
+            if (item.DropdownSound is {} DropdownSounditem)
+            {
+                hash.Add(DropdownSounditem);
+            }
             hash.Add(item.Keywords);
+            hash.Add(item.FeaturedItemMessage);
+            hash.Add(item.Resources);
+            hash.Add(item.ComponentDisplayIndices);
             hash.Add(item.Value);
             hash.Add(item.Weight);
             if (item.Flags is {} Flagsitem)
             {
                 hash.Add(Flagsitem);
+            }
+            if (item.ShortName is {} ShortNameitem)
+            {
+                hash.Add(ShortNameitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1893,9 +2679,48 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.CraftingSound is {} CraftingSoundItems)
+            {
+                foreach (var item in CraftingSoundItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.PickupSound is {} PickupSoundItems)
+            {
+                foreach (var item in PickupSoundItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            if (obj.DropdownSound is {} DropdownSoundItems)
+            {
+                foreach (var item in DropdownSoundItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.Keywords is {} KeywordsItem)
             {
                 foreach (var item in KeywordsItem)
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (FormLinkInformation.TryFactory(obj.FeaturedItemMessage, out var FeaturedItemMessageInfo))
+            {
+                yield return FeaturedItemMessageInfo;
+            }
+            if (obj.Resources is {} ResourcesItem)
+            {
+                foreach (var item in ResourcesItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -1912,6 +2737,13 @@ namespace Mutagen.Bethesda.Starfield
             if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
@@ -2042,6 +2874,32 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.DirtinessScale = rhs.DirtinessScale;
             }
+            if ((copyMask?.GetShouldTranslate((int)Key_FieldIndex.ObjectPaletteDefaults) ?? true))
+            {
+                errorMask?.PushIndex((int)Key_FieldIndex.ObjectPaletteDefaults);
+                try
+                {
+                    if(rhs.ObjectPaletteDefaults is {} rhsObjectPaletteDefaults)
+                    {
+                        item.ObjectPaletteDefaults = rhsObjectPaletteDefaults.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Key_FieldIndex.ObjectPaletteDefaults));
+                    }
+                    else
+                    {
+                        item.ObjectPaletteDefaults = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)Key_FieldIndex.Transforms) ?? true))
             {
                 errorMask?.PushIndex((int)Key_FieldIndex.Transforms);
@@ -2102,6 +2960,110 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Key_FieldIndex.Destructible) ?? true))
+            {
+                errorMask?.PushIndex((int)Key_FieldIndex.Destructible);
+                try
+                {
+                    if(rhs.Destructible is {} rhsDestructible)
+                    {
+                        item.Destructible = rhsDestructible.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Key_FieldIndex.Destructible));
+                    }
+                    else
+                    {
+                        item.Destructible = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Key_FieldIndex.CraftingSound) ?? true))
+            {
+                errorMask?.PushIndex((int)Key_FieldIndex.CraftingSound);
+                try
+                {
+                    if(rhs.CraftingSound is {} rhsCraftingSound)
+                    {
+                        item.CraftingSound = rhsCraftingSound.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Key_FieldIndex.CraftingSound));
+                    }
+                    else
+                    {
+                        item.CraftingSound = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Key_FieldIndex.PickupSound) ?? true))
+            {
+                errorMask?.PushIndex((int)Key_FieldIndex.PickupSound);
+                try
+                {
+                    if(rhs.PickupSound is {} rhsPickupSound)
+                    {
+                        item.PickupSound = rhsPickupSound.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Key_FieldIndex.PickupSound));
+                    }
+                    else
+                    {
+                        item.PickupSound = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Key_FieldIndex.DropdownSound) ?? true))
+            {
+                errorMask?.PushIndex((int)Key_FieldIndex.DropdownSound);
+                try
+                {
+                    if(rhs.DropdownSound is {} rhsDropdownSound)
+                    {
+                        item.DropdownSound = rhsDropdownSound.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Key_FieldIndex.DropdownSound));
+                    }
+                    else
+                    {
+                        item.DropdownSound = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)Key_FieldIndex.Keywords) ?? true))
             {
                 errorMask?.PushIndex((int)Key_FieldIndex.Keywords);
@@ -2129,6 +3091,68 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Key_FieldIndex.FeaturedItemMessage) ?? true))
+            {
+                item.FeaturedItemMessage.SetTo(rhs.FeaturedItemMessage.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Key_FieldIndex.Resources) ?? true))
+            {
+                errorMask?.PushIndex((int)Key_FieldIndex.Resources);
+                try
+                {
+                    if ((rhs.Resources != null))
+                    {
+                        item.Resources = 
+                            rhs.Resources
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<ItemResource>();
+                    }
+                    else
+                    {
+                        item.Resources = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Key_FieldIndex.ComponentDisplayIndices) ?? true))
+            {
+                errorMask?.PushIndex((int)Key_FieldIndex.ComponentDisplayIndices);
+                try
+                {
+                    if ((rhs.ComponentDisplayIndices != null))
+                    {
+                        item.ComponentDisplayIndices = 
+                            rhs.ComponentDisplayIndices
+                            .ToExtendedList<Byte>();
+                    }
+                    else
+                    {
+                        item.ComponentDisplayIndices = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)Key_FieldIndex.Value) ?? true))
             {
                 item.Value = rhs.Value;
@@ -2140,6 +3164,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((copyMask?.GetShouldTranslate((int)Key_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Key_FieldIndex.ShortName) ?? true))
+            {
+                item.ShortName = rhs.ShortName?.DeepCopy();
             }
             DeepCopyInCustom(
                 item: item,
@@ -2327,6 +3355,13 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.DirtinessScale,
                 integerType: FloatIntegerType.UInt,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            if (item.ObjectPaletteDefaults is {} ObjectPaletteDefaultsItem)
+            {
+                ((ObjectPaletteDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPaletteDefaultsItem).BinaryWriteTranslator).Write(
+                    item: ObjectPaletteDefaultsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             if (item.Transforms is {} TransformsItem)
             {
                 ((TransformsBinaryWriteTranslation)((IBinaryItem)TransformsItem).BinaryWriteTranslator).Write(
@@ -2351,6 +3386,43 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     translationParams: translationParams);
             }
+            if (item.Destructible is {} DestructibleItem)
+            {
+                ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
+                    item: DestructibleItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.CraftingSound is {} CraftingSoundItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.CUSH))
+                {
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)CraftingSoundItem).BinaryWriteTranslator).Write(
+                        item: CraftingSoundItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (item.PickupSound is {} PickupSoundItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.PUSH))
+                {
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)PickupSoundItem).BinaryWriteTranslator).Write(
+                        item: PickupSoundItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (item.DropdownSound is {} DropdownSoundItem)
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.PDSH))
+                {
+                    ((SoundReferenceBinaryWriteTranslation)((IBinaryItem)DropdownSoundItem).BinaryWriteTranslator).Write(
+                        item: DropdownSoundItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
@@ -2363,6 +3435,27 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         item: subItem);
                 });
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.FeaturedItemMessage,
+                header: translationParams.ConvertToCustom(RecordTypes.FIMD));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IItemResourceGetter>.Instance.Write(
+                writer: writer,
+                items: item.Resources,
+                recordType: translationParams.ConvertToCustom(RecordTypes.CVPA),
+                transl: (MutagenWriter subWriter, IItemResourceGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((ItemResourceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Byte>.Instance.Write(
+                writer: writer,
+                items: item.ComponentDisplayIndices,
+                recordType: translationParams.ConvertToCustom(RecordTypes.CDIX),
+                transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
             using (HeaderExport.Subrecord(writer, translationParams.ConvertToCustom(RecordTypes.DATA)))
             {
                 writer.Write(item.Value);
@@ -2370,10 +3463,17 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     item: item.Weight);
             }
-            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.Flags,
+            EnumBinaryTranslation<Key.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Flags,
+                length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.FLAG));
+            StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ShortName,
+                header: translationParams.ConvertToCustom(RecordTypes.NNAM),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
         }
 
         public void Write(
@@ -2462,6 +3562,11 @@ namespace Mutagen.Bethesda.Starfield
                         integerType: FloatIntegerType.UInt);
                     return (int)Key_FieldIndex.DirtinessScale;
                 }
+                case RecordTypeInts.OPDS:
+                {
+                    item.ObjectPaletteDefaults = Mutagen.Bethesda.Starfield.ObjectPaletteDefaults.CreateFromBinary(frame: frame);
+                    return (int)Key_FieldIndex.ObjectPaletteDefaults;
+                }
                 case RecordTypeInts.PTT2:
                 {
                     item.Transforms = Mutagen.Bethesda.Starfield.Transforms.CreateFromBinary(frame: frame);
@@ -2497,6 +3602,34 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)Key_FieldIndex.Model;
                 }
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DAMC:
+                case RecordTypeInts.DSDL:
+                case RecordTypeInts.DSTD:
+                {
+                    item.Destructible = Mutagen.Bethesda.Starfield.Destructible.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Key_FieldIndex.Destructible;
+                }
+                case RecordTypeInts.CUSH:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.CraftingSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)Key_FieldIndex.CraftingSound;
+                }
+                case RecordTypeInts.PUSH:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.PickupSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)Key_FieldIndex.PickupSound;
+                }
+                case RecordTypeInts.PDSH:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.DropdownSound = Mutagen.Bethesda.Starfield.SoundReference.CreateFromBinary(frame: frame);
+                    return (int)Key_FieldIndex.DropdownSound;
+                }
                 case RecordTypeInts.KSIZ:
                 case RecordTypeInts.KWDA:
                 {
@@ -2509,6 +3642,32 @@ namespace Mutagen.Bethesda.Starfield
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     return (int)Key_FieldIndex.Keywords;
+                }
+                case RecordTypeInts.FIMD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FeaturedItemMessage.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)Key_FieldIndex.FeaturedItemMessage;
+                }
+                case RecordTypeInts.CVPA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Resources = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ItemResource>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: ItemResource.TryCreateFromBinary)
+                        .CastExtendedList<ItemResource>();
+                    return (int)Key_FieldIndex.Resources;
+                }
+                case RecordTypeInts.CDIX:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ComponentDisplayIndices = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Byte>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
+                        .CastExtendedList<Byte>();
+                    return (int)Key_FieldIndex.ComponentDisplayIndices;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -2523,8 +3682,21 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.FLAG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = frame.ReadUInt32();
+                    item.Flags = EnumBinaryTranslation<Key.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)Key_FieldIndex.Flags;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ShortName = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
+                        eager: true,
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate,
+                        parseWhole: true);
+                    return (int)Key_FieldIndex.ShortName;
                 }
                 case RecordTypeInts.XXXX:
                 {
@@ -2606,6 +3778,10 @@ namespace Mutagen.Bethesda.Starfield
         private int? _DirtinessScaleLocation;
         public Percent DirtinessScale => _DirtinessScaleLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DirtinessScaleLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt) : default(Percent);
         #endregion
+        #region ObjectPaletteDefaults
+        private RangeInt32? _ObjectPaletteDefaultsLocation;
+        public IObjectPaletteDefaultsGetter? ObjectPaletteDefaults => _ObjectPaletteDefaultsLocation.HasValue ? ObjectPaletteDefaultsBinaryOverlay.ObjectPaletteDefaultsFactory(_recordData.Slice(_ObjectPaletteDefaultsLocation!.Value.Min), _package) : default;
+        #endregion
         #region Transforms
         private RangeInt32? _TransformsLocation;
         public ITransformsGetter? Transforms => _TransformsLocation.HasValue ? TransformsBinaryOverlay.TransformsFactory(_recordData.Slice(_TransformsLocation!.Value.Min), _package) : default;
@@ -2627,10 +3803,20 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #endregion
         public IModelGetter? Model { get; private set; }
+        public IDestructibleGetter? Destructible { get; private set; }
+        public ISoundReferenceGetter? CraftingSound { get; private set; }
+        public ISoundReferenceGetter? PickupSound { get; private set; }
+        public ISoundReferenceGetter? DropdownSound { get; private set; }
         #region Keywords
         public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
+        #region FeaturedItemMessage
+        private int? _FeaturedItemMessageLocation;
+        public IFormLinkNullableGetter<IMessageGetter> FeaturedItemMessage => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IMessageGetter>(_package, _recordData, _FeaturedItemMessageLocation);
+        #endregion
+        public IReadOnlyList<IItemResourceGetter>? Resources { get; private set; }
+        public IReadOnlyList<Byte>? ComponentDisplayIndices { get; private set; }
         private RangeInt32? _DATALocation;
         #region Value
         private int _ValueLocation => _DATALocation!.Value.Min;
@@ -2644,7 +3830,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public UInt32? Flags => _FlagsLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        public Key.Flag? Flags => _FlagsLocation.HasValue ? (Key.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Key.Flag?);
+        #endregion
+        #region ShortName
+        private int? _ShortNameLocation;
+        public ITranslatedStringGetter? ShortName => _ShortNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _ShortNameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2735,6 +3925,11 @@ namespace Mutagen.Bethesda.Starfield
                     _DirtinessScaleLocation = (stream.Position - offset);
                     return (int)Key_FieldIndex.DirtinessScale;
                 }
+                case RecordTypeInts.OPDS:
+                {
+                    _ObjectPaletteDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)Key_FieldIndex.ObjectPaletteDefaults;
+                }
                 case RecordTypeInts.PTT2:
                 {
                     _TransformsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
@@ -2764,6 +3959,44 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)Key_FieldIndex.Model;
                 }
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DAMC:
+                case RecordTypeInts.DSDL:
+                case RecordTypeInts.DSTD:
+                {
+                    this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Key_FieldIndex.Destructible;
+                }
+                case RecordTypeInts.CUSH:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.CraftingSound = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Key_FieldIndex.CraftingSound;
+                }
+                case RecordTypeInts.PUSH:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.PickupSound = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Key_FieldIndex.PickupSound;
+                }
+                case RecordTypeInts.PDSH:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.DropdownSound = SoundReferenceBinaryOverlay.SoundReferenceFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Key_FieldIndex.DropdownSound;
+                }
                 case RecordTypeInts.KSIZ:
                 case RecordTypeInts.KWDA:
                 {
@@ -2777,6 +4010,31 @@ namespace Mutagen.Bethesda.Starfield
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(p, s));
                     return (int)Key_FieldIndex.Keywords;
                 }
+                case RecordTypeInts.FIMD:
+                {
+                    _FeaturedItemMessageLocation = (stream.Position - offset);
+                    return (int)Key_FieldIndex.FeaturedItemMessage;
+                }
+                case RecordTypeInts.CVPA:
+                {
+                    this.Resources = BinaryOverlayList.FactoryByStartIndexWithTrigger<IItemResourceGetter>(
+                        stream: stream,
+                        package: _package,
+                        finalPos: finalPos,
+                        itemLength: 12,
+                        getter: (s, p) => ItemResourceBinaryOverlay.ItemResourceFactory(s, p));
+                    return (int)Key_FieldIndex.Resources;
+                }
+                case RecordTypeInts.CDIX:
+                {
+                    this.ComponentDisplayIndices = BinaryOverlayList.FactoryByStartIndexWithTrigger<Byte>(
+                        stream: stream,
+                        package: _package,
+                        finalPos: finalPos,
+                        itemLength: 1,
+                        getter: (s, p) => s[0]);
+                    return (int)Key_FieldIndex.ComponentDisplayIndices;
+                }
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = new((stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength, finalPos - offset - 1);
@@ -2786,6 +4044,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     _FlagsLocation = (stream.Position - offset);
                     return (int)Key_FieldIndex.Flags;
+                }
+                case RecordTypeInts.NNAM:
+                {
+                    _ShortNameLocation = (stream.Position - offset);
+                    return (int)Key_FieldIndex.ShortName;
                 }
                 case RecordTypeInts.XXXX:
                 {

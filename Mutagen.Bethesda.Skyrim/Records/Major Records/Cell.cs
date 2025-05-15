@@ -434,7 +434,6 @@ partial class CellBinaryOverlay
     partial void CustomEnd(OverlayStream stream, int finalPos, int _)
     {
         if (stream.Complete) return;
-        var startPos = stream.Position;
         if (!stream.TryGetGroupHeader(out var groupMeta)) return;
         var formKey = FormKey.Factory(
             _package.MetaData.MasterReferences, 

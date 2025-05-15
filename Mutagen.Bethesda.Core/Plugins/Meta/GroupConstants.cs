@@ -26,6 +26,7 @@ public sealed record GroupConstants : RecordHeaderConstants
     public GroupTopicConstants? Topic { get; init; }
     public GroupQuestConstants? Quest { get; init; }
     public IReadOnlyCollection<int> HasSubGroups { get; }
+    public IReadOnlyCollection<int> HasParentFormId { get; }
     private readonly GroupNesting[] _nesting;
 
     public GroupConstants(
@@ -36,6 +37,7 @@ public sealed record GroupConstants : RecordHeaderConstants
         GroupWorldConstants world,
         GroupTopicConstants? topic,
         int[] hasSubGroups,
+        int[] hasParentFormId,
         GroupNesting[] nesting)
         : base(type, headerLength, lengthLength)
     {
@@ -43,6 +45,7 @@ public sealed record GroupConstants : RecordHeaderConstants
         World = world;
         Topic = topic;
         HasSubGroups = hasSubGroups.ToHashSet();
+        HasParentFormId = hasParentFormId.ToHashSet();
         var max = nesting.Select(x => x.GroupType).StartWith(0).Max(x => x);
         _nesting = new GroupNesting[max + 1];
         for (int i = 0; i < _nesting.Length; i++)

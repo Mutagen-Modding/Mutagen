@@ -2,30 +2,133 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="InstanceNamingRules" recordType="INNR" objType="Record" baseClass="StarfieldMajorRecord">
     <Fields>
-      <Enum name="Target" enumName="InstanceNamingRules.RuleTarget" byteLength="4" recordType="UNAM" />
-      <RefList name="RuleSets" refName="InstanceNamingRuleSet" />
+      <CustomLogic name="RuleSetParser" recordType="UNAM" />
+      <RefDirect name="Rules" refName="AInstanceNamingRules" binary="NoGeneration" />
     </Fields>
   </Object>
-  <Object name="InstanceNamingRuleSet" objType="Subrecord">
+  <Object name="AInstanceNamingRules" objType="Subrecord" abstract="true">
     <Fields>
-      <RefList name="Names" refName="InstanceNamingRule" counterRecType="VNAM" allowNoCounter="false" />
     </Fields>
   </Object>
-  <Object name="InstanceNamingRule" objType="Subrecord">
+  <Object name="NoInstanceNamingRules" objType="Subrecord" baseClass="AInstanceNamingRules">
     <Fields>
-      <String name="Name" recordType="WNAM" translated="Normal" />
+      <List name="Rules" >
+        <Ref>
+          <Direct refName="InstanceNamingRuleSet">
+            <GenericSpecification Definition="NoInstanceNamingRules.Target" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+    </Fields>
+  </Object>
+  <Object name="ArmorInstanceNamingRules" objType="Subrecord" baseClass="AInstanceNamingRules">
+    <Fields>
+      <List name="Rules" >
+        <Ref>
+          <Direct refName="InstanceNamingRuleSet">
+            <GenericSpecification Definition="ArmorInstanceNamingRules.Target" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+    </Fields>
+  </Object>
+  <Object name="FloraInstanceNamingRules" objType="Subrecord" baseClass="AInstanceNamingRules">
+    <Fields>
+      <List name="Rules" >
+        <Ref>
+          <Direct refName="InstanceNamingRuleSet">
+            <GenericSpecification Definition="FloraInstanceNamingRules.Target" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+    </Fields>
+  </Object>
+  <Object name="FurnitureInstanceNamingRules" objType="Subrecord" baseClass="AInstanceNamingRules">
+    <Fields>
+      <List name="Rules" >
+        <Ref>
+          <Direct refName="InstanceNamingRuleSet">
+            <GenericSpecification Definition="FurnitureInstanceNamingRules.Target" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+    </Fields>
+  </Object>
+  <Object name="WeaponInstanceNamingRules" objType="Subrecord" baseClass="AInstanceNamingRules">
+    <Fields>
+      <List name="Rules" >
+        <Ref>
+          <Direct refName="InstanceNamingRuleSet">
+            <GenericSpecification Definition="WeaponInstanceNamingRules.Target" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+    </Fields>
+  </Object>
+  <Object name="ActorInstanceNamingRules" objType="Subrecord" baseClass="AInstanceNamingRules">
+    <Fields>
+      <List name="Rules" >
+        <Ref>
+          <Direct refName="InstanceNamingRuleSet">
+            <GenericSpecification Definition="ActorInstanceNamingRules.Target" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+    </Fields>
+  </Object>
+  <Object name="ContainerInstanceNamingRules" objType="Subrecord" baseClass="AInstanceNamingRules">
+    <Fields>
+      <List name="Rules" >
+        <Ref>
+          <Direct refName="InstanceNamingRuleSet">
+            <GenericSpecification Definition="ContainerInstanceNamingRules.Target" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+    </Fields>
+  </Object>
+  <Object name="InstanceNamingRuleSet" objType="Subrecord" >
+    <Generic name="T" isLoqui="false" getterVariance="Out" isClass="false">
+      <Where>struct</Where>
+      <Where>Enum</Where>
+    </Generic>
+    <Fields>
+      <List name="Names" counterRecType="VNAM" counterLength="4" allowNoCounter="false" >
+        <Ref>
+          <Direct refName="InstanceNamingRule">
+            <GenericSpecification Definition="T" TypeToSpecify="T" />
+          </Direct>
+        </Ref>
+      </List>
+    </Fields>
+  </Object>
+  <Object name="InstanceNamingRule" objType="Subrecord" >
+    <Generic name="T" isLoqui="false" getterVariance="Out" isClass="false">
+      <Where>struct</Where>
+      <Where>Enum</Where>
+    </Generic>
+    <Fields>
+      <String name="Text" recordType="WNAM" translated="Normal" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
-      <RefDirect name="Properties" refName="InstanceNamingRuleProperties" />
+      <Ref name="Property">
+        <Direct refName="InstanceNamingRuleProperty">
+          <GenericSpecification Definition="T" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
       <UInt16 name="Index" recordType="YNAM" />
     </Fields>
   </Object>
-  <Object name="InstanceNamingRuleProperties" objType="Subrecord" recordType="XNAM">
+  <Object name="InstanceNamingRuleProperty" objType="Subrecord" recordType="XNAM" >
+    <Generic name="T" isLoqui="false" getterVariance="Out" isClass="false">
+      <Where>struct</Where>
+      <Where>Enum</Where>
+    </Generic>
     <Fields>
       <Float name="Value" />
-      <Enum name="Target" enumName="InstanceNamingRule.PropertyTarget" byteLength="1" />
-      <Enum name="Operation" enumName="InstanceNamingRule.Operations" byteLength="1" />
+      <Enum name="Target" enumName="T" byteLength="1" />
+      <Enum name="Operator" enumName="InstanceNamingRules.Operator" byteLength="1" />
     </Fields>
   </Object>
 </Loqui>

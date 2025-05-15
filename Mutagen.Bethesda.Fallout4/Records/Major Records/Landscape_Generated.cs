@@ -1908,8 +1908,7 @@ namespace Mutagen.Bethesda.Fallout4
                     if ((rhs.VertexNormals != null))
                     {
                         item.VertexNormals = 
-                            rhs.VertexNormals
-                            .ShallowClone();
+                            rhs.VertexNormals.ShallowClone();
                     }
                     else
                     {
@@ -1960,8 +1959,7 @@ namespace Mutagen.Bethesda.Fallout4
                     if ((rhs.VertexColors != null))
                     {
                         item.VertexColors = 
-                            rhs.VertexColors
-                            .ShallowClone();
+                            rhs.VertexColors.ShallowClone();
                     }
                     else
                     {

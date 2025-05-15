@@ -9,7 +9,7 @@
         <AssetLink recordType="ANAM" assetType="SkyrimSound" />
       </List>
       <FormLink name="OutputModel" recordType="ONAM" refName="SoundOutputModel" />
-      <String name="String" recordType="FNAM" />
+      <String name="String" recordType="FNAM" translated="Normal"  />
       <RefList name="Conditions" refName="Condition" />
       <RefDirect name="LoopAndRumble" refName="SoundLoopAndRumble" />
       <Data recordType="BNAM">

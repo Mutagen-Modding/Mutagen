@@ -17,7 +17,8 @@ public static class FlattenedMod_Tests
             dataFolder: testingSettings.DataFolderLocations.Oblivion,
             loadOrder: loadOrderListing,
             gameRelease: GameRelease.Oblivion);
-        OblivionMod ret = new OblivionMod(new ModKey("Test", ModType.Plugin));
+        OblivionMod ret = new OblivionMod(new ModKey("Test", ModType.Plugin),
+            OblivionRelease.Oblivion);
         foreach (var listing in loadOrder.ListedOrder)
         {
             ret.Npcs.RecordCache.Set(listing.Mod.Npcs.Records);

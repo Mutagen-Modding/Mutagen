@@ -27,6 +27,7 @@ public class MutagenBaseCustomization : ICustomization
         fixture.Customizations.Add(new FormKeyBuilder());
         fixture.Customizations.Add(new LoadOrderListingBuilder());
         fixture.Customizations.Add(new GenderedItemBuilder());
+        fixture.Customizations.Add(new DataDirectoryProviderBuilder());
         fixture.Inject<IMutagenEncodingProvider>(MutagenEncoding.Default);
     }
 }

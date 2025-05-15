@@ -135,8 +135,7 @@ partial class WorldspaceBinaryOverlay
         try
         {
             if (stream.Complete) return;
-            var groupMeta = stream.GetGroupHeader();
-            if (!groupMeta.IsGroup || groupMeta.GroupType != (int)GroupTypeEnum.WorldChildren) return;
+            if (!stream.TryGetGroupHeader(out var groupMeta) || !groupMeta.IsGroup || groupMeta.GroupType != (int)GroupTypeEnum.WorldChildren) return;
 
             if (this.FormKey != Mutagen.Bethesda.Plugins.FormKey.Factory(
                     _package.MetaData.MasterReferences, 

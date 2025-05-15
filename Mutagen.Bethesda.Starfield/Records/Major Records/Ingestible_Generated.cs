@@ -197,6 +197,24 @@ namespace Mutagen.Bethesda.Starfield
         IModelGetter? IModeledGetter.Model => this.Model;
         #endregion
         #endregion
+        #region Destructible
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Destructible? _Destructible;
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
+        public Destructible? Destructible
+        {
+            get => _Destructible;
+            set => _Destructible = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IIngestibleGetter.Destructible => this.Destructible;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IDestructibleGetter? IHasDestructibleGetter.Destructible => this.Destructible;
+        #endregion
+        #endregion
         #region PickupSound
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private SoundReference? _PickupSound;
@@ -352,6 +370,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Name = initialValue;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(initialValue, new Destructible.Mask<TItem>(initialValue));
                 this.PickupSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.DropdownSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(initialValue, new SoundReference.Mask<TItem>(initialValue));
                 this.EquipmentType = initialValue;
@@ -386,6 +405,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Name,
                 TItem Keywords,
                 TItem Model,
+                TItem Destructible,
                 TItem PickupSound,
                 TItem DropdownSound,
                 TItem EquipmentType,
@@ -419,6 +439,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Name = Name;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
+                this.Destructible = new MaskItem<TItem, Destructible.Mask<TItem>?>(Destructible, new Destructible.Mask<TItem>(Destructible));
                 this.PickupSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(PickupSound, new SoundReference.Mask<TItem>(PickupSound));
                 this.DropdownSound = new MaskItem<TItem, SoundReference.Mask<TItem>?>(DropdownSound, new SoundReference.Mask<TItem>(DropdownSound));
                 this.EquipmentType = EquipmentType;
@@ -454,6 +475,7 @@ namespace Mutagen.Bethesda.Starfield
             public TItem Name;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
+            public MaskItem<TItem, Destructible.Mask<TItem>?>? Destructible { get; set; }
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? PickupSound { get; set; }
             public MaskItem<TItem, SoundReference.Mask<TItem>?>? DropdownSound { get; set; }
             public TItem EquipmentType;
@@ -491,6 +513,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
+                if (!object.Equals(this.Destructible, rhs.Destructible)) return false;
                 if (!object.Equals(this.PickupSound, rhs.PickupSound)) return false;
                 if (!object.Equals(this.DropdownSound, rhs.DropdownSound)) return false;
                 if (!object.Equals(this.EquipmentType, rhs.EquipmentType)) return false;
@@ -520,6 +543,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Name);
                 hash.Add(this.Keywords);
                 hash.Add(this.Model);
+                hash.Add(this.Destructible);
                 hash.Add(this.PickupSound);
                 hash.Add(this.DropdownSound);
                 hash.Add(this.EquipmentType);
@@ -590,6 +614,11 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
+                }
+                if (Destructible != null)
+                {
+                    if (!eval(this.Destructible.Overall)) return false;
+                    if (this.Destructible.Specific != null && !this.Destructible.Specific.All(eval)) return false;
                 }
                 if (PickupSound != null)
                 {
@@ -708,6 +737,11 @@ namespace Mutagen.Bethesda.Starfield
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
+                if (Destructible != null)
+                {
+                    if (eval(this.Destructible.Overall)) return true;
+                    if (this.Destructible.Specific != null && this.Destructible.Specific.Any(eval)) return true;
+                }
                 if (PickupSound != null)
                 {
                     if (eval(this.PickupSound.Overall)) return true;
@@ -822,6 +856,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
+                obj.Destructible = this.Destructible == null ? null : new MaskItem<R, Destructible.Mask<R>?>(eval(this.Destructible.Overall), this.Destructible.Specific?.Translate(eval));
                 obj.PickupSound = this.PickupSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.PickupSound.Overall), this.PickupSound.Specific?.Translate(eval));
                 obj.DropdownSound = this.DropdownSound == null ? null : new MaskItem<R, SoundReference.Mask<R>?>(eval(this.DropdownSound.Overall), this.DropdownSound.Specific?.Translate(eval));
                 obj.EquipmentType = eval(this.EquipmentType);
@@ -964,6 +999,10 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         Model?.Print(sb);
                     }
+                    if (printMask?.Destructible?.Overall ?? true)
+                    {
+                        Destructible?.Print(sb);
+                    }
                     if (printMask?.PickupSound?.Overall ?? true)
                     {
                         PickupSound?.Print(sb);
@@ -1091,6 +1130,7 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? Name;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
+            public MaskItem<Exception?, Destructible.ErrorMask?>? Destructible;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? PickupSound;
             public MaskItem<Exception?, SoundReference.ErrorMask?>? DropdownSound;
             public Exception? EquipmentType;
@@ -1132,6 +1172,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Keywords;
                     case Ingestible_FieldIndex.Model:
                         return Model;
+                    case Ingestible_FieldIndex.Destructible:
+                        return Destructible;
                     case Ingestible_FieldIndex.PickupSound:
                         return PickupSound;
                     case Ingestible_FieldIndex.DropdownSound:
@@ -1198,6 +1240,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case Ingestible_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Ingestible_FieldIndex.Destructible:
+                        this.Destructible = new MaskItem<Exception?, Destructible.ErrorMask?>(ex, null);
                         break;
                     case Ingestible_FieldIndex.PickupSound:
                         this.PickupSound = new MaskItem<Exception?, SoundReference.ErrorMask?>(ex, null);
@@ -1282,6 +1327,9 @@ namespace Mutagen.Bethesda.Starfield
                     case Ingestible_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
+                    case Ingestible_FieldIndex.Destructible:
+                        this.Destructible = (MaskItem<Exception?, Destructible.ErrorMask?>?)obj;
+                        break;
                     case Ingestible_FieldIndex.PickupSound:
                         this.PickupSound = (MaskItem<Exception?, SoundReference.ErrorMask?>?)obj;
                         break;
@@ -1345,6 +1393,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Name != null) return true;
                 if (Keywords != null) return true;
                 if (Model != null) return true;
+                if (Destructible != null) return true;
                 if (PickupSound != null) return true;
                 if (DropdownSound != null) return true;
                 if (EquipmentType != null) return true;
@@ -1437,6 +1486,7 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 Model?.Print(sb);
+                Destructible?.Print(sb);
                 PickupSound?.Print(sb);
                 DropdownSound?.Print(sb);
                 {
@@ -1538,6 +1588,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
+                ret.Destructible = this.Destructible.Combine(rhs.Destructible, (l, r) => l.Combine(r));
                 ret.PickupSound = this.PickupSound.Combine(rhs.PickupSound, (l, r) => l.Combine(r));
                 ret.DropdownSound = this.DropdownSound.Combine(rhs.DropdownSound, (l, r) => l.Combine(r));
                 ret.EquipmentType = this.EquipmentType.Combine(rhs.EquipmentType);
@@ -1584,6 +1635,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Name;
             public bool Keywords;
             public Model.TranslationMask? Model;
+            public Destructible.TranslationMask? Destructible;
             public SoundReference.TranslationMask? PickupSound;
             public SoundReference.TranslationMask? DropdownSound;
             public bool EquipmentType;
@@ -1636,6 +1688,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Name, null));
                 ret.Add((Keywords, null));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
+                ret.Add((Destructible != null ? Destructible.OnOverall : DefaultOn, Destructible?.GetCrystal()));
                 ret.Add((PickupSound != null ? PickupSound.OnOverall : DefaultOn, PickupSound?.GetCrystal()));
                 ret.Add((DropdownSound != null ? DropdownSound.OnOverall : DefaultOn, DropdownSound?.GetCrystal()));
                 ret.Add((EquipmentType, null));
@@ -1806,6 +1859,7 @@ namespace Mutagen.Bethesda.Starfield
         IBaseObject,
         IConstructibleObjectTarget,
         IFormLinkContainer,
+        IHasDestructible,
         IIngestibleGetter,
         IItem,
         IKeyworded<IKeywordGetter>,
@@ -1842,6 +1896,10 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
+        /// <summary>
+        /// Aspects: IHasDestructible
+        /// </summary>
+        new Destructible? Destructible { get; set; }
         new SoundReference? PickupSound { get; set; }
         new SoundReference? DropdownSound { get; set; }
         new IFormLinkNullable<IEquipTypeGetter> EquipmentType { get; set; }
@@ -1878,6 +1936,7 @@ namespace Mutagen.Bethesda.Starfield
         IBinaryItem,
         IConstructibleObjectTargetGetter,
         IFormLinkContainerGetter,
+        IHasDestructibleGetter,
         IItemGetter,
         IKeywordedGetter<IKeywordGetter>,
         ILoquiObject<IIngestibleGetter>,
@@ -1921,6 +1980,12 @@ namespace Mutagen.Bethesda.Starfield
         /// Aspects: IModeledGetter
         /// </summary>
         IModelGetter? Model { get; }
+        #endregion
+        #region Destructible
+        /// <summary>
+        /// Aspects: IHasDestructibleGetter
+        /// </summary>
+        IDestructibleGetter? Destructible { get; }
         #endregion
         ISoundReferenceGetter? PickupSound { get; }
         ISoundReferenceGetter? DropdownSound { get; }
@@ -2126,21 +2191,22 @@ namespace Mutagen.Bethesda.Starfield
         Name = 13,
         Keywords = 14,
         Model = 15,
-        PickupSound = 16,
-        DropdownSound = 17,
-        EquipmentType = 18,
-        CraftingSound = 19,
-        Description = 20,
-        Resources = 21,
-        ComponentDisplayIndices = 22,
-        Weight = 23,
-        Value = 24,
-        Flags = 25,
-        Addiction = 26,
-        AddictionChance = 27,
-        ConsumeSound = 28,
-        AddictionName = 29,
-        Effects = 30,
+        Destructible = 16,
+        PickupSound = 17,
+        DropdownSound = 18,
+        EquipmentType = 19,
+        CraftingSound = 20,
+        Description = 21,
+        Resources = 22,
+        ComponentDisplayIndices = 23,
+        Weight = 24,
+        Value = 25,
+        Flags = 26,
+        Addiction = 27,
+        AddictionChance = 28,
+        ConsumeSound = 29,
+        AddictionName = 30,
+        Effects = 31,
     }
     #endregion
 
@@ -2151,9 +2217,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 24;
+        public const ushort AdditionalFieldCount = 25;
 
-        public const ushort FieldCount = 31;
+        public const ushort FieldCount = 32;
 
         public static readonly Type MaskType = typeof(Ingestible.Mask<>);
 
@@ -2203,6 +2269,10 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XFLG,
                 RecordTypes.MODC,
                 RecordTypes.MODF,
+                RecordTypes.DEST,
+                RecordTypes.DAMC,
+                RecordTypes.DSDL,
+                RecordTypes.DSTD,
                 RecordTypes.PUSH,
                 RecordTypes.PDSH,
                 RecordTypes.ETYP,
@@ -2278,6 +2348,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Name = default;
             item.Keywords = null;
             item.Model = null;
+            item.Destructible = null;
             item.PickupSound = null;
             item.DropdownSound = null;
             item.EquipmentType.Clear();
@@ -2314,6 +2385,7 @@ namespace Mutagen.Bethesda.Starfield
             obj.Components.RemapLinks(mapping);
             obj.Keywords?.RemapLinks(mapping);
             obj.Model?.RemapLinks(mapping);
+            obj.Destructible?.RemapLinks(mapping);
             obj.PickupSound?.RemapLinks(mapping);
             obj.DropdownSound?.RemapLinks(mapping);
             obj.EquipmentType.Relink(mapping);
@@ -2342,6 +2414,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -2354,6 +2433,7 @@ namespace Mutagen.Bethesda.Starfield
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
             obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
             obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Destructible?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -2446,6 +2526,11 @@ namespace Mutagen.Bethesda.Starfield
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Destructible = EqualsMaskHelper.EqualsHelper(
+                item.Destructible,
+                rhs.Destructible,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.PickupSound = EqualsMaskHelper.EqualsHelper(
@@ -2594,6 +2679,11 @@ namespace Mutagen.Bethesda.Starfield
                 && item.Model is {} ModelItem)
             {
                 ModelItem?.Print(sb, "Model");
+            }
+            if ((printMask?.Destructible?.Overall ?? true)
+                && item.Destructible is {} DestructibleItem)
+            {
+                DestructibleItem?.Print(sb, "Destructible");
             }
             if ((printMask?.PickupSound?.Overall ?? true)
                 && item.PickupSound is {} PickupSoundItem)
@@ -2793,6 +2883,14 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isModelEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Destructible) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
+                {
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, equalsMask?.GetSubCrystal((int)Ingestible_FieldIndex.Destructible))) return false;
+                }
+                else if (!isDestructibleEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Ingestible_FieldIndex.PickupSound) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.PickupSound, rhs.PickupSound, out var lhsPickupSound, out var rhsPickupSound, out var isPickupSoundEqual))
@@ -2921,6 +3019,10 @@ namespace Mutagen.Bethesda.Starfield
             {
                 hash.Add(Modelitem);
             }
+            if (item.Destructible is {} Destructibleitem)
+            {
+                hash.Add(Destructibleitem);
+            }
             if (item.PickupSound is {} PickupSounditem)
             {
                 hash.Add(PickupSounditem);
@@ -3003,6 +3105,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
             if (obj.PickupSound is {} PickupSoundItems)
             {
                 foreach (var item in PickupSoundItems.EnumerateFormLinks())
@@ -3061,6 +3170,13 @@ namespace Mutagen.Bethesda.Starfield
             if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Destructible is {} DestructibleItems)
+            {
+                foreach (var item in DestructibleItems.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
                 {
                     yield return item;
                 }
@@ -3290,6 +3406,32 @@ namespace Mutagen.Bethesda.Starfield
                     else
                     {
                         item.Model = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ingestible_FieldIndex.Destructible) ?? true))
+            {
+                errorMask?.PushIndex((int)Ingestible_FieldIndex.Destructible);
+                try
+                {
+                    if(rhs.Destructible is {} rhsDestructible)
+                    {
+                        item.Destructible = rhsDestructible.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Ingestible_FieldIndex.Destructible));
+                    }
+                    else
+                    {
+                        item.Destructible = default;
                     }
                 }
                 catch (Exception ex)
@@ -3749,6 +3891,13 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     translationParams: translationParams);
             }
+            if (item.Destructible is {} DestructibleItem)
+            {
+                ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
+                    item: DestructibleItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
             if (item.PickupSound is {} PickupSoundItem)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.PUSH))
@@ -3990,6 +4139,16 @@ namespace Mutagen.Bethesda.Starfield
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)Ingestible_FieldIndex.Model;
                 }
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DAMC:
+                case RecordTypeInts.DSDL:
+                case RecordTypeInts.DSTD:
+                {
+                    item.Destructible = Mutagen.Bethesda.Starfield.Destructible.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Ingestible_FieldIndex.Destructible;
+                }
                 case RecordTypeInts.PUSH:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
@@ -4198,6 +4357,7 @@ namespace Mutagen.Bethesda.Starfield
         IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         public IModelGetter? Model { get; private set; }
+        public IDestructibleGetter? Destructible { get; private set; }
         public ISoundReferenceGetter? PickupSound { get; private set; }
         public ISoundReferenceGetter? DropdownSound { get; private set; }
         #region EquipmentType
@@ -4381,6 +4541,17 @@ namespace Mutagen.Bethesda.Starfield
                         package: _package,
                         translationParams: translationParams.DoNotShortCircuit());
                     return (int)Ingestible_FieldIndex.Model;
+                }
+                case RecordTypeInts.DEST:
+                case RecordTypeInts.DAMC:
+                case RecordTypeInts.DSDL:
+                case RecordTypeInts.DSTD:
+                {
+                    this.Destructible = DestructibleBinaryOverlay.DestructibleFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)Ingestible_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.PUSH:
                 {

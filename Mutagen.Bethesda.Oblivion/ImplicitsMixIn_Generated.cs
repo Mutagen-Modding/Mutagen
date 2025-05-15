@@ -7,19 +7,25 @@ namespace Mutagen.Bethesda
 {
     public static class ImplicitsMixIn
     {
-        public static IReadOnlyCollection<ModKey> Oblivion(this ImplicitBaseMasters _)
+        public static IReadOnlyCollection<ModKey> Oblivion(
+            this ImplicitBaseMasters _,
+            OblivionRelease release)
         {
-            return Implicits.Get(GameRelease.Oblivion).BaseMasters;
+            return Implicits.Get(release.ToGameRelease()).BaseMasters;
         }
 
-        public static IReadOnlyCollection<ModKey> Oblivion(this ImplicitListings _)
+        public static IReadOnlyCollection<ModKey> Oblivion(
+            this ImplicitListings _,
+            OblivionRelease release)
         {
-            return Implicits.Get(GameRelease.Oblivion).Listings;
+            return Implicits.Get(release.ToGameRelease()).Listings;
         }
 
-        public static IReadOnlyCollection<FormKey> Oblivion(this ImplicitRecordFormKeys _)
+        public static IReadOnlyCollection<FormKey> Oblivion(
+            this ImplicitRecordFormKeys _,
+            OblivionRelease release)
         {
-            return Implicits.Get(GameRelease.Oblivion).RecordFormKeys;
+            return Implicits.Get(release.ToGameRelease()).RecordFormKeys;
         }
     }
 }

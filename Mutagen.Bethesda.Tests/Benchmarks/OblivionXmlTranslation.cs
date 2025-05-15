@@ -38,7 +38,8 @@ public class OblivionXmlTranslation
 
         // Setup
         Mod = OblivionMod.CreateFromBinary(
-            new ModPath(ModKey, DataPath));
+            new ModPath(ModKey, DataPath),
+            OblivionRelease.Oblivion);
         //await Mod.WriteToXmlFolder(XmlFolder, doMasks: false);
     }
 
@@ -95,7 +96,9 @@ public class OblivionXmlCleanWriteTranslation
         OneTimeXmlFolder.Create();
 
         // Setup
-        Mod = OblivionMod.CreateFromBinary(new ModPath(ModKey, DataPath));
+        Mod = OblivionMod.CreateFromBinary(
+            new ModPath(ModKey, DataPath),
+            OblivionRelease.Oblivion);
     }
 
     [GlobalCleanup]
