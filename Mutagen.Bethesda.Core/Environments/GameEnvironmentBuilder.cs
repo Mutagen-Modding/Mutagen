@@ -29,6 +29,8 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
     internal IFileSystem? FileSystem { get; init; }
     internal Func<Type, object?>? Resolver { get; init; }
 
+    private ILoadOrderListingGetter[]? HardcodedListings { get; init; }
+
     private ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>> LoadOrderListingProcessors { get; init; }
 
     private ImmutableList<Func<IEnumerable<IModListingGetter<TModGetter>>, IEnumerable<IModListingGetter<TModGetter>>>> ModListingProcessors { get; init; }
@@ -90,9 +92,13 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
     /// </summary>
     /// <param name="listings">Listings to set the load order to</param>
     /// <returns>New builder with the new rules</returns>
-    public GameEnvironmentBuilder<TMod, TModGetter> WithLoadOrder(params ILoadOrderListingGetter[] listings)
+    public GameEnvironmentBuilder<TMod, TModGetter> WithLoadOrder<T>(params T[] listings)
+        where T : ILoadOrderListingGetter
     {
-        return TransformLoadOrderListings(_ => listings);
+        return this with
+        {
+            HardcodedListings = listings.Select(x => (ILoadOrderListingGetter)x).ToArray()
+        };
     }
 
     /// <summary>
@@ -211,52 +217,63 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
             },
             CccListingsPathProvider);
 
-        var listingsProv = Resolve<ILoadOrderListingsProvider>(
-            () =>
-            {
-                var pluginRawListingsReader = new PluginRawListingsReader(
-                    fs,
-                    new PluginListingsParser(
-                        new PluginListingCommentTrimmer(),
-                        new LoadOrderListingParser(
-                            new HasEnabledMarkersProvider(
-                                Release))));
+        ILoadOrderListingGetter[] listingsToUse;
 
-                return new LoadOrderListingsProvider(
-                    new OrderListings(),
-                    new ImplicitListingsProvider(
-                        fs,
-                        dataDirectory,
-                        new ImplicitListingModKeyProvider(
-                            Release)),
-                    new PluginListingsProvider(
-                        Release,
-                        new TimestampedPluginListingsProvider(
-                            fs,
-                            new TimestampAligner(fs),
-                            new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
-                            pluginRawListingsReader,
-                            dataDirectory,
-                            pluginPathProvider),
-                        new EnabledPluginListingsProvider(
-                            fs,
-                            pluginRawListingsReader,
-                            pluginPathProvider)),
-                    new CreationClubListingsProvider(
-                        fs,
-                        dataDirectory,
-                        cccPath,
-                        new CreationClubRawListingsReader()));
-            },
-            ListingsProvider);
-
-        var filteredListings = listingsProv.Get();
-        foreach (var filter in LoadOrderListingProcessors)
+        if (HardcodedListings != null)
         {
-            filteredListings = filter(filteredListings);
+            listingsToUse = HardcodedListings;
+        }
+        else
+        {
+            var listingsProv = Resolve<ILoadOrderListingsProvider>(
+                () =>
+                {
+                    var pluginRawListingsReader = new PluginRawListingsReader(
+                        fs,
+                        new PluginListingsParser(
+                            new PluginListingCommentTrimmer(),
+                            new LoadOrderListingParser(
+                                new HasEnabledMarkersProvider(
+                                    Release))));
+
+                    return new LoadOrderListingsProvider(
+                        new OrderListings(),
+                        new ImplicitListingsProvider(
+                            fs,
+                            dataDirectory,
+                            new ImplicitListingModKeyProvider(
+                                Release)),
+                        new PluginListingsProvider(
+                            Release,
+                            new TimestampedPluginListingsProvider(
+                                fs,
+                                new TimestampAligner(fs),
+                                new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
+                                pluginRawListingsReader,
+                                dataDirectory,
+                                pluginPathProvider),
+                            new EnabledPluginListingsProvider(
+                                fs,
+                                pluginRawListingsReader,
+                                pluginPathProvider)),
+                        new CreationClubListingsProvider(
+                            fs,
+                            dataDirectory,
+                            cccPath,
+                            new CreationClubRawListingsReader()));
+                },
+                ListingsProvider);
+
+            var filteredListings = listingsProv.Get();
+            foreach (var filter in LoadOrderListingProcessors)
+            {
+                filteredListings = filter(filteredListings);
+            }
+            
+            listingsToUse = filteredListings.ToArray();
         }
 
-        var loListings = new LoadOrderListingsInjection(filteredListings);
+        var loListings = new LoadOrderListingsInjection(listingsToUse);
         var loGetter = new LoadOrderImporter<TModGetter>(
             fs,
             dataDirectory,
@@ -304,8 +321,8 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
         return new GameEnvironmentState<TMod, TModGetter>(
             Release.Release,
             dataFolderPath: dataDirectory.Path,
-            loadOrderFilePath: pluginPathProvider.Path,
-            creationClubListingsFilePath: cccPath.Path,
+            pluginListingsPathContext: pluginPathProvider,
+            creationClubListingsFilePathProvider: cccPath,
             loadOrder: lo,
             linkCache: linkCache,
             assetProvider: assetProvider);
@@ -325,6 +342,8 @@ public sealed record GameEnvironmentBuilder
     private ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>> LoadOrderListingProcessors { get; init; }
 
     private ImmutableList<Func<IEnumerable<IModListingGetter<IModGetter>>, IEnumerable<IModListingGetter<IModGetter>>>> ModListingProcessors { get; init; }
+
+    private ILoadOrderListingGetter[]? HardcodedListings { get; init; }
 
     private ImmutableList<IMod> MutableMods { get; init; }
 
@@ -383,9 +402,13 @@ public sealed record GameEnvironmentBuilder
     /// </summary>
     /// <param name="listings">Listings to set the load order to</param>
     /// <returns>New builder with the new rules</returns>
-    public GameEnvironmentBuilder WithLoadOrder(params ILoadOrderListingGetter[] listings)
+    public GameEnvironmentBuilder WithLoadOrder<T>(params T[] listings)
+        where T : ILoadOrderListingGetter
     {
-        return TransformLoadOrderListings(_ => listings);
+        return this with
+        {
+            HardcodedListings = listings.Select(x => (ILoadOrderListingGetter)x).ToArray()
+        };
     }
 
     /// <summary>
@@ -494,52 +517,64 @@ public sealed record GameEnvironmentBuilder
             },
             CccListingsPathProvider);
 
-        var listingsProv = Resolve<ILoadOrderListingsProvider>(
-            () =>
-            {
-                var pluginRawListingsReader = new PluginRawListingsReader(
-                    fs,
-                    new PluginListingsParser(
-                        new PluginListingCommentTrimmer(),
-                        new LoadOrderListingParser(
-                            new HasEnabledMarkersProvider(
-                                Release))));
+        ILoadOrderListingGetter[] listingsToUse;
 
-                return new LoadOrderListingsProvider(
-                    new OrderListings(),
-                    new ImplicitListingsProvider(
-                        fs,
-                        dataDirectory,
-                        new ImplicitListingModKeyProvider(
-                            Release)),
-                    new PluginListingsProvider(
-                        Release,
-                        new TimestampedPluginListingsProvider(
-                            fs,
-                            new TimestampAligner(fs),
-                            new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
-                            pluginRawListingsReader,
-                            dataDirectory,
-                            pluginPathProvider),
-                        new EnabledPluginListingsProvider(
-                            fs,
-                            pluginRawListingsReader,
-                            pluginPathProvider)),
-                    new CreationClubListingsProvider(
-                        fs,
-                        dataDirectory,
-                        cccPath,
-                        new CreationClubRawListingsReader()));
-            },
-            ListingsProvider);
-
-        var filteredListings = listingsProv.Get();
-        foreach (var filter in LoadOrderListingProcessors)
+        if (HardcodedListings != null)
         {
-            filteredListings = filter(filteredListings);
+            listingsToUse = HardcodedListings;
         }
+        else
+        {
+            var listingsProv = Resolve<ILoadOrderListingsProvider>(
+                () =>
+                {
+                    var pluginRawListingsReader = new PluginRawListingsReader(
+                        fs,
+                        new PluginListingsParser(
+                            new PluginListingCommentTrimmer(),
+                            new LoadOrderListingParser(
+                                new HasEnabledMarkersProvider(
+                                    Release))));
 
-        var loListings = new LoadOrderListingsInjection(filteredListings);
+                    return new LoadOrderListingsProvider(
+                        new OrderListings(),
+                        new ImplicitListingsProvider(
+                            fs,
+                            dataDirectory,
+                            new ImplicitListingModKeyProvider(
+                                Release)),
+                        new PluginListingsProvider(
+                            Release,
+                            new TimestampedPluginListingsProvider(
+                                fs,
+                                new TimestampAligner(fs),
+                                new TimestampedPluginListingsPreferences() { ThrowOnMissingMods = false },
+                                pluginRawListingsReader,
+                                dataDirectory,
+                                pluginPathProvider),
+                            new EnabledPluginListingsProvider(
+                                fs,
+                                pluginRawListingsReader,
+                                pluginPathProvider)),
+                        new CreationClubListingsProvider(
+                            fs,
+                            dataDirectory,
+                            cccPath,
+                            new CreationClubRawListingsReader()));
+                },
+                ListingsProvider);
+
+            var filteredListings = listingsProv.Get();
+            foreach (var filter in LoadOrderListingProcessors)
+            {
+                filteredListings = filter(filteredListings);
+            }
+
+            listingsToUse = filteredListings.ToArray();
+        }
+        
+
+        var loListings = new LoadOrderListingsInjection(listingsToUse);
         var loGetter = new LoadOrderImporter(
             fs,
             Release,
