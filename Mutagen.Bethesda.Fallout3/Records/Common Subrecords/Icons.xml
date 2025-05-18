@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Icons" objType="Subrecord">
+    <Fields>
+      <AssetLink name="LargeIconFilename" recordType="ICON" nullable="False" assetType="Fallout3Texture" />
+      <AssetLink name="SmallIconFilename" recordType="MICO" assetType="Fallout3Texture" />
+    </Fields>
+  </Object>
+</Loqui>

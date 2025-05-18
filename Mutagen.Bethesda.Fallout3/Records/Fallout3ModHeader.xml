@@ -5,6 +5,8 @@
       <Enum name="Flags" enumName="Fallout3ModHeader.HeaderFlag" byteLength="4" />
       <UInt32 name="FormID" />
       <Int32 name="Version" />
+      <UInt16 name="FormVersion" />
+      <UInt16 name="Version2" />
       <RefDirect name="Stats" refName="ModStats" nullable="False" />
       <ByteArray name="TypeOffsets" recordType="OFST" />
       <ByteArray name="Deleted" recordType="DELE" />

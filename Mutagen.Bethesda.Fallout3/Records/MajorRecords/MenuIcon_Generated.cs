@@ -7,10 +7,13 @@
 using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
+using Mutagen.Bethesda.Assets;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout3;
 using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
@@ -40,29 +43,31 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Class
-    public partial class Npc :
+    public partial class MenuIcon :
         Fallout3MajorRecord,
-        IEquatable<INpcGetter>,
-        ILoquiObjectSetter<Npc>,
-        INpcInternal
+        IEquatable<IMenuIconGetter>,
+        ILoquiObjectSetter<MenuIcon>,
+        IMenuIconInternal
     {
         #region Ctor
-        protected Npc()
+        protected MenuIcon()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Race
-        private readonly IFormLinkNullable<IRaceGetter> _Race = new FormLinkNullable<IRaceGetter>();
-        public IFormLinkNullable<IRaceGetter> Race
-        {
-            get => _Race;
-            set => _Race.SetTo(value);
-        }
+        #region Icons
+        /// <summary>
+        /// Aspects: IHasIcons
+        /// </summary>
+        public Icons Icons { get; set; } = new Icons();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IRaceGetter> INpcGetter.Race => this.Race;
+        IIconsGetter IMenuIconGetter.Icons => Icons;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IIconsGetter? IHasIconsGetter.Icons => this.Icons;
+        #endregion
         #endregion
 
         #region To String
@@ -71,7 +76,7 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             string? name = null)
         {
-            NpcMixIn.Print(
+            MenuIconMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -89,7 +94,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Race = initialValue;
+                this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(initialValue, new Icons.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -100,7 +105,7 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem FormVersion,
                 TItem Version2,
                 TItem Fallout3MajorRecordFlags,
-                TItem Race)
+                TItem Icons)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -110,7 +115,7 @@ namespace Mutagen.Bethesda.Fallout3
                 Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
-                this.Race = Race;
+                this.Icons = new MaskItem<TItem, Icons.Mask<TItem>?>(Icons, new Icons.Mask<TItem>(Icons));
             }
 
             #pragma warning disable CS8618
@@ -122,7 +127,7 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
-            public TItem Race;
+            public MaskItem<TItem, Icons.Mask<TItem>?>? Icons { get; set; }
             #endregion
 
             #region Equals
@@ -136,13 +141,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Race, rhs.Race)) return false;
+                if (!object.Equals(this.Icons, rhs.Icons)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Race);
+                hash.Add(this.Icons);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -153,7 +158,11 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.Race)) return false;
+                if (Icons != null)
+                {
+                    if (!eval(this.Icons.Overall)) return false;
+                    if (this.Icons.Specific != null && !this.Icons.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -162,7 +171,11 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.Race)) return true;
+                if (Icons != null)
+                {
+                    if (eval(this.Icons.Overall)) return true;
+                    if (this.Icons.Specific != null && this.Icons.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -170,7 +183,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Npc.Mask<R>();
+                var ret = new MenuIcon.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -178,28 +191,28 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Race = eval(this.Race);
+                obj.Icons = this.Icons == null ? null : new MaskItem<R, Icons.Mask<R>?>(eval(this.Icons.Overall), this.Icons.Specific?.Translate(eval));
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(Npc.Mask<bool>? printMask = null)
+            public string Print(MenuIcon.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, Npc.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, MenuIcon.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(Npc.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(MenuIcon.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Race ?? true)
+                    if (printMask?.Icons?.Overall ?? true)
                     {
-                        sb.AppendItem(Race, "Race");
+                        Icons?.Print(sb);
                     }
                 }
             }
@@ -212,17 +225,17 @@ namespace Mutagen.Bethesda.Fallout3
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? Race;
+            public MaskItem<Exception?, Icons.ErrorMask?>? Icons;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                Npc_FieldIndex enu = (Npc_FieldIndex)index;
+                MenuIcon_FieldIndex enu = (MenuIcon_FieldIndex)index;
                 switch (enu)
                 {
-                    case Npc_FieldIndex.Race:
-                        return Race;
+                    case MenuIcon_FieldIndex.Icons:
+                        return Icons;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -230,11 +243,11 @@ namespace Mutagen.Bethesda.Fallout3
 
             public override void SetNthException(int index, Exception ex)
             {
-                Npc_FieldIndex enu = (Npc_FieldIndex)index;
+                MenuIcon_FieldIndex enu = (MenuIcon_FieldIndex)index;
                 switch (enu)
                 {
-                    case Npc_FieldIndex.Race:
-                        this.Race = ex;
+                    case MenuIcon_FieldIndex.Icons:
+                        this.Icons = new MaskItem<Exception?, Icons.ErrorMask?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -244,11 +257,11 @@ namespace Mutagen.Bethesda.Fallout3
 
             public override void SetNthMask(int index, object obj)
             {
-                Npc_FieldIndex enu = (Npc_FieldIndex)index;
+                MenuIcon_FieldIndex enu = (MenuIcon_FieldIndex)index;
                 switch (enu)
                 {
-                    case Npc_FieldIndex.Race:
-                        this.Race = (Exception?)obj;
+                    case MenuIcon_FieldIndex.Icons:
+                        this.Icons = (MaskItem<Exception?, Icons.ErrorMask?>?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -259,7 +272,7 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Race != null) return true;
+                if (Icons != null) return true;
                 return false;
             }
             #endregion
@@ -286,9 +299,7 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
-                {
-                    sb.AppendItem(Race, "Race");
-                }
+                Icons?.Print(sb);
             }
             #endregion
 
@@ -297,7 +308,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Race = this.Race.Combine(rhs.Race);
+                ret.Icons = this.Icons.Combine(rhs.Icons, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -320,7 +331,7 @@ namespace Mutagen.Bethesda.Fallout3
             ITranslationMask
         {
             #region Members
-            public bool Race;
+            public Icons.TranslationMask? Icons;
             #endregion
 
             #region Ctors
@@ -329,7 +340,6 @@ namespace Mutagen.Bethesda.Fallout3
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.Race = defaultOn;
             }
 
             #endregion
@@ -337,7 +347,7 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Race, null));
+                ret.Add((Icons != null ? Icons.OnOverall : DefaultOn, Icons?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -349,10 +359,8 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = Npc_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NpcCommon.Instance.EnumerateFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSetterCommon.Instance.RemapLinks(this, mapping);
-        public Npc(
+        public static readonly RecordType GrupRecordType = MenuIcon_Registration.TriggeringRecordType;
+        public MenuIcon(
             FormKey formKey,
             Fallout3Release gameRelease)
         {
@@ -360,7 +368,7 @@ namespace Mutagen.Bethesda.Fallout3
             CustomCtor();
         }
 
-        private Npc(
+        private MenuIcon(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -368,14 +376,14 @@ namespace Mutagen.Bethesda.Fallout3
             CustomCtor();
         }
 
-        public Npc(IFallout3Mod mod)
+        public MenuIcon(IFallout3Mod mod)
             : this(
                 mod.GetNextFormKey(),
                 mod.Fallout3Release)
         {
         }
 
-        public Npc(IFallout3Mod mod, string editorID)
+        public MenuIcon(IFallout3Mod mod, string editorID)
             : this(
                 mod.GetNextFormKey(editorID),
                 mod.Fallout3Release)
@@ -385,11 +393,15 @@ namespace Mutagen.Bethesda.Fallout3
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Npc>.ToString(this);
+            return MajorRecordPrinter<MenuIcon>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(INpc);
+        protected override Type LinkType => typeof(IMenuIcon);
 
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => MenuIconCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
+        public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => MenuIconSetterCommon.Instance.EnumerateListedAssetLinks(this);
+        public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => MenuIconSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
+        public override void RemapListedAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping) => MenuIconSetterCommon.Instance.RemapAssetLinks(this, mapping, null, AssetLinkQuery.Listed);
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -397,16 +409,16 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 return formLink.Equals(this);
             }
-            if (obj is not INpcGetter rhs) return false;
-            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IMenuIconGetter rhs) return false;
+            return ((MenuIconCommon)((IMenuIconGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(INpcGetter? obj)
+        public bool Equals(IMenuIconGetter? obj)
         {
-            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((MenuIconCommon)((IMenuIconGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((NpcCommon)((INpcGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((MenuIconCommon)((IMenuIconGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -414,23 +426,23 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => NpcBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => MenuIconBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((NpcBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((MenuIconBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static Npc CreateFromBinary(
+        public new static MenuIcon CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new Npc();
-            ((NpcSetterCommon)((INpcGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new MenuIcon();
+            ((MenuIconSetterCommon)((IMenuIconGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -441,7 +453,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out Npc item,
+            out MenuIcon item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -456,86 +468,96 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IClearable.Clear()
         {
-            ((NpcSetterCommon)((INpcGetter)this).CommonSetterInstance()!).Clear(this);
+            ((MenuIconSetterCommon)((IMenuIconGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new Npc GetNew()
+        internal static new MenuIcon GetNew()
         {
-            return new Npc();
+            return new MenuIcon();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface INpc :
+    public partial interface IMenuIcon :
+        IAssetLinkContainer,
         IFallout3MajorRecordInternal,
-        IFormLinkContainer,
-        ILoquiObjectSetter<INpcInternal>,
-        INpcGetter
+        IHasIcons,
+        ILoquiObjectSetter<IMenuIconInternal>,
+        IMenuIconGetter
     {
-        new IFormLinkNullable<IRaceGetter> Race { get; set; }
+        /// <summary>
+        /// Aspects: IHasIcons
+        /// </summary>
+        new Icons Icons { get; set; }
     }
 
-    public partial interface INpcInternal :
+    public partial interface IMenuIconInternal :
         IFallout3MajorRecordInternal,
-        INpc,
-        INpcGetter
+        IMenuIcon,
+        IMenuIconGetter
     {
     }
 
-    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.NPC_)]
-    public partial interface INpcGetter :
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.MICN)]
+    public partial interface IMenuIconGetter :
         IFallout3MajorRecordGetter,
+        IAssetLinkContainerGetter,
         IBinaryItem,
-        IFormLinkContainerGetter,
-        ILoquiObject<INpcGetter>,
-        IMapsToGetter<INpcGetter>
+        IHasIconsGetter,
+        ILoquiObject<IMenuIconGetter>,
+        IMapsToGetter<IMenuIconGetter>
     {
-        static new ILoquiRegistration StaticRegistration => Npc_Registration.Instance;
-        IFormLinkNullableGetter<IRaceGetter> Race { get; }
+        static new ILoquiRegistration StaticRegistration => MenuIcon_Registration.Instance;
+        #region Icons
+        /// <summary>
+        /// Aspects: IHasIconsGetter
+        /// </summary>
+        IIconsGetter Icons { get; }
+        #endregion
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class NpcMixIn
+    public static partial class MenuIconMixIn
     {
-        public static void Clear(this INpcInternal item)
+        public static void Clear(this IMenuIconInternal item)
         {
-            ((NpcSetterCommon)((INpcGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((MenuIconSetterCommon)((IMenuIconGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Npc.Mask<bool> GetEqualsMask(
-            this INpcGetter item,
-            INpcGetter rhs,
+        public static MenuIcon.Mask<bool> GetEqualsMask(
+            this IMenuIconGetter item,
+            IMenuIconGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((NpcCommon)((INpcGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((MenuIconCommon)((IMenuIconGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this INpcGetter item,
+            this IMenuIconGetter item,
             string? name = null,
-            Npc.Mask<bool>? printMask = null)
+            MenuIcon.Mask<bool>? printMask = null)
         {
-            return ((NpcCommon)((INpcGetter)item).CommonInstance()!).Print(
+            return ((MenuIconCommon)((IMenuIconGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this INpcGetter item,
+            this IMenuIconGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Npc.Mask<bool>? printMask = null)
+            MenuIcon.Mask<bool>? printMask = null)
         {
-            ((NpcCommon)((INpcGetter)item).CommonInstance()!).Print(
+            ((MenuIconCommon)((IMenuIconGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -543,39 +565,39 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static bool Equals(
-            this INpcGetter item,
-            INpcGetter rhs,
-            Npc.TranslationMask? equalsMask = null)
+            this IMenuIconGetter item,
+            IMenuIconGetter rhs,
+            MenuIcon.TranslationMask? equalsMask = null)
         {
-            return ((NpcCommon)((INpcGetter)item).CommonInstance()!).Equals(
+            return ((MenuIconCommon)((IMenuIconGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this INpcInternal lhs,
-            INpcGetter rhs,
-            out Npc.ErrorMask errorMask,
-            Npc.TranslationMask? copyMask = null)
+            this IMenuIconInternal lhs,
+            IMenuIconGetter rhs,
+            out MenuIcon.ErrorMask errorMask,
+            MenuIcon.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((NpcSetterTranslationCommon)((INpcGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MenuIconSetterTranslationCommon)((IMenuIconGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = Npc.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MenuIcon.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this INpcInternal lhs,
-            INpcGetter rhs,
+            this IMenuIconInternal lhs,
+            IMenuIconGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((NpcSetterTranslationCommon)((INpcGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MenuIconSetterTranslationCommon)((IMenuIconGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -583,55 +605,55 @@ namespace Mutagen.Bethesda.Fallout3
                 deepCopy: false);
         }
 
-        public static Npc DeepCopy(
-            this INpcGetter item,
-            Npc.TranslationMask? copyMask = null)
+        public static MenuIcon DeepCopy(
+            this IMenuIconGetter item,
+            MenuIcon.TranslationMask? copyMask = null)
         {
-            return ((NpcSetterTranslationCommon)((INpcGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MenuIconSetterTranslationCommon)((IMenuIconGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Npc DeepCopy(
-            this INpcGetter item,
-            out Npc.ErrorMask errorMask,
-            Npc.TranslationMask? copyMask = null)
+        public static MenuIcon DeepCopy(
+            this IMenuIconGetter item,
+            out MenuIcon.ErrorMask errorMask,
+            MenuIcon.TranslationMask? copyMask = null)
         {
-            return ((NpcSetterTranslationCommon)((INpcGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MenuIconSetterTranslationCommon)((IMenuIconGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Npc DeepCopy(
-            this INpcGetter item,
+        public static MenuIcon DeepCopy(
+            this IMenuIconGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((NpcSetterTranslationCommon)((INpcGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MenuIconSetterTranslationCommon)((IMenuIconGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static Npc Duplicate(
-            this INpcGetter item,
+        public static MenuIcon Duplicate(
+            this IMenuIconGetter item,
             FormKey formKey,
-            Npc.TranslationMask? copyMask = null)
+            MenuIcon.TranslationMask? copyMask = null)
         {
-            return ((NpcCommon)((INpcGetter)item).CommonInstance()!).Duplicate(
+            return ((MenuIconCommon)((IMenuIconGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static Npc Duplicate(
-            this INpcGetter item,
+        public static MenuIcon Duplicate(
+            this IMenuIconGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((NpcCommon)((INpcGetter)item).CommonInstance()!).Duplicate(
+            return ((MenuIconCommon)((IMenuIconGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -641,11 +663,11 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this INpcInternal item,
+            this IMenuIconInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((NpcSetterCommon)((INpcGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((MenuIconSetterCommon)((IMenuIconGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -661,7 +683,7 @@ namespace Mutagen.Bethesda.Fallout3
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Field Index
-    internal enum Npc_FieldIndex
+    internal enum MenuIcon_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -670,14 +692,14 @@ namespace Mutagen.Bethesda.Fallout3
         FormVersion = 4,
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
-        Race = 7,
+        Icons = 7,
     }
     #endregion
 
     #region Registration
-    internal partial class Npc_Registration : ILoquiRegistration
+    internal partial class MenuIcon_Registration : ILoquiRegistration
     {
-        public static readonly Npc_Registration Instance = new Npc_Registration();
+        public static readonly MenuIcon_Registration Instance = new MenuIcon_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
@@ -685,23 +707,23 @@ namespace Mutagen.Bethesda.Fallout3
 
         public const ushort FieldCount = 8;
 
-        public static readonly Type MaskType = typeof(Npc.Mask<>);
+        public static readonly Type MaskType = typeof(MenuIcon.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Npc.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(MenuIcon.ErrorMask);
 
-        public static readonly Type ClassType = typeof(Npc);
+        public static readonly Type ClassType = typeof(MenuIcon);
 
-        public static readonly Type GetterType = typeof(INpcGetter);
+        public static readonly Type GetterType = typeof(IMenuIconGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(INpc);
+        public static readonly Type SetterType = typeof(IMenuIcon);
 
-        public static readonly Type? InternalSetterType = typeof(INpcInternal);
+        public static readonly Type? InternalSetterType = typeof(IMenuIconInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Fallout3.Npc";
+        public const string FullName = "Mutagen.Bethesda.Fallout3.MenuIcon";
 
-        public const string Name = "Npc";
+        public const string Name = "MenuIcon";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout3";
 
@@ -709,19 +731,19 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.NPC_;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.MICN;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.NPC_);
+            var triggers = RecordCollection.Factory(RecordTypes.MICN);
             var all = RecordCollection.Factory(
-                RecordTypes.NPC_,
-                RecordTypes.RNAM);
+                RecordTypes.MICN,
+                RecordTypes.ICON);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(NpcBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(MenuIconBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -752,50 +774,74 @@ namespace Mutagen.Bethesda.Fallout3
     #endregion
 
     #region Common
-    internal partial class NpcSetterCommon : Fallout3MajorRecordSetterCommon
+    internal partial class MenuIconSetterCommon : Fallout3MajorRecordSetterCommon
     {
-        public new static readonly NpcSetterCommon Instance = new NpcSetterCommon();
+        public new static readonly MenuIconSetterCommon Instance = new MenuIconSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(INpcInternal item)
+        public void Clear(IMenuIconInternal item)
         {
             ClearPartial();
-            item.Race.Clear();
+            item.Icons.Clear();
             base.Clear(item);
         }
         
         public override void Clear(IFallout3MajorRecordInternal item)
         {
-            Clear(item: (INpcInternal)item);
+            Clear(item: (IMenuIconInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (INpcInternal)item);
+            Clear(item: (IMenuIconInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(INpc obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IMenuIcon obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Race.Relink(mapping);
+        }
+        
+        public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IMenuIcon obj)
+        {
+            foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            {
+                foreach (var item in obj.Icons.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            yield break;
+        }
+        
+        public void RemapAssetLinks(
+            IMenuIcon obj,
+            IReadOnlyDictionary<IAssetLinkGetter, string> mapping,
+            IAssetLinkCache? linkCache,
+            AssetLinkQuery queryCategories)
+        {
+            base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Icons.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            INpcInternal item,
+            IMenuIconInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<INpcInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IMenuIconInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: NpcBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: NpcBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: MenuIconBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: MenuIconBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -804,7 +850,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Npc)item,
+                item: (MenuIcon)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -815,7 +861,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Npc)item,
+                item: (MenuIcon)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -823,17 +869,17 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         
     }
-    internal partial class NpcCommon : Fallout3MajorRecordCommon
+    internal partial class MenuIconCommon : Fallout3MajorRecordCommon
     {
-        public new static readonly NpcCommon Instance = new NpcCommon();
+        public new static readonly MenuIconCommon Instance = new MenuIconCommon();
 
-        public Npc.Mask<bool> GetEqualsMask(
-            INpcGetter item,
-            INpcGetter rhs,
+        public MenuIcon.Mask<bool> GetEqualsMask(
+            IMenuIconGetter item,
+            IMenuIconGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Npc.Mask<bool>(false);
-            ((NpcCommon)((INpcGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new MenuIcon.Mask<bool>(false);
+            ((MenuIconCommon)((IMenuIconGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -842,19 +888,19 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void FillEqualsMask(
-            INpcGetter item,
-            INpcGetter rhs,
-            Npc.Mask<bool> ret,
+            IMenuIconGetter item,
+            IMenuIconGetter rhs,
+            MenuIcon.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Race = item.Race.Equals(rhs.Race);
+            ret.Icons = MaskItemExt.Factory(item.Icons.GetEqualsMask(rhs.Icons, include), include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            INpcGetter item,
+            IMenuIconGetter item,
             string? name = null,
-            Npc.Mask<bool>? printMask = null)
+            MenuIcon.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -866,18 +912,18 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void Print(
-            INpcGetter item,
+            IMenuIconGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Npc.Mask<bool>? printMask = null)
+            MenuIcon.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"Npc =>");
+                sb.AppendLine($"MenuIcon =>");
             }
             else
             {
-                sb.AppendLine($"{name} (Npc) =>");
+                sb.AppendLine($"{name} (MenuIcon) =>");
             }
             using (sb.Brace())
             {
@@ -889,55 +935,55 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         protected static void ToStringFields(
-            INpcGetter item,
+            IMenuIconGetter item,
             StructuredStringBuilder sb,
-            Npc.Mask<bool>? printMask = null)
+            MenuIcon.Mask<bool>? printMask = null)
         {
             Fallout3MajorRecordCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.Race ?? true)
+            if (printMask?.Icons?.Overall ?? true)
             {
-                sb.AppendItem(item.Race.FormKeyNullable, "Race");
+                item.Icons?.Print(sb, "Icons");
             }
         }
         
-        public static Npc_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
+        public static MenuIcon_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case Fallout3MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Npc_FieldIndex)((int)index);
+                    return (MenuIcon_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.FormKey:
-                    return (Npc_FieldIndex)((int)index);
+                    return (MenuIcon_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.VersionControl:
-                    return (Npc_FieldIndex)((int)index);
+                    return (MenuIcon_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.EditorID:
-                    return (Npc_FieldIndex)((int)index);
+                    return (MenuIcon_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.FormVersion:
-                    return (Npc_FieldIndex)((int)index);
+                    return (MenuIcon_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.Version2:
-                    return (Npc_FieldIndex)((int)index);
+                    return (MenuIcon_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.Fallout3MajorRecordFlags:
-                    return (Npc_FieldIndex)((int)index);
+                    return (MenuIcon_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new Npc_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new MenuIcon_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Npc_FieldIndex)((int)index);
+                    return (MenuIcon_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (Npc_FieldIndex)((int)index);
+                    return (MenuIcon_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (Npc_FieldIndex)((int)index);
+                    return (MenuIcon_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Npc_FieldIndex)((int)index);
+                    return (MenuIcon_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -945,15 +991,19 @@ namespace Mutagen.Bethesda.Fallout3
         
         #region Equals and Hash
         public virtual bool Equals(
-            INpcGetter? lhs,
-            INpcGetter? rhs,
+            IMenuIconGetter? lhs,
+            IMenuIconGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Race) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)MenuIcon_FieldIndex.Icons) ?? true))
             {
-                if (!lhs.Race.Equals(rhs.Race)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Icons, rhs.Icons, out var lhsIcons, out var rhsIcons, out var isIconsEqual))
+                {
+                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, equalsMask?.GetSubCrystal((int)MenuIcon_FieldIndex.Icons))) return false;
+                }
+                else if (!isIconsEqual) return false;
             }
             return true;
         }
@@ -964,8 +1014,8 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (INpcGetter?)lhs,
-                rhs: rhs as INpcGetter,
+                lhs: (IMenuIconGetter?)lhs,
+                rhs: rhs as IMenuIconGetter,
                 equalsMask: equalsMask);
         }
         
@@ -975,27 +1025,27 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (INpcGetter?)lhs,
-                rhs: rhs as INpcGetter,
+                lhs: (IMenuIconGetter?)lhs,
+                rhs: rhs as IMenuIconGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(INpcGetter item)
+        public virtual int GetHashCode(IMenuIconGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Race);
+            hash.Add(item.Icons);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
         public override int GetHashCode(IFallout3MajorRecordGetter item)
         {
-            return GetHashCode(item: (INpcGetter)item);
+            return GetHashCode(item: (IMenuIconGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (INpcGetter)item);
+            return GetHashCode(item: (IMenuIconGetter)item);
         }
         
         #endregion
@@ -1003,30 +1053,39 @@ namespace Mutagen.Bethesda.Fallout3
         
         public override object GetNew()
         {
-            return Npc.GetNew();
+            return MenuIcon.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INpcGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IMenuIconGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            if (FormLinkInformation.TryFactory(obj.Race, out var RaceInfo))
+            yield break;
+        }
+        
+        public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IMenuIconGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
+        {
+            foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
             {
-                yield return RaceInfo;
+                yield return item;
+            }
+            foreach (var item in obj.Icons.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
             }
             yield break;
         }
         
         #region Duplicate
-        public Npc Duplicate(
-            INpcGetter item,
+        public MenuIcon Duplicate(
+            IMenuIconGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Npc(formKey, default(Fallout3Release));
+            var newRec = new MenuIcon(formKey, default(Fallout3Release));
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1037,7 +1096,7 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (INpcGetter)item,
+                item: (IMenuIconGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1048,7 +1107,7 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (INpcGetter)item,
+                item: (IMenuIconGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1058,14 +1117,14 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         
     }
-    internal partial class NpcSetterTranslationCommon : Fallout3MajorRecordSetterTranslationCommon
+    internal partial class MenuIconSetterTranslationCommon : Fallout3MajorRecordSetterTranslationCommon
     {
-        public new static readonly NpcSetterTranslationCommon Instance = new NpcSetterTranslationCommon();
+        public new static readonly MenuIconSetterTranslationCommon Instance = new MenuIconSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            INpcInternal item,
-            INpcGetter rhs,
+            IMenuIconInternal item,
+            IMenuIconGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1079,8 +1138,8 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void DeepCopyIn(
-            INpc item,
-            INpcGetter rhs,
+            IMenuIcon item,
+            IMenuIconGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1091,9 +1150,27 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Race) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MenuIcon_FieldIndex.Icons) ?? true))
             {
-                item.Race.SetTo(rhs.Race.FormKeyNullable);
+                errorMask?.PushIndex((int)MenuIcon_FieldIndex.Icons);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)MenuIcon_FieldIndex.Icons) ?? true))
+                    {
+                        item.Icons = rhs.Icons.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)MenuIcon_FieldIndex.Icons),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             DeepCopyInCustom(
                 item: item,
@@ -1104,8 +1181,8 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         partial void DeepCopyInCustom(
-            INpc item,
-            INpcGetter rhs,
+            IMenuIcon item,
+            IMenuIconGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
@@ -1117,8 +1194,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (INpcInternal)item,
-                rhs: (INpcGetter)rhs,
+                item: (IMenuIconInternal)item,
+                rhs: (IMenuIconGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1132,8 +1209,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (INpc)item,
-                rhs: (INpcGetter)rhs,
+                item: (IMenuIcon)item,
+                rhs: (IMenuIconGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1147,8 +1224,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (INpcInternal)item,
-                rhs: (INpcGetter)rhs,
+                item: (IMenuIconInternal)item,
+                rhs: (IMenuIconGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1162,8 +1239,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (INpc)item,
-                rhs: (INpcGetter)rhs,
+                item: (IMenuIcon)item,
+                rhs: (IMenuIconGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1171,12 +1248,12 @@ namespace Mutagen.Bethesda.Fallout3
         
         #endregion
         
-        public Npc DeepCopy(
-            INpcGetter item,
-            Npc.TranslationMask? copyMask = null)
+        public MenuIcon DeepCopy(
+            IMenuIconGetter item,
+            MenuIcon.TranslationMask? copyMask = null)
         {
-            Npc ret = (Npc)((NpcCommon)((INpcGetter)item).CommonInstance()!).GetNew();
-            ((NpcSetterTranslationCommon)((INpcGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MenuIcon ret = (MenuIcon)((MenuIconCommon)((IMenuIconGetter)item).CommonInstance()!).GetNew();
+            ((MenuIconSetterTranslationCommon)((IMenuIconGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1185,30 +1262,30 @@ namespace Mutagen.Bethesda.Fallout3
             return ret;
         }
         
-        public Npc DeepCopy(
-            INpcGetter item,
-            out Npc.ErrorMask errorMask,
-            Npc.TranslationMask? copyMask = null)
+        public MenuIcon DeepCopy(
+            IMenuIconGetter item,
+            out MenuIcon.ErrorMask errorMask,
+            MenuIcon.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Npc ret = (Npc)((NpcCommon)((INpcGetter)item).CommonInstance()!).GetNew();
-            ((NpcSetterTranslationCommon)((INpcGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MenuIcon ret = (MenuIcon)((MenuIconCommon)((IMenuIconGetter)item).CommonInstance()!).GetNew();
+            ((MenuIconSetterTranslationCommon)((IMenuIconGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = Npc.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MenuIcon.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public Npc DeepCopy(
-            INpcGetter item,
+        public MenuIcon DeepCopy(
+            IMenuIconGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Npc ret = (Npc)((NpcCommon)((INpcGetter)item).CommonInstance()!).GetNew();
-            ((NpcSetterTranslationCommon)((INpcGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            MenuIcon ret = (MenuIcon)((MenuIconCommon)((IMenuIconGetter)item).CommonInstance()!).GetNew();
+            ((MenuIconSetterTranslationCommon)((IMenuIconGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1224,21 +1301,21 @@ namespace Mutagen.Bethesda.Fallout3
 
 namespace Mutagen.Bethesda.Fallout3
 {
-    public partial class Npc
+    public partial class MenuIcon
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Npc_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Npc_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => MenuIcon_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MenuIcon_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => NpcCommon.Instance;
+        protected override object CommonInstance() => MenuIconCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return NpcSetterCommon.Instance;
+            return MenuIconSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => NpcSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => MenuIconSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1249,14 +1326,14 @@ namespace Mutagen.Bethesda.Fallout3
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout3
 {
-    public partial class NpcBinaryWriteTranslation :
+    public partial class MenuIconBinaryWriteTranslation :
         Fallout3MajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly NpcBinaryWriteTranslation Instance = new();
+        public new static readonly MenuIconBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            INpcGetter item,
+            IMenuIconGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
@@ -1264,22 +1341,23 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            FormLinkBinaryTranslation.Instance.WriteNullable(
+            var IconsItem = item.Icons;
+            ((IconsBinaryWriteTranslation)((IBinaryItem)IconsItem).BinaryWriteTranslator).Write(
+                item: IconsItem,
                 writer: writer,
-                item: item.Race,
-                header: translationParams.ConvertToCustom(RecordTypes.RNAM));
+                translationParams: translationParams);
         }
 
         public void Write(
             MutagenWriter writer,
-            INpcGetter item,
+            IMenuIconGetter item,
             TypedWriteParams translationParams)
         {
             PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
                 item: item,
                 translationParams: translationParams,
-                type: RecordTypes.NPC_,
+                type: RecordTypes.MICN,
                 writeEmbedded: Fallout3MajorRecordBinaryWriteTranslation.WriteEmbedded,
                 writeRecordTypes: WriteRecordTypes);
         }
@@ -1290,7 +1368,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (INpcGetter)item,
+                item: (IMenuIconGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1301,7 +1379,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams)
         {
             Write(
-                item: (INpcGetter)item,
+                item: (IMenuIconGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1312,20 +1390,20 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams)
         {
             Write(
-                item: (INpcGetter)item,
+                item: (IMenuIconGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class NpcBinaryCreateTranslation : Fallout3MajorRecordBinaryCreateTranslation
+    internal partial class MenuIconBinaryCreateTranslation : Fallout3MajorRecordBinaryCreateTranslation
     {
-        public new static readonly NpcBinaryCreateTranslation Instance = new NpcBinaryCreateTranslation();
+        public new static readonly MenuIconBinaryCreateTranslation Instance = new MenuIconBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.NPC_;
+        public override RecordType RecordType => RecordTypes.MICN;
         public static ParseResult FillBinaryRecordTypes(
-            INpcInternal item,
+            IMenuIconInternal item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1336,11 +1414,12 @@ namespace Mutagen.Bethesda.Fallout3
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.RNAM:
+                case RecordTypeInts.ICON:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Race.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)Npc_FieldIndex.Race;
+                    item.Icons = Mutagen.Bethesda.Fallout3.Icons.CreateFromBinary(
+                        frame: frame,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)MenuIcon_FieldIndex.Icons;
                 }
                 default:
                     return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1360,7 +1439,7 @@ namespace Mutagen.Bethesda.Fallout3
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Binary Write Mixins
-    public static class NpcBinaryTranslationMixIn
+    public static class MenuIconBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1369,41 +1448,41 @@ namespace Mutagen.Bethesda.Fallout3
 }
 namespace Mutagen.Bethesda.Fallout3
 {
-    internal partial class NpcBinaryOverlay :
+    internal partial class MenuIconBinaryOverlay :
         Fallout3MajorRecordBinaryOverlay,
-        INpcGetter
+        IMenuIconGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Npc_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Npc_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => MenuIcon_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => MenuIcon_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => NpcCommon.Instance;
+        protected override object CommonInstance() => MenuIconCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => NpcSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => MenuIconSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NpcCommon.Instance.EnumerateFormLinks(this);
+        public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => MenuIconCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => NpcBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => MenuIconBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((NpcBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((MenuIconBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(INpc);
+        protected override Type LinkType => typeof(IMenuIcon);
 
 
-        #region Race
-        private int? _RaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> Race => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _RaceLocation);
+        #region Icons
+        private IIconsGetter? _Icons;
+        public IIconsGetter Icons => _Icons ?? new Icons();
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1411,7 +1490,7 @@ namespace Mutagen.Bethesda.Fallout3
             int offset);
 
         partial void CustomCtor();
-        protected NpcBinaryOverlay(
+        protected MenuIconBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1421,7 +1500,7 @@ namespace Mutagen.Bethesda.Fallout3
             this.CustomCtor();
         }
 
-        public static INpcGetter NpcFactory(
+        public static IMenuIconGetter MenuIconFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1433,7 +1512,7 @@ namespace Mutagen.Bethesda.Fallout3
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new NpcBinaryOverlay(
+            var ret = new MenuIconBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret._package.FormVersion = ret;
@@ -1451,12 +1530,12 @@ namespace Mutagen.Bethesda.Fallout3
             return ret;
         }
 
-        public static INpcGetter NpcFactory(
+        public static IMenuIconGetter MenuIconFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return NpcFactory(
+            return MenuIconFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1474,10 +1553,13 @@ namespace Mutagen.Bethesda.Fallout3
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.RNAM:
+                case RecordTypeInts.ICON:
                 {
-                    _RaceLocation = (stream.Position - offset);
-                    return (int)Npc_FieldIndex.Race;
+                    this._Icons = IconsBinaryOverlay.IconsFactory(
+                        stream: stream,
+                        package: _package,
+                        translationParams: translationParams.DoNotShortCircuit());
+                    return (int)MenuIcon_FieldIndex.Icons;
                 }
                 default:
                     return base.FillRecordType(
@@ -1496,7 +1578,7 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             string? name = null)
         {
-            NpcMixIn.Print(
+            MenuIconMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1506,7 +1588,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Npc>.ToString(this);
+            return MajorRecordPrinter<MenuIcon>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1516,16 +1598,16 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 return formLink.Equals(this);
             }
-            if (obj is not INpcGetter rhs) return false;
-            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IMenuIconGetter rhs) return false;
+            return ((MenuIconCommon)((IMenuIconGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(INpcGetter? obj)
+        public bool Equals(IMenuIconGetter? obj)
         {
-            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((MenuIconCommon)((IMenuIconGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((NpcCommon)((INpcGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((MenuIconCommon)((IMenuIconGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

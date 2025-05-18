@@ -66,6 +66,9 @@ namespace Mutagen.Bethesda.Fallout3
         #region LastModified
         public Int32 LastModified { get; set; } = default(Int32);
         #endregion
+        #region Unknown
+        public Int32 Unknown { get; set; } = default(Int32);
+        #endregion
         #region Records
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<T> _Records = new ExtendedList<T>();
@@ -225,6 +228,7 @@ namespace Mutagen.Bethesda.Fallout3
     {
         new GroupTypeEnum Type { get; set; }
         new Int32 LastModified { get; set; }
+        new Int32 Unknown { get; set; }
         new ExtendedList<T> Records { get; }
     }
 
@@ -246,6 +250,7 @@ namespace Mutagen.Bethesda.Fallout3
         static ILoquiRegistration StaticRegistration => Fallout3ListGroup_Registration.Instance;
         GroupTypeEnum Type { get; }
         Int32 LastModified { get; }
+        Int32 Unknown { get; }
         IReadOnlyList<T> Records { get; }
 
     }
@@ -703,7 +708,8 @@ namespace Mutagen.Bethesda.Fallout3
     {
         Type = 0,
         LastModified = 1,
-        Records = 2,
+        Unknown = 2,
+        Records = 3,
     }
     #endregion
 
@@ -714,9 +720,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(Fallout3ListGroup.Mask<>);
 
@@ -793,6 +799,7 @@ namespace Mutagen.Bethesda.Fallout3
             ClearPartial();
             item.Type = default(GroupTypeEnum);
             item.LastModified = default(Int32);
+            item.Unknown = default(Int32);
             item.Records.Clear();
         }
         
@@ -930,6 +937,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             ret.Type = item.Type == rhs.Type;
             ret.LastModified = item.LastModified == rhs.LastModified;
+            ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Records = item.Records.CollectionEqualsHelper(
                 rhs.Records,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -986,6 +994,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.LastModified, "LastModified");
             }
+            if (printMask?.Unknown ?? true)
+            {
+                sb.AppendItem(item.Unknown, "Unknown");
+            }
             if (printMask?.Records?.Overall ?? true)
             {
                 sb.AppendLine("Records =>");
@@ -1017,6 +1029,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.LastModified != rhs.LastModified) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3ListGroup_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Fallout3ListGroup_FieldIndex.Records) ?? true))
             {
                 if (!lhs.Records.SequenceEqual(rhs.Records, (l, r) => ((CellBlockCommon)((ICellBlockGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Fallout3ListGroup_FieldIndex.Records)))) return false;
@@ -1029,6 +1045,7 @@ namespace Mutagen.Bethesda.Fallout3
             var hash = new HashCode();
             hash.Add(item.Type);
             hash.Add(item.LastModified);
+            hash.Add(item.Unknown);
             hash.Add(item.Records);
             return hash.ToHashCode();
         }
@@ -1151,6 +1168,10 @@ namespace Mutagen.Bethesda.Fallout3
             if ((copyMask?.GetShouldTranslate((int)Fallout3ListGroup_FieldIndex.LastModified) ?? true))
             {
                 item.LastModified = rhs.LastModified;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3ListGroup_FieldIndex.Unknown) ?? true))
+            {
+                item.Unknown = rhs.Unknown;
             }
             if ((copyMask?.GetShouldTranslate((int)Fallout3ListGroup_FieldIndex.Records) ?? true))
             {
@@ -1302,6 +1323,7 @@ namespace Mutagen.Bethesda.Fallout3
                 item.Type,
                 length: 4);
             writer.Write(item.LastModified);
+            writer.Write(item.Unknown);
         }
 
         public static void WriteRecordTypes<T>(
@@ -1384,6 +1406,7 @@ namespace Mutagen.Bethesda.Fallout3
                 reader: frame,
                 length: 4);
             item.LastModified = frame.ReadInt32();
+            item.Unknown = frame.ReadInt32();
         }
 
         public static ParseResult FillBinaryRecordTypes(
@@ -1497,6 +1520,7 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         public GroupTypeEnum Type => (GroupTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x4, 0x4));
         public Int32 LastModified => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
+        public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1617,16 +1641,19 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 this.Type = initialValue;
                 this.LastModified = initialValue;
+                this.Unknown = initialValue;
                 this.Records = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellBlock.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, CellBlock.Mask<TItem>?>>());
             }
         
             public Mask(
                 TItem Type,
                 TItem LastModified,
+                TItem Unknown,
                 TItem Records)
             {
                 this.Type = Type;
                 this.LastModified = LastModified;
+                this.Unknown = Unknown;
                 this.Records = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellBlock.Mask<TItem>?>>?>(Records, Enumerable.Empty<MaskItemIndexed<TItem, CellBlock.Mask<TItem>?>>());
             }
         
@@ -1641,6 +1668,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Members
             public TItem Type;
             public TItem LastModified;
+            public TItem Unknown;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, CellBlock.Mask<TItem>?>>?>? Records;
             #endregion
         
@@ -1656,6 +1684,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (rhs == null) return false;
                 if (!object.Equals(this.Type, rhs.Type)) return false;
                 if (!object.Equals(this.LastModified, rhs.LastModified)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.Records, rhs.Records)) return false;
                 return true;
             }
@@ -1664,6 +1693,7 @@ namespace Mutagen.Bethesda.Fallout3
                 var hash = new HashCode();
                 hash.Add(this.Type);
                 hash.Add(this.LastModified);
+                hash.Add(this.Unknown);
                 hash.Add(this.Records);
                 return hash.ToHashCode();
             }
@@ -1675,6 +1705,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (!eval(this.Type)) return false;
                 if (!eval(this.LastModified)) return false;
+                if (!eval(this.Unknown)) return false;
                 if (this.Records != null)
                 {
                     if (!eval(this.Records.Overall)) return false;
@@ -1696,6 +1727,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (eval(this.Type)) return true;
                 if (eval(this.LastModified)) return true;
+                if (eval(this.Unknown)) return true;
                 if (this.Records != null)
                 {
                     if (eval(this.Records.Overall)) return true;
@@ -1724,6 +1756,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 obj.Type = eval(this.Type);
                 obj.LastModified = eval(this.LastModified);
+                obj.Unknown = eval(this.Unknown);
                 if (Records != null)
                 {
                     obj.Records = new MaskItem<R, IEnumerable<MaskItemIndexed<R, CellBlock.Mask<R>?>>?>(eval(this.Records.Overall), Enumerable.Empty<MaskItemIndexed<R, CellBlock.Mask<R>?>>());
@@ -1764,6 +1797,10 @@ namespace Mutagen.Bethesda.Fallout3
                     if (printMask?.LastModified ?? true)
                     {
                         sb.AppendItem(LastModified, "LastModified");
+                    }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        sb.AppendItem(Unknown, "Unknown");
                     }
                     if ((printMask?.Records?.Overall ?? true)
                         && Records is {} RecordsItem)
@@ -1811,6 +1848,7 @@ namespace Mutagen.Bethesda.Fallout3
             }
             public Exception? Type;
             public Exception? LastModified;
+            public Exception? Unknown;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>? Records;
             #endregion
         
@@ -1824,6 +1862,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return Type;
                     case Fallout3ListGroup_FieldIndex.LastModified:
                         return LastModified;
+                    case Fallout3ListGroup_FieldIndex.Unknown:
+                        return Unknown;
                     case Fallout3ListGroup_FieldIndex.Records:
                         return Records;
                     default:
@@ -1841,6 +1881,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3ListGroup_FieldIndex.LastModified:
                         this.LastModified = ex;
+                        break;
+                    case Fallout3ListGroup_FieldIndex.Unknown:
+                        this.Unknown = ex;
                         break;
                     case Fallout3ListGroup_FieldIndex.Records:
                         this.Records = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>(ex, null);
@@ -1861,6 +1904,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3ListGroup_FieldIndex.LastModified:
                         this.LastModified = (Exception?)obj;
                         break;
+                    case Fallout3ListGroup_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
+                        break;
                     case Fallout3ListGroup_FieldIndex.Records:
                         this.Records = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>)obj;
                         break;
@@ -1874,6 +1920,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Overall != null) return true;
                 if (Type != null) return true;
                 if (LastModified != null) return true;
+                if (Unknown != null) return true;
                 if (Records != null) return true;
                 return false;
             }
@@ -1906,6 +1953,9 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     sb.AppendItem(LastModified, "LastModified");
                 }
+                {
+                    sb.AppendItem(Unknown, "Unknown");
+                }
                 if (Records is {} RecordsItem)
                 {
                     sb.AppendLine("Records =>");
@@ -1934,6 +1984,7 @@ namespace Mutagen.Bethesda.Fallout3
                 var ret = new ErrorMask<T_ErrMask>();
                 ret.Type = this.Type.Combine(rhs.Type);
                 ret.LastModified = this.LastModified.Combine(rhs.LastModified);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.Records = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, T_ErrMask?>>?>(Noggog.ExceptionExt.Combine(this.Records?.Overall, rhs.Records?.Overall), Noggog.ExceptionExt.Combine(this.Records?.Specific, rhs.Records?.Specific));
                 return ret;
             }
@@ -1961,6 +2012,7 @@ namespace Mutagen.Bethesda.Fallout3
             public bool OnOverall;
             public bool Type;
             public bool LastModified;
+            public bool Unknown;
             public T_TranslMask? Records;
             #endregion
         
@@ -1973,6 +2025,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.OnOverall = onOverall;
                 this.Type = defaultOn;
                 this.LastModified = defaultOn;
+                this.Unknown = defaultOn;
             }
         
             #endregion
@@ -1990,6 +2043,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 ret.Add((Type, null));
                 ret.Add((LastModified, null));
+                ret.Add((Unknown, null));
                 ret.Add((Records == null ? DefaultOn : !Records.GetCrystal().CopyNothing, Records?.GetCrystal()));
             }
         

@@ -16,8 +16,31 @@
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Fallout3TextureAssetType.cs" />
     <Compile Include="Enum\GroupTypeEnum.cs" />
+    <Compile Include="Interfaces\Aspect\IHasIcons.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Interfaces\Aspect\IObjectBounded.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="InternalsPermissions.cs" />
+    <Compile Include="Records\Common Subrecords\Decal.cs">
+      <DependentUpon>Decal.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Decal_Generated.cs">
+      <DependentUpon>Decal.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Icons_Generated.cs">
+      <DependentUpon>Icons.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ObjectBounds_Generated.cs">
+      <DependentUpon>ObjectBounds.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Fallout3MajorRecord.cs">
       <DependentUpon>Fallout3MajorRecord.xml</DependentUpon>
     </Compile>
@@ -45,6 +68,18 @@
     <Compile Include="Records\MajorRecords\CellSubBlock.cs">
       <DependentUpon>Cell.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\GameSetting.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\GameSettingFloat.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\GameSettingInt.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\GameSettingString.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\Global.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
@@ -63,6 +98,7 @@
     <Compile Include="Records\Fallout3ModHeader.cs">
       <DependentUpon>Fallout3ModHeader.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\MenuIcon.cs" />
     <Compile Include="Records\RecordTypes_Generated.cs" />
     <Compile Include="Records\RecordTypeInts_Generated.cs" />
     <Compile Include="Interfaces\IsolatedAbstractInterfaceMapping_Generated.cs" />
@@ -119,5 +155,24 @@
     </Compile>
     <Compile Include="Interfaces\Link\IPlaced_Generated.cs" />
     <Compile Include="Interfaces\Link\LinkInterfaceMapping_Generated.cs" />
+    <Compile Include="Records\MajorRecords\GameSetting_Generated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\GameSettingInt_Generated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\GameSettingFloat_Generated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\GameSettingString_Generated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\TextureSet_Generated.cs">
+      <DependentUpon>TextureSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Aspect\AspectInterfaceMapping_Generated.cs" />
+    <Compile Include="Records\MajorRecords\MenuIcon_Generated.cs">
+      <DependentUpon>MenuIcon.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

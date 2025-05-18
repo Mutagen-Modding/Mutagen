@@ -61,9 +61,10 @@ namespace Mutagen.Bethesda.Fallout3
         #region Ctor
         public Fallout3Mod()
         {
+            _GameSettings_Object = new Fallout3Group<GameSetting>(this);
+            _TextureSets_Object = new Fallout3Group<TextureSet>(this);
+            _MenuIcons_Object = new Fallout3Group<MenuIcon>(this);
             _Globals_Object = new Fallout3Group<Global>(this);
-            _Npcs_Object = new Fallout3Group<Npc>(this);
-            _Races_Object = new Fallout3Group<Race>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -76,26 +77,33 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3ModHeaderGetter IFallout3ModGetter.ModHeader => _ModHeader_Object;
         #endregion
+        #region GameSettings
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<GameSetting> _GameSettings_Object;
+        public Fallout3Group<GameSetting> GameSettings => _GameSettings_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IGameSettingGetter> IFallout3ModGetter.GameSettings => _GameSettings_Object;
+        #endregion
+        #region TextureSets
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<TextureSet> _TextureSets_Object;
+        public Fallout3Group<TextureSet> TextureSets => _TextureSets_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<ITextureSetGetter> IFallout3ModGetter.TextureSets => _TextureSets_Object;
+        #endregion
+        #region MenuIcons
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<MenuIcon> _MenuIcons_Object;
+        public Fallout3Group<MenuIcon> MenuIcons => _MenuIcons_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IMenuIconGetter> IFallout3ModGetter.MenuIcons => _MenuIcons_Object;
+        #endregion
         #region Globals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Fallout3Group<Global> _Globals_Object;
         public Fallout3Group<Global> Globals => _Globals_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<IGlobalGetter> IFallout3ModGetter.Globals => _Globals_Object;
-        #endregion
-        #region Npcs
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Fallout3Group<Npc> _Npcs_Object;
-        public Fallout3Group<Npc> Npcs => _Npcs_Object;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFallout3GroupGetter<INpcGetter> IFallout3ModGetter.Npcs => _Npcs_Object;
-        #endregion
-        #region Races
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Fallout3Group<Race> _Races_Object;
-        public Fallout3Group<Race> Races => _Races_Object;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFallout3GroupGetter<IRaceGetter> IFallout3ModGetter.Races => _Races_Object;
         #endregion
 
         #region To String
@@ -137,21 +145,24 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(initialValue, new Fallout3ModHeader.Mask<TItem>(initialValue));
+                this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.TextureSets = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.MenuIcons = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Globals = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
-                this.Npcs = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
-                this.Races = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
                 TItem ModHeader,
-                TItem Globals,
-                TItem Npcs,
-                TItem Races)
+                TItem GameSettings,
+                TItem TextureSets,
+                TItem MenuIcons,
+                TItem Globals)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
+                this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
+                this.TextureSets = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(TextureSets, new Fallout3Group.Mask<TItem>(TextureSets));
+                this.MenuIcons = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(MenuIcons, new Fallout3Group.Mask<TItem>(MenuIcons));
                 this.Globals = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Globals, new Fallout3Group.Mask<TItem>(Globals));
-                this.Npcs = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Npcs, new Fallout3Group.Mask<TItem>(Npcs));
-                this.Races = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Races, new Fallout3Group.Mask<TItem>(Races));
             }
 
             #pragma warning disable CS8618
@@ -164,9 +175,10 @@ namespace Mutagen.Bethesda.Fallout3
 
             #region Members
             public MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>? ModHeader { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? GameSettings { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? TextureSets { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? MenuIcons { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Globals { get; set; }
-            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Npcs { get; set; }
-            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Races { get; set; }
             #endregion
 
             #region Equals
@@ -180,18 +192,20 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.ModHeader, rhs.ModHeader)) return false;
+                if (!object.Equals(this.GameSettings, rhs.GameSettings)) return false;
+                if (!object.Equals(this.TextureSets, rhs.TextureSets)) return false;
+                if (!object.Equals(this.MenuIcons, rhs.MenuIcons)) return false;
                 if (!object.Equals(this.Globals, rhs.Globals)) return false;
-                if (!object.Equals(this.Npcs, rhs.Npcs)) return false;
-                if (!object.Equals(this.Races, rhs.Races)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.ModHeader);
+                hash.Add(this.GameSettings);
+                hash.Add(this.TextureSets);
+                hash.Add(this.MenuIcons);
                 hash.Add(this.Globals);
-                hash.Add(this.Npcs);
-                hash.Add(this.Races);
                 return hash.ToHashCode();
             }
 
@@ -205,20 +219,25 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.ModHeader.Overall)) return false;
                     if (this.ModHeader.Specific != null && !this.ModHeader.Specific.All(eval)) return false;
                 }
+                if (GameSettings != null)
+                {
+                    if (!eval(this.GameSettings.Overall)) return false;
+                    if (this.GameSettings.Specific != null && !this.GameSettings.Specific.All(eval)) return false;
+                }
+                if (TextureSets != null)
+                {
+                    if (!eval(this.TextureSets.Overall)) return false;
+                    if (this.TextureSets.Specific != null && !this.TextureSets.Specific.All(eval)) return false;
+                }
+                if (MenuIcons != null)
+                {
+                    if (!eval(this.MenuIcons.Overall)) return false;
+                    if (this.MenuIcons.Specific != null && !this.MenuIcons.Specific.All(eval)) return false;
+                }
                 if (Globals != null)
                 {
                     if (!eval(this.Globals.Overall)) return false;
                     if (this.Globals.Specific != null && !this.Globals.Specific.All(eval)) return false;
-                }
-                if (Npcs != null)
-                {
-                    if (!eval(this.Npcs.Overall)) return false;
-                    if (this.Npcs.Specific != null && !this.Npcs.Specific.All(eval)) return false;
-                }
-                if (Races != null)
-                {
-                    if (!eval(this.Races.Overall)) return false;
-                    if (this.Races.Specific != null && !this.Races.Specific.All(eval)) return false;
                 }
                 return true;
             }
@@ -232,20 +251,25 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.ModHeader.Overall)) return true;
                     if (this.ModHeader.Specific != null && this.ModHeader.Specific.Any(eval)) return true;
                 }
+                if (GameSettings != null)
+                {
+                    if (eval(this.GameSettings.Overall)) return true;
+                    if (this.GameSettings.Specific != null && this.GameSettings.Specific.Any(eval)) return true;
+                }
+                if (TextureSets != null)
+                {
+                    if (eval(this.TextureSets.Overall)) return true;
+                    if (this.TextureSets.Specific != null && this.TextureSets.Specific.Any(eval)) return true;
+                }
+                if (MenuIcons != null)
+                {
+                    if (eval(this.MenuIcons.Overall)) return true;
+                    if (this.MenuIcons.Specific != null && this.MenuIcons.Specific.Any(eval)) return true;
+                }
                 if (Globals != null)
                 {
                     if (eval(this.Globals.Overall)) return true;
                     if (this.Globals.Specific != null && this.Globals.Specific.Any(eval)) return true;
-                }
-                if (Npcs != null)
-                {
-                    if (eval(this.Npcs.Overall)) return true;
-                    if (this.Npcs.Specific != null && this.Npcs.Specific.Any(eval)) return true;
-                }
-                if (Races != null)
-                {
-                    if (eval(this.Races.Overall)) return true;
-                    if (this.Races.Specific != null && this.Races.Specific.Any(eval)) return true;
                 }
                 return false;
             }
@@ -262,9 +286,10 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.ModHeader = this.ModHeader == null ? null : new MaskItem<R, Fallout3ModHeader.Mask<R>?>(eval(this.ModHeader.Overall), this.ModHeader.Specific?.Translate(eval));
+                obj.GameSettings = this.GameSettings == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.GameSettings.Overall), this.GameSettings.Specific?.Translate(eval));
+                obj.TextureSets = this.TextureSets == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.TextureSets.Overall), this.TextureSets.Specific?.Translate(eval));
+                obj.MenuIcons = this.MenuIcons == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.MenuIcons.Overall), this.MenuIcons.Specific?.Translate(eval));
                 obj.Globals = this.Globals == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Globals.Overall), this.Globals.Specific?.Translate(eval));
-                obj.Npcs = this.Npcs == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Npcs.Overall), this.Npcs.Specific?.Translate(eval));
-                obj.Races = this.Races == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Races.Overall), this.Races.Specific?.Translate(eval));
             }
             #endregion
 
@@ -287,17 +312,21 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         ModHeader?.Print(sb);
                     }
+                    if (printMask?.GameSettings?.Overall ?? true)
+                    {
+                        GameSettings?.Print(sb);
+                    }
+                    if (printMask?.TextureSets?.Overall ?? true)
+                    {
+                        TextureSets?.Print(sb);
+                    }
+                    if (printMask?.MenuIcons?.Overall ?? true)
+                    {
+                        MenuIcons?.Print(sb);
+                    }
                     if (printMask?.Globals?.Overall ?? true)
                     {
                         Globals?.Print(sb);
-                    }
-                    if (printMask?.Npcs?.Overall ?? true)
-                    {
-                        Npcs?.Print(sb);
-                    }
-                    if (printMask?.Races?.Overall ?? true)
-                    {
-                        Races?.Print(sb);
                     }
                 }
             }
@@ -324,9 +353,10 @@ namespace Mutagen.Bethesda.Fallout3
                 }
             }
             public MaskItem<Exception?, Fallout3ModHeader.ErrorMask?>? ModHeader;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<GameSetting.ErrorMask>?>? GameSettings;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<TextureSet.ErrorMask>?>? TextureSets;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<MenuIcon.ErrorMask>?>? MenuIcons;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Global.ErrorMask>?>? Globals;
-            public MaskItem<Exception?, Fallout3Group.ErrorMask<Npc.ErrorMask>?>? Npcs;
-            public MaskItem<Exception?, Fallout3Group.ErrorMask<Race.ErrorMask>?>? Races;
             #endregion
 
             #region IErrorMask
@@ -337,12 +367,14 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     case Fallout3Mod_FieldIndex.ModHeader:
                         return ModHeader;
+                    case Fallout3Mod_FieldIndex.GameSettings:
+                        return GameSettings;
+                    case Fallout3Mod_FieldIndex.TextureSets:
+                        return TextureSets;
+                    case Fallout3Mod_FieldIndex.MenuIcons:
+                        return MenuIcons;
                     case Fallout3Mod_FieldIndex.Globals:
                         return Globals;
-                    case Fallout3Mod_FieldIndex.Npcs:
-                        return Npcs;
-                    case Fallout3Mod_FieldIndex.Races:
-                        return Races;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -356,14 +388,17 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.ModHeader:
                         this.ModHeader = new MaskItem<Exception?, Fallout3ModHeader.ErrorMask?>(ex, null);
                         break;
+                    case Fallout3Mod_FieldIndex.GameSettings:
+                        this.GameSettings = new MaskItem<Exception?, Fallout3Group.ErrorMask<GameSetting.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.TextureSets:
+                        this.TextureSets = new MaskItem<Exception?, Fallout3Group.ErrorMask<TextureSet.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.MenuIcons:
+                        this.MenuIcons = new MaskItem<Exception?, Fallout3Group.ErrorMask<MenuIcon.ErrorMask>?>(ex, null);
+                        break;
                     case Fallout3Mod_FieldIndex.Globals:
                         this.Globals = new MaskItem<Exception?, Fallout3Group.ErrorMask<Global.ErrorMask>?>(ex, null);
-                        break;
-                    case Fallout3Mod_FieldIndex.Npcs:
-                        this.Npcs = new MaskItem<Exception?, Fallout3Group.ErrorMask<Npc.ErrorMask>?>(ex, null);
-                        break;
-                    case Fallout3Mod_FieldIndex.Races:
-                        this.Races = new MaskItem<Exception?, Fallout3Group.ErrorMask<Race.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -378,14 +413,17 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.ModHeader:
                         this.ModHeader = (MaskItem<Exception?, Fallout3ModHeader.ErrorMask?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.GameSettings:
+                        this.GameSettings = (MaskItem<Exception?, Fallout3Group.ErrorMask<GameSetting.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.TextureSets:
+                        this.TextureSets = (MaskItem<Exception?, Fallout3Group.ErrorMask<TextureSet.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.MenuIcons:
+                        this.MenuIcons = (MaskItem<Exception?, Fallout3Group.ErrorMask<MenuIcon.ErrorMask>?>?)obj;
+                        break;
                     case Fallout3Mod_FieldIndex.Globals:
                         this.Globals = (MaskItem<Exception?, Fallout3Group.ErrorMask<Global.ErrorMask>?>?)obj;
-                        break;
-                    case Fallout3Mod_FieldIndex.Npcs:
-                        this.Npcs = (MaskItem<Exception?, Fallout3Group.ErrorMask<Npc.ErrorMask>?>?)obj;
-                        break;
-                    case Fallout3Mod_FieldIndex.Races:
-                        this.Races = (MaskItem<Exception?, Fallout3Group.ErrorMask<Race.ErrorMask>?>?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -396,9 +434,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (Overall != null) return true;
                 if (ModHeader != null) return true;
+                if (GameSettings != null) return true;
+                if (TextureSets != null) return true;
+                if (MenuIcons != null) return true;
                 if (Globals != null) return true;
-                if (Npcs != null) return true;
-                if (Races != null) return true;
                 return false;
             }
             #endregion
@@ -425,9 +464,10 @@ namespace Mutagen.Bethesda.Fallout3
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 ModHeader?.Print(sb);
+                GameSettings?.Print(sb);
+                TextureSets?.Print(sb);
+                MenuIcons?.Print(sb);
                 Globals?.Print(sb);
-                Npcs?.Print(sb);
-                Races?.Print(sb);
             }
             #endregion
 
@@ -437,9 +477,10 @@ namespace Mutagen.Bethesda.Fallout3
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.ModHeader = this.ModHeader.Combine(rhs.ModHeader, (l, r) => l.Combine(r));
+                ret.GameSettings = this.GameSettings.Combine(rhs.GameSettings, (l, r) => l.Combine(r));
+                ret.TextureSets = this.TextureSets.Combine(rhs.TextureSets, (l, r) => l.Combine(r));
+                ret.MenuIcons = this.MenuIcons.Combine(rhs.MenuIcons, (l, r) => l.Combine(r));
                 ret.Globals = this.Globals.Combine(rhs.Globals, (l, r) => l.Combine(r));
-                ret.Npcs = this.Npcs.Combine(rhs.Npcs, (l, r) => l.Combine(r));
-                ret.Races = this.Races.Combine(rhs.Races, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -464,9 +505,10 @@ namespace Mutagen.Bethesda.Fallout3
             public readonly bool DefaultOn;
             public bool OnOverall;
             public Fallout3ModHeader.TranslationMask? ModHeader;
+            public Fallout3Group.TranslationMask<GameSetting.TranslationMask>? GameSettings;
+            public Fallout3Group.TranslationMask<TextureSet.TranslationMask>? TextureSets;
+            public Fallout3Group.TranslationMask<MenuIcon.TranslationMask>? MenuIcons;
             public Fallout3Group.TranslationMask<Global.TranslationMask>? Globals;
-            public Fallout3Group.TranslationMask<Npc.TranslationMask>? Npcs;
-            public Fallout3Group.TranslationMask<Race.TranslationMask>? Races;
             #endregion
 
             #region Ctors
@@ -492,9 +534,10 @@ namespace Mutagen.Bethesda.Fallout3
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((ModHeader != null ? ModHeader.OnOverall : DefaultOn, ModHeader?.GetCrystal()));
+                ret.Add((GameSettings != null ? GameSettings.OnOverall : DefaultOn, GameSettings?.GetCrystal()));
+                ret.Add((TextureSets != null ? TextureSets.OnOverall : DefaultOn, TextureSets?.GetCrystal()));
+                ret.Add((MenuIcons != null ? MenuIcons.OnOverall : DefaultOn, MenuIcons?.GetCrystal()));
                 ret.Add((Globals != null ? Globals.OnOverall : DefaultOn, Globals?.GetCrystal()));
-                ret.Add((Npcs != null ? Npcs.OnOverall : DefaultOn, Npcs?.GetCrystal()));
-                ret.Add((Races != null ? Races.OnOverall : DefaultOn, Races?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -551,26 +594,31 @@ namespace Mutagen.Bethesda.Fallout3
             }
             this.Fallout3Release = release;
             this.ModHeader.Stats.NextFormID = GetDefaultInitialNextFormID(forceUseLowerFormIDRanges: forceUseLowerFormIDRanges);
+            _GameSettings_Object = new Fallout3Group<GameSetting>(this);
+            _TextureSets_Object = new Fallout3Group<TextureSet>(this);
+            _MenuIcons_Object = new Fallout3Group<MenuIcon>(this);
             _Globals_Object = new Fallout3Group<Global>(this);
-            _Npcs_Object = new Fallout3Group<Npc>(this);
-            _Races_Object = new Fallout3Group<Race>(this);
             CustomCtor();
         }
         public void AddRecords(
             Fallout3Mod rhsMod,
             GroupMask? mask = null)
         {
+            if (mask?.GameSettings ?? true)
+            {
+                this.GameSettings.RecordCache.Set(rhsMod.GameSettings.RecordCache.Items);
+            }
+            if (mask?.TextureSets ?? true)
+            {
+                this.TextureSets.RecordCache.Set(rhsMod.TextureSets.RecordCache.Items);
+            }
+            if (mask?.MenuIcons ?? true)
+            {
+                this.MenuIcons.RecordCache.Set(rhsMod.MenuIcons.RecordCache.Items);
+            }
             if (mask?.Globals ?? true)
             {
                 this.Globals.RecordCache.Set(rhsMod.Globals.RecordCache.Items);
-            }
-            if (mask?.Npcs ?? true)
-            {
-                this.Npcs.RecordCache.Set(rhsMod.Npcs.RecordCache.Items);
-            }
-            if (mask?.Races ?? true)
-            {
-                this.Races.RecordCache.Set(rhsMod.Races.RecordCache.Items);
             }
         }
 
@@ -827,22 +875,21 @@ namespace Mutagen.Bethesda.Fallout3
         IAssetLinkContainer,
         IContextMod<IFallout3Mod, IFallout3ModGetter>,
         IFallout3ModGetter,
-        IFormLinkContainer,
         ILoquiObjectSetter<IFallout3Mod>,
         IMajorRecordEnumerable,
         IMod
     {
         new Fallout3ModHeader ModHeader { get; }
+        new Fallout3Group<GameSetting> GameSettings { get; }
+        new Fallout3Group<TextureSet> TextureSets { get; }
+        new Fallout3Group<MenuIcon> MenuIcons { get; }
         new Fallout3Group<Global> Globals { get; }
-        new Fallout3Group<Npc> Npcs { get; }
-        new Fallout3Group<Race> Races { get; }
     }
 
     public partial interface IFallout3ModGetter :
         ILoquiObject,
         IAssetLinkContainerGetter,
         IContextGetterMod<IFallout3Mod, IFallout3ModGetter>,
-        IFormLinkContainerGetter,
         ILoquiObject<IFallout3ModGetter>,
         IMajorRecordContextEnumerable<IFallout3Mod, IFallout3ModGetter>,
         IMajorRecordGetterEnumerable,
@@ -856,9 +903,10 @@ namespace Mutagen.Bethesda.Fallout3
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => Fallout3Mod_Registration.Instance;
         IFallout3ModHeaderGetter ModHeader { get; }
+        IFallout3GroupGetter<IGameSettingGetter> GameSettings { get; }
+        IFallout3GroupGetter<ITextureSetGetter> TextureSets { get; }
+        IFallout3GroupGetter<IMenuIconGetter> MenuIcons { get; }
         IFallout3GroupGetter<IGlobalGetter> Globals { get; }
-        IFallout3GroupGetter<INpcGetter> Npcs { get; }
-        IFallout3GroupGetter<IRaceGetter> Races { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -1410,9 +1458,10 @@ namespace Mutagen.Bethesda.Fallout3
     internal enum Fallout3Mod_FieldIndex
     {
         ModHeader = 0,
-        Globals = 1,
-        Npcs = 2,
-        Races = 3,
+        GameSettings = 1,
+        TextureSets = 2,
+        MenuIcons = 3,
+        Globals = 4,
     }
     #endregion
 
@@ -1423,9 +1472,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 5;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -1492,15 +1541,15 @@ namespace Mutagen.Bethesda.Fallout3
         public void Clear(IFallout3Mod item)
         {
             ClearPartial();
+            item.GameSettings.Clear();
+            item.TextureSets.Clear();
+            item.MenuIcons.Clear();
             item.Globals.Clear();
-            item.Npcs.Clear();
-            item.Races.Clear();
         }
         
         #region Mutagen
         public void RemapLinks(IFallout3Mod obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Npcs.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -1535,9 +1584,10 @@ namespace Mutagen.Bethesda.Fallout3
             IFallout3Mod obj,
             HashSet<FormKey> keys)
         {
+            obj.GameSettings.Remove(keys);
+            obj.TextureSets.Remove(keys);
+            obj.MenuIcons.Remove(keys);
             obj.Globals.Remove(keys);
-            obj.Npcs.Remove(keys);
-            obj.Races.Remove(keys);
         }
         
         public void Remove(
@@ -1556,6 +1606,42 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IFallout3MajorRecordGetter":
                     if (!Fallout3Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) return;
                     this.Remove(obj, keys);
+                    break;
+                case "GameSetting":
+                case "IGameSettingGetter":
+                case "IGameSetting":
+                case "IGameSettingInternal":
+                case "GameSettingInt":
+                case "IGameSettingIntGetter":
+                case "IGameSettingInt":
+                case "IGameSettingIntInternal":
+                case "GameSettingFloat":
+                case "IGameSettingFloatGetter":
+                case "IGameSettingFloat":
+                case "IGameSettingFloatInternal":
+                case "GameSettingString":
+                case "IGameSettingStringGetter":
+                case "IGameSettingString":
+                case "IGameSettingStringInternal":
+                    obj.GameSettings.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "TextureSet":
+                case "ITextureSetGetter":
+                case "ITextureSet":
+                case "ITextureSetInternal":
+                    obj.TextureSets.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "MenuIcon":
+                case "IMenuIconGetter":
+                case "IMenuIcon":
+                case "IMenuIconInternal":
+                    obj.MenuIcons.Remove(
+                        type: type,
+                        keys: keys);
                     break;
                 case "Global":
                 case "IGlobalGetter":
@@ -1581,22 +1667,6 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
-                case "Npc":
-                case "INpcGetter":
-                case "INpc":
-                case "INpcInternal":
-                    obj.Npcs.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
-                case "Race":
-                case "IRaceGetter":
-                case "IRace":
-                case "IRaceInternal":
-                    obj.Races.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
                 default:
                     if (throwIfUnknown)
                     {
@@ -1611,6 +1681,18 @@ namespace Mutagen.Bethesda.Fallout3
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(IFallout3Mod obj)
         {
+            {
+                foreach (var item in obj.TextureSets.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
+            {
+                foreach (var item in obj.MenuIcons.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -1620,6 +1702,8 @@ namespace Mutagen.Bethesda.Fallout3
             IAssetLinkCache? linkCache,
             AssetLinkQuery queryCategories)
         {
+            obj.TextureSets.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.MenuIcons.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -1666,9 +1750,10 @@ namespace Mutagen.Bethesda.Fallout3
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.ModHeader = MaskItemExt.Factory(item.ModHeader.GetEqualsMask(rhs.ModHeader, include), include);
+            ret.GameSettings = MaskItemExt.Factory(item.GameSettings.GetEqualsMask(rhs.GameSettings, include), include);
+            ret.TextureSets = MaskItemExt.Factory(item.TextureSets.GetEqualsMask(rhs.TextureSets, include), include);
+            ret.MenuIcons = MaskItemExt.Factory(item.MenuIcons.GetEqualsMask(rhs.MenuIcons, include), include);
             ret.Globals = MaskItemExt.Factory(item.Globals.GetEqualsMask(rhs.Globals, include), include);
-            ret.Npcs = MaskItemExt.Factory(item.Npcs.GetEqualsMask(rhs.Npcs, include), include);
-            ret.Races = MaskItemExt.Factory(item.Races.GetEqualsMask(rhs.Races, include), include);
         }
         
         public string Print(
@@ -1717,17 +1802,21 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.ModHeader?.Print(sb, "ModHeader");
             }
+            if (printMask?.GameSettings?.Overall ?? true)
+            {
+                item.GameSettings?.Print(sb, "GameSettings");
+            }
+            if (printMask?.TextureSets?.Overall ?? true)
+            {
+                item.TextureSets?.Print(sb, "TextureSets");
+            }
+            if (printMask?.MenuIcons?.Overall ?? true)
+            {
+                item.MenuIcons?.Print(sb, "MenuIcons");
+            }
             if (printMask?.Globals?.Overall ?? true)
             {
                 item.Globals?.Print(sb, "Globals");
-            }
-            if (printMask?.Npcs?.Overall ?? true)
-            {
-                item.Npcs?.Print(sb, "Npcs");
-            }
-            if (printMask?.Races?.Overall ?? true)
-            {
-                item.Races?.Print(sb, "Races");
             }
         }
         
@@ -1746,6 +1835,30 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isModHeaderEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.GameSettings) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.GameSettings, rhs.GameSettings, out var lhsGameSettings, out var rhsGameSettings, out var isGameSettingsEqual))
+                {
+                    if (!object.Equals(lhsGameSettings, rhsGameSettings)) return false;
+                }
+                else if (!isGameSettingsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.TextureSets) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.TextureSets, rhs.TextureSets, out var lhsTextureSets, out var rhsTextureSets, out var isTextureSetsEqual))
+                {
+                    if (!object.Equals(lhsTextureSets, rhsTextureSets)) return false;
+                }
+                else if (!isTextureSetsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.MenuIcons) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.MenuIcons, rhs.MenuIcons, out var lhsMenuIcons, out var rhsMenuIcons, out var isMenuIconsEqual))
+                {
+                    if (!object.Equals(lhsMenuIcons, rhsMenuIcons)) return false;
+                }
+                else if (!isMenuIconsEqual) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Globals) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Globals, rhs.Globals, out var lhsGlobals, out var rhsGlobals, out var isGlobalsEqual))
@@ -1754,22 +1867,6 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isGlobalsEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Npcs) ?? true))
-            {
-                if (EqualsMaskHelper.RefEquality(lhs.Npcs, rhs.Npcs, out var lhsNpcs, out var rhsNpcs, out var isNpcsEqual))
-                {
-                    if (!object.Equals(lhsNpcs, rhsNpcs)) return false;
-                }
-                else if (!isNpcsEqual) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Races) ?? true))
-            {
-                if (EqualsMaskHelper.RefEquality(lhs.Races, rhs.Races, out var lhsRaces, out var rhsRaces, out var isRacesEqual))
-                {
-                    if (!object.Equals(lhsRaces, rhsRaces)) return false;
-                }
-                else if (!isRacesEqual) return false;
-            }
             return true;
         }
         
@@ -1777,9 +1874,10 @@ namespace Mutagen.Bethesda.Fallout3
         {
             var hash = new HashCode();
             hash.Add(item.ModHeader);
+            hash.Add(item.GameSettings);
+            hash.Add(item.TextureSets);
+            hash.Add(item.MenuIcons);
             hash.Add(item.Globals);
-            hash.Add(item.Npcs);
-            hash.Add(item.Races);
             return hash.ToHashCode();
         }
         
@@ -1798,21 +1896,26 @@ namespace Mutagen.Bethesda.Fallout3
         {
             switch (type.Name)
             {
+                case "GameSetting":
+                case "IGameSettingGetter":
+                case "IGameSetting":
+                case "IGameSettingInternal":
+                    return obj.GameSettings;
+                case "TextureSet":
+                case "ITextureSetGetter":
+                case "ITextureSet":
+                case "ITextureSetInternal":
+                    return obj.TextureSets;
+                case "MenuIcon":
+                case "IMenuIconGetter":
+                case "IMenuIcon":
+                case "IMenuIconInternal":
+                    return obj.MenuIcons;
                 case "Global":
                 case "IGlobalGetter":
                 case "IGlobal":
                 case "IGlobalInternal":
                     return obj.Globals;
-                case "Npc":
-                case "INpcGetter":
-                case "INpc":
-                case "INpcInternal":
-                    return obj.Npcs;
-                case "Race":
-                case "IRaceGetter":
-                case "IRace":
-                case "IRaceInternal":
-                    return obj.Races;
                 default:
                     return null;
             }
@@ -1830,11 +1933,12 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[3];
+            Stream[] outputStreams = new Stream[4];
             List<Action> toDo = new List<Action>();
-            toDo.Add(() => WriteGroupParallel(item.Globals, 0, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Npcs, 1, outputStreams, writer.MetaData, param.Parallel));
-            toDo.Add(() => WriteGroupParallel(item.Races, 2, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.MenuIcons, 2, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Globals, 3, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -1880,9 +1984,10 @@ namespace Mutagen.Bethesda.Fallout3
         public uint GetRecordCount(IFallout3ModGetter item)
         {
             uint count = (uint)item.EnumerateMajorRecords().Count();
+            count += item.GameSettings.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.TextureSets.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.MenuIcons.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Globals.RecordCache.Count > 0 ? 1 : default(uint);
-            count += item.Npcs.RecordCache.Count > 0 ? 1 : default(uint);
-            count += item.Races.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -1891,24 +1996,24 @@ namespace Mutagen.Bethesda.Fallout3
         
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFallout3ModGetter obj)
         {
-            foreach (var item in obj.Npcs.EnumerateFormLinks())
-            {
-                yield return item;
-            }
             yield break;
         }
         
         public IEnumerable<IMajorRecordGetter> EnumerateMajorRecords(IFallout3ModGetter obj)
         {
+            foreach (var item in obj.GameSettings.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.TextureSets.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MenuIcons.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
             foreach (var item in obj.Globals.EnumerateMajorRecords())
-            {
-                yield return item;
-            }
-            foreach (var item in obj.Npcs.EnumerateMajorRecords())
-            {
-                yield return item;
-            }
-            foreach (var item in obj.Races.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -1947,29 +2052,38 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "GameSetting":
+                case "IGameSettingGetter":
+                case "IGameSetting":
+                case "IGameSettingInternal":
+                    foreach (var item in obj.GameSettings.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "TextureSet":
+                case "ITextureSetGetter":
+                case "ITextureSet":
+                case "ITextureSetInternal":
+                    foreach (var item in obj.TextureSets.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MenuIcon":
+                case "IMenuIconGetter":
+                case "IMenuIcon":
+                case "IMenuIconInternal":
+                    foreach (var item in obj.MenuIcons.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "Global":
                 case "IGlobalGetter":
                 case "IGlobal":
                 case "IGlobalInternal":
                     foreach (var item in obj.Globals.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Npc":
-                case "INpcGetter":
-                case "INpc":
-                case "INpcInternal":
-                    foreach (var item in obj.Npcs.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Race":
-                case "IRaceGetter":
-                case "IRace":
-                case "IRaceInternal":
-                    foreach (var item in obj.Races.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -1998,30 +2112,39 @@ namespace Mutagen.Bethesda.Fallout3
             IFallout3ModGetter obj,
             ILinkCache linkCache)
         {
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, GameSetting, IGameSettingGetter>(
+                srcGroup: obj.GameSettings,
+                type: typeof(IGameSettingGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.GameSettings,
+                groupGetter: (m) => m.GameSettings))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, TextureSet, ITextureSetGetter>(
+                srcGroup: obj.TextureSets,
+                type: typeof(ITextureSetGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.TextureSets,
+                groupGetter: (m) => m.TextureSets))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MenuIcon, IMenuIconGetter>(
+                srcGroup: obj.MenuIcons,
+                type: typeof(IMenuIconGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.MenuIcons,
+                groupGetter: (m) => m.MenuIcons))
+            {
+                yield return item;
+            }
             foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Global, IGlobalGetter>(
                 srcGroup: obj.Globals,
                 type: typeof(IGlobalGetter),
                 modKey: obj.ModKey,
                 group: (m) => m.Globals,
                 groupGetter: (m) => m.Globals))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Npc, INpcGetter>(
-                srcGroup: obj.Npcs,
-                type: typeof(INpcGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Npcs,
-                groupGetter: (m) => m.Npcs))
-            {
-                yield return item;
-            }
-            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Race, IRaceGetter>(
-                srcGroup: obj.Races,
-                type: typeof(IRaceGetter),
-                modKey: obj.ModKey,
-                group: (m) => m.Races,
-                groupGetter: (m) => m.Races))
             {
                 yield return item;
             }
@@ -2056,6 +2179,48 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "GameSetting":
+                case "IGameSettingGetter":
+                case "IGameSetting":
+                case "IGameSettingInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, GameSetting, IGameSettingGetter>(
+                        srcGroup: obj.GameSettings,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.GameSettings,
+                        groupGetter: (m) => m.GameSettings))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "TextureSet":
+                case "ITextureSetGetter":
+                case "ITextureSet":
+                case "ITextureSetInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, TextureSet, ITextureSetGetter>(
+                        srcGroup: obj.TextureSets,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.TextureSets,
+                        groupGetter: (m) => m.TextureSets))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MenuIcon":
+                case "IMenuIconGetter":
+                case "IMenuIcon":
+                case "IMenuIconInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, MenuIcon, IMenuIconGetter>(
+                        srcGroup: obj.MenuIcons,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.MenuIcons,
+                        groupGetter: (m) => m.MenuIcons))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "Global":
                 case "IGlobalGetter":
                 case "IGlobal":
@@ -2066,34 +2231,6 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.Globals,
                         groupGetter: (m) => m.Globals))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Npc":
-                case "INpcGetter":
-                case "INpc":
-                case "INpcInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Npc, INpcGetter>(
-                        srcGroup: obj.Npcs,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Npcs,
-                        groupGetter: (m) => m.Npcs))
-                    {
-                        yield return item;
-                    }
-                    yield break;
-                case "Race":
-                case "IRaceGetter":
-                case "IRace":
-                case "IRaceInternal":
-                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Race, IRaceGetter>(
-                        srcGroup: obj.Races,
-                        type: type,
-                        modKey: obj.ModKey,
-                        group: (m) => m.Races,
-                        groupGetter: (m) => m.Races))
                     {
                         yield return item;
                     }
@@ -2125,6 +2262,14 @@ namespace Mutagen.Bethesda.Fallout3
         
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(IFallout3ModGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
+            foreach (var item in obj.TextureSets.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MenuIcons.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -2163,6 +2308,66 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.GameSettings) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.GameSettings);
+                try
+                {
+                    item.GameSettings.DeepCopyIn(
+                        rhs: rhs.GameSettings,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.GameSettings));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.TextureSets) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.TextureSets);
+                try
+                {
+                    item.TextureSets.DeepCopyIn(
+                        rhs: rhs.TextureSets,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.TextureSets));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.MenuIcons) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.MenuIcons);
+                try
+                {
+                    item.MenuIcons.DeepCopyIn(
+                        rhs: rhs.MenuIcons,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.MenuIcons));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Globals) ?? true))
             {
                 errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Globals);
@@ -2172,46 +2377,6 @@ namespace Mutagen.Bethesda.Fallout3
                         rhs: rhs.Globals,
                         errorMask: errorMask,
                         copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Globals));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Npcs) ?? true))
-            {
-                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Npcs);
-                try
-                {
-                    item.Npcs.DeepCopyIn(
-                        rhs: rhs.Npcs,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Npcs));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Races) ?? true))
-            {
-                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Races);
-                try
-                {
-                    item.Races.DeepCopyIn(
-                        rhs: rhs.Races,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Races));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2326,17 +2491,19 @@ namespace Mutagen.Bethesda.Fallout3
 {
     public class GroupMask
     {
+        public bool GameSettings;
+        public bool TextureSets;
+        public bool MenuIcons;
         public bool Globals;
-        public bool Npcs;
-        public bool Races;
         public GroupMask()
         {
         }
         public GroupMask(bool defaultValue)
         {
+            GameSettings = defaultValue;
+            TextureSets = defaultValue;
+            MenuIcons = defaultValue;
             Globals = defaultValue;
-            Npcs = defaultValue;
-            Races = defaultValue;
         }
     }
 
@@ -2399,6 +2566,39 @@ namespace Mutagen.Bethesda.Fallout3
             GroupMask? importMask,
             TypedWriteParams translationParams = default)
         {
+            if (importMask?.GameSettings ?? true)
+            {
+                var GameSettingsItem = item.GameSettings;
+                if (GameSettingsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)GameSettingsItem).BinaryWriteTranslator).Write<IGameSettingGetter>(
+                        item: GameSettingsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.TextureSets ?? true)
+            {
+                var TextureSetsItem = item.TextureSets;
+                if (TextureSetsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)TextureSetsItem).BinaryWriteTranslator).Write<ITextureSetGetter>(
+                        item: TextureSetsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.MenuIcons ?? true)
+            {
+                var MenuIconsItem = item.MenuIcons;
+                if (MenuIconsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)MenuIconsItem).BinaryWriteTranslator).Write<IMenuIconGetter>(
+                        item: MenuIconsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
             if (importMask?.Globals ?? true)
             {
                 var GlobalsItem = item.Globals;
@@ -2406,28 +2606,6 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)GlobalsItem).BinaryWriteTranslator).Write<IGlobalGetter>(
                         item: GlobalsItem,
-                        writer: writer,
-                        translationParams: translationParams);
-                }
-            }
-            if (importMask?.Npcs ?? true)
-            {
-                var NpcsItem = item.Npcs;
-                if (NpcsItem.RecordCache.Count > 0)
-                {
-                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)NpcsItem).BinaryWriteTranslator).Write<INpcGetter>(
-                        item: NpcsItem,
-                        writer: writer,
-                        translationParams: translationParams);
-                }
-            }
-            if (importMask?.Races ?? true)
-            {
-                var RacesItem = item.Races;
-                if (RacesItem.RecordCache.Count > 0)
-                {
-                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)RacesItem).BinaryWriteTranslator).Write<IRaceGetter>(
-                        item: RacesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -2502,6 +2680,48 @@ namespace Mutagen.Bethesda.Fallout3
                         translationParams: null);
                     return (int)Fallout3Mod_FieldIndex.ModHeader;
                 }
+                case RecordTypeInts.GMST:
+                {
+                    if (importMask?.GameSettings ?? true)
+                    {
+                        item.GameSettings.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.GameSettings;
+                }
+                case RecordTypeInts.TXST:
+                {
+                    if (importMask?.TextureSets ?? true)
+                    {
+                        item.TextureSets.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.TextureSets;
+                }
+                case RecordTypeInts.MICN:
+                {
+                    if (importMask?.MenuIcons ?? true)
+                    {
+                        item.MenuIcons.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.MenuIcons;
+                }
                 case RecordTypeInts.GLOB:
                 {
                     if (importMask?.Globals ?? true)
@@ -2515,34 +2735,6 @@ namespace Mutagen.Bethesda.Fallout3
                         frame.Position += contentLength;
                     }
                     return (int)Fallout3Mod_FieldIndex.Globals;
-                }
-                case RecordTypeInts.NPC_:
-                {
-                    if (importMask?.Npcs ?? true)
-                    {
-                        item.Npcs.CopyInFromBinary(
-                            frame: frame,
-                            translationParams: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return (int)Fallout3Mod_FieldIndex.Npcs;
-                }
-                case RecordTypeInts.RACE:
-                {
-                    if (importMask?.Races ?? true)
-                    {
-                        item.Races.CopyInFromBinary(
-                            frame: frame,
-                            translationParams: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return (int)Fallout3Mod_FieldIndex.Races;
                 }
                 default:
                     frame.Position += contentLength;
@@ -2708,20 +2900,25 @@ namespace Mutagen.Bethesda.Fallout3
         private IFallout3ModHeaderGetter? _ModHeader => _ModHeaderLocation.HasValue ? Fallout3ModHeaderBinaryOverlay.Fallout3ModHeaderFactory(PluginBinaryOverlay.LockExtractMemory(_stream, _ModHeaderLocation!.Value.Min, _ModHeaderLocation!.Value.Max), _package) : default;
         public IFallout3ModHeaderGetter ModHeader => _ModHeader ?? new Fallout3ModHeader();
         #endregion
+        #region GameSettings
+        private List<RangeInt64>? _GameSettingsLocations;
+        private IFallout3GroupGetter<IGameSettingGetter>? _GameSettings => _GameSettingsLocations != null ? Fallout3GroupBinaryOverlay<IGameSettingGetter>.Fallout3GroupFactory(_stream, _GameSettingsLocations, _package) : default;
+        public IFallout3GroupGetter<IGameSettingGetter> GameSettings => _GameSettings ?? new Fallout3Group<GameSetting>(this);
+        #endregion
+        #region TextureSets
+        private List<RangeInt64>? _TextureSetsLocations;
+        private IFallout3GroupGetter<ITextureSetGetter>? _TextureSets => _TextureSetsLocations != null ? Fallout3GroupBinaryOverlay<ITextureSetGetter>.Fallout3GroupFactory(_stream, _TextureSetsLocations, _package) : default;
+        public IFallout3GroupGetter<ITextureSetGetter> TextureSets => _TextureSets ?? new Fallout3Group<TextureSet>(this);
+        #endregion
+        #region MenuIcons
+        private List<RangeInt64>? _MenuIconsLocations;
+        private IFallout3GroupGetter<IMenuIconGetter>? _MenuIcons => _MenuIconsLocations != null ? Fallout3GroupBinaryOverlay<IMenuIconGetter>.Fallout3GroupFactory(_stream, _MenuIconsLocations, _package) : default;
+        public IFallout3GroupGetter<IMenuIconGetter> MenuIcons => _MenuIcons ?? new Fallout3Group<MenuIcon>(this);
+        #endregion
         #region Globals
         private List<RangeInt64>? _GlobalsLocations;
         private IFallout3GroupGetter<IGlobalGetter>? _Globals => _GlobalsLocations != null ? Fallout3GroupBinaryOverlay<IGlobalGetter>.Fallout3GroupFactory(_stream, _GlobalsLocations, _package) : default;
         public IFallout3GroupGetter<IGlobalGetter> Globals => _Globals ?? new Fallout3Group<Global>(this);
-        #endregion
-        #region Npcs
-        private List<RangeInt64>? _NpcsLocations;
-        private IFallout3GroupGetter<INpcGetter>? _Npcs => _NpcsLocations != null ? Fallout3GroupBinaryOverlay<INpcGetter>.Fallout3GroupFactory(_stream, _NpcsLocations, _package) : default;
-        public IFallout3GroupGetter<INpcGetter> Npcs => _Npcs ?? new Fallout3Group<Npc>(this);
-        #endregion
-        #region Races
-        private List<RangeInt64>? _RacesLocations;
-        private IFallout3GroupGetter<IRaceGetter>? _Races => _RacesLocations != null ? Fallout3GroupBinaryOverlay<IRaceGetter>.Fallout3GroupFactory(_stream, _RacesLocations, _package) : default;
-        public IFallout3GroupGetter<IRaceGetter> Races => _Races ?? new Fallout3Group<Race>(this);
         #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
@@ -2797,23 +2994,29 @@ namespace Mutagen.Bethesda.Fallout3
                     _ModHeaderLocation = new RangeInt64((stream.Position - offset), finalPos - offset);
                     return (int)Fallout3Mod_FieldIndex.ModHeader;
                 }
+                case RecordTypeInts.GMST:
+                {
+                    _GameSettingsLocations ??= new();
+                    _GameSettingsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.GameSettings;
+                }
+                case RecordTypeInts.TXST:
+                {
+                    _TextureSetsLocations ??= new();
+                    _TextureSetsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.TextureSets;
+                }
+                case RecordTypeInts.MICN:
+                {
+                    _MenuIconsLocations ??= new();
+                    _MenuIconsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.MenuIcons;
+                }
                 case RecordTypeInts.GLOB:
                 {
                     _GlobalsLocations ??= new();
                     _GlobalsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.Globals;
-                }
-                case RecordTypeInts.NPC_:
-                {
-                    _NpcsLocations ??= new();
-                    _NpcsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
-                    return (int)Fallout3Mod_FieldIndex.Npcs;
-                }
-                case RecordTypeInts.RACE:
-                {
-                    _RacesLocations ??= new();
-                    _RacesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
-                    return (int)Fallout3Mod_FieldIndex.Races;
                 }
                 default:
                     return default(int?);

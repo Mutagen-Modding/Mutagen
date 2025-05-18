@@ -85,12 +85,16 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem FormKey,
                 TItem VersionControl,
                 TItem EditorID,
+                TItem FormVersion,
+                TItem Version2,
                 TItem Fallout3MajorRecordFlags)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
+                FormVersion: FormVersion,
+                Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
             }
@@ -602,7 +606,9 @@ namespace Mutagen.Bethesda.Fallout3
         FormKey = 1,
         VersionControl = 2,
         EditorID = 3,
-        Fallout3MajorRecordFlags = 4,
+        FormVersion = 4,
+        Version2 = 5,
+        Fallout3MajorRecordFlags = 6,
     }
     #endregion
 
@@ -615,7 +621,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public const ushort AdditionalFieldCount = 0;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(Race.Mask<>);
 
@@ -834,6 +840,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case Fallout3MajorRecord_FieldIndex.VersionControl:
                     return (Race_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.EditorID:
+                    return (Race_FieldIndex)((int)index);
+                case Fallout3MajorRecord_FieldIndex.FormVersion:
+                    return (Race_FieldIndex)((int)index);
+                case Fallout3MajorRecord_FieldIndex.Version2:
                     return (Race_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.Fallout3MajorRecordFlags:
                     return (Race_FieldIndex)((int)index);

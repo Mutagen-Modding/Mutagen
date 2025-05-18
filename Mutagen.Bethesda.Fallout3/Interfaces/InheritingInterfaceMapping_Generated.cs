@@ -19,6 +19,36 @@ internal class Fallout3InheritingInterfaceMapping : IInterfaceMapping
     public Fallout3InheritingInterfaceMapping()
     {
         var dict = new Dictionary<Type, InterfaceMappingResult>();
+        dict[typeof(IGameSettingFloat)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                GameSetting_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IGameSettingFloat),
+                Getter: typeof(IGameSettingFloatGetter)));
+        dict[typeof(IGameSettingFloatGetter)] = dict[typeof(IGameSettingFloat)] with { Setter = false };
+        dict[typeof(IGameSettingInt)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                GameSetting_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IGameSettingInt),
+                Getter: typeof(IGameSettingIntGetter)));
+        dict[typeof(IGameSettingIntGetter)] = dict[typeof(IGameSettingInt)] with { Setter = false };
+        dict[typeof(IGameSettingString)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                GameSetting_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(IGameSettingString),
+                Getter: typeof(IGameSettingStringGetter)));
+        dict[typeof(IGameSettingStringGetter)] = dict[typeof(IGameSettingString)] with { Setter = false };
         dict[typeof(IGlobalFloat)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]

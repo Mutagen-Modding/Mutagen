@@ -60,6 +60,12 @@ namespace Mutagen.Bethesda.Fallout3
         #region Version
         public Int32 Version { get; set; } = default(Int32);
         #endregion
+        #region FormVersion
+        public UInt16 FormVersion { get; set; } = default(UInt16);
+        #endregion
+        #region Version2
+        public UInt16 Version2 { get; set; } = default(UInt16);
+        #endregion
         #region Stats
         public ModStats Stats { get; set; } = new ModStats();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -153,6 +159,8 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Flags = initialValue;
                 this.FormID = initialValue;
                 this.Version = initialValue;
+                this.FormVersion = initialValue;
+                this.Version2 = initialValue;
                 this.Stats = new MaskItem<TItem, ModStats.Mask<TItem>?>(initialValue, new ModStats.Mask<TItem>(initialValue));
                 this.TypeOffsets = initialValue;
                 this.Deleted = initialValue;
@@ -165,6 +173,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Flags,
                 TItem FormID,
                 TItem Version,
+                TItem FormVersion,
+                TItem Version2,
                 TItem Stats,
                 TItem TypeOffsets,
                 TItem Deleted,
@@ -175,6 +185,8 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Flags = Flags;
                 this.FormID = FormID;
                 this.Version = Version;
+                this.FormVersion = FormVersion;
+                this.Version2 = Version2;
                 this.Stats = new MaskItem<TItem, ModStats.Mask<TItem>?>(Stats, new ModStats.Mask<TItem>(Stats));
                 this.TypeOffsets = TypeOffsets;
                 this.Deleted = Deleted;
@@ -195,6 +207,8 @@ namespace Mutagen.Bethesda.Fallout3
             public TItem Flags;
             public TItem FormID;
             public TItem Version;
+            public TItem FormVersion;
+            public TItem Version2;
             public MaskItem<TItem, ModStats.Mask<TItem>?>? Stats { get; set; }
             public TItem TypeOffsets;
             public TItem Deleted;
@@ -216,6 +230,8 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.FormID, rhs.FormID)) return false;
                 if (!object.Equals(this.Version, rhs.Version)) return false;
+                if (!object.Equals(this.FormVersion, rhs.FormVersion)) return false;
+                if (!object.Equals(this.Version2, rhs.Version2)) return false;
                 if (!object.Equals(this.Stats, rhs.Stats)) return false;
                 if (!object.Equals(this.TypeOffsets, rhs.TypeOffsets)) return false;
                 if (!object.Equals(this.Deleted, rhs.Deleted)) return false;
@@ -230,6 +246,8 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Flags);
                 hash.Add(this.FormID);
                 hash.Add(this.Version);
+                hash.Add(this.FormVersion);
+                hash.Add(this.Version2);
                 hash.Add(this.Stats);
                 hash.Add(this.TypeOffsets);
                 hash.Add(this.Deleted);
@@ -247,6 +265,8 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.FormID)) return false;
                 if (!eval(this.Version)) return false;
+                if (!eval(this.FormVersion)) return false;
+                if (!eval(this.Version2)) return false;
                 if (Stats != null)
                 {
                     if (!eval(this.Stats.Overall)) return false;
@@ -278,6 +298,8 @@ namespace Mutagen.Bethesda.Fallout3
                 if (eval(this.Flags)) return true;
                 if (eval(this.FormID)) return true;
                 if (eval(this.Version)) return true;
+                if (eval(this.FormVersion)) return true;
+                if (eval(this.Version2)) return true;
                 if (Stats != null)
                 {
                     if (eval(this.Stats.Overall)) return true;
@@ -316,6 +338,8 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Flags = eval(this.Flags);
                 obj.FormID = eval(this.FormID);
                 obj.Version = eval(this.Version);
+                obj.FormVersion = eval(this.FormVersion);
+                obj.Version2 = eval(this.Version2);
                 obj.Stats = this.Stats == null ? null : new MaskItem<R, ModStats.Mask<R>?>(eval(this.Stats.Overall), this.Stats.Specific?.Translate(eval));
                 obj.TypeOffsets = eval(this.TypeOffsets);
                 obj.Deleted = eval(this.Deleted);
@@ -365,6 +389,14 @@ namespace Mutagen.Bethesda.Fallout3
                     if (printMask?.Version ?? true)
                     {
                         sb.AppendItem(Version, "Version");
+                    }
+                    if (printMask?.FormVersion ?? true)
+                    {
+                        sb.AppendItem(FormVersion, "FormVersion");
+                    }
+                    if (printMask?.Version2 ?? true)
+                    {
+                        sb.AppendItem(Version2, "Version2");
                     }
                     if (printMask?.Stats?.Overall ?? true)
                     {
@@ -432,6 +464,8 @@ namespace Mutagen.Bethesda.Fallout3
             public Exception? Flags;
             public Exception? FormID;
             public Exception? Version;
+            public Exception? FormVersion;
+            public Exception? Version2;
             public MaskItem<Exception?, ModStats.ErrorMask?>? Stats;
             public Exception? TypeOffsets;
             public Exception? Deleted;
@@ -452,6 +486,10 @@ namespace Mutagen.Bethesda.Fallout3
                         return FormID;
                     case Fallout3ModHeader_FieldIndex.Version:
                         return Version;
+                    case Fallout3ModHeader_FieldIndex.FormVersion:
+                        return FormVersion;
+                    case Fallout3ModHeader_FieldIndex.Version2:
+                        return Version2;
                     case Fallout3ModHeader_FieldIndex.Stats:
                         return Stats;
                     case Fallout3ModHeader_FieldIndex.TypeOffsets:
@@ -482,6 +520,12 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3ModHeader_FieldIndex.Version:
                         this.Version = ex;
+                        break;
+                    case Fallout3ModHeader_FieldIndex.FormVersion:
+                        this.FormVersion = ex;
+                        break;
+                    case Fallout3ModHeader_FieldIndex.Version2:
+                        this.Version2 = ex;
                         break;
                     case Fallout3ModHeader_FieldIndex.Stats:
                         this.Stats = new MaskItem<Exception?, ModStats.ErrorMask?>(ex, null);
@@ -520,6 +564,12 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3ModHeader_FieldIndex.Version:
                         this.Version = (Exception?)obj;
                         break;
+                    case Fallout3ModHeader_FieldIndex.FormVersion:
+                        this.FormVersion = (Exception?)obj;
+                        break;
+                    case Fallout3ModHeader_FieldIndex.Version2:
+                        this.Version2 = (Exception?)obj;
+                        break;
                     case Fallout3ModHeader_FieldIndex.Stats:
                         this.Stats = (MaskItem<Exception?, ModStats.ErrorMask?>?)obj;
                         break;
@@ -549,6 +599,8 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Flags != null) return true;
                 if (FormID != null) return true;
                 if (Version != null) return true;
+                if (FormVersion != null) return true;
+                if (Version2 != null) return true;
                 if (Stats != null) return true;
                 if (TypeOffsets != null) return true;
                 if (Deleted != null) return true;
@@ -588,6 +640,12 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 {
                     sb.AppendItem(Version, "Version");
+                }
+                {
+                    sb.AppendItem(FormVersion, "FormVersion");
+                }
+                {
+                    sb.AppendItem(Version2, "Version2");
                 }
                 Stats?.Print(sb);
                 {
@@ -631,6 +689,8 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.FormID = this.FormID.Combine(rhs.FormID);
                 ret.Version = this.Version.Combine(rhs.Version);
+                ret.FormVersion = this.FormVersion.Combine(rhs.FormVersion);
+                ret.Version2 = this.Version2.Combine(rhs.Version2);
                 ret.Stats = this.Stats.Combine(rhs.Stats, (l, r) => l.Combine(r));
                 ret.TypeOffsets = this.TypeOffsets.Combine(rhs.TypeOffsets);
                 ret.Deleted = this.Deleted.Combine(rhs.Deleted);
@@ -663,6 +723,8 @@ namespace Mutagen.Bethesda.Fallout3
             public bool Flags;
             public bool FormID;
             public bool Version;
+            public bool FormVersion;
+            public bool Version2;
             public ModStats.TranslationMask? Stats;
             public bool TypeOffsets;
             public bool Deleted;
@@ -681,6 +743,8 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Flags = defaultOn;
                 this.FormID = defaultOn;
                 this.Version = defaultOn;
+                this.FormVersion = defaultOn;
+                this.Version2 = defaultOn;
                 this.TypeOffsets = defaultOn;
                 this.Deleted = defaultOn;
                 this.Author = defaultOn;
@@ -703,6 +767,8 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Flags, null));
                 ret.Add((FormID, null));
                 ret.Add((Version, null));
+                ret.Add((FormVersion, null));
+                ret.Add((Version2, null));
                 ret.Add((Stats != null ? Stats.OnOverall : DefaultOn, Stats?.GetCrystal()));
                 ret.Add((TypeOffsets, null));
                 ret.Add((Deleted, null));
@@ -788,6 +854,8 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3ModHeader.HeaderFlag Flags { get; set; }
         new UInt32 FormID { get; set; }
         new Int32 Version { get; set; }
+        new UInt16 FormVersion { get; set; }
+        new UInt16 Version2 { get; set; }
         new ModStats Stats { get; set; }
         new MemorySlice<Byte>? TypeOffsets { get; set; }
         new MemorySlice<Byte>? Deleted { get; set; }
@@ -811,6 +879,8 @@ namespace Mutagen.Bethesda.Fallout3
         Fallout3ModHeader.HeaderFlag Flags { get; }
         UInt32 FormID { get; }
         Int32 Version { get; }
+        UInt16 FormVersion { get; }
+        UInt16 Version2 { get; }
         IModStatsGetter Stats { get; }
         ReadOnlyMemorySlice<Byte>? TypeOffsets { get; }
         ReadOnlyMemorySlice<Byte>? Deleted { get; }
@@ -989,12 +1059,14 @@ namespace Mutagen.Bethesda.Fallout3
         Flags = 0,
         FormID = 1,
         Version = 2,
-        Stats = 3,
-        TypeOffsets = 4,
-        Deleted = 5,
-        Author = 6,
-        Description = 7,
-        MasterReferences = 8,
+        FormVersion = 3,
+        Version2 = 4,
+        Stats = 5,
+        TypeOffsets = 6,
+        Deleted = 7,
+        Author = 8,
+        Description = 9,
+        MasterReferences = 10,
     }
     #endregion
 
@@ -1005,9 +1077,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 9;
+        public const ushort AdditionalFieldCount = 11;
 
-        public const ushort FieldCount = 9;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(Fallout3ModHeader.Mask<>);
 
@@ -1094,6 +1166,8 @@ namespace Mutagen.Bethesda.Fallout3
             item.Flags = default(Fallout3ModHeader.HeaderFlag);
             item.FormID = default(UInt32);
             item.Version = default(Int32);
+            item.FormVersion = default(UInt16);
+            item.Version2 = default(UInt16);
             item.Stats.Clear();
             item.TypeOffsets = default;
             item.Deleted = default;
@@ -1156,6 +1230,8 @@ namespace Mutagen.Bethesda.Fallout3
             ret.Flags = item.Flags == rhs.Flags;
             ret.FormID = item.FormID == rhs.FormID;
             ret.Version = item.Version == rhs.Version;
+            ret.FormVersion = item.FormVersion == rhs.FormVersion;
+            ret.Version2 = item.Version2 == rhs.Version2;
             ret.Stats = MaskItemExt.Factory(item.Stats.GetEqualsMask(rhs.Stats, include), include);
             ret.TypeOffsets = MemorySliceExt.SequenceEqual(item.TypeOffsets, rhs.TypeOffsets);
             ret.Deleted = MemorySliceExt.SequenceEqual(item.Deleted, rhs.Deleted);
@@ -1221,6 +1297,14 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 sb.AppendItem(item.Version, "Version");
             }
+            if (printMask?.FormVersion ?? true)
+            {
+                sb.AppendItem(item.FormVersion, "FormVersion");
+            }
+            if (printMask?.Version2 ?? true)
+            {
+                sb.AppendItem(item.Version2, "Version2");
+            }
             if (printMask?.Stats?.Overall ?? true)
             {
                 item.Stats?.Print(sb, "Stats");
@@ -1280,6 +1364,14 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (lhs.Version != rhs.Version) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3ModHeader_FieldIndex.FormVersion) ?? true))
+            {
+                if (lhs.FormVersion != rhs.FormVersion) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3ModHeader_FieldIndex.Version2) ?? true))
+            {
+                if (lhs.Version2 != rhs.Version2) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Fallout3ModHeader_FieldIndex.Stats) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Stats, rhs.Stats, out var lhsStats, out var rhsStats, out var isStatsEqual))
@@ -1317,6 +1409,8 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.Flags);
             hash.Add(item.FormID);
             hash.Add(item.Version);
+            hash.Add(item.FormVersion);
+            hash.Add(item.Version2);
             hash.Add(item.Stats);
             if (item.TypeOffsets is {} TypeOffsetsItem)
             {
@@ -1378,6 +1472,14 @@ namespace Mutagen.Bethesda.Fallout3
             if ((copyMask?.GetShouldTranslate((int)Fallout3ModHeader_FieldIndex.Version) ?? true))
             {
                 item.Version = rhs.Version;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3ModHeader_FieldIndex.FormVersion) ?? true))
+            {
+                item.FormVersion = rhs.FormVersion;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3ModHeader_FieldIndex.Version2) ?? true))
+            {
+                item.Version2 = rhs.Version2;
             }
             if ((copyMask?.GetShouldTranslate((int)Fallout3ModHeader_FieldIndex.Stats) ?? true))
             {
@@ -1569,6 +1671,8 @@ namespace Mutagen.Bethesda.Fallout3
                 length: 4);
             writer.Write(item.FormID);
             writer.Write(item.Version);
+            writer.Write(item.FormVersion);
+            writer.Write(item.Version2);
         }
 
         public static void WriteRecordTypes(
@@ -1662,6 +1766,8 @@ namespace Mutagen.Bethesda.Fallout3
                 length: 4);
             item.FormID = frame.ReadUInt32();
             item.Version = frame.ReadInt32();
+            item.FormVersion = frame.ReadUInt16();
+            item.Version2 = frame.ReadUInt16();
         }
 
         public static ParseResult FillBinaryRecordTypes(
@@ -1796,6 +1902,8 @@ namespace Mutagen.Bethesda.Fallout3
         public Fallout3ModHeader.HeaderFlag Flags => (Fallout3ModHeader.HeaderFlag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
         public UInt32 FormID => BinaryPrimitives.ReadUInt32LittleEndian(_structData.Slice(0x4, 0x4));
         public Int32 Version => BinaryPrimitives.ReadInt32LittleEndian(_structData.Slice(0x8, 0x4));
+        public UInt16 FormVersion => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0xC, 0x2));
+        public UInt16 Version2 => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0xE, 0x2));
         #region Stats
         private RangeInt32? _StatsLocation;
         private IModStatsGetter? _Stats => _StatsLocation.HasValue ? ModStatsBinaryOverlay.ModStatsFactory(_recordData.Slice(_StatsLocation!.Value.Min), _package) : default;

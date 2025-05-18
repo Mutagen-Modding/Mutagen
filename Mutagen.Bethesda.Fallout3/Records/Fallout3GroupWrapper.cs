@@ -3,12 +3,14 @@ using System.Diagnostics;
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Assets;
+using Mutagen.Bethesda.Fallout3.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using Noggog.StructuredStrings;
 
@@ -55,8 +57,6 @@ internal class Fallout3GroupWrapper<TMajor> : IFallout3GroupGetter<TMajor>
         return _groupMerge.ContainsKey(key);
     }
 
-    public ILoquiRegistration ContainedRecordRegistration => _groupMerge.ContainedRecordRegistration;
-
     public IEnumerator<TMajor> GetEnumerator()
     {
         return _groupMerge.GetEnumerator();
@@ -96,9 +96,11 @@ internal class Fallout3GroupWrapper<TMajor> : IFallout3GroupGetter<TMajor>
 
     public IReadOnlyCache<TMajor, FormKey> RecordCache => _groupMerge.RecordCache;
     
-    
     public GroupTypeEnum Type => _groupMerge.SubGroups[^1].Type;
+    
     public int LastModified => _groupMerge.SubGroups[^1].LastModified;
+
+    public int Unknown => _groupMerge.SubGroups[^1].Unknown;
     
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     protected object BinaryWriteTranslator => Fallout3GroupBinaryWriteTranslation.Instance;
@@ -128,6 +130,8 @@ internal class Fallout3GroupWrapper<TMajor> : IFallout3GroupGetter<TMajor>
     [DebuggerStepThrough]
     IEnumerable<IMajorRecordGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
 
+    public ILoquiRegistration ContainedRecordRegistration => _groupMerge.ContainedRecordRegistration;
+    
     public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(
         AssetLinkQuery queryCategories = AssetLinkQuery.Listed, 
         IAssetLinkCache? linkCache = null, 

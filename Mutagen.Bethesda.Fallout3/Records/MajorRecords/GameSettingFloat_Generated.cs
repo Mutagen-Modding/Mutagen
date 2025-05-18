@@ -15,7 +15,6 @@ using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
-using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -40,29 +39,24 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Class
-    public partial class Npc :
-        Fallout3MajorRecord,
-        IEquatable<INpcGetter>,
-        ILoquiObjectSetter<Npc>,
-        INpcInternal
+    public partial class GameSettingFloat :
+        GameSetting,
+        IEquatable<IGameSettingFloatGetter>,
+        IGameSettingFloatInternal,
+        ILoquiObjectSetter<GameSettingFloat>
     {
         #region Ctor
-        protected Npc()
+        protected GameSettingFloat()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Race
-        private readonly IFormLinkNullable<IRaceGetter> _Race = new FormLinkNullable<IRaceGetter>();
-        public IFormLinkNullable<IRaceGetter> Race
-        {
-            get => _Race;
-            set => _Race.SetTo(value);
-        }
+        #region Data
+        public Single? Data { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IRaceGetter> INpcGetter.Race => this.Race;
+        Single? IGameSettingFloatGetter.Data => this.Data;
         #endregion
 
         #region To String
@@ -71,7 +65,7 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             string? name = null)
         {
-            NpcMixIn.Print(
+            GameSettingFloatMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -81,7 +75,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Mask
         public new class Mask<TItem> :
-            Fallout3MajorRecord.Mask<TItem>,
+            GameSetting.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -89,7 +83,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Race = initialValue;
+                this.Data = initialValue;
             }
 
             public Mask(
@@ -100,7 +94,7 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem FormVersion,
                 TItem Version2,
                 TItem Fallout3MajorRecordFlags,
-                TItem Race)
+                TItem Data)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -110,7 +104,7 @@ namespace Mutagen.Bethesda.Fallout3
                 Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
-                this.Race = Race;
+                this.Data = Data;
             }
 
             #pragma warning disable CS8618
@@ -122,7 +116,7 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
-            public TItem Race;
+            public TItem Data;
             #endregion
 
             #region Equals
@@ -136,13 +130,13 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Race, rhs.Race)) return false;
+                if (!object.Equals(this.Data, rhs.Data)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Race);
+                hash.Add(this.Data);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -153,7 +147,7 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.Race)) return false;
+                if (!eval(this.Data)) return false;
                 return true;
             }
             #endregion
@@ -162,7 +156,7 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.Race)) return true;
+                if (eval(this.Data)) return true;
                 return false;
             }
             #endregion
@@ -170,7 +164,7 @@ namespace Mutagen.Bethesda.Fallout3
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Npc.Mask<R>();
+                var ret = new GameSettingFloat.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -178,28 +172,28 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Race = eval(this.Race);
+                obj.Data = eval(this.Data);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(Npc.Mask<bool>? printMask = null)
+            public string Print(GameSettingFloat.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, Npc.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, GameSettingFloat.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(Npc.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(GameSettingFloat.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Race ?? true)
+                    if (printMask?.Data ?? true)
                     {
-                        sb.AppendItem(Race, "Race");
+                        sb.AppendItem(Data, "Data");
                     }
                 }
             }
@@ -208,21 +202,21 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public new class ErrorMask :
-            Fallout3MajorRecord.ErrorMask,
+            GameSetting.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? Race;
+            public Exception? Data;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                Npc_FieldIndex enu = (Npc_FieldIndex)index;
+                GameSettingFloat_FieldIndex enu = (GameSettingFloat_FieldIndex)index;
                 switch (enu)
                 {
-                    case Npc_FieldIndex.Race:
-                        return Race;
+                    case GameSettingFloat_FieldIndex.Data:
+                        return Data;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -230,11 +224,11 @@ namespace Mutagen.Bethesda.Fallout3
 
             public override void SetNthException(int index, Exception ex)
             {
-                Npc_FieldIndex enu = (Npc_FieldIndex)index;
+                GameSettingFloat_FieldIndex enu = (GameSettingFloat_FieldIndex)index;
                 switch (enu)
                 {
-                    case Npc_FieldIndex.Race:
-                        this.Race = ex;
+                    case GameSettingFloat_FieldIndex.Data:
+                        this.Data = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -244,11 +238,11 @@ namespace Mutagen.Bethesda.Fallout3
 
             public override void SetNthMask(int index, object obj)
             {
-                Npc_FieldIndex enu = (Npc_FieldIndex)index;
+                GameSettingFloat_FieldIndex enu = (GameSettingFloat_FieldIndex)index;
                 switch (enu)
                 {
-                    case Npc_FieldIndex.Race:
-                        this.Race = (Exception?)obj;
+                    case GameSettingFloat_FieldIndex.Data:
+                        this.Data = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -259,7 +253,7 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Race != null) return true;
+                if (Data != null) return true;
                 return false;
             }
             #endregion
@@ -287,7 +281,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 base.PrintFillInternal(sb);
                 {
-                    sb.AppendItem(Race, "Race");
+                    sb.AppendItem(Data, "Data");
                 }
             }
             #endregion
@@ -297,7 +291,7 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Race = this.Race.Combine(rhs.Race);
+                ret.Data = this.Data.Combine(rhs.Data);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -316,11 +310,11 @@ namespace Mutagen.Bethesda.Fallout3
 
         }
         public new class TranslationMask :
-            Fallout3MajorRecord.TranslationMask,
+            GameSetting.TranslationMask,
             ITranslationMask
         {
             #region Members
-            public bool Race;
+            public bool Data;
             #endregion
 
             #region Ctors
@@ -329,7 +323,7 @@ namespace Mutagen.Bethesda.Fallout3
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.Race = defaultOn;
+                this.Data = defaultOn;
             }
 
             #endregion
@@ -337,7 +331,7 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Race, null));
+                ret.Add((Data, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -349,10 +343,8 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = Npc_Registration.TriggeringRecordType;
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NpcCommon.Instance.EnumerateFormLinks(this);
-        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NpcSetterCommon.Instance.RemapLinks(this, mapping);
-        public Npc(
+        public static readonly RecordType GrupRecordType = GameSettingFloat_Registration.TriggeringRecordType;
+        public GameSettingFloat(
             FormKey formKey,
             Fallout3Release gameRelease)
         {
@@ -360,7 +352,7 @@ namespace Mutagen.Bethesda.Fallout3
             CustomCtor();
         }
 
-        private Npc(
+        private GameSettingFloat(
             FormKey formKey,
             GameRelease gameRelease)
         {
@@ -368,14 +360,14 @@ namespace Mutagen.Bethesda.Fallout3
             CustomCtor();
         }
 
-        public Npc(IFallout3Mod mod)
+        public GameSettingFloat(IFallout3Mod mod)
             : this(
                 mod.GetNextFormKey(),
                 mod.Fallout3Release)
         {
         }
 
-        public Npc(IFallout3Mod mod, string editorID)
+        public GameSettingFloat(IFallout3Mod mod, string editorID)
             : this(
                 mod.GetNextFormKey(editorID),
                 mod.Fallout3Release)
@@ -385,10 +377,10 @@ namespace Mutagen.Bethesda.Fallout3
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Npc>.ToString(this);
+            return MajorRecordPrinter<GameSettingFloat>.ToString(this);
         }
 
-        protected override Type LinkType => typeof(INpc);
+        protected override Type LinkType => typeof(IGameSettingFloat);
 
         #region Equals and Hash
         public override bool Equals(object? obj)
@@ -397,16 +389,16 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 return formLink.Equals(this);
             }
-            if (obj is not INpcGetter rhs) return false;
-            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IGameSettingFloatGetter rhs) return false;
+            return ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(INpcGetter? obj)
+        public bool Equals(IGameSettingFloatGetter? obj)
         {
-            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((NpcCommon)((INpcGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -414,23 +406,23 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => NpcBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => GameSettingFloatBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((NpcBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((GameSettingFloatBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public new static Npc CreateFromBinary(
+        public new static GameSettingFloat CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new Npc();
-            ((NpcSetterCommon)((INpcGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new GameSettingFloat();
+            ((GameSettingFloatSetterCommon)((IGameSettingFloatGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -441,7 +433,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out Npc item,
+            out GameSettingFloat item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -456,86 +448,84 @@ namespace Mutagen.Bethesda.Fallout3
 
         void IClearable.Clear()
         {
-            ((NpcSetterCommon)((INpcGetter)this).CommonSetterInstance()!).Clear(this);
+            ((GameSettingFloatSetterCommon)((IGameSettingFloatGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new Npc GetNew()
+        internal static new GameSettingFloat GetNew()
         {
-            return new Npc();
+            return new GameSettingFloat();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface INpc :
-        IFallout3MajorRecordInternal,
-        IFormLinkContainer,
-        ILoquiObjectSetter<INpcInternal>,
-        INpcGetter
+    public partial interface IGameSettingFloat :
+        IGameSettingFloatGetter,
+        IGameSettingInternal,
+        ILoquiObjectSetter<IGameSettingFloatInternal>
     {
-        new IFormLinkNullable<IRaceGetter> Race { get; set; }
+        new Single? Data { get; set; }
     }
 
-    public partial interface INpcInternal :
-        IFallout3MajorRecordInternal,
-        INpc,
-        INpcGetter
+    public partial interface IGameSettingFloatInternal :
+        IGameSettingInternal,
+        IGameSettingFloat,
+        IGameSettingFloatGetter
     {
     }
 
-    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.NPC_)]
-    public partial interface INpcGetter :
-        IFallout3MajorRecordGetter,
+    [AssociatedRecordTypesAttribute(Mutagen.Bethesda.Fallout3.Internals.RecordTypeInts.GMST)]
+    public partial interface IGameSettingFloatGetter :
+        IGameSettingGetter,
         IBinaryItem,
-        IFormLinkContainerGetter,
-        ILoquiObject<INpcGetter>,
-        IMapsToGetter<INpcGetter>
+        ILoquiObject<IGameSettingFloatGetter>,
+        IMapsToGetter<IGameSettingFloatGetter>
     {
-        static new ILoquiRegistration StaticRegistration => Npc_Registration.Instance;
-        IFormLinkNullableGetter<IRaceGetter> Race { get; }
+        static new ILoquiRegistration StaticRegistration => GameSettingFloat_Registration.Instance;
+        Single? Data { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class NpcMixIn
+    public static partial class GameSettingFloatMixIn
     {
-        public static void Clear(this INpcInternal item)
+        public static void Clear(this IGameSettingFloatInternal item)
         {
-            ((NpcSetterCommon)((INpcGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((GameSettingFloatSetterCommon)((IGameSettingFloatGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Npc.Mask<bool> GetEqualsMask(
-            this INpcGetter item,
-            INpcGetter rhs,
+        public static GameSettingFloat.Mask<bool> GetEqualsMask(
+            this IGameSettingFloatGetter item,
+            IGameSettingFloatGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((NpcCommon)((INpcGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((GameSettingFloatCommon)((IGameSettingFloatGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this INpcGetter item,
+            this IGameSettingFloatGetter item,
             string? name = null,
-            Npc.Mask<bool>? printMask = null)
+            GameSettingFloat.Mask<bool>? printMask = null)
         {
-            return ((NpcCommon)((INpcGetter)item).CommonInstance()!).Print(
+            return ((GameSettingFloatCommon)((IGameSettingFloatGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this INpcGetter item,
+            this IGameSettingFloatGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Npc.Mask<bool>? printMask = null)
+            GameSettingFloat.Mask<bool>? printMask = null)
         {
-            ((NpcCommon)((INpcGetter)item).CommonInstance()!).Print(
+            ((GameSettingFloatCommon)((IGameSettingFloatGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -543,39 +533,39 @@ namespace Mutagen.Bethesda.Fallout3
         }
 
         public static bool Equals(
-            this INpcGetter item,
-            INpcGetter rhs,
-            Npc.TranslationMask? equalsMask = null)
+            this IGameSettingFloatGetter item,
+            IGameSettingFloatGetter rhs,
+            GameSettingFloat.TranslationMask? equalsMask = null)
         {
-            return ((NpcCommon)((INpcGetter)item).CommonInstance()!).Equals(
+            return ((GameSettingFloatCommon)((IGameSettingFloatGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this INpcInternal lhs,
-            INpcGetter rhs,
-            out Npc.ErrorMask errorMask,
-            Npc.TranslationMask? copyMask = null)
+            this IGameSettingFloatInternal lhs,
+            IGameSettingFloatGetter rhs,
+            out GameSettingFloat.ErrorMask errorMask,
+            GameSettingFloat.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((NpcSetterTranslationCommon)((INpcGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((GameSettingFloatSetterTranslationCommon)((IGameSettingFloatGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = Npc.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = GameSettingFloat.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this INpcInternal lhs,
-            INpcGetter rhs,
+            this IGameSettingFloatInternal lhs,
+            IGameSettingFloatGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((NpcSetterTranslationCommon)((INpcGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((GameSettingFloatSetterTranslationCommon)((IGameSettingFloatGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -583,55 +573,55 @@ namespace Mutagen.Bethesda.Fallout3
                 deepCopy: false);
         }
 
-        public static Npc DeepCopy(
-            this INpcGetter item,
-            Npc.TranslationMask? copyMask = null)
+        public static GameSettingFloat DeepCopy(
+            this IGameSettingFloatGetter item,
+            GameSettingFloat.TranslationMask? copyMask = null)
         {
-            return ((NpcSetterTranslationCommon)((INpcGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((GameSettingFloatSetterTranslationCommon)((IGameSettingFloatGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Npc DeepCopy(
-            this INpcGetter item,
-            out Npc.ErrorMask errorMask,
-            Npc.TranslationMask? copyMask = null)
+        public static GameSettingFloat DeepCopy(
+            this IGameSettingFloatGetter item,
+            out GameSettingFloat.ErrorMask errorMask,
+            GameSettingFloat.TranslationMask? copyMask = null)
         {
-            return ((NpcSetterTranslationCommon)((INpcGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((GameSettingFloatSetterTranslationCommon)((IGameSettingFloatGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Npc DeepCopy(
-            this INpcGetter item,
+        public static GameSettingFloat DeepCopy(
+            this IGameSettingFloatGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((NpcSetterTranslationCommon)((INpcGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((GameSettingFloatSetterTranslationCommon)((IGameSettingFloatGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
         }
 
         #region Mutagen
-        public static Npc Duplicate(
-            this INpcGetter item,
+        public static GameSettingFloat Duplicate(
+            this IGameSettingFloatGetter item,
             FormKey formKey,
-            Npc.TranslationMask? copyMask = null)
+            GameSettingFloat.TranslationMask? copyMask = null)
         {
-            return ((NpcCommon)((INpcGetter)item).CommonInstance()!).Duplicate(
+            return ((GameSettingFloatCommon)((IGameSettingFloatGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask?.GetCrystal());
         }
 
-        public static Npc Duplicate(
-            this INpcGetter item,
+        public static GameSettingFloat Duplicate(
+            this IGameSettingFloatGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            return ((NpcCommon)((INpcGetter)item).CommonInstance()!).Duplicate(
+            return ((GameSettingFloatCommon)((IGameSettingFloatGetter)item).CommonInstance()!).Duplicate(
                 item: item,
                 formKey: formKey,
                 copyMask: copyMask);
@@ -641,11 +631,11 @@ namespace Mutagen.Bethesda.Fallout3
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this INpcInternal item,
+            this IGameSettingFloatInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((NpcSetterCommon)((INpcGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((GameSettingFloatSetterCommon)((IGameSettingFloatGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -661,7 +651,7 @@ namespace Mutagen.Bethesda.Fallout3
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Field Index
-    internal enum Npc_FieldIndex
+    internal enum GameSettingFloat_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -670,14 +660,14 @@ namespace Mutagen.Bethesda.Fallout3
         FormVersion = 4,
         Version2 = 5,
         Fallout3MajorRecordFlags = 6,
-        Race = 7,
+        Data = 7,
     }
     #endregion
 
     #region Registration
-    internal partial class Npc_Registration : ILoquiRegistration
+    internal partial class GameSettingFloat_Registration : ILoquiRegistration
     {
-        public static readonly Npc_Registration Instance = new Npc_Registration();
+        public static readonly GameSettingFloat_Registration Instance = new GameSettingFloat_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
@@ -685,23 +675,23 @@ namespace Mutagen.Bethesda.Fallout3
 
         public const ushort FieldCount = 8;
 
-        public static readonly Type MaskType = typeof(Npc.Mask<>);
+        public static readonly Type MaskType = typeof(GameSettingFloat.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Npc.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(GameSettingFloat.ErrorMask);
 
-        public static readonly Type ClassType = typeof(Npc);
+        public static readonly Type ClassType = typeof(GameSettingFloat);
 
-        public static readonly Type GetterType = typeof(INpcGetter);
+        public static readonly Type GetterType = typeof(IGameSettingFloatGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(INpc);
+        public static readonly Type SetterType = typeof(IGameSettingFloat);
 
-        public static readonly Type? InternalSetterType = typeof(INpcInternal);
+        public static readonly Type? InternalSetterType = typeof(IGameSettingFloatInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Fallout3.Npc";
+        public const string FullName = "Mutagen.Bethesda.Fallout3.GameSettingFloat";
 
-        public const string Name = "Npc";
+        public const string Name = "GameSettingFloat";
 
         public const string Namespace = "Mutagen.Bethesda.Fallout3";
 
@@ -709,19 +699,19 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly RecordType TriggeringRecordType = RecordTypes.NPC_;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.GMST;
         public static RecordTriggerSpecs TriggerSpecs => _recordSpecs.Value;
         private static readonly Lazy<RecordTriggerSpecs> _recordSpecs = new Lazy<RecordTriggerSpecs>(() =>
         {
-            var triggers = RecordCollection.Factory(RecordTypes.NPC_);
+            var triggers = RecordCollection.Factory(RecordTypes.GMST);
             var all = RecordCollection.Factory(
-                RecordTypes.NPC_,
-                RecordTypes.RNAM);
+                RecordTypes.GMST,
+                RecordTypes.DATA);
             return new RecordTriggerSpecs(
                 allRecordTypes: all,
                 triggeringRecordTypes: triggers);
         });
-        public static readonly Type BinaryWriteTranslation = typeof(NpcBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(GameSettingFloatBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -752,50 +742,65 @@ namespace Mutagen.Bethesda.Fallout3
     #endregion
 
     #region Common
-    internal partial class NpcSetterCommon : Fallout3MajorRecordSetterCommon
+    internal partial class GameSettingFloatSetterCommon : GameSettingSetterCommon
     {
-        public new static readonly NpcSetterCommon Instance = new NpcSetterCommon();
+        public new static readonly GameSettingFloatSetterCommon Instance = new GameSettingFloatSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(INpcInternal item)
+        public void Clear(IGameSettingFloatInternal item)
         {
             ClearPartial();
-            item.Race.Clear();
+            item.Data = default;
             base.Clear(item);
+        }
+        
+        public override void Clear(IGameSettingInternal item)
+        {
+            Clear(item: (IGameSettingFloatInternal)item);
         }
         
         public override void Clear(IFallout3MajorRecordInternal item)
         {
-            Clear(item: (INpcInternal)item);
+            Clear(item: (IGameSettingFloatInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (INpcInternal)item);
+            Clear(item: (IGameSettingFloatInternal)item);
         }
         
         #region Mutagen
-        public void RemapLinks(INpc obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IGameSettingFloat obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Race.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            INpcInternal item,
+            IGameSettingFloatInternal item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
-            PluginUtilityTranslation.MajorRecordParse<INpcInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IGameSettingFloatInternal>(
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: NpcBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: NpcBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: GameSettingFloatBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: GameSettingFloatBinaryCreateTranslation.FillBinaryRecordTypes);
+        }
+        
+        public override void CopyInFromBinary(
+            IGameSettingInternal item,
+            MutagenFrame frame,
+            TypedParseParams translationParams)
+        {
+            CopyInFromBinary(
+                item: (GameSettingFloat)item,
+                frame: frame,
+                translationParams: translationParams);
         }
         
         public override void CopyInFromBinary(
@@ -804,7 +809,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Npc)item,
+                item: (GameSettingFloat)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -815,7 +820,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedParseParams translationParams)
         {
             CopyInFromBinary(
-                item: (Npc)item,
+                item: (GameSettingFloat)item,
                 frame: frame,
                 translationParams: translationParams);
         }
@@ -823,17 +828,17 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         
     }
-    internal partial class NpcCommon : Fallout3MajorRecordCommon
+    internal partial class GameSettingFloatCommon : GameSettingCommon
     {
-        public new static readonly NpcCommon Instance = new NpcCommon();
+        public new static readonly GameSettingFloatCommon Instance = new GameSettingFloatCommon();
 
-        public Npc.Mask<bool> GetEqualsMask(
-            INpcGetter item,
-            INpcGetter rhs,
+        public GameSettingFloat.Mask<bool> GetEqualsMask(
+            IGameSettingFloatGetter item,
+            IGameSettingFloatGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Npc.Mask<bool>(false);
-            ((NpcCommon)((INpcGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new GameSettingFloat.Mask<bool>(false);
+            ((GameSettingFloatCommon)((IGameSettingFloatGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -842,19 +847,19 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void FillEqualsMask(
-            INpcGetter item,
-            INpcGetter rhs,
-            Npc.Mask<bool> ret,
+            IGameSettingFloatGetter item,
+            IGameSettingFloatGetter rhs,
+            GameSettingFloat.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Race = item.Race.Equals(rhs.Race);
+            ret.Data = item.Data.EqualsWithin(rhs.Data);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string Print(
-            INpcGetter item,
+            IGameSettingFloatGetter item,
             string? name = null,
-            Npc.Mask<bool>? printMask = null)
+            GameSettingFloat.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -866,18 +871,18 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void Print(
-            INpcGetter item,
+            IGameSettingFloatGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            Npc.Mask<bool>? printMask = null)
+            GameSettingFloat.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"Npc =>");
+                sb.AppendLine($"GameSettingFloat =>");
             }
             else
             {
-                sb.AppendLine($"{name} (Npc) =>");
+                sb.AppendLine($"{name} (GameSettingFloat) =>");
             }
             using (sb.Brace())
             {
@@ -889,55 +894,79 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         protected static void ToStringFields(
-            INpcGetter item,
+            IGameSettingFloatGetter item,
             StructuredStringBuilder sb,
-            Npc.Mask<bool>? printMask = null)
+            GameSettingFloat.Mask<bool>? printMask = null)
         {
-            Fallout3MajorRecordCommon.ToStringFields(
+            GameSettingCommon.ToStringFields(
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if (printMask?.Race ?? true)
+            if ((printMask?.Data ?? true)
+                && item.Data is {} DataItem)
             {
-                sb.AppendItem(item.Race.FormKeyNullable, "Race");
+                sb.AppendItem(DataItem, "Data");
             }
         }
         
-        public static Npc_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
+        public static GameSettingFloat_FieldIndex ConvertFieldIndex(GameSetting_FieldIndex index)
         {
             switch (index)
             {
-                case Fallout3MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Npc_FieldIndex)((int)index);
-                case Fallout3MajorRecord_FieldIndex.FormKey:
-                    return (Npc_FieldIndex)((int)index);
-                case Fallout3MajorRecord_FieldIndex.VersionControl:
-                    return (Npc_FieldIndex)((int)index);
-                case Fallout3MajorRecord_FieldIndex.EditorID:
-                    return (Npc_FieldIndex)((int)index);
-                case Fallout3MajorRecord_FieldIndex.FormVersion:
-                    return (Npc_FieldIndex)((int)index);
-                case Fallout3MajorRecord_FieldIndex.Version2:
-                    return (Npc_FieldIndex)((int)index);
-                case Fallout3MajorRecord_FieldIndex.Fallout3MajorRecordFlags:
-                    return (Npc_FieldIndex)((int)index);
+                case GameSetting_FieldIndex.MajorRecordFlagsRaw:
+                    return (GameSettingFloat_FieldIndex)((int)index);
+                case GameSetting_FieldIndex.FormKey:
+                    return (GameSettingFloat_FieldIndex)((int)index);
+                case GameSetting_FieldIndex.VersionControl:
+                    return (GameSettingFloat_FieldIndex)((int)index);
+                case GameSetting_FieldIndex.EditorID:
+                    return (GameSettingFloat_FieldIndex)((int)index);
+                case GameSetting_FieldIndex.FormVersion:
+                    return (GameSettingFloat_FieldIndex)((int)index);
+                case GameSetting_FieldIndex.Version2:
+                    return (GameSettingFloat_FieldIndex)((int)index);
+                case GameSetting_FieldIndex.Fallout3MajorRecordFlags:
+                    return (GameSettingFloat_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
         }
         
-        public static new Npc_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new GameSettingFloat_FieldIndex ConvertFieldIndex(Fallout3MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case Fallout3MajorRecord_FieldIndex.MajorRecordFlagsRaw:
+                    return (GameSettingFloat_FieldIndex)((int)index);
+                case Fallout3MajorRecord_FieldIndex.FormKey:
+                    return (GameSettingFloat_FieldIndex)((int)index);
+                case Fallout3MajorRecord_FieldIndex.VersionControl:
+                    return (GameSettingFloat_FieldIndex)((int)index);
+                case Fallout3MajorRecord_FieldIndex.EditorID:
+                    return (GameSettingFloat_FieldIndex)((int)index);
+                case Fallout3MajorRecord_FieldIndex.FormVersion:
+                    return (GameSettingFloat_FieldIndex)((int)index);
+                case Fallout3MajorRecord_FieldIndex.Version2:
+                    return (GameSettingFloat_FieldIndex)((int)index);
+                case Fallout3MajorRecord_FieldIndex.Fallout3MajorRecordFlags:
+                    return (GameSettingFloat_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
+            }
+        }
+        
+        public static new GameSettingFloat_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Npc_FieldIndex)((int)index);
+                    return (GameSettingFloat_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (Npc_FieldIndex)((int)index);
+                    return (GameSettingFloat_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.VersionControl:
-                    return (Npc_FieldIndex)((int)index);
+                    return (GameSettingFloat_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Npc_FieldIndex)((int)index);
+                    return (GameSettingFloat_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast()}");
             }
@@ -945,17 +974,28 @@ namespace Mutagen.Bethesda.Fallout3
         
         #region Equals and Hash
         public virtual bool Equals(
-            INpcGetter? lhs,
-            INpcGetter? rhs,
+            IGameSettingFloatGetter? lhs,
+            IGameSettingFloatGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if (!base.Equals((IFallout3MajorRecordGetter)lhs, (IFallout3MajorRecordGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)Npc_FieldIndex.Race) ?? true))
+            if (!base.Equals((IGameSettingGetter)lhs, (IGameSettingGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)GameSettingFloat_FieldIndex.Data) ?? true))
             {
-                if (!lhs.Race.Equals(rhs.Race)) return false;
+                if (!lhs.Data.EqualsWithin(rhs.Data)) return false;
             }
             return true;
+        }
+        
+        public override bool Equals(
+            IGameSettingGetter? lhs,
+            IGameSettingGetter? rhs,
+            TranslationCrystal? equalsMask)
+        {
+            return Equals(
+                lhs: (IGameSettingFloatGetter?)lhs,
+                rhs: rhs as IGameSettingFloatGetter,
+                equalsMask: equalsMask);
         }
         
         public override bool Equals(
@@ -964,8 +1004,8 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (INpcGetter?)lhs,
-                rhs: rhs as INpcGetter,
+                lhs: (IGameSettingFloatGetter?)lhs,
+                rhs: rhs as IGameSettingFloatGetter,
                 equalsMask: equalsMask);
         }
         
@@ -975,27 +1015,35 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? equalsMask)
         {
             return Equals(
-                lhs: (INpcGetter?)lhs,
-                rhs: rhs as INpcGetter,
+                lhs: (IGameSettingFloatGetter?)lhs,
+                rhs: rhs as IGameSettingFloatGetter,
                 equalsMask: equalsMask);
         }
         
-        public virtual int GetHashCode(INpcGetter item)
+        public virtual int GetHashCode(IGameSettingFloatGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Race);
+            if (item.Data is {} Dataitem)
+            {
+                hash.Add(Dataitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
+        public override int GetHashCode(IGameSettingGetter item)
+        {
+            return GetHashCode(item: (IGameSettingFloatGetter)item);
+        }
+        
         public override int GetHashCode(IFallout3MajorRecordGetter item)
         {
-            return GetHashCode(item: (INpcGetter)item);
+            return GetHashCode(item: (IGameSettingFloatGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (INpcGetter)item);
+            return GetHashCode(item: (IGameSettingFloatGetter)item);
         }
         
         #endregion
@@ -1003,32 +1051,39 @@ namespace Mutagen.Bethesda.Fallout3
         
         public override object GetNew()
         {
-            return Npc.GetNew();
+            return GameSettingFloat.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(INpcGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IGameSettingFloatGetter obj)
         {
             foreach (var item in base.EnumerateFormLinks(obj))
             {
                 yield return item;
             }
-            if (FormLinkInformation.TryFactory(obj.Race, out var RaceInfo))
-            {
-                yield return RaceInfo;
-            }
             yield break;
         }
         
         #region Duplicate
-        public Npc Duplicate(
-            INpcGetter item,
+        public GameSettingFloat Duplicate(
+            IGameSettingFloatGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Npc(formKey, default(Fallout3Release));
+            var newRec = new GameSettingFloat(formKey, default(Fallout3Release));
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
+        }
+        
+        public override GameSetting Duplicate(
+            IGameSettingGetter item,
+            FormKey formKey,
+            TranslationCrystal? copyMask)
+        {
+            return this.Duplicate(
+                item: (IGameSettingFloatGetter)item,
+                formKey: formKey,
+                copyMask: copyMask);
         }
         
         public override Fallout3MajorRecord Duplicate(
@@ -1037,7 +1092,7 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (INpcGetter)item,
+                item: (IGameSettingFloatGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1048,7 +1103,7 @@ namespace Mutagen.Bethesda.Fallout3
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (INpcGetter)item,
+                item: (IGameSettingFloatGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1058,14 +1113,14 @@ namespace Mutagen.Bethesda.Fallout3
         #endregion
         
     }
-    internal partial class NpcSetterTranslationCommon : Fallout3MajorRecordSetterTranslationCommon
+    internal partial class GameSettingFloatSetterTranslationCommon : GameSettingSetterTranslationCommon
     {
-        public new static readonly NpcSetterTranslationCommon Instance = new NpcSetterTranslationCommon();
+        public new static readonly GameSettingFloatSetterTranslationCommon Instance = new GameSettingFloatSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            INpcInternal item,
-            INpcGetter rhs,
+            IGameSettingFloatInternal item,
+            IGameSettingFloatGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1079,21 +1134,21 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         public void DeepCopyIn(
-            INpc item,
-            INpcGetter rhs,
+            IGameSettingFloat item,
+            IGameSettingFloatGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IFallout3MajorRecord)item,
-                (IFallout3MajorRecordGetter)rhs,
+                (IGameSetting)item,
+                (IGameSettingGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)Npc_FieldIndex.Race) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)GameSettingFloat_FieldIndex.Data) ?? true))
             {
-                item.Race.SetTo(rhs.Race.FormKeyNullable);
+                item.Data = rhs.Data;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1104,11 +1159,41 @@ namespace Mutagen.Bethesda.Fallout3
         }
         
         partial void DeepCopyInCustom(
-            INpc item,
-            INpcGetter rhs,
+            IGameSettingFloat item,
+            IGameSettingFloatGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
+        public override void DeepCopyIn(
+            IGameSettingInternal item,
+            IGameSettingGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+        {
+            this.DeepCopyIn(
+                item: (IGameSettingFloatInternal)item,
+                rhs: (IGameSettingFloatGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
+        }
+        
+        public override void DeepCopyIn(
+            IGameSetting item,
+            IGameSettingGetter rhs,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? copyMask,
+            bool deepCopy)
+        {
+            this.DeepCopyIn(
+                item: (IGameSettingFloat)item,
+                rhs: (IGameSettingFloatGetter)rhs,
+                errorMask: errorMask,
+                copyMask: copyMask,
+                deepCopy: deepCopy);
+        }
+        
         public override void DeepCopyIn(
             IFallout3MajorRecordInternal item,
             IFallout3MajorRecordGetter rhs,
@@ -1117,8 +1202,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (INpcInternal)item,
-                rhs: (INpcGetter)rhs,
+                item: (IGameSettingFloatInternal)item,
+                rhs: (IGameSettingFloatGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1132,8 +1217,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (INpc)item,
-                rhs: (INpcGetter)rhs,
+                item: (IGameSettingFloat)item,
+                rhs: (IGameSettingFloatGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1147,8 +1232,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (INpcInternal)item,
-                rhs: (INpcGetter)rhs,
+                item: (IGameSettingFloatInternal)item,
+                rhs: (IGameSettingFloatGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1162,8 +1247,8 @@ namespace Mutagen.Bethesda.Fallout3
             bool deepCopy)
         {
             this.DeepCopyIn(
-                item: (INpc)item,
-                rhs: (INpcGetter)rhs,
+                item: (IGameSettingFloat)item,
+                rhs: (IGameSettingFloatGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask,
                 deepCopy: deepCopy);
@@ -1171,12 +1256,12 @@ namespace Mutagen.Bethesda.Fallout3
         
         #endregion
         
-        public Npc DeepCopy(
-            INpcGetter item,
-            Npc.TranslationMask? copyMask = null)
+        public GameSettingFloat DeepCopy(
+            IGameSettingFloatGetter item,
+            GameSettingFloat.TranslationMask? copyMask = null)
         {
-            Npc ret = (Npc)((NpcCommon)((INpcGetter)item).CommonInstance()!).GetNew();
-            ((NpcSetterTranslationCommon)((INpcGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            GameSettingFloat ret = (GameSettingFloat)((GameSettingFloatCommon)((IGameSettingFloatGetter)item).CommonInstance()!).GetNew();
+            ((GameSettingFloatSetterTranslationCommon)((IGameSettingFloatGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -1185,30 +1270,30 @@ namespace Mutagen.Bethesda.Fallout3
             return ret;
         }
         
-        public Npc DeepCopy(
-            INpcGetter item,
-            out Npc.ErrorMask errorMask,
-            Npc.TranslationMask? copyMask = null)
+        public GameSettingFloat DeepCopy(
+            IGameSettingFloatGetter item,
+            out GameSettingFloat.ErrorMask errorMask,
+            GameSettingFloat.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            Npc ret = (Npc)((NpcCommon)((INpcGetter)item).CommonInstance()!).GetNew();
-            ((NpcSetterTranslationCommon)((INpcGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            GameSettingFloat ret = (GameSettingFloat)((GameSettingFloatCommon)((IGameSettingFloatGetter)item).CommonInstance()!).GetNew();
+            ((GameSettingFloatSetterTranslationCommon)((IGameSettingFloatGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = Npc.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = GameSettingFloat.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public Npc DeepCopy(
-            INpcGetter item,
+        public GameSettingFloat DeepCopy(
+            IGameSettingFloatGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Npc ret = (Npc)((NpcCommon)((INpcGetter)item).CommonInstance()!).GetNew();
-            ((NpcSetterTranslationCommon)((INpcGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            GameSettingFloat ret = (GameSettingFloat)((GameSettingFloatCommon)((IGameSettingFloatGetter)item).CommonInstance()!).GetNew();
+            ((GameSettingFloatSetterTranslationCommon)((IGameSettingFloatGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1224,21 +1309,21 @@ namespace Mutagen.Bethesda.Fallout3
 
 namespace Mutagen.Bethesda.Fallout3
 {
-    public partial class Npc
+    public partial class GameSettingFloat
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Npc_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Npc_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => GameSettingFloat_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GameSettingFloat_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => NpcCommon.Instance;
+        protected override object CommonInstance() => GameSettingFloatCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return NpcSetterCommon.Instance;
+            return GameSettingFloatSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => NpcSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => GameSettingFloatSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1249,14 +1334,14 @@ namespace Mutagen.Bethesda.Fallout3
 #region Binary Translation
 namespace Mutagen.Bethesda.Fallout3
 {
-    public partial class NpcBinaryWriteTranslation :
-        Fallout3MajorRecordBinaryWriteTranslation,
+    public partial class GameSettingFloatBinaryWriteTranslation :
+        GameSettingBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new static readonly NpcBinaryWriteTranslation Instance = new();
+        public new static readonly GameSettingFloatBinaryWriteTranslation Instance = new();
 
         public static void WriteRecordTypes(
-            INpcGetter item,
+            IGameSettingFloatGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams)
         {
@@ -1264,22 +1349,22 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            FormLinkBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
-                item: item.Race,
-                header: translationParams.ConvertToCustom(RecordTypes.RNAM));
+                item: item.Data,
+                header: translationParams.ConvertToCustom(RecordTypes.DATA));
         }
 
         public void Write(
             MutagenWriter writer,
-            INpcGetter item,
+            IGameSettingFloatGetter item,
             TypedWriteParams translationParams)
         {
             PluginUtilityTranslation.WriteMajorRecord(
                 writer: writer,
                 item: item,
                 translationParams: translationParams,
-                type: RecordTypes.NPC_,
+                type: RecordTypes.GMST,
                 writeEmbedded: Fallout3MajorRecordBinaryWriteTranslation.WriteEmbedded,
                 writeRecordTypes: WriteRecordTypes);
         }
@@ -1290,7 +1375,18 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (INpcGetter)item,
+                item: (IGameSettingFloatGetter)item,
+                writer: writer,
+                translationParams: translationParams);
+        }
+
+        public override void Write(
+            MutagenWriter writer,
+            IGameSettingGetter item,
+            TypedWriteParams translationParams)
+        {
+            Write(
+                item: (IGameSettingFloatGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1301,7 +1397,7 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams)
         {
             Write(
-                item: (INpcGetter)item,
+                item: (IGameSettingFloatGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
@@ -1312,20 +1408,20 @@ namespace Mutagen.Bethesda.Fallout3
             TypedWriteParams translationParams)
         {
             Write(
-                item: (INpcGetter)item,
+                item: (IGameSettingFloatGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class NpcBinaryCreateTranslation : Fallout3MajorRecordBinaryCreateTranslation
+    internal partial class GameSettingFloatBinaryCreateTranslation : GameSettingBinaryCreateTranslation
     {
-        public new static readonly NpcBinaryCreateTranslation Instance = new NpcBinaryCreateTranslation();
+        public new static readonly GameSettingFloatBinaryCreateTranslation Instance = new GameSettingFloatBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.NPC_;
+        public override RecordType RecordType => RecordTypes.GMST;
         public static ParseResult FillBinaryRecordTypes(
-            INpcInternal item,
+            IGameSettingFloatInternal item,
             MutagenFrame frame,
             PreviousParse lastParsed,
             Dictionary<RecordType, int>? recordParseCount,
@@ -1336,14 +1432,14 @@ namespace Mutagen.Bethesda.Fallout3
             nextRecordType = translationParams.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.RNAM:
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Race.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)Npc_FieldIndex.Race;
+                    item.Data = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    return (int)GameSettingFloat_FieldIndex.Data;
                 }
                 default:
-                    return Fallout3MajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                    return GameSettingBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         lastParsed: lastParsed,
@@ -1360,7 +1456,7 @@ namespace Mutagen.Bethesda.Fallout3
 namespace Mutagen.Bethesda.Fallout3
 {
     #region Binary Write Mixins
-    public static class NpcBinaryTranslationMixIn
+    public static class GameSettingFloatBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1369,41 +1465,40 @@ namespace Mutagen.Bethesda.Fallout3
 }
 namespace Mutagen.Bethesda.Fallout3
 {
-    internal partial class NpcBinaryOverlay :
-        Fallout3MajorRecordBinaryOverlay,
-        INpcGetter
+    internal partial class GameSettingFloatBinaryOverlay :
+        GameSettingBinaryOverlay,
+        IGameSettingFloatGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Npc_Registration.Instance;
-        public new static ILoquiRegistration StaticRegistration => Npc_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => GameSettingFloat_Registration.Instance;
+        public new static ILoquiRegistration StaticRegistration => GameSettingFloat_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => NpcCommon.Instance;
+        protected override object CommonInstance() => GameSettingFloatCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => NpcSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => GameSettingFloatSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public override IEnumerable<IFormLinkGetter> EnumerateFormLinks() => NpcCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => NpcBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => GameSettingFloatBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((NpcBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((GameSettingFloatBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
-        protected override Type LinkType => typeof(INpc);
+        protected override Type LinkType => typeof(IGameSettingFloat);
 
 
-        #region Race
-        private int? _RaceLocation;
-        public IFormLinkNullableGetter<IRaceGetter> Race => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IRaceGetter>(_package, _recordData, _RaceLocation);
+        #region Data
+        private int? _DataLocation;
+        public Single? Data => _DataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DataLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1411,7 +1506,7 @@ namespace Mutagen.Bethesda.Fallout3
             int offset);
 
         partial void CustomCtor();
-        protected NpcBinaryOverlay(
+        protected GameSettingFloatBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1421,7 +1516,7 @@ namespace Mutagen.Bethesda.Fallout3
             this.CustomCtor();
         }
 
-        public static INpcGetter NpcFactory(
+        public static IGameSettingFloatGetter GameSettingFloatFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1433,7 +1528,7 @@ namespace Mutagen.Bethesda.Fallout3
                 memoryPair: out var memoryPair,
                 offset: out var offset,
                 finalPos: out var finalPos);
-            var ret = new NpcBinaryOverlay(
+            var ret = new GameSettingFloatBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             ret._package.FormVersion = ret;
@@ -1451,12 +1546,12 @@ namespace Mutagen.Bethesda.Fallout3
             return ret;
         }
 
-        public static INpcGetter NpcFactory(
+        public static IGameSettingFloatGetter GameSettingFloatFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return NpcFactory(
+            return GameSettingFloatFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1474,10 +1569,10 @@ namespace Mutagen.Bethesda.Fallout3
             type = translationParams.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.RNAM:
+                case RecordTypeInts.DATA:
                 {
-                    _RaceLocation = (stream.Position - offset);
-                    return (int)Npc_FieldIndex.Race;
+                    _DataLocation = (stream.Position - offset);
+                    return (int)GameSettingFloat_FieldIndex.Data;
                 }
                 default:
                     return base.FillRecordType(
@@ -1496,7 +1591,7 @@ namespace Mutagen.Bethesda.Fallout3
             StructuredStringBuilder sb,
             string? name = null)
         {
-            NpcMixIn.Print(
+            GameSettingFloatMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1506,7 +1601,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public override string ToString()
         {
-            return MajorRecordPrinter<Npc>.ToString(this);
+            return MajorRecordPrinter<GameSettingFloat>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1516,16 +1611,16 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 return formLink.Equals(this);
             }
-            if (obj is not INpcGetter rhs) return false;
-            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IGameSettingFloatGetter rhs) return false;
+            return ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(INpcGetter? obj)
+        public bool Equals(IGameSettingFloatGetter? obj)
         {
-            return ((NpcCommon)((INpcGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((NpcCommon)((INpcGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((GameSettingFloatCommon)((IGameSettingFloatGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

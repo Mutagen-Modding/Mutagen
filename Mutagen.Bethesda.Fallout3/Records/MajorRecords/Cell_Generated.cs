@@ -149,6 +149,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem FormKey,
                 TItem VersionControl,
                 TItem EditorID,
+                TItem FormVersion,
+                TItem Version2,
                 TItem Fallout3MajorRecordFlags,
                 TItem Timestamp,
                 TItem PersistentTimestamp,
@@ -162,6 +164,8 @@ namespace Mutagen.Bethesda.Fallout3
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
+                FormVersion: FormVersion,
+                Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
                 this.Timestamp = Timestamp;
@@ -1372,14 +1376,16 @@ namespace Mutagen.Bethesda.Fallout3
         FormKey = 1,
         VersionControl = 2,
         EditorID = 3,
-        Fallout3MajorRecordFlags = 4,
-        Timestamp = 5,
-        PersistentTimestamp = 6,
-        Persistent = 7,
-        TemporaryTimestamp = 8,
-        Temporary = 9,
-        VisibleWhenDistantTimestamp = 10,
-        VisibleWhenDistant = 11,
+        FormVersion = 4,
+        Version2 = 5,
+        Fallout3MajorRecordFlags = 6,
+        Timestamp = 7,
+        PersistentTimestamp = 8,
+        Persistent = 9,
+        TemporaryTimestamp = 10,
+        Temporary = 11,
+        VisibleWhenDistantTimestamp = 12,
+        VisibleWhenDistant = 13,
     }
     #endregion
 
@@ -1392,7 +1398,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(Cell.Mask<>);
 
@@ -1819,6 +1825,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case Fallout3MajorRecord_FieldIndex.VersionControl:
                     return (Cell_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.EditorID:
+                    return (Cell_FieldIndex)((int)index);
+                case Fallout3MajorRecord_FieldIndex.FormVersion:
+                    return (Cell_FieldIndex)((int)index);
+                case Fallout3MajorRecord_FieldIndex.Version2:
                     return (Cell_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.Fallout3MajorRecordFlags:
                     return (Cell_FieldIndex)((int)index);

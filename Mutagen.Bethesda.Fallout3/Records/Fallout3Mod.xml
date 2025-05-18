@@ -3,9 +3,10 @@
   <Object name="Fallout3Mod" objType="Mod" ctorPermission="Protected" usesStringFiles="false" generateDeepCopyNew="false">
     <Fields>
       <RefDirect name="ModHeader" refName="Fallout3ModHeader" singleton="true" />
+      <Group name="GameSettings" refName="GameSetting" />
+      <Group name="TextureSets" refName="TextureSet" />
+      <Group name="MenuIcons" refName="MenuIcon" />
       <Group name="Globals" refName="Global" />
-      <Group name="Npcs" refName="Npc" />
-      <Group name="Races" refName="Race" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>

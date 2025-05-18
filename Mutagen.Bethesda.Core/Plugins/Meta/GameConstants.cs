@@ -195,11 +195,11 @@ public sealed record GameConstants
     /// </summary> 
     public static readonly GameConstants Fallout3 = new GameConstants(
         release: GameRelease.Fallout3,
-        modHeaderLength: 20,
-        modHeaderFluffLength: 12,
+        modHeaderLength: 24,
+        modHeaderFluffLength: 16,
         groupConstants: new GroupConstants(
             ObjectType.Group,
-            headerLength: 20,
+            headerLength: 24,
             lengthLength: 4,
             cell: new GroupCellConstants(6, SubTypes: new[] { 8, 9, 10 }),
             world: new GroupWorldConstants(
@@ -234,11 +234,11 @@ public sealed record GameConstants
                                 new GroupNesting(10))))),
             }),
         majorConstants: new MajorRecordConstants(
-            headerLength: 20,
+            headerLength: 24,
             lengthLength: 4,
             flagsLoc: 8,
             formIDloc: 12,
-            formVersionLoc: null),
+            formVersionLoc: 20),
         subConstants: new RecordHeaderConstants(
             ObjectType.Subrecord,
             headerLength: 6,

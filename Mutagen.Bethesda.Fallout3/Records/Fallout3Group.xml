@@ -8,6 +8,7 @@
       <CustomLogic byteLength="4" name="ContainedRecordTypeParse" />
       <Enum name="Type" enumName="GroupTypeEnum" byteLength="4" />
       <Int32 name="LastModified" />
+      <Int32 name="Unknown" />
       <Dict name="RecordCache" nullable="False" binaryOverlay="NoGeneration">
         <KeyedValue keyAccessor="FormKey" keyType="FormKey">
           <Ref>
@@ -25,6 +26,7 @@
       <CustomLogic byteLength="4" name="ContainedRecordType" />
       <Enum name="Type" enumName="GroupTypeEnum" byteLength="4" />
       <Int32 name="LastModified" />
+      <Int32 name="Unknown" />
       <List name="Records" nullable="False" binaryOverlay="NoGeneration" thread="true">
         <Ref>
           <Generic>T</Generic>

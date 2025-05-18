@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Fallout3
 {
     #region Class
     /// <summary>
-    /// Implemented by: [Cell, Global, Npc, PlacedObject, Race]
+    /// Implemented by: [Cell, GameSetting, Global, MenuIcon, Npc, PlacedObject, Race, TextureSet]
     /// </summary>
     public abstract partial class Fallout3MajorRecord :
         MajorRecord,
@@ -58,6 +58,12 @@ namespace Mutagen.Bethesda.Fallout3
         partial void CustomCtor();
         #endregion
 
+        #region FormVersion
+        public UInt16 FormVersion { get; set; } = default(UInt16);
+        #endregion
+        #region Version2
+        public UInt16 Version2 { get; set; } = default(UInt16);
+        #endregion
 
         #region To String
 
@@ -83,6 +89,8 @@ namespace Mutagen.Bethesda.Fallout3
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.FormVersion = initialValue;
+                this.Version2 = initialValue;
                 this.Fallout3MajorRecordFlags = initialValue;
             }
 
@@ -91,6 +99,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem FormKey,
                 TItem VersionControl,
                 TItem EditorID,
+                TItem FormVersion,
+                TItem Version2,
                 TItem Fallout3MajorRecordFlags)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -98,6 +108,8 @@ namespace Mutagen.Bethesda.Fallout3
                 VersionControl: VersionControl,
                 EditorID: EditorID)
             {
+                this.FormVersion = FormVersion;
+                this.Version2 = Version2;
                 this.Fallout3MajorRecordFlags = Fallout3MajorRecordFlags;
             }
 
@@ -110,6 +122,8 @@ namespace Mutagen.Bethesda.Fallout3
             #endregion
 
             #region Members
+            public TItem FormVersion;
+            public TItem Version2;
             public TItem Fallout3MajorRecordFlags;
             #endregion
 
@@ -124,12 +138,16 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.FormVersion, rhs.FormVersion)) return false;
+                if (!object.Equals(this.Version2, rhs.Version2)) return false;
                 if (!object.Equals(this.Fallout3MajorRecordFlags, rhs.Fallout3MajorRecordFlags)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.FormVersion);
+                hash.Add(this.Version2);
                 hash.Add(this.Fallout3MajorRecordFlags);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -141,6 +159,8 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.FormVersion)) return false;
+                if (!eval(this.Version2)) return false;
                 if (!eval(this.Fallout3MajorRecordFlags)) return false;
                 return true;
             }
@@ -150,6 +170,8 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.FormVersion)) return true;
+                if (eval(this.Version2)) return true;
                 if (eval(this.Fallout3MajorRecordFlags)) return true;
                 return false;
             }
@@ -166,6 +188,8 @@ namespace Mutagen.Bethesda.Fallout3
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.FormVersion = eval(this.FormVersion);
+                obj.Version2 = eval(this.Version2);
                 obj.Fallout3MajorRecordFlags = eval(this.Fallout3MajorRecordFlags);
             }
             #endregion
@@ -185,6 +209,14 @@ namespace Mutagen.Bethesda.Fallout3
                 sb.AppendLine($"{nameof(Fallout3MajorRecord.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
+                    if (printMask?.FormVersion ?? true)
+                    {
+                        sb.AppendItem(FormVersion, "FormVersion");
+                    }
+                    if (printMask?.Version2 ?? true)
+                    {
+                        sb.AppendItem(Version2, "Version2");
+                    }
                     if (printMask?.Fallout3MajorRecordFlags ?? true)
                     {
                         sb.AppendItem(Fallout3MajorRecordFlags, "Fallout3MajorRecordFlags");
@@ -200,6 +232,8 @@ namespace Mutagen.Bethesda.Fallout3
             IErrorMask<ErrorMask>
         {
             #region Members
+            public Exception? FormVersion;
+            public Exception? Version2;
             public Exception? Fallout3MajorRecordFlags;
             #endregion
 
@@ -209,6 +243,10 @@ namespace Mutagen.Bethesda.Fallout3
                 Fallout3MajorRecord_FieldIndex enu = (Fallout3MajorRecord_FieldIndex)index;
                 switch (enu)
                 {
+                    case Fallout3MajorRecord_FieldIndex.FormVersion:
+                        return FormVersion;
+                    case Fallout3MajorRecord_FieldIndex.Version2:
+                        return Version2;
                     case Fallout3MajorRecord_FieldIndex.Fallout3MajorRecordFlags:
                         return Fallout3MajorRecordFlags;
                     default:
@@ -221,6 +259,12 @@ namespace Mutagen.Bethesda.Fallout3
                 Fallout3MajorRecord_FieldIndex enu = (Fallout3MajorRecord_FieldIndex)index;
                 switch (enu)
                 {
+                    case Fallout3MajorRecord_FieldIndex.FormVersion:
+                        this.FormVersion = ex;
+                        break;
+                    case Fallout3MajorRecord_FieldIndex.Version2:
+                        this.Version2 = ex;
+                        break;
                     case Fallout3MajorRecord_FieldIndex.Fallout3MajorRecordFlags:
                         this.Fallout3MajorRecordFlags = ex;
                         break;
@@ -235,6 +279,12 @@ namespace Mutagen.Bethesda.Fallout3
                 Fallout3MajorRecord_FieldIndex enu = (Fallout3MajorRecord_FieldIndex)index;
                 switch (enu)
                 {
+                    case Fallout3MajorRecord_FieldIndex.FormVersion:
+                        this.FormVersion = (Exception?)obj;
+                        break;
+                    case Fallout3MajorRecord_FieldIndex.Version2:
+                        this.Version2 = (Exception?)obj;
+                        break;
                     case Fallout3MajorRecord_FieldIndex.Fallout3MajorRecordFlags:
                         this.Fallout3MajorRecordFlags = (Exception?)obj;
                         break;
@@ -247,6 +297,8 @@ namespace Mutagen.Bethesda.Fallout3
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (FormVersion != null) return true;
+                if (Version2 != null) return true;
                 if (Fallout3MajorRecordFlags != null) return true;
                 return false;
             }
@@ -275,6 +327,12 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 base.PrintFillInternal(sb);
                 {
+                    sb.AppendItem(FormVersion, "FormVersion");
+                }
+                {
+                    sb.AppendItem(Version2, "Version2");
+                }
+                {
                     sb.AppendItem(Fallout3MajorRecordFlags, "Fallout3MajorRecordFlags");
                 }
             }
@@ -285,6 +343,8 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.FormVersion = this.FormVersion.Combine(rhs.FormVersion);
+                ret.Version2 = this.Version2.Combine(rhs.Version2);
                 ret.Fallout3MajorRecordFlags = this.Fallout3MajorRecordFlags.Combine(rhs.Fallout3MajorRecordFlags);
                 return ret;
             }
@@ -308,6 +368,8 @@ namespace Mutagen.Bethesda.Fallout3
             ITranslationMask
         {
             #region Members
+            public bool FormVersion;
+            public bool Version2;
             public bool Fallout3MajorRecordFlags;
             #endregion
 
@@ -317,6 +379,8 @@ namespace Mutagen.Bethesda.Fallout3
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.FormVersion = defaultOn;
+                this.Version2 = defaultOn;
                 this.Fallout3MajorRecordFlags = defaultOn;
             }
 
@@ -325,6 +389,8 @@ namespace Mutagen.Bethesda.Fallout3
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
+                ret.Add((FormVersion, null));
+                ret.Add((Version2, null));
                 ret.Add((Fallout3MajorRecordFlags, null));
             }
 
@@ -468,7 +534,7 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     /// <summary>
-    /// Implemented by: [Cell, Global, Npc, PlacedObject, Race]
+    /// Implemented by: [Cell, GameSetting, Global, MenuIcon, Npc, PlacedObject, Race, TextureSet]
     /// </summary>
     public partial interface IFallout3MajorRecord :
         IAssetLinkContainer,
@@ -478,6 +544,8 @@ namespace Mutagen.Bethesda.Fallout3
         IMajorRecordEnumerable,
         IMajorRecordInternal
     {
+        new UInt16 FormVersion { get; set; }
+        new UInt16 Version2 { get; set; }
         new Fallout3MajorRecord.Fallout3MajorRecordFlag Fallout3MajorRecordFlags { get; set; }
     }
 
@@ -489,7 +557,7 @@ namespace Mutagen.Bethesda.Fallout3
     }
 
     /// <summary>
-    /// Implemented by: [Cell, Global, Npc, PlacedObject, Race]
+    /// Implemented by: [Cell, GameSetting, Global, MenuIcon, Npc, PlacedObject, Race, TextureSet]
     /// </summary>
     public partial interface IFallout3MajorRecordGetter :
         IMajorRecordGetter,
@@ -500,6 +568,8 @@ namespace Mutagen.Bethesda.Fallout3
         IMajorRecordGetterEnumerable
     {
         static new ILoquiRegistration StaticRegistration => Fallout3MajorRecord_Registration.Instance;
+        UInt16 FormVersion { get; }
+        UInt16 Version2 { get; }
         Fallout3MajorRecord.Fallout3MajorRecordFlag Fallout3MajorRecordFlags { get; }
 
     }
@@ -900,7 +970,9 @@ namespace Mutagen.Bethesda.Fallout3
         FormKey = 1,
         VersionControl = 2,
         EditorID = 3,
-        Fallout3MajorRecordFlags = 4,
+        FormVersion = 4,
+        Version2 = 5,
+        Fallout3MajorRecordFlags = 6,
     }
     #endregion
 
@@ -911,9 +983,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 1;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(Fallout3MajorRecord.Mask<>);
 
@@ -979,6 +1051,8 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual void Clear(IFallout3MajorRecordInternal item)
         {
             ClearPartial();
+            item.FormVersion = default(UInt16);
+            item.Version2 = default(UInt16);
             item.Fallout3MajorRecordFlags = default(Fallout3MajorRecord.Fallout3MajorRecordFlag);
             base.Clear(item);
         }
@@ -1129,6 +1203,8 @@ namespace Mutagen.Bethesda.Fallout3
             Fallout3MajorRecord.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
+            ret.FormVersion = item.FormVersion == rhs.FormVersion;
+            ret.Version2 = item.Version2 == rhs.Version2;
             ret.Fallout3MajorRecordFlags = item.Fallout3MajorRecordFlags == rhs.Fallout3MajorRecordFlags;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -1179,6 +1255,14 @@ namespace Mutagen.Bethesda.Fallout3
                 item: item,
                 sb: sb,
                 printMask: printMask);
+            if (printMask?.FormVersion ?? true)
+            {
+                sb.AppendItem(item.FormVersion, "FormVersion");
+            }
+            if (printMask?.Version2 ?? true)
+            {
+                sb.AppendItem(item.Version2, "Version2");
+            }
             if (printMask?.Fallout3MajorRecordFlags ?? true)
             {
                 sb.AppendItem(item.Fallout3MajorRecordFlags, "Fallout3MajorRecordFlags");
@@ -1210,6 +1294,14 @@ namespace Mutagen.Bethesda.Fallout3
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IMajorRecordGetter)lhs, (IMajorRecordGetter)rhs, equalsMask)) return false;
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3MajorRecord_FieldIndex.FormVersion) ?? true))
+            {
+                if (lhs.FormVersion != rhs.FormVersion) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3MajorRecord_FieldIndex.Version2) ?? true))
+            {
+                if (lhs.Version2 != rhs.Version2) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)Fallout3MajorRecord_FieldIndex.Fallout3MajorRecordFlags) ?? true))
             {
                 if (lhs.Fallout3MajorRecordFlags != rhs.Fallout3MajorRecordFlags) return false;
@@ -1231,6 +1323,8 @@ namespace Mutagen.Bethesda.Fallout3
         public virtual int GetHashCode(IFallout3MajorRecordGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.FormVersion);
+            hash.Add(item.Version2);
             hash.Add(item.Fallout3MajorRecordFlags);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -1384,6 +1478,14 @@ namespace Mutagen.Bethesda.Fallout3
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Fallout3MajorRecord_FieldIndex.FormVersion) ?? true))
+            {
+                item.FormVersion = rhs.FormVersion;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3MajorRecord_FieldIndex.Version2) ?? true))
+            {
+                item.Version2 = rhs.Version2;
+            }
             if ((copyMask?.GetShouldTranslate((int)Fallout3MajorRecord_FieldIndex.Fallout3MajorRecordFlags) ?? true))
             {
                 item.Fallout3MajorRecordFlags = rhs.Fallout3MajorRecordFlags;
@@ -1525,6 +1627,8 @@ namespace Mutagen.Bethesda.Fallout3
             MajorRecordBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
+            writer.Write(item.FormVersion);
+            writer.Write(item.Version2);
         }
 
         public virtual void Write(
@@ -1571,6 +1675,8 @@ namespace Mutagen.Bethesda.Fallout3
             MajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
+            item.FormVersion = frame.ReadUInt16();
+            item.Version2 = frame.ReadUInt16();
         }
 
     }
@@ -1625,6 +1731,8 @@ namespace Mutagen.Bethesda.Fallout3
                 translationParams: translationParams);
         }
 
+        public UInt16 FormVersion => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0xC, 0x2));
+        public UInt16 Version2 => BinaryPrimitives.ReadUInt16LittleEndian(_structData.Slice(0xE, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

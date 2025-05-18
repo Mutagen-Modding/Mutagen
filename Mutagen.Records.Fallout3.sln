@@ -36,6 +36,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Fallout3",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Oblivion", "Mutagen.Bethesda.Oblivion\Mutagen.Bethesda.Oblivion.csproj", "{33CD3C65-392C-4987-9240-BE1C45C972A5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Skyrim", "Mutagen.Bethesda.Skyrim\Mutagen.Bethesda.Skyrim.csproj", "{CCA0BAED-C7A8-439C-93C8-254810BF2E23}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -102,6 +104,10 @@ Global
 		{33CD3C65-392C-4987-9240-BE1C45C972A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33CD3C65-392C-4987-9240-BE1C45C972A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33CD3C65-392C-4987-9240-BE1C45C972A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCA0BAED-C7A8-439C-93C8-254810BF2E23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCA0BAED-C7A8-439C-93C8-254810BF2E23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCA0BAED-C7A8-439C-93C8-254810BF2E23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCA0BAED-C7A8-439C-93C8-254810BF2E23}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

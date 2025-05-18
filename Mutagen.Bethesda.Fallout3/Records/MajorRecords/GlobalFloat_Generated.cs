@@ -91,6 +91,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem FormKey,
                 TItem VersionControl,
                 TItem EditorID,
+                TItem FormVersion,
+                TItem Version2,
                 TItem Fallout3MajorRecordFlags,
                 TItem Data)
             : base(
@@ -98,6 +100,8 @@ namespace Mutagen.Bethesda.Fallout3
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
+                FormVersion: FormVersion,
+                Version2: Version2,
                 Fallout3MajorRecordFlags: Fallout3MajorRecordFlags)
             {
                 this.Data = Data;
@@ -653,8 +657,10 @@ namespace Mutagen.Bethesda.Fallout3
         FormKey = 1,
         VersionControl = 2,
         EditorID = 3,
-        Fallout3MajorRecordFlags = 4,
-        Data = 5,
+        FormVersion = 4,
+        Version2 = 5,
+        Fallout3MajorRecordFlags = 6,
+        Data = 7,
     }
     #endregion
 
@@ -667,7 +673,7 @@ namespace Mutagen.Bethesda.Fallout3
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(GlobalFloat.Mask<>);
 
@@ -915,6 +921,10 @@ namespace Mutagen.Bethesda.Fallout3
                     return (GlobalFloat_FieldIndex)((int)index);
                 case Global_FieldIndex.EditorID:
                     return (GlobalFloat_FieldIndex)((int)index);
+                case Global_FieldIndex.FormVersion:
+                    return (GlobalFloat_FieldIndex)((int)index);
+                case Global_FieldIndex.Version2:
+                    return (GlobalFloat_FieldIndex)((int)index);
                 case Global_FieldIndex.Fallout3MajorRecordFlags:
                     return (GlobalFloat_FieldIndex)((int)index);
                 default:
@@ -933,6 +943,10 @@ namespace Mutagen.Bethesda.Fallout3
                 case Fallout3MajorRecord_FieldIndex.VersionControl:
                     return (GlobalFloat_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.EditorID:
+                    return (GlobalFloat_FieldIndex)((int)index);
+                case Fallout3MajorRecord_FieldIndex.FormVersion:
+                    return (GlobalFloat_FieldIndex)((int)index);
+                case Fallout3MajorRecord_FieldIndex.Version2:
                     return (GlobalFloat_FieldIndex)((int)index);
                 case Fallout3MajorRecord_FieldIndex.Fallout3MajorRecordFlags:
                     return (GlobalFloat_FieldIndex)((int)index);
