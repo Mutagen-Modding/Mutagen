@@ -31,6 +31,7 @@ public class TestVM : ViewModel
         Passthrough = passthrough;
         Parent = parent;
         Test.Output
+            .SelectMany(x => x.Split(Environment.NewLine))
             .ToObservableChangeSet()
             .ObserveOnGui()
             .Bind(out _output)
