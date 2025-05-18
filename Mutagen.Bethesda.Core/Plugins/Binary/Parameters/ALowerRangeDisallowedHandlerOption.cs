@@ -14,6 +14,7 @@ public abstract class ALowerRangeDisallowedHandlerOption
 {
     public static NoCheckIfLowerRangeDisallowed NoCheck { get; } = new NoCheckIfLowerRangeDisallowed();
     public static ThrowIfLowerRangeDisallowed Throw { get; } = new ThrowIfLowerRangeDisallowed();
+    
     public static AddPlaceholderMasterIfLowerRangeDisallowed AddPlaceholder(ModKey key)
     {
         return new AddPlaceholderMasterIfLowerRangeDisallowed()
@@ -36,6 +37,35 @@ public abstract class ALowerRangeDisallowedHandlerOption
         {
             ModKey = loadOrder.Select<ModKey, ModKey?>(x => x).FirstOrDefault()
         };
+    }
+    
+    internal static ALowerRangeDisallowedHandlerOption AddPlaceholderIfNotSkipping(
+        ModKey key,
+        ALowerRangeDisallowedHandlerOption existing)
+    {
+        return SetIfNotSkipping(AddPlaceholder(key), existing);
+    }
+
+    internal static ALowerRangeDisallowedHandlerOption AddPlaceholderIfNotSkipping(
+        ILoadOrderGetter loadOrder,
+        ALowerRangeDisallowedHandlerOption existing)
+    {
+        return SetIfNotSkipping(AddPlaceholder(loadOrder), existing);
+    }
+
+    internal static ALowerRangeDisallowedHandlerOption AddPlaceholderIfNotSkipping(
+        IEnumerable<ModKey> loadOrder,
+        ALowerRangeDisallowedHandlerOption existing)
+    {
+        return SetIfNotSkipping(AddPlaceholder(loadOrder), existing);
+    }
+
+    internal static ALowerRangeDisallowedHandlerOption SetIfNotSkipping(
+        ALowerRangeDisallowedHandlerOption option, 
+        ALowerRangeDisallowedHandlerOption existing)
+    {
+        if (existing is NoCheckIfLowerRangeDisallowed) return existing;
+        return option;
     }
 }
 

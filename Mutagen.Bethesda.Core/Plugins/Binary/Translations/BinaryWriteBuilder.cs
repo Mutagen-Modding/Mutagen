@@ -255,7 +255,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                         .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
                         .ResolveExistingMods(),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholderIfNotSkipping(loadOrder, p._param.LowerRangeDisallowedHandler)
                 };
             }
         });
@@ -279,7 +279,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                     MasterFlagsLookup = loadOrder
                         .Where(x => !alreadyKnownMasters.Contains(x.ModKey)),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholderIfNotSkipping(loadOrder, p._param.LowerRangeDisallowedHandler)
                 };
             }
         });
@@ -342,7 +342,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                         .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
                         .ResolveExistingMods(),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholderIfNotSkipping(loadOrder, p._param.LowerRangeDisallowedHandler)
                 };
             }
         });
@@ -366,7 +366,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                     MasterFlagsLookup = loadOrder
                         .Where(x => !alreadyKnownMasters.Contains(x.ModKey)),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholderIfNotSkipping(loadOrder, p._param.LowerRangeDisallowedHandler)
                 };
             }
         });
@@ -422,7 +422,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                 {
                     MasterFlagsLookup = modFlagsLo?.Where(x => !alreadyKnownMasters.Contains(x.ModKey)),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholderIfNotSkipping(lo, p._param.LowerRangeDisallowedHandler)
                 };
             }
         });
@@ -448,7 +448,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                     return p._param with
                     {
                         MastersListOrdering = new MastersListOrderingByLoadOrder(loArray),
-                        LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loArray)
+                        LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholderIfNotSkipping(loArray, p._param.LowerRangeDisallowedHandler)
                     };
                 }
                 else
@@ -465,7 +465,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                             .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
                             .ResolveExistingMods(),
                         MastersListOrdering = new MastersListOrderingByLoadOrder(lo),
-                        LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
+                        LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholderIfNotSkipping(lo, p._param.LowerRangeDisallowedHandler)
                     };
                 }
             }
@@ -499,7 +499,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                     return p._param with
                     {
                         MastersListOrdering = p._param.MastersListOrdering ?? new MastersListOrderingByLoadOrder(lo),
-                        LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
+                        LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholderIfNotSkipping(lo, p._param.LowerRangeDisallowedHandler)
                     };
                 }
                 else
@@ -516,7 +516,7 @@ public record BinaryModdedWriteBuilderLoadOrderChoice<TModGetter> : IBinaryModde
                             .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
                             .ResolveExistingMods(),
                         MastersListOrdering = p._param.MastersListOrdering ?? new MastersListOrderingByLoadOrder(lo),
-                        LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
+                        LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholderIfNotSkipping(lo, p._param.LowerRangeDisallowedHandler)
                     };
                 }
             }
@@ -566,7 +566,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                         .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
                         .ResolveExistingMods(disposeItems: false),
                     MastersListOrdering = new MastersListOrderingByLoadOrder(loadOrder),
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholderIfNotSkipping(loadOrder, p._param.LowerRangeDisallowedHandler)
                 };
             }
         });
@@ -589,7 +589,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                     MasterFlagsLookup = loadOrder
                         .Where(x => !alreadyKnownMasters.Contains(x.ModKey)),
                     MastersListOrdering = p._param.MastersListOrdering ?? new MastersListOrderingByLoadOrder(loadOrder),
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholderIfNotSkipping(loadOrder, p._param.LowerRangeDisallowedHandler)
                 };
             }
         });
@@ -636,7 +636,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                         .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
                         .ResolveExistingMods(disposeItems: false),
                     MastersListOrdering = p._param.MastersListOrdering ?? new MastersListOrderingByLoadOrder(loadOrder),
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholderIfNotSkipping(loadOrder, p._param.LowerRangeDisallowedHandler)
                 };
             }
         });
@@ -660,7 +660,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                     MasterFlagsLookup = loadOrder
                         .Where(x => !alreadyKnownMasters.Contains(x.ModKey)),
                     MastersListOrdering = p._param.MastersListOrdering ?? new MastersListOrderingByLoadOrder(loadOrder),
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholderIfNotSkipping(loadOrder, p._param.LowerRangeDisallowedHandler)
                 };
             }
         });
@@ -739,7 +739,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                         .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
                         .ResolveExistingMods(disposeItems: false),
                     MastersListOrdering = p._param.MastersListOrdering ?? new MastersListOrderingByLoadOrder(lo),
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholderIfNotSkipping(lo, p._param.LowerRangeDisallowedHandler)
                 };
             }
         });
@@ -773,7 +773,7 @@ public record BinaryWriteBuilderLoadOrderChoice<TModGetter>
                         .Where(x => !alreadyKnownMasters.Contains(x.ModKey))
                         .ResolveExistingMods(disposeItems: false),
                     MastersListOrdering = p._param.MastersListOrdering ?? new MastersListOrderingByLoadOrder(lo),
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(lo)
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholderIfNotSkipping(lo, p._param.LowerRangeDisallowedHandler)
                 };
             }
         });
@@ -1631,7 +1631,7 @@ public record BinaryModdedWriteBuilder<TModGetter> : IBinaryModdedWriteBuilder
             {
                 _param = _params._param with
                 {
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(placeholder)
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholderIfNotSkipping(placeholder, _params._param.LowerRangeDisallowedHandler)
                 }
             }
         };
@@ -1653,7 +1653,7 @@ public record BinaryModdedWriteBuilder<TModGetter> : IBinaryModdedWriteBuilder
             {
                 _param = _params._param with
                 {
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholderIfNotSkipping(loadOrder, _params._param.LowerRangeDisallowedHandler)
                 }
             }
         };
@@ -1675,7 +1675,7 @@ public record BinaryModdedWriteBuilder<TModGetter> : IBinaryModdedWriteBuilder
             {
                 _param = _params._param with
                 {
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholderIfNotSkipping(loadOrder, _params._param.LowerRangeDisallowedHandler)
                 }
             }
         };
@@ -2362,7 +2362,7 @@ public record BinaryWriteBuilder<TModGetter>
             {
                 _param = _params._param with
                 {
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(placeholder)
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholderIfNotSkipping(placeholder, _params._param.LowerRangeDisallowedHandler)
                 }
             }
         };
@@ -2383,7 +2383,7 @@ public record BinaryWriteBuilder<TModGetter>
             {
                 _param = _params._param with
                 {
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholderIfNotSkipping(loadOrder, _params._param.LowerRangeDisallowedHandler)
                 }
             }
         };
@@ -2404,7 +2404,7 @@ public record BinaryWriteBuilder<TModGetter>
             {
                 _param = _params._param with
                 {
-                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholder(loadOrder)
+                    LowerRangeDisallowedHandler = ALowerRangeDisallowedHandlerOption.AddPlaceholderIfNotSkipping(loadOrder, _params._param.LowerRangeDisallowedHandler)
                 }
             }
         };
