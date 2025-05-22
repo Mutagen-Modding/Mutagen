@@ -70,6 +70,7 @@ namespace Mutagen.Bethesda.Fallout3
             _HeadParts_Object = new Fallout3Group<HeadPart>(this);
             _Hairs_Object = new Fallout3Group<Hair>(this);
             _Eyes_Object = new Fallout3Group<Eyes>(this);
+            _Sounds_Object = new Fallout3Group<Sound>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -145,6 +146,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<IEyesGetter> IFallout3ModGetter.Eyes => _Eyes_Object;
         #endregion
+        #region Sounds
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Sound> _Sounds_Object;
+        public Fallout3Group<Sound> Sounds => _Sounds_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<ISoundGetter> IFallout3ModGetter.Sounds => _Sounds_Object;
+        #endregion
 
         #region To String
 
@@ -194,6 +202,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.HeadParts = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Hairs = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Eyes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Sounds = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -206,7 +215,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem Factions,
                 TItem HeadParts,
                 TItem Hairs,
-                TItem Eyes)
+                TItem Eyes,
+                TItem Sounds)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -218,6 +228,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.HeadParts = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(HeadParts, new Fallout3Group.Mask<TItem>(HeadParts));
                 this.Hairs = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Hairs, new Fallout3Group.Mask<TItem>(Hairs));
                 this.Eyes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Eyes, new Fallout3Group.Mask<TItem>(Eyes));
+                this.Sounds = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Sounds, new Fallout3Group.Mask<TItem>(Sounds));
             }
 
             #pragma warning disable CS8618
@@ -239,6 +250,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? HeadParts { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Hairs { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Eyes { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Sounds { get; set; }
             #endregion
 
             #region Equals
@@ -261,6 +273,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.HeadParts, rhs.HeadParts)) return false;
                 if (!object.Equals(this.Hairs, rhs.Hairs)) return false;
                 if (!object.Equals(this.Eyes, rhs.Eyes)) return false;
+                if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -276,6 +289,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.HeadParts);
                 hash.Add(this.Hairs);
                 hash.Add(this.Eyes);
+                hash.Add(this.Sounds);
                 return hash.ToHashCode();
             }
 
@@ -334,6 +348,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Eyes.Overall)) return false;
                     if (this.Eyes.Specific != null && !this.Eyes.Specific.All(eval)) return false;
                 }
+                if (Sounds != null)
+                {
+                    if (!eval(this.Sounds.Overall)) return false;
+                    if (this.Sounds.Specific != null && !this.Sounds.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -391,6 +410,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Eyes.Overall)) return true;
                     if (this.Eyes.Specific != null && this.Eyes.Specific.Any(eval)) return true;
                 }
+                if (Sounds != null)
+                {
+                    if (eval(this.Sounds.Overall)) return true;
+                    if (this.Sounds.Specific != null && this.Sounds.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -415,6 +439,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.HeadParts = this.HeadParts == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.HeadParts.Overall), this.HeadParts.Specific?.Translate(eval));
                 obj.Hairs = this.Hairs == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Hairs.Overall), this.Hairs.Specific?.Translate(eval));
                 obj.Eyes = this.Eyes == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Eyes.Overall), this.Eyes.Specific?.Translate(eval));
+                obj.Sounds = this.Sounds == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Sounds.Overall), this.Sounds.Specific?.Translate(eval));
             }
             #endregion
 
@@ -473,6 +498,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Eyes?.Print(sb);
                     }
+                    if (printMask?.Sounds?.Overall ?? true)
+                    {
+                        Sounds?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -507,6 +536,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<HeadPart.ErrorMask>?>? HeadParts;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Hair.ErrorMask>?>? Hairs;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Eyes.ErrorMask>?>? Eyes;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Sound.ErrorMask>?>? Sounds;
             #endregion
 
             #region IErrorMask
@@ -535,6 +565,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return Hairs;
                     case Fallout3Mod_FieldIndex.Eyes:
                         return Eyes;
+                    case Fallout3Mod_FieldIndex.Sounds:
+                        return Sounds;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -574,6 +606,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.Eyes:
                         this.Eyes = new MaskItem<Exception?, Fallout3Group.ErrorMask<Eyes.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Sounds:
+                        this.Sounds = new MaskItem<Exception?, Fallout3Group.ErrorMask<Sound.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -615,6 +650,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.Eyes:
                         this.Eyes = (MaskItem<Exception?, Fallout3Group.ErrorMask<Eyes.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.Sounds:
+                        this.Sounds = (MaskItem<Exception?, Fallout3Group.ErrorMask<Sound.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -633,6 +671,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (HeadParts != null) return true;
                 if (Hairs != null) return true;
                 if (Eyes != null) return true;
+                if (Sounds != null) return true;
                 return false;
             }
             #endregion
@@ -668,6 +707,7 @@ namespace Mutagen.Bethesda.Fallout3
                 HeadParts?.Print(sb);
                 Hairs?.Print(sb);
                 Eyes?.Print(sb);
+                Sounds?.Print(sb);
             }
             #endregion
 
@@ -686,6 +726,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.HeadParts = this.HeadParts.Combine(rhs.HeadParts, (l, r) => l.Combine(r));
                 ret.Hairs = this.Hairs.Combine(rhs.Hairs, (l, r) => l.Combine(r));
                 ret.Eyes = this.Eyes.Combine(rhs.Eyes, (l, r) => l.Combine(r));
+                ret.Sounds = this.Sounds.Combine(rhs.Sounds, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -719,6 +760,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<HeadPart.TranslationMask>? HeadParts;
             public Fallout3Group.TranslationMask<Hair.TranslationMask>? Hairs;
             public Fallout3Group.TranslationMask<Eyes.TranslationMask>? Eyes;
+            public Fallout3Group.TranslationMask<Sound.TranslationMask>? Sounds;
             #endregion
 
             #region Ctors
@@ -753,6 +795,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((HeadParts != null ? HeadParts.OnOverall : DefaultOn, HeadParts?.GetCrystal()));
                 ret.Add((Hairs != null ? Hairs.OnOverall : DefaultOn, Hairs?.GetCrystal()));
                 ret.Add((Eyes != null ? Eyes.OnOverall : DefaultOn, Eyes?.GetCrystal()));
+                ret.Add((Sounds != null ? Sounds.OnOverall : DefaultOn, Sounds?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -818,6 +861,7 @@ namespace Mutagen.Bethesda.Fallout3
             _HeadParts_Object = new Fallout3Group<HeadPart>(this);
             _Hairs_Object = new Fallout3Group<Hair>(this);
             _Eyes_Object = new Fallout3Group<Eyes>(this);
+            _Sounds_Object = new Fallout3Group<Sound>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -859,6 +903,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (mask?.Eyes ?? true)
             {
                 this.Eyes.RecordCache.Set(rhsMod.Eyes.RecordCache.Items);
+            }
+            if (mask?.Sounds ?? true)
+            {
+                this.Sounds.RecordCache.Set(rhsMod.Sounds.RecordCache.Items);
             }
         }
 
@@ -1130,6 +1178,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<HeadPart> HeadParts { get; }
         new Fallout3Group<Hair> Hairs { get; }
         new Fallout3Group<Eyes> Eyes { get; }
+        new Fallout3Group<Sound> Sounds { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -1159,6 +1208,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<IHeadPartGetter> HeadParts { get; }
         IFallout3GroupGetter<IHairGetter> Hairs { get; }
         IFallout3GroupGetter<IEyesGetter> Eyes { get; }
+        IFallout3GroupGetter<ISoundGetter> Sounds { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -1719,6 +1769,7 @@ namespace Mutagen.Bethesda.Fallout3
         HeadParts = 7,
         Hairs = 8,
         Eyes = 9,
+        Sounds = 10,
     }
     #endregion
 
@@ -1729,9 +1780,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 10;
+        public const ushort AdditionalFieldCount = 11;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -1807,6 +1858,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.HeadParts.Clear();
             item.Hairs.Clear();
             item.Eyes.Clear();
+            item.Sounds.Clear();
         }
         
         #region Mutagen
@@ -1858,6 +1910,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.HeadParts.Remove(keys);
             obj.Hairs.Remove(keys);
             obj.Eyes.Remove(keys);
+            obj.Sounds.Remove(keys);
         }
         
         public void Remove(
@@ -1977,6 +2030,14 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
+                case "Sound":
+                case "ISoundGetter":
+                case "ISound":
+                case "ISoundInternal":
+                    obj.Sounds.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IRelatable":
                 case "IRelatableGetter":
                     Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
@@ -2080,6 +2141,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.HeadParts = MaskItemExt.Factory(item.HeadParts.GetEqualsMask(rhs.HeadParts, include), include);
             ret.Hairs = MaskItemExt.Factory(item.Hairs.GetEqualsMask(rhs.Hairs, include), include);
             ret.Eyes = MaskItemExt.Factory(item.Eyes.GetEqualsMask(rhs.Eyes, include), include);
+            ret.Sounds = MaskItemExt.Factory(item.Sounds.GetEqualsMask(rhs.Sounds, include), include);
         }
         
         public string Print(
@@ -2163,6 +2225,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (printMask?.Eyes?.Overall ?? true)
             {
                 item.Eyes?.Print(sb, "Eyes");
+            }
+            if (printMask?.Sounds?.Overall ?? true)
+            {
+                item.Sounds?.Print(sb, "Sounds");
             }
         }
         
@@ -2253,6 +2319,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isEyesEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Sounds) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Sounds, rhs.Sounds, out var lhsSounds, out var rhsSounds, out var isSoundsEqual))
+                {
+                    if (!object.Equals(lhsSounds, rhsSounds)) return false;
+                }
+                else if (!isSoundsEqual) return false;
+            }
             return true;
         }
         
@@ -2269,6 +2343,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.HeadParts);
             hash.Add(item.Hairs);
             hash.Add(item.Eyes);
+            hash.Add(item.Sounds);
             return hash.ToHashCode();
         }
         
@@ -2332,6 +2407,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IEyes":
                 case "IEyesInternal":
                     return obj.Eyes;
+                case "Sound":
+                case "ISoundGetter":
+                case "ISound":
+                case "ISoundInternal":
+                    return obj.Sounds;
                 default:
                     return null;
             }
@@ -2349,7 +2429,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[9];
+            Stream[] outputStreams = new Stream[10];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -2360,6 +2440,7 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.HeadParts, 6, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Hairs, 7, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Eyes, 8, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Sounds, 9, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -2414,6 +2495,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.HeadParts.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Hairs.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Eyes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Sounds.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -2472,6 +2554,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Eyes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Sounds.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -2591,6 +2677,15 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "Sound":
+                case "ISoundGetter":
+                case "ISound":
+                case "ISoundInternal":
+                    foreach (var item in obj.Sounds.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout3, obj, type, out var linkInterfaces))
                     {
@@ -2693,6 +2788,15 @@ namespace Mutagen.Bethesda.Fallout3
                 modKey: obj.ModKey,
                 group: (m) => m.Eyes,
                 groupGetter: (m) => m.Eyes))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Sound, ISoundGetter>(
+                srcGroup: obj.Sounds,
+                type: typeof(ISoundGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Sounds,
+                groupGetter: (m) => m.Sounds))
             {
                 yield return item;
             }
@@ -2849,6 +2953,20 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.Eyes,
                         groupGetter: (m) => m.Eyes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Sound":
+                case "ISoundGetter":
+                case "ISound":
+                case "ISoundInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Sound, ISoundGetter>(
+                        srcGroup: obj.Sounds,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Sounds,
+                        groupGetter: (m) => m.Sounds))
                     {
                         yield return item;
                     }
@@ -3110,6 +3228,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Sounds) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Sounds);
+                try
+                {
+                    item.Sounds.DeepCopyIn(
+                        rhs: rhs.Sounds,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Sounds));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -3222,6 +3360,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool HeadParts;
         public bool Hairs;
         public bool Eyes;
+        public bool Sounds;
         public GroupMask()
         {
         }
@@ -3236,6 +3375,7 @@ namespace Mutagen.Bethesda.Fallout3
             HeadParts = defaultValue;
             Hairs = defaultValue;
             Eyes = defaultValue;
+            Sounds = defaultValue;
         }
     }
 
@@ -3393,6 +3533,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)EyesItem).BinaryWriteTranslator).Write<IEyesGetter>(
                         item: EyesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Sounds ?? true)
+            {
+                var SoundsItem = item.Sounds;
+                if (SoundsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)SoundsItem).BinaryWriteTranslator).Write<ISoundGetter>(
+                        item: SoundsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -3592,6 +3743,20 @@ namespace Mutagen.Bethesda.Fallout3
                         frame.Position += contentLength;
                     }
                     return (int)Fallout3Mod_FieldIndex.Eyes;
+                }
+                case RecordTypeInts.SOUN:
+                {
+                    if (importMask?.Sounds ?? true)
+                    {
+                        item.Sounds.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Sounds;
                 }
                 default:
                     frame.Position += contentLength;
@@ -3802,6 +3967,11 @@ namespace Mutagen.Bethesda.Fallout3
         private IFallout3GroupGetter<IEyesGetter>? _Eyes => _EyesLocations != null ? Fallout3GroupBinaryOverlay<IEyesGetter>.Fallout3GroupFactory(_stream, _EyesLocations, _package) : default;
         public IFallout3GroupGetter<IEyesGetter> Eyes => _Eyes ?? new Fallout3Group<Eyes>(this);
         #endregion
+        #region Sounds
+        private List<RangeInt64>? _SoundsLocations;
+        private IFallout3GroupGetter<ISoundGetter>? _Sounds => _SoundsLocations != null ? Fallout3GroupBinaryOverlay<ISoundGetter>.Fallout3GroupFactory(_stream, _SoundsLocations, _package) : default;
+        public IFallout3GroupGetter<ISoundGetter> Sounds => _Sounds ?? new Fallout3Group<Sound>(this);
+        #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -3929,6 +4099,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _EyesLocations ??= new();
                     _EyesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.Eyes;
+                }
+                case RecordTypeInts.SOUN:
+                {
+                    _SoundsLocations ??= new();
+                    _SoundsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Sounds;
                 }
                 default:
                     return default(int?);

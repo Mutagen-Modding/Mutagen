@@ -43,6 +43,9 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             Race_Registration.Instance,
             Rank_Registration.Instance,
             Relation_Registration.Instance,
+            Sound_Registration.Instance,
+            SoundData_Registration.Instance,
+            SoundDataExtended_Registration.Instance,
             TextureSet_Registration.Instance
         );
     }

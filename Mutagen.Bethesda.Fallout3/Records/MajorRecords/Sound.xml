@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Sound" objType="Record" baseClass="Fallout3MajorRecord" recordType="SOUN">
+    <Fields>
+      <String name="File" recordType="FNAM" />
+      <RefDirect name="Data" refName="SoundData" />
+      <Array name="AttenuationCurve" fixedSize="5" recordType="ANAM" >
+        <Int16 />
+      </Array>
+      <Int16 name="ReverbAttenuationControl" recordType="GNAM" />
+      <Int32 name="Priority" recordType="HNAM" />
+    </Fields>
+  </Object>
+  <Object name="SoundData" objType="Subrecord" recordType="SNDX" forceInternalInterface="true">
+    <Fields>
+      <UInt16 name="MinimumAttenuationDistance" binary="Custom" byteLength="1" generateClassMembers="false" />
+      <UInt16 name="MaximumAttenuationDistance" binary="Custom" byteLength="1" generateClassMembers="false" />
+      <Int8 name="FrequencyAdjustment" />
+      <Buffer name="Marker" byteLength="1" static="false" />
+      <Enum name="Flags" enumName="SoundData.Flag" byteLength="4" />
+      <Float name="StaticAttenuation" integerType="UShort" divisor="100" />
+      <Float name="StopTime" binary="Custom" min="0" max="1434.375" byteLength="1" />
+      <Float name="StartTime" binary="Custom" min="0" max="1434.375" byteLength="1" />
+    </Fields>
+  </Object>
+  <Object name="SoundDataExtended" baseClass="SoundData" objType="Subrecord" recordType="SNDD">
+    <Fields>
+      <Array name="AttenuationCurve" fixedSize="5" >
+        <Int16 />
+      </Array>
+      <Int16 name="ReverbAttenuationControl" />
+      <Int32 name="Priority" />
+      <Int64 name="Unknown" />
+    </Fields>
+  </Object>
+</Loqui>

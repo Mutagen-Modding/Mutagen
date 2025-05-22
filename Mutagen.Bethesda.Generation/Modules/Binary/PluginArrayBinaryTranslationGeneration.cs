@@ -45,11 +45,8 @@ public class PluginArrayBinaryTranslationGeneration : PluginListBinaryTranslatio
             {
                 sb.AppendLine($"private readonly static {typeGen.TypeName(getter: true)} _default{typeGen.Name} = ArrayExt.Create({arr.FixedSize}, {arr.SubTypeGeneration.GetDefault(getter: false)});");
             }
-            if (arr.SubTypeGeneration is EnumType e)
-            {
-                sb.AppendLine($"public {arr.ListTypeName(getter: true, internalInterface: true)} {typeGen.Name} => {nameof(BinaryOverlayArrayHelper)}.{nameof(BinaryOverlayArrayHelper.EnumSliceFromFixedSize)}<{arr.SubTypeGeneration.TypeName(getter: true)}>({structDataAccessor}.Slice({passedLengthAccessor ?? "0x0"}), amount: {arr.FixedSize.Value}, enumLength: {e.ByteLength});");
-            }
-            else if (arr.SubTypeGeneration is Loqui.Generation.FloatType f
+            
+            if (arr.SubTypeGeneration is Loqui.Generation.FloatType f
                      && data.HasTrigger)
             {
                 sb.AppendLine($"public {typeGen.TypeName(getter: true)}{typeGen.NullChar} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {nameof(BinaryOverlayArrayHelper)}.{nameof(BinaryOverlayArrayHelper.FloatSliceFromFixedSize)}(HeaderTranslation.ExtractSubrecordMemory({recordDataAccessor}, _{typeGen.Name}Location.Value, _package.MetaData.Constants), amount: {arr.FixedSize.Value}) : {(useFixedDefaultVariable ? $"_default{typeGen.Name}" : typeGen.GetDefault(getter: true))};");
@@ -58,6 +55,20 @@ public class PluginArrayBinaryTranslationGeneration : PluginListBinaryTranslatio
                      && data.HasTrigger)
             {
                 sb.AppendLine($"public {typeGen.TypeName(getter: true)}{typeGen.NullChar} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {nameof(BinaryOverlayArrayHelper)}.{nameof(BinaryOverlayArrayHelper.FormLinkSliceFromFixedSize)}<{fl.LoquiType.TypeNameInternal(getter: true, internalInterface: true)}>(HeaderTranslation.ExtractSubrecordMemory({recordDataAccessor}, _{typeGen.Name}Location.Value, _package.MetaData.Constants{(data.OverflowRecordType.HasValue ? $", {nameof(TypedParseParams)}.{nameof(TypedParseParams.FromLengthOverride)}(_{typeGen.Name}LengthOverride)" : null)}), amount: {arr.FixedSize.Value}, masterReferences: _package.MetaData.MasterReferences) : {(useFixedDefaultVariable ? $"_default{typeGen.Name}" : typeGen.GetDefault(getter: true))};");
+            }
+            else if (arr.SubTypeGeneration is Int16Type i16
+                     && data.HasTrigger)
+            {
+                sb.AppendLine($"public {typeGen.TypeName(getter: true)}{typeGen.NullChar} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {nameof(BinaryOverlayArrayHelper)}.{nameof(BinaryOverlayArrayHelper.Int16SliceFromFixedSize)}(HeaderTranslation.ExtractSubrecordMemory({recordDataAccessor}, _{typeGen.Name}Location.Value, _package.MetaData.Constants{(data.OverflowRecordType.HasValue ? $", {nameof(TypedParseParams)}.{nameof(TypedParseParams.FromLengthOverride)}(_{typeGen.Name}LengthOverride)" : null)}), amount: {arr.FixedSize.Value}) : {(useFixedDefaultVariable ? $"_default{typeGen.Name}" : typeGen.GetDefault(getter: true))};");
+            }
+            else 
+            if (arr.SubTypeGeneration is EnumType e)
+            {
+                sb.AppendLine($"public {arr.ListTypeName(getter: true, internalInterface: true)} {typeGen.Name} => {nameof(BinaryOverlayArrayHelper)}.{nameof(BinaryOverlayArrayHelper.EnumSliceFromFixedSize)}<{arr.SubTypeGeneration.TypeName(getter: true)}>({structDataAccessor}.Slice({passedLengthAccessor ?? "0x0"}), amount: {arr.FixedSize.Value}, enumLength: {e.ByteLength});");
+            }
+            else if (arr.SubTypeGeneration is Int16Type i1)
+            {
+                sb.AppendLine($"public {arr.ListTypeName(getter: true, internalInterface: true)} {typeGen.Name} => {nameof(BinaryOverlayArrayHelper)}.{nameof(BinaryOverlayArrayHelper.Int16SliceFromFixedSize)}({structDataAccessor}.Slice({passedLengthAccessor ?? "0x0"}), amount: {arr.FixedSize.Value});");
             }
             else 
             {
@@ -88,6 +99,11 @@ public class PluginArrayBinaryTranslationGeneration : PluginListBinaryTranslatio
             {
                 return arr.FixedSize.Value * await loquiGen.GetPassedAmount(objGen, loqui);
             }
+            else if (arr.SubTypeGeneration is Int16Type i16)
+            {
+                return arr.FixedSize.Value * 2;
+            }
+            else 
             throw new NotImplementedException();
         }
         return null;

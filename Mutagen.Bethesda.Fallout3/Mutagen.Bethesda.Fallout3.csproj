@@ -123,6 +123,9 @@
     <Compile Include="Records\MajorRecords\MenuIcon.cs">
       <DependentUpon>MenuIcon.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\SoundData.cs">
+      <DependentUpon>Sound.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\RecordTypes_Generated.cs" />
     <Compile Include="Records\RecordTypeInts_Generated.cs" />
     <Compile Include="Interfaces\IsolatedAbstractInterfaceMapping_Generated.cs" />
@@ -225,6 +228,15 @@
     </Compile>
     <Compile Include="Records\MajorRecords\Eyes_Generated.cs">
       <DependentUpon>Eyes.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Sound_Generated.cs">
+      <DependentUpon>Sound.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\SoundData_Generated.cs">
+      <DependentUpon>Sound.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\SoundDataExtended_Generated.cs">
+      <DependentUpon>Sound.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

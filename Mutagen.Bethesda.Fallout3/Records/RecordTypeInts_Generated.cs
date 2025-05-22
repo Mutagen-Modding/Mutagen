@@ -2,6 +2,7 @@ namespace Mutagen.Bethesda.Fallout3.Internals;
 
 public partial class RecordTypeInts
 {
+    public const int ANAM = 0x4D414E41;
     public const int ATTR = 0x52545441;
     public const int CELL = 0x4C4C4543;
     public const int CLAS = 0x53414C43;
@@ -19,6 +20,7 @@ public partial class RecordTypeInts
     public const int FULL = 0x4C4C5546;
     public const int GLOB = 0x424F4C47;
     public const int GMST = 0x54534D47;
+    public const int GNAM = 0x4D414E47;
     public const int GRUP = 0x50555247;
     public const int HAIR = 0x52494148;
     public const int HDPT = 0x54504448;
@@ -42,6 +44,9 @@ public partial class RecordTypeInts
     public const int REFR = 0x52464552;
     public const int RNAM = 0x4D414E52;
     public const int SNAM = 0x4D414E53;
+    public const int SNDD = 0x44444E53;
+    public const int SNDX = 0x58444E53;
+    public const int SOUN = 0x4E554F53;
     public const int TES4 = 0x34534554;
     public const int TX00 = 0x30305854;
     public const int TX01 = 0x31305854;

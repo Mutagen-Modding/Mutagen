@@ -4,6 +4,7 @@ namespace Mutagen.Bethesda.Fallout3.Internals;
 
 public partial class RecordTypes
 {
+    public static readonly RecordType ANAM = new(0x4D414E41);
     public static readonly RecordType ATTR = new(0x52545441);
     public static readonly RecordType CELL = new(0x4C4C4543);
     public static readonly RecordType CLAS = new(0x53414C43);
@@ -21,6 +22,7 @@ public partial class RecordTypes
     public static readonly RecordType FULL = new(0x4C4C5546);
     public static readonly RecordType GLOB = new(0x424F4C47);
     public static readonly RecordType GMST = new(0x54534D47);
+    public static readonly RecordType GNAM = new(0x4D414E47);
     public static readonly RecordType GRUP = new(0x50555247);
     public static readonly RecordType HAIR = new(0x52494148);
     public static readonly RecordType HDPT = new(0x54504448);
@@ -44,6 +46,9 @@ public partial class RecordTypes
     public static readonly RecordType REFR = new(0x52464552);
     public static readonly RecordType RNAM = new(0x4D414E52);
     public static readonly RecordType SNAM = new(0x4D414E53);
+    public static readonly RecordType SNDD = new(0x44444E53);
+    public static readonly RecordType SNDX = new(0x58444E53);
+    public static readonly RecordType SOUN = new(0x4E554F53);
     public static readonly RecordType TES4 = new(0x34534554);
     public static readonly RecordType TX00 = new(0x30305854);
     public static readonly RecordType TX01 = new(0x31305854);
