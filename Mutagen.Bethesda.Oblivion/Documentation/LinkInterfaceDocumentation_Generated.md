@@ -37,6 +37,9 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - PlacedCreature
 - PlacedNpc
 - PlacedObject
+### IRelatable
+- Faction
+- Race
 ### ISpellRecord
 - LeveledSpell
 - Spell
@@ -57,6 +60,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - INpcSpawn
 ### Faction
 - IOwner
+- IRelatable
 ### Ingredient
 - IItem
 ### Key
@@ -85,6 +89,8 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IPlaced
 ### Potion
 - IItem
+### Race
+- IRelatable
 ### SigilStone
 - IItem
 ### SoulGem

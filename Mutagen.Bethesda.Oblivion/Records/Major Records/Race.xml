@@ -42,6 +42,7 @@
       <RefDirect name="FaceGenData" refName="FaceGenData" />
       <Int16 name="SNAM" recordType="SNAM" />
     </Fields>
+    <LinkInterface>IRelatable</LinkInterface>
   </Object>
   <Object name="RaceData" objType="Subrecord" recordType="DATA">
     <Fields>

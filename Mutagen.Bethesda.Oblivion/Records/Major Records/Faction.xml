@@ -9,6 +9,7 @@
       <RefList name="Ranks" refName="Rank" />
     </Fields>
     <LinkInterface>IOwner</LinkInterface>
+    <LinkInterface>IRelatable</LinkInterface>
   </Object>
   <Object name="Rank" objType="Subrecord">
     <Fields>

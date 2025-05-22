@@ -1463,7 +1463,8 @@ namespace Mutagen.Bethesda.Oblivion
         INamed,
         INamedRequired,
         IOblivionMajorRecordInternal,
-        IRaceGetter
+        IRaceGetter,
+        IRelatable
     {
         /// <summary>
         /// Aspects: INamed, INamedRequired
@@ -1506,7 +1507,8 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObject<IRaceGetter>,
         IMapsToGetter<IRaceGetter>,
         INamedGetter,
-        INamedRequiredGetter
+        INamedRequiredGetter,
+        IRelatableGetter
     {
         static new ILoquiRegistration StaticRegistration => Race_Registration.Instance;
         #region Name

@@ -768,7 +768,8 @@ namespace Mutagen.Bethesda.Oblivion
         INamed,
         INamedRequired,
         IOblivionMajorRecordInternal,
-        IOwner
+        IOwner,
+        IRelatable
     {
         /// <summary>
         /// Aspects: INamed, INamedRequired
@@ -796,7 +797,8 @@ namespace Mutagen.Bethesda.Oblivion
         IMapsToGetter<IFactionGetter>,
         INamedGetter,
         INamedRequiredGetter,
-        IOwnerGetter
+        IOwnerGetter,
+        IRelatableGetter
     {
         static new ILoquiRegistration StaticRegistration => Faction_Registration.Instance;
         #region Name
