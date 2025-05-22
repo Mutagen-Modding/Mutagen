@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="HeadPart" recordType="HDPT" objType="Record" baseClass="Fallout3MajorRecord">
+    <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <Bool name="Playable" byteLength="1" recordType="DATA" nullable="False" />
+      <List name="ExtraParts">
+        <FormLink refName="HeadPart" recordType="HNAM" />
+      </List>
+    </Fields>
+  </Object>
+</Loqui>

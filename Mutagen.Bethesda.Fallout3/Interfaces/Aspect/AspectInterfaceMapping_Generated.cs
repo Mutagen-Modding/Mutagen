@@ -30,11 +30,24 @@ namespace Mutagen.Bethesda.Fallout3
                     Setter: typeof(IHasIcons),
                     Getter: typeof(IHasIconsGetter)));
             dict[typeof(IHasIconsGetter)] = dict[typeof(IHasIcons)] with { Setter = false };
+            dict[typeof(IModeled)] = new InterfaceMappingResult(
+                true,
+                new ILoquiRegistration[]
+                {
+                    Hair_Registration.Instance,
+                    HeadPart_Registration.Instance,
+                },
+                new InterfaceMappingTypes(
+                    Setter: typeof(IModeled),
+                    Getter: typeof(IModeledGetter)));
+            dict[typeof(IModeledGetter)] = dict[typeof(IModeled)] with { Setter = false };
             dict[typeof(INamed)] = new InterfaceMappingResult(
                 true,
                 new ILoquiRegistration[]
                 {
                     Faction_Registration.Instance,
+                    Hair_Registration.Instance,
+                    HeadPart_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(INamed),
@@ -44,18 +57,34 @@ namespace Mutagen.Bethesda.Fallout3
                 true,
                 new ILoquiRegistration[]
                 {
+                    AlternateTexture_Registration.Instance,
                     Class_Registration.Instance,
+                    Eyes_Registration.Instance,
                     Faction_Registration.Instance,
+                    Hair_Registration.Instance,
+                    HeadPart_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(INamedRequired),
                     Getter: typeof(INamedRequiredGetter)));
             dict[typeof(INamedRequiredGetter)] = dict[typeof(INamedRequired)] with { Setter = false };
+            dict[typeof(ITranslatedNamed)] = new InterfaceMappingResult(
+                true,
+                new ILoquiRegistration[]
+                {
+                    HeadPart_Registration.Instance,
+                },
+                new InterfaceMappingTypes(
+                    Setter: typeof(ITranslatedNamed),
+                    Getter: typeof(ITranslatedNamedGetter)));
+            dict[typeof(ITranslatedNamedGetter)] = dict[typeof(ITranslatedNamed)] with { Setter = false };
             dict[typeof(ITranslatedNamedRequired)] = new InterfaceMappingResult(
                 true,
                 new ILoquiRegistration[]
                 {
                     Class_Registration.Instance,
+                    Eyes_Registration.Instance,
+                    HeadPart_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(ITranslatedNamedRequired),

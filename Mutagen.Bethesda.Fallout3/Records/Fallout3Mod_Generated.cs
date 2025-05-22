@@ -67,6 +67,9 @@ namespace Mutagen.Bethesda.Fallout3
             _Globals_Object = new Fallout3Group<Global>(this);
             _Classes_Object = new Fallout3Group<Class>(this);
             _Factions_Object = new Fallout3Group<Faction>(this);
+            _HeadParts_Object = new Fallout3Group<HeadPart>(this);
+            _Hairs_Object = new Fallout3Group<Hair>(this);
+            _Eyes_Object = new Fallout3Group<Eyes>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -121,6 +124,27 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<IFactionGetter> IFallout3ModGetter.Factions => _Factions_Object;
         #endregion
+        #region HeadParts
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<HeadPart> _HeadParts_Object;
+        public Fallout3Group<HeadPart> HeadParts => _HeadParts_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IHeadPartGetter> IFallout3ModGetter.HeadParts => _HeadParts_Object;
+        #endregion
+        #region Hairs
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Hair> _Hairs_Object;
+        public Fallout3Group<Hair> Hairs => _Hairs_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IHairGetter> IFallout3ModGetter.Hairs => _Hairs_Object;
+        #endregion
+        #region Eyes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Eyes> _Eyes_Object;
+        public Fallout3Group<Eyes> Eyes => _Eyes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IEyesGetter> IFallout3ModGetter.Eyes => _Eyes_Object;
+        #endregion
 
         #region To String
 
@@ -167,6 +191,9 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Globals = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Classes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Factions = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.HeadParts = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Hairs = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Eyes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -176,7 +203,10 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem MenuIcons,
                 TItem Globals,
                 TItem Classes,
-                TItem Factions)
+                TItem Factions,
+                TItem HeadParts,
+                TItem Hairs,
+                TItem Eyes)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -185,6 +215,9 @@ namespace Mutagen.Bethesda.Fallout3
                 this.Globals = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Globals, new Fallout3Group.Mask<TItem>(Globals));
                 this.Classes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Classes, new Fallout3Group.Mask<TItem>(Classes));
                 this.Factions = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Factions, new Fallout3Group.Mask<TItem>(Factions));
+                this.HeadParts = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(HeadParts, new Fallout3Group.Mask<TItem>(HeadParts));
+                this.Hairs = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Hairs, new Fallout3Group.Mask<TItem>(Hairs));
+                this.Eyes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Eyes, new Fallout3Group.Mask<TItem>(Eyes));
             }
 
             #pragma warning disable CS8618
@@ -203,6 +236,9 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Globals { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Classes { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Factions { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? HeadParts { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Hairs { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Eyes { get; set; }
             #endregion
 
             #region Equals
@@ -222,6 +258,9 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.Globals, rhs.Globals)) return false;
                 if (!object.Equals(this.Classes, rhs.Classes)) return false;
                 if (!object.Equals(this.Factions, rhs.Factions)) return false;
+                if (!object.Equals(this.HeadParts, rhs.HeadParts)) return false;
+                if (!object.Equals(this.Hairs, rhs.Hairs)) return false;
+                if (!object.Equals(this.Eyes, rhs.Eyes)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -234,6 +273,9 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.Globals);
                 hash.Add(this.Classes);
                 hash.Add(this.Factions);
+                hash.Add(this.HeadParts);
+                hash.Add(this.Hairs);
+                hash.Add(this.Eyes);
                 return hash.ToHashCode();
             }
 
@@ -277,6 +319,21 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Factions.Overall)) return false;
                     if (this.Factions.Specific != null && !this.Factions.Specific.All(eval)) return false;
                 }
+                if (HeadParts != null)
+                {
+                    if (!eval(this.HeadParts.Overall)) return false;
+                    if (this.HeadParts.Specific != null && !this.HeadParts.Specific.All(eval)) return false;
+                }
+                if (Hairs != null)
+                {
+                    if (!eval(this.Hairs.Overall)) return false;
+                    if (this.Hairs.Specific != null && !this.Hairs.Specific.All(eval)) return false;
+                }
+                if (Eyes != null)
+                {
+                    if (!eval(this.Eyes.Overall)) return false;
+                    if (this.Eyes.Specific != null && !this.Eyes.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -319,6 +376,21 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Factions.Overall)) return true;
                     if (this.Factions.Specific != null && this.Factions.Specific.Any(eval)) return true;
                 }
+                if (HeadParts != null)
+                {
+                    if (eval(this.HeadParts.Overall)) return true;
+                    if (this.HeadParts.Specific != null && this.HeadParts.Specific.Any(eval)) return true;
+                }
+                if (Hairs != null)
+                {
+                    if (eval(this.Hairs.Overall)) return true;
+                    if (this.Hairs.Specific != null && this.Hairs.Specific.Any(eval)) return true;
+                }
+                if (Eyes != null)
+                {
+                    if (eval(this.Eyes.Overall)) return true;
+                    if (this.Eyes.Specific != null && this.Eyes.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -340,6 +412,9 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.Globals = this.Globals == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Globals.Overall), this.Globals.Specific?.Translate(eval));
                 obj.Classes = this.Classes == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Classes.Overall), this.Classes.Specific?.Translate(eval));
                 obj.Factions = this.Factions == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Factions.Overall), this.Factions.Specific?.Translate(eval));
+                obj.HeadParts = this.HeadParts == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.HeadParts.Overall), this.HeadParts.Specific?.Translate(eval));
+                obj.Hairs = this.Hairs == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Hairs.Overall), this.Hairs.Specific?.Translate(eval));
+                obj.Eyes = this.Eyes == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Eyes.Overall), this.Eyes.Specific?.Translate(eval));
             }
             #endregion
 
@@ -386,6 +461,18 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Factions?.Print(sb);
                     }
+                    if (printMask?.HeadParts?.Overall ?? true)
+                    {
+                        HeadParts?.Print(sb);
+                    }
+                    if (printMask?.Hairs?.Overall ?? true)
+                    {
+                        Hairs?.Print(sb);
+                    }
+                    if (printMask?.Eyes?.Overall ?? true)
+                    {
+                        Eyes?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -417,6 +504,9 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Global.ErrorMask>?>? Globals;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Class.ErrorMask>?>? Classes;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Faction.ErrorMask>?>? Factions;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<HeadPart.ErrorMask>?>? HeadParts;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Hair.ErrorMask>?>? Hairs;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Eyes.ErrorMask>?>? Eyes;
             #endregion
 
             #region IErrorMask
@@ -439,6 +529,12 @@ namespace Mutagen.Bethesda.Fallout3
                         return Classes;
                     case Fallout3Mod_FieldIndex.Factions:
                         return Factions;
+                    case Fallout3Mod_FieldIndex.HeadParts:
+                        return HeadParts;
+                    case Fallout3Mod_FieldIndex.Hairs:
+                        return Hairs;
+                    case Fallout3Mod_FieldIndex.Eyes:
+                        return Eyes;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -469,6 +565,15 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.Factions:
                         this.Factions = new MaskItem<Exception?, Fallout3Group.ErrorMask<Faction.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.HeadParts:
+                        this.HeadParts = new MaskItem<Exception?, Fallout3Group.ErrorMask<HeadPart.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Hairs:
+                        this.Hairs = new MaskItem<Exception?, Fallout3Group.ErrorMask<Hair.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Eyes:
+                        this.Eyes = new MaskItem<Exception?, Fallout3Group.ErrorMask<Eyes.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -501,6 +606,15 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.Factions:
                         this.Factions = (MaskItem<Exception?, Fallout3Group.ErrorMask<Faction.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.HeadParts:
+                        this.HeadParts = (MaskItem<Exception?, Fallout3Group.ErrorMask<HeadPart.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.Hairs:
+                        this.Hairs = (MaskItem<Exception?, Fallout3Group.ErrorMask<Hair.ErrorMask>?>?)obj;
+                        break;
+                    case Fallout3Mod_FieldIndex.Eyes:
+                        this.Eyes = (MaskItem<Exception?, Fallout3Group.ErrorMask<Eyes.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -516,6 +630,9 @@ namespace Mutagen.Bethesda.Fallout3
                 if (Globals != null) return true;
                 if (Classes != null) return true;
                 if (Factions != null) return true;
+                if (HeadParts != null) return true;
+                if (Hairs != null) return true;
+                if (Eyes != null) return true;
                 return false;
             }
             #endregion
@@ -548,6 +665,9 @@ namespace Mutagen.Bethesda.Fallout3
                 Globals?.Print(sb);
                 Classes?.Print(sb);
                 Factions?.Print(sb);
+                HeadParts?.Print(sb);
+                Hairs?.Print(sb);
+                Eyes?.Print(sb);
             }
             #endregion
 
@@ -563,6 +683,9 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Globals = this.Globals.Combine(rhs.Globals, (l, r) => l.Combine(r));
                 ret.Classes = this.Classes.Combine(rhs.Classes, (l, r) => l.Combine(r));
                 ret.Factions = this.Factions.Combine(rhs.Factions, (l, r) => l.Combine(r));
+                ret.HeadParts = this.HeadParts.Combine(rhs.HeadParts, (l, r) => l.Combine(r));
+                ret.Hairs = this.Hairs.Combine(rhs.Hairs, (l, r) => l.Combine(r));
+                ret.Eyes = this.Eyes.Combine(rhs.Eyes, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -593,6 +716,9 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<Global.TranslationMask>? Globals;
             public Fallout3Group.TranslationMask<Class.TranslationMask>? Classes;
             public Fallout3Group.TranslationMask<Faction.TranslationMask>? Factions;
+            public Fallout3Group.TranslationMask<HeadPart.TranslationMask>? HeadParts;
+            public Fallout3Group.TranslationMask<Hair.TranslationMask>? Hairs;
+            public Fallout3Group.TranslationMask<Eyes.TranslationMask>? Eyes;
             #endregion
 
             #region Ctors
@@ -624,6 +750,9 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((Globals != null ? Globals.OnOverall : DefaultOn, Globals?.GetCrystal()));
                 ret.Add((Classes != null ? Classes.OnOverall : DefaultOn, Classes?.GetCrystal()));
                 ret.Add((Factions != null ? Factions.OnOverall : DefaultOn, Factions?.GetCrystal()));
+                ret.Add((HeadParts != null ? HeadParts.OnOverall : DefaultOn, HeadParts?.GetCrystal()));
+                ret.Add((Hairs != null ? Hairs.OnOverall : DefaultOn, Hairs?.GetCrystal()));
+                ret.Add((Eyes != null ? Eyes.OnOverall : DefaultOn, Eyes?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -686,6 +815,9 @@ namespace Mutagen.Bethesda.Fallout3
             _Globals_Object = new Fallout3Group<Global>(this);
             _Classes_Object = new Fallout3Group<Class>(this);
             _Factions_Object = new Fallout3Group<Faction>(this);
+            _HeadParts_Object = new Fallout3Group<HeadPart>(this);
+            _Hairs_Object = new Fallout3Group<Hair>(this);
+            _Eyes_Object = new Fallout3Group<Eyes>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -715,6 +847,18 @@ namespace Mutagen.Bethesda.Fallout3
             if (mask?.Factions ?? true)
             {
                 this.Factions.RecordCache.Set(rhsMod.Factions.RecordCache.Items);
+            }
+            if (mask?.HeadParts ?? true)
+            {
+                this.HeadParts.RecordCache.Set(rhsMod.HeadParts.RecordCache.Items);
+            }
+            if (mask?.Hairs ?? true)
+            {
+                this.Hairs.RecordCache.Set(rhsMod.Hairs.RecordCache.Items);
+            }
+            if (mask?.Eyes ?? true)
+            {
+                this.Eyes.RecordCache.Set(rhsMod.Eyes.RecordCache.Items);
             }
         }
 
@@ -983,6 +1127,9 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<Global> Globals { get; }
         new Fallout3Group<Class> Classes { get; }
         new Fallout3Group<Faction> Factions { get; }
+        new Fallout3Group<HeadPart> HeadParts { get; }
+        new Fallout3Group<Hair> Hairs { get; }
+        new Fallout3Group<Eyes> Eyes { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -1009,6 +1156,9 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<IGlobalGetter> Globals { get; }
         IFallout3GroupGetter<IClassGetter> Classes { get; }
         IFallout3GroupGetter<IFactionGetter> Factions { get; }
+        IFallout3GroupGetter<IHeadPartGetter> HeadParts { get; }
+        IFallout3GroupGetter<IHairGetter> Hairs { get; }
+        IFallout3GroupGetter<IEyesGetter> Eyes { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -1566,6 +1716,9 @@ namespace Mutagen.Bethesda.Fallout3
         Globals = 4,
         Classes = 5,
         Factions = 6,
+        HeadParts = 7,
+        Hairs = 8,
+        Eyes = 9,
     }
     #endregion
 
@@ -1576,9 +1729,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 10;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -1651,12 +1804,17 @@ namespace Mutagen.Bethesda.Fallout3
             item.Globals.Clear();
             item.Classes.Clear();
             item.Factions.Clear();
+            item.HeadParts.Clear();
+            item.Hairs.Clear();
+            item.Eyes.Clear();
         }
         
         #region Mutagen
         public void RemapLinks(IFallout3Mod obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.Factions.RemapLinks(mapping);
+            obj.HeadParts.RemapLinks(mapping);
+            obj.Hairs.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -1697,6 +1855,9 @@ namespace Mutagen.Bethesda.Fallout3
             obj.Globals.Remove(keys);
             obj.Classes.Remove(keys);
             obj.Factions.Remove(keys);
+            obj.HeadParts.Remove(keys);
+            obj.Hairs.Remove(keys);
+            obj.Eyes.Remove(keys);
         }
         
         public void Remove(
@@ -1792,6 +1953,30 @@ namespace Mutagen.Bethesda.Fallout3
                         type: type,
                         keys: keys);
                     break;
+                case "HeadPart":
+                case "IHeadPartGetter":
+                case "IHeadPart":
+                case "IHeadPartInternal":
+                    obj.HeadParts.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Hair":
+                case "IHairGetter":
+                case "IHair":
+                case "IHairInternal":
+                    obj.Hairs.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Eyes":
+                case "IEyesGetter":
+                case "IEyes":
+                case "IEyesInternal":
+                    obj.Eyes.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
                 case "IRelatable":
                 case "IRelatableGetter":
                     Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
@@ -1822,6 +2007,12 @@ namespace Mutagen.Bethesda.Fallout3
                     yield return item;
                 }
             }
+            {
+                foreach (var item in obj.Eyes.EnumerateListedAssetLinks())
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -1833,6 +2024,7 @@ namespace Mutagen.Bethesda.Fallout3
         {
             obj.TextureSets.RemapAssetLinks(mapping, queryCategories, linkCache);
             obj.MenuIcons.RemapAssetLinks(mapping, queryCategories, linkCache);
+            obj.Eyes.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
         #endregion
@@ -1885,6 +2077,9 @@ namespace Mutagen.Bethesda.Fallout3
             ret.Globals = MaskItemExt.Factory(item.Globals.GetEqualsMask(rhs.Globals, include), include);
             ret.Classes = MaskItemExt.Factory(item.Classes.GetEqualsMask(rhs.Classes, include), include);
             ret.Factions = MaskItemExt.Factory(item.Factions.GetEqualsMask(rhs.Factions, include), include);
+            ret.HeadParts = MaskItemExt.Factory(item.HeadParts.GetEqualsMask(rhs.HeadParts, include), include);
+            ret.Hairs = MaskItemExt.Factory(item.Hairs.GetEqualsMask(rhs.Hairs, include), include);
+            ret.Eyes = MaskItemExt.Factory(item.Eyes.GetEqualsMask(rhs.Eyes, include), include);
         }
         
         public string Print(
@@ -1957,6 +2152,18 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.Factions?.Print(sb, "Factions");
             }
+            if (printMask?.HeadParts?.Overall ?? true)
+            {
+                item.HeadParts?.Print(sb, "HeadParts");
+            }
+            if (printMask?.Hairs?.Overall ?? true)
+            {
+                item.Hairs?.Print(sb, "Hairs");
+            }
+            if (printMask?.Eyes?.Overall ?? true)
+            {
+                item.Eyes?.Print(sb, "Eyes");
+            }
         }
         
         #region Equals and Hash
@@ -2022,6 +2229,30 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isFactionsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.HeadParts) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.HeadParts, rhs.HeadParts, out var lhsHeadParts, out var rhsHeadParts, out var isHeadPartsEqual))
+                {
+                    if (!object.Equals(lhsHeadParts, rhsHeadParts)) return false;
+                }
+                else if (!isHeadPartsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Hairs) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Hairs, rhs.Hairs, out var lhsHairs, out var rhsHairs, out var isHairsEqual))
+                {
+                    if (!object.Equals(lhsHairs, rhsHairs)) return false;
+                }
+                else if (!isHairsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Eyes) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Eyes, rhs.Eyes, out var lhsEyes, out var rhsEyes, out var isEyesEqual))
+                {
+                    if (!object.Equals(lhsEyes, rhsEyes)) return false;
+                }
+                else if (!isEyesEqual) return false;
+            }
             return true;
         }
         
@@ -2035,6 +2266,9 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.Globals);
             hash.Add(item.Classes);
             hash.Add(item.Factions);
+            hash.Add(item.HeadParts);
+            hash.Add(item.Hairs);
+            hash.Add(item.Eyes);
             return hash.ToHashCode();
         }
         
@@ -2083,6 +2317,21 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IFaction":
                 case "IFactionInternal":
                     return obj.Factions;
+                case "HeadPart":
+                case "IHeadPartGetter":
+                case "IHeadPart":
+                case "IHeadPartInternal":
+                    return obj.HeadParts;
+                case "Hair":
+                case "IHairGetter":
+                case "IHair":
+                case "IHairInternal":
+                    return obj.Hairs;
+                case "Eyes":
+                case "IEyesGetter":
+                case "IEyes":
+                case "IEyesInternal":
+                    return obj.Eyes;
                 default:
                     return null;
             }
@@ -2100,7 +2349,7 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[6];
+            Stream[] outputStreams = new Stream[9];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
@@ -2108,6 +2357,9 @@ namespace Mutagen.Bethesda.Fallout3
             toDo.Add(() => WriteGroupParallel(item.Globals, 3, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Classes, 4, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Factions, 5, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.HeadParts, 6, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Hairs, 7, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Eyes, 8, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -2159,6 +2411,9 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.Globals.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Classes.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Factions.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.HeadParts.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Hairs.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Eyes.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -2168,6 +2423,14 @@ namespace Mutagen.Bethesda.Fallout3
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFallout3ModGetter obj)
         {
             foreach (var item in obj.Factions.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.HeadParts.EnumerateFormLinks())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Hairs.EnumerateFormLinks())
             {
                 yield return item;
             }
@@ -2197,6 +2460,18 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Factions.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.HeadParts.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Hairs.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Eyes.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -2289,6 +2564,33 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "HeadPart":
+                case "IHeadPartGetter":
+                case "IHeadPart":
+                case "IHeadPartInternal":
+                    foreach (var item in obj.HeadParts.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Hair":
+                case "IHairGetter":
+                case "IHair":
+                case "IHairInternal":
+                    foreach (var item in obj.Hairs.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Eyes":
+                case "IEyesGetter":
+                case "IEyes":
+                case "IEyesInternal":
+                    foreach (var item in obj.Eyes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout3, obj, type, out var linkInterfaces))
                     {
@@ -2364,6 +2666,33 @@ namespace Mutagen.Bethesda.Fallout3
                 modKey: obj.ModKey,
                 group: (m) => m.Factions,
                 groupGetter: (m) => m.Factions))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, HeadPart, IHeadPartGetter>(
+                srcGroup: obj.HeadParts,
+                type: typeof(IHeadPartGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.HeadParts,
+                groupGetter: (m) => m.HeadParts))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Hair, IHairGetter>(
+                srcGroup: obj.Hairs,
+                type: typeof(IHairGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Hairs,
+                groupGetter: (m) => m.Hairs))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Eyes, IEyesGetter>(
+                srcGroup: obj.Eyes,
+                type: typeof(IEyesGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Eyes,
+                groupGetter: (m) => m.Eyes))
             {
                 yield return item;
             }
@@ -2482,6 +2811,48 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "HeadPart":
+                case "IHeadPartGetter":
+                case "IHeadPart":
+                case "IHeadPartInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, HeadPart, IHeadPartGetter>(
+                        srcGroup: obj.HeadParts,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.HeadParts,
+                        groupGetter: (m) => m.HeadParts))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Hair":
+                case "IHairGetter":
+                case "IHair":
+                case "IHairInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Hair, IHairGetter>(
+                        srcGroup: obj.Hairs,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Hairs,
+                        groupGetter: (m) => m.Hairs))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Eyes":
+                case "IEyesGetter":
+                case "IEyes":
+                case "IEyesInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Eyes, IEyesGetter>(
+                        srcGroup: obj.Eyes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Eyes,
+                        groupGetter: (m) => m.Eyes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceContextsFor<IFallout3ModGetter, IFallout3Mod, IFallout3ModGetter>(
                         GameCategory.Fallout3,
@@ -2514,6 +2885,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.MenuIcons.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Eyes.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType))
             {
                 yield return item;
             }
@@ -2675,6 +3050,66 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.HeadParts) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.HeadParts);
+                try
+                {
+                    item.HeadParts.DeepCopyIn(
+                        rhs: rhs.HeadParts,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.HeadParts));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Hairs) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Hairs);
+                try
+                {
+                    item.Hairs.DeepCopyIn(
+                        rhs: rhs.Hairs,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Hairs));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Eyes) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Eyes);
+                try
+                {
+                    item.Eyes.DeepCopyIn(
+                        rhs: rhs.Eyes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Eyes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -2784,6 +3219,9 @@ namespace Mutagen.Bethesda.Fallout3
         public bool Globals;
         public bool Classes;
         public bool Factions;
+        public bool HeadParts;
+        public bool Hairs;
+        public bool Eyes;
         public GroupMask()
         {
         }
@@ -2795,6 +3233,9 @@ namespace Mutagen.Bethesda.Fallout3
             Globals = defaultValue;
             Classes = defaultValue;
             Factions = defaultValue;
+            HeadParts = defaultValue;
+            Hairs = defaultValue;
+            Eyes = defaultValue;
         }
     }
 
@@ -2919,6 +3360,39 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)FactionsItem).BinaryWriteTranslator).Write<IFactionGetter>(
                         item: FactionsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.HeadParts ?? true)
+            {
+                var HeadPartsItem = item.HeadParts;
+                if (HeadPartsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)HeadPartsItem).BinaryWriteTranslator).Write<IHeadPartGetter>(
+                        item: HeadPartsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Hairs ?? true)
+            {
+                var HairsItem = item.Hairs;
+                if (HairsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)HairsItem).BinaryWriteTranslator).Write<IHairGetter>(
+                        item: HairsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Eyes ?? true)
+            {
+                var EyesItem = item.Eyes;
+                if (EyesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)EyesItem).BinaryWriteTranslator).Write<IEyesGetter>(
+                        item: EyesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -3076,6 +3550,48 @@ namespace Mutagen.Bethesda.Fallout3
                         frame.Position += contentLength;
                     }
                     return (int)Fallout3Mod_FieldIndex.Factions;
+                }
+                case RecordTypeInts.HDPT:
+                {
+                    if (importMask?.HeadParts ?? true)
+                    {
+                        item.HeadParts.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.HeadParts;
+                }
+                case RecordTypeInts.HAIR:
+                {
+                    if (importMask?.Hairs ?? true)
+                    {
+                        item.Hairs.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Hairs;
+                }
+                case RecordTypeInts.EYES:
+                {
+                    if (importMask?.Eyes ?? true)
+                    {
+                        item.Eyes.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Eyes;
                 }
                 default:
                     frame.Position += contentLength;
@@ -3271,6 +3787,21 @@ namespace Mutagen.Bethesda.Fallout3
         private IFallout3GroupGetter<IFactionGetter>? _Factions => _FactionsLocations != null ? Fallout3GroupBinaryOverlay<IFactionGetter>.Fallout3GroupFactory(_stream, _FactionsLocations, _package) : default;
         public IFallout3GroupGetter<IFactionGetter> Factions => _Factions ?? new Fallout3Group<Faction>(this);
         #endregion
+        #region HeadParts
+        private List<RangeInt64>? _HeadPartsLocations;
+        private IFallout3GroupGetter<IHeadPartGetter>? _HeadParts => _HeadPartsLocations != null ? Fallout3GroupBinaryOverlay<IHeadPartGetter>.Fallout3GroupFactory(_stream, _HeadPartsLocations, _package) : default;
+        public IFallout3GroupGetter<IHeadPartGetter> HeadParts => _HeadParts ?? new Fallout3Group<HeadPart>(this);
+        #endregion
+        #region Hairs
+        private List<RangeInt64>? _HairsLocations;
+        private IFallout3GroupGetter<IHairGetter>? _Hairs => _HairsLocations != null ? Fallout3GroupBinaryOverlay<IHairGetter>.Fallout3GroupFactory(_stream, _HairsLocations, _package) : default;
+        public IFallout3GroupGetter<IHairGetter> Hairs => _Hairs ?? new Fallout3Group<Hair>(this);
+        #endregion
+        #region Eyes
+        private List<RangeInt64>? _EyesLocations;
+        private IFallout3GroupGetter<IEyesGetter>? _Eyes => _EyesLocations != null ? Fallout3GroupBinaryOverlay<IEyesGetter>.Fallout3GroupFactory(_stream, _EyesLocations, _package) : default;
+        public IFallout3GroupGetter<IEyesGetter> Eyes => _Eyes ?? new Fallout3Group<Eyes>(this);
+        #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -3380,6 +3911,24 @@ namespace Mutagen.Bethesda.Fallout3
                     _FactionsLocations ??= new();
                     _FactionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.Factions;
+                }
+                case RecordTypeInts.HDPT:
+                {
+                    _HeadPartsLocations ??= new();
+                    _HeadPartsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.HeadParts;
+                }
+                case RecordTypeInts.HAIR:
+                {
+                    _HairsLocations ??= new();
+                    _HairsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Hairs;
+                }
+                case RecordTypeInts.EYES:
+                {
+                    _EyesLocations ??= new();
+                    _EyesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Eyes;
                 }
                 default:
                     return default(int?);

@@ -28,6 +28,11 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Interfaces\Aspect\IModeled.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Interfaces\Aspect\IObjectBounded.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
@@ -76,6 +81,9 @@
     <Compile Include="Records\MajorRecords\Class.cs">
       <DependentUpon>Class.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\Eyes.cs">
+      <DependentUpon>Eyes.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\Faction.cs">
       <DependentUpon>Faction.xml</DependentUpon>
     </Compile>
@@ -108,6 +116,9 @@
     </Compile>
     <Compile Include="Records\Fallout3ModHeader.cs">
       <DependentUpon>Fallout3ModHeader.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Hair.cs">
+      <DependentUpon>Hair.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\MajorRecords\MenuIcon.cs">
       <DependentUpon>MenuIcon.xml</DependentUpon>
@@ -200,5 +211,20 @@
       <DependentUpon>Faction.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IRelatable_Generated.cs" />
+    <Compile Include="Records\Common Subrecords\Model_Generated.cs">
+      <DependentUpon>Model.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\HeadPart_Generated.cs">
+      <DependentUpon>HeadPart.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\AlternateTexture_Generated.cs">
+      <DependentUpon>Model.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Hair_Generated.cs">
+      <DependentUpon>Hair.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Eyes_Generated.cs">
+      <DependentUpon>Eyes.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

@@ -9,11 +9,13 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
     public static void Register()
     {
         LoquiRegistration.Register(
+            AlternateTexture_Registration.Instance,
             Cell_Registration.Instance,
             CellBlock_Registration.Instance,
             CellSubBlock_Registration.Instance,
             Class_Registration.Instance,
             Decal_Registration.Instance,
+            Eyes_Registration.Instance,
             Faction_Registration.Instance,
             Fallout3Group_Registration.Instance,
             Fallout3ListGroup_Registration.Instance,
@@ -29,8 +31,11 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             GlobalInt_Registration.Instance,
             GlobalShort_Registration.Instance,
             GlobalUnknown_Registration.Instance,
+            Hair_Registration.Instance,
+            HeadPart_Registration.Instance,
             Icons_Registration.Instance,
             MenuIcon_Registration.Instance,
+            Model_Registration.Instance,
             ModStats_Registration.Instance,
             Npc_Registration.Instance,
             ObjectBounds_Registration.Instance,
