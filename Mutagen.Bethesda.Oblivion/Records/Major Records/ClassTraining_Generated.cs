@@ -51,7 +51,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region TrainedSkill
-        public Skill TrainedSkill { get; set; } = default(Skill);
+        public Skill? TrainedSkill { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Skill? IClassTrainingGetter.TrainedSkill => this.TrainedSkill;
         #endregion
         #region MaximumTrainingLevel
         public Byte MaximumTrainingLevel { get; set; } = default(Byte);
@@ -480,7 +482,7 @@ namespace Mutagen.Bethesda.Oblivion
         IClassTrainingGetter,
         ILoquiObjectSetter<IClassTraining>
     {
-        new Skill TrainedSkill { get; set; }
+        new Skill? TrainedSkill { get; set; }
         new Byte MaximumTrainingLevel { get; set; }
         new Int16 Unknown { get; set; }
     }
@@ -497,7 +499,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => ClassTraining_Registration.Instance;
-        Skill TrainedSkill { get; }
+        Skill? TrainedSkill { get; }
         Byte MaximumTrainingLevel { get; }
         Int16 Unknown { get; }
 
@@ -750,7 +752,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(IClassTraining item)
         {
             ClearPartial();
-            item.TrainedSkill = default(Skill);
+            item.TrainedSkill = default;
             item.MaximumTrainingLevel = default(Byte);
             item.Unknown = default(Int16);
         }
@@ -849,9 +851,10 @@ namespace Mutagen.Bethesda.Oblivion
             StructuredStringBuilder sb,
             ClassTraining.Mask<bool>? printMask = null)
         {
-            if (printMask?.TrainedSkill ?? true)
+            if ((printMask?.TrainedSkill ?? true)
+                && item.TrainedSkill is {} TrainedSkillItem)
             {
-                sb.AppendItem(item.TrainedSkill, "TrainedSkill");
+                sb.AppendItem(TrainedSkillItem, "TrainedSkill");
             }
             if (printMask?.MaximumTrainingLevel ?? true)
             {
@@ -888,7 +891,10 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual int GetHashCode(IClassTrainingGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.TrainedSkill);
+            if (item.TrainedSkill is {} TrainedSkillitem)
+            {
+                hash.Add(TrainedSkillitem);
+            }
             hash.Add(item.MaximumTrainingLevel);
             hash.Add(item.Unknown);
             return hash.ToHashCode();
@@ -1045,7 +1051,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
-                item.TrainedSkill,
+                ((int?)item.TrainedSkill) ?? -1,
                 length: 1);
             writer.Write(item.MaximumTrainingLevel);
             writer.Write(item.Unknown);
@@ -1082,6 +1088,7 @@ namespace Mutagen.Bethesda.Oblivion
             IClassTraining item,
             MutagenFrame frame)
         {
+            if (frame.Complete) return;
             item.TrainedSkill = EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 length: 1);
@@ -1152,7 +1159,17 @@ namespace Mutagen.Bethesda.Oblivion
                 translationParams: translationParams);
         }
 
-        public Skill TrainedSkill => (Skill)_structData.Span.Slice(0x0, 0x1)[0];
+        #region TrainedSkill
+        public Skill? TrainedSkill
+        {
+            get
+            {
+                var val = (Skill)_structData.Span.Slice(0x0, 0x1)[0];
+                if (((int)val) == -1) return null;
+                return val;
+            }
+        }
+        #endregion
         public Byte MaximumTrainingLevel => _structData.Span[0x1];
         public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_structData.Slice(0x2, 0x2));
         partial void CustomFactoryEnd(

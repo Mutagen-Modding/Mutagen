@@ -1665,7 +1665,10 @@ namespace Mutagen.Bethesda.Oblivion
         public ReadOnlyMemorySlice<ActorValue> SecondaryAttributes => BinaryOverlayArrayHelper.EnumSliceFromFixedSize<ActorValue>(_structData.Slice(0xC), amount: 7, enumLength: 4);
         public ClassFlag Flags => (ClassFlag)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x28, 0x4));
         public ClassService ClassServices => (ClassService)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x2C, 0x4));
+        #region Training
         public IClassTrainingGetter Training => _structData.Length > 0x30 ? ClassTrainingBinaryOverlay.ClassTrainingFactory(_structData.Slice(0x30), _package, default(TypedParseParams)) : new ClassTraining();
+        protected int TrainingEndingPos;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1691,9 +1694,9 @@ namespace Mutagen.Bethesda.Oblivion
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
-                length: 0x34,
                 memoryPair: out var memoryPair,
-                offset: out var offset);
+                offset: out var offset,
+                finalPos: out var finalPos);
             var ret = new ClassDataBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
