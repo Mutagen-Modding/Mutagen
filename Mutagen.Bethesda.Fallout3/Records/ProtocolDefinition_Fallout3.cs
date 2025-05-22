@@ -12,6 +12,7 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             Cell_Registration.Instance,
             CellBlock_Registration.Instance,
             CellSubBlock_Registration.Instance,
+            Class_Registration.Instance,
             Decal_Registration.Instance,
             Fallout3Group_Registration.Instance,
             Fallout3ListGroup_Registration.Instance,

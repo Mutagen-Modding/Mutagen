@@ -17,7 +17,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Fallout3TextureAssetType.cs" />
+    <Compile Include="Enum\ActorValue.cs" />
+    <Compile Include="Enum\Attribute.cs" />
+    <Compile Include="Enum\ClassService.cs" />
     <Compile Include="Enum\GroupTypeEnum.cs" />
+    <Compile Include="Enum\Skill.cs" />
     <Compile Include="Interfaces\Aspect\IHasIcons.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
@@ -68,6 +72,9 @@
     <Compile Include="Records\MajorRecords\CellSubBlock.cs">
       <DependentUpon>Cell.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\MajorRecords\Class.cs">
+      <DependentUpon>Class.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\MajorRecords\GameSetting.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>
@@ -98,7 +105,9 @@
     <Compile Include="Records\Fallout3ModHeader.cs">
       <DependentUpon>Fallout3ModHeader.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\MajorRecords\MenuIcon.cs" />
+    <Compile Include="Records\MajorRecords\MenuIcon.cs">
+      <DependentUpon>MenuIcon.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\RecordTypes_Generated.cs" />
     <Compile Include="Records\RecordTypeInts_Generated.cs" />
     <Compile Include="Interfaces\IsolatedAbstractInterfaceMapping_Generated.cs" />
@@ -173,6 +182,9 @@
     <Compile Include="Interfaces\Aspect\AspectInterfaceMapping_Generated.cs" />
     <Compile Include="Records\MajorRecords\MenuIcon_Generated.cs">
       <DependentUpon>MenuIcon.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Class_Generated.cs">
+      <DependentUpon>Class.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

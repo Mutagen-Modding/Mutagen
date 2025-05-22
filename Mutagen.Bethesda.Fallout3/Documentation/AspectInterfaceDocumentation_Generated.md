@@ -5,9 +5,13 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 ## Interfaces to Concrete Classes
 ### IHasIcons
 - MenuIcon
+### INamed
+- Class
 ### IObjectBounded
 - TextureSet
 ## Concrete Classes to Interfaces
+### Class
+- INamed
 ### MenuIcon
 - IHasIcons
 ### TextureSet

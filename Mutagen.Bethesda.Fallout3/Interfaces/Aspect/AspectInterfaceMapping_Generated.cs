@@ -30,6 +30,26 @@ namespace Mutagen.Bethesda.Fallout3
                     Setter: typeof(IHasIcons),
                     Getter: typeof(IHasIconsGetter)));
             dict[typeof(IHasIconsGetter)] = dict[typeof(IHasIcons)] with { Setter = false };
+            dict[typeof(INamedRequired)] = new InterfaceMappingResult(
+                true,
+                new ILoquiRegistration[]
+                {
+                    Class_Registration.Instance,
+                },
+                new InterfaceMappingTypes(
+                    Setter: typeof(INamedRequired),
+                    Getter: typeof(INamedRequiredGetter)));
+            dict[typeof(INamedRequiredGetter)] = dict[typeof(INamedRequired)] with { Setter = false };
+            dict[typeof(ITranslatedNamedRequired)] = new InterfaceMappingResult(
+                true,
+                new ILoquiRegistration[]
+                {
+                    Class_Registration.Instance,
+                },
+                new InterfaceMappingTypes(
+                    Setter: typeof(ITranslatedNamedRequired),
+                    Getter: typeof(ITranslatedNamedRequiredGetter)));
+            dict[typeof(ITranslatedNamedRequiredGetter)] = dict[typeof(ITranslatedNamedRequired)] with { Setter = false };
             dict[typeof(IObjectBoundedOptional)] = new InterfaceMappingResult(
                 true,
                 new ILoquiRegistration[]

@@ -2,15 +2,19 @@ namespace Mutagen.Bethesda.Fallout3.Internals;
 
 public partial class RecordTypeInts
 {
+    public const int ATTR = 0x52545441;
     public const int CELL = 0x4C4C4543;
+    public const int CLAS = 0x53414C43;
     public const int CNAM = 0x4D414E43;
     public const int DATA = 0x41544144;
     public const int DELE = 0x454C4544;
+    public const int DESC = 0x43534544;
     public const int DNAM = 0x4D414E44;
     public const int DODT = 0x54444F44;
     public const int EDID = 0x44494445;
     public const int FLTV = 0x56544C46;
     public const int FNAM = 0x4D414E46;
+    public const int FULL = 0x4C4C5546;
     public const int GLOB = 0x424F4C47;
     public const int GMST = 0x54534D47;
     public const int GRUP = 0x50555247;

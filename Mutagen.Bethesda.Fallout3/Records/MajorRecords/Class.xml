@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Class" recordType="CLAS" objType="Record" baseClass="Fallout3MajorRecord">
+    <Fields>
+      <String name="Name" recordType="FULL" nullable="False" translated="Normal" />
+      <String name="Description" recordType="DESC" nullable="False" translated="DL" />
+      <String name="Icon" recordType="ICON" />
+      <Data>
+        <Fields>
+          <Array name="TagSkills" fixedSize="4" >
+            <Enum enumName="ActorValue" byteLength="4" />
+          </Array>
+          <Enum name="Flags" enumName="Class.Flag" byteLength="4" />
+          <Enum name="Services" enumName="ClassService" byteLength="4" />
+          <Enum name="Teaches" byteLength="1" enumName="Skill" nullable="True" nullableBinaryFallback="-1" />
+          <UInt8 name="MaxTrainingLevel" />
+          <UInt16 name="Unknown" />
+        </Fields>
+      </Data>
+      <Data recordType="ATTR" >
+        <Fields>
+          <Dict name="Attributes" numEnumKeys="7" >
+            <Key>
+              <Enum enumName="Attribute" />
+            </Key>
+            <Value>
+              <UInt8 />
+            </Value>
+          </Dict>
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

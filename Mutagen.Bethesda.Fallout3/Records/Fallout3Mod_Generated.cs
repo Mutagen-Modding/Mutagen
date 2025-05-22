@@ -65,6 +65,7 @@ namespace Mutagen.Bethesda.Fallout3
             _TextureSets_Object = new Fallout3Group<TextureSet>(this);
             _MenuIcons_Object = new Fallout3Group<MenuIcon>(this);
             _Globals_Object = new Fallout3Group<Global>(this);
+            _Classes_Object = new Fallout3Group<Class>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -104,6 +105,13 @@ namespace Mutagen.Bethesda.Fallout3
         public Fallout3Group<Global> Globals => _Globals_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<IGlobalGetter> IFallout3ModGetter.Globals => _Globals_Object;
+        #endregion
+        #region Classes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Class> _Classes_Object;
+        public Fallout3Group<Class> Classes => _Classes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IClassGetter> IFallout3ModGetter.Classes => _Classes_Object;
         #endregion
 
         #region To String
@@ -149,6 +157,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.TextureSets = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.MenuIcons = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Globals = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Classes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -156,13 +165,15 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem GameSettings,
                 TItem TextureSets,
                 TItem MenuIcons,
-                TItem Globals)
+                TItem Globals,
+                TItem Classes)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
                 this.TextureSets = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(TextureSets, new Fallout3Group.Mask<TItem>(TextureSets));
                 this.MenuIcons = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(MenuIcons, new Fallout3Group.Mask<TItem>(MenuIcons));
                 this.Globals = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Globals, new Fallout3Group.Mask<TItem>(Globals));
+                this.Classes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Classes, new Fallout3Group.Mask<TItem>(Classes));
             }
 
             #pragma warning disable CS8618
@@ -179,6 +190,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? TextureSets { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? MenuIcons { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Globals { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Classes { get; set; }
             #endregion
 
             #region Equals
@@ -196,6 +208,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.TextureSets, rhs.TextureSets)) return false;
                 if (!object.Equals(this.MenuIcons, rhs.MenuIcons)) return false;
                 if (!object.Equals(this.Globals, rhs.Globals)) return false;
+                if (!object.Equals(this.Classes, rhs.Classes)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -206,6 +219,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.TextureSets);
                 hash.Add(this.MenuIcons);
                 hash.Add(this.Globals);
+                hash.Add(this.Classes);
                 return hash.ToHashCode();
             }
 
@@ -239,6 +253,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Globals.Overall)) return false;
                     if (this.Globals.Specific != null && !this.Globals.Specific.All(eval)) return false;
                 }
+                if (Classes != null)
+                {
+                    if (!eval(this.Classes.Overall)) return false;
+                    if (this.Classes.Specific != null && !this.Classes.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -271,6 +290,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Globals.Overall)) return true;
                     if (this.Globals.Specific != null && this.Globals.Specific.Any(eval)) return true;
                 }
+                if (Classes != null)
+                {
+                    if (eval(this.Classes.Overall)) return true;
+                    if (this.Classes.Specific != null && this.Classes.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -290,6 +314,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.TextureSets = this.TextureSets == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.TextureSets.Overall), this.TextureSets.Specific?.Translate(eval));
                 obj.MenuIcons = this.MenuIcons == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.MenuIcons.Overall), this.MenuIcons.Specific?.Translate(eval));
                 obj.Globals = this.Globals == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Globals.Overall), this.Globals.Specific?.Translate(eval));
+                obj.Classes = this.Classes == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Classes.Overall), this.Classes.Specific?.Translate(eval));
             }
             #endregion
 
@@ -328,6 +353,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Globals?.Print(sb);
                     }
+                    if (printMask?.Classes?.Overall ?? true)
+                    {
+                        Classes?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -357,6 +386,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<TextureSet.ErrorMask>?>? TextureSets;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<MenuIcon.ErrorMask>?>? MenuIcons;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Global.ErrorMask>?>? Globals;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Class.ErrorMask>?>? Classes;
             #endregion
 
             #region IErrorMask
@@ -375,6 +405,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return MenuIcons;
                     case Fallout3Mod_FieldIndex.Globals:
                         return Globals;
+                    case Fallout3Mod_FieldIndex.Classes:
+                        return Classes;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -399,6 +431,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.Globals:
                         this.Globals = new MaskItem<Exception?, Fallout3Group.ErrorMask<Global.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Classes:
+                        this.Classes = new MaskItem<Exception?, Fallout3Group.ErrorMask<Class.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -425,6 +460,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.Globals:
                         this.Globals = (MaskItem<Exception?, Fallout3Group.ErrorMask<Global.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.Classes:
+                        this.Classes = (MaskItem<Exception?, Fallout3Group.ErrorMask<Class.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -438,6 +476,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (TextureSets != null) return true;
                 if (MenuIcons != null) return true;
                 if (Globals != null) return true;
+                if (Classes != null) return true;
                 return false;
             }
             #endregion
@@ -468,6 +507,7 @@ namespace Mutagen.Bethesda.Fallout3
                 TextureSets?.Print(sb);
                 MenuIcons?.Print(sb);
                 Globals?.Print(sb);
+                Classes?.Print(sb);
             }
             #endregion
 
@@ -481,6 +521,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.TextureSets = this.TextureSets.Combine(rhs.TextureSets, (l, r) => l.Combine(r));
                 ret.MenuIcons = this.MenuIcons.Combine(rhs.MenuIcons, (l, r) => l.Combine(r));
                 ret.Globals = this.Globals.Combine(rhs.Globals, (l, r) => l.Combine(r));
+                ret.Classes = this.Classes.Combine(rhs.Classes, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -509,6 +550,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<TextureSet.TranslationMask>? TextureSets;
             public Fallout3Group.TranslationMask<MenuIcon.TranslationMask>? MenuIcons;
             public Fallout3Group.TranslationMask<Global.TranslationMask>? Globals;
+            public Fallout3Group.TranslationMask<Class.TranslationMask>? Classes;
             #endregion
 
             #region Ctors
@@ -538,6 +580,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((TextureSets != null ? TextureSets.OnOverall : DefaultOn, TextureSets?.GetCrystal()));
                 ret.Add((MenuIcons != null ? MenuIcons.OnOverall : DefaultOn, MenuIcons?.GetCrystal()));
                 ret.Add((Globals != null ? Globals.OnOverall : DefaultOn, Globals?.GetCrystal()));
+                ret.Add((Classes != null ? Classes.OnOverall : DefaultOn, Classes?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -598,6 +641,7 @@ namespace Mutagen.Bethesda.Fallout3
             _TextureSets_Object = new Fallout3Group<TextureSet>(this);
             _MenuIcons_Object = new Fallout3Group<MenuIcon>(this);
             _Globals_Object = new Fallout3Group<Global>(this);
+            _Classes_Object = new Fallout3Group<Class>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -619,6 +663,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (mask?.Globals ?? true)
             {
                 this.Globals.RecordCache.Set(rhsMod.Globals.RecordCache.Items);
+            }
+            if (mask?.Classes ?? true)
+            {
+                this.Classes.RecordCache.Set(rhsMod.Classes.RecordCache.Items);
             }
         }
 
@@ -884,6 +932,7 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<TextureSet> TextureSets { get; }
         new Fallout3Group<MenuIcon> MenuIcons { get; }
         new Fallout3Group<Global> Globals { get; }
+        new Fallout3Group<Class> Classes { get; }
     }
 
     public partial interface IFallout3ModGetter :
@@ -907,6 +956,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<ITextureSetGetter> TextureSets { get; }
         IFallout3GroupGetter<IMenuIconGetter> MenuIcons { get; }
         IFallout3GroupGetter<IGlobalGetter> Globals { get; }
+        IFallout3GroupGetter<IClassGetter> Classes { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -1462,6 +1512,7 @@ namespace Mutagen.Bethesda.Fallout3
         TextureSets = 2,
         MenuIcons = 3,
         Globals = 4,
+        Classes = 5,
     }
     #endregion
 
@@ -1472,9 +1523,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -1545,6 +1596,7 @@ namespace Mutagen.Bethesda.Fallout3
             item.TextureSets.Clear();
             item.MenuIcons.Clear();
             item.Globals.Clear();
+            item.Classes.Clear();
         }
         
         #region Mutagen
@@ -1588,6 +1640,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.TextureSets.Remove(keys);
             obj.MenuIcons.Remove(keys);
             obj.Globals.Remove(keys);
+            obj.Classes.Remove(keys);
         }
         
         public void Remove(
@@ -1664,6 +1717,14 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IGlobalUnknown":
                 case "IGlobalUnknownInternal":
                     obj.Globals.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "Class":
+                case "IClassGetter":
+                case "IClass":
+                case "IClassInternal":
+                    obj.Classes.Remove(
                         type: type,
                         keys: keys);
                     break;
@@ -1754,6 +1815,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.TextureSets = MaskItemExt.Factory(item.TextureSets.GetEqualsMask(rhs.TextureSets, include), include);
             ret.MenuIcons = MaskItemExt.Factory(item.MenuIcons.GetEqualsMask(rhs.MenuIcons, include), include);
             ret.Globals = MaskItemExt.Factory(item.Globals.GetEqualsMask(rhs.Globals, include), include);
+            ret.Classes = MaskItemExt.Factory(item.Classes.GetEqualsMask(rhs.Classes, include), include);
         }
         
         public string Print(
@@ -1818,6 +1880,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.Globals?.Print(sb, "Globals");
             }
+            if (printMask?.Classes?.Overall ?? true)
+            {
+                item.Classes?.Print(sb, "Classes");
+            }
         }
         
         #region Equals and Hash
@@ -1867,6 +1933,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isGlobalsEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Classes) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Classes, rhs.Classes, out var lhsClasses, out var rhsClasses, out var isClassesEqual))
+                {
+                    if (!object.Equals(lhsClasses, rhsClasses)) return false;
+                }
+                else if (!isClassesEqual) return false;
+            }
             return true;
         }
         
@@ -1878,6 +1952,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.TextureSets);
             hash.Add(item.MenuIcons);
             hash.Add(item.Globals);
+            hash.Add(item.Classes);
             return hash.ToHashCode();
         }
         
@@ -1916,6 +1991,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IGlobal":
                 case "IGlobalInternal":
                     return obj.Globals;
+                case "Class":
+                case "IClassGetter":
+                case "IClass":
+                case "IClassInternal":
+                    return obj.Classes;
                 default:
                     return null;
             }
@@ -1933,12 +2013,13 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[4];
+            Stream[] outputStreams = new Stream[5];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.MenuIcons, 2, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Globals, 3, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Classes, 4, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -1988,6 +2069,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.TextureSets.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.MenuIcons.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Globals.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Classes.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -2014,6 +2096,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Globals.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Classes.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -2088,6 +2174,15 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "Class":
+                case "IClassGetter":
+                case "IClass":
+                case "IClassInternal":
+                    foreach (var item in obj.Classes.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout3, obj, type, out var linkInterfaces))
                     {
@@ -2145,6 +2240,15 @@ namespace Mutagen.Bethesda.Fallout3
                 modKey: obj.ModKey,
                 group: (m) => m.Globals,
                 groupGetter: (m) => m.Globals))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Class, IClassGetter>(
+                srcGroup: obj.Classes,
+                type: typeof(IClassGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Classes,
+                groupGetter: (m) => m.Classes))
             {
                 yield return item;
             }
@@ -2231,6 +2335,20 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.Globals,
                         groupGetter: (m) => m.Globals))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Class":
+                case "IClassGetter":
+                case "IClass":
+                case "IClassInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Class, IClassGetter>(
+                        srcGroup: obj.Classes,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Classes,
+                        groupGetter: (m) => m.Classes))
                     {
                         yield return item;
                     }
@@ -2388,6 +2506,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Classes) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Classes);
+                try
+                {
+                    item.Classes.DeepCopyIn(
+                        rhs: rhs.Classes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Classes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -2495,6 +2633,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool TextureSets;
         public bool MenuIcons;
         public bool Globals;
+        public bool Classes;
         public GroupMask()
         {
         }
@@ -2504,6 +2643,7 @@ namespace Mutagen.Bethesda.Fallout3
             TextureSets = defaultValue;
             MenuIcons = defaultValue;
             Globals = defaultValue;
+            Classes = defaultValue;
         }
     }
 
@@ -2606,6 +2746,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)GlobalsItem).BinaryWriteTranslator).Write<IGlobalGetter>(
                         item: GlobalsItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Classes ?? true)
+            {
+                var ClassesItem = item.Classes;
+                if (ClassesItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)ClassesItem).BinaryWriteTranslator).Write<IClassGetter>(
+                        item: ClassesItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -2735,6 +2886,20 @@ namespace Mutagen.Bethesda.Fallout3
                         frame.Position += contentLength;
                     }
                     return (int)Fallout3Mod_FieldIndex.Globals;
+                }
+                case RecordTypeInts.CLAS:
+                {
+                    if (importMask?.Classes ?? true)
+                    {
+                        item.Classes.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Classes;
                 }
                 default:
                     frame.Position += contentLength;
@@ -2920,6 +3085,11 @@ namespace Mutagen.Bethesda.Fallout3
         private IFallout3GroupGetter<IGlobalGetter>? _Globals => _GlobalsLocations != null ? Fallout3GroupBinaryOverlay<IGlobalGetter>.Fallout3GroupFactory(_stream, _GlobalsLocations, _package) : default;
         public IFallout3GroupGetter<IGlobalGetter> Globals => _Globals ?? new Fallout3Group<Global>(this);
         #endregion
+        #region Classes
+        private List<RangeInt64>? _ClassesLocations;
+        private IFallout3GroupGetter<IClassGetter>? _Classes => _ClassesLocations != null ? Fallout3GroupBinaryOverlay<IClassGetter>.Fallout3GroupFactory(_stream, _ClassesLocations, _package) : default;
+        public IFallout3GroupGetter<IClassGetter> Classes => _Classes ?? new Fallout3Group<Class>(this);
+        #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -3017,6 +3187,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _GlobalsLocations ??= new();
                     _GlobalsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.Globals;
+                }
+                case RecordTypeInts.CLAS:
+                {
+                    _ClassesLocations ??= new();
+                    _ClassesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Classes;
                 }
                 default:
                     return default(int?);
