@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Faction" objType="Record" baseClass="Fallout3MajorRecord" recordType="FACT">
+    <Fields>
+      <String name="Name" recordType="FULL" />
+      <RefList name="Relations" refName="Relation" />
+      <Enum name="Flags" recordType="DATA" enumName="Faction.FactionFlag" byteLength="4" nullable="False" />
+      <Float name="CrimeGoldMultiplier" recordType="CNAM" nullable="True" />
+      <RefList name="Ranks" refName="Rank" />
+    </Fields>
+    <LinkInterface>IRelatable</LinkInterface>
+  </Object>
+  <Object name="Rank" objType="Subrecord">
+    <Fields>
+      <Int32 name="RankNumber" recordType="RNAM" />
+      <Gendered name="Name" maleMarker="MNAM" femaleMarker="FNAM">
+        <Fields>
+          <String />
+        </Fields>
+      </Gendered>
+      <String name="Insignia" recordType="INAM" />
+    </Fields>
+  </Object>
+</Loqui>

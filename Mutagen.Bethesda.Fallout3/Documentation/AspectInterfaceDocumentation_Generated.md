@@ -7,10 +7,13 @@ Functions can then be written that take in `INamed`, allowing any record that ha
 - MenuIcon
 ### INamed
 - Class
+- Faction
 ### IObjectBounded
 - TextureSet
 ## Concrete Classes to Interfaces
 ### Class
+- INamed
+### Faction
 - INamed
 ### MenuIcon
 - IHasIcons

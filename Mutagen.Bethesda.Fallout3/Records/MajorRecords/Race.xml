@@ -3,5 +3,6 @@
   <Object name="Race" baseClass="Fallout3MajorRecord" objType="Record" recordType="RACE">
     <Fields>
     </Fields>
+    <LinkInterface>IRelatable</LinkInterface>
   </Object>
 </Loqui>

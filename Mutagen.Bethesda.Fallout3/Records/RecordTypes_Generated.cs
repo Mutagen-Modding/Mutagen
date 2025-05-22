@@ -14,6 +14,7 @@ public partial class RecordTypes
     public static readonly RecordType DNAM = new(0x4D414E44);
     public static readonly RecordType DODT = new(0x54444F44);
     public static readonly RecordType EDID = new(0x44494445);
+    public static readonly RecordType FACT = new(0x54434146);
     public static readonly RecordType FLTV = new(0x56544C46);
     public static readonly RecordType FNAM = new(0x4D414E46);
     public static readonly RecordType FULL = new(0x4C4C5546);
@@ -22,9 +23,11 @@ public partial class RecordTypes
     public static readonly RecordType GRUP = new(0x50555247);
     public static readonly RecordType HEDR = new(0x52444548);
     public static readonly RecordType ICON = new(0x4E4F4349);
+    public static readonly RecordType INAM = new(0x4D414E49);
     public static readonly RecordType MAST = new(0x5453414D);
     public static readonly RecordType MICN = new(0x4E43494D);
     public static readonly RecordType MICO = new(0x4F43494D);
+    public static readonly RecordType MNAM = new(0x4D414E4D);
     public static readonly RecordType NAME = new(0x454D414E);
     public static readonly RecordType NPC_ = new(0x5F43504E);
     public static readonly RecordType OBND = new(0x444E424F);
@@ -41,5 +44,6 @@ public partial class RecordTypes
     public static readonly RecordType TX04 = new(0x34305854);
     public static readonly RecordType TX05 = new(0x35305854);
     public static readonly RecordType TXST = new(0x54535854);
+    public static readonly RecordType XNAM = new(0x4D414E58);
     public static readonly RecordType XXXX = new(0x58585858);
 }

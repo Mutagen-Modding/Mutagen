@@ -1,5 +1,6 @@
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
@@ -21,6 +22,7 @@ public class Fallout3Processor : Processor
     {
         base.AddDynamicProcessorInstructions();
         AddDynamicProcessing(RecordTypes.GMST, ProcessGameSettings);
+        AddDynamicProcessing(RecordTypes.FACT, ProcessFactions);
     }
 
     protected override AStringsAlignment[] GetStringsFileAlignments(StringsSource source)
@@ -39,6 +41,27 @@ public class Fallout3Processor : Processor
         {
             var dataIndex = dataRec.EndLocation;
             ProcessZeroFloat(majorFrame, fileOffset, ref dataIndex);
+        }
+    }
+
+    private void ProcessFactions(
+        IMutagenReadStream stream,
+        MajorRecordFrame majorFrame,
+        long fileOffset)
+    {
+        if (majorFrame.TryFindSubrecord(RecordTypes.DATA, out var dat))
+        {
+            if (dat.ContentLength == 1)
+            {
+                Instructions.SetAddition(
+                    fileOffset + dat.Location + stream.MetaData.Constants.SubConstants.HeaderLength + 1,
+                    new byte[] { 0, 0, 0 });
+                ProcessLengths(
+                    majorFrame,
+                    dat,
+                    3,
+                    fileOffset);
+            }
         }
     }
 }

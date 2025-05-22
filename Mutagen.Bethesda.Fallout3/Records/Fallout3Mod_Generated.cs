@@ -66,6 +66,7 @@ namespace Mutagen.Bethesda.Fallout3
             _MenuIcons_Object = new Fallout3Group<MenuIcon>(this);
             _Globals_Object = new Fallout3Group<Global>(this);
             _Classes_Object = new Fallout3Group<Class>(this);
+            _Factions_Object = new Fallout3Group<Faction>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -113,6 +114,13 @@ namespace Mutagen.Bethesda.Fallout3
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFallout3GroupGetter<IClassGetter> IFallout3ModGetter.Classes => _Classes_Object;
         #endregion
+        #region Factions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Fallout3Group<Faction> _Factions_Object;
+        public Fallout3Group<Faction> Factions => _Factions_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFallout3GroupGetter<IFactionGetter> IFallout3ModGetter.Factions => _Factions_Object;
+        #endregion
 
         #region To String
 
@@ -158,6 +166,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.MenuIcons = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Globals = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
                 this.Classes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
+                this.Factions = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(initialValue, new Fallout3Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -166,7 +175,8 @@ namespace Mutagen.Bethesda.Fallout3
                 TItem TextureSets,
                 TItem MenuIcons,
                 TItem Globals,
-                TItem Classes)
+                TItem Classes,
+                TItem Factions)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout3ModHeader.Mask<TItem>?>(ModHeader, new Fallout3ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(GameSettings, new Fallout3Group.Mask<TItem>(GameSettings));
@@ -174,6 +184,7 @@ namespace Mutagen.Bethesda.Fallout3
                 this.MenuIcons = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(MenuIcons, new Fallout3Group.Mask<TItem>(MenuIcons));
                 this.Globals = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Globals, new Fallout3Group.Mask<TItem>(Globals));
                 this.Classes = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Classes, new Fallout3Group.Mask<TItem>(Classes));
+                this.Factions = new MaskItem<TItem, Fallout3Group.Mask<TItem>?>(Factions, new Fallout3Group.Mask<TItem>(Factions));
             }
 
             #pragma warning disable CS8618
@@ -191,6 +202,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? MenuIcons { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Globals { get; set; }
             public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Classes { get; set; }
+            public MaskItem<TItem, Fallout3Group.Mask<TItem>?>? Factions { get; set; }
             #endregion
 
             #region Equals
@@ -209,6 +221,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (!object.Equals(this.MenuIcons, rhs.MenuIcons)) return false;
                 if (!object.Equals(this.Globals, rhs.Globals)) return false;
                 if (!object.Equals(this.Classes, rhs.Classes)) return false;
+                if (!object.Equals(this.Factions, rhs.Factions)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -220,6 +233,7 @@ namespace Mutagen.Bethesda.Fallout3
                 hash.Add(this.MenuIcons);
                 hash.Add(this.Globals);
                 hash.Add(this.Classes);
+                hash.Add(this.Factions);
                 return hash.ToHashCode();
             }
 
@@ -258,6 +272,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (!eval(this.Classes.Overall)) return false;
                     if (this.Classes.Specific != null && !this.Classes.Specific.All(eval)) return false;
                 }
+                if (Factions != null)
+                {
+                    if (!eval(this.Factions.Overall)) return false;
+                    if (this.Factions.Specific != null && !this.Factions.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -295,6 +314,11 @@ namespace Mutagen.Bethesda.Fallout3
                     if (eval(this.Classes.Overall)) return true;
                     if (this.Classes.Specific != null && this.Classes.Specific.Any(eval)) return true;
                 }
+                if (Factions != null)
+                {
+                    if (eval(this.Factions.Overall)) return true;
+                    if (this.Factions.Specific != null && this.Factions.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -315,6 +339,7 @@ namespace Mutagen.Bethesda.Fallout3
                 obj.MenuIcons = this.MenuIcons == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.MenuIcons.Overall), this.MenuIcons.Specific?.Translate(eval));
                 obj.Globals = this.Globals == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Globals.Overall), this.Globals.Specific?.Translate(eval));
                 obj.Classes = this.Classes == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Classes.Overall), this.Classes.Specific?.Translate(eval));
+                obj.Factions = this.Factions == null ? null : new MaskItem<R, Fallout3Group.Mask<R>?>(eval(this.Factions.Overall), this.Factions.Specific?.Translate(eval));
             }
             #endregion
 
@@ -357,6 +382,10 @@ namespace Mutagen.Bethesda.Fallout3
                     {
                         Classes?.Print(sb);
                     }
+                    if (printMask?.Factions?.Overall ?? true)
+                    {
+                        Factions?.Print(sb);
+                    }
                 }
             }
             #endregion
@@ -387,6 +416,7 @@ namespace Mutagen.Bethesda.Fallout3
             public MaskItem<Exception?, Fallout3Group.ErrorMask<MenuIcon.ErrorMask>?>? MenuIcons;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Global.ErrorMask>?>? Globals;
             public MaskItem<Exception?, Fallout3Group.ErrorMask<Class.ErrorMask>?>? Classes;
+            public MaskItem<Exception?, Fallout3Group.ErrorMask<Faction.ErrorMask>?>? Factions;
             #endregion
 
             #region IErrorMask
@@ -407,6 +437,8 @@ namespace Mutagen.Bethesda.Fallout3
                         return Globals;
                     case Fallout3Mod_FieldIndex.Classes:
                         return Classes;
+                    case Fallout3Mod_FieldIndex.Factions:
+                        return Factions;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -434,6 +466,9 @@ namespace Mutagen.Bethesda.Fallout3
                         break;
                     case Fallout3Mod_FieldIndex.Classes:
                         this.Classes = new MaskItem<Exception?, Fallout3Group.ErrorMask<Class.ErrorMask>?>(ex, null);
+                        break;
+                    case Fallout3Mod_FieldIndex.Factions:
+                        this.Factions = new MaskItem<Exception?, Fallout3Group.ErrorMask<Faction.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -463,6 +498,9 @@ namespace Mutagen.Bethesda.Fallout3
                     case Fallout3Mod_FieldIndex.Classes:
                         this.Classes = (MaskItem<Exception?, Fallout3Group.ErrorMask<Class.ErrorMask>?>?)obj;
                         break;
+                    case Fallout3Mod_FieldIndex.Factions:
+                        this.Factions = (MaskItem<Exception?, Fallout3Group.ErrorMask<Faction.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -477,6 +515,7 @@ namespace Mutagen.Bethesda.Fallout3
                 if (MenuIcons != null) return true;
                 if (Globals != null) return true;
                 if (Classes != null) return true;
+                if (Factions != null) return true;
                 return false;
             }
             #endregion
@@ -508,6 +547,7 @@ namespace Mutagen.Bethesda.Fallout3
                 MenuIcons?.Print(sb);
                 Globals?.Print(sb);
                 Classes?.Print(sb);
+                Factions?.Print(sb);
             }
             #endregion
 
@@ -522,6 +562,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.MenuIcons = this.MenuIcons.Combine(rhs.MenuIcons, (l, r) => l.Combine(r));
                 ret.Globals = this.Globals.Combine(rhs.Globals, (l, r) => l.Combine(r));
                 ret.Classes = this.Classes.Combine(rhs.Classes, (l, r) => l.Combine(r));
+                ret.Factions = this.Factions.Combine(rhs.Factions, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -551,6 +592,7 @@ namespace Mutagen.Bethesda.Fallout3
             public Fallout3Group.TranslationMask<MenuIcon.TranslationMask>? MenuIcons;
             public Fallout3Group.TranslationMask<Global.TranslationMask>? Globals;
             public Fallout3Group.TranslationMask<Class.TranslationMask>? Classes;
+            public Fallout3Group.TranslationMask<Faction.TranslationMask>? Factions;
             #endregion
 
             #region Ctors
@@ -581,6 +623,7 @@ namespace Mutagen.Bethesda.Fallout3
                 ret.Add((MenuIcons != null ? MenuIcons.OnOverall : DefaultOn, MenuIcons?.GetCrystal()));
                 ret.Add((Globals != null ? Globals.OnOverall : DefaultOn, Globals?.GetCrystal()));
                 ret.Add((Classes != null ? Classes.OnOverall : DefaultOn, Classes?.GetCrystal()));
+                ret.Add((Factions != null ? Factions.OnOverall : DefaultOn, Factions?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -642,6 +685,7 @@ namespace Mutagen.Bethesda.Fallout3
             _MenuIcons_Object = new Fallout3Group<MenuIcon>(this);
             _Globals_Object = new Fallout3Group<Global>(this);
             _Classes_Object = new Fallout3Group<Class>(this);
+            _Factions_Object = new Fallout3Group<Faction>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -667,6 +711,10 @@ namespace Mutagen.Bethesda.Fallout3
             if (mask?.Classes ?? true)
             {
                 this.Classes.RecordCache.Set(rhsMod.Classes.RecordCache.Items);
+            }
+            if (mask?.Factions ?? true)
+            {
+                this.Factions.RecordCache.Set(rhsMod.Factions.RecordCache.Items);
             }
         }
 
@@ -923,6 +971,7 @@ namespace Mutagen.Bethesda.Fallout3
         IAssetLinkContainer,
         IContextMod<IFallout3Mod, IFallout3ModGetter>,
         IFallout3ModGetter,
+        IFormLinkContainer,
         ILoquiObjectSetter<IFallout3Mod>,
         IMajorRecordEnumerable,
         IMod
@@ -933,12 +982,14 @@ namespace Mutagen.Bethesda.Fallout3
         new Fallout3Group<MenuIcon> MenuIcons { get; }
         new Fallout3Group<Global> Globals { get; }
         new Fallout3Group<Class> Classes { get; }
+        new Fallout3Group<Faction> Factions { get; }
     }
 
     public partial interface IFallout3ModGetter :
         ILoquiObject,
         IAssetLinkContainerGetter,
         IContextGetterMod<IFallout3Mod, IFallout3ModGetter>,
+        IFormLinkContainerGetter,
         ILoquiObject<IFallout3ModGetter>,
         IMajorRecordContextEnumerable<IFallout3Mod, IFallout3ModGetter>,
         IMajorRecordGetterEnumerable,
@@ -957,6 +1008,7 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3GroupGetter<IMenuIconGetter> MenuIcons { get; }
         IFallout3GroupGetter<IGlobalGetter> Globals { get; }
         IFallout3GroupGetter<IClassGetter> Classes { get; }
+        IFallout3GroupGetter<IFactionGetter> Factions { get; }
 
         #region Mutagen
         Fallout3Release Fallout3Release { get; }
@@ -1513,6 +1565,7 @@ namespace Mutagen.Bethesda.Fallout3
         MenuIcons = 3,
         Globals = 4,
         Classes = 5,
+        Factions = 6,
     }
     #endregion
 
@@ -1523,9 +1576,9 @@ namespace Mutagen.Bethesda.Fallout3
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout3.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 6;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(Fallout3Mod.Mask<>);
 
@@ -1597,11 +1650,13 @@ namespace Mutagen.Bethesda.Fallout3
             item.MenuIcons.Clear();
             item.Globals.Clear();
             item.Classes.Clear();
+            item.Factions.Clear();
         }
         
         #region Mutagen
         public void RemapLinks(IFallout3Mod obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.Factions.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecord> EnumerateMajorRecords(IFallout3Mod obj)
@@ -1641,6 +1696,7 @@ namespace Mutagen.Bethesda.Fallout3
             obj.MenuIcons.Remove(keys);
             obj.Globals.Remove(keys);
             obj.Classes.Remove(keys);
+            obj.Factions.Remove(keys);
         }
         
         public void Remove(
@@ -1727,6 +1783,18 @@ namespace Mutagen.Bethesda.Fallout3
                     obj.Classes.Remove(
                         type: type,
                         keys: keys);
+                    break;
+                case "Faction":
+                case "IFactionGetter":
+                case "IFaction":
+                case "IFactionInternal":
+                    obj.Factions.Remove(
+                        type: type,
+                        keys: keys);
+                    break;
+                case "IRelatable":
+                case "IRelatableGetter":
+                    Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 default:
                     if (throwIfUnknown)
@@ -1816,6 +1884,7 @@ namespace Mutagen.Bethesda.Fallout3
             ret.MenuIcons = MaskItemExt.Factory(item.MenuIcons.GetEqualsMask(rhs.MenuIcons, include), include);
             ret.Globals = MaskItemExt.Factory(item.Globals.GetEqualsMask(rhs.Globals, include), include);
             ret.Classes = MaskItemExt.Factory(item.Classes.GetEqualsMask(rhs.Classes, include), include);
+            ret.Factions = MaskItemExt.Factory(item.Factions.GetEqualsMask(rhs.Factions, include), include);
         }
         
         public string Print(
@@ -1884,6 +1953,10 @@ namespace Mutagen.Bethesda.Fallout3
             {
                 item.Classes?.Print(sb, "Classes");
             }
+            if (printMask?.Factions?.Overall ?? true)
+            {
+                item.Factions?.Print(sb, "Factions");
+            }
         }
         
         #region Equals and Hash
@@ -1941,6 +2014,14 @@ namespace Mutagen.Bethesda.Fallout3
                 }
                 else if (!isClassesEqual) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Factions) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Factions, rhs.Factions, out var lhsFactions, out var rhsFactions, out var isFactionsEqual))
+                {
+                    if (!object.Equals(lhsFactions, rhsFactions)) return false;
+                }
+                else if (!isFactionsEqual) return false;
+            }
             return true;
         }
         
@@ -1953,6 +2034,7 @@ namespace Mutagen.Bethesda.Fallout3
             hash.Add(item.MenuIcons);
             hash.Add(item.Globals);
             hash.Add(item.Classes);
+            hash.Add(item.Factions);
             return hash.ToHashCode();
         }
         
@@ -1996,6 +2078,11 @@ namespace Mutagen.Bethesda.Fallout3
                 case "IClass":
                 case "IClassInternal":
                     return obj.Classes;
+                case "Faction":
+                case "IFactionGetter":
+                case "IFaction":
+                case "IFactionInternal":
+                    return obj.Factions;
                 default:
                     return null;
             }
@@ -2013,13 +2100,14 @@ namespace Mutagen.Bethesda.Fallout3
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[5];
+            Stream[] outputStreams = new Stream[6];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, 0, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.TextureSets, 1, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.MenuIcons, 2, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Globals, 3, outputStreams, writer.MetaData, param.Parallel));
             toDo.Add(() => WriteGroupParallel(item.Classes, 4, outputStreams, writer.MetaData, param.Parallel));
+            toDo.Add(() => WriteGroupParallel(item.Factions, 5, outputStreams, writer.MetaData, param.Parallel));
             Parallel.Invoke(param.Parallel.ParallelOptions, toDo.ToArray());
             PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.WhereNotNull(),
@@ -2070,6 +2158,7 @@ namespace Mutagen.Bethesda.Fallout3
             count += item.MenuIcons.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Globals.RecordCache.Count > 0 ? 1 : default(uint);
             count += item.Classes.RecordCache.Count > 0 ? 1 : default(uint);
+            count += item.Factions.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount(item, (customCount) => count += customCount);
             return count;
         }
@@ -2078,6 +2167,10 @@ namespace Mutagen.Bethesda.Fallout3
         
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IFallout3ModGetter obj)
         {
+            foreach (var item in obj.Factions.EnumerateFormLinks())
+            {
+                yield return item;
+            }
             yield break;
         }
         
@@ -2100,6 +2193,10 @@ namespace Mutagen.Bethesda.Fallout3
                 yield return item;
             }
             foreach (var item in obj.Classes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Factions.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -2183,6 +2280,15 @@ namespace Mutagen.Bethesda.Fallout3
                         yield return item;
                     }
                     yield break;
+                case "Faction":
+                case "IFactionGetter":
+                case "IFaction":
+                case "IFactionInternal":
+                    foreach (var item in obj.Factions.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 default:
                     if (InterfaceEnumerationHelper.TryEnumerateInterfaceRecordsFor(GameCategory.Fallout3, obj, type, out var linkInterfaces))
                     {
@@ -2249,6 +2355,15 @@ namespace Mutagen.Bethesda.Fallout3
                 modKey: obj.ModKey,
                 group: (m) => m.Classes,
                 groupGetter: (m) => m.Classes))
+            {
+                yield return item;
+            }
+            foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Faction, IFactionGetter>(
+                srcGroup: obj.Factions,
+                type: typeof(IFactionGetter),
+                modKey: obj.ModKey,
+                group: (m) => m.Factions,
+                groupGetter: (m) => m.Factions))
             {
                 yield return item;
             }
@@ -2349,6 +2464,20 @@ namespace Mutagen.Bethesda.Fallout3
                         modKey: obj.ModKey,
                         group: (m) => m.Classes,
                         groupGetter: (m) => m.Classes))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Faction":
+                case "IFactionGetter":
+                case "IFaction":
+                case "IFactionInternal":
+                    foreach (var item in InterfaceEnumerationHelper.EnumerateGroupContexts<IFallout3Mod, IFallout3ModGetter, Faction, IFactionGetter>(
+                        srcGroup: obj.Factions,
+                        type: type,
+                        modKey: obj.ModKey,
+                        group: (m) => m.Factions,
+                        groupGetter: (m) => m.Factions))
                     {
                         yield return item;
                     }
@@ -2526,6 +2655,26 @@ namespace Mutagen.Bethesda.Fallout3
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Fallout3Mod_FieldIndex.Factions) ?? true))
+            {
+                errorMask?.PushIndex((int)Fallout3Mod_FieldIndex.Factions);
+                try
+                {
+                    item.Factions.DeepCopyIn(
+                        rhs: rhs.Factions,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)Fallout3Mod_FieldIndex.Factions));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             DeepCopyInCustom(
                 item: item,
                 rhs: rhs,
@@ -2634,6 +2783,7 @@ namespace Mutagen.Bethesda.Fallout3
         public bool MenuIcons;
         public bool Globals;
         public bool Classes;
+        public bool Factions;
         public GroupMask()
         {
         }
@@ -2644,6 +2794,7 @@ namespace Mutagen.Bethesda.Fallout3
             MenuIcons = defaultValue;
             Globals = defaultValue;
             Classes = defaultValue;
+            Factions = defaultValue;
         }
     }
 
@@ -2757,6 +2908,17 @@ namespace Mutagen.Bethesda.Fallout3
                 {
                     ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)ClassesItem).BinaryWriteTranslator).Write<IClassGetter>(
                         item: ClassesItem,
+                        writer: writer,
+                        translationParams: translationParams);
+                }
+            }
+            if (importMask?.Factions ?? true)
+            {
+                var FactionsItem = item.Factions;
+                if (FactionsItem.RecordCache.Count > 0)
+                {
+                    ((Fallout3GroupBinaryWriteTranslation)((IBinaryItem)FactionsItem).BinaryWriteTranslator).Write<IFactionGetter>(
+                        item: FactionsItem,
                         writer: writer,
                         translationParams: translationParams);
                 }
@@ -2900,6 +3062,20 @@ namespace Mutagen.Bethesda.Fallout3
                         frame.Position += contentLength;
                     }
                     return (int)Fallout3Mod_FieldIndex.Classes;
+                }
+                case RecordTypeInts.FACT:
+                {
+                    if (importMask?.Factions ?? true)
+                    {
+                        item.Factions.CopyInFromBinary(
+                            frame: frame,
+                            translationParams: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)Fallout3Mod_FieldIndex.Factions;
                 }
                 default:
                     frame.Position += contentLength;
@@ -3090,6 +3266,11 @@ namespace Mutagen.Bethesda.Fallout3
         private IFallout3GroupGetter<IClassGetter>? _Classes => _ClassesLocations != null ? Fallout3GroupBinaryOverlay<IClassGetter>.Fallout3GroupFactory(_stream, _ClassesLocations, _package) : default;
         public IFallout3GroupGetter<IClassGetter> Classes => _Classes ?? new Fallout3Group<Class>(this);
         #endregion
+        #region Factions
+        private List<RangeInt64>? _FactionsLocations;
+        private IFallout3GroupGetter<IFactionGetter>? _Factions => _FactionsLocations != null ? Fallout3GroupBinaryOverlay<IFactionGetter>.Fallout3GroupFactory(_stream, _FactionsLocations, _package) : default;
+        public IFallout3GroupGetter<IFactionGetter> Factions => _Factions ?? new Fallout3Group<Faction>(this);
+        #endregion
         protected Fallout3ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -3193,6 +3374,12 @@ namespace Mutagen.Bethesda.Fallout3
                     _ClassesLocations ??= new();
                     _ClassesLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
                     return (int)Fallout3Mod_FieldIndex.Classes;
+                }
+                case RecordTypeInts.FACT:
+                {
+                    _FactionsLocations ??= new();
+                    _FactionsLocations.Add(new RangeInt64((stream.Position - offset), finalPos - offset));
+                    return (int)Fallout3Mod_FieldIndex.Factions;
                 }
                 default:
                     return default(int?);

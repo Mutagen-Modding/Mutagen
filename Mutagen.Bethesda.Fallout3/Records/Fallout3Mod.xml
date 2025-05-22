@@ -8,6 +8,7 @@
       <Group name="MenuIcons" refName="MenuIcon" />
       <Group name="Globals" refName="Global" />
       <Group name="Classes" refName="Class" />
+      <Group name="Factions" refName="Faction" />
     </Fields>
     <GameReleaseOptions>Fallout3</GameReleaseOptions>
     <GameReleaseOptions>FalloutNV</GameReleaseOptions>

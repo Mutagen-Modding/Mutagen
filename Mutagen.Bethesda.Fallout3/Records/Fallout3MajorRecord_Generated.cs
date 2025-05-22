@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Fallout3
 {
     #region Class
     /// <summary>
-    /// Implemented by: [Cell, Class, GameSetting, Global, MenuIcon, Npc, PlacedObject, Race, TextureSet]
+    /// Implemented by: [Cell, Class, Faction, GameSetting, Global, MenuIcon, Npc, PlacedObject, Race, TextureSet]
     /// </summary>
     public abstract partial class Fallout3MajorRecord :
         MajorRecord,
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Fallout3
 
     #region Interface
     /// <summary>
-    /// Implemented by: [Cell, Class, GameSetting, Global, MenuIcon, Npc, PlacedObject, Race, TextureSet]
+    /// Implemented by: [Cell, Class, Faction, GameSetting, Global, MenuIcon, Npc, PlacedObject, Race, TextureSet]
     /// </summary>
     public partial interface IFallout3MajorRecord :
         IAssetLinkContainer,
@@ -557,7 +557,7 @@ namespace Mutagen.Bethesda.Fallout3
     }
 
     /// <summary>
-    /// Implemented by: [Cell, Class, GameSetting, Global, MenuIcon, Npc, PlacedObject, Race, TextureSet]
+    /// Implemented by: [Cell, Class, Faction, GameSetting, Global, MenuIcon, Npc, PlacedObject, Race, TextureSet]
     /// </summary>
     public partial interface IFallout3MajorRecordGetter :
         IMajorRecordGetter,

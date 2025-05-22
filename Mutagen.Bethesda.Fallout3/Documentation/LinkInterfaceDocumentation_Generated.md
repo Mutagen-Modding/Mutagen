@@ -7,6 +7,13 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ## Interfaces to Concrete Classes
 ### IPlaced
 - PlacedObject
+### IRelatable
+- Faction
+- Race
 ## Concrete Classes to Interfaces
+### Faction
+- IRelatable
 ### PlacedObject
 - IPlaced
+### Race
+- IRelatable

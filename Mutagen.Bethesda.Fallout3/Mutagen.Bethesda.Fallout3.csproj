@@ -20,6 +20,7 @@
     <Compile Include="Enum\ActorValue.cs" />
     <Compile Include="Enum\Attribute.cs" />
     <Compile Include="Enum\ClassService.cs" />
+    <Compile Include="Enum\CombatReaction.cs" />
     <Compile Include="Enum\GroupTypeEnum.cs" />
     <Compile Include="Enum\Skill.cs" />
     <Compile Include="Interfaces\Aspect\IHasIcons.cs">
@@ -74,6 +75,9 @@
     </Compile>
     <Compile Include="Records\MajorRecords\Class.cs">
       <DependentUpon>Class.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Faction.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\MajorRecords\GameSetting.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
@@ -186,5 +190,15 @@
     <Compile Include="Records\MajorRecords\Class_Generated.cs">
       <DependentUpon>Class.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\Relation_Generated.cs">
+      <DependentUpon>Relation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Faction_Generated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MajorRecords\Rank_Generated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\IRelatable_Generated.cs" />
   </ItemGroup>
 </Project>

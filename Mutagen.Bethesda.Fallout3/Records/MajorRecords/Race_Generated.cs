@@ -414,7 +414,8 @@ namespace Mutagen.Bethesda.Fallout3
     public partial interface IRace :
         IFallout3MajorRecordInternal,
         ILoquiObjectSetter<IRaceInternal>,
-        IRaceGetter
+        IRaceGetter,
+        IRelatable
     {
     }
 
@@ -430,7 +431,8 @@ namespace Mutagen.Bethesda.Fallout3
         IFallout3MajorRecordGetter,
         IBinaryItem,
         ILoquiObject<IRaceGetter>,
-        IMapsToGetter<IRaceGetter>
+        IMapsToGetter<IRaceGetter>,
+        IRelatableGetter
     {
         static new ILoquiRegistration StaticRegistration => Race_Registration.Instance;
 

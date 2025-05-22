@@ -30,11 +30,22 @@ namespace Mutagen.Bethesda.Fallout3
                     Setter: typeof(IHasIcons),
                     Getter: typeof(IHasIconsGetter)));
             dict[typeof(IHasIconsGetter)] = dict[typeof(IHasIcons)] with { Setter = false };
+            dict[typeof(INamed)] = new InterfaceMappingResult(
+                true,
+                new ILoquiRegistration[]
+                {
+                    Faction_Registration.Instance,
+                },
+                new InterfaceMappingTypes(
+                    Setter: typeof(INamed),
+                    Getter: typeof(INamedGetter)));
+            dict[typeof(INamedGetter)] = dict[typeof(INamed)] with { Setter = false };
             dict[typeof(INamedRequired)] = new InterfaceMappingResult(
                 true,
                 new ILoquiRegistration[]
                 {
                     Class_Registration.Instance,
+                    Faction_Registration.Instance,
                 },
                 new InterfaceMappingTypes(
                     Setter: typeof(INamedRequired),

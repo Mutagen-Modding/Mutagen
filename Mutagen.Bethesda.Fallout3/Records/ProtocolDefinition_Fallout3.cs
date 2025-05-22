@@ -14,6 +14,7 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             CellSubBlock_Registration.Instance,
             Class_Registration.Instance,
             Decal_Registration.Instance,
+            Faction_Registration.Instance,
             Fallout3Group_Registration.Instance,
             Fallout3ListGroup_Registration.Instance,
             Fallout3MajorRecord_Registration.Instance,
@@ -35,6 +36,8 @@ internal class ProtocolDefinition_Fallout3 : IProtocolRegistration
             ObjectBounds_Registration.Instance,
             PlacedObject_Registration.Instance,
             Race_Registration.Instance,
+            Rank_Registration.Instance,
+            Relation_Registration.Instance,
             TextureSet_Registration.Instance
         );
     }

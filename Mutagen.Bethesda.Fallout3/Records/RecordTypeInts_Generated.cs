@@ -12,6 +12,7 @@ public partial class RecordTypeInts
     public const int DNAM = 0x4D414E44;
     public const int DODT = 0x54444F44;
     public const int EDID = 0x44494445;
+    public const int FACT = 0x54434146;
     public const int FLTV = 0x56544C46;
     public const int FNAM = 0x4D414E46;
     public const int FULL = 0x4C4C5546;
@@ -20,9 +21,11 @@ public partial class RecordTypeInts
     public const int GRUP = 0x50555247;
     public const int HEDR = 0x52444548;
     public const int ICON = 0x4E4F4349;
+    public const int INAM = 0x4D414E49;
     public const int MAST = 0x5453414D;
     public const int MICN = 0x4E43494D;
     public const int MICO = 0x4F43494D;
+    public const int MNAM = 0x4D414E4D;
     public const int NAME = 0x454D414E;
     public const int NPC_ = 0x5F43504E;
     public const int OBND = 0x444E424F;
@@ -39,5 +42,6 @@ public partial class RecordTypeInts
     public const int TX04 = 0x34305854;
     public const int TX05 = 0x35305854;
     public const int TXST = 0x54535854;
+    public const int XNAM = 0x4D414E58;
     public const int XXXX = 0x58585858;
 }
