@@ -31,7 +31,7 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
     internal IFileSystem? FileSystem { get; init; }
     internal Func<Type, object?>? Resolver { get; init; }
 
-    private ILoadOrderListingGetter[]? HardcodedListings { get; init; }
+    private Func<GameEnvironmentBuilderProcessorParameters, ILoadOrderListingGetter[]>? HardcodedListings { get; init; }
 
     private ImmutableList<Func<GameEnvironmentBuilderProcessorParameters, IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>> LoadOrderListingProcessors { get; init; }
 
@@ -99,7 +99,7 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
     {
         return this with
         {
-            HardcodedListings = listings.Select(x => (ILoadOrderListingGetter)x).ToArray(),
+            HardcodedListings = _ => listings.Select(x => (ILoadOrderListingGetter)x).ToArray(),
             LoadOrderListingProcessors = []
         };
     }
@@ -220,11 +220,13 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
             },
             CccListingsPathProvider);
 
+        var param = new GameEnvironmentBuilderProcessorParameters();
+
         ILoadOrderListingGetter[] listingsToUse;
 
         if (HardcodedListings != null)
         {
-            listingsToUse = HardcodedListings;
+            listingsToUse = HardcodedListings(param);
         }
         else
         {
@@ -269,8 +271,6 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
             
             listingsToUse = listingsProv.Get().ToArray();
         }
-
-        var param = new GameEnvironmentBuilderProcessorParameters();
 
         IEnumerable<ILoadOrderListingGetter> filteredListings = listingsToUse;
         foreach (var filter in LoadOrderListingProcessors)
@@ -350,7 +350,7 @@ public sealed record GameEnvironmentBuilder
 
     private ImmutableList<Func<GameEnvironmentBuilderProcessorParameters, IEnumerable<IModListingGetter<IModGetter>>, IEnumerable<IModListingGetter<IModGetter>>>> ModListingProcessors { get; init; }
 
-    private ILoadOrderListingGetter[]? HardcodedListings { get; init; }
+    private Func<GameEnvironmentBuilderProcessorParameters, ILoadOrderListingGetter[]>? HardcodedListings { get; init; }
 
     private ImmutableList<IMod> MutableMods { get; init; }
 
@@ -414,7 +414,7 @@ public sealed record GameEnvironmentBuilder
     {
         return this with
         {
-            HardcodedListings = listings.Select(x => (ILoadOrderListingGetter)x).ToArray(),
+            HardcodedListings = _ => listings.Select(x => (ILoadOrderListingGetter)x).ToArray(),
             LoadOrderListingProcessors = []
         };
     }
@@ -524,12 +524,14 @@ public sealed record GameEnvironmentBuilder
                         GameLocatorLookupCache.Instance));
             },
             CccListingsPathProvider);
+        
+        var param = new GameEnvironmentBuilderProcessorParameters();
 
         ILoadOrderListingGetter[] listingsToUse;
 
         if (HardcodedListings != null)
         {
-            listingsToUse = HardcodedListings;
+            listingsToUse = HardcodedListings(param);
         }
         else
         {
@@ -574,8 +576,6 @@ public sealed record GameEnvironmentBuilder
             
             listingsToUse = listingsProv.Get().ToArray();
         }
-        
-        var param = new GameEnvironmentBuilderProcessorParameters();
 
         IEnumerable<ILoadOrderListingGetter> filteredListings = listingsToUse;
         foreach (var filter in LoadOrderListingProcessors)
