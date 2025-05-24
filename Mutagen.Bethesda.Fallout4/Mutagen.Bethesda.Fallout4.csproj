@@ -5,12 +5,12 @@
     <Description>A C# library for manipulating, creating, and analyzing Fallout4 mods</Description>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <IsPackable>true</IsPackable>
-      <DebugType>portable</DebugType>
-      <DebugSymbols>true</DebugSymbols>
-      <PublishRepositoryUrl>true</PublishRepositoryUrl>
-      <EmbedUntrackedSources>true</EmbedUntrackedSources>
-      <IncludeSymbols>true</IncludeSymbols>
-      <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
@@ -40,6 +40,7 @@
     <Compile Include="Enums\TimeOfDay.cs" />
     <Compile Include="Extensions\GameSettingsGroupMixin.cs" />
     <Compile Include="Extensions\GlobalGroupMixin.cs" />
+    <Compile Include="Extensions\LocationExt.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
     <Compile Include="Interfaces\Aspect\IEnchantable.cs" />
     <Compile Include="Interfaces\Aspect\IHarvestable.cs">
@@ -2217,19 +2218,7 @@
     <Compile Include="Records\Major Records\ImpactData_Generated.cs">
       <DependentUpon>ImpactDataSet.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\LocationReference_Generated.cs">
-      <DependentUpon>Location.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\LocationCellUnique_Generated.cs">
-      <DependentUpon>Location.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\LocationCellStaticReference_Generated.cs">
-      <DependentUpon>Location.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\LocationCoordinate_Generated.cs">
-      <DependentUpon>Location.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\LocationCellEnablePoint_Generated.cs">
       <DependentUpon>Location.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IComplexLocation_Generated.cs" />
@@ -2476,6 +2465,18 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\RagdollData_Generated.cs">
       <DependentUpon>RagdollData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PersistentActorReference_Generated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\UniqueActorReference_Generated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocationRefTypeReference_Generated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\EnableParentReference_Generated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
