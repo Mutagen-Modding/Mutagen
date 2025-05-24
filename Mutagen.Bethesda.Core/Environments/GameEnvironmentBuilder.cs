@@ -97,7 +97,8 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
     {
         return this with
         {
-            HardcodedListings = listings.Select(x => (ILoadOrderListingGetter)x).ToArray()
+            HardcodedListings = listings.Select(x => (ILoadOrderListingGetter)x).ToArray(),
+            LoadOrderListingProcessors = []
         };
     }
 
@@ -409,7 +410,8 @@ public sealed record GameEnvironmentBuilder
     {
         return this with
         {
-            HardcodedListings = listings.Select(x => (ILoadOrderListingGetter)x).ToArray()
+            HardcodedListings = listings.Select(x => (ILoadOrderListingGetter)x).ToArray(),
+            LoadOrderListingProcessors = []
         };
     }
 
