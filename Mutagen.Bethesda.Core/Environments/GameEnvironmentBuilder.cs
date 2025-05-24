@@ -17,6 +17,8 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Environments;
 
+internal record GameEnvironmentBuilderProcessorParameters();
+
 public sealed record GameEnvironmentBuilder<TMod, TModGetter>
     where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
     where TModGetter : class, IContextGetterMod<TMod, TModGetter>
@@ -31,17 +33,17 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
 
     private ILoadOrderListingGetter[]? HardcodedListings { get; init; }
 
-    private ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>> LoadOrderListingProcessors { get; init; }
+    private ImmutableList<Func<GameEnvironmentBuilderProcessorParameters, IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>> LoadOrderListingProcessors { get; init; }
 
-    private ImmutableList<Func<IEnumerable<IModListingGetter<TModGetter>>, IEnumerable<IModListingGetter<TModGetter>>>> ModListingProcessors { get; init; }
+    private ImmutableList<Func<GameEnvironmentBuilderProcessorParameters, IEnumerable<IModListingGetter<TModGetter>>, IEnumerable<IModListingGetter<TModGetter>>>> ModListingProcessors { get; init; }
 
     private ImmutableList<TMod> MutableMods { get; init; }
 
     private GameEnvironmentBuilder(GameRelease release)
     {
         Release = new GameReleaseInjection(release);
-        LoadOrderListingProcessors = ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>>.Empty;
-        ModListingProcessors = ImmutableList<Func<IEnumerable<IModListingGetter<TModGetter>>, IEnumerable<IModListingGetter<TModGetter>>>>.Empty;
+        LoadOrderListingProcessors = [];
+        ModListingProcessors = [];
         MutableMods = ImmutableList<TMod>.Empty;
     }
 
@@ -57,8 +59,8 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
         ListingsProvider = listingsProvider;
         PluginListingsPathContext = pluginListingsPathContext;
         CccListingsPathProvider = cccListingsPathProvider;
-        LoadOrderListingProcessors = ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>>.Empty;
-        ModListingProcessors = ImmutableList<Func<IEnumerable<IModListingGetter<TModGetter>>, IEnumerable<IModListingGetter<TModGetter>>>>.Empty;
+        LoadOrderListingProcessors = [];
+        ModListingProcessors = [];
         MutableMods = ImmutableList<TMod>.Empty;
     }
 
@@ -74,7 +76,7 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
     /// <returns>New builder with the new rules</returns>
     public GameEnvironmentBuilder<TMod, TModGetter> TransformLoadOrderListings(Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>> transformer)
     {
-        return this with { LoadOrderListingProcessors = LoadOrderListingProcessors.Add(transformer) };
+        return this with { LoadOrderListingProcessors = LoadOrderListingProcessors.Add((_, l) => transformer(l)) };
     }
 
     /// <summary>
@@ -119,7 +121,7 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
     /// <returns>New builder with the new rules</returns>
     public GameEnvironmentBuilder<TMod, TModGetter> TransformModListings(Func<IEnumerable<IModListingGetter<TModGetter>>, IEnumerable<IModListingGetter<TModGetter>>> transformer)
     {
-        return this with { ModListingProcessors = ModListingProcessors.Add(transformer) };
+        return this with { ModListingProcessors = ModListingProcessors.Add((_, l) => transformer(l)) };
     }
 
     /// <summary>
@@ -268,10 +270,12 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
             listingsToUse = listingsProv.Get().ToArray();
         }
 
+        var param = new GameEnvironmentBuilderProcessorParameters();
+
         IEnumerable<ILoadOrderListingGetter> filteredListings = listingsToUse;
         foreach (var filter in LoadOrderListingProcessors)
         {
-            filteredListings = filter(filteredListings);
+            filteredListings = filter(param, filteredListings);
         }
             
         listingsToUse = filteredListings.ToArray();
@@ -292,7 +296,7 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
         ILoadOrderGetter<IModListingGetter<TModGetter>> lo = loGetter.Import();
         foreach (var filter in ModListingProcessors)
         {
-            lo = filter(lo.ListedOrder).ToLoadOrder();
+            lo = filter(param, lo.ListedOrder).ToLoadOrder();
         }
 
         var linkCache = lo.ToMutableLinkCache(MutableMods.ToArray());
@@ -342,9 +346,9 @@ public sealed record GameEnvironmentBuilder
     internal IFileSystem? FileSystem { get; init; }
     internal Func<Type, object?>? Resolver { get; init; }
 
-    private ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>> LoadOrderListingProcessors { get; init; }
+    private ImmutableList<Func<GameEnvironmentBuilderProcessorParameters, IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>> LoadOrderListingProcessors { get; init; }
 
-    private ImmutableList<Func<IEnumerable<IModListingGetter<IModGetter>>, IEnumerable<IModListingGetter<IModGetter>>>> ModListingProcessors { get; init; }
+    private ImmutableList<Func<GameEnvironmentBuilderProcessorParameters, IEnumerable<IModListingGetter<IModGetter>>, IEnumerable<IModListingGetter<IModGetter>>>> ModListingProcessors { get; init; }
 
     private ILoadOrderListingGetter[]? HardcodedListings { get; init; }
 
@@ -353,8 +357,8 @@ public sealed record GameEnvironmentBuilder
     private GameEnvironmentBuilder(GameRelease release)
     {
         Release = new GameReleaseInjection(release);
-        LoadOrderListingProcessors = ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>>.Empty;
-        ModListingProcessors = ImmutableList<Func<IEnumerable<IModListingGetter<IModGetter>>, IEnumerable<IModListingGetter<IModGetter>>>>.Empty;
+        LoadOrderListingProcessors = [];
+        ModListingProcessors = [];
         MutableMods = ImmutableList<IMod>.Empty;
     }
 
@@ -370,8 +374,8 @@ public sealed record GameEnvironmentBuilder
         ListingsProvider = listingsProvider;
         PluginListingsPathContext = pluginListingsPathContext;
         CccListingsPathProvider = cccListingsPathProvider;
-        LoadOrderListingProcessors = ImmutableList<Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>>>.Empty;
-        ModListingProcessors = ImmutableList<Func<IEnumerable<IModListingGetter<IModGetter>>, IEnumerable<IModListingGetter<IModGetter>>>>.Empty;
+        LoadOrderListingProcessors = [];
+        ModListingProcessors = [];
         MutableMods = ImmutableList<IMod>.Empty;
     }
 
@@ -387,7 +391,7 @@ public sealed record GameEnvironmentBuilder
     /// <returns>New builder with the new rules</returns>
     public GameEnvironmentBuilder TransformLoadOrderListings(Func<IEnumerable<ILoadOrderListingGetter>, IEnumerable<ILoadOrderListingGetter>> transformer)
     {
-        return this with { LoadOrderListingProcessors = LoadOrderListingProcessors.Add(transformer) };
+        return this with { LoadOrderListingProcessors = LoadOrderListingProcessors.Add((_, l) => transformer(l)) };
     }
 
     /// <summary>
@@ -422,7 +426,7 @@ public sealed record GameEnvironmentBuilder
     /// <returns>New builder with the new rules</returns>
     public GameEnvironmentBuilder TransformModListings(Func<IEnumerable<IModListingGetter<IModGetter>>, IEnumerable<IModListingGetter<IModGetter>>> transformer)
     {
-        return this with { ModListingProcessors = ModListingProcessors.Add(transformer) };
+        return this with { ModListingProcessors = ModListingProcessors.Add((_, l) => transformer(l)) };
     }
 
     /// <summary>
@@ -570,11 +574,13 @@ public sealed record GameEnvironmentBuilder
             
             listingsToUse = listingsProv.Get().ToArray();
         }
+        
+        var param = new GameEnvironmentBuilderProcessorParameters();
 
         IEnumerable<ILoadOrderListingGetter> filteredListings = listingsToUse;
         foreach (var filter in LoadOrderListingProcessors)
         {
-            filteredListings = filter(filteredListings);
+            filteredListings = filter(param, filteredListings);
         }
             
         listingsToUse = filteredListings.ToArray();
@@ -598,7 +604,7 @@ public sealed record GameEnvironmentBuilder
         });
         foreach (var filter in ModListingProcessors)
         {
-            lo = filter(lo.ListedOrder).ToLoadOrder();
+            lo = filter(param, lo.ListedOrder).ToLoadOrder();
         }
 
         var linkCache = lo.ToUntypedMutableLinkCache(Release.Release.ToCategory(), MutableMods.ToArray());
