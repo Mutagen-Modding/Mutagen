@@ -17,7 +17,10 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Environments;
 
-internal record GameEnvironmentBuilderProcessorParameters();
+internal record GameEnvironmentBuilderProcessorParameters(
+    IFileSystem FileSystem,
+    IDataDirectoryProvider DataDirectoryProvider,
+    IGameReleaseContext GameReleaseContext);
 
 public sealed record GameEnvironmentBuilder<TMod, TModGetter>
     where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
@@ -164,6 +167,27 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
         return this with { Resolver = resolver };
     }
 
+    public GameEnvironmentBuilder<TMod, TModGetter> WithTransitiveMastersOf(params ModKey[] modKeys)
+    {
+        return this with
+        {
+            LoadOrderListingProcessors = LoadOrderListingProcessors.Add((p, l) =>
+            {
+                var transitiveMasters = new TransitiveMasterLocator(
+                    p.FileSystem,
+                    p.DataDirectoryProvider,
+                    p.GameReleaseContext);
+                var allMasters = transitiveMasters
+                    .GetAllMasters(modKeys)
+                    .ToHashSet();
+                return l.Select(x =>
+                {
+                    return new LoadOrderListing(x.ModKey, enabled: allMasters.Contains(x.ModKey));
+                });
+            })
+        };
+    }
+
     private TObject Resolve<TObject>(Func<TObject> fallback, TObject? value = default)
     {
         if (value != null)
@@ -220,7 +244,7 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
             },
             CccListingsPathProvider);
 
-        var param = new GameEnvironmentBuilderProcessorParameters();
+        var param = new GameEnvironmentBuilderProcessorParameters(fs, dataDirectory, Release);
 
         ILoadOrderListingGetter[] listingsToUse;
 
@@ -469,6 +493,27 @@ public sealed record GameEnvironmentBuilder
         return this with { Resolver = resolver };
     }
 
+    public GameEnvironmentBuilder WithTransitiveMastersOf(params ModKey[] modKeys)
+    {
+        return this with
+        {
+            LoadOrderListingProcessors = LoadOrderListingProcessors.Add((p, l) =>
+            {
+                var transitiveMasters = new TransitiveMasterLocator(
+                    p.FileSystem,
+                    p.DataDirectoryProvider,
+                    p.GameReleaseContext);
+                var allMasters = transitiveMasters
+                    .GetAllMasters(modKeys)
+                    .ToHashSet();
+                return l.Select(x =>
+                {
+                    return new LoadOrderListing(x.ModKey, enabled: allMasters.Contains(x.ModKey));
+                });
+            })
+        };
+    }
+
     private TObject Resolve<TObject>(Func<TObject> fallback, TObject? value = default)
     {
         if (value != null)
@@ -525,7 +570,7 @@ public sealed record GameEnvironmentBuilder
             },
             CccListingsPathProvider);
         
-        var param = new GameEnvironmentBuilderProcessorParameters();
+        var param = new GameEnvironmentBuilderProcessorParameters(fs, dataDirectory, Release);
 
         ILoadOrderListingGetter[] listingsToUse;
 
@@ -576,7 +621,7 @@ public sealed record GameEnvironmentBuilder
             
             listingsToUse = listingsProv.Get().ToArray();
         }
-
+        
         IEnumerable<ILoadOrderListingGetter> filteredListings = listingsToUse;
         foreach (var filter in LoadOrderListingProcessors)
         {

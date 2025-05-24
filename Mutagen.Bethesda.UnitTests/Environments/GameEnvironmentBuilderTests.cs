@@ -641,4 +641,100 @@ public class GameEnvironmentBuilderTests
         env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
         env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(modKeys.And(outputModKey));
     }
+    
+    [Theory]
+    [MutagenAutoData]
+    public void TransitiveMasters(
+        IFileSystem fs,
+        ModKey transitiveMaster,
+        ModKey unrelatedMaster,
+        ModKey modToAdd,
+        GameRelease release,
+        IDataDirectoryProvider dataDirectoryProvider,
+        ICreationClubListingsPathProvider cccListingPathContext,
+        IPluginListingsPathContext pluginListingsPathProvider)
+    {
+        Setup(fs, release, [transitiveMaster, unrelatedMaster, modToAdd], dataDirectoryProvider, pluginListingsPathProvider);
+        
+        var mod = new SkyrimMod(modToAdd, SkyrimRelease.SkyrimSE);
+        mod.ModHeader.MasterReferences.Add(new MasterReference()
+        {
+            Master = transitiveMaster
+        });
+        mod.BeginWrite
+            .ToPath(Path.Combine(dataDirectoryProvider.Path, modToAdd.FileName))
+            .WithNoLoadOrder()
+            .WithFileSystem(fs)
+            .NoMastersListContentCheck()
+            .Write();
+        
+        using var env = GameEnvironment.Typical.Builder(GameRelease.SkyrimSE)
+            .WithResolver(t =>
+            {
+                if (t == typeof(IFileSystem)) return fs;
+                if (t == typeof(IDataDirectoryProvider)) return dataDirectoryProvider;
+                if (t == typeof(IPluginListingsPathContext)) return pluginListingsPathProvider;
+                if (t == typeof(ICreationClubListingsPathProvider)) return cccListingPathContext;
+                return default;
+            })
+            .WithTransitiveMastersOf(modToAdd)
+            .Build();
+
+        var expectedMods = new[] { transitiveMaster, modToAdd };
+        
+        env.LoadOrder.Count.ShouldBe(expectedMods.Length);
+        env.LoadOrder.Select(x => x.Key).ShouldBe(expectedMods);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(expectedMods);
+        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqual(true);
+        env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(expectedMods);
+    }
+    
+    [Theory]
+    [MutagenAutoData]
+    public void TransitiveMastersGeneric(
+        IFileSystem fs,
+        ModKey transitiveMaster,
+        ModKey unrelatedMaster,
+        ModKey modToAdd,
+        GameRelease release,
+        IDataDirectoryProvider dataDirectoryProvider,
+        ICreationClubListingsPathProvider cccListingPathContext,
+        IPluginListingsPathContext pluginListingsPathProvider)
+    {
+        Setup(fs, release, [transitiveMaster, unrelatedMaster, modToAdd], dataDirectoryProvider, pluginListingsPathProvider);
+        
+        var mod = new SkyrimMod(modToAdd, SkyrimRelease.SkyrimSE);
+        mod.ModHeader.MasterReferences.Add(new MasterReference()
+        {
+            Master = transitiveMaster
+        });
+        mod.BeginWrite
+            .ToPath(Path.Combine(dataDirectoryProvider.Path, modToAdd.FileName))
+            .WithNoLoadOrder()
+            .WithFileSystem(fs)
+            .NoMastersListContentCheck()
+            .Write();
+        
+        using var env = GameEnvironment.Typical.Builder<ISkyrimMod, ISkyrimModGetter>(GameRelease.SkyrimSE)
+            .WithResolver(t =>
+            {
+                if (t == typeof(IFileSystem)) return fs;
+                if (t == typeof(IDataDirectoryProvider)) return dataDirectoryProvider;
+                if (t == typeof(IPluginListingsPathContext)) return pluginListingsPathProvider;
+                if (t == typeof(ICreationClubListingsPathProvider)) return cccListingPathContext;
+                return default;
+            })
+            .WithTransitiveMastersOf(modToAdd)
+            .Build();
+
+        var expectedMods = new[] { transitiveMaster, modToAdd };
+        
+        env.LoadOrder.Count.ShouldBe(expectedMods.Length);
+        env.LoadOrder.Select(x => x.Key).ShouldBe(expectedMods);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(expectedMods);
+        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqual(true);
+        env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(expectedMods);
+    }
 }
