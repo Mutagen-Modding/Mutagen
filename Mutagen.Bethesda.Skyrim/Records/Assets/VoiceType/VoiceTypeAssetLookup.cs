@@ -649,11 +649,11 @@ public class VoiceTypeAssetLookup : IAssetCacheComponent
                 if (!locationAlias.SpecificLocation.IsNull)
                 {
                     var location = locationAlias.SpecificLocation.TryResolve(_formLinkCache);
-                    if (location?.LocationCellStaticReferences != null)
+                    if (location is not null)
                     {
-                        foreach (var locRef in location.LocationCellStaticReferences.Where(r => r.LocationRefType.FormKey == alias.Location.RefType.FormKey))
+                        foreach (var locRef in location.LocationRefTypesReferences().Where(r => r.LocationRefType.FormKey == alias.Location.RefType.FormKey))
                         {
-                            var linkedRef = locRef.Marker.TryResolve(_formLinkCache);
+                            var linkedRef = locRef.Ref.TryResolve(_formLinkCache);
                             if (linkedRef == null) continue;
 
                             return linkedRef switch
