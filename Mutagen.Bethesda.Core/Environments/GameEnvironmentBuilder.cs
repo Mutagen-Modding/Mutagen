@@ -263,15 +263,17 @@ public sealed record GameEnvironmentBuilder<TMod, TModGetter>
                             new CreationClubRawListingsReader()));
                 },
                 ListingsProvider);
-
-            var filteredListings = listingsProv.Get();
-            foreach (var filter in LoadOrderListingProcessors)
-            {
-                filteredListings = filter(filteredListings);
-            }
             
-            listingsToUse = filteredListings.ToArray();
+            listingsToUse = listingsProv.Get().ToArray();
         }
+
+        IEnumerable<ILoadOrderListingGetter> filteredListings = listingsToUse;
+        foreach (var filter in LoadOrderListingProcessors)
+        {
+            filteredListings = filter(filteredListings);
+        }
+            
+        listingsToUse = filteredListings.ToArray();
 
         var loListings = new LoadOrderListingsInjection(listingsToUse);
         var loGetter = new LoadOrderImporter<TModGetter>(
@@ -563,17 +565,18 @@ public sealed record GameEnvironmentBuilder
                             new CreationClubRawListingsReader()));
                 },
                 ListingsProvider);
-
-            var filteredListings = listingsProv.Get();
-            foreach (var filter in LoadOrderListingProcessors)
-            {
-                filteredListings = filter(filteredListings);
-            }
-
-            listingsToUse = filteredListings.ToArray();
+            
+            listingsToUse = listingsProv.Get().ToArray();
         }
-        
 
+        IEnumerable<ILoadOrderListingGetter> filteredListings = listingsToUse;
+        foreach (var filter in LoadOrderListingProcessors)
+        {
+            filteredListings = filter(filteredListings);
+        }
+            
+        listingsToUse = filteredListings.ToArray();
+        
         var loListings = new LoadOrderListingsInjection(listingsToUse);
         var loGetter = new LoadOrderImporter(
             fs,

@@ -1,4 +1,4 @@
-﻿using System.IO.Abstractions;
+using System.IO.Abstractions;
 using AutoFixture.Xunit2;
 using Shouldly;
 using Mutagen.Bethesda.Environments;
@@ -432,6 +432,80 @@ public class GameEnvironmentBuilderTests
         env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqual(false);
         env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
         env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(modKeys);
+    }
+    
+    [Theory]
+    [MutagenAutoData]
+    public void TransformLoadOrderWithManualLoadOrder(
+        IFileSystem fs,
+        ModKey[] modKeys,
+        ModKey[] modKeys2,
+        GameRelease release,
+        IDataDirectoryProvider dataDirectoryProvider,
+        ICreationClubListingsPathProvider cccListingPathContext,
+        IPluginListingsPathContext pluginListingsPathProvider)
+    {
+        Setup(fs, release, modKeys.And(modKeys2).ToArray(), dataDirectoryProvider, pluginListingsPathProvider);
+
+        using var env = GameEnvironment.Typical.Builder(GameRelease.SkyrimSE)
+            .WithResolver(t =>
+            {
+                if (t == typeof(IFileSystem)) return fs;
+                if (t == typeof(IDataDirectoryProvider)) return dataDirectoryProvider;
+                if (t == typeof(IPluginListingsPathContext)) return pluginListingsPathProvider;
+                if (t == typeof(ICreationClubListingsPathProvider)) return cccListingPathContext;
+                return default;
+            })
+            .WithLoadOrder(modKeys2)
+            .TransformLoadOrderListings(x => x.Where(x => x.ModKey != modKeys2[1]))
+            .Build();
+        
+        var expectedKeys = modKeys2
+            .Where(x => x != modKeys2[1])
+            .ToArray();
+
+        env.LoadOrder.Count.ShouldBe(expectedKeys.Length);
+        env.LoadOrder.Select(x => x.Key).ShouldBe(expectedKeys);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(expectedKeys);
+        env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(expectedKeys);
+    }
+    
+    [Theory]
+    [MutagenAutoData]
+    public void TransformLoadOrderWithManualLoadOrderGeneric(
+        IFileSystem fs,
+        ModKey[] modKeys,
+        ModKey[] modKeys2,
+        GameRelease release,
+        IDataDirectoryProvider dataDirectoryProvider,
+        ICreationClubListingsPathProvider cccListingPathContext,
+        IPluginListingsPathContext pluginListingsPathProvider)
+    {
+        Setup(fs, release, modKeys.And(modKeys2).ToArray(), dataDirectoryProvider, pluginListingsPathProvider);
+
+        using var env = GameEnvironment.Typical.Builder<ISkyrimMod, ISkyrimModGetter>(GameRelease.SkyrimSE)
+            .WithResolver(t =>
+            {
+                if (t == typeof(IFileSystem)) return fs;
+                if (t == typeof(IDataDirectoryProvider)) return dataDirectoryProvider;
+                if (t == typeof(IPluginListingsPathContext)) return pluginListingsPathProvider;
+                if (t == typeof(ICreationClubListingsPathProvider)) return cccListingPathContext;
+                return default;
+            })
+            .WithLoadOrder(modKeys2)
+            .TransformLoadOrderListings(x => x.Where(x => x.ModKey != modKeys2[1]))
+            .Build();
+        
+        var expectedKeys = modKeys2
+            .Where(x => x != modKeys2[1])
+            .ToArray();
+
+        env.LoadOrder.Count.ShouldBe(expectedKeys.Length);
+        env.LoadOrder.Select(x => x.Key).ShouldBe(expectedKeys);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(expectedKeys);
+        env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(expectedKeys);
     }
     
     [Theory]
