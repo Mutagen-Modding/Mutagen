@@ -57,227 +57,227 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
-        #region ActorCellPersistentReferences
+        #region PersistentActorReferencesAdded
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationReference>? _ActorCellPersistentReferences;
-        public ExtendedList<LocationReference>? ActorCellPersistentReferences
+        private ExtendedList<PersistentActorReference>? _PersistentActorReferencesAdded;
+        public ExtendedList<PersistentActorReference>? PersistentActorReferencesAdded
         {
-            get => this._ActorCellPersistentReferences;
-            set => this._ActorCellPersistentReferences = value;
+            get => this._PersistentActorReferencesAdded;
+            set => this._PersistentActorReferencesAdded = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ILocationReferenceGetter>? ILocationGetter.ActorCellPersistentReferences => _ActorCellPersistentReferences;
+        IReadOnlyList<IPersistentActorReferenceGetter>? ILocationGetter.PersistentActorReferencesAdded => _PersistentActorReferencesAdded;
         #endregion
 
         #endregion
-        #region LocationCellPersistentReferences
+        #region PersistentActorReferencesStatic
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationReference>? _LocationCellPersistentReferences;
-        public ExtendedList<LocationReference>? LocationCellPersistentReferences
+        private ExtendedList<PersistentActorReference>? _PersistentActorReferencesStatic;
+        public ExtendedList<PersistentActorReference>? PersistentActorReferencesStatic
         {
-            get => this._LocationCellPersistentReferences;
-            set => this._LocationCellPersistentReferences = value;
+            get => this._PersistentActorReferencesStatic;
+            set => this._PersistentActorReferencesStatic = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ILocationReferenceGetter>? ILocationGetter.LocationCellPersistentReferences => _LocationCellPersistentReferences;
+        IReadOnlyList<IPersistentActorReferenceGetter>? ILocationGetter.PersistentActorReferencesStatic => _PersistentActorReferencesStatic;
         #endregion
 
         #endregion
-        #region ReferenceCellPersistentReferences
+        #region PersistentActorReferencesRemoved
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>? _ReferenceCellPersistentReferences;
-        public ExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>? ReferenceCellPersistentReferences
+        private ExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>? _PersistentActorReferencesRemoved;
+        public ExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>? PersistentActorReferencesRemoved
         {
-            get => this._ReferenceCellPersistentReferences;
-            set => this._ReferenceCellPersistentReferences = value;
+            get => this._PersistentActorReferencesRemoved;
+            set => this._PersistentActorReferencesRemoved = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? ILocationGetter.ReferenceCellPersistentReferences => _ReferenceCellPersistentReferences;
+        IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? ILocationGetter.PersistentActorReferencesRemoved => _PersistentActorReferencesRemoved;
         #endregion
 
         #endregion
-        #region ActorCellUniques
+        #region UniqueActorReferencesAdded
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationCellUnique>? _ActorCellUniques;
-        public ExtendedList<LocationCellUnique>? ActorCellUniques
+        private ExtendedList<UniqueActorReference>? _UniqueActorReferencesAdded;
+        public ExtendedList<UniqueActorReference>? UniqueActorReferencesAdded
         {
-            get => this._ActorCellUniques;
-            set => this._ActorCellUniques = value;
+            get => this._UniqueActorReferencesAdded;
+            set => this._UniqueActorReferencesAdded = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ILocationCellUniqueGetter>? ILocationGetter.ActorCellUniques => _ActorCellUniques;
+        IReadOnlyList<IUniqueActorReferenceGetter>? ILocationGetter.UniqueActorReferencesAdded => _UniqueActorReferencesAdded;
         #endregion
 
         #endregion
-        #region LocationCellUniques
+        #region UniqueActorReferencesStatic
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationCellUnique>? _LocationCellUniques;
-        public ExtendedList<LocationCellUnique>? LocationCellUniques
+        private ExtendedList<UniqueActorReference>? _UniqueActorReferencesStatic;
+        public ExtendedList<UniqueActorReference>? UniqueActorReferencesStatic
         {
-            get => this._LocationCellUniques;
-            set => this._LocationCellUniques = value;
+            get => this._UniqueActorReferencesStatic;
+            set => this._UniqueActorReferencesStatic = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ILocationCellUniqueGetter>? ILocationGetter.LocationCellUniques => _LocationCellUniques;
+        IReadOnlyList<IUniqueActorReferenceGetter>? ILocationGetter.UniqueActorReferencesStatic => _UniqueActorReferencesStatic;
         #endregion
 
         #endregion
-        #region ReferenceCellUnique
+        #region UniqueActorRemoved
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<INpcGetter>>? _ReferenceCellUnique;
-        public ExtendedList<IFormLinkGetter<INpcGetter>>? ReferenceCellUnique
+        private ExtendedList<IFormLinkGetter<INpcGetter>>? _UniqueActorRemoved;
+        public ExtendedList<IFormLinkGetter<INpcGetter>>? UniqueActorRemoved
         {
-            get => this._ReferenceCellUnique;
-            set => this._ReferenceCellUnique = value;
+            get => this._UniqueActorRemoved;
+            set => this._UniqueActorRemoved = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<INpcGetter>>? ILocationGetter.ReferenceCellUnique => _ReferenceCellUnique;
+        IReadOnlyList<IFormLinkGetter<INpcGetter>>? ILocationGetter.UniqueActorRemoved => _UniqueActorRemoved;
         #endregion
 
         #endregion
-        #region ActorCellStaticReferences
+        #region LocationRefTypeReferencesAdded
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationCellStaticReference>? _ActorCellStaticReferences;
-        public ExtendedList<LocationCellStaticReference>? ActorCellStaticReferences
+        private ExtendedList<LocationRefTypeReference>? _LocationRefTypeReferencesAdded;
+        public ExtendedList<LocationRefTypeReference>? LocationRefTypeReferencesAdded
         {
-            get => this._ActorCellStaticReferences;
-            set => this._ActorCellStaticReferences = value;
+            get => this._LocationRefTypeReferencesAdded;
+            set => this._LocationRefTypeReferencesAdded = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ILocationCellStaticReferenceGetter>? ILocationGetter.ActorCellStaticReferences => _ActorCellStaticReferences;
+        IReadOnlyList<ILocationRefTypeReferenceGetter>? ILocationGetter.LocationRefTypeReferencesAdded => _LocationRefTypeReferencesAdded;
         #endregion
 
         #endregion
-        #region LocationCellStaticReferences
+        #region LocationRefTypeReferencesStatic
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationCellStaticReference>? _LocationCellStaticReferences;
-        public ExtendedList<LocationCellStaticReference>? LocationCellStaticReferences
+        private ExtendedList<LocationRefTypeReference>? _LocationRefTypeReferencesStatic;
+        public ExtendedList<LocationRefTypeReference>? LocationRefTypeReferencesStatic
         {
-            get => this._LocationCellStaticReferences;
-            set => this._LocationCellStaticReferences = value;
+            get => this._LocationRefTypeReferencesStatic;
+            set => this._LocationRefTypeReferencesStatic = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ILocationCellStaticReferenceGetter>? ILocationGetter.LocationCellStaticReferences => _LocationCellStaticReferences;
+        IReadOnlyList<ILocationRefTypeReferenceGetter>? ILocationGetter.LocationRefTypeReferencesStatic => _LocationRefTypeReferencesStatic;
         #endregion
 
         #endregion
-        #region ReferenceCellStaticReferences
+        #region LocationRefTypeReferencesRemoved
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>? _ReferenceCellStaticReferences;
-        public ExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>? ReferenceCellStaticReferences
+        private ExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>? _LocationRefTypeReferencesRemoved;
+        public ExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>? LocationRefTypeReferencesRemoved
         {
-            get => this._ReferenceCellStaticReferences;
-            set => this._ReferenceCellStaticReferences = value;
+            get => this._LocationRefTypeReferencesRemoved;
+            set => this._LocationRefTypeReferencesRemoved = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? ILocationGetter.ReferenceCellStaticReferences => _ReferenceCellStaticReferences;
+        IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? ILocationGetter.LocationRefTypeReferencesRemoved => _LocationRefTypeReferencesRemoved;
         #endregion
 
         #endregion
-        #region ActorCellEncounterCell
+        #region WorldspaceCellsAdded
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationCoordinate> _ActorCellEncounterCell = new ExtendedList<LocationCoordinate>();
-        public ExtendedList<LocationCoordinate> ActorCellEncounterCell
+        private ExtendedList<LocationCoordinate> _WorldspaceCellsAdded = new ExtendedList<LocationCoordinate>();
+        public ExtendedList<LocationCoordinate> WorldspaceCellsAdded
         {
-            get => this._ActorCellEncounterCell;
-            init => this._ActorCellEncounterCell = value;
+            get => this._WorldspaceCellsAdded;
+            init => this._WorldspaceCellsAdded = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ILocationCoordinateGetter> ILocationGetter.ActorCellEncounterCell => _ActorCellEncounterCell;
+        IReadOnlyList<ILocationCoordinateGetter> ILocationGetter.WorldspaceCellsAdded => _WorldspaceCellsAdded;
         #endregion
 
         #endregion
-        #region LocationCellEncounterCell
+        #region WorldspaceCellsStatic
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationCoordinate> _LocationCellEncounterCell = new ExtendedList<LocationCoordinate>();
-        public ExtendedList<LocationCoordinate> LocationCellEncounterCell
+        private ExtendedList<LocationCoordinate> _WorldspaceCellsStatic = new ExtendedList<LocationCoordinate>();
+        public ExtendedList<LocationCoordinate> WorldspaceCellsStatic
         {
-            get => this._LocationCellEncounterCell;
-            init => this._LocationCellEncounterCell = value;
+            get => this._WorldspaceCellsStatic;
+            init => this._WorldspaceCellsStatic = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ILocationCoordinateGetter> ILocationGetter.LocationCellEncounterCell => _LocationCellEncounterCell;
+        IReadOnlyList<ILocationCoordinateGetter> ILocationGetter.WorldspaceCellsStatic => _WorldspaceCellsStatic;
         #endregion
 
         #endregion
-        #region ReferenceCellEncounterCell
+        #region WorldspaceCellsRemoved
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationCoordinate> _ReferenceCellEncounterCell = new ExtendedList<LocationCoordinate>();
-        public ExtendedList<LocationCoordinate> ReferenceCellEncounterCell
+        private ExtendedList<LocationCoordinate> _WorldspaceCellsRemoved = new ExtendedList<LocationCoordinate>();
+        public ExtendedList<LocationCoordinate> WorldspaceCellsRemoved
         {
-            get => this._ReferenceCellEncounterCell;
-            init => this._ReferenceCellEncounterCell = value;
+            get => this._WorldspaceCellsRemoved;
+            init => this._WorldspaceCellsRemoved = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ILocationCoordinateGetter> ILocationGetter.ReferenceCellEncounterCell => _ReferenceCellEncounterCell;
+        IReadOnlyList<ILocationCoordinateGetter> ILocationGetter.WorldspaceCellsRemoved => _WorldspaceCellsRemoved;
         #endregion
 
         #endregion
-        #region ActorCellMarkerReference
+        #region InitiallyDisabledReferencesAdded
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<IPlacedGetter>>? _ActorCellMarkerReference;
-        public ExtendedList<IFormLinkGetter<IPlacedGetter>>? ActorCellMarkerReference
+        private ExtendedList<IFormLinkGetter<IPlacedGetter>>? _InitiallyDisabledReferencesAdded;
+        public ExtendedList<IFormLinkGetter<IPlacedGetter>>? InitiallyDisabledReferencesAdded
         {
-            get => this._ActorCellMarkerReference;
-            set => this._ActorCellMarkerReference = value;
+            get => this._InitiallyDisabledReferencesAdded;
+            set => this._InitiallyDisabledReferencesAdded = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? ILocationGetter.ActorCellMarkerReference => _ActorCellMarkerReference;
+        IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? ILocationGetter.InitiallyDisabledReferencesAdded => _InitiallyDisabledReferencesAdded;
         #endregion
 
         #endregion
-        #region LocationCellMarkerReference
+        #region InitiallyDisabledReferencesStatic
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLinkGetter<IPlacedGetter>>? _LocationCellMarkerReference;
-        public ExtendedList<IFormLinkGetter<IPlacedGetter>>? LocationCellMarkerReference
+        private ExtendedList<IFormLinkGetter<IPlacedGetter>>? _InitiallyDisabledReferencesStatic;
+        public ExtendedList<IFormLinkGetter<IPlacedGetter>>? InitiallyDisabledReferencesStatic
         {
-            get => this._LocationCellMarkerReference;
-            set => this._LocationCellMarkerReference = value;
+            get => this._InitiallyDisabledReferencesStatic;
+            set => this._InitiallyDisabledReferencesStatic = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? ILocationGetter.LocationCellMarkerReference => _LocationCellMarkerReference;
+        IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? ILocationGetter.InitiallyDisabledReferencesStatic => _InitiallyDisabledReferencesStatic;
         #endregion
 
         #endregion
-        #region ActorCellEnablePoint
+        #region EnableParentReferencesAdded
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationCellEnablePoint>? _ActorCellEnablePoint;
-        public ExtendedList<LocationCellEnablePoint>? ActorCellEnablePoint
+        private ExtendedList<EnableParentReference>? _EnableParentReferencesAdded;
+        public ExtendedList<EnableParentReference>? EnableParentReferencesAdded
         {
-            get => this._ActorCellEnablePoint;
-            set => this._ActorCellEnablePoint = value;
+            get => this._EnableParentReferencesAdded;
+            set => this._EnableParentReferencesAdded = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ILocationCellEnablePointGetter>? ILocationGetter.ActorCellEnablePoint => _ActorCellEnablePoint;
+        IReadOnlyList<IEnableParentReferenceGetter>? ILocationGetter.EnableParentReferencesAdded => _EnableParentReferencesAdded;
         #endregion
 
         #endregion
-        #region LocationCellEnablePoint
+        #region EnableParentReferencesStatic
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationCellEnablePoint>? _LocationCellEnablePoint;
-        public ExtendedList<LocationCellEnablePoint>? LocationCellEnablePoint
+        private ExtendedList<EnableParentReference>? _EnableParentReferencesStatic;
+        public ExtendedList<EnableParentReference>? EnableParentReferencesStatic
         {
-            get => this._LocationCellEnablePoint;
-            set => this._LocationCellEnablePoint = value;
+            get => this._EnableParentReferencesStatic;
+            set => this._EnableParentReferencesStatic = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ILocationCellEnablePointGetter>? ILocationGetter.LocationCellEnablePoint => _LocationCellEnablePoint;
+        IReadOnlyList<IEnableParentReferenceGetter>? ILocationGetter.EnableParentReferencesStatic => _EnableParentReferencesStatic;
         #endregion
 
         #endregion
@@ -423,22 +423,22 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.ActorCellPersistentReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
-                this.LocationCellPersistentReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
-                this.ReferenceCellPersistentReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ActorCellUniques = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>());
-                this.LocationCellUniques = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>());
-                this.ReferenceCellUnique = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ActorCellStaticReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>());
-                this.LocationCellStaticReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>());
-                this.ReferenceCellStaticReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ActorCellEncounterCell = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>());
-                this.LocationCellEncounterCell = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>());
-                this.ReferenceCellEncounterCell = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>());
-                this.ActorCellMarkerReference = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.LocationCellMarkerReference = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ActorCellEnablePoint = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>());
-                this.LocationCellEnablePoint = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>());
+                this.PersistentActorReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PersistentActorReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PersistentActorReference.Mask<TItem>?>>());
+                this.PersistentActorReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PersistentActorReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PersistentActorReference.Mask<TItem>?>>());
+                this.PersistentActorReferencesRemoved = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.UniqueActorReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>());
+                this.UniqueActorReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>());
+                this.UniqueActorRemoved = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LocationRefTypeReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>());
+                this.LocationRefTypeReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>());
+                this.LocationRefTypeReferencesRemoved = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.WorldspaceCellsAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>());
+                this.WorldspaceCellsStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>());
+                this.WorldspaceCellsRemoved = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>());
+                this.InitiallyDisabledReferencesAdded = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.InitiallyDisabledReferencesStatic = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.EnableParentReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EnableParentReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, EnableParentReference.Mask<TItem>?>>());
+                this.EnableParentReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EnableParentReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, EnableParentReference.Mask<TItem>?>>());
                 this.Name = initialValue;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ParentLocation = initialValue;
@@ -458,22 +458,22 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem FormVersion,
                 TItem Version2,
                 TItem SkyrimMajorRecordFlags,
-                TItem ActorCellPersistentReferences,
-                TItem LocationCellPersistentReferences,
-                TItem ReferenceCellPersistentReferences,
-                TItem ActorCellUniques,
-                TItem LocationCellUniques,
-                TItem ReferenceCellUnique,
-                TItem ActorCellStaticReferences,
-                TItem LocationCellStaticReferences,
-                TItem ReferenceCellStaticReferences,
-                TItem ActorCellEncounterCell,
-                TItem LocationCellEncounterCell,
-                TItem ReferenceCellEncounterCell,
-                TItem ActorCellMarkerReference,
-                TItem LocationCellMarkerReference,
-                TItem ActorCellEnablePoint,
-                TItem LocationCellEnablePoint,
+                TItem PersistentActorReferencesAdded,
+                TItem PersistentActorReferencesStatic,
+                TItem PersistentActorReferencesRemoved,
+                TItem UniqueActorReferencesAdded,
+                TItem UniqueActorReferencesStatic,
+                TItem UniqueActorRemoved,
+                TItem LocationRefTypeReferencesAdded,
+                TItem LocationRefTypeReferencesStatic,
+                TItem LocationRefTypeReferencesRemoved,
+                TItem WorldspaceCellsAdded,
+                TItem WorldspaceCellsStatic,
+                TItem WorldspaceCellsRemoved,
+                TItem InitiallyDisabledReferencesAdded,
+                TItem InitiallyDisabledReferencesStatic,
+                TItem EnableParentReferencesAdded,
+                TItem EnableParentReferencesStatic,
                 TItem Name,
                 TItem Keywords,
                 TItem ParentLocation,
@@ -492,22 +492,22 @@ namespace Mutagen.Bethesda.Skyrim
                 Version2: Version2,
                 SkyrimMajorRecordFlags: SkyrimMajorRecordFlags)
             {
-                this.ActorCellPersistentReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(ActorCellPersistentReferences, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
-                this.LocationCellPersistentReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(LocationCellPersistentReferences, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
-                this.ReferenceCellPersistentReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ReferenceCellPersistentReferences, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ActorCellUniques = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>?>(ActorCellUniques, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>());
-                this.LocationCellUniques = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>?>(LocationCellUniques, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>());
-                this.ReferenceCellUnique = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ReferenceCellUnique, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ActorCellStaticReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>?>(ActorCellStaticReferences, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>());
-                this.LocationCellStaticReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>?>(LocationCellStaticReferences, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>());
-                this.ReferenceCellStaticReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ReferenceCellStaticReferences, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ActorCellEncounterCell = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(ActorCellEncounterCell, Enumerable.Empty<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>());
-                this.LocationCellEncounterCell = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(LocationCellEncounterCell, Enumerable.Empty<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>());
-                this.ReferenceCellEncounterCell = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(ReferenceCellEncounterCell, Enumerable.Empty<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>());
-                this.ActorCellMarkerReference = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ActorCellMarkerReference, Enumerable.Empty<(int Index, TItem Value)>());
-                this.LocationCellMarkerReference = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LocationCellMarkerReference, Enumerable.Empty<(int Index, TItem Value)>());
-                this.ActorCellEnablePoint = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>?>(ActorCellEnablePoint, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>());
-                this.LocationCellEnablePoint = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>?>(LocationCellEnablePoint, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>());
+                this.PersistentActorReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PersistentActorReference.Mask<TItem>?>>?>(PersistentActorReferencesAdded, Enumerable.Empty<MaskItemIndexed<TItem, PersistentActorReference.Mask<TItem>?>>());
+                this.PersistentActorReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PersistentActorReference.Mask<TItem>?>>?>(PersistentActorReferencesStatic, Enumerable.Empty<MaskItemIndexed<TItem, PersistentActorReference.Mask<TItem>?>>());
+                this.PersistentActorReferencesRemoved = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(PersistentActorReferencesRemoved, Enumerable.Empty<(int Index, TItem Value)>());
+                this.UniqueActorReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>?>(UniqueActorReferencesAdded, Enumerable.Empty<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>());
+                this.UniqueActorReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>?>(UniqueActorReferencesStatic, Enumerable.Empty<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>());
+                this.UniqueActorRemoved = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(UniqueActorRemoved, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LocationRefTypeReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>?>(LocationRefTypeReferencesAdded, Enumerable.Empty<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>());
+                this.LocationRefTypeReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>?>(LocationRefTypeReferencesStatic, Enumerable.Empty<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>());
+                this.LocationRefTypeReferencesRemoved = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LocationRefTypeReferencesRemoved, Enumerable.Empty<(int Index, TItem Value)>());
+                this.WorldspaceCellsAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(WorldspaceCellsAdded, Enumerable.Empty<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>());
+                this.WorldspaceCellsStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(WorldspaceCellsStatic, Enumerable.Empty<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>());
+                this.WorldspaceCellsRemoved = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(WorldspaceCellsRemoved, Enumerable.Empty<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>());
+                this.InitiallyDisabledReferencesAdded = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(InitiallyDisabledReferencesAdded, Enumerable.Empty<(int Index, TItem Value)>());
+                this.InitiallyDisabledReferencesStatic = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(InitiallyDisabledReferencesStatic, Enumerable.Empty<(int Index, TItem Value)>());
+                this.EnableParentReferencesAdded = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EnableParentReference.Mask<TItem>?>>?>(EnableParentReferencesAdded, Enumerable.Empty<MaskItemIndexed<TItem, EnableParentReference.Mask<TItem>?>>());
+                this.EnableParentReferencesStatic = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EnableParentReference.Mask<TItem>?>>?>(EnableParentReferencesStatic, Enumerable.Empty<MaskItemIndexed<TItem, EnableParentReference.Mask<TItem>?>>());
                 this.Name = Name;
                 this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ParentLocation = ParentLocation;
@@ -528,22 +528,22 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>? ActorCellPersistentReferences;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>? LocationCellPersistentReferences;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ReferenceCellPersistentReferences;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>?>? ActorCellUniques;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellUnique.Mask<TItem>?>>?>? LocationCellUniques;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ReferenceCellUnique;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>?>? ActorCellStaticReferences;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>?>? LocationCellStaticReferences;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ReferenceCellStaticReferences;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>? ActorCellEncounterCell;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>? LocationCellEncounterCell;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>? ReferenceCellEncounterCell;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ActorCellMarkerReference;
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? LocationCellMarkerReference;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>?>? ActorCellEnablePoint;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>?>? LocationCellEnablePoint;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PersistentActorReference.Mask<TItem>?>>?>? PersistentActorReferencesAdded;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PersistentActorReference.Mask<TItem>?>>?>? PersistentActorReferencesStatic;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? PersistentActorReferencesRemoved;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>?>? UniqueActorReferencesAdded;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UniqueActorReference.Mask<TItem>?>>?>? UniqueActorReferencesStatic;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? UniqueActorRemoved;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>?>? LocationRefTypeReferencesAdded;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationRefTypeReference.Mask<TItem>?>>?>? LocationRefTypeReferencesStatic;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? LocationRefTypeReferencesRemoved;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>? WorldspaceCellsAdded;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>? WorldspaceCellsStatic;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>? WorldspaceCellsRemoved;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? InitiallyDisabledReferencesAdded;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? InitiallyDisabledReferencesStatic;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EnableParentReference.Mask<TItem>?>>?>? EnableParentReferencesAdded;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, EnableParentReference.Mask<TItem>?>>?>? EnableParentReferencesStatic;
             public TItem Name;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
             public TItem ParentLocation;
@@ -566,22 +566,22 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.ActorCellPersistentReferences, rhs.ActorCellPersistentReferences)) return false;
-                if (!object.Equals(this.LocationCellPersistentReferences, rhs.LocationCellPersistentReferences)) return false;
-                if (!object.Equals(this.ReferenceCellPersistentReferences, rhs.ReferenceCellPersistentReferences)) return false;
-                if (!object.Equals(this.ActorCellUniques, rhs.ActorCellUniques)) return false;
-                if (!object.Equals(this.LocationCellUniques, rhs.LocationCellUniques)) return false;
-                if (!object.Equals(this.ReferenceCellUnique, rhs.ReferenceCellUnique)) return false;
-                if (!object.Equals(this.ActorCellStaticReferences, rhs.ActorCellStaticReferences)) return false;
-                if (!object.Equals(this.LocationCellStaticReferences, rhs.LocationCellStaticReferences)) return false;
-                if (!object.Equals(this.ReferenceCellStaticReferences, rhs.ReferenceCellStaticReferences)) return false;
-                if (!object.Equals(this.ActorCellEncounterCell, rhs.ActorCellEncounterCell)) return false;
-                if (!object.Equals(this.LocationCellEncounterCell, rhs.LocationCellEncounterCell)) return false;
-                if (!object.Equals(this.ReferenceCellEncounterCell, rhs.ReferenceCellEncounterCell)) return false;
-                if (!object.Equals(this.ActorCellMarkerReference, rhs.ActorCellMarkerReference)) return false;
-                if (!object.Equals(this.LocationCellMarkerReference, rhs.LocationCellMarkerReference)) return false;
-                if (!object.Equals(this.ActorCellEnablePoint, rhs.ActorCellEnablePoint)) return false;
-                if (!object.Equals(this.LocationCellEnablePoint, rhs.LocationCellEnablePoint)) return false;
+                if (!object.Equals(this.PersistentActorReferencesAdded, rhs.PersistentActorReferencesAdded)) return false;
+                if (!object.Equals(this.PersistentActorReferencesStatic, rhs.PersistentActorReferencesStatic)) return false;
+                if (!object.Equals(this.PersistentActorReferencesRemoved, rhs.PersistentActorReferencesRemoved)) return false;
+                if (!object.Equals(this.UniqueActorReferencesAdded, rhs.UniqueActorReferencesAdded)) return false;
+                if (!object.Equals(this.UniqueActorReferencesStatic, rhs.UniqueActorReferencesStatic)) return false;
+                if (!object.Equals(this.UniqueActorRemoved, rhs.UniqueActorRemoved)) return false;
+                if (!object.Equals(this.LocationRefTypeReferencesAdded, rhs.LocationRefTypeReferencesAdded)) return false;
+                if (!object.Equals(this.LocationRefTypeReferencesStatic, rhs.LocationRefTypeReferencesStatic)) return false;
+                if (!object.Equals(this.LocationRefTypeReferencesRemoved, rhs.LocationRefTypeReferencesRemoved)) return false;
+                if (!object.Equals(this.WorldspaceCellsAdded, rhs.WorldspaceCellsAdded)) return false;
+                if (!object.Equals(this.WorldspaceCellsStatic, rhs.WorldspaceCellsStatic)) return false;
+                if (!object.Equals(this.WorldspaceCellsRemoved, rhs.WorldspaceCellsRemoved)) return false;
+                if (!object.Equals(this.InitiallyDisabledReferencesAdded, rhs.InitiallyDisabledReferencesAdded)) return false;
+                if (!object.Equals(this.InitiallyDisabledReferencesStatic, rhs.InitiallyDisabledReferencesStatic)) return false;
+                if (!object.Equals(this.EnableParentReferencesAdded, rhs.EnableParentReferencesAdded)) return false;
+                if (!object.Equals(this.EnableParentReferencesStatic, rhs.EnableParentReferencesStatic)) return false;
                 if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
                 if (!object.Equals(this.ParentLocation, rhs.ParentLocation)) return false;
@@ -596,22 +596,22 @@ namespace Mutagen.Bethesda.Skyrim
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.ActorCellPersistentReferences);
-                hash.Add(this.LocationCellPersistentReferences);
-                hash.Add(this.ReferenceCellPersistentReferences);
-                hash.Add(this.ActorCellUniques);
-                hash.Add(this.LocationCellUniques);
-                hash.Add(this.ReferenceCellUnique);
-                hash.Add(this.ActorCellStaticReferences);
-                hash.Add(this.LocationCellStaticReferences);
-                hash.Add(this.ReferenceCellStaticReferences);
-                hash.Add(this.ActorCellEncounterCell);
-                hash.Add(this.LocationCellEncounterCell);
-                hash.Add(this.ReferenceCellEncounterCell);
-                hash.Add(this.ActorCellMarkerReference);
-                hash.Add(this.LocationCellMarkerReference);
-                hash.Add(this.ActorCellEnablePoint);
-                hash.Add(this.LocationCellEnablePoint);
+                hash.Add(this.PersistentActorReferencesAdded);
+                hash.Add(this.PersistentActorReferencesStatic);
+                hash.Add(this.PersistentActorReferencesRemoved);
+                hash.Add(this.UniqueActorReferencesAdded);
+                hash.Add(this.UniqueActorReferencesStatic);
+                hash.Add(this.UniqueActorRemoved);
+                hash.Add(this.LocationRefTypeReferencesAdded);
+                hash.Add(this.LocationRefTypeReferencesStatic);
+                hash.Add(this.LocationRefTypeReferencesRemoved);
+                hash.Add(this.WorldspaceCellsAdded);
+                hash.Add(this.WorldspaceCellsStatic);
+                hash.Add(this.WorldspaceCellsRemoved);
+                hash.Add(this.InitiallyDisabledReferencesAdded);
+                hash.Add(this.InitiallyDisabledReferencesStatic);
+                hash.Add(this.EnableParentReferencesAdded);
+                hash.Add(this.EnableParentReferencesStatic);
                 hash.Add(this.Name);
                 hash.Add(this.Keywords);
                 hash.Add(this.ParentLocation);
@@ -631,187 +631,187 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (this.ActorCellPersistentReferences != null)
+                if (this.PersistentActorReferencesAdded != null)
                 {
-                    if (!eval(this.ActorCellPersistentReferences.Overall)) return false;
-                    if (this.ActorCellPersistentReferences.Specific != null)
+                    if (!eval(this.PersistentActorReferencesAdded.Overall)) return false;
+                    if (this.PersistentActorReferencesAdded.Specific != null)
                     {
-                        foreach (var item in this.ActorCellPersistentReferences.Specific)
+                        foreach (var item in this.PersistentActorReferencesAdded.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.LocationCellPersistentReferences != null)
+                if (this.PersistentActorReferencesStatic != null)
                 {
-                    if (!eval(this.LocationCellPersistentReferences.Overall)) return false;
-                    if (this.LocationCellPersistentReferences.Specific != null)
+                    if (!eval(this.PersistentActorReferencesStatic.Overall)) return false;
+                    if (this.PersistentActorReferencesStatic.Specific != null)
                     {
-                        foreach (var item in this.LocationCellPersistentReferences.Specific)
+                        foreach (var item in this.PersistentActorReferencesStatic.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.ReferenceCellPersistentReferences != null)
+                if (this.PersistentActorReferencesRemoved != null)
                 {
-                    if (!eval(this.ReferenceCellPersistentReferences.Overall)) return false;
-                    if (this.ReferenceCellPersistentReferences.Specific != null)
+                    if (!eval(this.PersistentActorReferencesRemoved.Overall)) return false;
+                    if (this.PersistentActorReferencesRemoved.Specific != null)
                     {
-                        foreach (var item in this.ReferenceCellPersistentReferences.Specific)
+                        foreach (var item in this.PersistentActorReferencesRemoved.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
-                if (this.ActorCellUniques != null)
+                if (this.UniqueActorReferencesAdded != null)
                 {
-                    if (!eval(this.ActorCellUniques.Overall)) return false;
-                    if (this.ActorCellUniques.Specific != null)
+                    if (!eval(this.UniqueActorReferencesAdded.Overall)) return false;
+                    if (this.UniqueActorReferencesAdded.Specific != null)
                     {
-                        foreach (var item in this.ActorCellUniques.Specific)
+                        foreach (var item in this.UniqueActorReferencesAdded.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.LocationCellUniques != null)
+                if (this.UniqueActorReferencesStatic != null)
                 {
-                    if (!eval(this.LocationCellUniques.Overall)) return false;
-                    if (this.LocationCellUniques.Specific != null)
+                    if (!eval(this.UniqueActorReferencesStatic.Overall)) return false;
+                    if (this.UniqueActorReferencesStatic.Specific != null)
                     {
-                        foreach (var item in this.LocationCellUniques.Specific)
+                        foreach (var item in this.UniqueActorReferencesStatic.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.ReferenceCellUnique != null)
+                if (this.UniqueActorRemoved != null)
                 {
-                    if (!eval(this.ReferenceCellUnique.Overall)) return false;
-                    if (this.ReferenceCellUnique.Specific != null)
+                    if (!eval(this.UniqueActorRemoved.Overall)) return false;
+                    if (this.UniqueActorRemoved.Specific != null)
                     {
-                        foreach (var item in this.ReferenceCellUnique.Specific)
+                        foreach (var item in this.UniqueActorRemoved.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
-                if (this.ActorCellStaticReferences != null)
+                if (this.LocationRefTypeReferencesAdded != null)
                 {
-                    if (!eval(this.ActorCellStaticReferences.Overall)) return false;
-                    if (this.ActorCellStaticReferences.Specific != null)
+                    if (!eval(this.LocationRefTypeReferencesAdded.Overall)) return false;
+                    if (this.LocationRefTypeReferencesAdded.Specific != null)
                     {
-                        foreach (var item in this.ActorCellStaticReferences.Specific)
+                        foreach (var item in this.LocationRefTypeReferencesAdded.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.LocationCellStaticReferences != null)
+                if (this.LocationRefTypeReferencesStatic != null)
                 {
-                    if (!eval(this.LocationCellStaticReferences.Overall)) return false;
-                    if (this.LocationCellStaticReferences.Specific != null)
+                    if (!eval(this.LocationRefTypeReferencesStatic.Overall)) return false;
+                    if (this.LocationRefTypeReferencesStatic.Specific != null)
                     {
-                        foreach (var item in this.LocationCellStaticReferences.Specific)
+                        foreach (var item in this.LocationRefTypeReferencesStatic.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.ReferenceCellStaticReferences != null)
+                if (this.LocationRefTypeReferencesRemoved != null)
                 {
-                    if (!eval(this.ReferenceCellStaticReferences.Overall)) return false;
-                    if (this.ReferenceCellStaticReferences.Specific != null)
+                    if (!eval(this.LocationRefTypeReferencesRemoved.Overall)) return false;
+                    if (this.LocationRefTypeReferencesRemoved.Specific != null)
                     {
-                        foreach (var item in this.ReferenceCellStaticReferences.Specific)
+                        foreach (var item in this.LocationRefTypeReferencesRemoved.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
-                if (this.ActorCellEncounterCell != null)
+                if (this.WorldspaceCellsAdded != null)
                 {
-                    if (!eval(this.ActorCellEncounterCell.Overall)) return false;
-                    if (this.ActorCellEncounterCell.Specific != null)
+                    if (!eval(this.WorldspaceCellsAdded.Overall)) return false;
+                    if (this.WorldspaceCellsAdded.Specific != null)
                     {
-                        foreach (var item in this.ActorCellEncounterCell.Specific)
+                        foreach (var item in this.WorldspaceCellsAdded.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.LocationCellEncounterCell != null)
+                if (this.WorldspaceCellsStatic != null)
                 {
-                    if (!eval(this.LocationCellEncounterCell.Overall)) return false;
-                    if (this.LocationCellEncounterCell.Specific != null)
+                    if (!eval(this.WorldspaceCellsStatic.Overall)) return false;
+                    if (this.WorldspaceCellsStatic.Specific != null)
                     {
-                        foreach (var item in this.LocationCellEncounterCell.Specific)
+                        foreach (var item in this.WorldspaceCellsStatic.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.ReferenceCellEncounterCell != null)
+                if (this.WorldspaceCellsRemoved != null)
                 {
-                    if (!eval(this.ReferenceCellEncounterCell.Overall)) return false;
-                    if (this.ReferenceCellEncounterCell.Specific != null)
+                    if (!eval(this.WorldspaceCellsRemoved.Overall)) return false;
+                    if (this.WorldspaceCellsRemoved.Specific != null)
                     {
-                        foreach (var item in this.ReferenceCellEncounterCell.Specific)
+                        foreach (var item in this.WorldspaceCellsRemoved.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.ActorCellMarkerReference != null)
+                if (this.InitiallyDisabledReferencesAdded != null)
                 {
-                    if (!eval(this.ActorCellMarkerReference.Overall)) return false;
-                    if (this.ActorCellMarkerReference.Specific != null)
+                    if (!eval(this.InitiallyDisabledReferencesAdded.Overall)) return false;
+                    if (this.InitiallyDisabledReferencesAdded.Specific != null)
                     {
-                        foreach (var item in this.ActorCellMarkerReference.Specific)
+                        foreach (var item in this.InitiallyDisabledReferencesAdded.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
-                if (this.LocationCellMarkerReference != null)
+                if (this.InitiallyDisabledReferencesStatic != null)
                 {
-                    if (!eval(this.LocationCellMarkerReference.Overall)) return false;
-                    if (this.LocationCellMarkerReference.Specific != null)
+                    if (!eval(this.InitiallyDisabledReferencesStatic.Overall)) return false;
+                    if (this.InitiallyDisabledReferencesStatic.Specific != null)
                     {
-                        foreach (var item in this.LocationCellMarkerReference.Specific)
+                        foreach (var item in this.InitiallyDisabledReferencesStatic.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
-                if (this.ActorCellEnablePoint != null)
+                if (this.EnableParentReferencesAdded != null)
                 {
-                    if (!eval(this.ActorCellEnablePoint.Overall)) return false;
-                    if (this.ActorCellEnablePoint.Specific != null)
+                    if (!eval(this.EnableParentReferencesAdded.Overall)) return false;
+                    if (this.EnableParentReferencesAdded.Specific != null)
                     {
-                        foreach (var item in this.ActorCellEnablePoint.Specific)
+                        foreach (var item in this.EnableParentReferencesAdded.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.LocationCellEnablePoint != null)
+                if (this.EnableParentReferencesStatic != null)
                 {
-                    if (!eval(this.LocationCellEnablePoint.Overall)) return false;
-                    if (this.LocationCellEnablePoint.Specific != null)
+                    if (!eval(this.EnableParentReferencesStatic.Overall)) return false;
+                    if (this.EnableParentReferencesStatic.Specific != null)
                     {
-                        foreach (var item in this.LocationCellEnablePoint.Specific)
+                        foreach (var item in this.EnableParentReferencesStatic.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -845,187 +845,187 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (this.ActorCellPersistentReferences != null)
+                if (this.PersistentActorReferencesAdded != null)
                 {
-                    if (eval(this.ActorCellPersistentReferences.Overall)) return true;
-                    if (this.ActorCellPersistentReferences.Specific != null)
+                    if (eval(this.PersistentActorReferencesAdded.Overall)) return true;
+                    if (this.PersistentActorReferencesAdded.Specific != null)
                     {
-                        foreach (var item in this.ActorCellPersistentReferences.Specific)
+                        foreach (var item in this.PersistentActorReferencesAdded.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.LocationCellPersistentReferences != null)
+                if (this.PersistentActorReferencesStatic != null)
                 {
-                    if (eval(this.LocationCellPersistentReferences.Overall)) return true;
-                    if (this.LocationCellPersistentReferences.Specific != null)
+                    if (eval(this.PersistentActorReferencesStatic.Overall)) return true;
+                    if (this.PersistentActorReferencesStatic.Specific != null)
                     {
-                        foreach (var item in this.LocationCellPersistentReferences.Specific)
+                        foreach (var item in this.PersistentActorReferencesStatic.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.ReferenceCellPersistentReferences != null)
+                if (this.PersistentActorReferencesRemoved != null)
                 {
-                    if (eval(this.ReferenceCellPersistentReferences.Overall)) return true;
-                    if (this.ReferenceCellPersistentReferences.Specific != null)
+                    if (eval(this.PersistentActorReferencesRemoved.Overall)) return true;
+                    if (this.PersistentActorReferencesRemoved.Specific != null)
                     {
-                        foreach (var item in this.ReferenceCellPersistentReferences.Specific)
+                        foreach (var item in this.PersistentActorReferencesRemoved.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
-                if (this.ActorCellUniques != null)
+                if (this.UniqueActorReferencesAdded != null)
                 {
-                    if (eval(this.ActorCellUniques.Overall)) return true;
-                    if (this.ActorCellUniques.Specific != null)
+                    if (eval(this.UniqueActorReferencesAdded.Overall)) return true;
+                    if (this.UniqueActorReferencesAdded.Specific != null)
                     {
-                        foreach (var item in this.ActorCellUniques.Specific)
+                        foreach (var item in this.UniqueActorReferencesAdded.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.LocationCellUniques != null)
+                if (this.UniqueActorReferencesStatic != null)
                 {
-                    if (eval(this.LocationCellUniques.Overall)) return true;
-                    if (this.LocationCellUniques.Specific != null)
+                    if (eval(this.UniqueActorReferencesStatic.Overall)) return true;
+                    if (this.UniqueActorReferencesStatic.Specific != null)
                     {
-                        foreach (var item in this.LocationCellUniques.Specific)
+                        foreach (var item in this.UniqueActorReferencesStatic.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.ReferenceCellUnique != null)
+                if (this.UniqueActorRemoved != null)
                 {
-                    if (eval(this.ReferenceCellUnique.Overall)) return true;
-                    if (this.ReferenceCellUnique.Specific != null)
+                    if (eval(this.UniqueActorRemoved.Overall)) return true;
+                    if (this.UniqueActorRemoved.Specific != null)
                     {
-                        foreach (var item in this.ReferenceCellUnique.Specific)
+                        foreach (var item in this.UniqueActorRemoved.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
-                if (this.ActorCellStaticReferences != null)
+                if (this.LocationRefTypeReferencesAdded != null)
                 {
-                    if (eval(this.ActorCellStaticReferences.Overall)) return true;
-                    if (this.ActorCellStaticReferences.Specific != null)
+                    if (eval(this.LocationRefTypeReferencesAdded.Overall)) return true;
+                    if (this.LocationRefTypeReferencesAdded.Specific != null)
                     {
-                        foreach (var item in this.ActorCellStaticReferences.Specific)
+                        foreach (var item in this.LocationRefTypeReferencesAdded.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.LocationCellStaticReferences != null)
+                if (this.LocationRefTypeReferencesStatic != null)
                 {
-                    if (eval(this.LocationCellStaticReferences.Overall)) return true;
-                    if (this.LocationCellStaticReferences.Specific != null)
+                    if (eval(this.LocationRefTypeReferencesStatic.Overall)) return true;
+                    if (this.LocationRefTypeReferencesStatic.Specific != null)
                     {
-                        foreach (var item in this.LocationCellStaticReferences.Specific)
+                        foreach (var item in this.LocationRefTypeReferencesStatic.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.ReferenceCellStaticReferences != null)
+                if (this.LocationRefTypeReferencesRemoved != null)
                 {
-                    if (eval(this.ReferenceCellStaticReferences.Overall)) return true;
-                    if (this.ReferenceCellStaticReferences.Specific != null)
+                    if (eval(this.LocationRefTypeReferencesRemoved.Overall)) return true;
+                    if (this.LocationRefTypeReferencesRemoved.Specific != null)
                     {
-                        foreach (var item in this.ReferenceCellStaticReferences.Specific)
+                        foreach (var item in this.LocationRefTypeReferencesRemoved.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
-                if (this.ActorCellEncounterCell != null)
+                if (this.WorldspaceCellsAdded != null)
                 {
-                    if (eval(this.ActorCellEncounterCell.Overall)) return true;
-                    if (this.ActorCellEncounterCell.Specific != null)
+                    if (eval(this.WorldspaceCellsAdded.Overall)) return true;
+                    if (this.WorldspaceCellsAdded.Specific != null)
                     {
-                        foreach (var item in this.ActorCellEncounterCell.Specific)
+                        foreach (var item in this.WorldspaceCellsAdded.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.LocationCellEncounterCell != null)
+                if (this.WorldspaceCellsStatic != null)
                 {
-                    if (eval(this.LocationCellEncounterCell.Overall)) return true;
-                    if (this.LocationCellEncounterCell.Specific != null)
+                    if (eval(this.WorldspaceCellsStatic.Overall)) return true;
+                    if (this.WorldspaceCellsStatic.Specific != null)
                     {
-                        foreach (var item in this.LocationCellEncounterCell.Specific)
+                        foreach (var item in this.WorldspaceCellsStatic.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.ReferenceCellEncounterCell != null)
+                if (this.WorldspaceCellsRemoved != null)
                 {
-                    if (eval(this.ReferenceCellEncounterCell.Overall)) return true;
-                    if (this.ReferenceCellEncounterCell.Specific != null)
+                    if (eval(this.WorldspaceCellsRemoved.Overall)) return true;
+                    if (this.WorldspaceCellsRemoved.Specific != null)
                     {
-                        foreach (var item in this.ReferenceCellEncounterCell.Specific)
+                        foreach (var item in this.WorldspaceCellsRemoved.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.ActorCellMarkerReference != null)
+                if (this.InitiallyDisabledReferencesAdded != null)
                 {
-                    if (eval(this.ActorCellMarkerReference.Overall)) return true;
-                    if (this.ActorCellMarkerReference.Specific != null)
+                    if (eval(this.InitiallyDisabledReferencesAdded.Overall)) return true;
+                    if (this.InitiallyDisabledReferencesAdded.Specific != null)
                     {
-                        foreach (var item in this.ActorCellMarkerReference.Specific)
+                        foreach (var item in this.InitiallyDisabledReferencesAdded.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
-                if (this.LocationCellMarkerReference != null)
+                if (this.InitiallyDisabledReferencesStatic != null)
                 {
-                    if (eval(this.LocationCellMarkerReference.Overall)) return true;
-                    if (this.LocationCellMarkerReference.Specific != null)
+                    if (eval(this.InitiallyDisabledReferencesStatic.Overall)) return true;
+                    if (this.InitiallyDisabledReferencesStatic.Specific != null)
                     {
-                        foreach (var item in this.LocationCellMarkerReference.Specific)
+                        foreach (var item in this.InitiallyDisabledReferencesStatic.Specific)
                         {
                             if (!eval(item.Value)) return false;
                         }
                     }
                 }
-                if (this.ActorCellEnablePoint != null)
+                if (this.EnableParentReferencesAdded != null)
                 {
-                    if (eval(this.ActorCellEnablePoint.Overall)) return true;
-                    if (this.ActorCellEnablePoint.Specific != null)
+                    if (eval(this.EnableParentReferencesAdded.Overall)) return true;
+                    if (this.EnableParentReferencesAdded.Specific != null)
                     {
-                        foreach (var item in this.ActorCellEnablePoint.Specific)
+                        foreach (var item in this.EnableParentReferencesAdded.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
                         }
                     }
                 }
-                if (this.LocationCellEnablePoint != null)
+                if (this.EnableParentReferencesStatic != null)
                 {
-                    if (eval(this.LocationCellEnablePoint.Overall)) return true;
-                    if (this.LocationCellEnablePoint.Specific != null)
+                    if (eval(this.EnableParentReferencesStatic.Overall)) return true;
+                    if (this.EnableParentReferencesStatic.Specific != null)
                     {
-                        foreach (var item in this.LocationCellEnablePoint.Specific)
+                        foreach (var item in this.EnableParentReferencesStatic.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -1066,146 +1066,146 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                if (ActorCellPersistentReferences != null)
+                if (PersistentActorReferencesAdded != null)
                 {
-                    obj.ActorCellPersistentReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationReference.Mask<R>?>>?>(eval(this.ActorCellPersistentReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationReference.Mask<R>?>>());
-                    if (ActorCellPersistentReferences.Specific != null)
+                    obj.PersistentActorReferencesAdded = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PersistentActorReference.Mask<R>?>>?>(eval(this.PersistentActorReferencesAdded.Overall), Enumerable.Empty<MaskItemIndexed<R, PersistentActorReference.Mask<R>?>>());
+                    if (PersistentActorReferencesAdded.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, LocationReference.Mask<R>?>>();
-                        obj.ActorCellPersistentReferences.Specific = l;
-                        foreach (var item in ActorCellPersistentReferences.Specific)
+                        var l = new List<MaskItemIndexed<R, PersistentActorReference.Mask<R>?>>();
+                        obj.PersistentActorReferencesAdded.Specific = l;
+                        foreach (var item in PersistentActorReferencesAdded.Specific)
                         {
-                            MaskItemIndexed<R, LocationReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, PersistentActorReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, PersistentActorReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
                     }
                 }
-                if (LocationCellPersistentReferences != null)
+                if (PersistentActorReferencesStatic != null)
                 {
-                    obj.LocationCellPersistentReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationReference.Mask<R>?>>?>(eval(this.LocationCellPersistentReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationReference.Mask<R>?>>());
-                    if (LocationCellPersistentReferences.Specific != null)
+                    obj.PersistentActorReferencesStatic = new MaskItem<R, IEnumerable<MaskItemIndexed<R, PersistentActorReference.Mask<R>?>>?>(eval(this.PersistentActorReferencesStatic.Overall), Enumerable.Empty<MaskItemIndexed<R, PersistentActorReference.Mask<R>?>>());
+                    if (PersistentActorReferencesStatic.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, LocationReference.Mask<R>?>>();
-                        obj.LocationCellPersistentReferences.Specific = l;
-                        foreach (var item in LocationCellPersistentReferences.Specific)
+                        var l = new List<MaskItemIndexed<R, PersistentActorReference.Mask<R>?>>();
+                        obj.PersistentActorReferencesStatic.Specific = l;
+                        foreach (var item in PersistentActorReferencesStatic.Specific)
                         {
-                            MaskItemIndexed<R, LocationReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, PersistentActorReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, PersistentActorReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
                     }
                 }
-                if (ReferenceCellPersistentReferences != null)
+                if (PersistentActorReferencesRemoved != null)
                 {
-                    obj.ReferenceCellPersistentReferences = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ReferenceCellPersistentReferences.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (ReferenceCellPersistentReferences.Specific != null)
+                    obj.PersistentActorReferencesRemoved = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.PersistentActorReferencesRemoved.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (PersistentActorReferencesRemoved.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
-                        obj.ReferenceCellPersistentReferences.Specific = l;
-                        foreach (var item in ReferenceCellPersistentReferences.Specific)
+                        obj.PersistentActorReferencesRemoved.Specific = l;
+                        foreach (var item in PersistentActorReferencesRemoved.Specific)
                         {
                             R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
                 }
-                if (ActorCellUniques != null)
+                if (UniqueActorReferencesAdded != null)
                 {
-                    obj.ActorCellUniques = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellUnique.Mask<R>?>>?>(eval(this.ActorCellUniques.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCellUnique.Mask<R>?>>());
-                    if (ActorCellUniques.Specific != null)
+                    obj.UniqueActorReferencesAdded = new MaskItem<R, IEnumerable<MaskItemIndexed<R, UniqueActorReference.Mask<R>?>>?>(eval(this.UniqueActorReferencesAdded.Overall), Enumerable.Empty<MaskItemIndexed<R, UniqueActorReference.Mask<R>?>>());
+                    if (UniqueActorReferencesAdded.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, LocationCellUnique.Mask<R>?>>();
-                        obj.ActorCellUniques.Specific = l;
-                        foreach (var item in ActorCellUniques.Specific)
+                        var l = new List<MaskItemIndexed<R, UniqueActorReference.Mask<R>?>>();
+                        obj.UniqueActorReferencesAdded.Specific = l;
+                        foreach (var item in UniqueActorReferencesAdded.Specific)
                         {
-                            MaskItemIndexed<R, LocationCellUnique.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCellUnique.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, UniqueActorReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, UniqueActorReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
                     }
                 }
-                if (LocationCellUniques != null)
+                if (UniqueActorReferencesStatic != null)
                 {
-                    obj.LocationCellUniques = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellUnique.Mask<R>?>>?>(eval(this.LocationCellUniques.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCellUnique.Mask<R>?>>());
-                    if (LocationCellUniques.Specific != null)
+                    obj.UniqueActorReferencesStatic = new MaskItem<R, IEnumerable<MaskItemIndexed<R, UniqueActorReference.Mask<R>?>>?>(eval(this.UniqueActorReferencesStatic.Overall), Enumerable.Empty<MaskItemIndexed<R, UniqueActorReference.Mask<R>?>>());
+                    if (UniqueActorReferencesStatic.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, LocationCellUnique.Mask<R>?>>();
-                        obj.LocationCellUniques.Specific = l;
-                        foreach (var item in LocationCellUniques.Specific)
+                        var l = new List<MaskItemIndexed<R, UniqueActorReference.Mask<R>?>>();
+                        obj.UniqueActorReferencesStatic.Specific = l;
+                        foreach (var item in UniqueActorReferencesStatic.Specific)
                         {
-                            MaskItemIndexed<R, LocationCellUnique.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCellUnique.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, UniqueActorReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, UniqueActorReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
                     }
                 }
-                if (ReferenceCellUnique != null)
+                if (UniqueActorRemoved != null)
                 {
-                    obj.ReferenceCellUnique = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ReferenceCellUnique.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (ReferenceCellUnique.Specific != null)
+                    obj.UniqueActorRemoved = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.UniqueActorRemoved.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (UniqueActorRemoved.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
-                        obj.ReferenceCellUnique.Specific = l;
-                        foreach (var item in ReferenceCellUnique.Specific)
+                        obj.UniqueActorRemoved.Specific = l;
+                        foreach (var item in UniqueActorRemoved.Specific)
                         {
                             R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
                 }
-                if (ActorCellStaticReferences != null)
+                if (LocationRefTypeReferencesAdded != null)
                 {
-                    obj.ActorCellStaticReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>>?>(eval(this.ActorCellStaticReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>>());
-                    if (ActorCellStaticReferences.Specific != null)
+                    obj.LocationRefTypeReferencesAdded = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationRefTypeReference.Mask<R>?>>?>(eval(this.LocationRefTypeReferencesAdded.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationRefTypeReference.Mask<R>?>>());
+                    if (LocationRefTypeReferencesAdded.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>>();
-                        obj.ActorCellStaticReferences.Specific = l;
-                        foreach (var item in ActorCellStaticReferences.Specific)
+                        var l = new List<MaskItemIndexed<R, LocationRefTypeReference.Mask<R>?>>();
+                        obj.LocationRefTypeReferencesAdded.Specific = l;
+                        foreach (var item in LocationRefTypeReferencesAdded.Specific)
                         {
-                            MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocationRefTypeReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationRefTypeReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
                     }
                 }
-                if (LocationCellStaticReferences != null)
+                if (LocationRefTypeReferencesStatic != null)
                 {
-                    obj.LocationCellStaticReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>>?>(eval(this.LocationCellStaticReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>>());
-                    if (LocationCellStaticReferences.Specific != null)
+                    obj.LocationRefTypeReferencesStatic = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationRefTypeReference.Mask<R>?>>?>(eval(this.LocationRefTypeReferencesStatic.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationRefTypeReference.Mask<R>?>>());
+                    if (LocationRefTypeReferencesStatic.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>>();
-                        obj.LocationCellStaticReferences.Specific = l;
-                        foreach (var item in LocationCellStaticReferences.Specific)
+                        var l = new List<MaskItemIndexed<R, LocationRefTypeReference.Mask<R>?>>();
+                        obj.LocationRefTypeReferencesStatic.Specific = l;
+                        foreach (var item in LocationRefTypeReferencesStatic.Specific)
                         {
-                            MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, LocationRefTypeReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationRefTypeReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
                     }
                 }
-                if (ReferenceCellStaticReferences != null)
+                if (LocationRefTypeReferencesRemoved != null)
                 {
-                    obj.ReferenceCellStaticReferences = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ReferenceCellStaticReferences.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (ReferenceCellStaticReferences.Specific != null)
+                    obj.LocationRefTypeReferencesRemoved = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LocationRefTypeReferencesRemoved.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (LocationRefTypeReferencesRemoved.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
-                        obj.ReferenceCellStaticReferences.Specific = l;
-                        foreach (var item in ReferenceCellStaticReferences.Specific)
+                        obj.LocationRefTypeReferencesRemoved.Specific = l;
+                        foreach (var item in LocationRefTypeReferencesRemoved.Specific)
                         {
                             R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
                 }
-                if (ActorCellEncounterCell != null)
+                if (WorldspaceCellsAdded != null)
                 {
-                    obj.ActorCellEncounterCell = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>?>(eval(this.ActorCellEncounterCell.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>());
-                    if (ActorCellEncounterCell.Specific != null)
+                    obj.WorldspaceCellsAdded = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>?>(eval(this.WorldspaceCellsAdded.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>());
+                    if (WorldspaceCellsAdded.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>();
-                        obj.ActorCellEncounterCell.Specific = l;
-                        foreach (var item in ActorCellEncounterCell.Specific)
+                        obj.WorldspaceCellsAdded.Specific = l;
+                        foreach (var item in WorldspaceCellsAdded.Specific)
                         {
                             MaskItemIndexed<R, LocationCoordinate.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCoordinate.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
@@ -1213,14 +1213,14 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (LocationCellEncounterCell != null)
+                if (WorldspaceCellsStatic != null)
                 {
-                    obj.LocationCellEncounterCell = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>?>(eval(this.LocationCellEncounterCell.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>());
-                    if (LocationCellEncounterCell.Specific != null)
+                    obj.WorldspaceCellsStatic = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>?>(eval(this.WorldspaceCellsStatic.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>());
+                    if (WorldspaceCellsStatic.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>();
-                        obj.LocationCellEncounterCell.Specific = l;
-                        foreach (var item in LocationCellEncounterCell.Specific)
+                        obj.WorldspaceCellsStatic.Specific = l;
+                        foreach (var item in WorldspaceCellsStatic.Specific)
                         {
                             MaskItemIndexed<R, LocationCoordinate.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCoordinate.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
@@ -1228,14 +1228,14 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (ReferenceCellEncounterCell != null)
+                if (WorldspaceCellsRemoved != null)
                 {
-                    obj.ReferenceCellEncounterCell = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>?>(eval(this.ReferenceCellEncounterCell.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>());
-                    if (ReferenceCellEncounterCell.Specific != null)
+                    obj.WorldspaceCellsRemoved = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>?>(eval(this.WorldspaceCellsRemoved.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>());
+                    if (WorldspaceCellsRemoved.Specific != null)
                     {
                         var l = new List<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>();
-                        obj.ReferenceCellEncounterCell.Specific = l;
-                        foreach (var item in ReferenceCellEncounterCell.Specific)
+                        obj.WorldspaceCellsRemoved.Specific = l;
+                        foreach (var item in WorldspaceCellsRemoved.Specific)
                         {
                             MaskItemIndexed<R, LocationCoordinate.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCoordinate.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
@@ -1243,59 +1243,59 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (ActorCellMarkerReference != null)
+                if (InitiallyDisabledReferencesAdded != null)
                 {
-                    obj.ActorCellMarkerReference = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ActorCellMarkerReference.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (ActorCellMarkerReference.Specific != null)
+                    obj.InitiallyDisabledReferencesAdded = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.InitiallyDisabledReferencesAdded.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (InitiallyDisabledReferencesAdded.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
-                        obj.ActorCellMarkerReference.Specific = l;
-                        foreach (var item in ActorCellMarkerReference.Specific)
+                        obj.InitiallyDisabledReferencesAdded.Specific = l;
+                        foreach (var item in InitiallyDisabledReferencesAdded.Specific)
                         {
                             R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
                 }
-                if (LocationCellMarkerReference != null)
+                if (InitiallyDisabledReferencesStatic != null)
                 {
-                    obj.LocationCellMarkerReference = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LocationCellMarkerReference.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (LocationCellMarkerReference.Specific != null)
+                    obj.InitiallyDisabledReferencesStatic = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.InitiallyDisabledReferencesStatic.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (InitiallyDisabledReferencesStatic.Specific != null)
                     {
                         var l = new List<(int Index, R Item)>();
-                        obj.LocationCellMarkerReference.Specific = l;
-                        foreach (var item in LocationCellMarkerReference.Specific)
+                        obj.InitiallyDisabledReferencesStatic.Specific = l;
+                        foreach (var item in InitiallyDisabledReferencesStatic.Specific)
                         {
                             R mask = eval(item.Value);
                             l.Add((item.Index, mask));
                         }
                     }
                 }
-                if (ActorCellEnablePoint != null)
+                if (EnableParentReferencesAdded != null)
                 {
-                    obj.ActorCellEnablePoint = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>>?>(eval(this.ActorCellEnablePoint.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>>());
-                    if (ActorCellEnablePoint.Specific != null)
+                    obj.EnableParentReferencesAdded = new MaskItem<R, IEnumerable<MaskItemIndexed<R, EnableParentReference.Mask<R>?>>?>(eval(this.EnableParentReferencesAdded.Overall), Enumerable.Empty<MaskItemIndexed<R, EnableParentReference.Mask<R>?>>());
+                    if (EnableParentReferencesAdded.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>>();
-                        obj.ActorCellEnablePoint.Specific = l;
-                        foreach (var item in ActorCellEnablePoint.Specific)
+                        var l = new List<MaskItemIndexed<R, EnableParentReference.Mask<R>?>>();
+                        obj.EnableParentReferencesAdded.Specific = l;
+                        foreach (var item in EnableParentReferencesAdded.Specific)
                         {
-                            MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, EnableParentReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, EnableParentReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
                     }
                 }
-                if (LocationCellEnablePoint != null)
+                if (EnableParentReferencesStatic != null)
                 {
-                    obj.LocationCellEnablePoint = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>>?>(eval(this.LocationCellEnablePoint.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>>());
-                    if (LocationCellEnablePoint.Specific != null)
+                    obj.EnableParentReferencesStatic = new MaskItem<R, IEnumerable<MaskItemIndexed<R, EnableParentReference.Mask<R>?>>?>(eval(this.EnableParentReferencesStatic.Overall), Enumerable.Empty<MaskItemIndexed<R, EnableParentReference.Mask<R>?>>());
+                    if (EnableParentReferencesStatic.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>>();
-                        obj.LocationCellEnablePoint.Specific = l;
-                        foreach (var item in LocationCellEnablePoint.Specific)
+                        var l = new List<MaskItemIndexed<R, EnableParentReference.Mask<R>?>>();
+                        obj.EnableParentReferencesStatic.Specific = l;
+                        foreach (var item in EnableParentReferencesStatic.Specific)
                         {
-                            MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, EnableParentReference.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, EnableParentReference.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -1341,16 +1341,16 @@ namespace Mutagen.Bethesda.Skyrim
                 sb.AppendLine($"{nameof(Location.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if ((printMask?.ActorCellPersistentReferences?.Overall ?? true)
-                        && ActorCellPersistentReferences is {} ActorCellPersistentReferencesItem)
+                    if ((printMask?.PersistentActorReferencesAdded?.Overall ?? true)
+                        && PersistentActorReferencesAdded is {} PersistentActorReferencesAddedItem)
                     {
-                        sb.AppendLine("ActorCellPersistentReferences =>");
+                        sb.AppendLine("PersistentActorReferencesAdded =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(ActorCellPersistentReferencesItem.Overall);
-                            if (ActorCellPersistentReferencesItem.Specific != null)
+                            sb.AppendItem(PersistentActorReferencesAddedItem.Overall);
+                            if (PersistentActorReferencesAddedItem.Specific != null)
                             {
-                                foreach (var subItem in ActorCellPersistentReferencesItem.Specific)
+                                foreach (var subItem in PersistentActorReferencesAddedItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1360,16 +1360,16 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if ((printMask?.LocationCellPersistentReferences?.Overall ?? true)
-                        && LocationCellPersistentReferences is {} LocationCellPersistentReferencesItem)
+                    if ((printMask?.PersistentActorReferencesStatic?.Overall ?? true)
+                        && PersistentActorReferencesStatic is {} PersistentActorReferencesStaticItem)
                     {
-                        sb.AppendLine("LocationCellPersistentReferences =>");
+                        sb.AppendLine("PersistentActorReferencesStatic =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(LocationCellPersistentReferencesItem.Overall);
-                            if (LocationCellPersistentReferencesItem.Specific != null)
+                            sb.AppendItem(PersistentActorReferencesStaticItem.Overall);
+                            if (PersistentActorReferencesStaticItem.Specific != null)
                             {
-                                foreach (var subItem in LocationCellPersistentReferencesItem.Specific)
+                                foreach (var subItem in PersistentActorReferencesStaticItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1379,16 +1379,16 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if ((printMask?.ReferenceCellPersistentReferences?.Overall ?? true)
-                        && ReferenceCellPersistentReferences is {} ReferenceCellPersistentReferencesItem)
+                    if ((printMask?.PersistentActorReferencesRemoved?.Overall ?? true)
+                        && PersistentActorReferencesRemoved is {} PersistentActorReferencesRemovedItem)
                     {
-                        sb.AppendLine("ReferenceCellPersistentReferences =>");
+                        sb.AppendLine("PersistentActorReferencesRemoved =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(ReferenceCellPersistentReferencesItem.Overall);
-                            if (ReferenceCellPersistentReferencesItem.Specific != null)
+                            sb.AppendItem(PersistentActorReferencesRemovedItem.Overall);
+                            if (PersistentActorReferencesRemovedItem.Specific != null)
                             {
-                                foreach (var subItem in ReferenceCellPersistentReferencesItem.Specific)
+                                foreach (var subItem in PersistentActorReferencesRemovedItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1400,16 +1400,16 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if ((printMask?.ActorCellUniques?.Overall ?? true)
-                        && ActorCellUniques is {} ActorCellUniquesItem)
+                    if ((printMask?.UniqueActorReferencesAdded?.Overall ?? true)
+                        && UniqueActorReferencesAdded is {} UniqueActorReferencesAddedItem)
                     {
-                        sb.AppendLine("ActorCellUniques =>");
+                        sb.AppendLine("UniqueActorReferencesAdded =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(ActorCellUniquesItem.Overall);
-                            if (ActorCellUniquesItem.Specific != null)
+                            sb.AppendItem(UniqueActorReferencesAddedItem.Overall);
+                            if (UniqueActorReferencesAddedItem.Specific != null)
                             {
-                                foreach (var subItem in ActorCellUniquesItem.Specific)
+                                foreach (var subItem in UniqueActorReferencesAddedItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1419,16 +1419,16 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if ((printMask?.LocationCellUniques?.Overall ?? true)
-                        && LocationCellUniques is {} LocationCellUniquesItem)
+                    if ((printMask?.UniqueActorReferencesStatic?.Overall ?? true)
+                        && UniqueActorReferencesStatic is {} UniqueActorReferencesStaticItem)
                     {
-                        sb.AppendLine("LocationCellUniques =>");
+                        sb.AppendLine("UniqueActorReferencesStatic =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(LocationCellUniquesItem.Overall);
-                            if (LocationCellUniquesItem.Specific != null)
+                            sb.AppendItem(UniqueActorReferencesStaticItem.Overall);
+                            if (UniqueActorReferencesStaticItem.Specific != null)
                             {
-                                foreach (var subItem in LocationCellUniquesItem.Specific)
+                                foreach (var subItem in UniqueActorReferencesStaticItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1438,16 +1438,16 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if ((printMask?.ReferenceCellUnique?.Overall ?? true)
-                        && ReferenceCellUnique is {} ReferenceCellUniqueItem)
+                    if ((printMask?.UniqueActorRemoved?.Overall ?? true)
+                        && UniqueActorRemoved is {} UniqueActorRemovedItem)
                     {
-                        sb.AppendLine("ReferenceCellUnique =>");
+                        sb.AppendLine("UniqueActorRemoved =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(ReferenceCellUniqueItem.Overall);
-                            if (ReferenceCellUniqueItem.Specific != null)
+                            sb.AppendItem(UniqueActorRemovedItem.Overall);
+                            if (UniqueActorRemovedItem.Specific != null)
                             {
-                                foreach (var subItem in ReferenceCellUniqueItem.Specific)
+                                foreach (var subItem in UniqueActorRemovedItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1459,16 +1459,16 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if ((printMask?.ActorCellStaticReferences?.Overall ?? true)
-                        && ActorCellStaticReferences is {} ActorCellStaticReferencesItem)
+                    if ((printMask?.LocationRefTypeReferencesAdded?.Overall ?? true)
+                        && LocationRefTypeReferencesAdded is {} LocationRefTypeReferencesAddedItem)
                     {
-                        sb.AppendLine("ActorCellStaticReferences =>");
+                        sb.AppendLine("LocationRefTypeReferencesAdded =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(ActorCellStaticReferencesItem.Overall);
-                            if (ActorCellStaticReferencesItem.Specific != null)
+                            sb.AppendItem(LocationRefTypeReferencesAddedItem.Overall);
+                            if (LocationRefTypeReferencesAddedItem.Specific != null)
                             {
-                                foreach (var subItem in ActorCellStaticReferencesItem.Specific)
+                                foreach (var subItem in LocationRefTypeReferencesAddedItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1478,16 +1478,16 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if ((printMask?.LocationCellStaticReferences?.Overall ?? true)
-                        && LocationCellStaticReferences is {} LocationCellStaticReferencesItem)
+                    if ((printMask?.LocationRefTypeReferencesStatic?.Overall ?? true)
+                        && LocationRefTypeReferencesStatic is {} LocationRefTypeReferencesStaticItem)
                     {
-                        sb.AppendLine("LocationCellStaticReferences =>");
+                        sb.AppendLine("LocationRefTypeReferencesStatic =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(LocationCellStaticReferencesItem.Overall);
-                            if (LocationCellStaticReferencesItem.Specific != null)
+                            sb.AppendItem(LocationRefTypeReferencesStaticItem.Overall);
+                            if (LocationRefTypeReferencesStaticItem.Specific != null)
                             {
-                                foreach (var subItem in LocationCellStaticReferencesItem.Specific)
+                                foreach (var subItem in LocationRefTypeReferencesStaticItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1497,16 +1497,16 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if ((printMask?.ReferenceCellStaticReferences?.Overall ?? true)
-                        && ReferenceCellStaticReferences is {} ReferenceCellStaticReferencesItem)
+                    if ((printMask?.LocationRefTypeReferencesRemoved?.Overall ?? true)
+                        && LocationRefTypeReferencesRemoved is {} LocationRefTypeReferencesRemovedItem)
                     {
-                        sb.AppendLine("ReferenceCellStaticReferences =>");
+                        sb.AppendLine("LocationRefTypeReferencesRemoved =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(ReferenceCellStaticReferencesItem.Overall);
-                            if (ReferenceCellStaticReferencesItem.Specific != null)
+                            sb.AppendItem(LocationRefTypeReferencesRemovedItem.Overall);
+                            if (LocationRefTypeReferencesRemovedItem.Specific != null)
                             {
-                                foreach (var subItem in ReferenceCellStaticReferencesItem.Specific)
+                                foreach (var subItem in LocationRefTypeReferencesRemovedItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1518,16 +1518,16 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if ((printMask?.ActorCellEncounterCell?.Overall ?? true)
-                        && ActorCellEncounterCell is {} ActorCellEncounterCellItem)
+                    if ((printMask?.WorldspaceCellsAdded?.Overall ?? true)
+                        && WorldspaceCellsAdded is {} WorldspaceCellsAddedItem)
                     {
-                        sb.AppendLine("ActorCellEncounterCell =>");
+                        sb.AppendLine("WorldspaceCellsAdded =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(ActorCellEncounterCellItem.Overall);
-                            if (ActorCellEncounterCellItem.Specific != null)
+                            sb.AppendItem(WorldspaceCellsAddedItem.Overall);
+                            if (WorldspaceCellsAddedItem.Specific != null)
                             {
-                                foreach (var subItem in ActorCellEncounterCellItem.Specific)
+                                foreach (var subItem in WorldspaceCellsAddedItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1537,16 +1537,16 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if ((printMask?.LocationCellEncounterCell?.Overall ?? true)
-                        && LocationCellEncounterCell is {} LocationCellEncounterCellItem)
+                    if ((printMask?.WorldspaceCellsStatic?.Overall ?? true)
+                        && WorldspaceCellsStatic is {} WorldspaceCellsStaticItem)
                     {
-                        sb.AppendLine("LocationCellEncounterCell =>");
+                        sb.AppendLine("WorldspaceCellsStatic =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(LocationCellEncounterCellItem.Overall);
-                            if (LocationCellEncounterCellItem.Specific != null)
+                            sb.AppendItem(WorldspaceCellsStaticItem.Overall);
+                            if (WorldspaceCellsStaticItem.Specific != null)
                             {
-                                foreach (var subItem in LocationCellEncounterCellItem.Specific)
+                                foreach (var subItem in WorldspaceCellsStaticItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1556,16 +1556,16 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if ((printMask?.ReferenceCellEncounterCell?.Overall ?? true)
-                        && ReferenceCellEncounterCell is {} ReferenceCellEncounterCellItem)
+                    if ((printMask?.WorldspaceCellsRemoved?.Overall ?? true)
+                        && WorldspaceCellsRemoved is {} WorldspaceCellsRemovedItem)
                     {
-                        sb.AppendLine("ReferenceCellEncounterCell =>");
+                        sb.AppendLine("WorldspaceCellsRemoved =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(ReferenceCellEncounterCellItem.Overall);
-                            if (ReferenceCellEncounterCellItem.Specific != null)
+                            sb.AppendItem(WorldspaceCellsRemovedItem.Overall);
+                            if (WorldspaceCellsRemovedItem.Specific != null)
                             {
-                                foreach (var subItem in ReferenceCellEncounterCellItem.Specific)
+                                foreach (var subItem in WorldspaceCellsRemovedItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1575,16 +1575,16 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if ((printMask?.ActorCellMarkerReference?.Overall ?? true)
-                        && ActorCellMarkerReference is {} ActorCellMarkerReferenceItem)
+                    if ((printMask?.InitiallyDisabledReferencesAdded?.Overall ?? true)
+                        && InitiallyDisabledReferencesAdded is {} InitiallyDisabledReferencesAddedItem)
                     {
-                        sb.AppendLine("ActorCellMarkerReference =>");
+                        sb.AppendLine("InitiallyDisabledReferencesAdded =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(ActorCellMarkerReferenceItem.Overall);
-                            if (ActorCellMarkerReferenceItem.Specific != null)
+                            sb.AppendItem(InitiallyDisabledReferencesAddedItem.Overall);
+                            if (InitiallyDisabledReferencesAddedItem.Specific != null)
                             {
-                                foreach (var subItem in ActorCellMarkerReferenceItem.Specific)
+                                foreach (var subItem in InitiallyDisabledReferencesAddedItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1596,16 +1596,16 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if ((printMask?.LocationCellMarkerReference?.Overall ?? true)
-                        && LocationCellMarkerReference is {} LocationCellMarkerReferenceItem)
+                    if ((printMask?.InitiallyDisabledReferencesStatic?.Overall ?? true)
+                        && InitiallyDisabledReferencesStatic is {} InitiallyDisabledReferencesStaticItem)
                     {
-                        sb.AppendLine("LocationCellMarkerReference =>");
+                        sb.AppendLine("InitiallyDisabledReferencesStatic =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(LocationCellMarkerReferenceItem.Overall);
-                            if (LocationCellMarkerReferenceItem.Specific != null)
+                            sb.AppendItem(InitiallyDisabledReferencesStaticItem.Overall);
+                            if (InitiallyDisabledReferencesStaticItem.Specific != null)
                             {
-                                foreach (var subItem in LocationCellMarkerReferenceItem.Specific)
+                                foreach (var subItem in InitiallyDisabledReferencesStaticItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1617,16 +1617,16 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if ((printMask?.ActorCellEnablePoint?.Overall ?? true)
-                        && ActorCellEnablePoint is {} ActorCellEnablePointItem)
+                    if ((printMask?.EnableParentReferencesAdded?.Overall ?? true)
+                        && EnableParentReferencesAdded is {} EnableParentReferencesAddedItem)
                     {
-                        sb.AppendLine("ActorCellEnablePoint =>");
+                        sb.AppendLine("EnableParentReferencesAdded =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(ActorCellEnablePointItem.Overall);
-                            if (ActorCellEnablePointItem.Specific != null)
+                            sb.AppendItem(EnableParentReferencesAddedItem.Overall);
+                            if (EnableParentReferencesAddedItem.Specific != null)
                             {
-                                foreach (var subItem in ActorCellEnablePointItem.Specific)
+                                foreach (var subItem in EnableParentReferencesAddedItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1636,16 +1636,16 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                         }
                     }
-                    if ((printMask?.LocationCellEnablePoint?.Overall ?? true)
-                        && LocationCellEnablePoint is {} LocationCellEnablePointItem)
+                    if ((printMask?.EnableParentReferencesStatic?.Overall ?? true)
+                        && EnableParentReferencesStatic is {} EnableParentReferencesStaticItem)
                     {
-                        sb.AppendLine("LocationCellEnablePoint =>");
+                        sb.AppendLine("EnableParentReferencesStatic =>");
                         using (sb.Brace())
                         {
-                            sb.AppendItem(LocationCellEnablePointItem.Overall);
-                            if (LocationCellEnablePointItem.Specific != null)
+                            sb.AppendItem(EnableParentReferencesStaticItem.Overall);
+                            if (EnableParentReferencesStaticItem.Specific != null)
                             {
-                                foreach (var subItem in LocationCellEnablePointItem.Specific)
+                                foreach (var subItem in EnableParentReferencesStaticItem.Specific)
                                 {
                                     using (sb.Brace())
                                     {
@@ -1719,22 +1719,22 @@ namespace Mutagen.Bethesda.Skyrim
             IErrorMask<ErrorMask>
         {
             #region Members
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>? ActorCellPersistentReferences;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>? LocationCellPersistentReferences;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ReferenceCellPersistentReferences;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellUnique.ErrorMask?>>?>? ActorCellUniques;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellUnique.ErrorMask?>>?>? LocationCellUniques;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ReferenceCellUnique;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellStaticReference.ErrorMask?>>?>? ActorCellStaticReferences;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellStaticReference.ErrorMask?>>?>? LocationCellStaticReferences;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ReferenceCellStaticReferences;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>? ActorCellEncounterCell;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>? LocationCellEncounterCell;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>? ReferenceCellEncounterCell;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ActorCellMarkerReference;
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? LocationCellMarkerReference;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellEnablePoint.ErrorMask?>>?>? ActorCellEnablePoint;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellEnablePoint.ErrorMask?>>?>? LocationCellEnablePoint;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PersistentActorReference.ErrorMask?>>?>? PersistentActorReferencesAdded;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PersistentActorReference.ErrorMask?>>?>? PersistentActorReferencesStatic;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? PersistentActorReferencesRemoved;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, UniqueActorReference.ErrorMask?>>?>? UniqueActorReferencesAdded;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, UniqueActorReference.ErrorMask?>>?>? UniqueActorReferencesStatic;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? UniqueActorRemoved;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationRefTypeReference.ErrorMask?>>?>? LocationRefTypeReferencesAdded;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationRefTypeReference.ErrorMask?>>?>? LocationRefTypeReferencesStatic;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? LocationRefTypeReferencesRemoved;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>? WorldspaceCellsAdded;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>? WorldspaceCellsStatic;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>? WorldspaceCellsRemoved;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? InitiallyDisabledReferencesAdded;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? InitiallyDisabledReferencesStatic;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EnableParentReference.ErrorMask?>>?>? EnableParentReferencesAdded;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EnableParentReference.ErrorMask?>>?>? EnableParentReferencesStatic;
             public Exception? Name;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
             public Exception? ParentLocation;
@@ -1752,38 +1752,38 @@ namespace Mutagen.Bethesda.Skyrim
                 Location_FieldIndex enu = (Location_FieldIndex)index;
                 switch (enu)
                 {
-                    case Location_FieldIndex.ActorCellPersistentReferences:
-                        return ActorCellPersistentReferences;
-                    case Location_FieldIndex.LocationCellPersistentReferences:
-                        return LocationCellPersistentReferences;
-                    case Location_FieldIndex.ReferenceCellPersistentReferences:
-                        return ReferenceCellPersistentReferences;
-                    case Location_FieldIndex.ActorCellUniques:
-                        return ActorCellUniques;
-                    case Location_FieldIndex.LocationCellUniques:
-                        return LocationCellUniques;
-                    case Location_FieldIndex.ReferenceCellUnique:
-                        return ReferenceCellUnique;
-                    case Location_FieldIndex.ActorCellStaticReferences:
-                        return ActorCellStaticReferences;
-                    case Location_FieldIndex.LocationCellStaticReferences:
-                        return LocationCellStaticReferences;
-                    case Location_FieldIndex.ReferenceCellStaticReferences:
-                        return ReferenceCellStaticReferences;
-                    case Location_FieldIndex.ActorCellEncounterCell:
-                        return ActorCellEncounterCell;
-                    case Location_FieldIndex.LocationCellEncounterCell:
-                        return LocationCellEncounterCell;
-                    case Location_FieldIndex.ReferenceCellEncounterCell:
-                        return ReferenceCellEncounterCell;
-                    case Location_FieldIndex.ActorCellMarkerReference:
-                        return ActorCellMarkerReference;
-                    case Location_FieldIndex.LocationCellMarkerReference:
-                        return LocationCellMarkerReference;
-                    case Location_FieldIndex.ActorCellEnablePoint:
-                        return ActorCellEnablePoint;
-                    case Location_FieldIndex.LocationCellEnablePoint:
-                        return LocationCellEnablePoint;
+                    case Location_FieldIndex.PersistentActorReferencesAdded:
+                        return PersistentActorReferencesAdded;
+                    case Location_FieldIndex.PersistentActorReferencesStatic:
+                        return PersistentActorReferencesStatic;
+                    case Location_FieldIndex.PersistentActorReferencesRemoved:
+                        return PersistentActorReferencesRemoved;
+                    case Location_FieldIndex.UniqueActorReferencesAdded:
+                        return UniqueActorReferencesAdded;
+                    case Location_FieldIndex.UniqueActorReferencesStatic:
+                        return UniqueActorReferencesStatic;
+                    case Location_FieldIndex.UniqueActorRemoved:
+                        return UniqueActorRemoved;
+                    case Location_FieldIndex.LocationRefTypeReferencesAdded:
+                        return LocationRefTypeReferencesAdded;
+                    case Location_FieldIndex.LocationRefTypeReferencesStatic:
+                        return LocationRefTypeReferencesStatic;
+                    case Location_FieldIndex.LocationRefTypeReferencesRemoved:
+                        return LocationRefTypeReferencesRemoved;
+                    case Location_FieldIndex.WorldspaceCellsAdded:
+                        return WorldspaceCellsAdded;
+                    case Location_FieldIndex.WorldspaceCellsStatic:
+                        return WorldspaceCellsStatic;
+                    case Location_FieldIndex.WorldspaceCellsRemoved:
+                        return WorldspaceCellsRemoved;
+                    case Location_FieldIndex.InitiallyDisabledReferencesAdded:
+                        return InitiallyDisabledReferencesAdded;
+                    case Location_FieldIndex.InitiallyDisabledReferencesStatic:
+                        return InitiallyDisabledReferencesStatic;
+                    case Location_FieldIndex.EnableParentReferencesAdded:
+                        return EnableParentReferencesAdded;
+                    case Location_FieldIndex.EnableParentReferencesStatic:
+                        return EnableParentReferencesStatic;
                     case Location_FieldIndex.Name:
                         return Name;
                     case Location_FieldIndex.Keywords:
@@ -1812,53 +1812,53 @@ namespace Mutagen.Bethesda.Skyrim
                 Location_FieldIndex enu = (Location_FieldIndex)index;
                 switch (enu)
                 {
-                    case Location_FieldIndex.ActorCellPersistentReferences:
-                        this.ActorCellPersistentReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>(ex, null);
+                    case Location_FieldIndex.PersistentActorReferencesAdded:
+                        this.PersistentActorReferencesAdded = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PersistentActorReference.ErrorMask?>>?>(ex, null);
                         break;
-                    case Location_FieldIndex.LocationCellPersistentReferences:
-                        this.LocationCellPersistentReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>(ex, null);
+                    case Location_FieldIndex.PersistentActorReferencesStatic:
+                        this.PersistentActorReferencesStatic = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PersistentActorReference.ErrorMask?>>?>(ex, null);
                         break;
-                    case Location_FieldIndex.ReferenceCellPersistentReferences:
-                        this.ReferenceCellPersistentReferences = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case Location_FieldIndex.PersistentActorReferencesRemoved:
+                        this.PersistentActorReferencesRemoved = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case Location_FieldIndex.ActorCellUniques:
-                        this.ActorCellUniques = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellUnique.ErrorMask?>>?>(ex, null);
+                    case Location_FieldIndex.UniqueActorReferencesAdded:
+                        this.UniqueActorReferencesAdded = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, UniqueActorReference.ErrorMask?>>?>(ex, null);
                         break;
-                    case Location_FieldIndex.LocationCellUniques:
-                        this.LocationCellUniques = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellUnique.ErrorMask?>>?>(ex, null);
+                    case Location_FieldIndex.UniqueActorReferencesStatic:
+                        this.UniqueActorReferencesStatic = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, UniqueActorReference.ErrorMask?>>?>(ex, null);
                         break;
-                    case Location_FieldIndex.ReferenceCellUnique:
-                        this.ReferenceCellUnique = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case Location_FieldIndex.UniqueActorRemoved:
+                        this.UniqueActorRemoved = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case Location_FieldIndex.ActorCellStaticReferences:
-                        this.ActorCellStaticReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellStaticReference.ErrorMask?>>?>(ex, null);
+                    case Location_FieldIndex.LocationRefTypeReferencesAdded:
+                        this.LocationRefTypeReferencesAdded = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationRefTypeReference.ErrorMask?>>?>(ex, null);
                         break;
-                    case Location_FieldIndex.LocationCellStaticReferences:
-                        this.LocationCellStaticReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellStaticReference.ErrorMask?>>?>(ex, null);
+                    case Location_FieldIndex.LocationRefTypeReferencesStatic:
+                        this.LocationRefTypeReferencesStatic = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationRefTypeReference.ErrorMask?>>?>(ex, null);
                         break;
-                    case Location_FieldIndex.ReferenceCellStaticReferences:
-                        this.ReferenceCellStaticReferences = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case Location_FieldIndex.LocationRefTypeReferencesRemoved:
+                        this.LocationRefTypeReferencesRemoved = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case Location_FieldIndex.ActorCellEncounterCell:
-                        this.ActorCellEncounterCell = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>(ex, null);
+                    case Location_FieldIndex.WorldspaceCellsAdded:
+                        this.WorldspaceCellsAdded = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>(ex, null);
                         break;
-                    case Location_FieldIndex.LocationCellEncounterCell:
-                        this.LocationCellEncounterCell = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>(ex, null);
+                    case Location_FieldIndex.WorldspaceCellsStatic:
+                        this.WorldspaceCellsStatic = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>(ex, null);
                         break;
-                    case Location_FieldIndex.ReferenceCellEncounterCell:
-                        this.ReferenceCellEncounterCell = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>(ex, null);
+                    case Location_FieldIndex.WorldspaceCellsRemoved:
+                        this.WorldspaceCellsRemoved = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>(ex, null);
                         break;
-                    case Location_FieldIndex.ActorCellMarkerReference:
-                        this.ActorCellMarkerReference = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case Location_FieldIndex.InitiallyDisabledReferencesAdded:
+                        this.InitiallyDisabledReferencesAdded = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case Location_FieldIndex.LocationCellMarkerReference:
-                        this.LocationCellMarkerReference = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                    case Location_FieldIndex.InitiallyDisabledReferencesStatic:
+                        this.InitiallyDisabledReferencesStatic = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case Location_FieldIndex.ActorCellEnablePoint:
-                        this.ActorCellEnablePoint = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellEnablePoint.ErrorMask?>>?>(ex, null);
+                    case Location_FieldIndex.EnableParentReferencesAdded:
+                        this.EnableParentReferencesAdded = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EnableParentReference.ErrorMask?>>?>(ex, null);
                         break;
-                    case Location_FieldIndex.LocationCellEnablePoint:
-                        this.LocationCellEnablePoint = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellEnablePoint.ErrorMask?>>?>(ex, null);
+                    case Location_FieldIndex.EnableParentReferencesStatic:
+                        this.EnableParentReferencesStatic = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EnableParentReference.ErrorMask?>>?>(ex, null);
                         break;
                     case Location_FieldIndex.Name:
                         this.Name = ex;
@@ -1898,53 +1898,53 @@ namespace Mutagen.Bethesda.Skyrim
                 Location_FieldIndex enu = (Location_FieldIndex)index;
                 switch (enu)
                 {
-                    case Location_FieldIndex.ActorCellPersistentReferences:
-                        this.ActorCellPersistentReferences = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>)obj;
+                    case Location_FieldIndex.PersistentActorReferencesAdded:
+                        this.PersistentActorReferencesAdded = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PersistentActorReference.ErrorMask?>>?>)obj;
                         break;
-                    case Location_FieldIndex.LocationCellPersistentReferences:
-                        this.LocationCellPersistentReferences = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>)obj;
+                    case Location_FieldIndex.PersistentActorReferencesStatic:
+                        this.PersistentActorReferencesStatic = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PersistentActorReference.ErrorMask?>>?>)obj;
                         break;
-                    case Location_FieldIndex.ReferenceCellPersistentReferences:
-                        this.ReferenceCellPersistentReferences = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case Location_FieldIndex.PersistentActorReferencesRemoved:
+                        this.PersistentActorReferencesRemoved = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case Location_FieldIndex.ActorCellUniques:
-                        this.ActorCellUniques = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellUnique.ErrorMask?>>?>)obj;
+                    case Location_FieldIndex.UniqueActorReferencesAdded:
+                        this.UniqueActorReferencesAdded = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, UniqueActorReference.ErrorMask?>>?>)obj;
                         break;
-                    case Location_FieldIndex.LocationCellUniques:
-                        this.LocationCellUniques = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellUnique.ErrorMask?>>?>)obj;
+                    case Location_FieldIndex.UniqueActorReferencesStatic:
+                        this.UniqueActorReferencesStatic = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, UniqueActorReference.ErrorMask?>>?>)obj;
                         break;
-                    case Location_FieldIndex.ReferenceCellUnique:
-                        this.ReferenceCellUnique = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case Location_FieldIndex.UniqueActorRemoved:
+                        this.UniqueActorRemoved = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case Location_FieldIndex.ActorCellStaticReferences:
-                        this.ActorCellStaticReferences = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellStaticReference.ErrorMask?>>?>)obj;
+                    case Location_FieldIndex.LocationRefTypeReferencesAdded:
+                        this.LocationRefTypeReferencesAdded = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationRefTypeReference.ErrorMask?>>?>)obj;
                         break;
-                    case Location_FieldIndex.LocationCellStaticReferences:
-                        this.LocationCellStaticReferences = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellStaticReference.ErrorMask?>>?>)obj;
+                    case Location_FieldIndex.LocationRefTypeReferencesStatic:
+                        this.LocationRefTypeReferencesStatic = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationRefTypeReference.ErrorMask?>>?>)obj;
                         break;
-                    case Location_FieldIndex.ReferenceCellStaticReferences:
-                        this.ReferenceCellStaticReferences = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case Location_FieldIndex.LocationRefTypeReferencesRemoved:
+                        this.LocationRefTypeReferencesRemoved = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case Location_FieldIndex.ActorCellEncounterCell:
-                        this.ActorCellEncounterCell = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>)obj;
+                    case Location_FieldIndex.WorldspaceCellsAdded:
+                        this.WorldspaceCellsAdded = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>)obj;
                         break;
-                    case Location_FieldIndex.LocationCellEncounterCell:
-                        this.LocationCellEncounterCell = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>)obj;
+                    case Location_FieldIndex.WorldspaceCellsStatic:
+                        this.WorldspaceCellsStatic = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>)obj;
                         break;
-                    case Location_FieldIndex.ReferenceCellEncounterCell:
-                        this.ReferenceCellEncounterCell = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>)obj;
+                    case Location_FieldIndex.WorldspaceCellsRemoved:
+                        this.WorldspaceCellsRemoved = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>)obj;
                         break;
-                    case Location_FieldIndex.ActorCellMarkerReference:
-                        this.ActorCellMarkerReference = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case Location_FieldIndex.InitiallyDisabledReferencesAdded:
+                        this.InitiallyDisabledReferencesAdded = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case Location_FieldIndex.LocationCellMarkerReference:
-                        this.LocationCellMarkerReference = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                    case Location_FieldIndex.InitiallyDisabledReferencesStatic:
+                        this.InitiallyDisabledReferencesStatic = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case Location_FieldIndex.ActorCellEnablePoint:
-                        this.ActorCellEnablePoint = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellEnablePoint.ErrorMask?>>?>)obj;
+                    case Location_FieldIndex.EnableParentReferencesAdded:
+                        this.EnableParentReferencesAdded = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EnableParentReference.ErrorMask?>>?>)obj;
                         break;
-                    case Location_FieldIndex.LocationCellEnablePoint:
-                        this.LocationCellEnablePoint = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellEnablePoint.ErrorMask?>>?>)obj;
+                    case Location_FieldIndex.EnableParentReferencesStatic:
+                        this.EnableParentReferencesStatic = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EnableParentReference.ErrorMask?>>?>)obj;
                         break;
                     case Location_FieldIndex.Name:
                         this.Name = (Exception?)obj;
@@ -1982,22 +1982,22 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (ActorCellPersistentReferences != null) return true;
-                if (LocationCellPersistentReferences != null) return true;
-                if (ReferenceCellPersistentReferences != null) return true;
-                if (ActorCellUniques != null) return true;
-                if (LocationCellUniques != null) return true;
-                if (ReferenceCellUnique != null) return true;
-                if (ActorCellStaticReferences != null) return true;
-                if (LocationCellStaticReferences != null) return true;
-                if (ReferenceCellStaticReferences != null) return true;
-                if (ActorCellEncounterCell != null) return true;
-                if (LocationCellEncounterCell != null) return true;
-                if (ReferenceCellEncounterCell != null) return true;
-                if (ActorCellMarkerReference != null) return true;
-                if (LocationCellMarkerReference != null) return true;
-                if (ActorCellEnablePoint != null) return true;
-                if (LocationCellEnablePoint != null) return true;
+                if (PersistentActorReferencesAdded != null) return true;
+                if (PersistentActorReferencesStatic != null) return true;
+                if (PersistentActorReferencesRemoved != null) return true;
+                if (UniqueActorReferencesAdded != null) return true;
+                if (UniqueActorReferencesStatic != null) return true;
+                if (UniqueActorRemoved != null) return true;
+                if (LocationRefTypeReferencesAdded != null) return true;
+                if (LocationRefTypeReferencesStatic != null) return true;
+                if (LocationRefTypeReferencesRemoved != null) return true;
+                if (WorldspaceCellsAdded != null) return true;
+                if (WorldspaceCellsStatic != null) return true;
+                if (WorldspaceCellsRemoved != null) return true;
+                if (InitiallyDisabledReferencesAdded != null) return true;
+                if (InitiallyDisabledReferencesStatic != null) return true;
+                if (EnableParentReferencesAdded != null) return true;
+                if (EnableParentReferencesStatic != null) return true;
                 if (Name != null) return true;
                 if (Keywords != null) return true;
                 if (ParentLocation != null) return true;
@@ -2033,15 +2033,15 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void PrintFillInternal(StructuredStringBuilder sb)
             {
                 base.PrintFillInternal(sb);
-                if (ActorCellPersistentReferences is {} ActorCellPersistentReferencesItem)
+                if (PersistentActorReferencesAdded is {} PersistentActorReferencesAddedItem)
                 {
-                    sb.AppendLine("ActorCellPersistentReferences =>");
+                    sb.AppendLine("PersistentActorReferencesAdded =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(ActorCellPersistentReferencesItem.Overall);
-                        if (ActorCellPersistentReferencesItem.Specific != null)
+                        sb.AppendItem(PersistentActorReferencesAddedItem.Overall);
+                        if (PersistentActorReferencesAddedItem.Specific != null)
                         {
-                            foreach (var subItem in ActorCellPersistentReferencesItem.Specific)
+                            foreach (var subItem in PersistentActorReferencesAddedItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -2051,15 +2051,15 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (LocationCellPersistentReferences is {} LocationCellPersistentReferencesItem)
+                if (PersistentActorReferencesStatic is {} PersistentActorReferencesStaticItem)
                 {
-                    sb.AppendLine("LocationCellPersistentReferences =>");
+                    sb.AppendLine("PersistentActorReferencesStatic =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(LocationCellPersistentReferencesItem.Overall);
-                        if (LocationCellPersistentReferencesItem.Specific != null)
+                        sb.AppendItem(PersistentActorReferencesStaticItem.Overall);
+                        if (PersistentActorReferencesStaticItem.Specific != null)
                         {
-                            foreach (var subItem in LocationCellPersistentReferencesItem.Specific)
+                            foreach (var subItem in PersistentActorReferencesStaticItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -2069,15 +2069,15 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (ReferenceCellPersistentReferences is {} ReferenceCellPersistentReferencesItem)
+                if (PersistentActorReferencesRemoved is {} PersistentActorReferencesRemovedItem)
                 {
-                    sb.AppendLine("ReferenceCellPersistentReferences =>");
+                    sb.AppendLine("PersistentActorReferencesRemoved =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(ReferenceCellPersistentReferencesItem.Overall);
-                        if (ReferenceCellPersistentReferencesItem.Specific != null)
+                        sb.AppendItem(PersistentActorReferencesRemovedItem.Overall);
+                        if (PersistentActorReferencesRemovedItem.Specific != null)
                         {
-                            foreach (var subItem in ReferenceCellPersistentReferencesItem.Specific)
+                            foreach (var subItem in PersistentActorReferencesRemovedItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -2089,15 +2089,15 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (ActorCellUniques is {} ActorCellUniquesItem)
+                if (UniqueActorReferencesAdded is {} UniqueActorReferencesAddedItem)
                 {
-                    sb.AppendLine("ActorCellUniques =>");
+                    sb.AppendLine("UniqueActorReferencesAdded =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(ActorCellUniquesItem.Overall);
-                        if (ActorCellUniquesItem.Specific != null)
+                        sb.AppendItem(UniqueActorReferencesAddedItem.Overall);
+                        if (UniqueActorReferencesAddedItem.Specific != null)
                         {
-                            foreach (var subItem in ActorCellUniquesItem.Specific)
+                            foreach (var subItem in UniqueActorReferencesAddedItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -2107,15 +2107,15 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (LocationCellUniques is {} LocationCellUniquesItem)
+                if (UniqueActorReferencesStatic is {} UniqueActorReferencesStaticItem)
                 {
-                    sb.AppendLine("LocationCellUniques =>");
+                    sb.AppendLine("UniqueActorReferencesStatic =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(LocationCellUniquesItem.Overall);
-                        if (LocationCellUniquesItem.Specific != null)
+                        sb.AppendItem(UniqueActorReferencesStaticItem.Overall);
+                        if (UniqueActorReferencesStaticItem.Specific != null)
                         {
-                            foreach (var subItem in LocationCellUniquesItem.Specific)
+                            foreach (var subItem in UniqueActorReferencesStaticItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -2125,15 +2125,15 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (ReferenceCellUnique is {} ReferenceCellUniqueItem)
+                if (UniqueActorRemoved is {} UniqueActorRemovedItem)
                 {
-                    sb.AppendLine("ReferenceCellUnique =>");
+                    sb.AppendLine("UniqueActorRemoved =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(ReferenceCellUniqueItem.Overall);
-                        if (ReferenceCellUniqueItem.Specific != null)
+                        sb.AppendItem(UniqueActorRemovedItem.Overall);
+                        if (UniqueActorRemovedItem.Specific != null)
                         {
-                            foreach (var subItem in ReferenceCellUniqueItem.Specific)
+                            foreach (var subItem in UniqueActorRemovedItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -2145,15 +2145,15 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (ActorCellStaticReferences is {} ActorCellStaticReferencesItem)
+                if (LocationRefTypeReferencesAdded is {} LocationRefTypeReferencesAddedItem)
                 {
-                    sb.AppendLine("ActorCellStaticReferences =>");
+                    sb.AppendLine("LocationRefTypeReferencesAdded =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(ActorCellStaticReferencesItem.Overall);
-                        if (ActorCellStaticReferencesItem.Specific != null)
+                        sb.AppendItem(LocationRefTypeReferencesAddedItem.Overall);
+                        if (LocationRefTypeReferencesAddedItem.Specific != null)
                         {
-                            foreach (var subItem in ActorCellStaticReferencesItem.Specific)
+                            foreach (var subItem in LocationRefTypeReferencesAddedItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -2163,15 +2163,15 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (LocationCellStaticReferences is {} LocationCellStaticReferencesItem)
+                if (LocationRefTypeReferencesStatic is {} LocationRefTypeReferencesStaticItem)
                 {
-                    sb.AppendLine("LocationCellStaticReferences =>");
+                    sb.AppendLine("LocationRefTypeReferencesStatic =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(LocationCellStaticReferencesItem.Overall);
-                        if (LocationCellStaticReferencesItem.Specific != null)
+                        sb.AppendItem(LocationRefTypeReferencesStaticItem.Overall);
+                        if (LocationRefTypeReferencesStaticItem.Specific != null)
                         {
-                            foreach (var subItem in LocationCellStaticReferencesItem.Specific)
+                            foreach (var subItem in LocationRefTypeReferencesStaticItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -2181,15 +2181,15 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (ReferenceCellStaticReferences is {} ReferenceCellStaticReferencesItem)
+                if (LocationRefTypeReferencesRemoved is {} LocationRefTypeReferencesRemovedItem)
                 {
-                    sb.AppendLine("ReferenceCellStaticReferences =>");
+                    sb.AppendLine("LocationRefTypeReferencesRemoved =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(ReferenceCellStaticReferencesItem.Overall);
-                        if (ReferenceCellStaticReferencesItem.Specific != null)
+                        sb.AppendItem(LocationRefTypeReferencesRemovedItem.Overall);
+                        if (LocationRefTypeReferencesRemovedItem.Specific != null)
                         {
-                            foreach (var subItem in ReferenceCellStaticReferencesItem.Specific)
+                            foreach (var subItem in LocationRefTypeReferencesRemovedItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -2201,15 +2201,15 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (ActorCellEncounterCell is {} ActorCellEncounterCellItem)
+                if (WorldspaceCellsAdded is {} WorldspaceCellsAddedItem)
                 {
-                    sb.AppendLine("ActorCellEncounterCell =>");
+                    sb.AppendLine("WorldspaceCellsAdded =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(ActorCellEncounterCellItem.Overall);
-                        if (ActorCellEncounterCellItem.Specific != null)
+                        sb.AppendItem(WorldspaceCellsAddedItem.Overall);
+                        if (WorldspaceCellsAddedItem.Specific != null)
                         {
-                            foreach (var subItem in ActorCellEncounterCellItem.Specific)
+                            foreach (var subItem in WorldspaceCellsAddedItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -2219,15 +2219,15 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (LocationCellEncounterCell is {} LocationCellEncounterCellItem)
+                if (WorldspaceCellsStatic is {} WorldspaceCellsStaticItem)
                 {
-                    sb.AppendLine("LocationCellEncounterCell =>");
+                    sb.AppendLine("WorldspaceCellsStatic =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(LocationCellEncounterCellItem.Overall);
-                        if (LocationCellEncounterCellItem.Specific != null)
+                        sb.AppendItem(WorldspaceCellsStaticItem.Overall);
+                        if (WorldspaceCellsStaticItem.Specific != null)
                         {
-                            foreach (var subItem in LocationCellEncounterCellItem.Specific)
+                            foreach (var subItem in WorldspaceCellsStaticItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -2237,15 +2237,15 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (ReferenceCellEncounterCell is {} ReferenceCellEncounterCellItem)
+                if (WorldspaceCellsRemoved is {} WorldspaceCellsRemovedItem)
                 {
-                    sb.AppendLine("ReferenceCellEncounterCell =>");
+                    sb.AppendLine("WorldspaceCellsRemoved =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(ReferenceCellEncounterCellItem.Overall);
-                        if (ReferenceCellEncounterCellItem.Specific != null)
+                        sb.AppendItem(WorldspaceCellsRemovedItem.Overall);
+                        if (WorldspaceCellsRemovedItem.Specific != null)
                         {
-                            foreach (var subItem in ReferenceCellEncounterCellItem.Specific)
+                            foreach (var subItem in WorldspaceCellsRemovedItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -2255,15 +2255,15 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (ActorCellMarkerReference is {} ActorCellMarkerReferenceItem)
+                if (InitiallyDisabledReferencesAdded is {} InitiallyDisabledReferencesAddedItem)
                 {
-                    sb.AppendLine("ActorCellMarkerReference =>");
+                    sb.AppendLine("InitiallyDisabledReferencesAdded =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(ActorCellMarkerReferenceItem.Overall);
-                        if (ActorCellMarkerReferenceItem.Specific != null)
+                        sb.AppendItem(InitiallyDisabledReferencesAddedItem.Overall);
+                        if (InitiallyDisabledReferencesAddedItem.Specific != null)
                         {
-                            foreach (var subItem in ActorCellMarkerReferenceItem.Specific)
+                            foreach (var subItem in InitiallyDisabledReferencesAddedItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -2275,15 +2275,15 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (LocationCellMarkerReference is {} LocationCellMarkerReferenceItem)
+                if (InitiallyDisabledReferencesStatic is {} InitiallyDisabledReferencesStaticItem)
                 {
-                    sb.AppendLine("LocationCellMarkerReference =>");
+                    sb.AppendLine("InitiallyDisabledReferencesStatic =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(LocationCellMarkerReferenceItem.Overall);
-                        if (LocationCellMarkerReferenceItem.Specific != null)
+                        sb.AppendItem(InitiallyDisabledReferencesStaticItem.Overall);
+                        if (InitiallyDisabledReferencesStaticItem.Specific != null)
                         {
-                            foreach (var subItem in LocationCellMarkerReferenceItem.Specific)
+                            foreach (var subItem in InitiallyDisabledReferencesStaticItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -2295,15 +2295,15 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (ActorCellEnablePoint is {} ActorCellEnablePointItem)
+                if (EnableParentReferencesAdded is {} EnableParentReferencesAddedItem)
                 {
-                    sb.AppendLine("ActorCellEnablePoint =>");
+                    sb.AppendLine("EnableParentReferencesAdded =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(ActorCellEnablePointItem.Overall);
-                        if (ActorCellEnablePointItem.Specific != null)
+                        sb.AppendItem(EnableParentReferencesAddedItem.Overall);
+                        if (EnableParentReferencesAddedItem.Specific != null)
                         {
-                            foreach (var subItem in ActorCellEnablePointItem.Specific)
+                            foreach (var subItem in EnableParentReferencesAddedItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -2313,15 +2313,15 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                if (LocationCellEnablePoint is {} LocationCellEnablePointItem)
+                if (EnableParentReferencesStatic is {} EnableParentReferencesStaticItem)
                 {
-                    sb.AppendLine("LocationCellEnablePoint =>");
+                    sb.AppendLine("EnableParentReferencesStatic =>");
                     using (sb.Brace())
                     {
-                        sb.AppendItem(LocationCellEnablePointItem.Overall);
-                        if (LocationCellEnablePointItem.Specific != null)
+                        sb.AppendItem(EnableParentReferencesStaticItem.Overall);
+                        if (EnableParentReferencesStaticItem.Specific != null)
                         {
-                            foreach (var subItem in LocationCellEnablePointItem.Specific)
+                            foreach (var subItem in EnableParentReferencesStaticItem.Specific)
                             {
                                 using (sb.Brace())
                                 {
@@ -2383,22 +2383,22 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.ActorCellPersistentReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ActorCellPersistentReferences?.Overall, rhs.ActorCellPersistentReferences?.Overall), Noggog.ExceptionExt.Combine(this.ActorCellPersistentReferences?.Specific, rhs.ActorCellPersistentReferences?.Specific));
-                ret.LocationCellPersistentReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LocationCellPersistentReferences?.Overall, rhs.LocationCellPersistentReferences?.Overall), Noggog.ExceptionExt.Combine(this.LocationCellPersistentReferences?.Specific, rhs.LocationCellPersistentReferences?.Specific));
-                ret.ReferenceCellPersistentReferences = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ReferenceCellPersistentReferences?.Overall, rhs.ReferenceCellPersistentReferences?.Overall), Noggog.ExceptionExt.Combine(this.ReferenceCellPersistentReferences?.Specific, rhs.ReferenceCellPersistentReferences?.Specific));
-                ret.ActorCellUniques = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellUnique.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ActorCellUniques?.Overall, rhs.ActorCellUniques?.Overall), Noggog.ExceptionExt.Combine(this.ActorCellUniques?.Specific, rhs.ActorCellUniques?.Specific));
-                ret.LocationCellUniques = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellUnique.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LocationCellUniques?.Overall, rhs.LocationCellUniques?.Overall), Noggog.ExceptionExt.Combine(this.LocationCellUniques?.Specific, rhs.LocationCellUniques?.Specific));
-                ret.ReferenceCellUnique = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ReferenceCellUnique?.Overall, rhs.ReferenceCellUnique?.Overall), Noggog.ExceptionExt.Combine(this.ReferenceCellUnique?.Specific, rhs.ReferenceCellUnique?.Specific));
-                ret.ActorCellStaticReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellStaticReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ActorCellStaticReferences?.Overall, rhs.ActorCellStaticReferences?.Overall), Noggog.ExceptionExt.Combine(this.ActorCellStaticReferences?.Specific, rhs.ActorCellStaticReferences?.Specific));
-                ret.LocationCellStaticReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellStaticReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LocationCellStaticReferences?.Overall, rhs.LocationCellStaticReferences?.Overall), Noggog.ExceptionExt.Combine(this.LocationCellStaticReferences?.Specific, rhs.LocationCellStaticReferences?.Specific));
-                ret.ReferenceCellStaticReferences = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ReferenceCellStaticReferences?.Overall, rhs.ReferenceCellStaticReferences?.Overall), Noggog.ExceptionExt.Combine(this.ReferenceCellStaticReferences?.Specific, rhs.ReferenceCellStaticReferences?.Specific));
-                ret.ActorCellEncounterCell = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ActorCellEncounterCell?.Overall, rhs.ActorCellEncounterCell?.Overall), Noggog.ExceptionExt.Combine(this.ActorCellEncounterCell?.Specific, rhs.ActorCellEncounterCell?.Specific));
-                ret.LocationCellEncounterCell = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LocationCellEncounterCell?.Overall, rhs.LocationCellEncounterCell?.Overall), Noggog.ExceptionExt.Combine(this.LocationCellEncounterCell?.Specific, rhs.LocationCellEncounterCell?.Specific));
-                ret.ReferenceCellEncounterCell = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ReferenceCellEncounterCell?.Overall, rhs.ReferenceCellEncounterCell?.Overall), Noggog.ExceptionExt.Combine(this.ReferenceCellEncounterCell?.Specific, rhs.ReferenceCellEncounterCell?.Specific));
-                ret.ActorCellMarkerReference = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ActorCellMarkerReference?.Overall, rhs.ActorCellMarkerReference?.Overall), Noggog.ExceptionExt.Combine(this.ActorCellMarkerReference?.Specific, rhs.ActorCellMarkerReference?.Specific));
-                ret.LocationCellMarkerReference = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LocationCellMarkerReference?.Overall, rhs.LocationCellMarkerReference?.Overall), Noggog.ExceptionExt.Combine(this.LocationCellMarkerReference?.Specific, rhs.LocationCellMarkerReference?.Specific));
-                ret.ActorCellEnablePoint = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellEnablePoint.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ActorCellEnablePoint?.Overall, rhs.ActorCellEnablePoint?.Overall), Noggog.ExceptionExt.Combine(this.ActorCellEnablePoint?.Specific, rhs.ActorCellEnablePoint?.Specific));
-                ret.LocationCellEnablePoint = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellEnablePoint.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LocationCellEnablePoint?.Overall, rhs.LocationCellEnablePoint?.Overall), Noggog.ExceptionExt.Combine(this.LocationCellEnablePoint?.Specific, rhs.LocationCellEnablePoint?.Specific));
+                ret.PersistentActorReferencesAdded = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PersistentActorReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.PersistentActorReferencesAdded?.Overall, rhs.PersistentActorReferencesAdded?.Overall), Noggog.ExceptionExt.Combine(this.PersistentActorReferencesAdded?.Specific, rhs.PersistentActorReferencesAdded?.Specific));
+                ret.PersistentActorReferencesStatic = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PersistentActorReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.PersistentActorReferencesStatic?.Overall, rhs.PersistentActorReferencesStatic?.Overall), Noggog.ExceptionExt.Combine(this.PersistentActorReferencesStatic?.Specific, rhs.PersistentActorReferencesStatic?.Specific));
+                ret.PersistentActorReferencesRemoved = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.PersistentActorReferencesRemoved?.Overall, rhs.PersistentActorReferencesRemoved?.Overall), Noggog.ExceptionExt.Combine(this.PersistentActorReferencesRemoved?.Specific, rhs.PersistentActorReferencesRemoved?.Specific));
+                ret.UniqueActorReferencesAdded = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, UniqueActorReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.UniqueActorReferencesAdded?.Overall, rhs.UniqueActorReferencesAdded?.Overall), Noggog.ExceptionExt.Combine(this.UniqueActorReferencesAdded?.Specific, rhs.UniqueActorReferencesAdded?.Specific));
+                ret.UniqueActorReferencesStatic = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, UniqueActorReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.UniqueActorReferencesStatic?.Overall, rhs.UniqueActorReferencesStatic?.Overall), Noggog.ExceptionExt.Combine(this.UniqueActorReferencesStatic?.Specific, rhs.UniqueActorReferencesStatic?.Specific));
+                ret.UniqueActorRemoved = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.UniqueActorRemoved?.Overall, rhs.UniqueActorRemoved?.Overall), Noggog.ExceptionExt.Combine(this.UniqueActorRemoved?.Specific, rhs.UniqueActorRemoved?.Specific));
+                ret.LocationRefTypeReferencesAdded = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationRefTypeReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LocationRefTypeReferencesAdded?.Overall, rhs.LocationRefTypeReferencesAdded?.Overall), Noggog.ExceptionExt.Combine(this.LocationRefTypeReferencesAdded?.Specific, rhs.LocationRefTypeReferencesAdded?.Specific));
+                ret.LocationRefTypeReferencesStatic = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationRefTypeReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LocationRefTypeReferencesStatic?.Overall, rhs.LocationRefTypeReferencesStatic?.Overall), Noggog.ExceptionExt.Combine(this.LocationRefTypeReferencesStatic?.Specific, rhs.LocationRefTypeReferencesStatic?.Specific));
+                ret.LocationRefTypeReferencesRemoved = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.LocationRefTypeReferencesRemoved?.Overall, rhs.LocationRefTypeReferencesRemoved?.Overall), Noggog.ExceptionExt.Combine(this.LocationRefTypeReferencesRemoved?.Specific, rhs.LocationRefTypeReferencesRemoved?.Specific));
+                ret.WorldspaceCellsAdded = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.WorldspaceCellsAdded?.Overall, rhs.WorldspaceCellsAdded?.Overall), Noggog.ExceptionExt.Combine(this.WorldspaceCellsAdded?.Specific, rhs.WorldspaceCellsAdded?.Specific));
+                ret.WorldspaceCellsStatic = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.WorldspaceCellsStatic?.Overall, rhs.WorldspaceCellsStatic?.Overall), Noggog.ExceptionExt.Combine(this.WorldspaceCellsStatic?.Specific, rhs.WorldspaceCellsStatic?.Specific));
+                ret.WorldspaceCellsRemoved = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.WorldspaceCellsRemoved?.Overall, rhs.WorldspaceCellsRemoved?.Overall), Noggog.ExceptionExt.Combine(this.WorldspaceCellsRemoved?.Specific, rhs.WorldspaceCellsRemoved?.Specific));
+                ret.InitiallyDisabledReferencesAdded = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.InitiallyDisabledReferencesAdded?.Overall, rhs.InitiallyDisabledReferencesAdded?.Overall), Noggog.ExceptionExt.Combine(this.InitiallyDisabledReferencesAdded?.Specific, rhs.InitiallyDisabledReferencesAdded?.Specific));
+                ret.InitiallyDisabledReferencesStatic = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.InitiallyDisabledReferencesStatic?.Overall, rhs.InitiallyDisabledReferencesStatic?.Overall), Noggog.ExceptionExt.Combine(this.InitiallyDisabledReferencesStatic?.Specific, rhs.InitiallyDisabledReferencesStatic?.Specific));
+                ret.EnableParentReferencesAdded = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EnableParentReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.EnableParentReferencesAdded?.Overall, rhs.EnableParentReferencesAdded?.Overall), Noggog.ExceptionExt.Combine(this.EnableParentReferencesAdded?.Specific, rhs.EnableParentReferencesAdded?.Specific));
+                ret.EnableParentReferencesStatic = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, EnableParentReference.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.EnableParentReferencesStatic?.Overall, rhs.EnableParentReferencesStatic?.Overall), Noggog.ExceptionExt.Combine(this.EnableParentReferencesStatic?.Specific, rhs.EnableParentReferencesStatic?.Specific));
                 ret.Name = this.Name.Combine(rhs.Name);
                 ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), Noggog.ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
                 ret.ParentLocation = this.ParentLocation.Combine(rhs.ParentLocation);
@@ -2430,22 +2430,22 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public LocationReference.TranslationMask? ActorCellPersistentReferences;
-            public LocationReference.TranslationMask? LocationCellPersistentReferences;
-            public bool ReferenceCellPersistentReferences;
-            public LocationCellUnique.TranslationMask? ActorCellUniques;
-            public LocationCellUnique.TranslationMask? LocationCellUniques;
-            public bool ReferenceCellUnique;
-            public LocationCellStaticReference.TranslationMask? ActorCellStaticReferences;
-            public LocationCellStaticReference.TranslationMask? LocationCellStaticReferences;
-            public bool ReferenceCellStaticReferences;
-            public LocationCoordinate.TranslationMask? ActorCellEncounterCell;
-            public LocationCoordinate.TranslationMask? LocationCellEncounterCell;
-            public LocationCoordinate.TranslationMask? ReferenceCellEncounterCell;
-            public bool ActorCellMarkerReference;
-            public bool LocationCellMarkerReference;
-            public LocationCellEnablePoint.TranslationMask? ActorCellEnablePoint;
-            public LocationCellEnablePoint.TranslationMask? LocationCellEnablePoint;
+            public PersistentActorReference.TranslationMask? PersistentActorReferencesAdded;
+            public PersistentActorReference.TranslationMask? PersistentActorReferencesStatic;
+            public bool PersistentActorReferencesRemoved;
+            public UniqueActorReference.TranslationMask? UniqueActorReferencesAdded;
+            public UniqueActorReference.TranslationMask? UniqueActorReferencesStatic;
+            public bool UniqueActorRemoved;
+            public LocationRefTypeReference.TranslationMask? LocationRefTypeReferencesAdded;
+            public LocationRefTypeReference.TranslationMask? LocationRefTypeReferencesStatic;
+            public bool LocationRefTypeReferencesRemoved;
+            public LocationCoordinate.TranslationMask? WorldspaceCellsAdded;
+            public LocationCoordinate.TranslationMask? WorldspaceCellsStatic;
+            public LocationCoordinate.TranslationMask? WorldspaceCellsRemoved;
+            public bool InitiallyDisabledReferencesAdded;
+            public bool InitiallyDisabledReferencesStatic;
+            public EnableParentReference.TranslationMask? EnableParentReferencesAdded;
+            public EnableParentReference.TranslationMask? EnableParentReferencesStatic;
             public bool Name;
             public bool Keywords;
             public bool ParentLocation;
@@ -2463,11 +2463,11 @@ namespace Mutagen.Bethesda.Skyrim
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
-                this.ReferenceCellPersistentReferences = defaultOn;
-                this.ReferenceCellUnique = defaultOn;
-                this.ReferenceCellStaticReferences = defaultOn;
-                this.ActorCellMarkerReference = defaultOn;
-                this.LocationCellMarkerReference = defaultOn;
+                this.PersistentActorReferencesRemoved = defaultOn;
+                this.UniqueActorRemoved = defaultOn;
+                this.LocationRefTypeReferencesRemoved = defaultOn;
+                this.InitiallyDisabledReferencesAdded = defaultOn;
+                this.InitiallyDisabledReferencesStatic = defaultOn;
                 this.Name = defaultOn;
                 this.Keywords = defaultOn;
                 this.ParentLocation = defaultOn;
@@ -2484,22 +2484,22 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((ActorCellPersistentReferences == null ? DefaultOn : !ActorCellPersistentReferences.GetCrystal().CopyNothing, ActorCellPersistentReferences?.GetCrystal()));
-                ret.Add((LocationCellPersistentReferences == null ? DefaultOn : !LocationCellPersistentReferences.GetCrystal().CopyNothing, LocationCellPersistentReferences?.GetCrystal()));
-                ret.Add((ReferenceCellPersistentReferences, null));
-                ret.Add((ActorCellUniques == null ? DefaultOn : !ActorCellUniques.GetCrystal().CopyNothing, ActorCellUniques?.GetCrystal()));
-                ret.Add((LocationCellUniques == null ? DefaultOn : !LocationCellUniques.GetCrystal().CopyNothing, LocationCellUniques?.GetCrystal()));
-                ret.Add((ReferenceCellUnique, null));
-                ret.Add((ActorCellStaticReferences == null ? DefaultOn : !ActorCellStaticReferences.GetCrystal().CopyNothing, ActorCellStaticReferences?.GetCrystal()));
-                ret.Add((LocationCellStaticReferences == null ? DefaultOn : !LocationCellStaticReferences.GetCrystal().CopyNothing, LocationCellStaticReferences?.GetCrystal()));
-                ret.Add((ReferenceCellStaticReferences, null));
-                ret.Add((ActorCellEncounterCell == null ? DefaultOn : !ActorCellEncounterCell.GetCrystal().CopyNothing, ActorCellEncounterCell?.GetCrystal()));
-                ret.Add((LocationCellEncounterCell == null ? DefaultOn : !LocationCellEncounterCell.GetCrystal().CopyNothing, LocationCellEncounterCell?.GetCrystal()));
-                ret.Add((ReferenceCellEncounterCell == null ? DefaultOn : !ReferenceCellEncounterCell.GetCrystal().CopyNothing, ReferenceCellEncounterCell?.GetCrystal()));
-                ret.Add((ActorCellMarkerReference, null));
-                ret.Add((LocationCellMarkerReference, null));
-                ret.Add((ActorCellEnablePoint == null ? DefaultOn : !ActorCellEnablePoint.GetCrystal().CopyNothing, ActorCellEnablePoint?.GetCrystal()));
-                ret.Add((LocationCellEnablePoint == null ? DefaultOn : !LocationCellEnablePoint.GetCrystal().CopyNothing, LocationCellEnablePoint?.GetCrystal()));
+                ret.Add((PersistentActorReferencesAdded == null ? DefaultOn : !PersistentActorReferencesAdded.GetCrystal().CopyNothing, PersistentActorReferencesAdded?.GetCrystal()));
+                ret.Add((PersistentActorReferencesStatic == null ? DefaultOn : !PersistentActorReferencesStatic.GetCrystal().CopyNothing, PersistentActorReferencesStatic?.GetCrystal()));
+                ret.Add((PersistentActorReferencesRemoved, null));
+                ret.Add((UniqueActorReferencesAdded == null ? DefaultOn : !UniqueActorReferencesAdded.GetCrystal().CopyNothing, UniqueActorReferencesAdded?.GetCrystal()));
+                ret.Add((UniqueActorReferencesStatic == null ? DefaultOn : !UniqueActorReferencesStatic.GetCrystal().CopyNothing, UniqueActorReferencesStatic?.GetCrystal()));
+                ret.Add((UniqueActorRemoved, null));
+                ret.Add((LocationRefTypeReferencesAdded == null ? DefaultOn : !LocationRefTypeReferencesAdded.GetCrystal().CopyNothing, LocationRefTypeReferencesAdded?.GetCrystal()));
+                ret.Add((LocationRefTypeReferencesStatic == null ? DefaultOn : !LocationRefTypeReferencesStatic.GetCrystal().CopyNothing, LocationRefTypeReferencesStatic?.GetCrystal()));
+                ret.Add((LocationRefTypeReferencesRemoved, null));
+                ret.Add((WorldspaceCellsAdded == null ? DefaultOn : !WorldspaceCellsAdded.GetCrystal().CopyNothing, WorldspaceCellsAdded?.GetCrystal()));
+                ret.Add((WorldspaceCellsStatic == null ? DefaultOn : !WorldspaceCellsStatic.GetCrystal().CopyNothing, WorldspaceCellsStatic?.GetCrystal()));
+                ret.Add((WorldspaceCellsRemoved == null ? DefaultOn : !WorldspaceCellsRemoved.GetCrystal().CopyNothing, WorldspaceCellsRemoved?.GetCrystal()));
+                ret.Add((InitiallyDisabledReferencesAdded, null));
+                ret.Add((InitiallyDisabledReferencesStatic, null));
+                ret.Add((EnableParentReferencesAdded == null ? DefaultOn : !EnableParentReferencesAdded.GetCrystal().CopyNothing, EnableParentReferencesAdded?.GetCrystal()));
+                ret.Add((EnableParentReferencesStatic == null ? DefaultOn : !EnableParentReferencesStatic.GetCrystal().CopyNothing, EnableParentReferencesStatic?.GetCrystal()));
                 ret.Add((Name, null));
                 ret.Add((Keywords, null));
                 ret.Add((ParentLocation, null));
@@ -2662,22 +2662,22 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
-        new ExtendedList<LocationReference>? ActorCellPersistentReferences { get; set; }
-        new ExtendedList<LocationReference>? LocationCellPersistentReferences { get; set; }
-        new ExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>? ReferenceCellPersistentReferences { get; set; }
-        new ExtendedList<LocationCellUnique>? ActorCellUniques { get; set; }
-        new ExtendedList<LocationCellUnique>? LocationCellUniques { get; set; }
-        new ExtendedList<IFormLinkGetter<INpcGetter>>? ReferenceCellUnique { get; set; }
-        new ExtendedList<LocationCellStaticReference>? ActorCellStaticReferences { get; set; }
-        new ExtendedList<LocationCellStaticReference>? LocationCellStaticReferences { get; set; }
-        new ExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>? ReferenceCellStaticReferences { get; set; }
-        new ExtendedList<LocationCoordinate> ActorCellEncounterCell { get; }
-        new ExtendedList<LocationCoordinate> LocationCellEncounterCell { get; }
-        new ExtendedList<LocationCoordinate> ReferenceCellEncounterCell { get; }
-        new ExtendedList<IFormLinkGetter<IPlacedGetter>>? ActorCellMarkerReference { get; set; }
-        new ExtendedList<IFormLinkGetter<IPlacedGetter>>? LocationCellMarkerReference { get; set; }
-        new ExtendedList<LocationCellEnablePoint>? ActorCellEnablePoint { get; set; }
-        new ExtendedList<LocationCellEnablePoint>? LocationCellEnablePoint { get; set; }
+        new ExtendedList<PersistentActorReference>? PersistentActorReferencesAdded { get; set; }
+        new ExtendedList<PersistentActorReference>? PersistentActorReferencesStatic { get; set; }
+        new ExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>? PersistentActorReferencesRemoved { get; set; }
+        new ExtendedList<UniqueActorReference>? UniqueActorReferencesAdded { get; set; }
+        new ExtendedList<UniqueActorReference>? UniqueActorReferencesStatic { get; set; }
+        new ExtendedList<IFormLinkGetter<INpcGetter>>? UniqueActorRemoved { get; set; }
+        new ExtendedList<LocationRefTypeReference>? LocationRefTypeReferencesAdded { get; set; }
+        new ExtendedList<LocationRefTypeReference>? LocationRefTypeReferencesStatic { get; set; }
+        new ExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>? LocationRefTypeReferencesRemoved { get; set; }
+        new ExtendedList<LocationCoordinate> WorldspaceCellsAdded { get; }
+        new ExtendedList<LocationCoordinate> WorldspaceCellsStatic { get; }
+        new ExtendedList<LocationCoordinate> WorldspaceCellsRemoved { get; }
+        new ExtendedList<IFormLinkGetter<IPlacedGetter>>? InitiallyDisabledReferencesAdded { get; set; }
+        new ExtendedList<IFormLinkGetter<IPlacedGetter>>? InitiallyDisabledReferencesStatic { get; set; }
+        new ExtendedList<EnableParentReference>? EnableParentReferencesAdded { get; set; }
+        new ExtendedList<EnableParentReference>? EnableParentReferencesStatic { get; set; }
         /// <summary>
         /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
@@ -2717,22 +2717,22 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration StaticRegistration => Location_Registration.Instance;
-        IReadOnlyList<ILocationReferenceGetter>? ActorCellPersistentReferences { get; }
-        IReadOnlyList<ILocationReferenceGetter>? LocationCellPersistentReferences { get; }
-        IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? ReferenceCellPersistentReferences { get; }
-        IReadOnlyList<ILocationCellUniqueGetter>? ActorCellUniques { get; }
-        IReadOnlyList<ILocationCellUniqueGetter>? LocationCellUniques { get; }
-        IReadOnlyList<IFormLinkGetter<INpcGetter>>? ReferenceCellUnique { get; }
-        IReadOnlyList<ILocationCellStaticReferenceGetter>? ActorCellStaticReferences { get; }
-        IReadOnlyList<ILocationCellStaticReferenceGetter>? LocationCellStaticReferences { get; }
-        IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? ReferenceCellStaticReferences { get; }
-        IReadOnlyList<ILocationCoordinateGetter> ActorCellEncounterCell { get; }
-        IReadOnlyList<ILocationCoordinateGetter> LocationCellEncounterCell { get; }
-        IReadOnlyList<ILocationCoordinateGetter> ReferenceCellEncounterCell { get; }
-        IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? ActorCellMarkerReference { get; }
-        IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? LocationCellMarkerReference { get; }
-        IReadOnlyList<ILocationCellEnablePointGetter>? ActorCellEnablePoint { get; }
-        IReadOnlyList<ILocationCellEnablePointGetter>? LocationCellEnablePoint { get; }
+        IReadOnlyList<IPersistentActorReferenceGetter>? PersistentActorReferencesAdded { get; }
+        IReadOnlyList<IPersistentActorReferenceGetter>? PersistentActorReferencesStatic { get; }
+        IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? PersistentActorReferencesRemoved { get; }
+        IReadOnlyList<IUniqueActorReferenceGetter>? UniqueActorReferencesAdded { get; }
+        IReadOnlyList<IUniqueActorReferenceGetter>? UniqueActorReferencesStatic { get; }
+        IReadOnlyList<IFormLinkGetter<INpcGetter>>? UniqueActorRemoved { get; }
+        IReadOnlyList<ILocationRefTypeReferenceGetter>? LocationRefTypeReferencesAdded { get; }
+        IReadOnlyList<ILocationRefTypeReferenceGetter>? LocationRefTypeReferencesStatic { get; }
+        IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? LocationRefTypeReferencesRemoved { get; }
+        IReadOnlyList<ILocationCoordinateGetter> WorldspaceCellsAdded { get; }
+        IReadOnlyList<ILocationCoordinateGetter> WorldspaceCellsStatic { get; }
+        IReadOnlyList<ILocationCoordinateGetter> WorldspaceCellsRemoved { get; }
+        IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? InitiallyDisabledReferencesAdded { get; }
+        IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? InitiallyDisabledReferencesStatic { get; }
+        IReadOnlyList<IEnableParentReferenceGetter>? EnableParentReferencesAdded { get; }
+        IReadOnlyList<IEnableParentReferenceGetter>? EnableParentReferencesStatic { get; }
         #region Name
         /// <summary>
         /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
@@ -2928,22 +2928,22 @@ namespace Mutagen.Bethesda.Skyrim
         FormVersion = 4,
         Version2 = 5,
         SkyrimMajorRecordFlags = 6,
-        ActorCellPersistentReferences = 7,
-        LocationCellPersistentReferences = 8,
-        ReferenceCellPersistentReferences = 9,
-        ActorCellUniques = 10,
-        LocationCellUniques = 11,
-        ReferenceCellUnique = 12,
-        ActorCellStaticReferences = 13,
-        LocationCellStaticReferences = 14,
-        ReferenceCellStaticReferences = 15,
-        ActorCellEncounterCell = 16,
-        LocationCellEncounterCell = 17,
-        ReferenceCellEncounterCell = 18,
-        ActorCellMarkerReference = 19,
-        LocationCellMarkerReference = 20,
-        ActorCellEnablePoint = 21,
-        LocationCellEnablePoint = 22,
+        PersistentActorReferencesAdded = 7,
+        PersistentActorReferencesStatic = 8,
+        PersistentActorReferencesRemoved = 9,
+        UniqueActorReferencesAdded = 10,
+        UniqueActorReferencesStatic = 11,
+        UniqueActorRemoved = 12,
+        LocationRefTypeReferencesAdded = 13,
+        LocationRefTypeReferencesStatic = 14,
+        LocationRefTypeReferencesRemoved = 15,
+        WorldspaceCellsAdded = 16,
+        WorldspaceCellsStatic = 17,
+        WorldspaceCellsRemoved = 18,
+        InitiallyDisabledReferencesAdded = 19,
+        InitiallyDisabledReferencesStatic = 20,
+        EnableParentReferencesAdded = 21,
+        EnableParentReferencesStatic = 22,
         Name = 23,
         Keywords = 24,
         ParentLocation = 25,
@@ -3068,22 +3068,22 @@ namespace Mutagen.Bethesda.Skyrim
         public void Clear(ILocationInternal item)
         {
             ClearPartial();
-            item.ActorCellPersistentReferences = null;
-            item.LocationCellPersistentReferences = null;
-            item.ReferenceCellPersistentReferences = null;
-            item.ActorCellUniques = null;
-            item.LocationCellUniques = null;
-            item.ReferenceCellUnique = null;
-            item.ActorCellStaticReferences = null;
-            item.LocationCellStaticReferences = null;
-            item.ReferenceCellStaticReferences = null;
-            item.ActorCellEncounterCell.Clear();
-            item.LocationCellEncounterCell.Clear();
-            item.ReferenceCellEncounterCell.Clear();
-            item.ActorCellMarkerReference = null;
-            item.LocationCellMarkerReference = null;
-            item.ActorCellEnablePoint = null;
-            item.LocationCellEnablePoint = null;
+            item.PersistentActorReferencesAdded = null;
+            item.PersistentActorReferencesStatic = null;
+            item.PersistentActorReferencesRemoved = null;
+            item.UniqueActorReferencesAdded = null;
+            item.UniqueActorReferencesStatic = null;
+            item.UniqueActorRemoved = null;
+            item.LocationRefTypeReferencesAdded = null;
+            item.LocationRefTypeReferencesStatic = null;
+            item.LocationRefTypeReferencesRemoved = null;
+            item.WorldspaceCellsAdded.Clear();
+            item.WorldspaceCellsStatic.Clear();
+            item.WorldspaceCellsRemoved.Clear();
+            item.InitiallyDisabledReferencesAdded = null;
+            item.InitiallyDisabledReferencesStatic = null;
+            item.EnableParentReferencesAdded = null;
+            item.EnableParentReferencesStatic = null;
             item.Name = default;
             item.Keywords = null;
             item.ParentLocation.Clear();
@@ -3110,22 +3110,22 @@ namespace Mutagen.Bethesda.Skyrim
         public void RemapLinks(ILocation obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.ActorCellPersistentReferences?.RemapLinks(mapping);
-            obj.LocationCellPersistentReferences?.RemapLinks(mapping);
-            obj.ReferenceCellPersistentReferences?.RemapLinks(mapping);
-            obj.ActorCellUniques?.RemapLinks(mapping);
-            obj.LocationCellUniques?.RemapLinks(mapping);
-            obj.ReferenceCellUnique?.RemapLinks(mapping);
-            obj.ActorCellStaticReferences?.RemapLinks(mapping);
-            obj.LocationCellStaticReferences?.RemapLinks(mapping);
-            obj.ReferenceCellStaticReferences?.RemapLinks(mapping);
-            obj.ActorCellEncounterCell.RemapLinks(mapping);
-            obj.LocationCellEncounterCell.RemapLinks(mapping);
-            obj.ReferenceCellEncounterCell.RemapLinks(mapping);
-            obj.ActorCellMarkerReference?.RemapLinks(mapping);
-            obj.LocationCellMarkerReference?.RemapLinks(mapping);
-            obj.ActorCellEnablePoint?.RemapLinks(mapping);
-            obj.LocationCellEnablePoint?.RemapLinks(mapping);
+            obj.PersistentActorReferencesAdded?.RemapLinks(mapping);
+            obj.PersistentActorReferencesStatic?.RemapLinks(mapping);
+            obj.PersistentActorReferencesRemoved?.RemapLinks(mapping);
+            obj.UniqueActorReferencesAdded?.RemapLinks(mapping);
+            obj.UniqueActorReferencesStatic?.RemapLinks(mapping);
+            obj.UniqueActorRemoved?.RemapLinks(mapping);
+            obj.LocationRefTypeReferencesAdded?.RemapLinks(mapping);
+            obj.LocationRefTypeReferencesStatic?.RemapLinks(mapping);
+            obj.LocationRefTypeReferencesRemoved?.RemapLinks(mapping);
+            obj.WorldspaceCellsAdded.RemapLinks(mapping);
+            obj.WorldspaceCellsStatic.RemapLinks(mapping);
+            obj.WorldspaceCellsRemoved.RemapLinks(mapping);
+            obj.InitiallyDisabledReferencesAdded?.RemapLinks(mapping);
+            obj.InitiallyDisabledReferencesStatic?.RemapLinks(mapping);
+            obj.EnableParentReferencesAdded?.RemapLinks(mapping);
+            obj.EnableParentReferencesStatic?.RemapLinks(mapping);
             obj.Keywords?.RemapLinks(mapping);
             obj.ParentLocation.Relink(mapping);
             obj.Music.Relink(mapping);
@@ -3199,68 +3199,68 @@ namespace Mutagen.Bethesda.Skyrim
             Location.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.ActorCellPersistentReferences = item.ActorCellPersistentReferences.CollectionEqualsHelper(
-                rhs.ActorCellPersistentReferences,
+            ret.PersistentActorReferencesAdded = item.PersistentActorReferencesAdded.CollectionEqualsHelper(
+                rhs.PersistentActorReferencesAdded,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.LocationCellPersistentReferences = item.LocationCellPersistentReferences.CollectionEqualsHelper(
-                rhs.LocationCellPersistentReferences,
+            ret.PersistentActorReferencesStatic = item.PersistentActorReferencesStatic.CollectionEqualsHelper(
+                rhs.PersistentActorReferencesStatic,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.ReferenceCellPersistentReferences = item.ReferenceCellPersistentReferences.CollectionEqualsHelper(
-                rhs.ReferenceCellPersistentReferences,
+            ret.PersistentActorReferencesRemoved = item.PersistentActorReferencesRemoved.CollectionEqualsHelper(
+                rhs.PersistentActorReferencesRemoved,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.ActorCellUniques = item.ActorCellUniques.CollectionEqualsHelper(
-                rhs.ActorCellUniques,
+            ret.UniqueActorReferencesAdded = item.UniqueActorReferencesAdded.CollectionEqualsHelper(
+                rhs.UniqueActorReferencesAdded,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.LocationCellUniques = item.LocationCellUniques.CollectionEqualsHelper(
-                rhs.LocationCellUniques,
+            ret.UniqueActorReferencesStatic = item.UniqueActorReferencesStatic.CollectionEqualsHelper(
+                rhs.UniqueActorReferencesStatic,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.ReferenceCellUnique = item.ReferenceCellUnique.CollectionEqualsHelper(
-                rhs.ReferenceCellUnique,
+            ret.UniqueActorRemoved = item.UniqueActorRemoved.CollectionEqualsHelper(
+                rhs.UniqueActorRemoved,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.ActorCellStaticReferences = item.ActorCellStaticReferences.CollectionEqualsHelper(
-                rhs.ActorCellStaticReferences,
+            ret.LocationRefTypeReferencesAdded = item.LocationRefTypeReferencesAdded.CollectionEqualsHelper(
+                rhs.LocationRefTypeReferencesAdded,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.LocationCellStaticReferences = item.LocationCellStaticReferences.CollectionEqualsHelper(
-                rhs.LocationCellStaticReferences,
+            ret.LocationRefTypeReferencesStatic = item.LocationRefTypeReferencesStatic.CollectionEqualsHelper(
+                rhs.LocationRefTypeReferencesStatic,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.ReferenceCellStaticReferences = item.ReferenceCellStaticReferences.CollectionEqualsHelper(
-                rhs.ReferenceCellStaticReferences,
+            ret.LocationRefTypeReferencesRemoved = item.LocationRefTypeReferencesRemoved.CollectionEqualsHelper(
+                rhs.LocationRefTypeReferencesRemoved,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.ActorCellEncounterCell = item.ActorCellEncounterCell.CollectionEqualsHelper(
-                rhs.ActorCellEncounterCell,
+            ret.WorldspaceCellsAdded = item.WorldspaceCellsAdded.CollectionEqualsHelper(
+                rhs.WorldspaceCellsAdded,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.LocationCellEncounterCell = item.LocationCellEncounterCell.CollectionEqualsHelper(
-                rhs.LocationCellEncounterCell,
+            ret.WorldspaceCellsStatic = item.WorldspaceCellsStatic.CollectionEqualsHelper(
+                rhs.WorldspaceCellsStatic,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.ReferenceCellEncounterCell = item.ReferenceCellEncounterCell.CollectionEqualsHelper(
-                rhs.ReferenceCellEncounterCell,
+            ret.WorldspaceCellsRemoved = item.WorldspaceCellsRemoved.CollectionEqualsHelper(
+                rhs.WorldspaceCellsRemoved,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.ActorCellMarkerReference = item.ActorCellMarkerReference.CollectionEqualsHelper(
-                rhs.ActorCellMarkerReference,
+            ret.InitiallyDisabledReferencesAdded = item.InitiallyDisabledReferencesAdded.CollectionEqualsHelper(
+                rhs.InitiallyDisabledReferencesAdded,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.LocationCellMarkerReference = item.LocationCellMarkerReference.CollectionEqualsHelper(
-                rhs.LocationCellMarkerReference,
+            ret.InitiallyDisabledReferencesStatic = item.InitiallyDisabledReferencesStatic.CollectionEqualsHelper(
+                rhs.InitiallyDisabledReferencesStatic,
                 (l, r) => object.Equals(l, r),
                 include);
-            ret.ActorCellEnablePoint = item.ActorCellEnablePoint.CollectionEqualsHelper(
-                rhs.ActorCellEnablePoint,
+            ret.EnableParentReferencesAdded = item.EnableParentReferencesAdded.CollectionEqualsHelper(
+                rhs.EnableParentReferencesAdded,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.LocationCellEnablePoint = item.LocationCellEnablePoint.CollectionEqualsHelper(
-                rhs.LocationCellEnablePoint,
+            ret.EnableParentReferencesStatic = item.EnableParentReferencesStatic.CollectionEqualsHelper(
+                rhs.EnableParentReferencesStatic,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.Name = object.Equals(item.Name, rhs.Name);
@@ -3324,13 +3324,13 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 sb: sb,
                 printMask: printMask);
-            if ((printMask?.ActorCellPersistentReferences?.Overall ?? true)
-                && item.ActorCellPersistentReferences is {} ActorCellPersistentReferencesItem)
+            if ((printMask?.PersistentActorReferencesAdded?.Overall ?? true)
+                && item.PersistentActorReferencesAdded is {} PersistentActorReferencesAddedItem)
             {
-                sb.AppendLine("ActorCellPersistentReferences =>");
+                sb.AppendLine("PersistentActorReferencesAdded =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in ActorCellPersistentReferencesItem)
+                    foreach (var subItem in PersistentActorReferencesAddedItem)
                     {
                         using (sb.Brace())
                         {
@@ -3339,13 +3339,13 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if ((printMask?.LocationCellPersistentReferences?.Overall ?? true)
-                && item.LocationCellPersistentReferences is {} LocationCellPersistentReferencesItem)
+            if ((printMask?.PersistentActorReferencesStatic?.Overall ?? true)
+                && item.PersistentActorReferencesStatic is {} PersistentActorReferencesStaticItem)
             {
-                sb.AppendLine("LocationCellPersistentReferences =>");
+                sb.AppendLine("PersistentActorReferencesStatic =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in LocationCellPersistentReferencesItem)
+                    foreach (var subItem in PersistentActorReferencesStaticItem)
                     {
                         using (sb.Brace())
                         {
@@ -3354,13 +3354,13 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if ((printMask?.ReferenceCellPersistentReferences?.Overall ?? true)
-                && item.ReferenceCellPersistentReferences is {} ReferenceCellPersistentReferencesItem)
+            if ((printMask?.PersistentActorReferencesRemoved?.Overall ?? true)
+                && item.PersistentActorReferencesRemoved is {} PersistentActorReferencesRemovedItem)
             {
-                sb.AppendLine("ReferenceCellPersistentReferences =>");
+                sb.AppendLine("PersistentActorReferencesRemoved =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in ReferenceCellPersistentReferencesItem)
+                    foreach (var subItem in PersistentActorReferencesRemovedItem)
                     {
                         using (sb.Brace())
                         {
@@ -3369,13 +3369,13 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if ((printMask?.ActorCellUniques?.Overall ?? true)
-                && item.ActorCellUniques is {} ActorCellUniquesItem)
+            if ((printMask?.UniqueActorReferencesAdded?.Overall ?? true)
+                && item.UniqueActorReferencesAdded is {} UniqueActorReferencesAddedItem)
             {
-                sb.AppendLine("ActorCellUniques =>");
+                sb.AppendLine("UniqueActorReferencesAdded =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in ActorCellUniquesItem)
+                    foreach (var subItem in UniqueActorReferencesAddedItem)
                     {
                         using (sb.Brace())
                         {
@@ -3384,13 +3384,13 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if ((printMask?.LocationCellUniques?.Overall ?? true)
-                && item.LocationCellUniques is {} LocationCellUniquesItem)
+            if ((printMask?.UniqueActorReferencesStatic?.Overall ?? true)
+                && item.UniqueActorReferencesStatic is {} UniqueActorReferencesStaticItem)
             {
-                sb.AppendLine("LocationCellUniques =>");
+                sb.AppendLine("UniqueActorReferencesStatic =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in LocationCellUniquesItem)
+                    foreach (var subItem in UniqueActorReferencesStaticItem)
                     {
                         using (sb.Brace())
                         {
@@ -3399,13 +3399,13 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if ((printMask?.ReferenceCellUnique?.Overall ?? true)
-                && item.ReferenceCellUnique is {} ReferenceCellUniqueItem)
+            if ((printMask?.UniqueActorRemoved?.Overall ?? true)
+                && item.UniqueActorRemoved is {} UniqueActorRemovedItem)
             {
-                sb.AppendLine("ReferenceCellUnique =>");
+                sb.AppendLine("UniqueActorRemoved =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in ReferenceCellUniqueItem)
+                    foreach (var subItem in UniqueActorRemovedItem)
                     {
                         using (sb.Brace())
                         {
@@ -3414,13 +3414,13 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if ((printMask?.ActorCellStaticReferences?.Overall ?? true)
-                && item.ActorCellStaticReferences is {} ActorCellStaticReferencesItem)
+            if ((printMask?.LocationRefTypeReferencesAdded?.Overall ?? true)
+                && item.LocationRefTypeReferencesAdded is {} LocationRefTypeReferencesAddedItem)
             {
-                sb.AppendLine("ActorCellStaticReferences =>");
+                sb.AppendLine("LocationRefTypeReferencesAdded =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in ActorCellStaticReferencesItem)
+                    foreach (var subItem in LocationRefTypeReferencesAddedItem)
                     {
                         using (sb.Brace())
                         {
@@ -3429,13 +3429,13 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if ((printMask?.LocationCellStaticReferences?.Overall ?? true)
-                && item.LocationCellStaticReferences is {} LocationCellStaticReferencesItem)
+            if ((printMask?.LocationRefTypeReferencesStatic?.Overall ?? true)
+                && item.LocationRefTypeReferencesStatic is {} LocationRefTypeReferencesStaticItem)
             {
-                sb.AppendLine("LocationCellStaticReferences =>");
+                sb.AppendLine("LocationRefTypeReferencesStatic =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in LocationCellStaticReferencesItem)
+                    foreach (var subItem in LocationRefTypeReferencesStaticItem)
                     {
                         using (sb.Brace())
                         {
@@ -3444,13 +3444,13 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if ((printMask?.ReferenceCellStaticReferences?.Overall ?? true)
-                && item.ReferenceCellStaticReferences is {} ReferenceCellStaticReferencesItem)
+            if ((printMask?.LocationRefTypeReferencesRemoved?.Overall ?? true)
+                && item.LocationRefTypeReferencesRemoved is {} LocationRefTypeReferencesRemovedItem)
             {
-                sb.AppendLine("ReferenceCellStaticReferences =>");
+                sb.AppendLine("LocationRefTypeReferencesRemoved =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in ReferenceCellStaticReferencesItem)
+                    foreach (var subItem in LocationRefTypeReferencesRemovedItem)
                     {
                         using (sb.Brace())
                         {
@@ -3459,12 +3459,12 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if (printMask?.ActorCellEncounterCell?.Overall ?? true)
+            if (printMask?.WorldspaceCellsAdded?.Overall ?? true)
             {
-                sb.AppendLine("ActorCellEncounterCell =>");
+                sb.AppendLine("WorldspaceCellsAdded =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.ActorCellEncounterCell)
+                    foreach (var subItem in item.WorldspaceCellsAdded)
                     {
                         using (sb.Brace())
                         {
@@ -3473,12 +3473,12 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if (printMask?.LocationCellEncounterCell?.Overall ?? true)
+            if (printMask?.WorldspaceCellsStatic?.Overall ?? true)
             {
-                sb.AppendLine("LocationCellEncounterCell =>");
+                sb.AppendLine("WorldspaceCellsStatic =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.LocationCellEncounterCell)
+                    foreach (var subItem in item.WorldspaceCellsStatic)
                     {
                         using (sb.Brace())
                         {
@@ -3487,12 +3487,12 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if (printMask?.ReferenceCellEncounterCell?.Overall ?? true)
+            if (printMask?.WorldspaceCellsRemoved?.Overall ?? true)
             {
-                sb.AppendLine("ReferenceCellEncounterCell =>");
+                sb.AppendLine("WorldspaceCellsRemoved =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in item.ReferenceCellEncounterCell)
+                    foreach (var subItem in item.WorldspaceCellsRemoved)
                     {
                         using (sb.Brace())
                         {
@@ -3501,13 +3501,13 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if ((printMask?.ActorCellMarkerReference?.Overall ?? true)
-                && item.ActorCellMarkerReference is {} ActorCellMarkerReferenceItem)
+            if ((printMask?.InitiallyDisabledReferencesAdded?.Overall ?? true)
+                && item.InitiallyDisabledReferencesAdded is {} InitiallyDisabledReferencesAddedItem)
             {
-                sb.AppendLine("ActorCellMarkerReference =>");
+                sb.AppendLine("InitiallyDisabledReferencesAdded =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in ActorCellMarkerReferenceItem)
+                    foreach (var subItem in InitiallyDisabledReferencesAddedItem)
                     {
                         using (sb.Brace())
                         {
@@ -3516,13 +3516,13 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if ((printMask?.LocationCellMarkerReference?.Overall ?? true)
-                && item.LocationCellMarkerReference is {} LocationCellMarkerReferenceItem)
+            if ((printMask?.InitiallyDisabledReferencesStatic?.Overall ?? true)
+                && item.InitiallyDisabledReferencesStatic is {} InitiallyDisabledReferencesStaticItem)
             {
-                sb.AppendLine("LocationCellMarkerReference =>");
+                sb.AppendLine("InitiallyDisabledReferencesStatic =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in LocationCellMarkerReferenceItem)
+                    foreach (var subItem in InitiallyDisabledReferencesStaticItem)
                     {
                         using (sb.Brace())
                         {
@@ -3531,13 +3531,13 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if ((printMask?.ActorCellEnablePoint?.Overall ?? true)
-                && item.ActorCellEnablePoint is {} ActorCellEnablePointItem)
+            if ((printMask?.EnableParentReferencesAdded?.Overall ?? true)
+                && item.EnableParentReferencesAdded is {} EnableParentReferencesAddedItem)
             {
-                sb.AppendLine("ActorCellEnablePoint =>");
+                sb.AppendLine("EnableParentReferencesAdded =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in ActorCellEnablePointItem)
+                    foreach (var subItem in EnableParentReferencesAddedItem)
                     {
                         using (sb.Brace())
                         {
@@ -3546,13 +3546,13 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
-            if ((printMask?.LocationCellEnablePoint?.Overall ?? true)
-                && item.LocationCellEnablePoint is {} LocationCellEnablePointItem)
+            if ((printMask?.EnableParentReferencesStatic?.Overall ?? true)
+                && item.EnableParentReferencesStatic is {} EnableParentReferencesStaticItem)
             {
-                sb.AppendLine("LocationCellEnablePoint =>");
+                sb.AppendLine("EnableParentReferencesStatic =>");
                 using (sb.Brace())
                 {
-                    foreach (var subItem in LocationCellEnablePointItem)
+                    foreach (var subItem in EnableParentReferencesStaticItem)
                     {
                         using (sb.Brace())
                         {
@@ -3661,69 +3661,69 @@ namespace Mutagen.Bethesda.Skyrim
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, equalsMask)) return false;
-            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellPersistentReferences) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.PersistentActorReferencesAdded) ?? true))
             {
-                if (!lhs.ActorCellPersistentReferences.SequenceEqualNullable(rhs.ActorCellPersistentReferences, (l, r) => ((LocationReferenceCommon)((ILocationReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellPersistentReferences)))) return false;
+                if (!lhs.PersistentActorReferencesAdded.SequenceEqualNullable(rhs.PersistentActorReferencesAdded, (l, r) => ((PersistentActorReferenceCommon)((IPersistentActorReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.PersistentActorReferencesAdded)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellPersistentReferences) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.PersistentActorReferencesStatic) ?? true))
             {
-                if (!lhs.LocationCellPersistentReferences.SequenceEqualNullable(rhs.LocationCellPersistentReferences, (l, r) => ((LocationReferenceCommon)((ILocationReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellPersistentReferences)))) return false;
+                if (!lhs.PersistentActorReferencesStatic.SequenceEqualNullable(rhs.PersistentActorReferencesStatic, (l, r) => ((PersistentActorReferenceCommon)((IPersistentActorReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.PersistentActorReferencesStatic)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellPersistentReferences) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.PersistentActorReferencesRemoved) ?? true))
             {
-                if (!lhs.ReferenceCellPersistentReferences.SequenceEqualNullable(rhs.ReferenceCellPersistentReferences)) return false;
+                if (!lhs.PersistentActorReferencesRemoved.SequenceEqualNullable(rhs.PersistentActorReferencesRemoved)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellUniques) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.UniqueActorReferencesAdded) ?? true))
             {
-                if (!lhs.ActorCellUniques.SequenceEqualNullable(rhs.ActorCellUniques, (l, r) => ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellUniques)))) return false;
+                if (!lhs.UniqueActorReferencesAdded.SequenceEqualNullable(rhs.UniqueActorReferencesAdded, (l, r) => ((UniqueActorReferenceCommon)((IUniqueActorReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.UniqueActorReferencesAdded)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellUniques) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.UniqueActorReferencesStatic) ?? true))
             {
-                if (!lhs.LocationCellUniques.SequenceEqualNullable(rhs.LocationCellUniques, (l, r) => ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellUniques)))) return false;
+                if (!lhs.UniqueActorReferencesStatic.SequenceEqualNullable(rhs.UniqueActorReferencesStatic, (l, r) => ((UniqueActorReferenceCommon)((IUniqueActorReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.UniqueActorReferencesStatic)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellUnique) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.UniqueActorRemoved) ?? true))
             {
-                if (!lhs.ReferenceCellUnique.SequenceEqualNullable(rhs.ReferenceCellUnique)) return false;
+                if (!lhs.UniqueActorRemoved.SequenceEqualNullable(rhs.UniqueActorRemoved)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellStaticReferences) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.LocationRefTypeReferencesAdded) ?? true))
             {
-                if (!lhs.ActorCellStaticReferences.SequenceEqualNullable(rhs.ActorCellStaticReferences, (l, r) => ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellStaticReferences)))) return false;
+                if (!lhs.LocationRefTypeReferencesAdded.SequenceEqualNullable(rhs.LocationRefTypeReferencesAdded, (l, r) => ((LocationRefTypeReferenceCommon)((ILocationRefTypeReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.LocationRefTypeReferencesAdded)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellStaticReferences) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.LocationRefTypeReferencesStatic) ?? true))
             {
-                if (!lhs.LocationCellStaticReferences.SequenceEqualNullable(rhs.LocationCellStaticReferences, (l, r) => ((LocationCellStaticReferenceCommon)((ILocationCellStaticReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellStaticReferences)))) return false;
+                if (!lhs.LocationRefTypeReferencesStatic.SequenceEqualNullable(rhs.LocationRefTypeReferencesStatic, (l, r) => ((LocationRefTypeReferenceCommon)((ILocationRefTypeReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.LocationRefTypeReferencesStatic)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellStaticReferences) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.LocationRefTypeReferencesRemoved) ?? true))
             {
-                if (!lhs.ReferenceCellStaticReferences.SequenceEqualNullable(rhs.ReferenceCellStaticReferences)) return false;
+                if (!lhs.LocationRefTypeReferencesRemoved.SequenceEqualNullable(rhs.LocationRefTypeReferencesRemoved)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellEncounterCell) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.WorldspaceCellsAdded) ?? true))
             {
-                if (!lhs.ActorCellEncounterCell.SequenceEqual(rhs.ActorCellEncounterCell, (l, r) => ((LocationCoordinateCommon)((ILocationCoordinateGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellEncounterCell)))) return false;
+                if (!lhs.WorldspaceCellsAdded.SequenceEqual(rhs.WorldspaceCellsAdded, (l, r) => ((LocationCoordinateCommon)((ILocationCoordinateGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.WorldspaceCellsAdded)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellEncounterCell) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.WorldspaceCellsStatic) ?? true))
             {
-                if (!lhs.LocationCellEncounterCell.SequenceEqual(rhs.LocationCellEncounterCell, (l, r) => ((LocationCoordinateCommon)((ILocationCoordinateGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellEncounterCell)))) return false;
+                if (!lhs.WorldspaceCellsStatic.SequenceEqual(rhs.WorldspaceCellsStatic, (l, r) => ((LocationCoordinateCommon)((ILocationCoordinateGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.WorldspaceCellsStatic)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellEncounterCell) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.WorldspaceCellsRemoved) ?? true))
             {
-                if (!lhs.ReferenceCellEncounterCell.SequenceEqual(rhs.ReferenceCellEncounterCell, (l, r) => ((LocationCoordinateCommon)((ILocationCoordinateGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.ReferenceCellEncounterCell)))) return false;
+                if (!lhs.WorldspaceCellsRemoved.SequenceEqual(rhs.WorldspaceCellsRemoved, (l, r) => ((LocationCoordinateCommon)((ILocationCoordinateGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.WorldspaceCellsRemoved)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellMarkerReference) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.InitiallyDisabledReferencesAdded) ?? true))
             {
-                if (!lhs.ActorCellMarkerReference.SequenceEqualNullable(rhs.ActorCellMarkerReference)) return false;
+                if (!lhs.InitiallyDisabledReferencesAdded.SequenceEqualNullable(rhs.InitiallyDisabledReferencesAdded)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellMarkerReference) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.InitiallyDisabledReferencesStatic) ?? true))
             {
-                if (!lhs.LocationCellMarkerReference.SequenceEqualNullable(rhs.LocationCellMarkerReference)) return false;
+                if (!lhs.InitiallyDisabledReferencesStatic.SequenceEqualNullable(rhs.InitiallyDisabledReferencesStatic)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellEnablePoint) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.EnableParentReferencesAdded) ?? true))
             {
-                if (!lhs.ActorCellEnablePoint.SequenceEqualNullable(rhs.ActorCellEnablePoint, (l, r) => ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellEnablePoint)))) return false;
+                if (!lhs.EnableParentReferencesAdded.SequenceEqualNullable(rhs.EnableParentReferencesAdded, (l, r) => ((EnableParentReferenceCommon)((IEnableParentReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.EnableParentReferencesAdded)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellEnablePoint) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.EnableParentReferencesStatic) ?? true))
             {
-                if (!lhs.LocationCellEnablePoint.SequenceEqualNullable(rhs.LocationCellEnablePoint, (l, r) => ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellEnablePoint)))) return false;
+                if (!lhs.EnableParentReferencesStatic.SequenceEqualNullable(rhs.EnableParentReferencesStatic, (l, r) => ((EnableParentReferenceCommon)((IEnableParentReferenceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)Location_FieldIndex.EnableParentReferencesStatic)))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)Location_FieldIndex.Name) ?? true))
             {
@@ -3789,22 +3789,22 @@ namespace Mutagen.Bethesda.Skyrim
         public virtual int GetHashCode(ILocationGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.ActorCellPersistentReferences);
-            hash.Add(item.LocationCellPersistentReferences);
-            hash.Add(item.ReferenceCellPersistentReferences);
-            hash.Add(item.ActorCellUniques);
-            hash.Add(item.LocationCellUniques);
-            hash.Add(item.ReferenceCellUnique);
-            hash.Add(item.ActorCellStaticReferences);
-            hash.Add(item.LocationCellStaticReferences);
-            hash.Add(item.ReferenceCellStaticReferences);
-            hash.Add(item.ActorCellEncounterCell);
-            hash.Add(item.LocationCellEncounterCell);
-            hash.Add(item.ReferenceCellEncounterCell);
-            hash.Add(item.ActorCellMarkerReference);
-            hash.Add(item.LocationCellMarkerReference);
-            hash.Add(item.ActorCellEnablePoint);
-            hash.Add(item.LocationCellEnablePoint);
+            hash.Add(item.PersistentActorReferencesAdded);
+            hash.Add(item.PersistentActorReferencesStatic);
+            hash.Add(item.PersistentActorReferencesRemoved);
+            hash.Add(item.UniqueActorReferencesAdded);
+            hash.Add(item.UniqueActorReferencesStatic);
+            hash.Add(item.UniqueActorRemoved);
+            hash.Add(item.LocationRefTypeReferencesAdded);
+            hash.Add(item.LocationRefTypeReferencesStatic);
+            hash.Add(item.LocationRefTypeReferencesRemoved);
+            hash.Add(item.WorldspaceCellsAdded);
+            hash.Add(item.WorldspaceCellsStatic);
+            hash.Add(item.WorldspaceCellsRemoved);
+            hash.Add(item.InitiallyDisabledReferencesAdded);
+            hash.Add(item.InitiallyDisabledReferencesStatic);
+            hash.Add(item.EnableParentReferencesAdded);
+            hash.Add(item.EnableParentReferencesStatic);
             if (item.Name is {} Nameitem)
             {
                 hash.Add(Nameitem);
@@ -3852,105 +3852,105 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 yield return item;
             }
-            if (obj.ActorCellPersistentReferences is {} ActorCellPersistentReferencesItem)
+            if (obj.PersistentActorReferencesAdded is {} PersistentActorReferencesAddedItem)
             {
-                foreach (var item in ActorCellPersistentReferencesItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in PersistentActorReferencesAddedItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.LocationCellPersistentReferences is {} LocationCellPersistentReferencesItem)
+            if (obj.PersistentActorReferencesStatic is {} PersistentActorReferencesStaticItem)
             {
-                foreach (var item in LocationCellPersistentReferencesItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in PersistentActorReferencesStaticItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.ReferenceCellPersistentReferences is {} ReferenceCellPersistentReferencesItem)
+            if (obj.PersistentActorReferencesRemoved is {} PersistentActorReferencesRemovedItem)
             {
-                foreach (var item in ReferenceCellPersistentReferencesItem)
+                foreach (var item in PersistentActorReferencesRemovedItem)
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.ActorCellUniques is {} ActorCellUniquesItem)
+            if (obj.UniqueActorReferencesAdded is {} UniqueActorReferencesAddedItem)
             {
-                foreach (var item in ActorCellUniquesItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in UniqueActorReferencesAddedItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.LocationCellUniques is {} LocationCellUniquesItem)
+            if (obj.UniqueActorReferencesStatic is {} UniqueActorReferencesStaticItem)
             {
-                foreach (var item in LocationCellUniquesItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in UniqueActorReferencesStaticItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.ReferenceCellUnique is {} ReferenceCellUniqueItem)
+            if (obj.UniqueActorRemoved is {} UniqueActorRemovedItem)
             {
-                foreach (var item in ReferenceCellUniqueItem)
+                foreach (var item in UniqueActorRemovedItem)
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.ActorCellStaticReferences is {} ActorCellStaticReferencesItem)
+            if (obj.LocationRefTypeReferencesAdded is {} LocationRefTypeReferencesAddedItem)
             {
-                foreach (var item in ActorCellStaticReferencesItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in LocationRefTypeReferencesAddedItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.LocationCellStaticReferences is {} LocationCellStaticReferencesItem)
+            if (obj.LocationRefTypeReferencesStatic is {} LocationRefTypeReferencesStaticItem)
             {
-                foreach (var item in LocationCellStaticReferencesItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in LocationRefTypeReferencesStaticItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.ReferenceCellStaticReferences is {} ReferenceCellStaticReferencesItem)
+            if (obj.LocationRefTypeReferencesRemoved is {} LocationRefTypeReferencesRemovedItem)
             {
-                foreach (var item in ReferenceCellStaticReferencesItem)
+                foreach (var item in LocationRefTypeReferencesRemovedItem)
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            foreach (var item in obj.ActorCellEncounterCell.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.WorldspaceCellsAdded.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.LocationCellEncounterCell.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.WorldspaceCellsStatic.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            foreach (var item in obj.ReferenceCellEncounterCell.SelectMany(f => f.EnumerateFormLinks()))
+            foreach (var item in obj.WorldspaceCellsRemoved.SelectMany(f => f.EnumerateFormLinks()))
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (obj.ActorCellMarkerReference is {} ActorCellMarkerReferenceItem)
+            if (obj.InitiallyDisabledReferencesAdded is {} InitiallyDisabledReferencesAddedItem)
             {
-                foreach (var item in ActorCellMarkerReferenceItem)
+                foreach (var item in InitiallyDisabledReferencesAddedItem)
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.LocationCellMarkerReference is {} LocationCellMarkerReferenceItem)
+            if (obj.InitiallyDisabledReferencesStatic is {} InitiallyDisabledReferencesStaticItem)
             {
-                foreach (var item in LocationCellMarkerReferenceItem)
+                foreach (var item in InitiallyDisabledReferencesStaticItem)
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.ActorCellEnablePoint is {} ActorCellEnablePointItem)
+            if (obj.EnableParentReferencesAdded is {} EnableParentReferencesAddedItem)
             {
-                foreach (var item in ActorCellEnablePointItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in EnableParentReferencesAddedItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
             }
-            if (obj.LocationCellEnablePoint is {} LocationCellEnablePointItem)
+            if (obj.EnableParentReferencesStatic is {} EnableParentReferencesStaticItem)
             {
-                foreach (var item in LocationCellEnablePointItem.SelectMany(f => f.EnumerateFormLinks()))
+                foreach (var item in EnableParentReferencesStaticItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -4056,26 +4056,26 @@ namespace Mutagen.Bethesda.Skyrim
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
-            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellPersistentReferences) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.PersistentActorReferencesAdded) ?? true))
             {
-                errorMask?.PushIndex((int)Location_FieldIndex.ActorCellPersistentReferences);
+                errorMask?.PushIndex((int)Location_FieldIndex.PersistentActorReferencesAdded);
                 try
                 {
-                    if ((rhs.ActorCellPersistentReferences != null))
+                    if ((rhs.PersistentActorReferencesAdded != null))
                     {
-                        item.ActorCellPersistentReferences = 
-                            rhs.ActorCellPersistentReferences
+                        item.PersistentActorReferencesAdded = 
+                            rhs.PersistentActorReferencesAdded
                             .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
                             })
-                            .ToExtendedList<LocationReference>();
+                            .ToExtendedList<PersistentActorReference>();
                     }
                     else
                     {
-                        item.ActorCellPersistentReferences = null;
+                        item.PersistentActorReferencesAdded = null;
                     }
                 }
                 catch (Exception ex)
@@ -4088,26 +4088,26 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellPersistentReferences) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.PersistentActorReferencesStatic) ?? true))
             {
-                errorMask?.PushIndex((int)Location_FieldIndex.LocationCellPersistentReferences);
+                errorMask?.PushIndex((int)Location_FieldIndex.PersistentActorReferencesStatic);
                 try
                 {
-                    if ((rhs.LocationCellPersistentReferences != null))
+                    if ((rhs.PersistentActorReferencesStatic != null))
                     {
-                        item.LocationCellPersistentReferences = 
-                            rhs.LocationCellPersistentReferences
+                        item.PersistentActorReferencesStatic = 
+                            rhs.PersistentActorReferencesStatic
                             .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
                             })
-                            .ToExtendedList<LocationReference>();
+                            .ToExtendedList<PersistentActorReference>();
                     }
                     else
                     {
-                        item.LocationCellPersistentReferences = null;
+                        item.PersistentActorReferencesStatic = null;
                     }
                 }
                 catch (Exception ex)
@@ -4120,21 +4120,21 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellPersistentReferences) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.PersistentActorReferencesRemoved) ?? true))
             {
-                errorMask?.PushIndex((int)Location_FieldIndex.ReferenceCellPersistentReferences);
+                errorMask?.PushIndex((int)Location_FieldIndex.PersistentActorReferencesRemoved);
                 try
                 {
-                    if ((rhs.ReferenceCellPersistentReferences != null))
+                    if ((rhs.PersistentActorReferencesRemoved != null))
                     {
-                        item.ReferenceCellPersistentReferences = 
-                            rhs.ReferenceCellPersistentReferences
+                        item.PersistentActorReferencesRemoved = 
+                            rhs.PersistentActorReferencesRemoved
                                 .Select(b => (IFormLinkGetter<IPlacedSimpleGetter>)new FormLink<IPlacedSimpleGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>();
                     }
                     else
                     {
-                        item.ReferenceCellPersistentReferences = null;
+                        item.PersistentActorReferencesRemoved = null;
                     }
                 }
                 catch (Exception ex)
@@ -4147,26 +4147,26 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellUniques) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.UniqueActorReferencesAdded) ?? true))
             {
-                errorMask?.PushIndex((int)Location_FieldIndex.ActorCellUniques);
+                errorMask?.PushIndex((int)Location_FieldIndex.UniqueActorReferencesAdded);
                 try
                 {
-                    if ((rhs.ActorCellUniques != null))
+                    if ((rhs.UniqueActorReferencesAdded != null))
                     {
-                        item.ActorCellUniques = 
-                            rhs.ActorCellUniques
+                        item.UniqueActorReferencesAdded = 
+                            rhs.UniqueActorReferencesAdded
                             .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
                             })
-                            .ToExtendedList<LocationCellUnique>();
+                            .ToExtendedList<UniqueActorReference>();
                     }
                     else
                     {
-                        item.ActorCellUniques = null;
+                        item.UniqueActorReferencesAdded = null;
                     }
                 }
                 catch (Exception ex)
@@ -4179,26 +4179,26 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellUniques) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.UniqueActorReferencesStatic) ?? true))
             {
-                errorMask?.PushIndex((int)Location_FieldIndex.LocationCellUniques);
+                errorMask?.PushIndex((int)Location_FieldIndex.UniqueActorReferencesStatic);
                 try
                 {
-                    if ((rhs.LocationCellUniques != null))
+                    if ((rhs.UniqueActorReferencesStatic != null))
                     {
-                        item.LocationCellUniques = 
-                            rhs.LocationCellUniques
+                        item.UniqueActorReferencesStatic = 
+                            rhs.UniqueActorReferencesStatic
                             .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
                             })
-                            .ToExtendedList<LocationCellUnique>();
+                            .ToExtendedList<UniqueActorReference>();
                     }
                     else
                     {
-                        item.LocationCellUniques = null;
+                        item.UniqueActorReferencesStatic = null;
                     }
                 }
                 catch (Exception ex)
@@ -4211,21 +4211,21 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellUnique) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.UniqueActorRemoved) ?? true))
             {
-                errorMask?.PushIndex((int)Location_FieldIndex.ReferenceCellUnique);
+                errorMask?.PushIndex((int)Location_FieldIndex.UniqueActorRemoved);
                 try
                 {
-                    if ((rhs.ReferenceCellUnique != null))
+                    if ((rhs.UniqueActorRemoved != null))
                     {
-                        item.ReferenceCellUnique = 
-                            rhs.ReferenceCellUnique
+                        item.UniqueActorRemoved = 
+                            rhs.UniqueActorRemoved
                                 .Select(b => (IFormLinkGetter<INpcGetter>)new FormLink<INpcGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<INpcGetter>>();
                     }
                     else
                     {
-                        item.ReferenceCellUnique = null;
+                        item.UniqueActorRemoved = null;
                     }
                 }
                 catch (Exception ex)
@@ -4238,26 +4238,26 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellStaticReferences) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.LocationRefTypeReferencesAdded) ?? true))
             {
-                errorMask?.PushIndex((int)Location_FieldIndex.ActorCellStaticReferences);
+                errorMask?.PushIndex((int)Location_FieldIndex.LocationRefTypeReferencesAdded);
                 try
                 {
-                    if ((rhs.ActorCellStaticReferences != null))
+                    if ((rhs.LocationRefTypeReferencesAdded != null))
                     {
-                        item.ActorCellStaticReferences = 
-                            rhs.ActorCellStaticReferences
+                        item.LocationRefTypeReferencesAdded = 
+                            rhs.LocationRefTypeReferencesAdded
                             .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
                             })
-                            .ToExtendedList<LocationCellStaticReference>();
+                            .ToExtendedList<LocationRefTypeReference>();
                     }
                     else
                     {
-                        item.ActorCellStaticReferences = null;
+                        item.LocationRefTypeReferencesAdded = null;
                     }
                 }
                 catch (Exception ex)
@@ -4270,26 +4270,26 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellStaticReferences) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.LocationRefTypeReferencesStatic) ?? true))
             {
-                errorMask?.PushIndex((int)Location_FieldIndex.LocationCellStaticReferences);
+                errorMask?.PushIndex((int)Location_FieldIndex.LocationRefTypeReferencesStatic);
                 try
                 {
-                    if ((rhs.LocationCellStaticReferences != null))
+                    if ((rhs.LocationRefTypeReferencesStatic != null))
                     {
-                        item.LocationCellStaticReferences = 
-                            rhs.LocationCellStaticReferences
+                        item.LocationRefTypeReferencesStatic = 
+                            rhs.LocationRefTypeReferencesStatic
                             .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
                             })
-                            .ToExtendedList<LocationCellStaticReference>();
+                            .ToExtendedList<LocationRefTypeReference>();
                     }
                     else
                     {
-                        item.LocationCellStaticReferences = null;
+                        item.LocationRefTypeReferencesStatic = null;
                     }
                 }
                 catch (Exception ex)
@@ -4302,21 +4302,21 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellStaticReferences) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.LocationRefTypeReferencesRemoved) ?? true))
             {
-                errorMask?.PushIndex((int)Location_FieldIndex.ReferenceCellStaticReferences);
+                errorMask?.PushIndex((int)Location_FieldIndex.LocationRefTypeReferencesRemoved);
                 try
                 {
-                    if ((rhs.ReferenceCellStaticReferences != null))
+                    if ((rhs.LocationRefTypeReferencesRemoved != null))
                     {
-                        item.ReferenceCellStaticReferences = 
-                            rhs.ReferenceCellStaticReferences
+                        item.LocationRefTypeReferencesRemoved = 
+                            rhs.LocationRefTypeReferencesRemoved
                                 .Select(b => (IFormLinkGetter<IPlacedSimpleGetter>)new FormLink<IPlacedSimpleGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>();
                     }
                     else
                     {
-                        item.ReferenceCellStaticReferences = null;
+                        item.LocationRefTypeReferencesRemoved = null;
                     }
                 }
                 catch (Exception ex)
@@ -4329,13 +4329,13 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellEncounterCell) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.WorldspaceCellsAdded) ?? true))
             {
-                errorMask?.PushIndex((int)Location_FieldIndex.ActorCellEncounterCell);
+                errorMask?.PushIndex((int)Location_FieldIndex.WorldspaceCellsAdded);
                 try
                 {
-                    item.ActorCellEncounterCell.SetTo(
-                        rhs.ActorCellEncounterCell
+                    item.WorldspaceCellsAdded.SetTo(
+                        rhs.WorldspaceCellsAdded
                         .Select(r =>
                         {
                             return r.DeepCopy(
@@ -4353,13 +4353,13 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellEncounterCell) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.WorldspaceCellsStatic) ?? true))
             {
-                errorMask?.PushIndex((int)Location_FieldIndex.LocationCellEncounterCell);
+                errorMask?.PushIndex((int)Location_FieldIndex.WorldspaceCellsStatic);
                 try
                 {
-                    item.LocationCellEncounterCell.SetTo(
-                        rhs.LocationCellEncounterCell
+                    item.WorldspaceCellsStatic.SetTo(
+                        rhs.WorldspaceCellsStatic
                         .Select(r =>
                         {
                             return r.DeepCopy(
@@ -4377,13 +4377,13 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellEncounterCell) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.WorldspaceCellsRemoved) ?? true))
             {
-                errorMask?.PushIndex((int)Location_FieldIndex.ReferenceCellEncounterCell);
+                errorMask?.PushIndex((int)Location_FieldIndex.WorldspaceCellsRemoved);
                 try
                 {
-                    item.ReferenceCellEncounterCell.SetTo(
-                        rhs.ReferenceCellEncounterCell
+                    item.WorldspaceCellsRemoved.SetTo(
+                        rhs.WorldspaceCellsRemoved
                         .Select(r =>
                         {
                             return r.DeepCopy(
@@ -4401,21 +4401,21 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellMarkerReference) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.InitiallyDisabledReferencesAdded) ?? true))
             {
-                errorMask?.PushIndex((int)Location_FieldIndex.ActorCellMarkerReference);
+                errorMask?.PushIndex((int)Location_FieldIndex.InitiallyDisabledReferencesAdded);
                 try
                 {
-                    if ((rhs.ActorCellMarkerReference != null))
+                    if ((rhs.InitiallyDisabledReferencesAdded != null))
                     {
-                        item.ActorCellMarkerReference = 
-                            rhs.ActorCellMarkerReference
+                        item.InitiallyDisabledReferencesAdded = 
+                            rhs.InitiallyDisabledReferencesAdded
                                 .Select(b => (IFormLinkGetter<IPlacedGetter>)new FormLink<IPlacedGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IPlacedGetter>>();
                     }
                     else
                     {
-                        item.ActorCellMarkerReference = null;
+                        item.InitiallyDisabledReferencesAdded = null;
                     }
                 }
                 catch (Exception ex)
@@ -4428,21 +4428,21 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellMarkerReference) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.InitiallyDisabledReferencesStatic) ?? true))
             {
-                errorMask?.PushIndex((int)Location_FieldIndex.LocationCellMarkerReference);
+                errorMask?.PushIndex((int)Location_FieldIndex.InitiallyDisabledReferencesStatic);
                 try
                 {
-                    if ((rhs.LocationCellMarkerReference != null))
+                    if ((rhs.InitiallyDisabledReferencesStatic != null))
                     {
-                        item.LocationCellMarkerReference = 
-                            rhs.LocationCellMarkerReference
+                        item.InitiallyDisabledReferencesStatic = 
+                            rhs.InitiallyDisabledReferencesStatic
                                 .Select(b => (IFormLinkGetter<IPlacedGetter>)new FormLink<IPlacedGetter>(b.FormKey))
                             .ToExtendedList<IFormLinkGetter<IPlacedGetter>>();
                     }
                     else
                     {
-                        item.LocationCellMarkerReference = null;
+                        item.InitiallyDisabledReferencesStatic = null;
                     }
                 }
                 catch (Exception ex)
@@ -4455,26 +4455,26 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellEnablePoint) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.EnableParentReferencesAdded) ?? true))
             {
-                errorMask?.PushIndex((int)Location_FieldIndex.ActorCellEnablePoint);
+                errorMask?.PushIndex((int)Location_FieldIndex.EnableParentReferencesAdded);
                 try
                 {
-                    if ((rhs.ActorCellEnablePoint != null))
+                    if ((rhs.EnableParentReferencesAdded != null))
                     {
-                        item.ActorCellEnablePoint = 
-                            rhs.ActorCellEnablePoint
+                        item.EnableParentReferencesAdded = 
+                            rhs.EnableParentReferencesAdded
                             .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
                             })
-                            .ToExtendedList<LocationCellEnablePoint>();
+                            .ToExtendedList<EnableParentReference>();
                     }
                     else
                     {
-                        item.ActorCellEnablePoint = null;
+                        item.EnableParentReferencesAdded = null;
                     }
                 }
                 catch (Exception ex)
@@ -4487,26 +4487,26 @@ namespace Mutagen.Bethesda.Skyrim
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellEnablePoint) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.EnableParentReferencesStatic) ?? true))
             {
-                errorMask?.PushIndex((int)Location_FieldIndex.LocationCellEnablePoint);
+                errorMask?.PushIndex((int)Location_FieldIndex.EnableParentReferencesStatic);
                 try
                 {
-                    if ((rhs.LocationCellEnablePoint != null))
+                    if ((rhs.EnableParentReferencesStatic != null))
                     {
-                        item.LocationCellEnablePoint = 
-                            rhs.LocationCellEnablePoint
+                        item.EnableParentReferencesStatic = 
+                            rhs.EnableParentReferencesStatic
                             .Select(r =>
                             {
                                 return r.DeepCopy(
                                     errorMask: errorMask,
                                     default(TranslationCrystal));
                             })
-                            .ToExtendedList<LocationCellEnablePoint>();
+                            .ToExtendedList<EnableParentReference>();
                     }
                     else
                     {
-                        item.LocationCellEnablePoint = null;
+                        item.EnableParentReferencesStatic = null;
                     }
                 }
                 catch (Exception ex)
@@ -4747,33 +4747,33 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILocationReferenceGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IPersistentActorReferenceGetter>.Instance.Write(
                 writer: writer,
-                items: item.ActorCellPersistentReferences,
+                items: item.PersistentActorReferencesAdded,
                 recordType: translationParams.ConvertToCustom(RecordTypes.ACPR),
-                transl: (MutagenWriter subWriter, ILocationReferenceGetter subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, IPersistentActorReferenceGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
-                    ((LocationReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((PersistentActorReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
                 });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILocationReferenceGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IPersistentActorReferenceGetter>.Instance.Write(
                 writer: writer,
-                items: item.LocationCellPersistentReferences,
+                items: item.PersistentActorReferencesStatic,
                 recordType: translationParams.ConvertToCustom(RecordTypes.LCPR),
-                transl: (MutagenWriter subWriter, ILocationReferenceGetter subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, IPersistentActorReferenceGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
-                    ((LocationReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((PersistentActorReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPlacedSimpleGetter>>.Instance.Write(
                 writer: writer,
-                items: item.ReferenceCellPersistentReferences,
+                items: item.PersistentActorReferencesRemoved,
                 recordType: translationParams.ConvertToCustom(RecordTypes.RCPR),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IPlacedSimpleGetter> subItem, TypedWriteParams conv) =>
                 {
@@ -4781,33 +4781,33 @@ namespace Mutagen.Bethesda.Skyrim
                         writer: subWriter,
                         item: subItem);
                 });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILocationCellUniqueGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IUniqueActorReferenceGetter>.Instance.Write(
                 writer: writer,
-                items: item.ActorCellUniques,
+                items: item.UniqueActorReferencesAdded,
                 recordType: translationParams.ConvertToCustom(RecordTypes.ACUN),
-                transl: (MutagenWriter subWriter, ILocationCellUniqueGetter subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, IUniqueActorReferenceGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
-                    ((LocationCellUniqueBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((UniqueActorReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
                 });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILocationCellUniqueGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IUniqueActorReferenceGetter>.Instance.Write(
                 writer: writer,
-                items: item.LocationCellUniques,
+                items: item.UniqueActorReferencesStatic,
                 recordType: translationParams.ConvertToCustom(RecordTypes.LCUN),
-                transl: (MutagenWriter subWriter, ILocationCellUniqueGetter subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, IUniqueActorReferenceGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
-                    ((LocationCellUniqueBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((UniqueActorReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Write(
                 writer: writer,
-                items: item.ReferenceCellUnique,
+                items: item.UniqueActorRemoved,
                 recordType: translationParams.ConvertToCustom(RecordTypes.RCUN),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<INpcGetter> subItem, TypedWriteParams conv) =>
                 {
@@ -4815,33 +4815,33 @@ namespace Mutagen.Bethesda.Skyrim
                         writer: subWriter,
                         item: subItem);
                 });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILocationCellStaticReferenceGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILocationRefTypeReferenceGetter>.Instance.Write(
                 writer: writer,
-                items: item.ActorCellStaticReferences,
+                items: item.LocationRefTypeReferencesAdded,
                 recordType: translationParams.ConvertToCustom(RecordTypes.ACSR),
-                transl: (MutagenWriter subWriter, ILocationCellStaticReferenceGetter subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, ILocationRefTypeReferenceGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
-                    ((LocationCellStaticReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((LocationRefTypeReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
                 });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILocationCellStaticReferenceGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILocationRefTypeReferenceGetter>.Instance.Write(
                 writer: writer,
-                items: item.LocationCellStaticReferences,
+                items: item.LocationRefTypeReferencesStatic,
                 recordType: translationParams.ConvertToCustom(RecordTypes.LCSR),
-                transl: (MutagenWriter subWriter, ILocationCellStaticReferenceGetter subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, ILocationRefTypeReferenceGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
-                    ((LocationCellStaticReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((LocationRefTypeReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPlacedSimpleGetter>>.Instance.Write(
                 writer: writer,
-                items: item.ReferenceCellStaticReferences,
+                items: item.LocationRefTypeReferencesRemoved,
                 recordType: translationParams.ConvertToCustom(RecordTypes.RCSR),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IPlacedSimpleGetter> subItem, TypedWriteParams conv) =>
                 {
@@ -4851,7 +4851,7 @@ namespace Mutagen.Bethesda.Skyrim
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILocationCoordinateGetter>.Instance.Write(
                 writer: writer,
-                items: item.ActorCellEncounterCell,
+                items: item.WorldspaceCellsAdded,
                 transl: (MutagenWriter subWriter, ILocationCoordinateGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
@@ -4865,7 +4865,7 @@ namespace Mutagen.Bethesda.Skyrim
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILocationCoordinateGetter>.Instance.Write(
                 writer: writer,
-                items: item.LocationCellEncounterCell,
+                items: item.WorldspaceCellsStatic,
                 transl: (MutagenWriter subWriter, ILocationCoordinateGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
@@ -4879,7 +4879,7 @@ namespace Mutagen.Bethesda.Skyrim
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILocationCoordinateGetter>.Instance.Write(
                 writer: writer,
-                items: item.ReferenceCellEncounterCell,
+                items: item.WorldspaceCellsRemoved,
                 transl: (MutagenWriter subWriter, ILocationCoordinateGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
@@ -4893,7 +4893,7 @@ namespace Mutagen.Bethesda.Skyrim
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPlacedGetter>>.Instance.Write(
                 writer: writer,
-                items: item.ActorCellMarkerReference,
+                items: item.InitiallyDisabledReferencesAdded,
                 recordType: translationParams.ConvertToCustom(RecordTypes.ACID),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IPlacedGetter> subItem, TypedWriteParams conv) =>
                 {
@@ -4903,7 +4903,7 @@ namespace Mutagen.Bethesda.Skyrim
                 });
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPlacedGetter>>.Instance.Write(
                 writer: writer,
-                items: item.LocationCellMarkerReference,
+                items: item.InitiallyDisabledReferencesStatic,
                 recordType: translationParams.ConvertToCustom(RecordTypes.LCID),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IPlacedGetter> subItem, TypedWriteParams conv) =>
                 {
@@ -4911,26 +4911,26 @@ namespace Mutagen.Bethesda.Skyrim
                         writer: subWriter,
                         item: subItem);
                 });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILocationCellEnablePointGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IEnableParentReferenceGetter>.Instance.Write(
                 writer: writer,
-                items: item.ActorCellEnablePoint,
+                items: item.EnableParentReferencesAdded,
                 recordType: translationParams.ConvertToCustom(RecordTypes.ACEP),
-                transl: (MutagenWriter subWriter, ILocationCellEnablePointGetter subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, IEnableParentReferenceGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
-                    ((LocationCellEnablePointBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((EnableParentReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
                 });
-            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILocationCellEnablePointGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IEnableParentReferenceGetter>.Instance.Write(
                 writer: writer,
-                items: item.LocationCellEnablePoint,
+                items: item.EnableParentReferencesStatic,
                 recordType: translationParams.ConvertToCustom(RecordTypes.LCEP),
-                transl: (MutagenWriter subWriter, ILocationCellEnablePointGetter subItem, TypedWriteParams conv) =>
+                transl: (MutagenWriter subWriter, IEnableParentReferenceGetter subItem, TypedWriteParams conv) =>
                 {
                     var Item = subItem;
-                    ((LocationCellEnablePointBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((EnableParentReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
@@ -5052,165 +5052,165 @@ namespace Mutagen.Bethesda.Skyrim
                 case RecordTypeInts.ACPR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ActorCellPersistentReferences = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LocationReference>.Instance.Parse(
+                    item.PersistentActorReferencesAdded = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<PersistentActorReference>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
-                            transl: LocationReference.TryCreateFromBinary)
-                        .CastExtendedList<LocationReference>();
-                    return (int)Location_FieldIndex.ActorCellPersistentReferences;
+                            transl: PersistentActorReference.TryCreateFromBinary)
+                        .CastExtendedList<PersistentActorReference>();
+                    return (int)Location_FieldIndex.PersistentActorReferencesAdded;
                 }
                 case RecordTypeInts.LCPR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LocationCellPersistentReferences = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LocationReference>.Instance.Parse(
+                    item.PersistentActorReferencesStatic = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<PersistentActorReference>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
-                            transl: LocationReference.TryCreateFromBinary)
-                        .CastExtendedList<LocationReference>();
-                    return (int)Location_FieldIndex.LocationCellPersistentReferences;
+                            transl: PersistentActorReference.TryCreateFromBinary)
+                        .CastExtendedList<PersistentActorReference>();
+                    return (int)Location_FieldIndex.PersistentActorReferencesStatic;
                 }
                 case RecordTypeInts.RCPR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ReferenceCellPersistentReferences = 
+                    item.PersistentActorReferencesRemoved = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPlacedSimpleGetter>>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>();
-                    return (int)Location_FieldIndex.ReferenceCellPersistentReferences;
+                    return (int)Location_FieldIndex.PersistentActorReferencesRemoved;
                 }
                 case RecordTypeInts.ACUN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ActorCellUniques = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LocationCellUnique>.Instance.Parse(
+                    item.UniqueActorReferencesAdded = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<UniqueActorReference>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
-                            transl: LocationCellUnique.TryCreateFromBinary)
-                        .CastExtendedList<LocationCellUnique>();
-                    return (int)Location_FieldIndex.ActorCellUniques;
+                            transl: UniqueActorReference.TryCreateFromBinary)
+                        .CastExtendedList<UniqueActorReference>();
+                    return (int)Location_FieldIndex.UniqueActorReferencesAdded;
                 }
                 case RecordTypeInts.LCUN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LocationCellUniques = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LocationCellUnique>.Instance.Parse(
+                    item.UniqueActorReferencesStatic = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<UniqueActorReference>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
-                            transl: LocationCellUnique.TryCreateFromBinary)
-                        .CastExtendedList<LocationCellUnique>();
-                    return (int)Location_FieldIndex.LocationCellUniques;
+                            transl: UniqueActorReference.TryCreateFromBinary)
+                        .CastExtendedList<UniqueActorReference>();
+                    return (int)Location_FieldIndex.UniqueActorReferencesStatic;
                 }
                 case RecordTypeInts.RCUN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ReferenceCellUnique = 
+                    item.UniqueActorRemoved = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<INpcGetter>>();
-                    return (int)Location_FieldIndex.ReferenceCellUnique;
+                    return (int)Location_FieldIndex.UniqueActorRemoved;
                 }
                 case RecordTypeInts.ACSR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ActorCellStaticReferences = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LocationCellStaticReference>.Instance.Parse(
+                    item.LocationRefTypeReferencesAdded = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LocationRefTypeReference>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
-                            transl: LocationCellStaticReference.TryCreateFromBinary)
-                        .CastExtendedList<LocationCellStaticReference>();
-                    return (int)Location_FieldIndex.ActorCellStaticReferences;
+                            transl: LocationRefTypeReference.TryCreateFromBinary)
+                        .CastExtendedList<LocationRefTypeReference>();
+                    return (int)Location_FieldIndex.LocationRefTypeReferencesAdded;
                 }
                 case RecordTypeInts.LCSR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LocationCellStaticReferences = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LocationCellStaticReference>.Instance.Parse(
+                    item.LocationRefTypeReferencesStatic = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LocationRefTypeReference>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
-                            transl: LocationCellStaticReference.TryCreateFromBinary)
-                        .CastExtendedList<LocationCellStaticReference>();
-                    return (int)Location_FieldIndex.LocationCellStaticReferences;
+                            transl: LocationRefTypeReference.TryCreateFromBinary)
+                        .CastExtendedList<LocationRefTypeReference>();
+                    return (int)Location_FieldIndex.LocationRefTypeReferencesStatic;
                 }
                 case RecordTypeInts.RCSR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ReferenceCellStaticReferences = 
+                    item.LocationRefTypeReferencesRemoved = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPlacedSimpleGetter>>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>();
-                    return (int)Location_FieldIndex.ReferenceCellStaticReferences;
+                    return (int)Location_FieldIndex.LocationRefTypeReferencesRemoved;
                 }
                 case RecordTypeInts.ACEC:
                 {
-                    item.ActorCellEncounterCell.SetTo(
+                    item.WorldspaceCellsAdded.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LocationCoordinate>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: RecordTypes.ACEC,
                             skipHeader: true,
                             translationParams: translationParams,
                             transl: LocationCoordinate.TryCreateFromBinary));
-                    return (int)Location_FieldIndex.ActorCellEncounterCell;
+                    return (int)Location_FieldIndex.WorldspaceCellsAdded;
                 }
                 case RecordTypeInts.LCEC:
                 {
-                    item.LocationCellEncounterCell.SetTo(
+                    item.WorldspaceCellsStatic.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LocationCoordinate>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: RecordTypes.LCEC,
                             skipHeader: true,
                             translationParams: translationParams,
                             transl: LocationCoordinate.TryCreateFromBinary));
-                    return (int)Location_FieldIndex.LocationCellEncounterCell;
+                    return (int)Location_FieldIndex.WorldspaceCellsStatic;
                 }
                 case RecordTypeInts.RCEC:
                 {
-                    item.ReferenceCellEncounterCell.SetTo(
+                    item.WorldspaceCellsRemoved.SetTo(
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LocationCoordinate>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: RecordTypes.RCEC,
                             skipHeader: true,
                             translationParams: translationParams,
                             transl: LocationCoordinate.TryCreateFromBinary));
-                    return (int)Location_FieldIndex.ReferenceCellEncounterCell;
+                    return (int)Location_FieldIndex.WorldspaceCellsRemoved;
                 }
                 case RecordTypeInts.ACID:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ActorCellMarkerReference = 
+                    item.InitiallyDisabledReferencesAdded = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPlacedGetter>>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<IPlacedGetter>>();
-                    return (int)Location_FieldIndex.ActorCellMarkerReference;
+                    return (int)Location_FieldIndex.InitiallyDisabledReferencesAdded;
                 }
                 case RecordTypeInts.LCID:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LocationCellMarkerReference = 
+                    item.InitiallyDisabledReferencesStatic = 
                         Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPlacedGetter>>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<IPlacedGetter>>();
-                    return (int)Location_FieldIndex.LocationCellMarkerReference;
+                    return (int)Location_FieldIndex.InitiallyDisabledReferencesStatic;
                 }
                 case RecordTypeInts.ACEP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ActorCellEnablePoint = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LocationCellEnablePoint>.Instance.Parse(
+                    item.EnableParentReferencesAdded = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<EnableParentReference>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
-                            transl: LocationCellEnablePoint.TryCreateFromBinary)
-                        .CastExtendedList<LocationCellEnablePoint>();
-                    return (int)Location_FieldIndex.ActorCellEnablePoint;
+                            transl: EnableParentReference.TryCreateFromBinary)
+                        .CastExtendedList<EnableParentReference>();
+                    return (int)Location_FieldIndex.EnableParentReferencesAdded;
                 }
                 case RecordTypeInts.LCEP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LocationCellEnablePoint = 
-                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LocationCellEnablePoint>.Instance.Parse(
+                    item.EnableParentReferencesStatic = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<EnableParentReference>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
-                            transl: LocationCellEnablePoint.TryCreateFromBinary)
-                        .CastExtendedList<LocationCellEnablePoint>();
-                    return (int)Location_FieldIndex.LocationCellEnablePoint;
+                            transl: EnableParentReference.TryCreateFromBinary)
+                        .CastExtendedList<EnableParentReference>();
+                    return (int)Location_FieldIndex.EnableParentReferencesStatic;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -5337,22 +5337,22 @@ namespace Mutagen.Bethesda.Skyrim
         protected override Type LinkType => typeof(ILocation);
 
 
-        public IReadOnlyList<ILocationReferenceGetter>? ActorCellPersistentReferences { get; private set; }
-        public IReadOnlyList<ILocationReferenceGetter>? LocationCellPersistentReferences { get; private set; }
-        public IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? ReferenceCellPersistentReferences { get; private set; }
-        public IReadOnlyList<ILocationCellUniqueGetter>? ActorCellUniques { get; private set; }
-        public IReadOnlyList<ILocationCellUniqueGetter>? LocationCellUniques { get; private set; }
-        public IReadOnlyList<IFormLinkGetter<INpcGetter>>? ReferenceCellUnique { get; private set; }
-        public IReadOnlyList<ILocationCellStaticReferenceGetter>? ActorCellStaticReferences { get; private set; }
-        public IReadOnlyList<ILocationCellStaticReferenceGetter>? LocationCellStaticReferences { get; private set; }
-        public IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? ReferenceCellStaticReferences { get; private set; }
-        public IReadOnlyList<ILocationCoordinateGetter> ActorCellEncounterCell { get; private set; } = Array.Empty<ILocationCoordinateGetter>();
-        public IReadOnlyList<ILocationCoordinateGetter> LocationCellEncounterCell { get; private set; } = Array.Empty<ILocationCoordinateGetter>();
-        public IReadOnlyList<ILocationCoordinateGetter> ReferenceCellEncounterCell { get; private set; } = Array.Empty<ILocationCoordinateGetter>();
-        public IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? ActorCellMarkerReference { get; private set; }
-        public IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? LocationCellMarkerReference { get; private set; }
-        public IReadOnlyList<ILocationCellEnablePointGetter>? ActorCellEnablePoint { get; private set; }
-        public IReadOnlyList<ILocationCellEnablePointGetter>? LocationCellEnablePoint { get; private set; }
+        public IReadOnlyList<IPersistentActorReferenceGetter>? PersistentActorReferencesAdded { get; private set; }
+        public IReadOnlyList<IPersistentActorReferenceGetter>? PersistentActorReferencesStatic { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? PersistentActorReferencesRemoved { get; private set; }
+        public IReadOnlyList<IUniqueActorReferenceGetter>? UniqueActorReferencesAdded { get; private set; }
+        public IReadOnlyList<IUniqueActorReferenceGetter>? UniqueActorReferencesStatic { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<INpcGetter>>? UniqueActorRemoved { get; private set; }
+        public IReadOnlyList<ILocationRefTypeReferenceGetter>? LocationRefTypeReferencesAdded { get; private set; }
+        public IReadOnlyList<ILocationRefTypeReferenceGetter>? LocationRefTypeReferencesStatic { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? LocationRefTypeReferencesRemoved { get; private set; }
+        public IReadOnlyList<ILocationCoordinateGetter> WorldspaceCellsAdded { get; private set; } = Array.Empty<ILocationCoordinateGetter>();
+        public IReadOnlyList<ILocationCoordinateGetter> WorldspaceCellsStatic { get; private set; } = Array.Empty<ILocationCoordinateGetter>();
+        public IReadOnlyList<ILocationCoordinateGetter> WorldspaceCellsRemoved { get; private set; } = Array.Empty<ILocationCoordinateGetter>();
+        public IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? InitiallyDisabledReferencesAdded { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? InitiallyDisabledReferencesStatic { get; private set; }
+        public IReadOnlyList<IEnableParentReferenceGetter>? EnableParentReferencesAdded { get; private set; }
+        public IReadOnlyList<IEnableParentReferenceGetter>? EnableParentReferencesStatic { get; private set; }
         #region Name
         private int? _NameLocation;
         public ITranslatedStringGetter? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
@@ -5468,163 +5468,163 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 case RecordTypeInts.ACPR:
                 {
-                    this.ActorCellPersistentReferences = BinaryOverlayList.FactoryByStartIndexWithTrigger<ILocationReferenceGetter>(
+                    this.PersistentActorReferencesAdded = BinaryOverlayList.FactoryByStartIndexWithTrigger<IPersistentActorReferenceGetter>(
                         stream: stream,
                         package: _package,
                         finalPos: finalPos,
                         itemLength: 12,
-                        getter: (s, p) => LocationReferenceBinaryOverlay.LocationReferenceFactory(s, p));
-                    return (int)Location_FieldIndex.ActorCellPersistentReferences;
+                        getter: (s, p) => PersistentActorReferenceBinaryOverlay.PersistentActorReferenceFactory(s, p));
+                    return (int)Location_FieldIndex.PersistentActorReferencesAdded;
                 }
                 case RecordTypeInts.LCPR:
                 {
-                    this.LocationCellPersistentReferences = BinaryOverlayList.FactoryByStartIndexWithTrigger<ILocationReferenceGetter>(
+                    this.PersistentActorReferencesStatic = BinaryOverlayList.FactoryByStartIndexWithTrigger<IPersistentActorReferenceGetter>(
                         stream: stream,
                         package: _package,
                         finalPos: finalPos,
                         itemLength: 12,
-                        getter: (s, p) => LocationReferenceBinaryOverlay.LocationReferenceFactory(s, p));
-                    return (int)Location_FieldIndex.LocationCellPersistentReferences;
+                        getter: (s, p) => PersistentActorReferenceBinaryOverlay.PersistentActorReferenceFactory(s, p));
+                    return (int)Location_FieldIndex.PersistentActorReferencesStatic;
                 }
                 case RecordTypeInts.RCPR:
                 {
-                    this.ReferenceCellPersistentReferences = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IPlacedSimpleGetter>>(
+                    this.PersistentActorReferencesRemoved = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IPlacedSimpleGetter>>(
                         stream: stream,
                         package: _package,
                         finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedSimpleGetter>(p, s));
-                    return (int)Location_FieldIndex.ReferenceCellPersistentReferences;
+                    return (int)Location_FieldIndex.PersistentActorReferencesRemoved;
                 }
                 case RecordTypeInts.ACUN:
                 {
-                    this.ActorCellUniques = BinaryOverlayList.FactoryByStartIndexWithTrigger<ILocationCellUniqueGetter>(
+                    this.UniqueActorReferencesAdded = BinaryOverlayList.FactoryByStartIndexWithTrigger<IUniqueActorReferenceGetter>(
                         stream: stream,
                         package: _package,
                         finalPos: finalPos,
                         itemLength: 12,
-                        getter: (s, p) => LocationCellUniqueBinaryOverlay.LocationCellUniqueFactory(s, p));
-                    return (int)Location_FieldIndex.ActorCellUniques;
+                        getter: (s, p) => UniqueActorReferenceBinaryOverlay.UniqueActorReferenceFactory(s, p));
+                    return (int)Location_FieldIndex.UniqueActorReferencesAdded;
                 }
                 case RecordTypeInts.LCUN:
                 {
-                    this.LocationCellUniques = BinaryOverlayList.FactoryByStartIndexWithTrigger<ILocationCellUniqueGetter>(
+                    this.UniqueActorReferencesStatic = BinaryOverlayList.FactoryByStartIndexWithTrigger<IUniqueActorReferenceGetter>(
                         stream: stream,
                         package: _package,
                         finalPos: finalPos,
                         itemLength: 12,
-                        getter: (s, p) => LocationCellUniqueBinaryOverlay.LocationCellUniqueFactory(s, p));
-                    return (int)Location_FieldIndex.LocationCellUniques;
+                        getter: (s, p) => UniqueActorReferenceBinaryOverlay.UniqueActorReferenceFactory(s, p));
+                    return (int)Location_FieldIndex.UniqueActorReferencesStatic;
                 }
                 case RecordTypeInts.RCUN:
                 {
-                    this.ReferenceCellUnique = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<INpcGetter>>(
+                    this.UniqueActorRemoved = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<INpcGetter>>(
                         stream: stream,
                         package: _package,
                         finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcGetter>(p, s));
-                    return (int)Location_FieldIndex.ReferenceCellUnique;
+                    return (int)Location_FieldIndex.UniqueActorRemoved;
                 }
                 case RecordTypeInts.ACSR:
                 {
-                    this.ActorCellStaticReferences = BinaryOverlayList.FactoryByStartIndexWithTrigger<ILocationCellStaticReferenceGetter>(
+                    this.LocationRefTypeReferencesAdded = BinaryOverlayList.FactoryByStartIndexWithTrigger<ILocationRefTypeReferenceGetter>(
                         stream: stream,
                         package: _package,
                         finalPos: finalPos,
                         itemLength: 16,
-                        getter: (s, p) => LocationCellStaticReferenceBinaryOverlay.LocationCellStaticReferenceFactory(s, p));
-                    return (int)Location_FieldIndex.ActorCellStaticReferences;
+                        getter: (s, p) => LocationRefTypeReferenceBinaryOverlay.LocationRefTypeReferenceFactory(s, p));
+                    return (int)Location_FieldIndex.LocationRefTypeReferencesAdded;
                 }
                 case RecordTypeInts.LCSR:
                 {
-                    this.LocationCellStaticReferences = BinaryOverlayList.FactoryByStartIndexWithTrigger<ILocationCellStaticReferenceGetter>(
+                    this.LocationRefTypeReferencesStatic = BinaryOverlayList.FactoryByStartIndexWithTrigger<ILocationRefTypeReferenceGetter>(
                         stream: stream,
                         package: _package,
                         finalPos: finalPos,
                         itemLength: 16,
-                        getter: (s, p) => LocationCellStaticReferenceBinaryOverlay.LocationCellStaticReferenceFactory(s, p));
-                    return (int)Location_FieldIndex.LocationCellStaticReferences;
+                        getter: (s, p) => LocationRefTypeReferenceBinaryOverlay.LocationRefTypeReferenceFactory(s, p));
+                    return (int)Location_FieldIndex.LocationRefTypeReferencesStatic;
                 }
                 case RecordTypeInts.RCSR:
                 {
-                    this.ReferenceCellStaticReferences = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IPlacedSimpleGetter>>(
+                    this.LocationRefTypeReferencesRemoved = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IPlacedSimpleGetter>>(
                         stream: stream,
                         package: _package,
                         finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedSimpleGetter>(p, s));
-                    return (int)Location_FieldIndex.ReferenceCellStaticReferences;
+                    return (int)Location_FieldIndex.LocationRefTypeReferencesRemoved;
                 }
                 case RecordTypeInts.ACEC:
                 {
-                    this.ActorCellEncounterCell = this.ParseRepeatedTypelessSubrecord<ILocationCoordinateGetter>(
+                    this.WorldspaceCellsAdded = this.ParseRepeatedTypelessSubrecord<ILocationCoordinateGetter>(
                         stream: stream,
                         translationParams: translationParams,
                         trigger: RecordTypes.ACEC,
                         factory: LocationCoordinateBinaryOverlay.LocationCoordinateFactory,
                         skipHeader: true);
-                    return (int)Location_FieldIndex.ActorCellEncounterCell;
+                    return (int)Location_FieldIndex.WorldspaceCellsAdded;
                 }
                 case RecordTypeInts.LCEC:
                 {
-                    this.LocationCellEncounterCell = this.ParseRepeatedTypelessSubrecord<ILocationCoordinateGetter>(
+                    this.WorldspaceCellsStatic = this.ParseRepeatedTypelessSubrecord<ILocationCoordinateGetter>(
                         stream: stream,
                         translationParams: translationParams,
                         trigger: RecordTypes.LCEC,
                         factory: LocationCoordinateBinaryOverlay.LocationCoordinateFactory,
                         skipHeader: true);
-                    return (int)Location_FieldIndex.LocationCellEncounterCell;
+                    return (int)Location_FieldIndex.WorldspaceCellsStatic;
                 }
                 case RecordTypeInts.RCEC:
                 {
-                    this.ReferenceCellEncounterCell = this.ParseRepeatedTypelessSubrecord<ILocationCoordinateGetter>(
+                    this.WorldspaceCellsRemoved = this.ParseRepeatedTypelessSubrecord<ILocationCoordinateGetter>(
                         stream: stream,
                         translationParams: translationParams,
                         trigger: RecordTypes.RCEC,
                         factory: LocationCoordinateBinaryOverlay.LocationCoordinateFactory,
                         skipHeader: true);
-                    return (int)Location_FieldIndex.ReferenceCellEncounterCell;
+                    return (int)Location_FieldIndex.WorldspaceCellsRemoved;
                 }
                 case RecordTypeInts.ACID:
                 {
-                    this.ActorCellMarkerReference = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IPlacedGetter>>(
+                    this.InitiallyDisabledReferencesAdded = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IPlacedGetter>>(
                         stream: stream,
                         package: _package,
                         finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(p, s));
-                    return (int)Location_FieldIndex.ActorCellMarkerReference;
+                    return (int)Location_FieldIndex.InitiallyDisabledReferencesAdded;
                 }
                 case RecordTypeInts.LCID:
                 {
-                    this.LocationCellMarkerReference = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IPlacedGetter>>(
+                    this.InitiallyDisabledReferencesStatic = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFormLinkGetter<IPlacedGetter>>(
                         stream: stream,
                         package: _package,
                         finalPos: finalPos,
                         itemLength: 4,
                         getter: (s, p) => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(p, s));
-                    return (int)Location_FieldIndex.LocationCellMarkerReference;
+                    return (int)Location_FieldIndex.InitiallyDisabledReferencesStatic;
                 }
                 case RecordTypeInts.ACEP:
                 {
-                    this.ActorCellEnablePoint = BinaryOverlayList.FactoryByStartIndexWithTrigger<ILocationCellEnablePointGetter>(
+                    this.EnableParentReferencesAdded = BinaryOverlayList.FactoryByStartIndexWithTrigger<IEnableParentReferenceGetter>(
                         stream: stream,
                         package: _package,
                         finalPos: finalPos,
                         itemLength: 12,
-                        getter: (s, p) => LocationCellEnablePointBinaryOverlay.LocationCellEnablePointFactory(s, p));
-                    return (int)Location_FieldIndex.ActorCellEnablePoint;
+                        getter: (s, p) => EnableParentReferenceBinaryOverlay.EnableParentReferenceFactory(s, p));
+                    return (int)Location_FieldIndex.EnableParentReferencesAdded;
                 }
                 case RecordTypeInts.LCEP:
                 {
-                    this.LocationCellEnablePoint = BinaryOverlayList.FactoryByStartIndexWithTrigger<ILocationCellEnablePointGetter>(
+                    this.EnableParentReferencesStatic = BinaryOverlayList.FactoryByStartIndexWithTrigger<IEnableParentReferenceGetter>(
                         stream: stream,
                         package: _package,
                         finalPos: finalPos,
                         itemLength: 12,
-                        getter: (s, p) => LocationCellEnablePointBinaryOverlay.LocationCellEnablePointFactory(s, p));
-                    return (int)Location_FieldIndex.LocationCellEnablePoint;
+                        getter: (s, p) => EnableParentReferenceBinaryOverlay.EnableParentReferenceFactory(s, p));
+                    return (int)Location_FieldIndex.EnableParentReferencesStatic;
                 }
                 case RecordTypeInts.FULL:
                 {

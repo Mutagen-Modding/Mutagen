@@ -38,13 +38,13 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class LocationCellUnique :
-        IEquatable<ILocationCellUniqueGetter>,
-        ILocationCellUnique,
-        ILoquiObjectSetter<LocationCellUnique>
+    public partial class PersistentActorReference :
+        IEquatable<IPersistentActorReferenceGetter>,
+        ILoquiObjectSetter<PersistentActorReference>,
+        IPersistentActorReference
     {
         #region Ctor
-        public LocationCellUnique()
+        public PersistentActorReference()
         {
             CustomCtor();
         }
@@ -52,34 +52,27 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Actor
-        private readonly IFormLink<INpcGetter> _Actor = new FormLink<INpcGetter>();
-        public IFormLink<INpcGetter> Actor
+        private readonly IFormLink<IPlacedNpcGetter> _Actor = new FormLink<IPlacedNpcGetter>();
+        public IFormLink<IPlacedNpcGetter> Actor
         {
             get => _Actor;
             set => _Actor.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<INpcGetter> ILocationCellUniqueGetter.Actor => this.Actor;
-        #endregion
-        #region Ref
-        private readonly IFormLink<IPlacedNpcGetter> _Ref = new FormLink<IPlacedNpcGetter>();
-        public IFormLink<IPlacedNpcGetter> Ref
-        {
-            get => _Ref;
-            set => _Ref.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IPlacedNpcGetter> ILocationCellUniqueGetter.Ref => this.Ref;
+        IFormLinkGetter<IPlacedNpcGetter> IPersistentActorReferenceGetter.Actor => this.Actor;
         #endregion
         #region Location
-        private readonly IFormLink<ILocationGetter> _Location = new FormLink<ILocationGetter>();
-        public IFormLink<ILocationGetter> Location
+        private readonly IFormLink<IComplexLocationGetter> _Location = new FormLink<IComplexLocationGetter>();
+        public IFormLink<IComplexLocationGetter> Location
         {
             get => _Location;
             set => _Location.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ILocationGetter> ILocationCellUniqueGetter.Location => this.Location;
+        IFormLinkGetter<IComplexLocationGetter> IPersistentActorReferenceGetter.Location => this.Location;
+        #endregion
+        #region Grid
+        public P2Int16 Grid { get; set; } = default(P2Int16);
         #endregion
 
         #region To String
@@ -88,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
             StructuredStringBuilder sb,
             string? name = null)
         {
-            LocationCellUniqueMixIn.Print(
+            PersistentActorReferenceMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -99,16 +92,16 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ILocationCellUniqueGetter rhs) return false;
-            return ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IPersistentActorReferenceGetter rhs) return false;
+            return ((PersistentActorReferenceCommon)((IPersistentActorReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ILocationCellUniqueGetter? obj)
+        public bool Equals(IPersistentActorReferenceGetter? obj)
         {
-            return ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((PersistentActorReferenceCommon)((IPersistentActorReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((PersistentActorReferenceCommon)((IPersistentActorReferenceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -121,18 +114,18 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             {
                 this.Actor = initialValue;
-                this.Ref = initialValue;
                 this.Location = initialValue;
+                this.Grid = initialValue;
             }
 
             public Mask(
                 TItem Actor,
-                TItem Ref,
-                TItem Location)
+                TItem Location,
+                TItem Grid)
             {
                 this.Actor = Actor;
-                this.Ref = Ref;
                 this.Location = Location;
+                this.Grid = Grid;
             }
 
             #pragma warning disable CS8618
@@ -145,8 +138,8 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public TItem Actor;
-            public TItem Ref;
             public TItem Location;
+            public TItem Grid;
             #endregion
 
             #region Equals
@@ -160,16 +153,16 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Actor, rhs.Actor)) return false;
-                if (!object.Equals(this.Ref, rhs.Ref)) return false;
                 if (!object.Equals(this.Location, rhs.Location)) return false;
+                if (!object.Equals(this.Grid, rhs.Grid)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Actor);
-                hash.Add(this.Ref);
                 hash.Add(this.Location);
+                hash.Add(this.Grid);
                 return hash.ToHashCode();
             }
 
@@ -179,8 +172,8 @@ namespace Mutagen.Bethesda.Skyrim
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Actor)) return false;
-                if (!eval(this.Ref)) return false;
                 if (!eval(this.Location)) return false;
+                if (!eval(this.Grid)) return false;
                 return true;
             }
             #endregion
@@ -189,8 +182,8 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Actor)) return true;
-                if (eval(this.Ref)) return true;
                 if (eval(this.Location)) return true;
+                if (eval(this.Grid)) return true;
                 return false;
             }
             #endregion
@@ -198,7 +191,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new LocationCellUnique.Mask<R>();
+                var ret = new PersistentActorReference.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -206,37 +199,37 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Actor = eval(this.Actor);
-                obj.Ref = eval(this.Ref);
                 obj.Location = eval(this.Location);
+                obj.Grid = eval(this.Grid);
             }
             #endregion
 
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(LocationCellUnique.Mask<bool>? printMask = null)
+            public string Print(PersistentActorReference.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, LocationCellUnique.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, PersistentActorReference.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(LocationCellUnique.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(PersistentActorReference.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                     if (printMask?.Actor ?? true)
                     {
                         sb.AppendItem(Actor, "Actor");
                     }
-                    if (printMask?.Ref ?? true)
-                    {
-                        sb.AppendItem(Ref, "Ref");
-                    }
                     if (printMask?.Location ?? true)
                     {
                         sb.AppendItem(Location, "Location");
+                    }
+                    if (printMask?.Grid ?? true)
+                    {
+                        sb.AppendItem(Grid, "Grid");
                     }
                 }
             }
@@ -263,22 +256,22 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
             public Exception? Actor;
-            public Exception? Ref;
             public Exception? Location;
+            public Exception? Grid;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                LocationCellUnique_FieldIndex enu = (LocationCellUnique_FieldIndex)index;
+                PersistentActorReference_FieldIndex enu = (PersistentActorReference_FieldIndex)index;
                 switch (enu)
                 {
-                    case LocationCellUnique_FieldIndex.Actor:
+                    case PersistentActorReference_FieldIndex.Actor:
                         return Actor;
-                    case LocationCellUnique_FieldIndex.Ref:
-                        return Ref;
-                    case LocationCellUnique_FieldIndex.Location:
+                    case PersistentActorReference_FieldIndex.Location:
                         return Location;
+                    case PersistentActorReference_FieldIndex.Grid:
+                        return Grid;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -286,17 +279,17 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void SetNthException(int index, Exception ex)
             {
-                LocationCellUnique_FieldIndex enu = (LocationCellUnique_FieldIndex)index;
+                PersistentActorReference_FieldIndex enu = (PersistentActorReference_FieldIndex)index;
                 switch (enu)
                 {
-                    case LocationCellUnique_FieldIndex.Actor:
+                    case PersistentActorReference_FieldIndex.Actor:
                         this.Actor = ex;
                         break;
-                    case LocationCellUnique_FieldIndex.Ref:
-                        this.Ref = ex;
-                        break;
-                    case LocationCellUnique_FieldIndex.Location:
+                    case PersistentActorReference_FieldIndex.Location:
                         this.Location = ex;
+                        break;
+                    case PersistentActorReference_FieldIndex.Grid:
+                        this.Grid = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -305,17 +298,17 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void SetNthMask(int index, object obj)
             {
-                LocationCellUnique_FieldIndex enu = (LocationCellUnique_FieldIndex)index;
+                PersistentActorReference_FieldIndex enu = (PersistentActorReference_FieldIndex)index;
                 switch (enu)
                 {
-                    case LocationCellUnique_FieldIndex.Actor:
+                    case PersistentActorReference_FieldIndex.Actor:
                         this.Actor = (Exception?)obj;
                         break;
-                    case LocationCellUnique_FieldIndex.Ref:
-                        this.Ref = (Exception?)obj;
-                        break;
-                    case LocationCellUnique_FieldIndex.Location:
+                    case PersistentActorReference_FieldIndex.Location:
                         this.Location = (Exception?)obj;
+                        break;
+                    case PersistentActorReference_FieldIndex.Grid:
+                        this.Grid = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -326,8 +319,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (Overall != null) return true;
                 if (Actor != null) return true;
-                if (Ref != null) return true;
                 if (Location != null) return true;
+                if (Grid != null) return true;
                 return false;
             }
             #endregion
@@ -357,10 +350,10 @@ namespace Mutagen.Bethesda.Skyrim
                     sb.AppendItem(Actor, "Actor");
                 }
                 {
-                    sb.AppendItem(Ref, "Ref");
+                    sb.AppendItem(Location, "Location");
                 }
                 {
-                    sb.AppendItem(Location, "Location");
+                    sb.AppendItem(Grid, "Grid");
                 }
             }
             #endregion
@@ -371,8 +364,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Actor = this.Actor.Combine(rhs.Actor);
-                ret.Ref = this.Ref.Combine(rhs.Ref);
                 ret.Location = this.Location.Combine(rhs.Location);
+                ret.Grid = this.Grid.Combine(rhs.Grid);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -397,8 +390,8 @@ namespace Mutagen.Bethesda.Skyrim
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Actor;
-            public bool Ref;
             public bool Location;
+            public bool Grid;
             #endregion
 
             #region Ctors
@@ -409,8 +402,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Actor = defaultOn;
-                this.Ref = defaultOn;
                 this.Location = defaultOn;
+                this.Grid = defaultOn;
             }
 
             #endregion
@@ -427,8 +420,8 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Actor, null));
-                ret.Add((Ref, null));
                 ret.Add((Location, null));
+                ret.Add((Grid, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -440,31 +433,31 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationCellUniqueCommon.Instance.EnumerateFormLinks(this);
-        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCellUniqueSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PersistentActorReferenceCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PersistentActorReferenceSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => LocationCellUniqueBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => PersistentActorReferenceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((LocationCellUniqueBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PersistentActorReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static LocationCellUnique CreateFromBinary(
+        public static PersistentActorReference CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new LocationCellUnique();
-            ((LocationCellUniqueSetterCommon)((ILocationCellUniqueGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new PersistentActorReference();
+            ((PersistentActorReferenceSetterCommon)((IPersistentActorReferenceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -475,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out LocationCellUnique item,
+            out PersistentActorReference item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -490,33 +483,33 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IClearable.Clear()
         {
-            ((LocationCellUniqueSetterCommon)((ILocationCellUniqueGetter)this).CommonSetterInstance()!).Clear(this);
+            ((PersistentActorReferenceSetterCommon)((IPersistentActorReferenceGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static LocationCellUnique GetNew()
+        internal static PersistentActorReference GetNew()
         {
-            return new LocationCellUnique();
+            return new PersistentActorReference();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ILocationCellUnique :
+    public partial interface IPersistentActorReference :
         IFormLinkContainer,
-        ILocationCellUniqueGetter,
-        ILoquiObjectSetter<ILocationCellUnique>
+        ILoquiObjectSetter<IPersistentActorReference>,
+        IPersistentActorReferenceGetter
     {
-        new IFormLink<INpcGetter> Actor { get; set; }
-        new IFormLink<IPlacedNpcGetter> Ref { get; set; }
-        new IFormLink<ILocationGetter> Location { get; set; }
+        new IFormLink<IPlacedNpcGetter> Actor { get; set; }
+        new IFormLink<IComplexLocationGetter> Location { get; set; }
+        new P2Int16 Grid { get; set; }
     }
 
-    public partial interface ILocationCellUniqueGetter :
+    public partial interface IPersistentActorReferenceGetter :
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<ILocationCellUniqueGetter>
+        ILoquiObject<IPersistentActorReferenceGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -524,52 +517,52 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => LocationCellUnique_Registration.Instance;
-        IFormLinkGetter<INpcGetter> Actor { get; }
-        IFormLinkGetter<IPlacedNpcGetter> Ref { get; }
-        IFormLinkGetter<ILocationGetter> Location { get; }
+        static ILoquiRegistration StaticRegistration => PersistentActorReference_Registration.Instance;
+        IFormLinkGetter<IPlacedNpcGetter> Actor { get; }
+        IFormLinkGetter<IComplexLocationGetter> Location { get; }
+        P2Int16 Grid { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class LocationCellUniqueMixIn
+    public static partial class PersistentActorReferenceMixIn
     {
-        public static void Clear(this ILocationCellUnique item)
+        public static void Clear(this IPersistentActorReference item)
         {
-            ((LocationCellUniqueSetterCommon)((ILocationCellUniqueGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((PersistentActorReferenceSetterCommon)((IPersistentActorReferenceGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static LocationCellUnique.Mask<bool> GetEqualsMask(
-            this ILocationCellUniqueGetter item,
-            ILocationCellUniqueGetter rhs,
+        public static PersistentActorReference.Mask<bool> GetEqualsMask(
+            this IPersistentActorReferenceGetter item,
+            IPersistentActorReferenceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((PersistentActorReferenceCommon)((IPersistentActorReferenceGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this ILocationCellUniqueGetter item,
+            this IPersistentActorReferenceGetter item,
             string? name = null,
-            LocationCellUnique.Mask<bool>? printMask = null)
+            PersistentActorReference.Mask<bool>? printMask = null)
         {
-            return ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)item).CommonInstance()!).Print(
+            return ((PersistentActorReferenceCommon)((IPersistentActorReferenceGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this ILocationCellUniqueGetter item,
+            this IPersistentActorReferenceGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            LocationCellUnique.Mask<bool>? printMask = null)
+            PersistentActorReference.Mask<bool>? printMask = null)
         {
-            ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)item).CommonInstance()!).Print(
+            ((PersistentActorReferenceCommon)((IPersistentActorReferenceGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -577,21 +570,21 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool Equals(
-            this ILocationCellUniqueGetter item,
-            ILocationCellUniqueGetter rhs,
-            LocationCellUnique.TranslationMask? equalsMask = null)
+            this IPersistentActorReferenceGetter item,
+            IPersistentActorReferenceGetter rhs,
+            PersistentActorReference.TranslationMask? equalsMask = null)
         {
-            return ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)item).CommonInstance()!).Equals(
+            return ((PersistentActorReferenceCommon)((IPersistentActorReferenceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this ILocationCellUnique lhs,
-            ILocationCellUniqueGetter rhs)
+            this IPersistentActorReference lhs,
+            IPersistentActorReferenceGetter rhs)
         {
-            ((LocationCellUniqueSetterTranslationCommon)((ILocationCellUniqueGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PersistentActorReferenceSetterTranslationCommon)((IPersistentActorReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -600,11 +593,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this ILocationCellUnique lhs,
-            ILocationCellUniqueGetter rhs,
-            LocationCellUnique.TranslationMask? copyMask = null)
+            this IPersistentActorReference lhs,
+            IPersistentActorReferenceGetter rhs,
+            PersistentActorReference.TranslationMask? copyMask = null)
         {
-            ((LocationCellUniqueSetterTranslationCommon)((ILocationCellUniqueGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PersistentActorReferenceSetterTranslationCommon)((IPersistentActorReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -613,28 +606,28 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this ILocationCellUnique lhs,
-            ILocationCellUniqueGetter rhs,
-            out LocationCellUnique.ErrorMask errorMask,
-            LocationCellUnique.TranslationMask? copyMask = null)
+            this IPersistentActorReference lhs,
+            IPersistentActorReferenceGetter rhs,
+            out PersistentActorReference.ErrorMask errorMask,
+            PersistentActorReference.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((LocationCellUniqueSetterTranslationCommon)((ILocationCellUniqueGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PersistentActorReferenceSetterTranslationCommon)((IPersistentActorReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = LocationCellUnique.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PersistentActorReference.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ILocationCellUnique lhs,
-            ILocationCellUniqueGetter rhs,
+            this IPersistentActorReference lhs,
+            IPersistentActorReferenceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((LocationCellUniqueSetterTranslationCommon)((ILocationCellUniqueGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((PersistentActorReferenceSetterTranslationCommon)((IPersistentActorReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -642,32 +635,32 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: false);
         }
 
-        public static LocationCellUnique DeepCopy(
-            this ILocationCellUniqueGetter item,
-            LocationCellUnique.TranslationMask? copyMask = null)
+        public static PersistentActorReference DeepCopy(
+            this IPersistentActorReferenceGetter item,
+            PersistentActorReference.TranslationMask? copyMask = null)
         {
-            return ((LocationCellUniqueSetterTranslationCommon)((ILocationCellUniqueGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PersistentActorReferenceSetterTranslationCommon)((IPersistentActorReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static LocationCellUnique DeepCopy(
-            this ILocationCellUniqueGetter item,
-            out LocationCellUnique.ErrorMask errorMask,
-            LocationCellUnique.TranslationMask? copyMask = null)
+        public static PersistentActorReference DeepCopy(
+            this IPersistentActorReferenceGetter item,
+            out PersistentActorReference.ErrorMask errorMask,
+            PersistentActorReference.TranslationMask? copyMask = null)
         {
-            return ((LocationCellUniqueSetterTranslationCommon)((ILocationCellUniqueGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PersistentActorReferenceSetterTranslationCommon)((IPersistentActorReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static LocationCellUnique DeepCopy(
-            this ILocationCellUniqueGetter item,
+        public static PersistentActorReference DeepCopy(
+            this IPersistentActorReferenceGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((LocationCellUniqueSetterTranslationCommon)((ILocationCellUniqueGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((PersistentActorReferenceSetterTranslationCommon)((IPersistentActorReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -675,11 +668,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this ILocationCellUnique item,
+            this IPersistentActorReference item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((LocationCellUniqueSetterCommon)((ILocationCellUniqueGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((PersistentActorReferenceSetterCommon)((IPersistentActorReferenceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -695,18 +688,18 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    internal enum LocationCellUnique_FieldIndex
+    internal enum PersistentActorReference_FieldIndex
     {
         Actor = 0,
-        Ref = 1,
-        Location = 2,
+        Location = 1,
+        Grid = 2,
     }
     #endregion
 
     #region Registration
-    internal partial class LocationCellUnique_Registration : ILoquiRegistration
+    internal partial class PersistentActorReference_Registration : ILoquiRegistration
     {
-        public static readonly LocationCellUnique_Registration Instance = new LocationCellUnique_Registration();
+        public static readonly PersistentActorReference_Registration Instance = new PersistentActorReference_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
@@ -714,23 +707,23 @@ namespace Mutagen.Bethesda.Skyrim
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(LocationCellUnique.Mask<>);
+        public static readonly Type MaskType = typeof(PersistentActorReference.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(LocationCellUnique.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(PersistentActorReference.ErrorMask);
 
-        public static readonly Type ClassType = typeof(LocationCellUnique);
+        public static readonly Type ClassType = typeof(PersistentActorReference);
 
-        public static readonly Type GetterType = typeof(ILocationCellUniqueGetter);
+        public static readonly Type GetterType = typeof(IPersistentActorReferenceGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ILocationCellUnique);
+        public static readonly Type SetterType = typeof(IPersistentActorReference);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.LocationCellUnique";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.PersistentActorReference";
 
-        public const string Name = "LocationCellUnique";
+        public const string Name = "PersistentActorReference";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -738,7 +731,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(LocationCellUniqueBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(PersistentActorReferenceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -769,25 +762,24 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common
-    internal partial class LocationCellUniqueSetterCommon
+    internal partial class PersistentActorReferenceSetterCommon
     {
-        public static readonly LocationCellUniqueSetterCommon Instance = new LocationCellUniqueSetterCommon();
+        public static readonly PersistentActorReferenceSetterCommon Instance = new PersistentActorReferenceSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(ILocationCellUnique item)
+        public void Clear(IPersistentActorReference item)
         {
             ClearPartial();
             item.Actor.Clear();
-            item.Ref.Clear();
             item.Location.Clear();
+            item.Grid = default(P2Int16);
         }
         
         #region Mutagen
-        public void RemapLinks(ILocationCellUnique obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IPersistentActorReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.Actor.Relink(mapping);
-            obj.Ref.Relink(mapping);
             obj.Location.Relink(mapping);
         }
         
@@ -795,7 +787,7 @@ namespace Mutagen.Bethesda.Skyrim
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            ILocationCellUnique item,
+            IPersistentActorReference item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -803,23 +795,23 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: LocationCellUniqueBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: PersistentActorReferenceBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class LocationCellUniqueCommon
+    internal partial class PersistentActorReferenceCommon
     {
-        public static readonly LocationCellUniqueCommon Instance = new LocationCellUniqueCommon();
+        public static readonly PersistentActorReferenceCommon Instance = new PersistentActorReferenceCommon();
 
-        public LocationCellUnique.Mask<bool> GetEqualsMask(
-            ILocationCellUniqueGetter item,
-            ILocationCellUniqueGetter rhs,
+        public PersistentActorReference.Mask<bool> GetEqualsMask(
+            IPersistentActorReferenceGetter item,
+            IPersistentActorReferenceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new LocationCellUnique.Mask<bool>(false);
-            ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new PersistentActorReference.Mask<bool>(false);
+            ((PersistentActorReferenceCommon)((IPersistentActorReferenceGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -828,20 +820,20 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         public void FillEqualsMask(
-            ILocationCellUniqueGetter item,
-            ILocationCellUniqueGetter rhs,
-            LocationCellUnique.Mask<bool> ret,
+            IPersistentActorReferenceGetter item,
+            IPersistentActorReferenceGetter rhs,
+            PersistentActorReference.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Actor = item.Actor.Equals(rhs.Actor);
-            ret.Ref = item.Ref.Equals(rhs.Ref);
             ret.Location = item.Location.Equals(rhs.Location);
+            ret.Grid = item.Grid.Equals(rhs.Grid);
         }
         
         public string Print(
-            ILocationCellUniqueGetter item,
+            IPersistentActorReferenceGetter item,
             string? name = null,
-            LocationCellUnique.Mask<bool>? printMask = null)
+            PersistentActorReference.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -853,18 +845,18 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         public void Print(
-            ILocationCellUniqueGetter item,
+            IPersistentActorReferenceGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            LocationCellUnique.Mask<bool>? printMask = null)
+            PersistentActorReference.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"LocationCellUnique =>");
+                sb.AppendLine($"PersistentActorReference =>");
             }
             else
             {
-                sb.AppendLine($"{name} (LocationCellUnique) =>");
+                sb.AppendLine($"{name} (PersistentActorReference) =>");
             }
             using (sb.Brace())
             {
@@ -876,52 +868,52 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         protected static void ToStringFields(
-            ILocationCellUniqueGetter item,
+            IPersistentActorReferenceGetter item,
             StructuredStringBuilder sb,
-            LocationCellUnique.Mask<bool>? printMask = null)
+            PersistentActorReference.Mask<bool>? printMask = null)
         {
             if (printMask?.Actor ?? true)
             {
                 sb.AppendItem(item.Actor.FormKey, "Actor");
             }
-            if (printMask?.Ref ?? true)
-            {
-                sb.AppendItem(item.Ref.FormKey, "Ref");
-            }
             if (printMask?.Location ?? true)
             {
                 sb.AppendItem(item.Location.FormKey, "Location");
+            }
+            if (printMask?.Grid ?? true)
+            {
+                sb.AppendItem(item.Grid, "Grid");
             }
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            ILocationCellUniqueGetter? lhs,
-            ILocationCellUniqueGetter? rhs,
+            IPersistentActorReferenceGetter? lhs,
+            IPersistentActorReferenceGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)LocationCellUnique_FieldIndex.Actor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PersistentActorReference_FieldIndex.Actor) ?? true))
             {
                 if (!lhs.Actor.Equals(rhs.Actor)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LocationCellUnique_FieldIndex.Ref) ?? true))
-            {
-                if (!lhs.Ref.Equals(rhs.Ref)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)LocationCellUnique_FieldIndex.Location) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)PersistentActorReference_FieldIndex.Location) ?? true))
             {
                 if (!lhs.Location.Equals(rhs.Location)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)PersistentActorReference_FieldIndex.Grid) ?? true))
+            {
+                if (!lhs.Grid.Equals(rhs.Grid)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(ILocationCellUniqueGetter item)
+        public virtual int GetHashCode(IPersistentActorReferenceGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.Actor);
-            hash.Add(item.Ref);
             hash.Add(item.Location);
+            hash.Add(item.Grid);
             return hash.ToHashCode();
         }
         
@@ -930,14 +922,13 @@ namespace Mutagen.Bethesda.Skyrim
         
         public object GetNew()
         {
-            return LocationCellUnique.GetNew();
+            return PersistentActorReference.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILocationCellUniqueGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IPersistentActorReferenceGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Actor);
-            yield return FormLinkInformation.Factory(obj.Ref);
             yield return FormLinkInformation.Factory(obj.Location);
             yield break;
         }
@@ -945,29 +936,29 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         
     }
-    internal partial class LocationCellUniqueSetterTranslationCommon
+    internal partial class PersistentActorReferenceSetterTranslationCommon
     {
-        public static readonly LocationCellUniqueSetterTranslationCommon Instance = new LocationCellUniqueSetterTranslationCommon();
+        public static readonly PersistentActorReferenceSetterTranslationCommon Instance = new PersistentActorReferenceSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            ILocationCellUnique item,
-            ILocationCellUniqueGetter rhs,
+            IPersistentActorReference item,
+            IPersistentActorReferenceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)LocationCellUnique_FieldIndex.Actor) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PersistentActorReference_FieldIndex.Actor) ?? true))
             {
                 item.Actor.SetTo(rhs.Actor.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)LocationCellUnique_FieldIndex.Ref) ?? true))
-            {
-                item.Ref.SetTo(rhs.Ref.FormKey);
-            }
-            if ((copyMask?.GetShouldTranslate((int)LocationCellUnique_FieldIndex.Location) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PersistentActorReference_FieldIndex.Location) ?? true))
             {
                 item.Location.SetTo(rhs.Location.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)PersistentActorReference_FieldIndex.Grid) ?? true))
+            {
+                item.Grid = rhs.Grid;
             }
             DeepCopyInCustom(
                 item: item,
@@ -978,19 +969,19 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         partial void DeepCopyInCustom(
-            ILocationCellUnique item,
-            ILocationCellUniqueGetter rhs,
+            IPersistentActorReference item,
+            IPersistentActorReferenceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
         #endregion
         
-        public LocationCellUnique DeepCopy(
-            ILocationCellUniqueGetter item,
-            LocationCellUnique.TranslationMask? copyMask = null)
+        public PersistentActorReference DeepCopy(
+            IPersistentActorReferenceGetter item,
+            PersistentActorReference.TranslationMask? copyMask = null)
         {
-            LocationCellUnique ret = (LocationCellUnique)((LocationCellUniqueCommon)((ILocationCellUniqueGetter)item).CommonInstance()!).GetNew();
-            ((LocationCellUniqueSetterTranslationCommon)((ILocationCellUniqueGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PersistentActorReference ret = (PersistentActorReference)((PersistentActorReferenceCommon)((IPersistentActorReferenceGetter)item).CommonInstance()!).GetNew();
+            ((PersistentActorReferenceSetterTranslationCommon)((IPersistentActorReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -999,30 +990,30 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
         
-        public LocationCellUnique DeepCopy(
-            ILocationCellUniqueGetter item,
-            out LocationCellUnique.ErrorMask errorMask,
-            LocationCellUnique.TranslationMask? copyMask = null)
+        public PersistentActorReference DeepCopy(
+            IPersistentActorReferenceGetter item,
+            out PersistentActorReference.ErrorMask errorMask,
+            PersistentActorReference.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            LocationCellUnique ret = (LocationCellUnique)((LocationCellUniqueCommon)((ILocationCellUniqueGetter)item).CommonInstance()!).GetNew();
-            ((LocationCellUniqueSetterTranslationCommon)((ILocationCellUniqueGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PersistentActorReference ret = (PersistentActorReference)((PersistentActorReferenceCommon)((IPersistentActorReferenceGetter)item).CommonInstance()!).GetNew();
+            ((PersistentActorReferenceSetterTranslationCommon)((IPersistentActorReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = LocationCellUnique.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = PersistentActorReference.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public LocationCellUnique DeepCopy(
-            ILocationCellUniqueGetter item,
+        public PersistentActorReference DeepCopy(
+            IPersistentActorReferenceGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            LocationCellUnique ret = (LocationCellUnique)((LocationCellUniqueCommon)((ILocationCellUniqueGetter)item).CommonInstance()!).GetNew();
-            ((LocationCellUniqueSetterTranslationCommon)((ILocationCellUniqueGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            PersistentActorReference ret = (PersistentActorReference)((PersistentActorReferenceCommon)((IPersistentActorReferenceGetter)item).CommonInstance()!).GetNew();
+            ((PersistentActorReferenceSetterTranslationCommon)((IPersistentActorReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1038,27 +1029,27 @@ namespace Mutagen.Bethesda.Skyrim
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LocationCellUnique
+    public partial class PersistentActorReference
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LocationCellUnique_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => LocationCellUnique_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PersistentActorReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PersistentActorReference_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => LocationCellUniqueCommon.Instance;
+        protected object CommonInstance() => PersistentActorReferenceCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return LocationCellUniqueSetterCommon.Instance;
+            return PersistentActorReferenceSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => LocationCellUniqueSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => PersistentActorReferenceSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ILocationCellUniqueGetter.CommonInstance() => this.CommonInstance();
+        object IPersistentActorReferenceGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object ILocationCellUniqueGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IPersistentActorReferenceGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object ILocationCellUniqueGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IPersistentActorReferenceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1069,12 +1060,12 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LocationCellUniqueBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class PersistentActorReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LocationCellUniqueBinaryWriteTranslation Instance = new();
+        public static readonly PersistentActorReferenceBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            ILocationCellUniqueGetter item,
+            IPersistentActorReferenceGetter item,
             MutagenWriter writer)
         {
             FormLinkBinaryTranslation.Instance.Write(
@@ -1082,15 +1073,16 @@ namespace Mutagen.Bethesda.Skyrim
                 item: item.Actor);
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Ref);
-            FormLinkBinaryTranslation.Instance.Write(
-                writer: writer,
                 item: item.Location);
+            P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Grid,
+                swapCoords: true);
         }
 
         public void Write(
             MutagenWriter writer,
-            ILocationCellUniqueGetter item,
+            IPersistentActorReferenceGetter item,
             TypedWriteParams translationParams)
         {
             WriteEmbedded(
@@ -1104,24 +1096,26 @@ namespace Mutagen.Bethesda.Skyrim
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (ILocationCellUniqueGetter)item,
+                item: (IPersistentActorReferenceGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class LocationCellUniqueBinaryCreateTranslation
+    internal partial class PersistentActorReferenceBinaryCreateTranslation
     {
-        public static readonly LocationCellUniqueBinaryCreateTranslation Instance = new LocationCellUniqueBinaryCreateTranslation();
+        public static readonly PersistentActorReferenceBinaryCreateTranslation Instance = new PersistentActorReferenceBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            ILocationCellUnique item,
+            IPersistentActorReference item,
             MutagenFrame frame)
         {
             item.Actor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Ref.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Grid = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                swapCoords: true);
         }
 
     }
@@ -1130,14 +1124,14 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class LocationCellUniqueBinaryTranslationMixIn
+    public static class PersistentActorReferenceBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this ILocationCellUniqueGetter item,
+            this IPersistentActorReferenceGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((LocationCellUniqueBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((PersistentActorReferenceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1150,54 +1144,54 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim
 {
-    internal partial class LocationCellUniqueBinaryOverlay :
+    internal partial class PersistentActorReferenceBinaryOverlay :
         PluginBinaryOverlay,
-        ILocationCellUniqueGetter
+        IPersistentActorReferenceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LocationCellUnique_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => LocationCellUnique_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PersistentActorReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => PersistentActorReference_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => LocationCellUniqueCommon.Instance;
+        protected object CommonInstance() => PersistentActorReferenceCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => LocationCellUniqueSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => PersistentActorReferenceSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ILocationCellUniqueGetter.CommonInstance() => this.CommonInstance();
+        object IPersistentActorReferenceGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? ILocationCellUniqueGetter.CommonSetterInstance() => null;
+        object? IPersistentActorReferenceGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object ILocationCellUniqueGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IPersistentActorReferenceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationCellUniqueCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => PersistentActorReferenceCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => LocationCellUniqueBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => PersistentActorReferenceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((LocationCellUniqueBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((PersistentActorReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<INpcGetter> Actor => FormLinkBinaryTranslation.Instance.OverlayFactory<INpcGetter>(_package, _structData.Span.Slice(0x0, 0x4));
-        public IFormLinkGetter<IPlacedNpcGetter> Ref => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedNpcGetter>(_package, _structData.Span.Slice(0x4, 0x4));
-        public IFormLinkGetter<ILocationGetter> Location => FormLinkBinaryTranslation.Instance.OverlayFactory<ILocationGetter>(_package, _structData.Span.Slice(0x8, 0x4));
+        public IFormLinkGetter<IPlacedNpcGetter> Actor => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedNpcGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<IComplexLocationGetter> Location => FormLinkBinaryTranslation.Instance.OverlayFactory<IComplexLocationGetter>(_package, _structData.Span.Slice(0x4, 0x4));
+        public P2Int16 Grid => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x8, 0x4), swapCoords: true);
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected LocationCellUniqueBinaryOverlay(
+        protected PersistentActorReferenceBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1207,7 +1201,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ILocationCellUniqueGetter LocationCellUniqueFactory(
+        public static IPersistentActorReferenceGetter PersistentActorReferenceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1219,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim
                 length: 0xC,
                 memoryPair: out var memoryPair,
                 offset: out var offset);
-            var ret = new LocationCellUniqueBinaryOverlay(
+            var ret = new PersistentActorReferenceBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             stream.Position += 0xC;
@@ -1230,12 +1224,12 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ILocationCellUniqueGetter LocationCellUniqueFactory(
+        public static IPersistentActorReferenceGetter PersistentActorReferenceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return LocationCellUniqueFactory(
+            return PersistentActorReferenceFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1247,7 +1241,7 @@ namespace Mutagen.Bethesda.Skyrim
             StructuredStringBuilder sb,
             string? name = null)
         {
-            LocationCellUniqueMixIn.Print(
+            PersistentActorReferenceMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1258,16 +1252,16 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ILocationCellUniqueGetter rhs) return false;
-            return ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IPersistentActorReferenceGetter rhs) return false;
+            return ((PersistentActorReferenceCommon)((IPersistentActorReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ILocationCellUniqueGetter? obj)
+        public bool Equals(IPersistentActorReferenceGetter? obj)
         {
-            return ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((PersistentActorReferenceCommon)((IPersistentActorReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((PersistentActorReferenceCommon)((IPersistentActorReferenceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

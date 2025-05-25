@@ -8,7 +8,6 @@ using Loqui;
 using Loqui.Interfaces;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Headers;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
@@ -21,12 +20,13 @@ using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Plugins.Records.Mapping;
+using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using Noggog.StructuredStrings;
 using Noggog.StructuredStrings.CSharp;
-using RecordTypeInts = Mutagen.Bethesda.Fallout4.Internals.RecordTypeInts;
-using RecordTypes = Mutagen.Bethesda.Fallout4.Internals.RecordTypes;
+using RecordTypeInts = Mutagen.Bethesda.Skyrim.Internals.RecordTypeInts;
+using RecordTypes = Mutagen.Bethesda.Skyrim.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -35,16 +35,16 @@ using System.Reactive.Linq;
 #endregion
 
 #nullable enable
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class LocationReference :
-        IEquatable<ILocationReferenceGetter>,
-        ILocationReference,
-        ILoquiObjectSetter<LocationReference>
+    public partial class EnableParentReference :
+        IEnableParentReference,
+        IEquatable<IEnableParentReferenceGetter>,
+        ILoquiObjectSetter<EnableParentReference>
     {
         #region Ctor
-        public LocationReference()
+        public EnableParentReference()
         {
             CustomCtor();
         }
@@ -52,24 +52,24 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Actor
-        private readonly IFormLink<ILinkedReferenceGetter> _Actor = new FormLink<ILinkedReferenceGetter>();
-        public IFormLink<ILinkedReferenceGetter> Actor
+        private readonly IFormLink<IPlacedGetter> _Actor = new FormLink<IPlacedGetter>();
+        public IFormLink<IPlacedGetter> Actor
         {
             get => _Actor;
             set => _Actor.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ILinkedReferenceGetter> ILocationReferenceGetter.Actor => this.Actor;
+        IFormLinkGetter<IPlacedGetter> IEnableParentReferenceGetter.Actor => this.Actor;
         #endregion
-        #region Location
-        private readonly IFormLink<IComplexLocationGetter> _Location = new FormLink<IComplexLocationGetter>();
-        public IFormLink<IComplexLocationGetter> Location
+        #region Ref
+        private readonly IFormLink<IPlacedGetter> _Ref = new FormLink<IPlacedGetter>();
+        public IFormLink<IPlacedGetter> Ref
         {
-            get => _Location;
-            set => _Location.SetTo(value);
+            get => _Ref;
+            set => _Ref.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IComplexLocationGetter> ILocationReferenceGetter.Location => this.Location;
+        IFormLinkGetter<IPlacedGetter> IEnableParentReferenceGetter.Ref => this.Ref;
         #endregion
         #region Grid
         public P2Int16 Grid { get; set; } = default(P2Int16);
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            LocationReferenceMixIn.Print(
+            EnableParentReferenceMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -92,16 +92,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ILocationReferenceGetter rhs) return false;
-            return ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IEnableParentReferenceGetter rhs) return false;
+            return ((EnableParentReferenceCommon)((IEnableParentReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ILocationReferenceGetter? obj)
+        public bool Equals(IEnableParentReferenceGetter? obj)
         {
-            return ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((EnableParentReferenceCommon)((IEnableParentReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((EnableParentReferenceCommon)((IEnableParentReferenceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -114,17 +114,17 @@ namespace Mutagen.Bethesda.Fallout4
             public Mask(TItem initialValue)
             {
                 this.Actor = initialValue;
-                this.Location = initialValue;
+                this.Ref = initialValue;
                 this.Grid = initialValue;
             }
 
             public Mask(
                 TItem Actor,
-                TItem Location,
+                TItem Ref,
                 TItem Grid)
             {
                 this.Actor = Actor;
-                this.Location = Location;
+                this.Ref = Ref;
                 this.Grid = Grid;
             }
 
@@ -138,7 +138,7 @@ namespace Mutagen.Bethesda.Fallout4
 
             #region Members
             public TItem Actor;
-            public TItem Location;
+            public TItem Ref;
             public TItem Grid;
             #endregion
 
@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Actor, rhs.Actor)) return false;
-                if (!object.Equals(this.Location, rhs.Location)) return false;
+                if (!object.Equals(this.Ref, rhs.Ref)) return false;
                 if (!object.Equals(this.Grid, rhs.Grid)) return false;
                 return true;
             }
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 var hash = new HashCode();
                 hash.Add(this.Actor);
-                hash.Add(this.Location);
+                hash.Add(this.Ref);
                 hash.Add(this.Grid);
                 return hash.ToHashCode();
             }
@@ -172,7 +172,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Actor)) return false;
-                if (!eval(this.Location)) return false;
+                if (!eval(this.Ref)) return false;
                 if (!eval(this.Grid)) return false;
                 return true;
             }
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Actor)) return true;
-                if (eval(this.Location)) return true;
+                if (eval(this.Ref)) return true;
                 if (eval(this.Grid)) return true;
                 return false;
             }
@@ -191,7 +191,7 @@ namespace Mutagen.Bethesda.Fallout4
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new LocationReference.Mask<R>();
+                var ret = new EnableParentReference.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Fallout4
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Actor = eval(this.Actor);
-                obj.Location = eval(this.Location);
+                obj.Ref = eval(this.Ref);
                 obj.Grid = eval(this.Grid);
             }
             #endregion
@@ -207,25 +207,25 @@ namespace Mutagen.Bethesda.Fallout4
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(LocationReference.Mask<bool>? printMask = null)
+            public string Print(EnableParentReference.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, LocationReference.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, EnableParentReference.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(LocationReference.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(EnableParentReference.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
                     if (printMask?.Actor ?? true)
                     {
                         sb.AppendItem(Actor, "Actor");
                     }
-                    if (printMask?.Location ?? true)
+                    if (printMask?.Ref ?? true)
                     {
-                        sb.AppendItem(Location, "Location");
+                        sb.AppendItem(Ref, "Ref");
                     }
                     if (printMask?.Grid ?? true)
                     {
@@ -256,21 +256,21 @@ namespace Mutagen.Bethesda.Fallout4
                 }
             }
             public Exception? Actor;
-            public Exception? Location;
+            public Exception? Ref;
             public Exception? Grid;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                LocationReference_FieldIndex enu = (LocationReference_FieldIndex)index;
+                EnableParentReference_FieldIndex enu = (EnableParentReference_FieldIndex)index;
                 switch (enu)
                 {
-                    case LocationReference_FieldIndex.Actor:
+                    case EnableParentReference_FieldIndex.Actor:
                         return Actor;
-                    case LocationReference_FieldIndex.Location:
-                        return Location;
-                    case LocationReference_FieldIndex.Grid:
+                    case EnableParentReference_FieldIndex.Ref:
+                        return Ref;
+                    case EnableParentReference_FieldIndex.Grid:
                         return Grid;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -279,16 +279,16 @@ namespace Mutagen.Bethesda.Fallout4
 
             public void SetNthException(int index, Exception ex)
             {
-                LocationReference_FieldIndex enu = (LocationReference_FieldIndex)index;
+                EnableParentReference_FieldIndex enu = (EnableParentReference_FieldIndex)index;
                 switch (enu)
                 {
-                    case LocationReference_FieldIndex.Actor:
+                    case EnableParentReference_FieldIndex.Actor:
                         this.Actor = ex;
                         break;
-                    case LocationReference_FieldIndex.Location:
-                        this.Location = ex;
+                    case EnableParentReference_FieldIndex.Ref:
+                        this.Ref = ex;
                         break;
-                    case LocationReference_FieldIndex.Grid:
+                    case EnableParentReference_FieldIndex.Grid:
                         this.Grid = ex;
                         break;
                     default:
@@ -298,16 +298,16 @@ namespace Mutagen.Bethesda.Fallout4
 
             public void SetNthMask(int index, object obj)
             {
-                LocationReference_FieldIndex enu = (LocationReference_FieldIndex)index;
+                EnableParentReference_FieldIndex enu = (EnableParentReference_FieldIndex)index;
                 switch (enu)
                 {
-                    case LocationReference_FieldIndex.Actor:
+                    case EnableParentReference_FieldIndex.Actor:
                         this.Actor = (Exception?)obj;
                         break;
-                    case LocationReference_FieldIndex.Location:
-                        this.Location = (Exception?)obj;
+                    case EnableParentReference_FieldIndex.Ref:
+                        this.Ref = (Exception?)obj;
                         break;
-                    case LocationReference_FieldIndex.Grid:
+                    case EnableParentReference_FieldIndex.Grid:
                         this.Grid = (Exception?)obj;
                         break;
                     default:
@@ -319,7 +319,7 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (Overall != null) return true;
                 if (Actor != null) return true;
-                if (Location != null) return true;
+                if (Ref != null) return true;
                 if (Grid != null) return true;
                 return false;
             }
@@ -350,7 +350,7 @@ namespace Mutagen.Bethesda.Fallout4
                     sb.AppendItem(Actor, "Actor");
                 }
                 {
-                    sb.AppendItem(Location, "Location");
+                    sb.AppendItem(Ref, "Ref");
                 }
                 {
                     sb.AppendItem(Grid, "Grid");
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Actor = this.Actor.Combine(rhs.Actor);
-                ret.Location = this.Location.Combine(rhs.Location);
+                ret.Ref = this.Ref.Combine(rhs.Ref);
                 ret.Grid = this.Grid.Combine(rhs.Grid);
                 return ret;
             }
@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Fallout4
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Actor;
-            public bool Location;
+            public bool Ref;
             public bool Grid;
             #endregion
 
@@ -402,7 +402,7 @@ namespace Mutagen.Bethesda.Fallout4
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Actor = defaultOn;
-                this.Location = defaultOn;
+                this.Ref = defaultOn;
                 this.Grid = defaultOn;
             }
 
@@ -420,7 +420,7 @@ namespace Mutagen.Bethesda.Fallout4
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Actor, null));
-                ret.Add((Location, null));
+                ret.Add((Ref, null));
                 ret.Add((Grid, null));
             }
 
@@ -433,31 +433,31 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationReferenceCommon.Instance.EnumerateFormLinks(this);
-        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationReferenceSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => EnableParentReferenceCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EnableParentReferenceSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => LocationReferenceBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => EnableParentReferenceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((LocationReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((EnableParentReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static LocationReference CreateFromBinary(
+        public static EnableParentReference CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new LocationReference();
-            ((LocationReferenceSetterCommon)((ILocationReferenceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new EnableParentReference();
+            ((EnableParentReferenceSetterCommon)((IEnableParentReferenceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out LocationReference item,
+            out EnableParentReference item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -483,33 +483,33 @@ namespace Mutagen.Bethesda.Fallout4
 
         void IClearable.Clear()
         {
-            ((LocationReferenceSetterCommon)((ILocationReferenceGetter)this).CommonSetterInstance()!).Clear(this);
+            ((EnableParentReferenceSetterCommon)((IEnableParentReferenceGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static LocationReference GetNew()
+        internal static EnableParentReference GetNew()
         {
-            return new LocationReference();
+            return new EnableParentReference();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ILocationReference :
+    public partial interface IEnableParentReference :
+        IEnableParentReferenceGetter,
         IFormLinkContainer,
-        ILocationReferenceGetter,
-        ILoquiObjectSetter<ILocationReference>
+        ILoquiObjectSetter<IEnableParentReference>
     {
-        new IFormLink<ILinkedReferenceGetter> Actor { get; set; }
-        new IFormLink<IComplexLocationGetter> Location { get; set; }
+        new IFormLink<IPlacedGetter> Actor { get; set; }
+        new IFormLink<IPlacedGetter> Ref { get; set; }
         new P2Int16 Grid { get; set; }
     }
 
-    public partial interface ILocationReferenceGetter :
+    public partial interface IEnableParentReferenceGetter :
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<ILocationReferenceGetter>
+        ILoquiObject<IEnableParentReferenceGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -517,9 +517,9 @@ namespace Mutagen.Bethesda.Fallout4
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => LocationReference_Registration.Instance;
-        IFormLinkGetter<ILinkedReferenceGetter> Actor { get; }
-        IFormLinkGetter<IComplexLocationGetter> Location { get; }
+        static ILoquiRegistration StaticRegistration => EnableParentReference_Registration.Instance;
+        IFormLinkGetter<IPlacedGetter> Actor { get; }
+        IFormLinkGetter<IPlacedGetter> Ref { get; }
         P2Int16 Grid { get; }
 
     }
@@ -527,42 +527,42 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common MixIn
-    public static partial class LocationReferenceMixIn
+    public static partial class EnableParentReferenceMixIn
     {
-        public static void Clear(this ILocationReference item)
+        public static void Clear(this IEnableParentReference item)
         {
-            ((LocationReferenceSetterCommon)((ILocationReferenceGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((EnableParentReferenceSetterCommon)((IEnableParentReferenceGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static LocationReference.Mask<bool> GetEqualsMask(
-            this ILocationReferenceGetter item,
-            ILocationReferenceGetter rhs,
+        public static EnableParentReference.Mask<bool> GetEqualsMask(
+            this IEnableParentReferenceGetter item,
+            IEnableParentReferenceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LocationReferenceCommon)((ILocationReferenceGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((EnableParentReferenceCommon)((IEnableParentReferenceGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this ILocationReferenceGetter item,
+            this IEnableParentReferenceGetter item,
             string? name = null,
-            LocationReference.Mask<bool>? printMask = null)
+            EnableParentReference.Mask<bool>? printMask = null)
         {
-            return ((LocationReferenceCommon)((ILocationReferenceGetter)item).CommonInstance()!).Print(
+            return ((EnableParentReferenceCommon)((IEnableParentReferenceGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this ILocationReferenceGetter item,
+            this IEnableParentReferenceGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            LocationReference.Mask<bool>? printMask = null)
+            EnableParentReference.Mask<bool>? printMask = null)
         {
-            ((LocationReferenceCommon)((ILocationReferenceGetter)item).CommonInstance()!).Print(
+            ((EnableParentReferenceCommon)((IEnableParentReferenceGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -570,21 +570,21 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static bool Equals(
-            this ILocationReferenceGetter item,
-            ILocationReferenceGetter rhs,
-            LocationReference.TranslationMask? equalsMask = null)
+            this IEnableParentReferenceGetter item,
+            IEnableParentReferenceGetter rhs,
+            EnableParentReference.TranslationMask? equalsMask = null)
         {
-            return ((LocationReferenceCommon)((ILocationReferenceGetter)item).CommonInstance()!).Equals(
+            return ((EnableParentReferenceCommon)((IEnableParentReferenceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this ILocationReference lhs,
-            ILocationReferenceGetter rhs)
+            this IEnableParentReference lhs,
+            IEnableParentReferenceGetter rhs)
         {
-            ((LocationReferenceSetterTranslationCommon)((ILocationReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((EnableParentReferenceSetterTranslationCommon)((IEnableParentReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -593,11 +593,11 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this ILocationReference lhs,
-            ILocationReferenceGetter rhs,
-            LocationReference.TranslationMask? copyMask = null)
+            this IEnableParentReference lhs,
+            IEnableParentReferenceGetter rhs,
+            EnableParentReference.TranslationMask? copyMask = null)
         {
-            ((LocationReferenceSetterTranslationCommon)((ILocationReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((EnableParentReferenceSetterTranslationCommon)((IEnableParentReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -606,28 +606,28 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         public static void DeepCopyIn(
-            this ILocationReference lhs,
-            ILocationReferenceGetter rhs,
-            out LocationReference.ErrorMask errorMask,
-            LocationReference.TranslationMask? copyMask = null)
+            this IEnableParentReference lhs,
+            IEnableParentReferenceGetter rhs,
+            out EnableParentReference.ErrorMask errorMask,
+            EnableParentReference.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((LocationReferenceSetterTranslationCommon)((ILocationReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((EnableParentReferenceSetterTranslationCommon)((IEnableParentReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = LocationReference.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = EnableParentReference.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ILocationReference lhs,
-            ILocationReferenceGetter rhs,
+            this IEnableParentReference lhs,
+            IEnableParentReferenceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((LocationReferenceSetterTranslationCommon)((ILocationReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((EnableParentReferenceSetterTranslationCommon)((IEnableParentReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -635,32 +635,32 @@ namespace Mutagen.Bethesda.Fallout4
                 deepCopy: false);
         }
 
-        public static LocationReference DeepCopy(
-            this ILocationReferenceGetter item,
-            LocationReference.TranslationMask? copyMask = null)
+        public static EnableParentReference DeepCopy(
+            this IEnableParentReferenceGetter item,
+            EnableParentReference.TranslationMask? copyMask = null)
         {
-            return ((LocationReferenceSetterTranslationCommon)((ILocationReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((EnableParentReferenceSetterTranslationCommon)((IEnableParentReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static LocationReference DeepCopy(
-            this ILocationReferenceGetter item,
-            out LocationReference.ErrorMask errorMask,
-            LocationReference.TranslationMask? copyMask = null)
+        public static EnableParentReference DeepCopy(
+            this IEnableParentReferenceGetter item,
+            out EnableParentReference.ErrorMask errorMask,
+            EnableParentReference.TranslationMask? copyMask = null)
         {
-            return ((LocationReferenceSetterTranslationCommon)((ILocationReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((EnableParentReferenceSetterTranslationCommon)((IEnableParentReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static LocationReference DeepCopy(
-            this ILocationReferenceGetter item,
+        public static EnableParentReference DeepCopy(
+            this IEnableParentReferenceGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((LocationReferenceSetterTranslationCommon)((ILocationReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((EnableParentReferenceSetterTranslationCommon)((IEnableParentReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -668,11 +668,11 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this ILocationReference item,
+            this IEnableParentReference item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((LocationReferenceSetterCommon)((ILocationReferenceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((EnableParentReferenceSetterCommon)((IEnableParentReferenceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -685,53 +685,53 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    internal enum LocationReference_FieldIndex
+    internal enum EnableParentReference_FieldIndex
     {
         Actor = 0,
-        Location = 1,
+        Ref = 1,
         Grid = 2,
     }
     #endregion
 
     #region Registration
-    internal partial class LocationReference_Registration : ILoquiRegistration
+    internal partial class EnableParentReference_Registration : ILoquiRegistration
     {
-        public static readonly LocationReference_Registration Instance = new LocationReference_Registration();
+        public static readonly EnableParentReference_Registration Instance = new EnableParentReference_Registration();
 
-        public static ProtocolKey ProtocolKey => ProtocolDefinition_Fallout4.ProtocolKey;
+        public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(LocationReference.Mask<>);
+        public static readonly Type MaskType = typeof(EnableParentReference.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(LocationReference.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(EnableParentReference.ErrorMask);
 
-        public static readonly Type ClassType = typeof(LocationReference);
+        public static readonly Type ClassType = typeof(EnableParentReference);
 
-        public static readonly Type GetterType = typeof(ILocationReferenceGetter);
+        public static readonly Type GetterType = typeof(IEnableParentReferenceGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ILocationReference);
+        public static readonly Type SetterType = typeof(IEnableParentReference);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Fallout4.LocationReference";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.EnableParentReference";
 
-        public const string Name = "LocationReference";
+        public const string Name = "EnableParentReference";
 
-        public const string Namespace = "Mutagen.Bethesda.Fallout4";
+        public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
         public const byte GenericCount = 0;
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(LocationReferenceBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(EnableParentReferenceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -762,32 +762,32 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Common
-    internal partial class LocationReferenceSetterCommon
+    internal partial class EnableParentReferenceSetterCommon
     {
-        public static readonly LocationReferenceSetterCommon Instance = new LocationReferenceSetterCommon();
+        public static readonly EnableParentReferenceSetterCommon Instance = new EnableParentReferenceSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(ILocationReference item)
+        public void Clear(IEnableParentReference item)
         {
             ClearPartial();
             item.Actor.Clear();
-            item.Location.Clear();
+            item.Ref.Clear();
             item.Grid = default(P2Int16);
         }
         
         #region Mutagen
-        public void RemapLinks(ILocationReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(IEnableParentReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             obj.Actor.Relink(mapping);
-            obj.Location.Relink(mapping);
+            obj.Ref.Relink(mapping);
         }
         
         #endregion
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            ILocationReference item,
+            IEnableParentReference item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -795,23 +795,23 @@ namespace Mutagen.Bethesda.Fallout4
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: LocationReferenceBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: EnableParentReferenceBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class LocationReferenceCommon
+    internal partial class EnableParentReferenceCommon
     {
-        public static readonly LocationReferenceCommon Instance = new LocationReferenceCommon();
+        public static readonly EnableParentReferenceCommon Instance = new EnableParentReferenceCommon();
 
-        public LocationReference.Mask<bool> GetEqualsMask(
-            ILocationReferenceGetter item,
-            ILocationReferenceGetter rhs,
+        public EnableParentReference.Mask<bool> GetEqualsMask(
+            IEnableParentReferenceGetter item,
+            IEnableParentReferenceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new LocationReference.Mask<bool>(false);
-            ((LocationReferenceCommon)((ILocationReferenceGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new EnableParentReference.Mask<bool>(false);
+            ((EnableParentReferenceCommon)((IEnableParentReferenceGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -820,20 +820,20 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void FillEqualsMask(
-            ILocationReferenceGetter item,
-            ILocationReferenceGetter rhs,
-            LocationReference.Mask<bool> ret,
+            IEnableParentReferenceGetter item,
+            IEnableParentReferenceGetter rhs,
+            EnableParentReference.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Actor = item.Actor.Equals(rhs.Actor);
-            ret.Location = item.Location.Equals(rhs.Location);
+            ret.Ref = item.Ref.Equals(rhs.Ref);
             ret.Grid = item.Grid.Equals(rhs.Grid);
         }
         
         public string Print(
-            ILocationReferenceGetter item,
+            IEnableParentReferenceGetter item,
             string? name = null,
-            LocationReference.Mask<bool>? printMask = null)
+            EnableParentReference.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -845,18 +845,18 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         public void Print(
-            ILocationReferenceGetter item,
+            IEnableParentReferenceGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            LocationReference.Mask<bool>? printMask = null)
+            EnableParentReference.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"LocationReference =>");
+                sb.AppendLine($"EnableParentReference =>");
             }
             else
             {
-                sb.AppendLine($"{name} (LocationReference) =>");
+                sb.AppendLine($"{name} (EnableParentReference) =>");
             }
             using (sb.Brace())
             {
@@ -868,17 +868,17 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         protected static void ToStringFields(
-            ILocationReferenceGetter item,
+            IEnableParentReferenceGetter item,
             StructuredStringBuilder sb,
-            LocationReference.Mask<bool>? printMask = null)
+            EnableParentReference.Mask<bool>? printMask = null)
         {
             if (printMask?.Actor ?? true)
             {
                 sb.AppendItem(item.Actor.FormKey, "Actor");
             }
-            if (printMask?.Location ?? true)
+            if (printMask?.Ref ?? true)
             {
-                sb.AppendItem(item.Location.FormKey, "Location");
+                sb.AppendItem(item.Ref.FormKey, "Ref");
             }
             if (printMask?.Grid ?? true)
             {
@@ -888,31 +888,31 @@ namespace Mutagen.Bethesda.Fallout4
         
         #region Equals and Hash
         public virtual bool Equals(
-            ILocationReferenceGetter? lhs,
-            ILocationReferenceGetter? rhs,
+            IEnableParentReferenceGetter? lhs,
+            IEnableParentReferenceGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)LocationReference_FieldIndex.Actor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EnableParentReference_FieldIndex.Actor) ?? true))
             {
                 if (!lhs.Actor.Equals(rhs.Actor)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LocationReference_FieldIndex.Location) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EnableParentReference_FieldIndex.Ref) ?? true))
             {
-                if (!lhs.Location.Equals(rhs.Location)) return false;
+                if (!lhs.Ref.Equals(rhs.Ref)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LocationReference_FieldIndex.Grid) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)EnableParentReference_FieldIndex.Grid) ?? true))
             {
                 if (!lhs.Grid.Equals(rhs.Grid)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(ILocationReferenceGetter item)
+        public virtual int GetHashCode(IEnableParentReferenceGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.Actor);
-            hash.Add(item.Location);
+            hash.Add(item.Ref);
             hash.Add(item.Grid);
             return hash.ToHashCode();
         }
@@ -922,41 +922,41 @@ namespace Mutagen.Bethesda.Fallout4
         
         public object GetNew()
         {
-            return LocationReference.GetNew();
+            return EnableParentReference.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILocationReferenceGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(IEnableParentReferenceGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Actor);
-            yield return FormLinkInformation.Factory(obj.Location);
+            yield return FormLinkInformation.Factory(obj.Ref);
             yield break;
         }
         
         #endregion
         
     }
-    internal partial class LocationReferenceSetterTranslationCommon
+    internal partial class EnableParentReferenceSetterTranslationCommon
     {
-        public static readonly LocationReferenceSetterTranslationCommon Instance = new LocationReferenceSetterTranslationCommon();
+        public static readonly EnableParentReferenceSetterTranslationCommon Instance = new EnableParentReferenceSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            ILocationReference item,
-            ILocationReferenceGetter rhs,
+            IEnableParentReference item,
+            IEnableParentReferenceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)LocationReference_FieldIndex.Actor) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)EnableParentReference_FieldIndex.Actor) ?? true))
             {
                 item.Actor.SetTo(rhs.Actor.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)LocationReference_FieldIndex.Location) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)EnableParentReference_FieldIndex.Ref) ?? true))
             {
-                item.Location.SetTo(rhs.Location.FormKey);
+                item.Ref.SetTo(rhs.Ref.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)LocationReference_FieldIndex.Grid) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)EnableParentReference_FieldIndex.Grid) ?? true))
             {
                 item.Grid = rhs.Grid;
             }
@@ -969,19 +969,19 @@ namespace Mutagen.Bethesda.Fallout4
         }
         
         partial void DeepCopyInCustom(
-            ILocationReference item,
-            ILocationReferenceGetter rhs,
+            IEnableParentReference item,
+            IEnableParentReferenceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
         #endregion
         
-        public LocationReference DeepCopy(
-            ILocationReferenceGetter item,
-            LocationReference.TranslationMask? copyMask = null)
+        public EnableParentReference DeepCopy(
+            IEnableParentReferenceGetter item,
+            EnableParentReference.TranslationMask? copyMask = null)
         {
-            LocationReference ret = (LocationReference)((LocationReferenceCommon)((ILocationReferenceGetter)item).CommonInstance()!).GetNew();
-            ((LocationReferenceSetterTranslationCommon)((ILocationReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            EnableParentReference ret = (EnableParentReference)((EnableParentReferenceCommon)((IEnableParentReferenceGetter)item).CommonInstance()!).GetNew();
+            ((EnableParentReferenceSetterTranslationCommon)((IEnableParentReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -990,30 +990,30 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
         
-        public LocationReference DeepCopy(
-            ILocationReferenceGetter item,
-            out LocationReference.ErrorMask errorMask,
-            LocationReference.TranslationMask? copyMask = null)
+        public EnableParentReference DeepCopy(
+            IEnableParentReferenceGetter item,
+            out EnableParentReference.ErrorMask errorMask,
+            EnableParentReference.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            LocationReference ret = (LocationReference)((LocationReferenceCommon)((ILocationReferenceGetter)item).CommonInstance()!).GetNew();
-            ((LocationReferenceSetterTranslationCommon)((ILocationReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            EnableParentReference ret = (EnableParentReference)((EnableParentReferenceCommon)((IEnableParentReferenceGetter)item).CommonInstance()!).GetNew();
+            ((EnableParentReferenceSetterTranslationCommon)((IEnableParentReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = LocationReference.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = EnableParentReference.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public LocationReference DeepCopy(
-            ILocationReferenceGetter item,
+        public EnableParentReference DeepCopy(
+            IEnableParentReferenceGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            LocationReference ret = (LocationReference)((LocationReferenceCommon)((ILocationReferenceGetter)item).CommonInstance()!).GetNew();
-            ((LocationReferenceSetterTranslationCommon)((ILocationReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            EnableParentReference ret = (EnableParentReference)((EnableParentReferenceCommon)((IEnableParentReferenceGetter)item).CommonInstance()!).GetNew();
+            ((EnableParentReferenceSetterTranslationCommon)((IEnableParentReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1027,29 +1027,29 @@ namespace Mutagen.Bethesda.Fallout4
 
 }
 
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LocationReference
+    public partial class EnableParentReference
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LocationReference_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => LocationReference_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => EnableParentReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => EnableParentReference_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => LocationReferenceCommon.Instance;
+        protected object CommonInstance() => EnableParentReferenceCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return LocationReferenceSetterCommon.Instance;
+            return EnableParentReferenceSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => LocationReferenceSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => EnableParentReferenceSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ILocationReferenceGetter.CommonInstance() => this.CommonInstance();
+        object IEnableParentReferenceGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object ILocationReferenceGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IEnableParentReferenceGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object ILocationReferenceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IEnableParentReferenceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1058,14 +1058,14 @@ namespace Mutagen.Bethesda.Fallout4
 
 #region Modules
 #region Binary Translation
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LocationReferenceBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class EnableParentReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LocationReferenceBinaryWriteTranslation Instance = new();
+        public static readonly EnableParentReferenceBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            ILocationReferenceGetter item,
+            IEnableParentReferenceGetter item,
             MutagenWriter writer)
         {
             FormLinkBinaryTranslation.Instance.Write(
@@ -1073,7 +1073,7 @@ namespace Mutagen.Bethesda.Fallout4
                 item: item.Actor);
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Location);
+                item: item.Ref);
             P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Grid,
@@ -1082,7 +1082,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public void Write(
             MutagenWriter writer,
-            ILocationReferenceGetter item,
+            IEnableParentReferenceGetter item,
             TypedWriteParams translationParams)
         {
             WriteEmbedded(
@@ -1096,23 +1096,23 @@ namespace Mutagen.Bethesda.Fallout4
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (ILocationReferenceGetter)item,
+                item: (IEnableParentReferenceGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class LocationReferenceBinaryCreateTranslation
+    internal partial class EnableParentReferenceBinaryCreateTranslation
     {
-        public static readonly LocationReferenceBinaryCreateTranslation Instance = new LocationReferenceBinaryCreateTranslation();
+        public static readonly EnableParentReferenceBinaryCreateTranslation Instance = new EnableParentReferenceBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            ILocationReference item,
+            IEnableParentReference item,
             MutagenFrame frame)
         {
             item.Actor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Ref.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Grid = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 swapCoords: true);
@@ -1121,17 +1121,17 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
 }
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class LocationReferenceBinaryTranslationMixIn
+    public static class EnableParentReferenceBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this ILocationReferenceGetter item,
+            this IEnableParentReferenceGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((LocationReferenceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((EnableParentReferenceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1142,48 +1142,48 @@ namespace Mutagen.Bethesda.Fallout4
 
 
 }
-namespace Mutagen.Bethesda.Fallout4
+namespace Mutagen.Bethesda.Skyrim
 {
-    internal partial class LocationReferenceBinaryOverlay :
+    internal partial class EnableParentReferenceBinaryOverlay :
         PluginBinaryOverlay,
-        ILocationReferenceGetter
+        IEnableParentReferenceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LocationReference_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => LocationReference_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => EnableParentReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => EnableParentReference_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => LocationReferenceCommon.Instance;
+        protected object CommonInstance() => EnableParentReferenceCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => LocationReferenceSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => EnableParentReferenceSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ILocationReferenceGetter.CommonInstance() => this.CommonInstance();
+        object IEnableParentReferenceGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? ILocationReferenceGetter.CommonSetterInstance() => null;
+        object? IEnableParentReferenceGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object ILocationReferenceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IEnableParentReferenceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationReferenceCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => EnableParentReferenceCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => LocationReferenceBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => EnableParentReferenceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((LocationReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((EnableParentReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ILinkedReferenceGetter> Actor => FormLinkBinaryTranslation.Instance.OverlayFactory<ILinkedReferenceGetter>(_package, _structData.Span.Slice(0x0, 0x4));
-        public IFormLinkGetter<IComplexLocationGetter> Location => FormLinkBinaryTranslation.Instance.OverlayFactory<IComplexLocationGetter>(_package, _structData.Span.Slice(0x4, 0x4));
+        public IFormLinkGetter<IPlacedGetter> Actor => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<IPlacedGetter> Ref => FormLinkBinaryTranslation.Instance.OverlayFactory<IPlacedGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         public P2Int16 Grid => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x8, 0x4), swapCoords: true);
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1191,7 +1191,7 @@ namespace Mutagen.Bethesda.Fallout4
             int offset);
 
         partial void CustomCtor();
-        protected LocationReferenceBinaryOverlay(
+        protected EnableParentReferenceBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1201,7 +1201,7 @@ namespace Mutagen.Bethesda.Fallout4
             this.CustomCtor();
         }
 
-        public static ILocationReferenceGetter LocationReferenceFactory(
+        public static IEnableParentReferenceGetter EnableParentReferenceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Fallout4
                 length: 0xC,
                 memoryPair: out var memoryPair,
                 offset: out var offset);
-            var ret = new LocationReferenceBinaryOverlay(
+            var ret = new EnableParentReferenceBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
             stream.Position += 0xC;
@@ -1224,12 +1224,12 @@ namespace Mutagen.Bethesda.Fallout4
             return ret;
         }
 
-        public static ILocationReferenceGetter LocationReferenceFactory(
+        public static IEnableParentReferenceGetter EnableParentReferenceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return LocationReferenceFactory(
+            return EnableParentReferenceFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1241,7 +1241,7 @@ namespace Mutagen.Bethesda.Fallout4
             StructuredStringBuilder sb,
             string? name = null)
         {
-            LocationReferenceMixIn.Print(
+            EnableParentReferenceMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1252,16 +1252,16 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ILocationReferenceGetter rhs) return false;
-            return ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not IEnableParentReferenceGetter rhs) return false;
+            return ((EnableParentReferenceCommon)((IEnableParentReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ILocationReferenceGetter? obj)
+        public bool Equals(IEnableParentReferenceGetter? obj)
         {
-            return ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((EnableParentReferenceCommon)((IEnableParentReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((EnableParentReferenceCommon)((IEnableParentReferenceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 

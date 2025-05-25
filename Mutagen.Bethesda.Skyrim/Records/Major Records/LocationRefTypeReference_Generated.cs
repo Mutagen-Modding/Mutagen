@@ -38,28 +38,38 @@ using System.Reactive.Linq;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class LocationReference :
-        IEquatable<ILocationReferenceGetter>,
-        ILocationReference,
-        ILoquiObjectSetter<LocationReference>
+    public partial class LocationRefTypeReference :
+        IEquatable<ILocationRefTypeReferenceGetter>,
+        ILocationRefTypeReference,
+        ILoquiObjectSetter<LocationRefTypeReference>
     {
         #region Ctor
-        public LocationReference()
+        public LocationRefTypeReference()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Actor
-        private readonly IFormLink<ILinkedReferenceGetter> _Actor = new FormLink<ILinkedReferenceGetter>();
-        public IFormLink<ILinkedReferenceGetter> Actor
+        #region LocationRefType
+        private readonly IFormLink<ILocationReferenceTypeGetter> _LocationRefType = new FormLink<ILocationReferenceTypeGetter>();
+        public IFormLink<ILocationReferenceTypeGetter> LocationRefType
         {
-            get => _Actor;
-            set => _Actor.SetTo(value);
+            get => _LocationRefType;
+            set => _LocationRefType.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<ILinkedReferenceGetter> ILocationReferenceGetter.Actor => this.Actor;
+        IFormLinkGetter<ILocationReferenceTypeGetter> ILocationRefTypeReferenceGetter.LocationRefType => this.LocationRefType;
+        #endregion
+        #region Ref
+        private readonly IFormLink<ILinkedReferenceGetter> _Ref = new FormLink<ILinkedReferenceGetter>();
+        public IFormLink<ILinkedReferenceGetter> Ref
+        {
+            get => _Ref;
+            set => _Ref.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ILinkedReferenceGetter> ILocationRefTypeReferenceGetter.Ref => this.Ref;
         #endregion
         #region Location
         private readonly IFormLink<IComplexLocationGetter> _Location = new FormLink<IComplexLocationGetter>();
@@ -69,7 +79,7 @@ namespace Mutagen.Bethesda.Skyrim
             set => _Location.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IComplexLocationGetter> ILocationReferenceGetter.Location => this.Location;
+        IFormLinkGetter<IComplexLocationGetter> ILocationRefTypeReferenceGetter.Location => this.Location;
         #endregion
         #region Grid
         public P2Int16 Grid { get; set; } = default(P2Int16);
@@ -81,7 +91,7 @@ namespace Mutagen.Bethesda.Skyrim
             StructuredStringBuilder sb,
             string? name = null)
         {
-            LocationReferenceMixIn.Print(
+            LocationRefTypeReferenceMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -92,16 +102,16 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ILocationReferenceGetter rhs) return false;
-            return ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ILocationRefTypeReferenceGetter rhs) return false;
+            return ((LocationRefTypeReferenceCommon)((ILocationRefTypeReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ILocationReferenceGetter? obj)
+        public bool Equals(ILocationRefTypeReferenceGetter? obj)
         {
-            return ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((LocationRefTypeReferenceCommon)((ILocationRefTypeReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((LocationRefTypeReferenceCommon)((ILocationRefTypeReferenceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -113,17 +123,20 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Actor = initialValue;
+                this.LocationRefType = initialValue;
+                this.Ref = initialValue;
                 this.Location = initialValue;
                 this.Grid = initialValue;
             }
 
             public Mask(
-                TItem Actor,
+                TItem LocationRefType,
+                TItem Ref,
                 TItem Location,
                 TItem Grid)
             {
-                this.Actor = Actor;
+                this.LocationRefType = LocationRefType;
+                this.Ref = Ref;
                 this.Location = Location;
                 this.Grid = Grid;
             }
@@ -137,7 +150,8 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem Actor;
+            public TItem LocationRefType;
+            public TItem Ref;
             public TItem Location;
             public TItem Grid;
             #endregion
@@ -152,7 +166,8 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Actor, rhs.Actor)) return false;
+                if (!object.Equals(this.LocationRefType, rhs.LocationRefType)) return false;
+                if (!object.Equals(this.Ref, rhs.Ref)) return false;
                 if (!object.Equals(this.Location, rhs.Location)) return false;
                 if (!object.Equals(this.Grid, rhs.Grid)) return false;
                 return true;
@@ -160,7 +175,8 @@ namespace Mutagen.Bethesda.Skyrim
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Actor);
+                hash.Add(this.LocationRefType);
+                hash.Add(this.Ref);
                 hash.Add(this.Location);
                 hash.Add(this.Grid);
                 return hash.ToHashCode();
@@ -171,7 +187,8 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Actor)) return false;
+                if (!eval(this.LocationRefType)) return false;
+                if (!eval(this.Ref)) return false;
                 if (!eval(this.Location)) return false;
                 if (!eval(this.Grid)) return false;
                 return true;
@@ -181,7 +198,8 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Actor)) return true;
+                if (eval(this.LocationRefType)) return true;
+                if (eval(this.Ref)) return true;
                 if (eval(this.Location)) return true;
                 if (eval(this.Grid)) return true;
                 return false;
@@ -191,14 +209,15 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new LocationReference.Mask<R>();
+                var ret = new LocationRefTypeReference.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Actor = eval(this.Actor);
+                obj.LocationRefType = eval(this.LocationRefType);
+                obj.Ref = eval(this.Ref);
                 obj.Location = eval(this.Location);
                 obj.Grid = eval(this.Grid);
             }
@@ -207,21 +226,25 @@ namespace Mutagen.Bethesda.Skyrim
             #region To String
             public override string ToString() => this.Print();
 
-            public string Print(LocationReference.Mask<bool>? printMask = null)
+            public string Print(LocationRefTypeReference.Mask<bool>? printMask = null)
             {
                 var sb = new StructuredStringBuilder();
                 Print(sb, printMask);
                 return sb.ToString();
             }
 
-            public void Print(StructuredStringBuilder sb, LocationReference.Mask<bool>? printMask = null)
+            public void Print(StructuredStringBuilder sb, LocationRefTypeReference.Mask<bool>? printMask = null)
             {
-                sb.AppendLine($"{nameof(LocationReference.Mask<TItem>)} =>");
+                sb.AppendLine($"{nameof(LocationRefTypeReference.Mask<TItem>)} =>");
                 using (sb.Brace())
                 {
-                    if (printMask?.Actor ?? true)
+                    if (printMask?.LocationRefType ?? true)
                     {
-                        sb.AppendItem(Actor, "Actor");
+                        sb.AppendItem(LocationRefType, "LocationRefType");
+                    }
+                    if (printMask?.Ref ?? true)
+                    {
+                        sb.AppendItem(Ref, "Ref");
                     }
                     if (printMask?.Location ?? true)
                     {
@@ -255,7 +278,8 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
-            public Exception? Actor;
+            public Exception? LocationRefType;
+            public Exception? Ref;
             public Exception? Location;
             public Exception? Grid;
             #endregion
@@ -263,14 +287,16 @@ namespace Mutagen.Bethesda.Skyrim
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                LocationReference_FieldIndex enu = (LocationReference_FieldIndex)index;
+                LocationRefTypeReference_FieldIndex enu = (LocationRefTypeReference_FieldIndex)index;
                 switch (enu)
                 {
-                    case LocationReference_FieldIndex.Actor:
-                        return Actor;
-                    case LocationReference_FieldIndex.Location:
+                    case LocationRefTypeReference_FieldIndex.LocationRefType:
+                        return LocationRefType;
+                    case LocationRefTypeReference_FieldIndex.Ref:
+                        return Ref;
+                    case LocationRefTypeReference_FieldIndex.Location:
                         return Location;
-                    case LocationReference_FieldIndex.Grid:
+                    case LocationRefTypeReference_FieldIndex.Grid:
                         return Grid;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -279,16 +305,19 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void SetNthException(int index, Exception ex)
             {
-                LocationReference_FieldIndex enu = (LocationReference_FieldIndex)index;
+                LocationRefTypeReference_FieldIndex enu = (LocationRefTypeReference_FieldIndex)index;
                 switch (enu)
                 {
-                    case LocationReference_FieldIndex.Actor:
-                        this.Actor = ex;
+                    case LocationRefTypeReference_FieldIndex.LocationRefType:
+                        this.LocationRefType = ex;
                         break;
-                    case LocationReference_FieldIndex.Location:
+                    case LocationRefTypeReference_FieldIndex.Ref:
+                        this.Ref = ex;
+                        break;
+                    case LocationRefTypeReference_FieldIndex.Location:
                         this.Location = ex;
                         break;
-                    case LocationReference_FieldIndex.Grid:
+                    case LocationRefTypeReference_FieldIndex.Grid:
                         this.Grid = ex;
                         break;
                     default:
@@ -298,16 +327,19 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void SetNthMask(int index, object obj)
             {
-                LocationReference_FieldIndex enu = (LocationReference_FieldIndex)index;
+                LocationRefTypeReference_FieldIndex enu = (LocationRefTypeReference_FieldIndex)index;
                 switch (enu)
                 {
-                    case LocationReference_FieldIndex.Actor:
-                        this.Actor = (Exception?)obj;
+                    case LocationRefTypeReference_FieldIndex.LocationRefType:
+                        this.LocationRefType = (Exception?)obj;
                         break;
-                    case LocationReference_FieldIndex.Location:
+                    case LocationRefTypeReference_FieldIndex.Ref:
+                        this.Ref = (Exception?)obj;
+                        break;
+                    case LocationRefTypeReference_FieldIndex.Location:
                         this.Location = (Exception?)obj;
                         break;
-                    case LocationReference_FieldIndex.Grid:
+                    case LocationRefTypeReference_FieldIndex.Grid:
                         this.Grid = (Exception?)obj;
                         break;
                     default:
@@ -318,7 +350,8 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Actor != null) return true;
+                if (LocationRefType != null) return true;
+                if (Ref != null) return true;
                 if (Location != null) return true;
                 if (Grid != null) return true;
                 return false;
@@ -347,7 +380,10 @@ namespace Mutagen.Bethesda.Skyrim
             protected void PrintFillInternal(StructuredStringBuilder sb)
             {
                 {
-                    sb.AppendItem(Actor, "Actor");
+                    sb.AppendItem(LocationRefType, "LocationRefType");
+                }
+                {
+                    sb.AppendItem(Ref, "Ref");
                 }
                 {
                     sb.AppendItem(Location, "Location");
@@ -363,7 +399,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Actor = this.Actor.Combine(rhs.Actor);
+                ret.LocationRefType = this.LocationRefType.Combine(rhs.LocationRefType);
+                ret.Ref = this.Ref.Combine(rhs.Ref);
                 ret.Location = this.Location.Combine(rhs.Location);
                 ret.Grid = this.Grid.Combine(rhs.Grid);
                 return ret;
@@ -389,7 +426,8 @@ namespace Mutagen.Bethesda.Skyrim
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Actor;
+            public bool LocationRefType;
+            public bool Ref;
             public bool Location;
             public bool Grid;
             #endregion
@@ -401,7 +439,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Actor = defaultOn;
+                this.LocationRefType = defaultOn;
+                this.Ref = defaultOn;
                 this.Location = defaultOn;
                 this.Grid = defaultOn;
             }
@@ -419,7 +458,8 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Actor, null));
+                ret.Add((LocationRefType, null));
+                ret.Add((Ref, null));
                 ret.Add((Location, null));
                 ret.Add((Grid, null));
             }
@@ -433,31 +473,31 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationReferenceCommon.Instance.EnumerateFormLinks(this);
-        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationReferenceSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationRefTypeReferenceCommon.Instance.EnumerateFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationRefTypeReferenceSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => LocationReferenceBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => LocationRefTypeReferenceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((LocationReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((LocationRefTypeReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
         #region Binary Create
-        public static LocationReference CreateFromBinary(
+        public static LocationRefTypeReference CreateFromBinary(
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            var ret = new LocationReference();
-            ((LocationReferenceSetterCommon)((ILocationReferenceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new LocationRefTypeReference();
+            ((LocationRefTypeReferenceSetterCommon)((ILocationRefTypeReferenceGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 translationParams: translationParams);
@@ -468,7 +508,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out LocationReference item,
+            out LocationRefTypeReference item,
             TypedParseParams translationParams = default)
         {
             var startPos = frame.Position;
@@ -483,33 +523,34 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IClearable.Clear()
         {
-            ((LocationReferenceSetterCommon)((ILocationReferenceGetter)this).CommonSetterInstance()!).Clear(this);
+            ((LocationRefTypeReferenceSetterCommon)((ILocationRefTypeReferenceGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static LocationReference GetNew()
+        internal static LocationRefTypeReference GetNew()
         {
-            return new LocationReference();
+            return new LocationRefTypeReference();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ILocationReference :
+    public partial interface ILocationRefTypeReference :
         IFormLinkContainer,
-        ILocationReferenceGetter,
-        ILoquiObjectSetter<ILocationReference>
+        ILocationRefTypeReferenceGetter,
+        ILoquiObjectSetter<ILocationRefTypeReference>
     {
-        new IFormLink<ILinkedReferenceGetter> Actor { get; set; }
+        new IFormLink<ILocationReferenceTypeGetter> LocationRefType { get; set; }
+        new IFormLink<ILinkedReferenceGetter> Ref { get; set; }
         new IFormLink<IComplexLocationGetter> Location { get; set; }
         new P2Int16 Grid { get; set; }
     }
 
-    public partial interface ILocationReferenceGetter :
+    public partial interface ILocationRefTypeReferenceGetter :
         ILoquiObject,
         IBinaryItem,
         IFormLinkContainerGetter,
-        ILoquiObject<ILocationReferenceGetter>
+        ILoquiObject<ILocationRefTypeReferenceGetter>
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonInstance();
@@ -517,8 +558,9 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration StaticRegistration => LocationReference_Registration.Instance;
-        IFormLinkGetter<ILinkedReferenceGetter> Actor { get; }
+        static ILoquiRegistration StaticRegistration => LocationRefTypeReference_Registration.Instance;
+        IFormLinkGetter<ILocationReferenceTypeGetter> LocationRefType { get; }
+        IFormLinkGetter<ILinkedReferenceGetter> Ref { get; }
         IFormLinkGetter<IComplexLocationGetter> Location { get; }
         P2Int16 Grid { get; }
 
@@ -527,42 +569,42 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static partial class LocationReferenceMixIn
+    public static partial class LocationRefTypeReferenceMixIn
     {
-        public static void Clear(this ILocationReference item)
+        public static void Clear(this ILocationRefTypeReference item)
         {
-            ((LocationReferenceSetterCommon)((ILocationReferenceGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((LocationRefTypeReferenceSetterCommon)((ILocationRefTypeReferenceGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static LocationReference.Mask<bool> GetEqualsMask(
-            this ILocationReferenceGetter item,
-            ILocationReferenceGetter rhs,
+        public static LocationRefTypeReference.Mask<bool> GetEqualsMask(
+            this ILocationRefTypeReferenceGetter item,
+            ILocationRefTypeReferenceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LocationReferenceCommon)((ILocationReferenceGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((LocationRefTypeReferenceCommon)((ILocationRefTypeReferenceGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string Print(
-            this ILocationReferenceGetter item,
+            this ILocationRefTypeReferenceGetter item,
             string? name = null,
-            LocationReference.Mask<bool>? printMask = null)
+            LocationRefTypeReference.Mask<bool>? printMask = null)
         {
-            return ((LocationReferenceCommon)((ILocationReferenceGetter)item).CommonInstance()!).Print(
+            return ((LocationRefTypeReferenceCommon)((ILocationRefTypeReferenceGetter)item).CommonInstance()!).Print(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void Print(
-            this ILocationReferenceGetter item,
+            this ILocationRefTypeReferenceGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            LocationReference.Mask<bool>? printMask = null)
+            LocationRefTypeReference.Mask<bool>? printMask = null)
         {
-            ((LocationReferenceCommon)((ILocationReferenceGetter)item).CommonInstance()!).Print(
+            ((LocationRefTypeReferenceCommon)((ILocationRefTypeReferenceGetter)item).CommonInstance()!).Print(
                 item: item,
                 sb: sb,
                 name: name,
@@ -570,21 +612,21 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool Equals(
-            this ILocationReferenceGetter item,
-            ILocationReferenceGetter rhs,
-            LocationReference.TranslationMask? equalsMask = null)
+            this ILocationRefTypeReferenceGetter item,
+            ILocationRefTypeReferenceGetter rhs,
+            LocationRefTypeReference.TranslationMask? equalsMask = null)
         {
-            return ((LocationReferenceCommon)((ILocationReferenceGetter)item).CommonInstance()!).Equals(
+            return ((LocationRefTypeReferenceCommon)((ILocationRefTypeReferenceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs,
                 equalsMask: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
-            this ILocationReference lhs,
-            ILocationReferenceGetter rhs)
+            this ILocationRefTypeReference lhs,
+            ILocationRefTypeReferenceGetter rhs)
         {
-            ((LocationReferenceSetterTranslationCommon)((ILocationReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LocationRefTypeReferenceSetterTranslationCommon)((ILocationRefTypeReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -593,11 +635,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this ILocationReference lhs,
-            ILocationReferenceGetter rhs,
-            LocationReference.TranslationMask? copyMask = null)
+            this ILocationRefTypeReference lhs,
+            ILocationRefTypeReferenceGetter rhs,
+            LocationRefTypeReference.TranslationMask? copyMask = null)
         {
-            ((LocationReferenceSetterTranslationCommon)((ILocationReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LocationRefTypeReferenceSetterTranslationCommon)((ILocationRefTypeReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -606,28 +648,28 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this ILocationReference lhs,
-            ILocationReferenceGetter rhs,
-            out LocationReference.ErrorMask errorMask,
-            LocationReference.TranslationMask? copyMask = null)
+            this ILocationRefTypeReference lhs,
+            ILocationRefTypeReferenceGetter rhs,
+            out LocationRefTypeReference.ErrorMask errorMask,
+            LocationRefTypeReference.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((LocationReferenceSetterTranslationCommon)((ILocationReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LocationRefTypeReferenceSetterTranslationCommon)((ILocationRefTypeReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: false);
-            errorMask = LocationReference.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LocationRefTypeReference.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ILocationReference lhs,
-            ILocationReferenceGetter rhs,
+            this ILocationRefTypeReference lhs,
+            ILocationRefTypeReferenceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((LocationReferenceSetterTranslationCommon)((ILocationReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((LocationRefTypeReferenceSetterTranslationCommon)((ILocationRefTypeReferenceGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
@@ -635,32 +677,32 @@ namespace Mutagen.Bethesda.Skyrim
                 deepCopy: false);
         }
 
-        public static LocationReference DeepCopy(
-            this ILocationReferenceGetter item,
-            LocationReference.TranslationMask? copyMask = null)
+        public static LocationRefTypeReference DeepCopy(
+            this ILocationRefTypeReferenceGetter item,
+            LocationRefTypeReference.TranslationMask? copyMask = null)
         {
-            return ((LocationReferenceSetterTranslationCommon)((ILocationReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LocationRefTypeReferenceSetterTranslationCommon)((ILocationRefTypeReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static LocationReference DeepCopy(
-            this ILocationReferenceGetter item,
-            out LocationReference.ErrorMask errorMask,
-            LocationReference.TranslationMask? copyMask = null)
+        public static LocationRefTypeReference DeepCopy(
+            this ILocationRefTypeReferenceGetter item,
+            out LocationRefTypeReference.ErrorMask errorMask,
+            LocationRefTypeReference.TranslationMask? copyMask = null)
         {
-            return ((LocationReferenceSetterTranslationCommon)((ILocationReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LocationRefTypeReferenceSetterTranslationCommon)((ILocationRefTypeReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static LocationReference DeepCopy(
-            this ILocationReferenceGetter item,
+        public static LocationRefTypeReference DeepCopy(
+            this ILocationRefTypeReferenceGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((LocationReferenceSetterTranslationCommon)((ILocationReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((LocationRefTypeReferenceSetterTranslationCommon)((ILocationRefTypeReferenceGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -668,11 +710,11 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         public static void CopyInFromBinary(
-            this ILocationReference item,
+            this ILocationRefTypeReference item,
             MutagenFrame frame,
             TypedParseParams translationParams = default)
         {
-            ((LocationReferenceSetterCommon)((ILocationReferenceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((LocationRefTypeReferenceSetterCommon)((ILocationRefTypeReferenceGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 translationParams: translationParams);
@@ -688,42 +730,43 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Field Index
-    internal enum LocationReference_FieldIndex
+    internal enum LocationRefTypeReference_FieldIndex
     {
-        Actor = 0,
-        Location = 1,
-        Grid = 2,
+        LocationRefType = 0,
+        Ref = 1,
+        Location = 2,
+        Grid = 3,
     }
     #endregion
 
     #region Registration
-    internal partial class LocationReference_Registration : ILoquiRegistration
+    internal partial class LocationRefTypeReference_Registration : ILoquiRegistration
     {
-        public static readonly LocationReference_Registration Instance = new LocationReference_Registration();
+        public static readonly LocationRefTypeReference_Registration Instance = new LocationRefTypeReference_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 4;
 
-        public static readonly Type MaskType = typeof(LocationReference.Mask<>);
+        public static readonly Type MaskType = typeof(LocationRefTypeReference.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(LocationReference.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(LocationRefTypeReference.ErrorMask);
 
-        public static readonly Type ClassType = typeof(LocationReference);
+        public static readonly Type ClassType = typeof(LocationRefTypeReference);
 
-        public static readonly Type GetterType = typeof(ILocationReferenceGetter);
+        public static readonly Type GetterType = typeof(ILocationRefTypeReferenceGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ILocationReference);
+        public static readonly Type SetterType = typeof(ILocationRefTypeReference);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.LocationReference";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.LocationRefTypeReference";
 
-        public const string Name = "LocationReference";
+        public const string Name = "LocationRefTypeReference";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -731,7 +774,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static readonly Type? GenericRegistrationType = null;
 
-        public static readonly Type BinaryWriteTranslation = typeof(LocationReferenceBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(LocationRefTypeReferenceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ushort ILoquiRegistration.FieldCount => FieldCount;
@@ -762,24 +805,26 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common
-    internal partial class LocationReferenceSetterCommon
+    internal partial class LocationRefTypeReferenceSetterCommon
     {
-        public static readonly LocationReferenceSetterCommon Instance = new LocationReferenceSetterCommon();
+        public static readonly LocationRefTypeReferenceSetterCommon Instance = new LocationRefTypeReferenceSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(ILocationReference item)
+        public void Clear(ILocationRefTypeReference item)
         {
             ClearPartial();
-            item.Actor.Clear();
+            item.LocationRefType.Clear();
+            item.Ref.Clear();
             item.Location.Clear();
             item.Grid = default(P2Int16);
         }
         
         #region Mutagen
-        public void RemapLinks(ILocationReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
+        public void RemapLinks(ILocationRefTypeReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Actor.Relink(mapping);
+            obj.LocationRefType.Relink(mapping);
+            obj.Ref.Relink(mapping);
             obj.Location.Relink(mapping);
         }
         
@@ -787,7 +832,7 @@ namespace Mutagen.Bethesda.Skyrim
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            ILocationReference item,
+            ILocationRefTypeReference item,
             MutagenFrame frame,
             TypedParseParams translationParams)
         {
@@ -795,23 +840,23 @@ namespace Mutagen.Bethesda.Skyrim
                 record: item,
                 frame: frame,
                 translationParams: translationParams,
-                fillStructs: LocationReferenceBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: LocationRefTypeReferenceBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    internal partial class LocationReferenceCommon
+    internal partial class LocationRefTypeReferenceCommon
     {
-        public static readonly LocationReferenceCommon Instance = new LocationReferenceCommon();
+        public static readonly LocationRefTypeReferenceCommon Instance = new LocationRefTypeReferenceCommon();
 
-        public LocationReference.Mask<bool> GetEqualsMask(
-            ILocationReferenceGetter item,
-            ILocationReferenceGetter rhs,
+        public LocationRefTypeReference.Mask<bool> GetEqualsMask(
+            ILocationRefTypeReferenceGetter item,
+            ILocationRefTypeReferenceGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new LocationReference.Mask<bool>(false);
-            ((LocationReferenceCommon)((ILocationReferenceGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new LocationRefTypeReference.Mask<bool>(false);
+            ((LocationRefTypeReferenceCommon)((ILocationRefTypeReferenceGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -820,20 +865,21 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         public void FillEqualsMask(
-            ILocationReferenceGetter item,
-            ILocationReferenceGetter rhs,
-            LocationReference.Mask<bool> ret,
+            ILocationRefTypeReferenceGetter item,
+            ILocationRefTypeReferenceGetter rhs,
+            LocationRefTypeReference.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            ret.Actor = item.Actor.Equals(rhs.Actor);
+            ret.LocationRefType = item.LocationRefType.Equals(rhs.LocationRefType);
+            ret.Ref = item.Ref.Equals(rhs.Ref);
             ret.Location = item.Location.Equals(rhs.Location);
             ret.Grid = item.Grid.Equals(rhs.Grid);
         }
         
         public string Print(
-            ILocationReferenceGetter item,
+            ILocationRefTypeReferenceGetter item,
             string? name = null,
-            LocationReference.Mask<bool>? printMask = null)
+            LocationRefTypeReference.Mask<bool>? printMask = null)
         {
             var sb = new StructuredStringBuilder();
             Print(
@@ -845,18 +891,18 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         public void Print(
-            ILocationReferenceGetter item,
+            ILocationRefTypeReferenceGetter item,
             StructuredStringBuilder sb,
             string? name = null,
-            LocationReference.Mask<bool>? printMask = null)
+            LocationRefTypeReference.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                sb.AppendLine($"LocationReference =>");
+                sb.AppendLine($"LocationRefTypeReference =>");
             }
             else
             {
-                sb.AppendLine($"{name} (LocationReference) =>");
+                sb.AppendLine($"{name} (LocationRefTypeReference) =>");
             }
             using (sb.Brace())
             {
@@ -868,13 +914,17 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         protected static void ToStringFields(
-            ILocationReferenceGetter item,
+            ILocationRefTypeReferenceGetter item,
             StructuredStringBuilder sb,
-            LocationReference.Mask<bool>? printMask = null)
+            LocationRefTypeReference.Mask<bool>? printMask = null)
         {
-            if (printMask?.Actor ?? true)
+            if (printMask?.LocationRefType ?? true)
             {
-                sb.AppendItem(item.Actor.FormKey, "Actor");
+                sb.AppendItem(item.LocationRefType.FormKey, "LocationRefType");
+            }
+            if (printMask?.Ref ?? true)
+            {
+                sb.AppendItem(item.Ref.FormKey, "Ref");
             }
             if (printMask?.Location ?? true)
             {
@@ -888,30 +938,35 @@ namespace Mutagen.Bethesda.Skyrim
         
         #region Equals and Hash
         public virtual bool Equals(
-            ILocationReferenceGetter? lhs,
-            ILocationReferenceGetter? rhs,
+            ILocationRefTypeReferenceGetter? lhs,
+            ILocationRefTypeReferenceGetter? rhs,
             TranslationCrystal? equalsMask)
         {
             if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
-            if ((equalsMask?.GetShouldTranslate((int)LocationReference_FieldIndex.Actor) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LocationRefTypeReference_FieldIndex.LocationRefType) ?? true))
             {
-                if (!lhs.Actor.Equals(rhs.Actor)) return false;
+                if (!lhs.LocationRefType.Equals(rhs.LocationRefType)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LocationReference_FieldIndex.Location) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LocationRefTypeReference_FieldIndex.Ref) ?? true))
+            {
+                if (!lhs.Ref.Equals(rhs.Ref)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LocationRefTypeReference_FieldIndex.Location) ?? true))
             {
                 if (!lhs.Location.Equals(rhs.Location)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LocationReference_FieldIndex.Grid) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LocationRefTypeReference_FieldIndex.Grid) ?? true))
             {
                 if (!lhs.Grid.Equals(rhs.Grid)) return false;
             }
             return true;
         }
         
-        public virtual int GetHashCode(ILocationReferenceGetter item)
+        public virtual int GetHashCode(ILocationRefTypeReferenceGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Actor);
+            hash.Add(item.LocationRefType);
+            hash.Add(item.Ref);
             hash.Add(item.Location);
             hash.Add(item.Grid);
             return hash.ToHashCode();
@@ -922,13 +977,14 @@ namespace Mutagen.Bethesda.Skyrim
         
         public object GetNew()
         {
-            return LocationReference.GetNew();
+            return LocationRefTypeReference.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILocationReferenceGetter obj)
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILocationRefTypeReferenceGetter obj)
         {
-            yield return FormLinkInformation.Factory(obj.Actor);
+            yield return FormLinkInformation.Factory(obj.LocationRefType);
+            yield return FormLinkInformation.Factory(obj.Ref);
             yield return FormLinkInformation.Factory(obj.Location);
             yield break;
         }
@@ -936,27 +992,31 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         
     }
-    internal partial class LocationReferenceSetterTranslationCommon
+    internal partial class LocationRefTypeReferenceSetterTranslationCommon
     {
-        public static readonly LocationReferenceSetterTranslationCommon Instance = new LocationReferenceSetterTranslationCommon();
+        public static readonly LocationRefTypeReferenceSetterTranslationCommon Instance = new LocationRefTypeReferenceSetterTranslationCommon();
 
         #region DeepCopyIn
         public void DeepCopyIn(
-            ILocationReference item,
-            ILocationReferenceGetter rhs,
+            ILocationRefTypeReference item,
+            ILocationRefTypeReferenceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)LocationReference_FieldIndex.Actor) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LocationRefTypeReference_FieldIndex.LocationRefType) ?? true))
             {
-                item.Actor.SetTo(rhs.Actor.FormKey);
+                item.LocationRefType.SetTo(rhs.LocationRefType.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)LocationReference_FieldIndex.Location) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LocationRefTypeReference_FieldIndex.Ref) ?? true))
+            {
+                item.Ref.SetTo(rhs.Ref.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)LocationRefTypeReference_FieldIndex.Location) ?? true))
             {
                 item.Location.SetTo(rhs.Location.FormKey);
             }
-            if ((copyMask?.GetShouldTranslate((int)LocationReference_FieldIndex.Grid) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LocationRefTypeReference_FieldIndex.Grid) ?? true))
             {
                 item.Grid = rhs.Grid;
             }
@@ -969,19 +1029,19 @@ namespace Mutagen.Bethesda.Skyrim
         }
         
         partial void DeepCopyInCustom(
-            ILocationReference item,
-            ILocationReferenceGetter rhs,
+            ILocationRefTypeReference item,
+            ILocationRefTypeReferenceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy);
         #endregion
         
-        public LocationReference DeepCopy(
-            ILocationReferenceGetter item,
-            LocationReference.TranslationMask? copyMask = null)
+        public LocationRefTypeReference DeepCopy(
+            ILocationRefTypeReferenceGetter item,
+            LocationRefTypeReference.TranslationMask? copyMask = null)
         {
-            LocationReference ret = (LocationReference)((LocationReferenceCommon)((ILocationReferenceGetter)item).CommonInstance()!).GetNew();
-            ((LocationReferenceSetterTranslationCommon)((ILocationReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            LocationRefTypeReference ret = (LocationRefTypeReference)((LocationRefTypeReferenceCommon)((ILocationRefTypeReferenceGetter)item).CommonInstance()!).GetNew();
+            ((LocationRefTypeReferenceSetterTranslationCommon)((ILocationRefTypeReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: null,
@@ -990,30 +1050,30 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
         
-        public LocationReference DeepCopy(
-            ILocationReferenceGetter item,
-            out LocationReference.ErrorMask errorMask,
-            LocationReference.TranslationMask? copyMask = null)
+        public LocationRefTypeReference DeepCopy(
+            ILocationRefTypeReferenceGetter item,
+            out LocationRefTypeReference.ErrorMask errorMask,
+            LocationRefTypeReference.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            LocationReference ret = (LocationReference)((LocationReferenceCommon)((ILocationReferenceGetter)item).CommonInstance()!).GetNew();
-            ((LocationReferenceSetterTranslationCommon)((ILocationReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            LocationRefTypeReference ret = (LocationRefTypeReference)((LocationRefTypeReferenceCommon)((ILocationRefTypeReferenceGetter)item).CommonInstance()!).GetNew();
+            ((LocationRefTypeReferenceSetterTranslationCommon)((ILocationRefTypeReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 ret,
                 item,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal(),
                 deepCopy: true);
-            errorMask = LocationReference.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = LocationRefTypeReference.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
         
-        public LocationReference DeepCopy(
-            ILocationReferenceGetter item,
+        public LocationRefTypeReference DeepCopy(
+            ILocationRefTypeReferenceGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            LocationReference ret = (LocationReference)((LocationReferenceCommon)((ILocationReferenceGetter)item).CommonInstance()!).GetNew();
-            ((LocationReferenceSetterTranslationCommon)((ILocationReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
+            LocationRefTypeReference ret = (LocationRefTypeReference)((LocationRefTypeReferenceCommon)((ILocationRefTypeReferenceGetter)item).CommonInstance()!).GetNew();
+            ((LocationRefTypeReferenceSetterTranslationCommon)((ILocationRefTypeReferenceGetter)ret).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: ret,
                 rhs: item,
                 errorMask: errorMask,
@@ -1029,27 +1089,27 @@ namespace Mutagen.Bethesda.Skyrim
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LocationReference
+    public partial class LocationRefTypeReference
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LocationReference_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => LocationReference_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => LocationRefTypeReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LocationRefTypeReference_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => LocationReferenceCommon.Instance;
+        protected object CommonInstance() => LocationRefTypeReferenceCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return LocationReferenceSetterCommon.Instance;
+            return LocationRefTypeReferenceSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => LocationReferenceSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => LocationRefTypeReferenceSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ILocationReferenceGetter.CommonInstance() => this.CommonInstance();
+        object ILocationRefTypeReferenceGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object ILocationReferenceGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ILocationRefTypeReferenceGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object ILocationReferenceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ILocationRefTypeReferenceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1060,17 +1120,20 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LocationReferenceBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class LocationRefTypeReferenceBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public static readonly LocationReferenceBinaryWriteTranslation Instance = new();
+        public static readonly LocationRefTypeReferenceBinaryWriteTranslation Instance = new();
 
         public static void WriteEmbedded(
-            ILocationReferenceGetter item,
+            ILocationRefTypeReferenceGetter item,
             MutagenWriter writer)
         {
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Actor);
+                item: item.LocationRefType);
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Ref);
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Location);
@@ -1082,7 +1145,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public void Write(
             MutagenWriter writer,
-            ILocationReferenceGetter item,
+            ILocationRefTypeReferenceGetter item,
             TypedWriteParams translationParams)
         {
             WriteEmbedded(
@@ -1096,22 +1159,23 @@ namespace Mutagen.Bethesda.Skyrim
             TypedWriteParams translationParams = default)
         {
             Write(
-                item: (ILocationReferenceGetter)item,
+                item: (ILocationRefTypeReferenceGetter)item,
                 writer: writer,
                 translationParams: translationParams);
         }
 
     }
 
-    internal partial class LocationReferenceBinaryCreateTranslation
+    internal partial class LocationRefTypeReferenceBinaryCreateTranslation
     {
-        public static readonly LocationReferenceBinaryCreateTranslation Instance = new LocationReferenceBinaryCreateTranslation();
+        public static readonly LocationRefTypeReferenceBinaryCreateTranslation Instance = new LocationRefTypeReferenceBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            ILocationReference item,
+            ILocationRefTypeReference item,
             MutagenFrame frame)
         {
-            item.Actor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.LocationRefType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Ref.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Grid = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
@@ -1124,14 +1188,14 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class LocationReferenceBinaryTranslationMixIn
+    public static class LocationRefTypeReferenceBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this ILocationReferenceGetter item,
+            this ILocationRefTypeReferenceGetter item,
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((LocationReferenceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((LocationRefTypeReferenceBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 translationParams: translationParams);
@@ -1144,54 +1208,55 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim
 {
-    internal partial class LocationReferenceBinaryOverlay :
+    internal partial class LocationRefTypeReferenceBinaryOverlay :
         PluginBinaryOverlay,
-        ILocationReferenceGetter
+        ILocationRefTypeReferenceGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LocationReference_Registration.Instance;
-        public static ILoquiRegistration StaticRegistration => LocationReference_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => LocationRefTypeReference_Registration.Instance;
+        public static ILoquiRegistration StaticRegistration => LocationRefTypeReference_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => LocationReferenceCommon.Instance;
+        protected object CommonInstance() => LocationRefTypeReferenceCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => LocationReferenceSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => LocationRefTypeReferenceSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object ILocationReferenceGetter.CommonInstance() => this.CommonInstance();
+        object ILocationRefTypeReferenceGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? ILocationReferenceGetter.CommonSetterInstance() => null;
+        object? ILocationRefTypeReferenceGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object ILocationReferenceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ILocationRefTypeReferenceGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.Print(StructuredStringBuilder sb, string? name) => this.Print(sb, name);
 
-        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationReferenceCommon.Instance.EnumerateFormLinks(this);
+        public IEnumerable<IFormLinkGetter> EnumerateFormLinks() => LocationRefTypeReferenceCommon.Instance.EnumerateFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => LocationReferenceBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => LocationRefTypeReferenceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             TypedWriteParams translationParams = default)
         {
-            ((LocationReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((LocationRefTypeReferenceBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 translationParams: translationParams);
         }
 
-        public IFormLinkGetter<ILinkedReferenceGetter> Actor => FormLinkBinaryTranslation.Instance.OverlayFactory<ILinkedReferenceGetter>(_package, _structData.Span.Slice(0x0, 0x4));
-        public IFormLinkGetter<IComplexLocationGetter> Location => FormLinkBinaryTranslation.Instance.OverlayFactory<IComplexLocationGetter>(_package, _structData.Span.Slice(0x4, 0x4));
-        public P2Int16 Grid => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0x8, 0x4), swapCoords: true);
+        public IFormLinkGetter<ILocationReferenceTypeGetter> LocationRefType => FormLinkBinaryTranslation.Instance.OverlayFactory<ILocationReferenceTypeGetter>(_package, _structData.Span.Slice(0x0, 0x4));
+        public IFormLinkGetter<ILinkedReferenceGetter> Ref => FormLinkBinaryTranslation.Instance.OverlayFactory<ILinkedReferenceGetter>(_package, _structData.Span.Slice(0x4, 0x4));
+        public IFormLinkGetter<IComplexLocationGetter> Location => FormLinkBinaryTranslation.Instance.OverlayFactory<IComplexLocationGetter>(_package, _structData.Span.Slice(0x8, 0x4));
+        public P2Int16 Grid => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_structData.Slice(0xC, 0x4), swapCoords: true);
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected LocationReferenceBinaryOverlay(
+        protected LocationRefTypeReferenceBinaryOverlay(
             MemoryPair memoryPair,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1201,7 +1266,7 @@ namespace Mutagen.Bethesda.Skyrim
             this.CustomCtor();
         }
 
-        public static ILocationReferenceGetter LocationReferenceFactory(
+        public static ILocationRefTypeReferenceGetter LocationRefTypeReferenceFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
@@ -1210,13 +1275,13 @@ namespace Mutagen.Bethesda.Skyrim
                 stream: stream,
                 meta: package.MetaData.Constants,
                 translationParams: translationParams,
-                length: 0xC,
+                length: 0x10,
                 memoryPair: out var memoryPair,
                 offset: out var offset);
-            var ret = new LocationReferenceBinaryOverlay(
+            var ret = new LocationRefTypeReferenceBinaryOverlay(
                 memoryPair: memoryPair,
                 package: package);
-            stream.Position += 0xC;
+            stream.Position += 0x10;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1224,12 +1289,12 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static ILocationReferenceGetter LocationReferenceFactory(
+        public static ILocationRefTypeReferenceGetter LocationRefTypeReferenceFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             TypedParseParams translationParams = default)
         {
-            return LocationReferenceFactory(
+            return LocationRefTypeReferenceFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 translationParams: translationParams);
@@ -1241,7 +1306,7 @@ namespace Mutagen.Bethesda.Skyrim
             StructuredStringBuilder sb,
             string? name = null)
         {
-            LocationReferenceMixIn.Print(
+            LocationRefTypeReferenceMixIn.Print(
                 item: this,
                 sb: sb,
                 name: name);
@@ -1252,16 +1317,16 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (obj is not ILocationReferenceGetter rhs) return false;
-            return ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
+            if (obj is not ILocationRefTypeReferenceGetter rhs) return false;
+            return ((LocationRefTypeReferenceCommon)((ILocationRefTypeReferenceGetter)this).CommonInstance()!).Equals(this, rhs, equalsMask: null);
         }
 
-        public bool Equals(ILocationReferenceGetter? obj)
+        public bool Equals(ILocationRefTypeReferenceGetter? obj)
         {
-            return ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
+            return ((LocationRefTypeReferenceCommon)((ILocationRefTypeReferenceGetter)this).CommonInstance()!).Equals(this, obj, equalsMask: null);
         }
 
-        public override int GetHashCode() => ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((LocationRefTypeReferenceCommon)((ILocationRefTypeReferenceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
