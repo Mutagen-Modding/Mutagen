@@ -34,7 +34,7 @@
       <FormLink name="Emittance" recordType="XEMI">
         <Interface>IEmittance</Interface>
       </FormLink>
-      <FormLink name="MultiboundReference" recordType="XMBR">
+      <FormLink name="MultiBoundReference" recordType="XMBR">
         <Interface>ILinkedReference</Interface>
       </FormLink>
       <!-- Possibly unneeded.  Never seen, just listed in xEdit -->

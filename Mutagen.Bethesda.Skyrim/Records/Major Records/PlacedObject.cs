@@ -30,7 +30,7 @@ public partial class PlacedObject
         ReflectedByAutoWater = 0x1000_0000,
         DontHavokSettle = 0x2000_0000,
         Ground = 0x4000_0000,
-        Multibound = 0x8000_0000,
+        MultiBound = 0x8000_0000,
     }
 
     /// <summary>
@@ -50,7 +50,7 @@ public partial class PlacedObject
         ReflectedByAutoWater = 0x1000_0000,
         DontHavokSettle = 0x2000_0000,
         NoRespawn = 0x4000_0000,
-        Multibound = 0x8000_0000,
+        MultiBound = 0x8000_0000,
     }
 
     /// <summary>
@@ -69,7 +69,7 @@ public partial class PlacedObject
         ReflectedByAutoWater = 0x1000_0000,
         DontHavokSettle = 0x2000_0000,
         Ground = 0x4000_0000,
-        Multibound = 0x8000_0000,
+        MultiBound = 0x8000_0000,
     }
 
     /// <summary>
@@ -88,7 +88,7 @@ public partial class PlacedObject
         ReflectedByAutoWater = 0x1000_0000,
         DontHavokSettle = 0x2000_0000,
         NoRespawn = 0x4000_0000,
-        Multibound = 0x8000_0000,
+        MultiBound = 0x8000_0000,
     }
 
     /// <summary>
@@ -107,7 +107,7 @@ public partial class PlacedObject
         ReflectedByAutoWater = 0x1000_0000,
         DontHavokSettle = 0x2000_0000,
         NoRespawn = 0x4000_0000,
-        Multibound = 0x8000_0000,
+        MultiBound = 0x8000_0000,
     }
 
     /// <summary>
@@ -125,7 +125,7 @@ public partial class PlacedObject
         ReflectedByAutoWater = 0x1000_0000,
         DontHavokSettle = 0x2000_0000,
         NoRespawn = 0x4000_0000,
-        Multibound = 0x8000_0000,
+        MultiBound = 0x8000_0000,
     }
 
     /// <summary>
@@ -140,7 +140,7 @@ public partial class PlacedObject
         ReflectedByAutoWater = 0x1000_0000,
         DontHavokSettle = 0x2000_0000,
         NoRespawn = 0x4000_0000,
-        Multibound = 0x8000_0000,
+        MultiBound = 0x8000_0000,
     }
 
     /// <summary>
@@ -158,7 +158,7 @@ public partial class PlacedObject
         ReflectedByAutoWater = 0x1000_0000,
         DontHavokSettle = 0x2000_0000,
         NoRespawn = 0x4000_0000,
-        Multibound = 0x8000_0000,
+        MultiBound = 0x8000_0000,
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]

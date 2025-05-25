@@ -33,7 +33,7 @@
       <RefDirect name="Alpha" refName="Alpha" />
       <RefDirect name="TeleportDestination" refName="TeleportDestination" />
       <FormLink name="TeleportLocName" refName="Message" recordType="XTNM" />
-      <FormLink name="MultiboundReference" recordType="XMBR">
+      <FormLink name="MultiBoundReference" recordType="XMBR">
         <Interface>ILinkedReference</Interface>
       </FormLink>
       <ByteArray name="XWCN" recordType="XWCN" />

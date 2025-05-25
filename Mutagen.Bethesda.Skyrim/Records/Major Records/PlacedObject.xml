@@ -34,7 +34,7 @@
       <RefDirect name="Alpha" refName="Alpha" />
       <RefDirect name="TeleportDestination" refName="TeleportDestination" />
       <FormLink name="TeleportMessageBox" refName="Message" recordType="XTNM" />
-      <FormLink name="MultiboundReference" refName="PlacedObject" recordType="XMBR" />
+      <FormLink name="MultiBoundReference" refName="PlacedObject" recordType="XMBR" />
       <ByteArray name="XWCN" recordType="XWCN" />
       <ByteArray name="XWCS" recordType="XWCS" />
       <RefDirect name="WaterVelocity" refName="WaterVelocity" />
