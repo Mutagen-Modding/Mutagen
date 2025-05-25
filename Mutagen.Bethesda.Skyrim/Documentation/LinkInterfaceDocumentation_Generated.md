@@ -122,9 +122,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - APlacedTrap
 - PlacedNpc
 - PlacedObject
-### ILocationRecord
-- Location
-- LocationReferenceType
 ### ILockList
 - FormList
 - Npc
@@ -433,10 +430,6 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IObjectId
 - IPlaceableObject
 - IReferenceableObject
-### Location
-- ILocationRecord
-### LocationReferenceType
-- ILocationRecord
 ### MagicEffect
 - IKnowable
 ### MiscItem

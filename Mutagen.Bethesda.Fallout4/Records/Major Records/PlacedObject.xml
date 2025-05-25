@@ -57,9 +57,7 @@
       <RefDirect name="Lock" refName="LockData" />
       <FormLink name="EncounterZone" recordType="XEZN" refName="EncounterZone" />
       <RefDirect name="NavigationDoorLink" refName="NavigationDoorLink" />
-      <FormLink name="LocationReference" recordType="XLRL">
-        <Interface>ILocationRecord</Interface>
-      </FormLink>
+      <FormLink name="LocationReference" refName="Location" recordType="XLRL" />
       <FormLink name="LocationRefType" refName="LocationReferenceType" recordType="XLIB" />
       <List name="LocationRefTypes" recordType="XLRT">
         <FormLink refName="LocationReferenceType" />

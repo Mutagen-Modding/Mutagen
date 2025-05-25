@@ -56,7 +56,6 @@
       <Float name="ActorFadeMult" recordType="ANAM" />
       <Color name="Color" recordType="CNAM" binaryType="Alpha" />
     </Fields>
-    <LinkInterface>ILocationRecord</LinkInterface>
   </Object>
   <Object name="LocationReference" objType="Subrecord">
     <Fields>

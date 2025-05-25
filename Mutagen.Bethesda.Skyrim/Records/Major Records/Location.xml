@@ -56,7 +56,6 @@
       <FormLink name="HorseMarkerRef" recordType="NAM0" refName="PlacedObject" />
       <Color name="Color" recordType="CNAM" binaryType="Alpha" />
     </Fields>
-    <LinkInterface>ILocationRecord</LinkInterface>
   </Object>
   <Object name="LocationReference" objType="Subrecord">
     <Fields>

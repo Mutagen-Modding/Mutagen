@@ -207,14 +207,14 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ILocationGetter> IPlacedNpcGetter.PersistentLocation => this.PersistentLocation;
         #endregion
         #region LocationReference
-        private readonly IFormLinkNullable<ILocationRecordGetter> _LocationReference = new FormLinkNullable<ILocationRecordGetter>();
-        public IFormLinkNullable<ILocationRecordGetter> LocationReference
+        private readonly IFormLinkNullable<ILocationGetter> _LocationReference = new FormLinkNullable<ILocationGetter>();
+        public IFormLinkNullable<ILocationGetter> LocationReference
         {
             get => _LocationReference;
             set => _LocationReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILocationRecordGetter> IPlacedNpcGetter.LocationReference => this.LocationReference;
+        IFormLinkNullableGetter<ILocationGetter> IPlacedNpcGetter.LocationReference => this.LocationReference;
         #endregion
         #region IsIgnoredBySandbox
         public Boolean IsIgnoredBySandbox { get; set; } = default(Boolean);
@@ -1775,7 +1775,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ActivateParents? ActivateParents { get; set; }
         new LinkedReferenceColor? LinkedReferenceColor { get; set; }
         new IFormLinkNullable<ILocationGetter> PersistentLocation { get; set; }
-        new IFormLinkNullable<ILocationRecordGetter> LocationReference { get; set; }
+        new IFormLinkNullable<ILocationGetter> LocationReference { get; set; }
         new Boolean IsIgnoredBySandbox { get; set; }
         new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
         new Single? HeadTrackingWeight { get; set; }
@@ -1838,7 +1838,7 @@ namespace Mutagen.Bethesda.Skyrim
         IActivateParentsGetter? ActivateParents { get; }
         ILinkedReferenceColorGetter? LinkedReferenceColor { get; }
         IFormLinkNullableGetter<ILocationGetter> PersistentLocation { get; }
-        IFormLinkNullableGetter<ILocationRecordGetter> LocationReference { get; }
+        IFormLinkNullableGetter<ILocationGetter> LocationReference { get; }
         Boolean IsIgnoredBySandbox { get; }
         IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; }
         Single? HeadTrackingWeight { get; }
@@ -4077,7 +4077,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationReference
         private int? _LocationReferenceLocation;
-        public IFormLinkNullableGetter<ILocationRecordGetter> LocationReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationRecordGetter>(_package, _recordData, _LocationReferenceLocation);
+        public IFormLinkNullableGetter<ILocationGetter> LocationReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _LocationReferenceLocation);
         #endregion
         #region IsIgnoredBySandbox
         private int? _IsIgnoredBySandboxLocation;

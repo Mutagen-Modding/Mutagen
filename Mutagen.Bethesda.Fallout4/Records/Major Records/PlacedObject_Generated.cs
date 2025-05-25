@@ -479,14 +479,14 @@ namespace Mutagen.Bethesda.Fallout4
         INavigationDoorLinkGetter? IPlacedObjectGetter.NavigationDoorLink => this.NavigationDoorLink;
         #endregion
         #region LocationReference
-        private readonly IFormLinkNullable<ILocationRecordGetter> _LocationReference = new FormLinkNullable<ILocationRecordGetter>();
-        public IFormLinkNullable<ILocationRecordGetter> LocationReference
+        private readonly IFormLinkNullable<ILocationGetter> _LocationReference = new FormLinkNullable<ILocationGetter>();
+        public IFormLinkNullable<ILocationGetter> LocationReference
         {
             get => _LocationReference;
             set => _LocationReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILocationRecordGetter> IPlacedObjectGetter.LocationReference => this.LocationReference;
+        IFormLinkNullableGetter<ILocationGetter> IPlacedObjectGetter.LocationReference => this.LocationReference;
         #endregion
         #region LocationRefType
         private readonly IFormLinkNullable<ILocationReferenceTypeGetter> _LocationRefType = new FormLinkNullable<ILocationReferenceTypeGetter>();
@@ -4048,7 +4048,7 @@ namespace Mutagen.Bethesda.Fallout4
         new LockData? Lock { get; set; }
         new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; set; }
         new NavigationDoorLink? NavigationDoorLink { get; set; }
-        new IFormLinkNullable<ILocationRecordGetter> LocationReference { get; set; }
+        new IFormLinkNullable<ILocationGetter> LocationReference { get; set; }
         new IFormLinkNullable<ILocationReferenceTypeGetter> LocationRefType { get; set; }
         new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
         new Boolean IsIgnoredBySandbox { get; set; }
@@ -4154,7 +4154,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILockDataGetter? Lock { get; }
         IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone { get; }
         INavigationDoorLinkGetter? NavigationDoorLink { get; }
-        IFormLinkNullableGetter<ILocationRecordGetter> LocationReference { get; }
+        IFormLinkNullableGetter<ILocationGetter> LocationReference { get; }
         IFormLinkNullableGetter<ILocationReferenceTypeGetter> LocationRefType { get; }
         IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; }
         Boolean IsIgnoredBySandbox { get; }
@@ -8607,7 +8607,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region LocationReference
         private int? _LocationReferenceLocation;
-        public IFormLinkNullableGetter<ILocationRecordGetter> LocationReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationRecordGetter>(_package, _recordData, _LocationReferenceLocation);
+        public IFormLinkNullableGetter<ILocationGetter> LocationReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _LocationReferenceLocation);
         #endregion
         #region LocationRefType
         private int? _LocationRefTypeLocation;

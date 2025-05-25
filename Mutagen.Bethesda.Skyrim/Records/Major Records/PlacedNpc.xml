@@ -17,9 +17,7 @@
       <RefDirect name="ActivateParents" refName="ActivateParents" />
       <RefDirect name="LinkedReferenceColor" refName="LinkedReferenceColor" />
       <FormLink name="PersistentLocation" refName="Location" recordType="XLCN" />
-      <FormLink name="LocationReference" recordType="XLRL">
-        <Interface>ILocationRecord</Interface>
-      </FormLink>
+      <FormLink name="LocationReference" refName="Location" recordType="XLRL" />
       <Bool name="IsIgnoredBySandbox" boolAsMarker="XIS2" />
       <List name="LocationRefTypes" recordType="XLRT">
         <FormLink refName="LocationReferenceType" />

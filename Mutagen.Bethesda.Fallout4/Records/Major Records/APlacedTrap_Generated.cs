@@ -272,14 +272,14 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region LocationReference
-        private readonly IFormLinkNullable<ILocationRecordGetter> _LocationReference = new FormLinkNullable<ILocationRecordGetter>();
-        public IFormLinkNullable<ILocationRecordGetter> LocationReference
+        private readonly IFormLinkNullable<ILocationGetter> _LocationReference = new FormLinkNullable<ILocationGetter>();
+        public IFormLinkNullable<ILocationGetter> LocationReference
         {
             get => _LocationReference;
             set => _LocationReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILocationRecordGetter> IAPlacedTrapGetter.LocationReference => this.LocationReference;
+        IFormLinkNullableGetter<ILocationGetter> IAPlacedTrapGetter.LocationReference => this.LocationReference;
         #endregion
         #region Scale
         public Single? Scale { get; set; }
@@ -1837,7 +1837,7 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<IPlacedObjectGetter> MultiBoundReference { get; set; }
         new Boolean IsIgnoredBySandbox { get; set; }
         new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
-        new IFormLinkNullable<ILocationRecordGetter> LocationReference { get; set; }
+        new IFormLinkNullable<ILocationGetter> LocationReference { get; set; }
         new Single? Scale { get; set; }
         new ExtendedList<Single>? DistantLodData { get; set; }
         new P3Float Position { get; set; }
@@ -1900,7 +1900,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IPlacedObjectGetter> MultiBoundReference { get; }
         Boolean IsIgnoredBySandbox { get; }
         IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; }
-        IFormLinkNullableGetter<ILocationRecordGetter> LocationReference { get; }
+        IFormLinkNullableGetter<ILocationGetter> LocationReference { get; }
         Single? Scale { get; }
         IReadOnlyList<Single>? DistantLodData { get; }
         P3Float Position { get; }
@@ -4151,7 +4151,7 @@ namespace Mutagen.Bethesda.Fallout4
         public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; private set; }
         #region LocationReference
         private int? _LocationReferenceLocation;
-        public IFormLinkNullableGetter<ILocationRecordGetter> LocationReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationRecordGetter>(_package, _recordData, _LocationReferenceLocation);
+        public IFormLinkNullableGetter<ILocationGetter> LocationReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _LocationReferenceLocation);
         #endregion
         #region Scale
         private int? _ScaleLocation;

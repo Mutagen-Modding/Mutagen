@@ -20,9 +20,7 @@
       <FormLink name="Layer" recordType="XLYR" refName="Layer" />
       <FormLink name="MaterialSwap" recordType="XMSP" refName="MaterialSwap" />
       <FormLink name="PersistentLocation" recordType="XLCN" refName="Location" />
-      <FormLink name="LocationReference" recordType="XLRL">
-        <Interface>ILocationRecord</Interface>
-      </FormLink>
+      <FormLink name="LocationReference" refName="Location" recordType="XLRL" />
       <List name="LocationRefTypes" recordType="XLRT">
         <FormLink refName="LocationReferenceType" />
       </List>

@@ -5,12 +5,12 @@
     <Description>A C# library for manipulating, creating, and analyzing Fallout4 mods</Description>
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
     <IsPackable>true</IsPackable>
-      <DebugType>portable</DebugType>
-      <DebugSymbols>true</DebugSymbols>
-      <PublishRepositoryUrl>true</PublishRepositoryUrl>
-      <EmbedUntrackedSources>true</EmbedUntrackedSources>
-      <IncludeSymbols>true</IncludeSymbols>
-      <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
@@ -1013,7 +1013,6 @@
     <Compile Include="Interfaces\Link\IKeywordLinkedReference_Generated.cs" />
     <Compile Include="Interfaces\Link\IRegionTarget_Generated.cs" />
     <Compile Include="Interfaces\Link\ISpellRecord_Generated.cs" />
-    <Compile Include="Interfaces\Link\ILocationRecord_Generated.cs" />
     <Compile Include="Interfaces\Link\LinkInterfaceMapping_Generated.cs" />
     <Compile Include="Interfaces\Aspect\AspectInterfaceMapping_Generated.cs" />
     <Compile Include="Records\Common Subrecords\Effect_Generated.cs">

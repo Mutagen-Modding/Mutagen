@@ -473,7 +473,6 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface ILocationReferenceType :
-        ILocationRecord,
         ILocationReferenceTypeGetter,
         ILoquiObjectSetter<ILocationReferenceTypeInternal>,
         ISkyrimMajorRecordInternal
@@ -492,7 +491,6 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationReferenceTypeGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
-        ILocationRecordGetter,
         ILoquiObject<ILocationReferenceTypeGetter>,
         IMapsToGetter<ILocationReferenceTypeGetter>
     {

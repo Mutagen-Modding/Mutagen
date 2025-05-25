@@ -514,14 +514,14 @@ namespace Mutagen.Bethesda.Skyrim
         Single? IPlacedObjectGetter.Charge => this.Charge;
         #endregion
         #region LocationReference
-        private readonly IFormLinkNullable<ILocationRecordGetter> _LocationReference = new FormLinkNullable<ILocationRecordGetter>();
-        public IFormLinkNullable<ILocationRecordGetter> LocationReference
+        private readonly IFormLinkNullable<ILocationGetter> _LocationReference = new FormLinkNullable<ILocationGetter>();
+        public IFormLinkNullable<ILocationGetter> LocationReference
         {
             get => _LocationReference;
             set => _LocationReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILocationRecordGetter> IPlacedObjectGetter.LocationReference => this.LocationReference;
+        IFormLinkNullableGetter<ILocationGetter> IPlacedObjectGetter.LocationReference => this.LocationReference;
         #endregion
         #region EnableParent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3314,7 +3314,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Int32? FactionRank { get; set; }
         new Int32? ItemCount { get; set; }
         new Single? Charge { get; set; }
-        new IFormLinkNullable<ILocationRecordGetter> LocationReference { get; set; }
+        new IFormLinkNullable<ILocationGetter> LocationReference { get; set; }
         new EnableParent? EnableParent { get; set; }
         new ExtendedList<LinkedReferences> LinkedReferences { get; }
         new Patrol? Patrol { get; set; }
@@ -3404,7 +3404,7 @@ namespace Mutagen.Bethesda.Skyrim
         Int32? FactionRank { get; }
         Int32? ItemCount { get; }
         Single? Charge { get; }
-        IFormLinkNullableGetter<ILocationRecordGetter> LocationReference { get; }
+        IFormLinkNullableGetter<ILocationGetter> LocationReference { get; }
         IEnableParentGetter? EnableParent { get; }
         IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; }
         IPatrolGetter? Patrol { get; }
@@ -7214,7 +7214,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationReference
         private int? _LocationReferenceLocation;
-        public IFormLinkNullableGetter<ILocationRecordGetter> LocationReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationRecordGetter>(_package, _recordData, _LocationReferenceLocation);
+        public IFormLinkNullableGetter<ILocationGetter> LocationReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _LocationReferenceLocation);
         #endregion
         #region EnableParent
         private RangeInt32? _EnableParentLocation;

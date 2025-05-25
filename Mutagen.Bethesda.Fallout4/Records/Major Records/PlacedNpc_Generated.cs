@@ -217,14 +217,14 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<ILocationGetter> IPlacedNpcGetter.PersistentLocation => this.PersistentLocation;
         #endregion
         #region LocationReference
-        private readonly IFormLinkNullable<ILocationRecordGetter> _LocationReference = new FormLinkNullable<ILocationRecordGetter>();
-        public IFormLinkNullable<ILocationRecordGetter> LocationReference
+        private readonly IFormLinkNullable<ILocationGetter> _LocationReference = new FormLinkNullable<ILocationGetter>();
+        public IFormLinkNullable<ILocationGetter> LocationReference
         {
             get => _LocationReference;
             set => _LocationReference.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILocationRecordGetter> IPlacedNpcGetter.LocationReference => this.LocationReference;
+        IFormLinkNullableGetter<ILocationGetter> IPlacedNpcGetter.LocationReference => this.LocationReference;
         #endregion
         #region LocationRefTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2064,7 +2064,7 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<ILayerGetter> Layer { get; set; }
         new IFormLinkNullable<IMaterialSwapGetter> MaterialSwap { get; set; }
         new IFormLinkNullable<ILocationGetter> PersistentLocation { get; set; }
-        new IFormLinkNullable<ILocationRecordGetter> LocationReference { get; set; }
+        new IFormLinkNullable<ILocationGetter> LocationReference { get; set; }
         new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; set; }
         new Boolean IsIgnoredBySandbox { get; set; }
         new ExtendedList<SplineConnection> SplineConnections { get; }
@@ -2132,7 +2132,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<ILayerGetter> Layer { get; }
         IFormLinkNullableGetter<IMaterialSwapGetter> MaterialSwap { get; }
         IFormLinkNullableGetter<ILocationGetter> PersistentLocation { get; }
-        IFormLinkNullableGetter<ILocationRecordGetter> LocationReference { get; }
+        IFormLinkNullableGetter<ILocationGetter> LocationReference { get; }
         IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; }
         Boolean IsIgnoredBySandbox { get; }
         IReadOnlyList<ISplineConnectionGetter> SplineConnections { get; }
@@ -4538,7 +4538,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region LocationReference
         private int? _LocationReferenceLocation;
-        public IFormLinkNullableGetter<ILocationRecordGetter> LocationReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationRecordGetter>(_package, _recordData, _LocationReferenceLocation);
+        public IFormLinkNullableGetter<ILocationGetter> LocationReference => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILocationGetter>(_package, _recordData, _LocationReferenceLocation);
         #endregion
         public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? LocationRefTypes { get; private set; }
         #region IsIgnoredBySandbox

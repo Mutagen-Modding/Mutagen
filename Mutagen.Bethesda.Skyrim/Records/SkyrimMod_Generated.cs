@@ -8898,11 +8898,6 @@ namespace Mutagen.Bethesda.Skyrim
                     Remove(obj, keys, typeof(ILightGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(IRegionGetter), throwIfUnknown: throwIfUnknown);
                     break;
-                case "ILocationRecord":
-                case "ILocationRecordGetter":
-                    Remove(obj, keys, typeof(ILocationGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(ILocationReferenceTypeGetter), throwIfUnknown: throwIfUnknown);
-                    break;
                 case "IKnowable":
                 case "IKnowableGetter":
                     Remove(obj, keys, typeof(IMagicEffectGetter), throwIfUnknown: throwIfUnknown);

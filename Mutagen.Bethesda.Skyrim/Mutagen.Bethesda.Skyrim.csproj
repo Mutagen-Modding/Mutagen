@@ -3385,7 +3385,6 @@
     <Compile Include="Interfaces\Link\INpcSpawn_Generated.cs" />
     <Compile Include="Interfaces\Link\ISpellRecord_Generated.cs" />
     <Compile Include="Interfaces\Link\IEmittance_Generated.cs" />
-    <Compile Include="Interfaces\Link\ILocationRecord_Generated.cs" />
     <Compile Include="Interfaces\Link\IEffectRecord_Generated.cs" />
     <Compile Include="Interfaces\Link\ILinkedReference_Generated.cs" />
     <Compile Include="Interfaces\Link\IPlaced_Generated.cs" />
