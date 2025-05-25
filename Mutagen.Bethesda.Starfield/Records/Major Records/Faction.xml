@@ -23,6 +23,7 @@
       <Float name="FormationRadius" recordType="GRPH" markerType="CRGP" />
     </Fields>
     <LinkInterface>IOwner</LinkInterface>
+    <LinkInterface>ILocationOwner</LinkInterface>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IRelatable</LinkInterface>
     <LinkInterface>IAliasVoiceType</LinkInterface>

@@ -268,6 +268,17 @@ internal class StarfieldLinkInterfaceMapping : IInterfaceMapping
                 Setter: typeof(IOwner),
                 Getter: typeof(IOwnerGetter)));
         dict[typeof(IOwnerGetter)] = dict[typeof(IOwner)] with { Setter = false };
+        dict[typeof(ILocationOwner)] = new InterfaceMappingResult(
+            true,
+            new ILoquiRegistration[]
+            {
+                Faction_Registration.Instance,
+                Npc_Registration.Instance,
+            },
+            new InterfaceMappingTypes(
+                Setter: typeof(ILocationOwner),
+                Getter: typeof(ILocationOwnerGetter)));
+        dict[typeof(ILocationOwnerGetter)] = dict[typeof(ILocationOwner)] with { Setter = false };
         dict[typeof(IObjectId)] = new InterfaceMappingResult(
             true,
             new ILoquiRegistration[]

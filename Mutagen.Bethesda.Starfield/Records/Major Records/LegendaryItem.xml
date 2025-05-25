@@ -4,10 +4,14 @@
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" />
       <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
+      <RefDirect name="ObjectPaletteDefaults" refName="ObjectPaletteDefaults" />
+      <RefDirect name="Transforms" refName="Transforms" />
+      <UInt64 name="XALG" recordType="XALG" unknown="true" />
+      <RefList name="Components" refName="AComponent" />
       <RefDirect name="Model" refName="Model" />
-      <ByteArray name="DATA" recordType="DATA" unknown="true" />
-      <FormLink name="ApplicableItemList" refName="LeveledItem" recordType="ANAM" />
-      <FormLink name="LegendaryTemplateList" refName="LegendaryItem" recordType="ENAM" />
+      <Marker name="DATA" recordType="DATA" />
+      <FormLink name="BaseObjectList" refName="LeveledItem" recordType="ANAM" />
+      <FormLink name="RankTemplate" refName="LegendaryItem" recordType="ENAM" />
       <RefList name="LegendaryMods" refName="LegendaryMod" recordType="BNAM" />
       <RefList name="IncludeFilters" refName="LegendaryFilter" recordType="CNAM" />
       <RefList name="ExcludeFilters" refName="LegendaryFilter" recordType="DNAM" />
@@ -18,13 +22,13 @@
   <Object name="LegendaryMod" objType="Subrecord">
     <Fields>
       <Enum name="Slot" enumName="LegendaryItem.StarSlot" />
-      <FormLink name="LegendaryModifier" refName="AObjectModification" />
+      <FormLink name="ObjectMod" refName="AObjectModification" />
     </Fields>
   </Object>
   <Object name="LegendaryFilter" objType="Subrecord">
     <Fields>
       <Enum name="Slot" enumName="LegendaryItem.StarSlot" />
-      <FormLink name="ReferencedModifier" refName="Keyword" />
+      <FormLink name="ReferencedMod" refName="ObjectModification" />
       <FormLink name="Keyword" refName="Keyword" />
     </Fields>
   </Object>

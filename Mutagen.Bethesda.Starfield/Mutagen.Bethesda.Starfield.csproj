@@ -2255,6 +2255,9 @@
     <Compile Include="Records\Major Records\LensFlareSpriteData.cs">
       <DependentUpon>LensFlare.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LeveledBaseForm.cs">
+      <DependentUpon>LeveledBaseForm.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\LeveledNpc.cs">
       <DependentUpon>LeveledNpc.xml</DependentUpon>
     </Compile>
@@ -2271,6 +2274,9 @@
       <DependentUpon>LoadScreen.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Location.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocationOwnerData.cs">
       <DependentUpon>Location.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\MagicEffect.cs">
@@ -6600,9 +6606,6 @@
     <Compile Include="Records\Major Records\NoteTerminal_Generated.cs">
       <DependentUpon>Note.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\LocationFaction_Generated.cs">
-      <DependentUpon>Location.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\TerminalMenuItemDisplayText_Generated.cs">
       <DependentUpon>TerminalMenu.xml</DependentUpon>
     </Compile>
@@ -6871,6 +6874,10 @@
     </Compile>
     <Compile Include="Records\Major Records\InstanceNamingRuleProperty_Generated.cs">
       <DependentUpon>InstanceNamingRules.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\Link\ILocationOwner_Generated.cs" />
+    <Compile Include="Records\Major Records\LocationOwnerData_Generated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

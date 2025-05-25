@@ -78,6 +78,47 @@ namespace Mutagen.Bethesda.Starfield
         #region DirtinessScale
         public Percent DirtinessScale { get; set; } = default(Percent);
         #endregion
+        #region ObjectPaletteDefaults
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectPaletteDefaults? _ObjectPaletteDefaults;
+        public ObjectPaletteDefaults? ObjectPaletteDefaults
+        {
+            get => _ObjectPaletteDefaults;
+            set => _ObjectPaletteDefaults = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectPaletteDefaultsGetter? ILegendaryItemGetter.ObjectPaletteDefaults => this.ObjectPaletteDefaults;
+        #endregion
+        #region Transforms
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Transforms? _Transforms;
+        public Transforms? Transforms
+        {
+            get => _Transforms;
+            set => _Transforms = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITransformsGetter? ILegendaryItemGetter.Transforms => this.Transforms;
+        #endregion
+        #region XALG
+        public UInt64? XALG { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt64? ILegendaryItemGetter.XALG => this.XALG;
+        #endregion
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> ILegendaryItemGetter.Components => _Components;
+        #endregion
+
+        #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
@@ -96,36 +137,25 @@ namespace Mutagen.Bethesda.Starfield
         IModelGetter? IModeledGetter.Model => this.Model;
         #endregion
         #endregion
-        #region DATA
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _DATA;
-        public MemorySlice<Byte>? DATA
+        #region BaseObjectList
+        private readonly IFormLinkNullable<ILeveledItemGetter> _BaseObjectList = new FormLinkNullable<ILeveledItemGetter>();
+        public IFormLinkNullable<ILeveledItemGetter> BaseObjectList
         {
-            get => this._DATA;
-            set => this._DATA = value;
+            get => _BaseObjectList;
+            set => _BaseObjectList.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ILegendaryItemGetter.DATA => this.DATA;
+        IFormLinkNullableGetter<ILeveledItemGetter> ILegendaryItemGetter.BaseObjectList => this.BaseObjectList;
         #endregion
-        #region ApplicableItemList
-        private readonly IFormLinkNullable<ILeveledItemGetter> _ApplicableItemList = new FormLinkNullable<ILeveledItemGetter>();
-        public IFormLinkNullable<ILeveledItemGetter> ApplicableItemList
+        #region RankTemplate
+        private readonly IFormLinkNullable<ILegendaryItemGetter> _RankTemplate = new FormLinkNullable<ILegendaryItemGetter>();
+        public IFormLinkNullable<ILegendaryItemGetter> RankTemplate
         {
-            get => _ApplicableItemList;
-            set => _ApplicableItemList.SetTo(value);
+            get => _RankTemplate;
+            set => _RankTemplate.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILeveledItemGetter> ILegendaryItemGetter.ApplicableItemList => this.ApplicableItemList;
-        #endregion
-        #region LegendaryTemplateList
-        private readonly IFormLinkNullable<ILegendaryItemGetter> _LegendaryTemplateList = new FormLinkNullable<ILegendaryItemGetter>();
-        public IFormLinkNullable<ILegendaryItemGetter> LegendaryTemplateList
-        {
-            get => _LegendaryTemplateList;
-            set => _LegendaryTemplateList.SetTo(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<ILegendaryItemGetter> ILegendaryItemGetter.LegendaryTemplateList => this.LegendaryTemplateList;
+        IFormLinkNullableGetter<ILegendaryItemGetter> ILegendaryItemGetter.RankTemplate => this.RankTemplate;
         #endregion
         #region LegendaryMods
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -196,10 +226,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.DirtinessScale = initialValue;
+                this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(initialValue, new ObjectPaletteDefaults.Mask<TItem>(initialValue));
+                this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
+                this.XALG = initialValue;
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.DATA = initialValue;
-                this.ApplicableItemList = initialValue;
-                this.LegendaryTemplateList = initialValue;
+                this.BaseObjectList = initialValue;
+                this.RankTemplate = initialValue;
                 this.LegendaryMods = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryMod.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LegendaryMod.Mask<TItem>?>>());
                 this.IncludeFilters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>());
                 this.ExcludeFilters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>());
@@ -215,10 +248,13 @@ namespace Mutagen.Bethesda.Starfield
                 TItem StarfieldMajorRecordFlags,
                 TItem ObjectBounds,
                 TItem DirtinessScale,
+                TItem ObjectPaletteDefaults,
+                TItem Transforms,
+                TItem XALG,
+                TItem Components,
                 TItem Model,
-                TItem DATA,
-                TItem ApplicableItemList,
-                TItem LegendaryTemplateList,
+                TItem BaseObjectList,
+                TItem RankTemplate,
                 TItem LegendaryMods,
                 TItem IncludeFilters,
                 TItem ExcludeFilters)
@@ -233,10 +269,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.DirtinessScale = DirtinessScale;
+                this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(ObjectPaletteDefaults, new ObjectPaletteDefaults.Mask<TItem>(ObjectPaletteDefaults));
+                this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
+                this.XALG = XALG;
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.DATA = DATA;
-                this.ApplicableItemList = ApplicableItemList;
-                this.LegendaryTemplateList = LegendaryTemplateList;
+                this.BaseObjectList = BaseObjectList;
+                this.RankTemplate = RankTemplate;
                 this.LegendaryMods = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryMod.Mask<TItem>?>>?>(LegendaryMods, Enumerable.Empty<MaskItemIndexed<TItem, LegendaryMod.Mask<TItem>?>>());
                 this.IncludeFilters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>?>(IncludeFilters, Enumerable.Empty<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>());
                 this.ExcludeFilters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>?>(ExcludeFilters, Enumerable.Empty<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>());
@@ -253,10 +292,13 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem DirtinessScale;
+            public MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>? ObjectPaletteDefaults { get; set; }
+            public MaskItem<TItem, Transforms.Mask<TItem>?>? Transforms { get; set; }
+            public TItem XALG;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
-            public TItem DATA;
-            public TItem ApplicableItemList;
-            public TItem LegendaryTemplateList;
+            public TItem BaseObjectList;
+            public TItem RankTemplate;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryMod.Mask<TItem>?>>?>? LegendaryMods;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>?>? IncludeFilters;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LegendaryFilter.Mask<TItem>?>>?>? ExcludeFilters;
@@ -275,10 +317,13 @@ namespace Mutagen.Bethesda.Starfield
                 if (!base.Equals(rhs)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.DirtinessScale, rhs.DirtinessScale)) return false;
+                if (!object.Equals(this.ObjectPaletteDefaults, rhs.ObjectPaletteDefaults)) return false;
+                if (!object.Equals(this.Transforms, rhs.Transforms)) return false;
+                if (!object.Equals(this.XALG, rhs.XALG)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
-                if (!object.Equals(this.DATA, rhs.DATA)) return false;
-                if (!object.Equals(this.ApplicableItemList, rhs.ApplicableItemList)) return false;
-                if (!object.Equals(this.LegendaryTemplateList, rhs.LegendaryTemplateList)) return false;
+                if (!object.Equals(this.BaseObjectList, rhs.BaseObjectList)) return false;
+                if (!object.Equals(this.RankTemplate, rhs.RankTemplate)) return false;
                 if (!object.Equals(this.LegendaryMods, rhs.LegendaryMods)) return false;
                 if (!object.Equals(this.IncludeFilters, rhs.IncludeFilters)) return false;
                 if (!object.Equals(this.ExcludeFilters, rhs.ExcludeFilters)) return false;
@@ -289,10 +334,13 @@ namespace Mutagen.Bethesda.Starfield
                 var hash = new HashCode();
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.DirtinessScale);
+                hash.Add(this.ObjectPaletteDefaults);
+                hash.Add(this.Transforms);
+                hash.Add(this.XALG);
+                hash.Add(this.Components);
                 hash.Add(this.Model);
-                hash.Add(this.DATA);
-                hash.Add(this.ApplicableItemList);
-                hash.Add(this.LegendaryTemplateList);
+                hash.Add(this.BaseObjectList);
+                hash.Add(this.RankTemplate);
                 hash.Add(this.LegendaryMods);
                 hash.Add(this.IncludeFilters);
                 hash.Add(this.ExcludeFilters);
@@ -312,14 +360,36 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (!eval(this.DirtinessScale)) return false;
+                if (ObjectPaletteDefaults != null)
+                {
+                    if (!eval(this.ObjectPaletteDefaults.Overall)) return false;
+                    if (this.ObjectPaletteDefaults.Specific != null && !this.ObjectPaletteDefaults.Specific.All(eval)) return false;
+                }
+                if (Transforms != null)
+                {
+                    if (!eval(this.Transforms.Overall)) return false;
+                    if (this.Transforms.Specific != null && !this.Transforms.Specific.All(eval)) return false;
+                }
+                if (!eval(this.XALG)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (Model != null)
                 {
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
-                if (!eval(this.DATA)) return false;
-                if (!eval(this.ApplicableItemList)) return false;
-                if (!eval(this.LegendaryTemplateList)) return false;
+                if (!eval(this.BaseObjectList)) return false;
+                if (!eval(this.RankTemplate)) return false;
                 if (this.LegendaryMods != null)
                 {
                     if (!eval(this.LegendaryMods.Overall)) return false;
@@ -370,14 +440,36 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
                 if (eval(this.DirtinessScale)) return true;
+                if (ObjectPaletteDefaults != null)
+                {
+                    if (eval(this.ObjectPaletteDefaults.Overall)) return true;
+                    if (this.ObjectPaletteDefaults.Specific != null && this.ObjectPaletteDefaults.Specific.Any(eval)) return true;
+                }
+                if (Transforms != null)
+                {
+                    if (eval(this.Transforms.Overall)) return true;
+                    if (this.Transforms.Specific != null && this.Transforms.Specific.Any(eval)) return true;
+                }
+                if (eval(this.XALG)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (Model != null)
                 {
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
-                if (eval(this.DATA)) return true;
-                if (eval(this.ApplicableItemList)) return true;
-                if (eval(this.LegendaryTemplateList)) return true;
+                if (eval(this.BaseObjectList)) return true;
+                if (eval(this.RankTemplate)) return true;
                 if (this.LegendaryMods != null)
                 {
                     if (eval(this.LegendaryMods.Overall)) return true;
@@ -431,10 +523,27 @@ namespace Mutagen.Bethesda.Starfield
                 base.Translate_InternalFill(obj, eval);
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.DirtinessScale = eval(this.DirtinessScale);
+                obj.ObjectPaletteDefaults = this.ObjectPaletteDefaults == null ? null : new MaskItem<R, ObjectPaletteDefaults.Mask<R>?>(eval(this.ObjectPaletteDefaults.Overall), this.ObjectPaletteDefaults.Specific?.Translate(eval));
+                obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Transforms.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
+                obj.XALG = eval(this.XALG);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-                obj.DATA = eval(this.DATA);
-                obj.ApplicableItemList = eval(this.ApplicableItemList);
-                obj.LegendaryTemplateList = eval(this.LegendaryTemplateList);
+                obj.BaseObjectList = eval(this.BaseObjectList);
+                obj.RankTemplate = eval(this.RankTemplate);
                 if (LegendaryMods != null)
                 {
                     obj.LegendaryMods = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LegendaryMod.Mask<R>?>>?>(eval(this.LegendaryMods.Overall), Enumerable.Empty<MaskItemIndexed<R, LegendaryMod.Mask<R>?>>());
@@ -506,21 +615,48 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(DirtinessScale, "DirtinessScale");
                     }
+                    if (printMask?.ObjectPaletteDefaults?.Overall ?? true)
+                    {
+                        ObjectPaletteDefaults?.Print(sb);
+                    }
+                    if (printMask?.Transforms?.Overall ?? true)
+                    {
+                        Transforms?.Print(sb);
+                    }
+                    if (printMask?.XALG ?? true)
+                    {
+                        sb.AppendItem(XALG, "XALG");
+                    }
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                     if (printMask?.Model?.Overall ?? true)
                     {
                         Model?.Print(sb);
                     }
-                    if (printMask?.DATA ?? true)
+                    if (printMask?.BaseObjectList ?? true)
                     {
-                        sb.AppendItem(DATA, "DATA");
+                        sb.AppendItem(BaseObjectList, "BaseObjectList");
                     }
-                    if (printMask?.ApplicableItemList ?? true)
+                    if (printMask?.RankTemplate ?? true)
                     {
-                        sb.AppendItem(ApplicableItemList, "ApplicableItemList");
-                    }
-                    if (printMask?.LegendaryTemplateList ?? true)
-                    {
-                        sb.AppendItem(LegendaryTemplateList, "LegendaryTemplateList");
+                        sb.AppendItem(RankTemplate, "RankTemplate");
                     }
                     if ((printMask?.LegendaryMods?.Overall ?? true)
                         && LegendaryMods is {} LegendaryModsItem)
@@ -592,10 +728,13 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? DirtinessScale;
+            public MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>? ObjectPaletteDefaults;
+            public MaskItem<Exception?, Transforms.ErrorMask?>? Transforms;
+            public Exception? XALG;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
-            public Exception? DATA;
-            public Exception? ApplicableItemList;
-            public Exception? LegendaryTemplateList;
+            public Exception? BaseObjectList;
+            public Exception? RankTemplate;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryMod.ErrorMask?>>?>? LegendaryMods;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryFilter.ErrorMask?>>?>? IncludeFilters;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryFilter.ErrorMask?>>?>? ExcludeFilters;
@@ -611,14 +750,20 @@ namespace Mutagen.Bethesda.Starfield
                         return ObjectBounds;
                     case LegendaryItem_FieldIndex.DirtinessScale:
                         return DirtinessScale;
+                    case LegendaryItem_FieldIndex.ObjectPaletteDefaults:
+                        return ObjectPaletteDefaults;
+                    case LegendaryItem_FieldIndex.Transforms:
+                        return Transforms;
+                    case LegendaryItem_FieldIndex.XALG:
+                        return XALG;
+                    case LegendaryItem_FieldIndex.Components:
+                        return Components;
                     case LegendaryItem_FieldIndex.Model:
                         return Model;
-                    case LegendaryItem_FieldIndex.DATA:
-                        return DATA;
-                    case LegendaryItem_FieldIndex.ApplicableItemList:
-                        return ApplicableItemList;
-                    case LegendaryItem_FieldIndex.LegendaryTemplateList:
-                        return LegendaryTemplateList;
+                    case LegendaryItem_FieldIndex.BaseObjectList:
+                        return BaseObjectList;
+                    case LegendaryItem_FieldIndex.RankTemplate:
+                        return RankTemplate;
                     case LegendaryItem_FieldIndex.LegendaryMods:
                         return LegendaryMods;
                     case LegendaryItem_FieldIndex.IncludeFilters:
@@ -641,17 +786,26 @@ namespace Mutagen.Bethesda.Starfield
                     case LegendaryItem_FieldIndex.DirtinessScale:
                         this.DirtinessScale = ex;
                         break;
+                    case LegendaryItem_FieldIndex.ObjectPaletteDefaults:
+                        this.ObjectPaletteDefaults = new MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>(ex, null);
+                        break;
+                    case LegendaryItem_FieldIndex.Transforms:
+                        this.Transforms = new MaskItem<Exception?, Transforms.ErrorMask?>(ex, null);
+                        break;
+                    case LegendaryItem_FieldIndex.XALG:
+                        this.XALG = ex;
+                        break;
+                    case LegendaryItem_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
                     case LegendaryItem_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
                         break;
-                    case LegendaryItem_FieldIndex.DATA:
-                        this.DATA = ex;
+                    case LegendaryItem_FieldIndex.BaseObjectList:
+                        this.BaseObjectList = ex;
                         break;
-                    case LegendaryItem_FieldIndex.ApplicableItemList:
-                        this.ApplicableItemList = ex;
-                        break;
-                    case LegendaryItem_FieldIndex.LegendaryTemplateList:
-                        this.LegendaryTemplateList = ex;
+                    case LegendaryItem_FieldIndex.RankTemplate:
+                        this.RankTemplate = ex;
                         break;
                     case LegendaryItem_FieldIndex.LegendaryMods:
                         this.LegendaryMods = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryMod.ErrorMask?>>?>(ex, null);
@@ -679,17 +833,26 @@ namespace Mutagen.Bethesda.Starfield
                     case LegendaryItem_FieldIndex.DirtinessScale:
                         this.DirtinessScale = (Exception?)obj;
                         break;
+                    case LegendaryItem_FieldIndex.ObjectPaletteDefaults:
+                        this.ObjectPaletteDefaults = (MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>?)obj;
+                        break;
+                    case LegendaryItem_FieldIndex.Transforms:
+                        this.Transforms = (MaskItem<Exception?, Transforms.ErrorMask?>?)obj;
+                        break;
+                    case LegendaryItem_FieldIndex.XALG:
+                        this.XALG = (Exception?)obj;
+                        break;
+                    case LegendaryItem_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
                     case LegendaryItem_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case LegendaryItem_FieldIndex.DATA:
-                        this.DATA = (Exception?)obj;
+                    case LegendaryItem_FieldIndex.BaseObjectList:
+                        this.BaseObjectList = (Exception?)obj;
                         break;
-                    case LegendaryItem_FieldIndex.ApplicableItemList:
-                        this.ApplicableItemList = (Exception?)obj;
-                        break;
-                    case LegendaryItem_FieldIndex.LegendaryTemplateList:
-                        this.LegendaryTemplateList = (Exception?)obj;
+                    case LegendaryItem_FieldIndex.RankTemplate:
+                        this.RankTemplate = (Exception?)obj;
                         break;
                     case LegendaryItem_FieldIndex.LegendaryMods:
                         this.LegendaryMods = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryMod.ErrorMask?>>?>)obj;
@@ -711,10 +874,13 @@ namespace Mutagen.Bethesda.Starfield
                 if (Overall != null) return true;
                 if (ObjectBounds != null) return true;
                 if (DirtinessScale != null) return true;
+                if (ObjectPaletteDefaults != null) return true;
+                if (Transforms != null) return true;
+                if (XALG != null) return true;
+                if (Components != null) return true;
                 if (Model != null) return true;
-                if (DATA != null) return true;
-                if (ApplicableItemList != null) return true;
-                if (LegendaryTemplateList != null) return true;
+                if (BaseObjectList != null) return true;
+                if (RankTemplate != null) return true;
                 if (LegendaryMods != null) return true;
                 if (IncludeFilters != null) return true;
                 if (ExcludeFilters != null) return true;
@@ -748,15 +914,35 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     sb.AppendItem(DirtinessScale, "DirtinessScale");
                 }
+                ObjectPaletteDefaults?.Print(sb);
+                Transforms?.Print(sb);
+                {
+                    sb.AppendItem(XALG, "XALG");
+                }
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
                 Model?.Print(sb);
                 {
-                    sb.AppendItem(DATA, "DATA");
+                    sb.AppendItem(BaseObjectList, "BaseObjectList");
                 }
                 {
-                    sb.AppendItem(ApplicableItemList, "ApplicableItemList");
-                }
-                {
-                    sb.AppendItem(LegendaryTemplateList, "LegendaryTemplateList");
+                    sb.AppendItem(RankTemplate, "RankTemplate");
                 }
                 if (LegendaryMods is {} LegendaryModsItem)
                 {
@@ -822,10 +1008,13 @@ namespace Mutagen.Bethesda.Starfield
                 var ret = new ErrorMask();
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.DirtinessScale = this.DirtinessScale.Combine(rhs.DirtinessScale);
+                ret.ObjectPaletteDefaults = this.ObjectPaletteDefaults.Combine(rhs.ObjectPaletteDefaults, (l, r) => l.Combine(r));
+                ret.Transforms = this.Transforms.Combine(rhs.Transforms, (l, r) => l.Combine(r));
+                ret.XALG = this.XALG.Combine(rhs.XALG);
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.DATA = this.DATA.Combine(rhs.DATA);
-                ret.ApplicableItemList = this.ApplicableItemList.Combine(rhs.ApplicableItemList);
-                ret.LegendaryTemplateList = this.LegendaryTemplateList.Combine(rhs.LegendaryTemplateList);
+                ret.BaseObjectList = this.BaseObjectList.Combine(rhs.BaseObjectList);
+                ret.RankTemplate = this.RankTemplate.Combine(rhs.RankTemplate);
                 ret.LegendaryMods = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryMod.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.LegendaryMods?.Overall, rhs.LegendaryMods?.Overall), Noggog.ExceptionExt.Combine(this.LegendaryMods?.Specific, rhs.LegendaryMods?.Specific));
                 ret.IncludeFilters = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryFilter.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.IncludeFilters?.Overall, rhs.IncludeFilters?.Overall), Noggog.ExceptionExt.Combine(this.IncludeFilters?.Specific, rhs.IncludeFilters?.Specific));
                 ret.ExcludeFilters = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LegendaryFilter.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.ExcludeFilters?.Overall, rhs.ExcludeFilters?.Overall), Noggog.ExceptionExt.Combine(this.ExcludeFilters?.Specific, rhs.ExcludeFilters?.Specific));
@@ -853,10 +1042,13 @@ namespace Mutagen.Bethesda.Starfield
             #region Members
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool DirtinessScale;
+            public ObjectPaletteDefaults.TranslationMask? ObjectPaletteDefaults;
+            public Transforms.TranslationMask? Transforms;
+            public bool XALG;
+            public AComponent.TranslationMask? Components;
             public Model.TranslationMask? Model;
-            public bool DATA;
-            public bool ApplicableItemList;
-            public bool LegendaryTemplateList;
+            public bool BaseObjectList;
+            public bool RankTemplate;
             public LegendaryMod.TranslationMask? LegendaryMods;
             public LegendaryFilter.TranslationMask? IncludeFilters;
             public LegendaryFilter.TranslationMask? ExcludeFilters;
@@ -869,9 +1061,9 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.DirtinessScale = defaultOn;
-                this.DATA = defaultOn;
-                this.ApplicableItemList = defaultOn;
-                this.LegendaryTemplateList = defaultOn;
+                this.XALG = defaultOn;
+                this.BaseObjectList = defaultOn;
+                this.RankTemplate = defaultOn;
             }
 
             #endregion
@@ -881,10 +1073,13 @@ namespace Mutagen.Bethesda.Starfield
                 base.GetCrystal(ret);
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((DirtinessScale, null));
+                ret.Add((ObjectPaletteDefaults != null ? ObjectPaletteDefaults.OnOverall : DefaultOn, ObjectPaletteDefaults?.GetCrystal()));
+                ret.Add((Transforms != null ? Transforms.OnOverall : DefaultOn, Transforms?.GetCrystal()));
+                ret.Add((XALG, null));
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
-                ret.Add((DATA, null));
-                ret.Add((ApplicableItemList, null));
-                ret.Add((LegendaryTemplateList, null));
+                ret.Add((BaseObjectList, null));
+                ret.Add((RankTemplate, null));
                 ret.Add((LegendaryMods == null ? DefaultOn : !LegendaryMods.GetCrystal().CopyNothing, LegendaryMods?.GetCrystal()));
                 ret.Add((IncludeFilters == null ? DefaultOn : !IncludeFilters.GetCrystal().CopyNothing, IncludeFilters?.GetCrystal()));
                 ret.Add((ExcludeFilters == null ? DefaultOn : !ExcludeFilters.GetCrystal().CopyNothing, ExcludeFilters?.GetCrystal()));
@@ -1049,13 +1244,16 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ObjectBounds? ObjectBounds { get; set; }
         new Percent DirtinessScale { get; set; }
+        new ObjectPaletteDefaults? ObjectPaletteDefaults { get; set; }
+        new Transforms? Transforms { get; set; }
+        new UInt64? XALG { get; set; }
+        new ExtendedList<AComponent> Components { get; }
         /// <summary>
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
-        new MemorySlice<Byte>? DATA { get; set; }
-        new IFormLinkNullable<ILeveledItemGetter> ApplicableItemList { get; set; }
-        new IFormLinkNullable<ILegendaryItemGetter> LegendaryTemplateList { get; set; }
+        new IFormLinkNullable<ILeveledItemGetter> BaseObjectList { get; set; }
+        new IFormLinkNullable<ILegendaryItemGetter> RankTemplate { get; set; }
         new ExtendedList<LegendaryMod>? LegendaryMods { get; set; }
         new ExtendedList<LegendaryFilter>? IncludeFilters { get; set; }
         new ExtendedList<LegendaryFilter>? ExcludeFilters { get; set; }
@@ -1089,15 +1287,18 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter? ObjectBounds { get; }
         #endregion
         Percent DirtinessScale { get; }
+        IObjectPaletteDefaultsGetter? ObjectPaletteDefaults { get; }
+        ITransformsGetter? Transforms { get; }
+        UInt64? XALG { get; }
+        IReadOnlyList<IAComponentGetter> Components { get; }
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
-        ReadOnlyMemorySlice<Byte>? DATA { get; }
-        IFormLinkNullableGetter<ILeveledItemGetter> ApplicableItemList { get; }
-        IFormLinkNullableGetter<ILegendaryItemGetter> LegendaryTemplateList { get; }
+        IFormLinkNullableGetter<ILeveledItemGetter> BaseObjectList { get; }
+        IFormLinkNullableGetter<ILegendaryItemGetter> RankTemplate { get; }
         IReadOnlyList<ILegendaryModGetter>? LegendaryMods { get; }
         IReadOnlyList<ILegendaryFilterGetter>? IncludeFilters { get; }
         IReadOnlyList<ILegendaryFilterGetter>? ExcludeFilters { get; }
@@ -1279,13 +1480,16 @@ namespace Mutagen.Bethesda.Starfield
         StarfieldMajorRecordFlags = 6,
         ObjectBounds = 7,
         DirtinessScale = 8,
-        Model = 9,
-        DATA = 10,
-        ApplicableItemList = 11,
-        LegendaryTemplateList = 12,
-        LegendaryMods = 13,
-        IncludeFilters = 14,
-        ExcludeFilters = 15,
+        ObjectPaletteDefaults = 9,
+        Transforms = 10,
+        XALG = 11,
+        Components = 12,
+        Model = 13,
+        BaseObjectList = 14,
+        RankTemplate = 15,
+        LegendaryMods = 16,
+        IncludeFilters = 17,
+        ExcludeFilters = 18,
     }
     #endregion
 
@@ -1296,9 +1500,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 9;
+        public const ushort AdditionalFieldCount = 12;
 
-        public const ushort FieldCount = 16;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(LegendaryItem.Mask<>);
 
@@ -1333,6 +1537,11 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.LGDI,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
+                RecordTypes.OPDS,
+                RecordTypes.PTT2,
+                RecordTypes.XALG,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
                 RecordTypes.MODL,
                 RecordTypes.MODT,
                 RecordTypes.MOLM,
@@ -1392,10 +1601,13 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.ObjectBounds = null;
             item.DirtinessScale = default(Percent);
+            item.ObjectPaletteDefaults = null;
+            item.Transforms = null;
+            item.XALG = default;
+            item.Components.Clear();
             item.Model = null;
-            item.DATA = default;
-            item.ApplicableItemList.Clear();
-            item.LegendaryTemplateList.Clear();
+            item.BaseObjectList.Clear();
+            item.RankTemplate.Clear();
             item.LegendaryMods = null;
             item.IncludeFilters = null;
             item.ExcludeFilters = null;
@@ -1416,9 +1628,11 @@ namespace Mutagen.Bethesda.Starfield
         public void RemapLinks(ILegendaryItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Transforms?.RemapLinks(mapping);
+            obj.Components.RemapLinks(mapping);
             obj.Model?.RemapLinks(mapping);
-            obj.ApplicableItemList.Relink(mapping);
-            obj.LegendaryTemplateList.Relink(mapping);
+            obj.BaseObjectList.Relink(mapping);
+            obj.RankTemplate.Relink(mapping);
             obj.LegendaryMods?.RemapLinks(mapping);
             obj.IncludeFilters?.RemapLinks(mapping);
             obj.ExcludeFilters?.RemapLinks(mapping);
@@ -1427,6 +1641,11 @@ namespace Mutagen.Bethesda.Starfield
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ILegendaryItem obj)
         {
             foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
             {
                 yield return item;
             }
@@ -1447,6 +1666,7 @@ namespace Mutagen.Bethesda.Starfield
             AssetLinkQuery queryCategories)
         {
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
             obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
@@ -1521,14 +1741,28 @@ namespace Mutagen.Bethesda.Starfield
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
             ret.DirtinessScale = item.DirtinessScale.Equals(rhs.DirtinessScale);
+            ret.ObjectPaletteDefaults = EqualsMaskHelper.EqualsHelper(
+                item.ObjectPaletteDefaults,
+                rhs.ObjectPaletteDefaults,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Transforms = EqualsMaskHelper.EqualsHelper(
+                item.Transforms,
+                rhs.Transforms,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.XALG = item.XALG == rhs.XALG;
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.DATA = MemorySliceExt.SequenceEqual(item.DATA, rhs.DATA);
-            ret.ApplicableItemList = item.ApplicableItemList.Equals(rhs.ApplicableItemList);
-            ret.LegendaryTemplateList = item.LegendaryTemplateList.Equals(rhs.LegendaryTemplateList);
+            ret.BaseObjectList = item.BaseObjectList.Equals(rhs.BaseObjectList);
+            ret.RankTemplate = item.RankTemplate.Equals(rhs.RankTemplate);
             ret.LegendaryMods = item.LegendaryMods.CollectionEqualsHelper(
                 rhs.LegendaryMods,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1599,23 +1833,47 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.DirtinessScale, "DirtinessScale");
             }
+            if ((printMask?.ObjectPaletteDefaults?.Overall ?? true)
+                && item.ObjectPaletteDefaults is {} ObjectPaletteDefaultsItem)
+            {
+                ObjectPaletteDefaultsItem?.Print(sb, "ObjectPaletteDefaults");
+            }
+            if ((printMask?.Transforms?.Overall ?? true)
+                && item.Transforms is {} TransformsItem)
+            {
+                TransformsItem?.Print(sb, "Transforms");
+            }
+            if ((printMask?.XALG ?? true)
+                && item.XALG is {} XALGItem)
+            {
+                sb.AppendItem(XALGItem, "XALG");
+            }
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
             {
                 ModelItem?.Print(sb, "Model");
             }
-            if ((printMask?.DATA ?? true)
-                && item.DATA is {} DATAItem)
+            if (printMask?.BaseObjectList ?? true)
             {
-                sb.AppendLine($"DATA => {SpanExt.ToHexString(DATAItem)}");
+                sb.AppendItem(item.BaseObjectList.FormKeyNullable, "BaseObjectList");
             }
-            if (printMask?.ApplicableItemList ?? true)
+            if (printMask?.RankTemplate ?? true)
             {
-                sb.AppendItem(item.ApplicableItemList.FormKeyNullable, "ApplicableItemList");
-            }
-            if (printMask?.LegendaryTemplateList ?? true)
-            {
-                sb.AppendItem(item.LegendaryTemplateList.FormKeyNullable, "LegendaryTemplateList");
+                sb.AppendItem(item.RankTemplate.FormKeyNullable, "RankTemplate");
             }
             if ((printMask?.LegendaryMods?.Overall ?? true)
                 && item.LegendaryMods is {} LegendaryModsItem)
@@ -1724,6 +1982,30 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.DirtinessScale.Equals(rhs.DirtinessScale)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.ObjectPaletteDefaults) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectPaletteDefaults, rhs.ObjectPaletteDefaults, out var lhsObjectPaletteDefaults, out var rhsObjectPaletteDefaults, out var isObjectPaletteDefaultsEqual))
+                {
+                    if (!((ObjectPaletteDefaultsCommon)((IObjectPaletteDefaultsGetter)lhsObjectPaletteDefaults).CommonInstance()!).Equals(lhsObjectPaletteDefaults, rhsObjectPaletteDefaults, equalsMask?.GetSubCrystal((int)LegendaryItem_FieldIndex.ObjectPaletteDefaults))) return false;
+                }
+                else if (!isObjectPaletteDefaultsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.Transforms) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Transforms, rhs.Transforms, out var lhsTransforms, out var rhsTransforms, out var isTransformsEqual))
+                {
+                    if (!((TransformsCommon)((ITransformsGetter)lhsTransforms).CommonInstance()!).Equals(lhsTransforms, rhsTransforms, equalsMask?.GetSubCrystal((int)LegendaryItem_FieldIndex.Transforms))) return false;
+                }
+                else if (!isTransformsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.XALG) ?? true))
+            {
+                if (lhs.XALG != rhs.XALG) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LegendaryItem_FieldIndex.Components)))) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.Model) ?? true))
             {
                 if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
@@ -1732,17 +2014,13 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 else if (!isModelEqual) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.DATA) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.BaseObjectList) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.DATA, rhs.DATA)) return false;
+                if (!lhs.BaseObjectList.Equals(rhs.BaseObjectList)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.ApplicableItemList) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.RankTemplate) ?? true))
             {
-                if (!lhs.ApplicableItemList.Equals(rhs.ApplicableItemList)) return false;
-            }
-            if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.LegendaryTemplateList) ?? true))
-            {
-                if (!lhs.LegendaryTemplateList.Equals(rhs.LegendaryTemplateList)) return false;
+                if (!lhs.RankTemplate.Equals(rhs.RankTemplate)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.LegendaryMods) ?? true))
             {
@@ -1789,16 +2067,25 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(ObjectBoundsitem);
             }
             hash.Add(item.DirtinessScale);
+            if (item.ObjectPaletteDefaults is {} ObjectPaletteDefaultsitem)
+            {
+                hash.Add(ObjectPaletteDefaultsitem);
+            }
+            if (item.Transforms is {} Transformsitem)
+            {
+                hash.Add(Transformsitem);
+            }
+            if (item.XALG is {} XALGitem)
+            {
+                hash.Add(XALGitem);
+            }
+            hash.Add(item.Components);
             if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
             }
-            if (item.DATA is {} DATAItem)
-            {
-                hash.Add(DATAItem);
-            }
-            hash.Add(item.ApplicableItemList);
-            hash.Add(item.LegendaryTemplateList);
+            hash.Add(item.BaseObjectList);
+            hash.Add(item.RankTemplate);
             hash.Add(item.LegendaryMods);
             hash.Add(item.IncludeFilters);
             hash.Add(item.ExcludeFilters);
@@ -1831,6 +2118,18 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return item;
             }
+            if (obj.Transforms is {} TransformsItems)
+            {
+                foreach (var item in TransformsItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
             if (obj.Model is {} ModelItems)
             {
                 foreach (var item in ModelItems.EnumerateFormLinks())
@@ -1838,13 +2137,13 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
-            if (FormLinkInformation.TryFactory(obj.ApplicableItemList, out var ApplicableItemListInfo))
+            if (FormLinkInformation.TryFactory(obj.BaseObjectList, out var BaseObjectListInfo))
             {
-                yield return ApplicableItemListInfo;
+                yield return BaseObjectListInfo;
             }
-            if (FormLinkInformation.TryFactory(obj.LegendaryTemplateList, out var LegendaryTemplateListInfo))
+            if (FormLinkInformation.TryFactory(obj.RankTemplate, out var RankTemplateInfo))
             {
-                yield return LegendaryTemplateListInfo;
+                yield return RankTemplateInfo;
             }
             if (obj.LegendaryMods is {} LegendaryModsItem)
             {
@@ -1873,6 +2172,11 @@ namespace Mutagen.Bethesda.Starfield
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILegendaryItemGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
             foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
             {
                 yield return item;
             }
@@ -1987,6 +2291,86 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.DirtinessScale = rhs.DirtinessScale;
             }
+            if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.ObjectPaletteDefaults) ?? true))
+            {
+                errorMask?.PushIndex((int)LegendaryItem_FieldIndex.ObjectPaletteDefaults);
+                try
+                {
+                    if(rhs.ObjectPaletteDefaults is {} rhsObjectPaletteDefaults)
+                    {
+                        item.ObjectPaletteDefaults = rhsObjectPaletteDefaults.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)LegendaryItem_FieldIndex.ObjectPaletteDefaults));
+                    }
+                    else
+                    {
+                        item.ObjectPaletteDefaults = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.Transforms) ?? true))
+            {
+                errorMask?.PushIndex((int)LegendaryItem_FieldIndex.Transforms);
+                try
+                {
+                    if(rhs.Transforms is {} rhsTransforms)
+                    {
+                        item.Transforms = rhsTransforms.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)LegendaryItem_FieldIndex.Transforms));
+                    }
+                    else
+                    {
+                        item.Transforms = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.XALG) ?? true))
+            {
+                item.XALG = rhs.XALG;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)LegendaryItem_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.Model) ?? true))
             {
                 errorMask?.PushIndex((int)LegendaryItem_FieldIndex.Model);
@@ -2013,24 +2397,13 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.DATA) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.BaseObjectList) ?? true))
             {
-                if(rhs.DATA is {} DATArhs)
-                {
-                    item.DATA = DATArhs.ToArray();
-                }
-                else
-                {
-                    item.DATA = default;
-                }
+                item.BaseObjectList.SetTo(rhs.BaseObjectList.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.ApplicableItemList) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.RankTemplate) ?? true))
             {
-                item.ApplicableItemList.SetTo(rhs.ApplicableItemList.FormKeyNullable);
-            }
-            if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.LegendaryTemplateList) ?? true))
-            {
-                item.LegendaryTemplateList.SetTo(rhs.LegendaryTemplateList.FormKeyNullable);
+                item.RankTemplate.SetTo(rhs.RankTemplate.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)LegendaryItem_FieldIndex.LegendaryMods) ?? true))
             {
@@ -2309,6 +2682,35 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.DirtinessScale,
                 integerType: FloatIntegerType.UInt,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            if (item.ObjectPaletteDefaults is {} ObjectPaletteDefaultsItem)
+            {
+                ((ObjectPaletteDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPaletteDefaultsItem).BinaryWriteTranslator).Write(
+                    item: ObjectPaletteDefaultsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.Transforms is {} TransformsItem)
+            {
+                ((TransformsBinaryWriteTranslation)((IBinaryItem)TransformsItem).BinaryWriteTranslator).Write(
+                    item: TransformsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            UInt64BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.XALG,
+                header: translationParams.ConvertToCustom(RecordTypes.XALG));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
             if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
@@ -2316,17 +2718,14 @@ namespace Mutagen.Bethesda.Starfield
                     writer: writer,
                     translationParams: translationParams);
             }
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.DATA,
-                header: translationParams.ConvertToCustom(RecordTypes.DATA));
+            using (HeaderExport.Subrecord(writer, RecordTypes.DATA)) { }
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.ApplicableItemList,
+                item: item.BaseObjectList,
                 header: translationParams.ConvertToCustom(RecordTypes.ANAM));
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.LegendaryTemplateList,
+                item: item.RankTemplate,
                 header: translationParams.ConvertToCustom(RecordTypes.ENAM));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILegendaryModGetter>.Instance.Write(
                 writer: writer,
@@ -2445,6 +2844,32 @@ namespace Mutagen.Bethesda.Starfield
                         integerType: FloatIntegerType.UInt);
                     return (int)LegendaryItem_FieldIndex.DirtinessScale;
                 }
+                case RecordTypeInts.OPDS:
+                {
+                    item.ObjectPaletteDefaults = Mutagen.Bethesda.Starfield.ObjectPaletteDefaults.CreateFromBinary(frame: frame);
+                    return (int)LegendaryItem_FieldIndex.ObjectPaletteDefaults;
+                }
+                case RecordTypeInts.PTT2:
+                {
+                    item.Transforms = Mutagen.Bethesda.Starfield.Transforms.CreateFromBinary(frame: frame);
+                    return (int)LegendaryItem_FieldIndex.Transforms;
+                }
+                case RecordTypeInts.XALG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XALG = frame.ReadUInt64();
+                    return (int)LegendaryItem_FieldIndex.XALG;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)LegendaryItem_FieldIndex.Components;
+                }
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
@@ -2460,21 +2885,20 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.DATA:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DATA = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)LegendaryItem_FieldIndex.DATA;
+                    frame.ReadSubrecord();
+                    return default(int?);
                 }
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ApplicableItemList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)LegendaryItem_FieldIndex.ApplicableItemList;
+                    item.BaseObjectList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)LegendaryItem_FieldIndex.BaseObjectList;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LegendaryTemplateList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)LegendaryItem_FieldIndex.LegendaryTemplateList;
+                    item.RankTemplate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)LegendaryItem_FieldIndex.RankTemplate;
                 }
                 case RecordTypeInts.BNAM:
                 {
@@ -2574,18 +2998,27 @@ namespace Mutagen.Bethesda.Starfield
         private int? _DirtinessScaleLocation;
         public Percent DirtinessScale => _DirtinessScaleLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DirtinessScaleLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt) : default(Percent);
         #endregion
+        #region ObjectPaletteDefaults
+        private RangeInt32? _ObjectPaletteDefaultsLocation;
+        public IObjectPaletteDefaultsGetter? ObjectPaletteDefaults => _ObjectPaletteDefaultsLocation.HasValue ? ObjectPaletteDefaultsBinaryOverlay.ObjectPaletteDefaultsFactory(_recordData.Slice(_ObjectPaletteDefaultsLocation!.Value.Min), _package) : default;
+        #endregion
+        #region Transforms
+        private RangeInt32? _TransformsLocation;
+        public ITransformsGetter? Transforms => _TransformsLocation.HasValue ? TransformsBinaryOverlay.TransformsFactory(_recordData.Slice(_TransformsLocation!.Value.Min), _package) : default;
+        #endregion
+        #region XALG
+        private int? _XALGLocation;
+        public UInt64? XALG => _XALGLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants)) : default(UInt64?);
+        #endregion
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         public IModelGetter? Model { get; private set; }
-        #region DATA
-        private int? _DATALocation;
-        public ReadOnlyMemorySlice<Byte>? DATA => _DATALocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _DATALocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region BaseObjectList
+        private int? _BaseObjectListLocation;
+        public IFormLinkNullableGetter<ILeveledItemGetter> BaseObjectList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILeveledItemGetter>(_package, _recordData, _BaseObjectListLocation);
         #endregion
-        #region ApplicableItemList
-        private int? _ApplicableItemListLocation;
-        public IFormLinkNullableGetter<ILeveledItemGetter> ApplicableItemList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILeveledItemGetter>(_package, _recordData, _ApplicableItemListLocation);
-        #endregion
-        #region LegendaryTemplateList
-        private int? _LegendaryTemplateListLocation;
-        public IFormLinkNullableGetter<ILegendaryItemGetter> LegendaryTemplateList => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILegendaryItemGetter>(_package, _recordData, _LegendaryTemplateListLocation);
+        #region RankTemplate
+        private int? _RankTemplateLocation;
+        public IFormLinkNullableGetter<ILegendaryItemGetter> RankTemplate => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<ILegendaryItemGetter>(_package, _recordData, _RankTemplateLocation);
         #endregion
         public IReadOnlyList<ILegendaryModGetter>? LegendaryMods { get; private set; }
         public IReadOnlyList<ILegendaryFilterGetter>? IncludeFilters { get; private set; }
@@ -2669,6 +3102,30 @@ namespace Mutagen.Bethesda.Starfield
                     _DirtinessScaleLocation = (stream.Position - offset);
                     return (int)LegendaryItem_FieldIndex.DirtinessScale;
                 }
+                case RecordTypeInts.OPDS:
+                {
+                    _ObjectPaletteDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)LegendaryItem_FieldIndex.ObjectPaletteDefaults;
+                }
+                case RecordTypeInts.PTT2:
+                {
+                    _TransformsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)LegendaryItem_FieldIndex.Transforms;
+                }
+                case RecordTypeInts.XALG:
+                {
+                    _XALGLocation = (stream.Position - offset);
+                    return (int)LegendaryItem_FieldIndex.XALG;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)LegendaryItem_FieldIndex.Components;
+                }
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
                 case RecordTypeInts.MOLM:
@@ -2685,18 +3142,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset);
-                    return (int)LegendaryItem_FieldIndex.DATA;
+                    stream.ReadSubrecord();
+                    return default(int?);
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    _ApplicableItemListLocation = (stream.Position - offset);
-                    return (int)LegendaryItem_FieldIndex.ApplicableItemList;
+                    _BaseObjectListLocation = (stream.Position - offset);
+                    return (int)LegendaryItem_FieldIndex.BaseObjectList;
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    _LegendaryTemplateListLocation = (stream.Position - offset);
-                    return (int)LegendaryItem_FieldIndex.LegendaryTemplateList;
+                    _RankTemplateLocation = (stream.Position - offset);
+                    return (int)LegendaryItem_FieldIndex.RankTemplate;
                 }
                 case RecordTypeInts.BNAM:
                 {

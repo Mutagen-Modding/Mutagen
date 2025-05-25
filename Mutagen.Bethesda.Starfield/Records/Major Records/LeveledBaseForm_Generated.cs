@@ -100,6 +100,47 @@ namespace Mutagen.Bethesda.Starfield
         #region DirtinessScale
         public Percent DirtinessScale { get; set; } = default(Percent);
         #endregion
+        #region ObjectPaletteDefaults
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ObjectPaletteDefaults? _ObjectPaletteDefaults;
+        public ObjectPaletteDefaults? ObjectPaletteDefaults
+        {
+            get => _ObjectPaletteDefaults;
+            set => _ObjectPaletteDefaults = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectPaletteDefaultsGetter? ILeveledBaseFormGetter.ObjectPaletteDefaults => this.ObjectPaletteDefaults;
+        #endregion
+        #region Transforms
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Transforms? _Transforms;
+        public Transforms? Transforms
+        {
+            get => _Transforms;
+            set => _Transforms = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ITransformsGetter? ILeveledBaseFormGetter.Transforms => this.Transforms;
+        #endregion
+        #region XALG
+        public UInt64? XALG { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt64? ILeveledBaseFormGetter.XALG => this.XALG;
+        #endregion
+        #region Components
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<AComponent> _Components = new ExtendedList<AComponent>();
+        public ExtendedList<AComponent> Components
+        {
+            get => this._Components;
+            init => this._Components = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IAComponentGetter> ILeveledBaseFormGetter.Components => _Components;
+        #endregion
+
+        #endregion
         #region ChanceNone
         public Single ChanceNone { get; set; } = default(Single);
         #endregion
@@ -149,6 +190,20 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
+        #region FilterKeywordChances
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<FilterKeywordChance>? _FilterKeywordChances;
+        public ExtendedList<FilterKeywordChance>? FilterKeywordChances
+        {
+            get => this._FilterKeywordChances;
+            set => this._FilterKeywordChances = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFilterKeywordChanceGetter>? ILeveledBaseFormGetter.FilterKeywordChances => _FilterKeywordChances;
+        #endregion
+
+        #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
@@ -195,12 +250,17 @@ namespace Mutagen.Bethesda.Starfield
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(initialValue, new VirtualMachineAdapter.Mask<TItem>(initialValue));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
                 this.DirtinessScale = initialValue;
+                this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(initialValue, new ObjectPaletteDefaults.Mask<TItem>(initialValue));
+                this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(initialValue, new Transforms.Mask<TItem>(initialValue));
+                this.XALG = initialValue;
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.ChanceNone = initialValue;
                 this.MaxCount = initialValue;
                 this.Flags = initialValue;
                 this.UseGlobal = initialValue;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledBaseFormEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LeveledBaseFormEntry.Mask<TItem>?>>());
+                this.FilterKeywordChances = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FilterKeywordChance.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FilterKeywordChance.Mask<TItem>?>>());
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
             }
 
@@ -215,12 +275,17 @@ namespace Mutagen.Bethesda.Starfield
                 TItem VirtualMachineAdapter,
                 TItem ObjectBounds,
                 TItem DirtinessScale,
+                TItem ObjectPaletteDefaults,
+                TItem Transforms,
+                TItem XALG,
+                TItem Components,
                 TItem ChanceNone,
                 TItem MaxCount,
                 TItem Flags,
                 TItem UseGlobal,
                 TItem Conditions,
                 TItem Entries,
+                TItem FilterKeywordChances,
                 TItem Model)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -234,12 +299,17 @@ namespace Mutagen.Bethesda.Starfield
                 this.VirtualMachineAdapter = new MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>(VirtualMachineAdapter, new VirtualMachineAdapter.Mask<TItem>(VirtualMachineAdapter));
                 this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
                 this.DirtinessScale = DirtinessScale;
+                this.ObjectPaletteDefaults = new MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>(ObjectPaletteDefaults, new ObjectPaletteDefaults.Mask<TItem>(ObjectPaletteDefaults));
+                this.Transforms = new MaskItem<TItem, Transforms.Mask<TItem>?>(Transforms, new Transforms.Mask<TItem>(Transforms));
+                this.XALG = XALG;
+                this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.ChanceNone = ChanceNone;
                 this.MaxCount = MaxCount;
                 this.Flags = Flags;
                 this.UseGlobal = UseGlobal;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
                 this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledBaseFormEntry.Mask<TItem>?>>?>(Entries, Enumerable.Empty<MaskItemIndexed<TItem, LeveledBaseFormEntry.Mask<TItem>?>>());
+                this.FilterKeywordChances = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FilterKeywordChance.Mask<TItem>?>>?>(FilterKeywordChances, Enumerable.Empty<MaskItemIndexed<TItem, FilterKeywordChance.Mask<TItem>?>>());
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
             }
 
@@ -255,12 +325,17 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, VirtualMachineAdapter.Mask<TItem>?>? VirtualMachineAdapter { get; set; }
             public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
             public TItem DirtinessScale;
+            public MaskItem<TItem, ObjectPaletteDefaults.Mask<TItem>?>? ObjectPaletteDefaults { get; set; }
+            public MaskItem<TItem, Transforms.Mask<TItem>?>? Transforms { get; set; }
+            public TItem XALG;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public TItem ChanceNone;
             public TItem MaxCount;
             public TItem Flags;
             public TItem UseGlobal;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledBaseFormEntry.Mask<TItem>?>>?>? Entries;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FilterKeywordChance.Mask<TItem>?>>?>? FilterKeywordChances;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             #endregion
 
@@ -278,12 +353,17 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
                 if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
                 if (!object.Equals(this.DirtinessScale, rhs.DirtinessScale)) return false;
+                if (!object.Equals(this.ObjectPaletteDefaults, rhs.ObjectPaletteDefaults)) return false;
+                if (!object.Equals(this.Transforms, rhs.Transforms)) return false;
+                if (!object.Equals(this.XALG, rhs.XALG)) return false;
+                if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.ChanceNone, rhs.ChanceNone)) return false;
                 if (!object.Equals(this.MaxCount, rhs.MaxCount)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.UseGlobal, rhs.UseGlobal)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
                 if (!object.Equals(this.Entries, rhs.Entries)) return false;
+                if (!object.Equals(this.FilterKeywordChances, rhs.FilterKeywordChances)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 return true;
             }
@@ -293,12 +373,17 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.VirtualMachineAdapter);
                 hash.Add(this.ObjectBounds);
                 hash.Add(this.DirtinessScale);
+                hash.Add(this.ObjectPaletteDefaults);
+                hash.Add(this.Transforms);
+                hash.Add(this.XALG);
+                hash.Add(this.Components);
                 hash.Add(this.ChanceNone);
                 hash.Add(this.MaxCount);
                 hash.Add(this.Flags);
                 hash.Add(this.UseGlobal);
                 hash.Add(this.Conditions);
                 hash.Add(this.Entries);
+                hash.Add(this.FilterKeywordChances);
                 hash.Add(this.Model);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -321,6 +406,29 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
                 }
                 if (!eval(this.DirtinessScale)) return false;
+                if (ObjectPaletteDefaults != null)
+                {
+                    if (!eval(this.ObjectPaletteDefaults.Overall)) return false;
+                    if (this.ObjectPaletteDefaults.Specific != null && !this.ObjectPaletteDefaults.Specific.All(eval)) return false;
+                }
+                if (Transforms != null)
+                {
+                    if (!eval(this.Transforms.Overall)) return false;
+                    if (this.Transforms.Specific != null && !this.Transforms.Specific.All(eval)) return false;
+                }
+                if (!eval(this.XALG)) return false;
+                if (this.Components != null)
+                {
+                    if (!eval(this.Components.Overall)) return false;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (!eval(this.ChanceNone)) return false;
                 if (!eval(this.MaxCount)) return false;
                 if (!eval(this.Flags)) return false;
@@ -343,6 +451,18 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.Entries.Specific != null)
                     {
                         foreach (var item in this.Entries.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.FilterKeywordChances != null)
+                {
+                    if (!eval(this.FilterKeywordChances.Overall)) return false;
+                    if (this.FilterKeywordChances.Specific != null)
+                    {
+                        foreach (var item in this.FilterKeywordChances.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -373,6 +493,29 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
                 }
                 if (eval(this.DirtinessScale)) return true;
+                if (ObjectPaletteDefaults != null)
+                {
+                    if (eval(this.ObjectPaletteDefaults.Overall)) return true;
+                    if (this.ObjectPaletteDefaults.Specific != null && this.ObjectPaletteDefaults.Specific.Any(eval)) return true;
+                }
+                if (Transforms != null)
+                {
+                    if (eval(this.Transforms.Overall)) return true;
+                    if (this.Transforms.Specific != null && this.Transforms.Specific.Any(eval)) return true;
+                }
+                if (eval(this.XALG)) return true;
+                if (this.Components != null)
+                {
+                    if (eval(this.Components.Overall)) return true;
+                    if (this.Components.Specific != null)
+                    {
+                        foreach (var item in this.Components.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 if (eval(this.ChanceNone)) return true;
                 if (eval(this.MaxCount)) return true;
                 if (eval(this.Flags)) return true;
@@ -395,6 +538,18 @@ namespace Mutagen.Bethesda.Starfield
                     if (this.Entries.Specific != null)
                     {
                         foreach (var item in this.Entries.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.FilterKeywordChances != null)
+                {
+                    if (eval(this.FilterKeywordChances.Overall)) return true;
+                    if (this.FilterKeywordChances.Specific != null)
+                    {
+                        foreach (var item in this.FilterKeywordChances.Specific)
                         {
                             if (!eval(item.Overall)) return false;
                             if (item.Specific != null && !item.Specific.All(eval)) return false;
@@ -424,6 +579,24 @@ namespace Mutagen.Bethesda.Starfield
                 obj.VirtualMachineAdapter = this.VirtualMachineAdapter == null ? null : new MaskItem<R, VirtualMachineAdapter.Mask<R>?>(eval(this.VirtualMachineAdapter.Overall), this.VirtualMachineAdapter.Specific?.Translate(eval));
                 obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
                 obj.DirtinessScale = eval(this.DirtinessScale);
+                obj.ObjectPaletteDefaults = this.ObjectPaletteDefaults == null ? null : new MaskItem<R, ObjectPaletteDefaults.Mask<R>?>(eval(this.ObjectPaletteDefaults.Overall), this.ObjectPaletteDefaults.Specific?.Translate(eval));
+                obj.Transforms = this.Transforms == null ? null : new MaskItem<R, Transforms.Mask<R>?>(eval(this.Transforms.Overall), this.Transforms.Specific?.Translate(eval));
+                obj.XALG = eval(this.XALG);
+                if (Components != null)
+                {
+                    obj.Components = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AComponent.Mask<R>?>>?>(eval(this.Components.Overall), Enumerable.Empty<MaskItemIndexed<R, AComponent.Mask<R>?>>());
+                    if (Components.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, AComponent.Mask<R>?>>();
+                        obj.Components.Specific = l;
+                        foreach (var item in Components.Specific)
+                        {
+                            MaskItemIndexed<R, AComponent.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, AComponent.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
                 obj.ChanceNone = eval(this.ChanceNone);
                 obj.MaxCount = eval(this.MaxCount);
                 obj.Flags = eval(this.Flags);
@@ -453,6 +626,21 @@ namespace Mutagen.Bethesda.Starfield
                         foreach (var item in Entries.Specific)
                         {
                             MaskItemIndexed<R, LeveledBaseFormEntry.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, LeveledBaseFormEntry.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (FilterKeywordChances != null)
+                {
+                    obj.FilterKeywordChances = new MaskItem<R, IEnumerable<MaskItemIndexed<R, FilterKeywordChance.Mask<R>?>>?>(eval(this.FilterKeywordChances.Overall), Enumerable.Empty<MaskItemIndexed<R, FilterKeywordChance.Mask<R>?>>());
+                    if (FilterKeywordChances.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, FilterKeywordChance.Mask<R>?>>();
+                        obj.FilterKeywordChances.Specific = l;
+                        foreach (var item in FilterKeywordChances.Specific)
+                        {
+                            MaskItemIndexed<R, FilterKeywordChance.Mask<R>?>? mask = item == null ? null : new MaskItemIndexed<R, FilterKeywordChance.Mask<R>?>(item.Index, eval(item.Overall), item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -488,6 +676,37 @@ namespace Mutagen.Bethesda.Starfield
                     if (printMask?.DirtinessScale ?? true)
                     {
                         sb.AppendItem(DirtinessScale, "DirtinessScale");
+                    }
+                    if (printMask?.ObjectPaletteDefaults?.Overall ?? true)
+                    {
+                        ObjectPaletteDefaults?.Print(sb);
+                    }
+                    if (printMask?.Transforms?.Overall ?? true)
+                    {
+                        Transforms?.Print(sb);
+                    }
+                    if (printMask?.XALG ?? true)
+                    {
+                        sb.AppendItem(XALG, "XALG");
+                    }
+                    if ((printMask?.Components?.Overall ?? true)
+                        && Components is {} ComponentsItem)
+                    {
+                        sb.AppendLine("Components =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(ComponentsItem.Overall);
+                            if (ComponentsItem.Specific != null)
+                            {
+                                foreach (var subItem in ComponentsItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
                     }
                     if (printMask?.ChanceNone ?? true)
                     {
@@ -543,6 +762,25 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
+                    if ((printMask?.FilterKeywordChances?.Overall ?? true)
+                        && FilterKeywordChances is {} FilterKeywordChancesItem)
+                    {
+                        sb.AppendLine("FilterKeywordChances =>");
+                        using (sb.Brace())
+                        {
+                            sb.AppendItem(FilterKeywordChancesItem.Overall);
+                            if (FilterKeywordChancesItem.Specific != null)
+                            {
+                                foreach (var subItem in FilterKeywordChancesItem.Specific)
+                                {
+                                    using (sb.Brace())
+                                    {
+                                        subItem?.Print(sb);
+                                    }
+                                }
+                            }
+                        }
+                    }
                     if (printMask?.Model?.Overall ?? true)
                     {
                         Model?.Print(sb);
@@ -561,12 +799,17 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, VirtualMachineAdapter.ErrorMask?>? VirtualMachineAdapter;
             public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
             public Exception? DirtinessScale;
+            public MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>? ObjectPaletteDefaults;
+            public MaskItem<Exception?, Transforms.ErrorMask?>? Transforms;
+            public Exception? XALG;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public Exception? ChanceNone;
             public Exception? MaxCount;
             public Exception? Flags;
             public Exception? UseGlobal;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledBaseFormEntry.ErrorMask?>>?>? Entries;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FilterKeywordChance.ErrorMask?>>?>? FilterKeywordChances;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             #endregion
 
@@ -582,6 +825,14 @@ namespace Mutagen.Bethesda.Starfield
                         return ObjectBounds;
                     case LeveledBaseForm_FieldIndex.DirtinessScale:
                         return DirtinessScale;
+                    case LeveledBaseForm_FieldIndex.ObjectPaletteDefaults:
+                        return ObjectPaletteDefaults;
+                    case LeveledBaseForm_FieldIndex.Transforms:
+                        return Transforms;
+                    case LeveledBaseForm_FieldIndex.XALG:
+                        return XALG;
+                    case LeveledBaseForm_FieldIndex.Components:
+                        return Components;
                     case LeveledBaseForm_FieldIndex.ChanceNone:
                         return ChanceNone;
                     case LeveledBaseForm_FieldIndex.MaxCount:
@@ -594,6 +845,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Conditions;
                     case LeveledBaseForm_FieldIndex.Entries:
                         return Entries;
+                    case LeveledBaseForm_FieldIndex.FilterKeywordChances:
+                        return FilterKeywordChances;
                     case LeveledBaseForm_FieldIndex.Model:
                         return Model;
                     default:
@@ -615,6 +868,18 @@ namespace Mutagen.Bethesda.Starfield
                     case LeveledBaseForm_FieldIndex.DirtinessScale:
                         this.DirtinessScale = ex;
                         break;
+                    case LeveledBaseForm_FieldIndex.ObjectPaletteDefaults:
+                        this.ObjectPaletteDefaults = new MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>(ex, null);
+                        break;
+                    case LeveledBaseForm_FieldIndex.Transforms:
+                        this.Transforms = new MaskItem<Exception?, Transforms.ErrorMask?>(ex, null);
+                        break;
+                    case LeveledBaseForm_FieldIndex.XALG:
+                        this.XALG = ex;
+                        break;
+                    case LeveledBaseForm_FieldIndex.Components:
+                        this.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(ex, null);
+                        break;
                     case LeveledBaseForm_FieldIndex.ChanceNone:
                         this.ChanceNone = ex;
                         break;
@@ -632,6 +897,9 @@ namespace Mutagen.Bethesda.Starfield
                         break;
                     case LeveledBaseForm_FieldIndex.Entries:
                         this.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledBaseFormEntry.ErrorMask?>>?>(ex, null);
+                        break;
+                    case LeveledBaseForm_FieldIndex.FilterKeywordChances:
+                        this.FilterKeywordChances = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FilterKeywordChance.ErrorMask?>>?>(ex, null);
                         break;
                     case LeveledBaseForm_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
@@ -656,6 +924,18 @@ namespace Mutagen.Bethesda.Starfield
                     case LeveledBaseForm_FieldIndex.DirtinessScale:
                         this.DirtinessScale = (Exception?)obj;
                         break;
+                    case LeveledBaseForm_FieldIndex.ObjectPaletteDefaults:
+                        this.ObjectPaletteDefaults = (MaskItem<Exception?, ObjectPaletteDefaults.ErrorMask?>?)obj;
+                        break;
+                    case LeveledBaseForm_FieldIndex.Transforms:
+                        this.Transforms = (MaskItem<Exception?, Transforms.ErrorMask?>?)obj;
+                        break;
+                    case LeveledBaseForm_FieldIndex.XALG:
+                        this.XALG = (Exception?)obj;
+                        break;
+                    case LeveledBaseForm_FieldIndex.Components:
+                        this.Components = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>)obj;
+                        break;
                     case LeveledBaseForm_FieldIndex.ChanceNone:
                         this.ChanceNone = (Exception?)obj;
                         break;
@@ -674,6 +954,9 @@ namespace Mutagen.Bethesda.Starfield
                     case LeveledBaseForm_FieldIndex.Entries:
                         this.Entries = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledBaseFormEntry.ErrorMask?>>?>)obj;
                         break;
+                    case LeveledBaseForm_FieldIndex.FilterKeywordChances:
+                        this.FilterKeywordChances = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FilterKeywordChance.ErrorMask?>>?>)obj;
+                        break;
                     case LeveledBaseForm_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
@@ -689,12 +972,17 @@ namespace Mutagen.Bethesda.Starfield
                 if (VirtualMachineAdapter != null) return true;
                 if (ObjectBounds != null) return true;
                 if (DirtinessScale != null) return true;
+                if (ObjectPaletteDefaults != null) return true;
+                if (Transforms != null) return true;
+                if (XALG != null) return true;
+                if (Components != null) return true;
                 if (ChanceNone != null) return true;
                 if (MaxCount != null) return true;
                 if (Flags != null) return true;
                 if (UseGlobal != null) return true;
                 if (Conditions != null) return true;
                 if (Entries != null) return true;
+                if (FilterKeywordChances != null) return true;
                 if (Model != null) return true;
                 return false;
             }
@@ -726,6 +1014,29 @@ namespace Mutagen.Bethesda.Starfield
                 ObjectBounds?.Print(sb);
                 {
                     sb.AppendItem(DirtinessScale, "DirtinessScale");
+                }
+                ObjectPaletteDefaults?.Print(sb);
+                Transforms?.Print(sb);
+                {
+                    sb.AppendItem(XALG, "XALG");
+                }
+                if (Components is {} ComponentsItem)
+                {
+                    sb.AppendLine("Components =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(ComponentsItem.Overall);
+                        if (ComponentsItem.Specific != null)
+                        {
+                            foreach (var subItem in ComponentsItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
                 }
                 {
                     sb.AppendItem(ChanceNone, "ChanceNone");
@@ -775,6 +1086,24 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
+                if (FilterKeywordChances is {} FilterKeywordChancesItem)
+                {
+                    sb.AppendLine("FilterKeywordChances =>");
+                    using (sb.Brace())
+                    {
+                        sb.AppendItem(FilterKeywordChancesItem.Overall);
+                        if (FilterKeywordChancesItem.Specific != null)
+                        {
+                            foreach (var subItem in FilterKeywordChancesItem.Specific)
+                            {
+                                using (sb.Brace())
+                                {
+                                    subItem?.Print(sb);
+                                }
+                            }
+                        }
+                    }
+                }
                 Model?.Print(sb);
             }
             #endregion
@@ -787,12 +1116,17 @@ namespace Mutagen.Bethesda.Starfield
                 ret.VirtualMachineAdapter = this.VirtualMachineAdapter.Combine(rhs.VirtualMachineAdapter, (l, r) => l.Combine(r));
                 ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
                 ret.DirtinessScale = this.DirtinessScale.Combine(rhs.DirtinessScale);
+                ret.ObjectPaletteDefaults = this.ObjectPaletteDefaults.Combine(rhs.ObjectPaletteDefaults, (l, r) => l.Combine(r));
+                ret.Transforms = this.Transforms.Combine(rhs.Transforms, (l, r) => l.Combine(r));
+                ret.XALG = this.XALG.Combine(rhs.XALG);
+                ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.ChanceNone = this.ChanceNone.Combine(rhs.ChanceNone);
                 ret.MaxCount = this.MaxCount.Combine(rhs.MaxCount);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.UseGlobal = this.UseGlobal.Combine(rhs.UseGlobal);
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
                 ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledBaseFormEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), Noggog.ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
+                ret.FilterKeywordChances = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FilterKeywordChance.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.FilterKeywordChances?.Overall, rhs.FilterKeywordChances?.Overall), Noggog.ExceptionExt.Combine(this.FilterKeywordChances?.Specific, rhs.FilterKeywordChances?.Specific));
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 return ret;
             }
@@ -819,12 +1153,17 @@ namespace Mutagen.Bethesda.Starfield
             public VirtualMachineAdapter.TranslationMask? VirtualMachineAdapter;
             public ObjectBounds.TranslationMask? ObjectBounds;
             public bool DirtinessScale;
+            public ObjectPaletteDefaults.TranslationMask? ObjectPaletteDefaults;
+            public Transforms.TranslationMask? Transforms;
+            public bool XALG;
+            public AComponent.TranslationMask? Components;
             public bool ChanceNone;
             public bool MaxCount;
             public bool Flags;
             public bool UseGlobal;
             public Condition.TranslationMask? Conditions;
             public LeveledBaseFormEntry.TranslationMask? Entries;
+            public FilterKeywordChance.TranslationMask? FilterKeywordChances;
             public Model.TranslationMask? Model;
             #endregion
 
@@ -835,6 +1174,7 @@ namespace Mutagen.Bethesda.Starfield
                 : base(defaultOn, onOverall)
             {
                 this.DirtinessScale = defaultOn;
+                this.XALG = defaultOn;
                 this.ChanceNone = defaultOn;
                 this.MaxCount = defaultOn;
                 this.Flags = defaultOn;
@@ -849,12 +1189,17 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((VirtualMachineAdapter != null ? VirtualMachineAdapter.OnOverall : DefaultOn, VirtualMachineAdapter?.GetCrystal()));
                 ret.Add((ObjectBounds != null ? ObjectBounds.OnOverall : DefaultOn, ObjectBounds?.GetCrystal()));
                 ret.Add((DirtinessScale, null));
+                ret.Add((ObjectPaletteDefaults != null ? ObjectPaletteDefaults.OnOverall : DefaultOn, ObjectPaletteDefaults?.GetCrystal()));
+                ret.Add((Transforms != null ? Transforms.OnOverall : DefaultOn, Transforms?.GetCrystal()));
+                ret.Add((XALG, null));
+                ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((ChanceNone, null));
                 ret.Add((MaxCount, null));
                 ret.Add((Flags, null));
                 ret.Add((UseGlobal, null));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
                 ret.Add((Entries == null ? DefaultOn : !Entries.GetCrystal().CopyNothing, Entries?.GetCrystal()));
+                ret.Add((FilterKeywordChances == null ? DefaultOn : !FilterKeywordChances.GetCrystal().CopyNothing, FilterKeywordChances?.GetCrystal()));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
             }
 
@@ -1023,12 +1368,17 @@ namespace Mutagen.Bethesda.Starfield
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new Percent DirtinessScale { get; set; }
+        new ObjectPaletteDefaults? ObjectPaletteDefaults { get; set; }
+        new Transforms? Transforms { get; set; }
+        new UInt64? XALG { get; set; }
+        new ExtendedList<AComponent> Components { get; }
         new Single ChanceNone { get; set; }
         new Byte? MaxCount { get; set; }
         new LeveledItem.Flag Flags { get; set; }
         new IFormLinkNullable<IGlobalGetter> UseGlobal { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         new ExtendedList<LeveledBaseFormEntry>? Entries { get; set; }
+        new ExtendedList<FilterKeywordChance>? FilterKeywordChances { get; set; }
         /// <summary>
         /// Aspects: IModeled
         /// </summary>
@@ -1071,12 +1421,17 @@ namespace Mutagen.Bethesda.Starfield
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
         Percent DirtinessScale { get; }
+        IObjectPaletteDefaultsGetter? ObjectPaletteDefaults { get; }
+        ITransformsGetter? Transforms { get; }
+        UInt64? XALG { get; }
+        IReadOnlyList<IAComponentGetter> Components { get; }
         Single ChanceNone { get; }
         Byte? MaxCount { get; }
         LeveledItem.Flag Flags { get; }
         IFormLinkNullableGetter<IGlobalGetter> UseGlobal { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         IReadOnlyList<ILeveledBaseFormEntryGetter>? Entries { get; }
+        IReadOnlyList<IFilterKeywordChanceGetter>? FilterKeywordChances { get; }
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter
@@ -1262,13 +1617,18 @@ namespace Mutagen.Bethesda.Starfield
         VirtualMachineAdapter = 7,
         ObjectBounds = 8,
         DirtinessScale = 9,
-        ChanceNone = 10,
-        MaxCount = 11,
-        Flags = 12,
-        UseGlobal = 13,
-        Conditions = 14,
-        Entries = 15,
-        Model = 16,
+        ObjectPaletteDefaults = 10,
+        Transforms = 11,
+        XALG = 12,
+        Components = 13,
+        ChanceNone = 14,
+        MaxCount = 15,
+        Flags = 16,
+        UseGlobal = 17,
+        Conditions = 18,
+        Entries = 19,
+        FilterKeywordChances = 20,
+        Model = 21,
     }
     #endregion
 
@@ -1279,9 +1639,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 10;
+        public const ushort AdditionalFieldCount = 15;
 
-        public const ushort FieldCount = 17;
+        public const ushort FieldCount = 22;
 
         public static readonly Type MaskType = typeof(LeveledBaseForm.Mask<>);
 
@@ -1318,6 +1678,11 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.XXXX,
                 RecordTypes.OBND,
                 RecordTypes.ODTY,
+                RecordTypes.OPDS,
+                RecordTypes.PTT2,
+                RecordTypes.XALG,
+                RecordTypes.BFCB,
+                RecordTypes.BFCE,
                 RecordTypes.LVLD,
                 RecordTypes.LVLM,
                 RecordTypes.LVLF,
@@ -1328,6 +1693,8 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.CIS2,
                 RecordTypes.LVLO,
                 RecordTypes.LLCT,
+                RecordTypes.COED,
+                RecordTypes.LLKC,
                 RecordTypes.MODL,
                 RecordTypes.MODT,
                 RecordTypes.MOLM,
@@ -1382,12 +1749,17 @@ namespace Mutagen.Bethesda.Starfield
             item.VirtualMachineAdapter = null;
             item.ObjectBounds.Clear();
             item.DirtinessScale = default(Percent);
+            item.ObjectPaletteDefaults = null;
+            item.Transforms = null;
+            item.XALG = default;
+            item.Components.Clear();
             item.ChanceNone = default(Single);
             item.MaxCount = default;
             item.Flags = default(LeveledItem.Flag);
             item.UseGlobal.Clear();
             item.Conditions.Clear();
             item.Entries = null;
+            item.FilterKeywordChances = null;
             item.Model = null;
             base.Clear(item);
         }
@@ -1407,15 +1779,23 @@ namespace Mutagen.Bethesda.Starfield
         {
             base.RemapLinks(obj, mapping);
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
+            obj.Transforms?.RemapLinks(mapping);
+            obj.Components.RemapLinks(mapping);
             obj.UseGlobal.Relink(mapping);
             obj.Conditions.RemapLinks(mapping);
             obj.Entries?.RemapLinks(mapping);
+            obj.FilterKeywordChances?.RemapLinks(mapping);
             obj.Model?.RemapLinks(mapping);
         }
         
         public IEnumerable<IAssetLink> EnumerateListedAssetLinks(ILeveledBaseForm obj)
         {
             foreach (var item in base.EnumerateListedAssetLinks(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainer>()
+                .SelectMany((f) => f.EnumerateListedAssetLinks()))
             {
                 yield return item;
             }
@@ -1436,6 +1816,7 @@ namespace Mutagen.Bethesda.Starfield
             AssetLinkQuery queryCategories)
         {
             base.RemapAssetLinks(obj, mapping, linkCache, queryCategories);
+            obj.Components.ForEach(x => x.RemapAssetLinks(mapping, queryCategories, linkCache));
             obj.Model?.RemapAssetLinks(mapping, queryCategories, linkCache);
         }
         
@@ -1511,6 +1892,21 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
             ret.DirtinessScale = item.DirtinessScale.Equals(rhs.DirtinessScale);
+            ret.ObjectPaletteDefaults = EqualsMaskHelper.EqualsHelper(
+                item.ObjectPaletteDefaults,
+                rhs.ObjectPaletteDefaults,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Transforms = EqualsMaskHelper.EqualsHelper(
+                item.Transforms,
+                rhs.Transforms,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.XALG = item.XALG == rhs.XALG;
+            ret.Components = item.Components.CollectionEqualsHelper(
+                rhs.Components,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             ret.ChanceNone = item.ChanceNone.EqualsWithin(rhs.ChanceNone);
             ret.MaxCount = item.MaxCount == rhs.MaxCount;
             ret.Flags = item.Flags == rhs.Flags;
@@ -1521,6 +1917,10 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.Entries = item.Entries.CollectionEqualsHelper(
                 rhs.Entries,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.FilterKeywordChances = item.FilterKeywordChances.CollectionEqualsHelper(
+                rhs.FilterKeywordChances,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
             ret.Model = EqualsMaskHelper.EqualsHelper(
@@ -1590,6 +1990,35 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.DirtinessScale, "DirtinessScale");
             }
+            if ((printMask?.ObjectPaletteDefaults?.Overall ?? true)
+                && item.ObjectPaletteDefaults is {} ObjectPaletteDefaultsItem)
+            {
+                ObjectPaletteDefaultsItem?.Print(sb, "ObjectPaletteDefaults");
+            }
+            if ((printMask?.Transforms?.Overall ?? true)
+                && item.Transforms is {} TransformsItem)
+            {
+                TransformsItem?.Print(sb, "Transforms");
+            }
+            if ((printMask?.XALG ?? true)
+                && item.XALG is {} XALGItem)
+            {
+                sb.AppendItem(XALGItem, "XALG");
+            }
+            if (printMask?.Components?.Overall ?? true)
+            {
+                sb.AppendLine("Components =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in item.Components)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
             if (printMask?.ChanceNone ?? true)
             {
                 sb.AppendItem(item.ChanceNone, "ChanceNone");
@@ -1628,6 +2057,21 @@ namespace Mutagen.Bethesda.Starfield
                 using (sb.Brace())
                 {
                     foreach (var subItem in EntriesItem)
+                    {
+                        using (sb.Brace())
+                        {
+                            subItem?.Print(sb, "Item");
+                        }
+                    }
+                }
+            }
+            if ((printMask?.FilterKeywordChances?.Overall ?? true)
+                && item.FilterKeywordChances is {} FilterKeywordChancesItem)
+            {
+                sb.AppendLine("FilterKeywordChances =>");
+                using (sb.Brace())
+                {
+                    foreach (var subItem in FilterKeywordChancesItem)
                     {
                         using (sb.Brace())
                         {
@@ -1711,6 +2155,30 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.DirtinessScale.Equals(rhs.DirtinessScale)) return false;
             }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledBaseForm_FieldIndex.ObjectPaletteDefaults) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectPaletteDefaults, rhs.ObjectPaletteDefaults, out var lhsObjectPaletteDefaults, out var rhsObjectPaletteDefaults, out var isObjectPaletteDefaultsEqual))
+                {
+                    if (!((ObjectPaletteDefaultsCommon)((IObjectPaletteDefaultsGetter)lhsObjectPaletteDefaults).CommonInstance()!).Equals(lhsObjectPaletteDefaults, rhsObjectPaletteDefaults, equalsMask?.GetSubCrystal((int)LeveledBaseForm_FieldIndex.ObjectPaletteDefaults))) return false;
+                }
+                else if (!isObjectPaletteDefaultsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledBaseForm_FieldIndex.Transforms) ?? true))
+            {
+                if (EqualsMaskHelper.RefEquality(lhs.Transforms, rhs.Transforms, out var lhsTransforms, out var rhsTransforms, out var isTransformsEqual))
+                {
+                    if (!((TransformsCommon)((ITransformsGetter)lhsTransforms).CommonInstance()!).Equals(lhsTransforms, rhsTransforms, equalsMask?.GetSubCrystal((int)LeveledBaseForm_FieldIndex.Transforms))) return false;
+                }
+                else if (!isTransformsEqual) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledBaseForm_FieldIndex.XALG) ?? true))
+            {
+                if (lhs.XALG != rhs.XALG) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledBaseForm_FieldIndex.Components) ?? true))
+            {
+                if (!lhs.Components.SequenceEqual(rhs.Components, (l, r) => ((AComponentCommon)((IAComponentGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LeveledBaseForm_FieldIndex.Components)))) return false;
+            }
             if ((equalsMask?.GetShouldTranslate((int)LeveledBaseForm_FieldIndex.ChanceNone) ?? true))
             {
                 if (!lhs.ChanceNone.EqualsWithin(rhs.ChanceNone)) return false;
@@ -1734,6 +2202,10 @@ namespace Mutagen.Bethesda.Starfield
             if ((equalsMask?.GetShouldTranslate((int)LeveledBaseForm_FieldIndex.Entries) ?? true))
             {
                 if (!lhs.Entries.SequenceEqualNullable(rhs.Entries, (l, r) => ((LeveledBaseFormEntryCommon)((ILeveledBaseFormEntryGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LeveledBaseForm_FieldIndex.Entries)))) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledBaseForm_FieldIndex.FilterKeywordChances) ?? true))
+            {
+                if (!lhs.FilterKeywordChances.SequenceEqualNullable(rhs.FilterKeywordChances, (l, r) => ((FilterKeywordChanceCommon)((IFilterKeywordChanceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LeveledBaseForm_FieldIndex.FilterKeywordChances)))) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)LeveledBaseForm_FieldIndex.Model) ?? true))
             {
@@ -1777,6 +2249,19 @@ namespace Mutagen.Bethesda.Starfield
             }
             hash.Add(item.ObjectBounds);
             hash.Add(item.DirtinessScale);
+            if (item.ObjectPaletteDefaults is {} ObjectPaletteDefaultsitem)
+            {
+                hash.Add(ObjectPaletteDefaultsitem);
+            }
+            if (item.Transforms is {} Transformsitem)
+            {
+                hash.Add(Transformsitem);
+            }
+            if (item.XALG is {} XALGitem)
+            {
+                hash.Add(XALGitem);
+            }
+            hash.Add(item.Components);
             hash.Add(item.ChanceNone);
             if (item.MaxCount is {} MaxCountitem)
             {
@@ -1786,6 +2271,7 @@ namespace Mutagen.Bethesda.Starfield
             hash.Add(item.UseGlobal);
             hash.Add(item.Conditions);
             hash.Add(item.Entries);
+            hash.Add(item.FilterKeywordChances);
             if (item.Model is {} Modelitem)
             {
                 hash.Add(Modelitem);
@@ -1826,6 +2312,18 @@ namespace Mutagen.Bethesda.Starfield
                     yield return item;
                 }
             }
+            if (obj.Transforms is {} TransformsItems)
+            {
+                foreach (var item in TransformsItems.EnumerateFormLinks())
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IFormLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateFormLinks()))
+            {
+                yield return FormLinkInformation.Factory(item);
+            }
             if (FormLinkInformation.TryFactory(obj.UseGlobal, out var UseGlobalInfo))
             {
                 yield return UseGlobalInfo;
@@ -1837,6 +2335,13 @@ namespace Mutagen.Bethesda.Starfield
             if (obj.Entries is {} EntriesItem)
             {
                 foreach (var item in EntriesItem.SelectMany(f => f.EnumerateFormLinks()))
+                {
+                    yield return FormLinkInformation.Factory(item);
+                }
+            }
+            if (obj.FilterKeywordChances is {} FilterKeywordChancesItem)
+            {
+                foreach (var item in FilterKeywordChancesItem.SelectMany(f => f.EnumerateFormLinks()))
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
@@ -1854,6 +2359,11 @@ namespace Mutagen.Bethesda.Starfield
         public IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(ILeveledBaseFormGetter obj, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType)
         {
             foreach (var item in base.EnumerateAssetLinks(obj, queryCategories, linkCache, assetType))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Components.WhereCastable<IAComponentGetter, IAssetLinkContainerGetter>()
+                .SelectMany((f) => f.EnumerateAssetLinks(queryCategories: queryCategories, linkCache: linkCache, assetType: assetType)))
             {
                 yield return item;
             }
@@ -1990,6 +2500,86 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.DirtinessScale = rhs.DirtinessScale;
             }
+            if ((copyMask?.GetShouldTranslate((int)LeveledBaseForm_FieldIndex.ObjectPaletteDefaults) ?? true))
+            {
+                errorMask?.PushIndex((int)LeveledBaseForm_FieldIndex.ObjectPaletteDefaults);
+                try
+                {
+                    if(rhs.ObjectPaletteDefaults is {} rhsObjectPaletteDefaults)
+                    {
+                        item.ObjectPaletteDefaults = rhsObjectPaletteDefaults.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)LeveledBaseForm_FieldIndex.ObjectPaletteDefaults));
+                    }
+                    else
+                    {
+                        item.ObjectPaletteDefaults = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledBaseForm_FieldIndex.Transforms) ?? true))
+            {
+                errorMask?.PushIndex((int)LeveledBaseForm_FieldIndex.Transforms);
+                try
+                {
+                    if(rhs.Transforms is {} rhsTransforms)
+                    {
+                        item.Transforms = rhsTransforms.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)LeveledBaseForm_FieldIndex.Transforms));
+                    }
+                    else
+                    {
+                        item.Transforms = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledBaseForm_FieldIndex.XALG) ?? true))
+            {
+                item.XALG = rhs.XALG;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledBaseForm_FieldIndex.Components) ?? true))
+            {
+                errorMask?.PushIndex((int)LeveledBaseForm_FieldIndex.Components);
+                try
+                {
+                    item.Components.SetTo(
+                        rhs.Components
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)LeveledBaseForm_FieldIndex.ChanceNone) ?? true))
             {
                 item.ChanceNone = rhs.ChanceNone;
@@ -2050,6 +2640,38 @@ namespace Mutagen.Bethesda.Starfield
                     else
                     {
                         item.Entries = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledBaseForm_FieldIndex.FilterKeywordChances) ?? true))
+            {
+                errorMask?.PushIndex((int)LeveledBaseForm_FieldIndex.FilterKeywordChances);
+                try
+                {
+                    if ((rhs.FilterKeywordChances != null))
+                    {
+                        item.FilterKeywordChances = 
+                            rhs.FilterKeywordChances
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<FilterKeywordChance>();
+                    }
+                    else
+                    {
+                        item.FilterKeywordChances = null;
                     }
                 }
                 catch (Exception ex)
@@ -2274,6 +2896,35 @@ namespace Mutagen.Bethesda.Starfield
                 item: item.DirtinessScale,
                 integerType: FloatIntegerType.UInt,
                 header: translationParams.ConvertToCustom(RecordTypes.ODTY));
+            if (item.ObjectPaletteDefaults is {} ObjectPaletteDefaultsItem)
+            {
+                ((ObjectPaletteDefaultsBinaryWriteTranslation)((IBinaryItem)ObjectPaletteDefaultsItem).BinaryWriteTranslator).Write(
+                    item: ObjectPaletteDefaultsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            if (item.Transforms is {} TransformsItem)
+            {
+                ((TransformsBinaryWriteTranslation)((IBinaryItem)TransformsItem).BinaryWriteTranslator).Write(
+                    item: TransformsItem,
+                    writer: writer,
+                    translationParams: translationParams);
+            }
+            UInt64BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.XALG,
+                header: translationParams.ConvertToCustom(RecordTypes.XALG));
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAComponentGetter>.Instance.Write(
+                writer: writer,
+                items: item.Components,
+                transl: (MutagenWriter subWriter, IAComponentGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((AComponentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.ChanceNone,
@@ -2311,6 +2962,18 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     var Item = subItem;
                     ((LeveledBaseFormEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        translationParams: conv);
+                });
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFilterKeywordChanceGetter>.Instance.Write(
+                writer: writer,
+                items: item.FilterKeywordChances,
+                recordType: translationParams.ConvertToCustom(RecordTypes.LLKC),
+                transl: (MutagenWriter subWriter, IFilterKeywordChanceGetter subItem, TypedWriteParams conv) =>
+                {
+                    var Item = subItem;
+                    ((FilterKeywordChanceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         translationParams: conv);
@@ -2410,6 +3073,32 @@ namespace Mutagen.Bethesda.Starfield
                         integerType: FloatIntegerType.UInt);
                     return (int)LeveledBaseForm_FieldIndex.DirtinessScale;
                 }
+                case RecordTypeInts.OPDS:
+                {
+                    item.ObjectPaletteDefaults = Mutagen.Bethesda.Starfield.ObjectPaletteDefaults.CreateFromBinary(frame: frame);
+                    return (int)LeveledBaseForm_FieldIndex.ObjectPaletteDefaults;
+                }
+                case RecordTypeInts.PTT2:
+                {
+                    item.Transforms = Mutagen.Bethesda.Starfield.Transforms.CreateFromBinary(frame: frame);
+                    return (int)LeveledBaseForm_FieldIndex.Transforms;
+                }
+                case RecordTypeInts.XALG:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.XALG = frame.ReadUInt64();
+                    return (int)LeveledBaseForm_FieldIndex.XALG;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    item.Components.SetTo(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AComponent>.Instance.Parse(
+                            reader: frame,
+                            triggeringRecord: AComponent_Registration.TriggerSpecs,
+                            translationParams: translationParams,
+                            transl: AComponent.TryCreateFromBinary));
+                    return (int)LeveledBaseForm_FieldIndex.Components;
+                }
                 case RecordTypeInts.LVLD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2459,6 +3148,16 @@ namespace Mutagen.Bethesda.Starfield
                             transl: LeveledBaseFormEntry.TryCreateFromBinary)
                         .CastExtendedList<LeveledBaseFormEntry>();
                     return (int)LeveledBaseForm_FieldIndex.Entries;
+                }
+                case RecordTypeInts.LLKC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FilterKeywordChances = 
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<FilterKeywordChance>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: FilterKeywordChance.TryCreateFromBinary)
+                        .CastExtendedList<FilterKeywordChance>();
+                    return (int)LeveledBaseForm_FieldIndex.FilterKeywordChances;
                 }
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
@@ -2553,6 +3252,19 @@ namespace Mutagen.Bethesda.Starfield
         private int? _DirtinessScaleLocation;
         public Percent DirtinessScale => _DirtinessScaleLocation.HasValue ? PercentBinaryTranslation.GetPercent(HeaderTranslation.ExtractSubrecordMemory(_recordData, _DirtinessScaleLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt) : default(Percent);
         #endregion
+        #region ObjectPaletteDefaults
+        private RangeInt32? _ObjectPaletteDefaultsLocation;
+        public IObjectPaletteDefaultsGetter? ObjectPaletteDefaults => _ObjectPaletteDefaultsLocation.HasValue ? ObjectPaletteDefaultsBinaryOverlay.ObjectPaletteDefaultsFactory(_recordData.Slice(_ObjectPaletteDefaultsLocation!.Value.Min), _package) : default;
+        #endregion
+        #region Transforms
+        private RangeInt32? _TransformsLocation;
+        public ITransformsGetter? Transforms => _TransformsLocation.HasValue ? TransformsBinaryOverlay.TransformsFactory(_recordData.Slice(_TransformsLocation!.Value.Min), _package) : default;
+        #endregion
+        #region XALG
+        private int? _XALGLocation;
+        public UInt64? XALG => _XALGLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _XALGLocation.Value, _package.MetaData.Constants)) : default(UInt64?);
+        #endregion
+        public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         #region ChanceNone
         private int? _ChanceNoneLocation;
         public Single ChanceNone => _ChanceNoneLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _ChanceNoneLocation.Value, _package.MetaData.Constants).Float() : default(Single);
@@ -2571,6 +3283,7 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
         public IReadOnlyList<ILeveledBaseFormEntryGetter>? Entries { get; private set; }
+        public IReadOnlyList<IFilterKeywordChanceGetter>? FilterKeywordChances { get; private set; }
         public IModelGetter? Model { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2661,6 +3374,30 @@ namespace Mutagen.Bethesda.Starfield
                     _DirtinessScaleLocation = (stream.Position - offset);
                     return (int)LeveledBaseForm_FieldIndex.DirtinessScale;
                 }
+                case RecordTypeInts.OPDS:
+                {
+                    _ObjectPaletteDefaultsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)LeveledBaseForm_FieldIndex.ObjectPaletteDefaults;
+                }
+                case RecordTypeInts.PTT2:
+                {
+                    _TransformsLocation = new RangeInt32((stream.Position - offset), finalPos - offset);
+                    return (int)LeveledBaseForm_FieldIndex.Transforms;
+                }
+                case RecordTypeInts.XALG:
+                {
+                    _XALGLocation = (stream.Position - offset);
+                    return (int)LeveledBaseForm_FieldIndex.XALG;
+                }
+                case RecordTypeInts.BFCB:
+                {
+                    this.Components = this.ParseRepeatedTypelessSubrecord<IAComponentGetter>(
+                        stream: stream,
+                        translationParams: translationParams,
+                        trigger: AComponent_Registration.TriggerSpecs,
+                        factory: AComponentBinaryOverlay.AComponentFactory);
+                    return (int)LeveledBaseForm_FieldIndex.Components;
+                }
                 case RecordTypeInts.LVLD:
                 {
                     _ChanceNoneLocation = (stream.Position - offset);
@@ -2709,6 +3446,16 @@ namespace Mutagen.Bethesda.Starfield
                         getter: (s, p, recConv) => LeveledBaseFormEntryBinaryOverlay.LeveledBaseFormEntryFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return (int)LeveledBaseForm_FieldIndex.Entries;
+                }
+                case RecordTypeInts.LLKC:
+                {
+                    this.FilterKeywordChances = BinaryOverlayList.FactoryByStartIndexWithTrigger<IFilterKeywordChanceGetter>(
+                        stream: stream,
+                        package: _package,
+                        finalPos: finalPos,
+                        itemLength: 12,
+                        getter: (s, p) => FilterKeywordChanceBinaryOverlay.FilterKeywordChanceFactory(s, p));
+                    return (int)LeveledBaseForm_FieldIndex.FilterKeywordChances;
                 }
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:

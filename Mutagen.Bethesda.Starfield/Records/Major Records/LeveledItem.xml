@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="LeveledItem" recordType="LVLI" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="LeveledItem" recordType="LVLI" objType="Record" baseClass="StarfieldMajorRecord" majorFlag="true">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
@@ -12,12 +12,15 @@
       <UInt8 name="MaxCount" recordType="LVLM" />
       <Enum name="Flags" recordType="LVLF" nullable="False" enumName="LeveledItem.Flag" byteLength="2" />
       <RefList name="Conditions" refName="Condition" />
-      <FormLink name="UseGlobal" refName="Global" recordType="LVLG" />
+      <FormLink name="UseChanceNoneGlobal" refName="Global" recordType="LVLG" />
+      <FormLink name="RequiredBiome" refName="Biome" recordType="LLRB" />
+      <FormLink name="RequiredResourceVein" refName="Resource" recordType="LLRV" />
       <RefList name="Entries" counterRecType="LLCT" refName="LeveledItemEntry" counterLength="1" />
       <RefList name="FilterKeywordChances" recordType="LLKC" refName="FilterKeywordChance" />
-      <ByteArray name="LVLL" recordType="LVLL" unknown="true" />
-      <ByteArray name="LIMC" recordType="LIMC" unknown="true" />
+      <FormLink name="EpicLootChance" refName="Global" recordType="LVSG" />
+      <Color name="MarkerColor" recordType="LIMC" />
       <String name="OverrideName" translated="Normal" recordType="ONAM" />
+      <UInt8 name="LegendaryItemDefaultListRank" recordType="LVLL" />
       <RefDirect name="Model" refName="Model" />
       <List name="ForcedLocations" recordType="FTYP" >
         <FormLink refName="LocationReferenceType" />
@@ -45,6 +48,7 @@
           <Int8 name="Unused2" />
         </Fields>
       </Data>
+      <RefDirect name="Data" refName="ExtraData" />
       <RefList name="Conditions" refName="Condition" />
     </Fields>
   </Object>

@@ -138,6 +138,7 @@
     <LinkInterface>IOwner</LinkInterface>
     <LinkInterface>INpcTemplateTarget</LinkInterface>
     <LinkInterface>IBaseObject</LinkInterface>
+    <LinkInterface>ILocationOwner</LinkInterface>
   </Object>
   <Object name="TemplateActors" objType="Subrecord" recordType="TPTA">
     <Fields>

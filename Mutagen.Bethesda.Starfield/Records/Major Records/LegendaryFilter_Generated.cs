@@ -54,15 +54,15 @@ namespace Mutagen.Bethesda.Starfield
         #region Slot
         public LegendaryItem.StarSlot Slot { get; set; } = default(LegendaryItem.StarSlot);
         #endregion
-        #region ReferencedModifier
-        private readonly IFormLink<IKeywordGetter> _ReferencedModifier = new FormLink<IKeywordGetter>();
-        public IFormLink<IKeywordGetter> ReferencedModifier
+        #region ReferencedMod
+        private readonly IFormLink<IObjectModificationGetter> _ReferencedMod = new FormLink<IObjectModificationGetter>();
+        public IFormLink<IObjectModificationGetter> ReferencedMod
         {
-            get => _ReferencedModifier;
-            set => _ReferencedModifier.SetTo(value);
+            get => _ReferencedMod;
+            set => _ReferencedMod.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkGetter<IKeywordGetter> ILegendaryFilterGetter.ReferencedModifier => this.ReferencedModifier;
+        IFormLinkGetter<IObjectModificationGetter> ILegendaryFilterGetter.ReferencedMod => this.ReferencedMod;
         #endregion
         #region Keyword
         private readonly IFormLink<IKeywordGetter> _Keyword = new FormLink<IKeywordGetter>();
@@ -114,17 +114,17 @@ namespace Mutagen.Bethesda.Starfield
             public Mask(TItem initialValue)
             {
                 this.Slot = initialValue;
-                this.ReferencedModifier = initialValue;
+                this.ReferencedMod = initialValue;
                 this.Keyword = initialValue;
             }
 
             public Mask(
                 TItem Slot,
-                TItem ReferencedModifier,
+                TItem ReferencedMod,
                 TItem Keyword)
             {
                 this.Slot = Slot;
-                this.ReferencedModifier = ReferencedModifier;
+                this.ReferencedMod = ReferencedMod;
                 this.Keyword = Keyword;
             }
 
@@ -138,7 +138,7 @@ namespace Mutagen.Bethesda.Starfield
 
             #region Members
             public TItem Slot;
-            public TItem ReferencedModifier;
+            public TItem ReferencedMod;
             public TItem Keyword;
             #endregion
 
@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Slot, rhs.Slot)) return false;
-                if (!object.Equals(this.ReferencedModifier, rhs.ReferencedModifier)) return false;
+                if (!object.Equals(this.ReferencedMod, rhs.ReferencedMod)) return false;
                 if (!object.Equals(this.Keyword, rhs.Keyword)) return false;
                 return true;
             }
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 var hash = new HashCode();
                 hash.Add(this.Slot);
-                hash.Add(this.ReferencedModifier);
+                hash.Add(this.ReferencedMod);
                 hash.Add(this.Keyword);
                 return hash.ToHashCode();
             }
@@ -172,7 +172,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Slot)) return false;
-                if (!eval(this.ReferencedModifier)) return false;
+                if (!eval(this.ReferencedMod)) return false;
                 if (!eval(this.Keyword)) return false;
                 return true;
             }
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Starfield
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Slot)) return true;
-                if (eval(this.ReferencedModifier)) return true;
+                if (eval(this.ReferencedMod)) return true;
                 if (eval(this.Keyword)) return true;
                 return false;
             }
@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Slot = eval(this.Slot);
-                obj.ReferencedModifier = eval(this.ReferencedModifier);
+                obj.ReferencedMod = eval(this.ReferencedMod);
                 obj.Keyword = eval(this.Keyword);
             }
             #endregion
@@ -223,9 +223,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(Slot, "Slot");
                     }
-                    if (printMask?.ReferencedModifier ?? true)
+                    if (printMask?.ReferencedMod ?? true)
                     {
-                        sb.AppendItem(ReferencedModifier, "ReferencedModifier");
+                        sb.AppendItem(ReferencedMod, "ReferencedMod");
                     }
                     if (printMask?.Keyword ?? true)
                     {
@@ -256,7 +256,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
             }
             public Exception? Slot;
-            public Exception? ReferencedModifier;
+            public Exception? ReferencedMod;
             public Exception? Keyword;
             #endregion
 
@@ -268,8 +268,8 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     case LegendaryFilter_FieldIndex.Slot:
                         return Slot;
-                    case LegendaryFilter_FieldIndex.ReferencedModifier:
-                        return ReferencedModifier;
+                    case LegendaryFilter_FieldIndex.ReferencedMod:
+                        return ReferencedMod;
                     case LegendaryFilter_FieldIndex.Keyword:
                         return Keyword;
                     default:
@@ -285,8 +285,8 @@ namespace Mutagen.Bethesda.Starfield
                     case LegendaryFilter_FieldIndex.Slot:
                         this.Slot = ex;
                         break;
-                    case LegendaryFilter_FieldIndex.ReferencedModifier:
-                        this.ReferencedModifier = ex;
+                    case LegendaryFilter_FieldIndex.ReferencedMod:
+                        this.ReferencedMod = ex;
                         break;
                     case LegendaryFilter_FieldIndex.Keyword:
                         this.Keyword = ex;
@@ -304,8 +304,8 @@ namespace Mutagen.Bethesda.Starfield
                     case LegendaryFilter_FieldIndex.Slot:
                         this.Slot = (Exception?)obj;
                         break;
-                    case LegendaryFilter_FieldIndex.ReferencedModifier:
-                        this.ReferencedModifier = (Exception?)obj;
+                    case LegendaryFilter_FieldIndex.ReferencedMod:
+                        this.ReferencedMod = (Exception?)obj;
                         break;
                     case LegendaryFilter_FieldIndex.Keyword:
                         this.Keyword = (Exception?)obj;
@@ -319,7 +319,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (Overall != null) return true;
                 if (Slot != null) return true;
-                if (ReferencedModifier != null) return true;
+                if (ReferencedMod != null) return true;
                 if (Keyword != null) return true;
                 return false;
             }
@@ -350,7 +350,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(Slot, "Slot");
                 }
                 {
-                    sb.AppendItem(ReferencedModifier, "ReferencedModifier");
+                    sb.AppendItem(ReferencedMod, "ReferencedMod");
                 }
                 {
                     sb.AppendItem(Keyword, "Keyword");
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Slot = this.Slot.Combine(rhs.Slot);
-                ret.ReferencedModifier = this.ReferencedModifier.Combine(rhs.ReferencedModifier);
+                ret.ReferencedMod = this.ReferencedMod.Combine(rhs.ReferencedMod);
                 ret.Keyword = this.Keyword.Combine(rhs.Keyword);
                 return ret;
             }
@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Starfield
             public readonly bool DefaultOn;
             public bool OnOverall;
             public bool Slot;
-            public bool ReferencedModifier;
+            public bool ReferencedMod;
             public bool Keyword;
             #endregion
 
@@ -402,7 +402,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
                 this.Slot = defaultOn;
-                this.ReferencedModifier = defaultOn;
+                this.ReferencedMod = defaultOn;
                 this.Keyword = defaultOn;
             }
 
@@ -420,7 +420,7 @@ namespace Mutagen.Bethesda.Starfield
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Slot, null));
-                ret.Add((ReferencedModifier, null));
+                ret.Add((ReferencedMod, null));
                 ret.Add((Keyword, null));
             }
 
@@ -501,7 +501,7 @@ namespace Mutagen.Bethesda.Starfield
         ILoquiObjectSetter<ILegendaryFilter>
     {
         new LegendaryItem.StarSlot Slot { get; set; }
-        new IFormLink<IKeywordGetter> ReferencedModifier { get; set; }
+        new IFormLink<IObjectModificationGetter> ReferencedMod { get; set; }
         new IFormLink<IKeywordGetter> Keyword { get; set; }
     }
 
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Starfield
         object CommonSetterTranslationInstance();
         static ILoquiRegistration StaticRegistration => LegendaryFilter_Registration.Instance;
         LegendaryItem.StarSlot Slot { get; }
-        IFormLinkGetter<IKeywordGetter> ReferencedModifier { get; }
+        IFormLinkGetter<IObjectModificationGetter> ReferencedMod { get; }
         IFormLinkGetter<IKeywordGetter> Keyword { get; }
 
     }
@@ -691,7 +691,7 @@ namespace Mutagen.Bethesda.Starfield
     internal enum LegendaryFilter_FieldIndex
     {
         Slot = 0,
-        ReferencedModifier = 1,
+        ReferencedMod = 1,
         Keyword = 2,
     }
     #endregion
@@ -772,14 +772,14 @@ namespace Mutagen.Bethesda.Starfield
         {
             ClearPartial();
             item.Slot = default(LegendaryItem.StarSlot);
-            item.ReferencedModifier.Clear();
+            item.ReferencedMod.Clear();
             item.Keyword.Clear();
         }
         
         #region Mutagen
         public void RemapLinks(ILegendaryFilter obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.ReferencedModifier.Relink(mapping);
+            obj.ReferencedMod.Relink(mapping);
             obj.Keyword.Relink(mapping);
         }
         
@@ -826,7 +826,7 @@ namespace Mutagen.Bethesda.Starfield
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             ret.Slot = item.Slot == rhs.Slot;
-            ret.ReferencedModifier = item.ReferencedModifier.Equals(rhs.ReferencedModifier);
+            ret.ReferencedMod = item.ReferencedMod.Equals(rhs.ReferencedMod);
             ret.Keyword = item.Keyword.Equals(rhs.Keyword);
         }
         
@@ -876,9 +876,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Slot, "Slot");
             }
-            if (printMask?.ReferencedModifier ?? true)
+            if (printMask?.ReferencedMod ?? true)
             {
-                sb.AppendItem(item.ReferencedModifier.FormKey, "ReferencedModifier");
+                sb.AppendItem(item.ReferencedMod.FormKey, "ReferencedMod");
             }
             if (printMask?.Keyword ?? true)
             {
@@ -897,9 +897,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (lhs.Slot != rhs.Slot) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LegendaryFilter_FieldIndex.ReferencedModifier) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LegendaryFilter_FieldIndex.ReferencedMod) ?? true))
             {
-                if (!lhs.ReferencedModifier.Equals(rhs.ReferencedModifier)) return false;
+                if (!lhs.ReferencedMod.Equals(rhs.ReferencedMod)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)LegendaryFilter_FieldIndex.Keyword) ?? true))
             {
@@ -912,7 +912,7 @@ namespace Mutagen.Bethesda.Starfield
         {
             var hash = new HashCode();
             hash.Add(item.Slot);
-            hash.Add(item.ReferencedModifier);
+            hash.Add(item.ReferencedMod);
             hash.Add(item.Keyword);
             return hash.ToHashCode();
         }
@@ -928,7 +928,7 @@ namespace Mutagen.Bethesda.Starfield
         #region Mutagen
         public IEnumerable<IFormLinkGetter> EnumerateFormLinks(ILegendaryFilterGetter obj)
         {
-            yield return FormLinkInformation.Factory(obj.ReferencedModifier);
+            yield return FormLinkInformation.Factory(obj.ReferencedMod);
             yield return FormLinkInformation.Factory(obj.Keyword);
             yield break;
         }
@@ -952,9 +952,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.Slot = rhs.Slot;
             }
-            if ((copyMask?.GetShouldTranslate((int)LegendaryFilter_FieldIndex.ReferencedModifier) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LegendaryFilter_FieldIndex.ReferencedMod) ?? true))
             {
-                item.ReferencedModifier.SetTo(rhs.ReferencedModifier.FormKey);
+                item.ReferencedMod.SetTo(rhs.ReferencedMod.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LegendaryFilter_FieldIndex.Keyword) ?? true))
             {
@@ -1074,7 +1074,7 @@ namespace Mutagen.Bethesda.Starfield
                 length: 4);
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.ReferencedModifier);
+                item: item.ReferencedMod);
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Keyword);
@@ -1114,7 +1114,7 @@ namespace Mutagen.Bethesda.Starfield
             item.Slot = EnumBinaryTranslation<LegendaryItem.StarSlot, MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 length: 4);
-            item.ReferencedModifier.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.ReferencedMod.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Keyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
@@ -1183,7 +1183,7 @@ namespace Mutagen.Bethesda.Starfield
         }
 
         public LegendaryItem.StarSlot Slot => (LegendaryItem.StarSlot)BinaryPrimitives.ReadInt32LittleEndian(_structData.Span.Slice(0x0, 0x4));
-        public IFormLinkGetter<IKeywordGetter> ReferencedModifier => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(_package, _structData.Span.Slice(0x4, 0x4));
+        public IFormLinkGetter<IObjectModificationGetter> ReferencedMod => FormLinkBinaryTranslation.Instance.OverlayFactory<IObjectModificationGetter>(_package, _structData.Span.Slice(0x4, 0x4));
         public IFormLinkGetter<IKeywordGetter> Keyword => FormLinkBinaryTranslation.Instance.OverlayFactory<IKeywordGetter>(_package, _structData.Span.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

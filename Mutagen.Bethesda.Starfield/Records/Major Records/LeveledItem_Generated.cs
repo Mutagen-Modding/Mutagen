@@ -36,6 +36,7 @@ using RecordTypes = Mutagen.Bethesda.Starfield.Internals.RecordTypes;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 #endregion
@@ -156,15 +157,35 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
-        #region UseGlobal
-        private readonly IFormLinkNullable<IGlobalGetter> _UseGlobal = new FormLinkNullable<IGlobalGetter>();
-        public IFormLinkNullable<IGlobalGetter> UseGlobal
+        #region UseChanceNoneGlobal
+        private readonly IFormLinkNullable<IGlobalGetter> _UseChanceNoneGlobal = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> UseChanceNoneGlobal
         {
-            get => _UseGlobal;
-            set => _UseGlobal.SetTo(value);
+            get => _UseChanceNoneGlobal;
+            set => _UseChanceNoneGlobal.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullableGetter<IGlobalGetter> ILeveledItemGetter.UseGlobal => this.UseGlobal;
+        IFormLinkNullableGetter<IGlobalGetter> ILeveledItemGetter.UseChanceNoneGlobal => this.UseChanceNoneGlobal;
+        #endregion
+        #region RequiredBiome
+        private readonly IFormLinkNullable<IBiomeGetter> _RequiredBiome = new FormLinkNullable<IBiomeGetter>();
+        public IFormLinkNullable<IBiomeGetter> RequiredBiome
+        {
+            get => _RequiredBiome;
+            set => _RequiredBiome.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IBiomeGetter> ILeveledItemGetter.RequiredBiome => this.RequiredBiome;
+        #endregion
+        #region RequiredResourceVein
+        private readonly IFormLinkNullable<IResourceGetter> _RequiredResourceVein = new FormLinkNullable<IResourceGetter>();
+        public IFormLinkNullable<IResourceGetter> RequiredResourceVein
+        {
+            get => _RequiredResourceVein;
+            set => _RequiredResourceVein.SetTo(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IResourceGetter> ILeveledItemGetter.RequiredResourceVein => this.RequiredResourceVein;
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -194,32 +215,30 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
 
         #endregion
-        #region LVLL
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _LVLL;
-        public MemorySlice<Byte>? LVLL
+        #region EpicLootChance
+        private readonly IFormLinkNullable<IGlobalGetter> _EpicLootChance = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> EpicLootChance
         {
-            get => this._LVLL;
-            set => this._LVLL = value;
+            get => _EpicLootChance;
+            set => _EpicLootChance.SetTo(value);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ILeveledItemGetter.LVLL => this.LVLL;
+        IFormLinkNullableGetter<IGlobalGetter> ILeveledItemGetter.EpicLootChance => this.EpicLootChance;
         #endregion
-        #region LIMC
+        #region MarkerColor
+        public Color? MarkerColor { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _LIMC;
-        public MemorySlice<Byte>? LIMC
-        {
-            get => this._LIMC;
-            set => this._LIMC = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? ILeveledItemGetter.LIMC => this.LIMC;
+        Color? ILeveledItemGetter.MarkerColor => this.MarkerColor;
         #endregion
         #region OverrideName
         public TranslatedString? OverrideName { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? ILeveledItemGetter.OverrideName => this.OverrideName;
+        #endregion
+        #region LegendaryItemDefaultListRank
+        public Byte? LegendaryItemDefaultListRank { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Byte? ILeveledItemGetter.LegendaryItemDefaultListRank => this.LegendaryItemDefaultListRank;
         #endregion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -288,12 +307,15 @@ namespace Mutagen.Bethesda.Starfield
                 this.MaxCount = initialValue;
                 this.Flags = initialValue;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.UseGlobal = initialValue;
+                this.UseChanceNoneGlobal = initialValue;
+                this.RequiredBiome = initialValue;
+                this.RequiredResourceVein = initialValue;
                 this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>());
                 this.FilterKeywordChances = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FilterKeywordChance.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, FilterKeywordChance.Mask<TItem>?>>());
-                this.LVLL = initialValue;
-                this.LIMC = initialValue;
+                this.EpicLootChance = initialValue;
+                this.MarkerColor = initialValue;
                 this.OverrideName = initialValue;
+                this.LegendaryItemDefaultListRank = initialValue;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.ForcedLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
@@ -316,12 +338,15 @@ namespace Mutagen.Bethesda.Starfield
                 TItem MaxCount,
                 TItem Flags,
                 TItem Conditions,
-                TItem UseGlobal,
+                TItem UseChanceNoneGlobal,
+                TItem RequiredBiome,
+                TItem RequiredResourceVein,
                 TItem Entries,
                 TItem FilterKeywordChances,
-                TItem LVLL,
-                TItem LIMC,
+                TItem EpicLootChance,
+                TItem MarkerColor,
                 TItem OverrideName,
+                TItem LegendaryItemDefaultListRank,
                 TItem Model,
                 TItem ForcedLocations)
             : base(
@@ -343,12 +368,15 @@ namespace Mutagen.Bethesda.Starfield
                 this.MaxCount = MaxCount;
                 this.Flags = Flags;
                 this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
-                this.UseGlobal = UseGlobal;
+                this.UseChanceNoneGlobal = UseChanceNoneGlobal;
+                this.RequiredBiome = RequiredBiome;
+                this.RequiredResourceVein = RequiredResourceVein;
                 this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>?>(Entries, Enumerable.Empty<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>());
                 this.FilterKeywordChances = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FilterKeywordChance.Mask<TItem>?>>?>(FilterKeywordChances, Enumerable.Empty<MaskItemIndexed<TItem, FilterKeywordChance.Mask<TItem>?>>());
-                this.LVLL = LVLL;
-                this.LIMC = LIMC;
+                this.EpicLootChance = EpicLootChance;
+                this.MarkerColor = MarkerColor;
                 this.OverrideName = OverrideName;
+                this.LegendaryItemDefaultListRank = LegendaryItemDefaultListRank;
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.ForcedLocations = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ForcedLocations, Enumerable.Empty<(int Index, TItem Value)>());
             }
@@ -372,12 +400,15 @@ namespace Mutagen.Bethesda.Starfield
             public TItem MaxCount;
             public TItem Flags;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
-            public TItem UseGlobal;
+            public TItem UseChanceNoneGlobal;
+            public TItem RequiredBiome;
+            public TItem RequiredResourceVein;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>?>? Entries;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, FilterKeywordChance.Mask<TItem>?>>?>? FilterKeywordChances;
-            public TItem LVLL;
-            public TItem LIMC;
+            public TItem EpicLootChance;
+            public TItem MarkerColor;
             public TItem OverrideName;
+            public TItem LegendaryItemDefaultListRank;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ForcedLocations;
             #endregion
@@ -403,12 +434,15 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.MaxCount, rhs.MaxCount)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
-                if (!object.Equals(this.UseGlobal, rhs.UseGlobal)) return false;
+                if (!object.Equals(this.UseChanceNoneGlobal, rhs.UseChanceNoneGlobal)) return false;
+                if (!object.Equals(this.RequiredBiome, rhs.RequiredBiome)) return false;
+                if (!object.Equals(this.RequiredResourceVein, rhs.RequiredResourceVein)) return false;
                 if (!object.Equals(this.Entries, rhs.Entries)) return false;
                 if (!object.Equals(this.FilterKeywordChances, rhs.FilterKeywordChances)) return false;
-                if (!object.Equals(this.LVLL, rhs.LVLL)) return false;
-                if (!object.Equals(this.LIMC, rhs.LIMC)) return false;
+                if (!object.Equals(this.EpicLootChance, rhs.EpicLootChance)) return false;
+                if (!object.Equals(this.MarkerColor, rhs.MarkerColor)) return false;
                 if (!object.Equals(this.OverrideName, rhs.OverrideName)) return false;
+                if (!object.Equals(this.LegendaryItemDefaultListRank, rhs.LegendaryItemDefaultListRank)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.ForcedLocations, rhs.ForcedLocations)) return false;
                 return true;
@@ -426,12 +460,15 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.MaxCount);
                 hash.Add(this.Flags);
                 hash.Add(this.Conditions);
-                hash.Add(this.UseGlobal);
+                hash.Add(this.UseChanceNoneGlobal);
+                hash.Add(this.RequiredBiome);
+                hash.Add(this.RequiredResourceVein);
                 hash.Add(this.Entries);
                 hash.Add(this.FilterKeywordChances);
-                hash.Add(this.LVLL);
-                hash.Add(this.LIMC);
+                hash.Add(this.EpicLootChance);
+                hash.Add(this.MarkerColor);
                 hash.Add(this.OverrideName);
+                hash.Add(this.LegendaryItemDefaultListRank);
                 hash.Add(this.Model);
                 hash.Add(this.ForcedLocations);
                 hash.Add(base.GetHashCode());
@@ -488,7 +525,9 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (!eval(this.UseGlobal)) return false;
+                if (!eval(this.UseChanceNoneGlobal)) return false;
+                if (!eval(this.RequiredBiome)) return false;
+                if (!eval(this.RequiredResourceVein)) return false;
                 if (this.Entries != null)
                 {
                     if (!eval(this.Entries.Overall)) return false;
@@ -513,9 +552,10 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (!eval(this.LVLL)) return false;
-                if (!eval(this.LIMC)) return false;
+                if (!eval(this.EpicLootChance)) return false;
+                if (!eval(this.MarkerColor)) return false;
                 if (!eval(this.OverrideName)) return false;
+                if (!eval(this.LegendaryItemDefaultListRank)) return false;
                 if (Model != null)
                 {
                     if (!eval(this.Model.Overall)) return false;
@@ -584,7 +624,9 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (eval(this.UseGlobal)) return true;
+                if (eval(this.UseChanceNoneGlobal)) return true;
+                if (eval(this.RequiredBiome)) return true;
+                if (eval(this.RequiredResourceVein)) return true;
                 if (this.Entries != null)
                 {
                     if (eval(this.Entries.Overall)) return true;
@@ -609,9 +651,10 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                if (eval(this.LVLL)) return true;
-                if (eval(this.LIMC)) return true;
+                if (eval(this.EpicLootChance)) return true;
+                if (eval(this.MarkerColor)) return true;
                 if (eval(this.OverrideName)) return true;
+                if (eval(this.LegendaryItemDefaultListRank)) return true;
                 if (Model != null)
                 {
                     if (eval(this.Model.Overall)) return true;
@@ -681,7 +724,9 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                obj.UseGlobal = eval(this.UseGlobal);
+                obj.UseChanceNoneGlobal = eval(this.UseChanceNoneGlobal);
+                obj.RequiredBiome = eval(this.RequiredBiome);
+                obj.RequiredResourceVein = eval(this.RequiredResourceVein);
                 if (Entries != null)
                 {
                     obj.Entries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>>?>(eval(this.Entries.Overall), Enumerable.Empty<MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>>());
@@ -712,9 +757,10 @@ namespace Mutagen.Bethesda.Starfield
                         }
                     }
                 }
-                obj.LVLL = eval(this.LVLL);
-                obj.LIMC = eval(this.LIMC);
+                obj.EpicLootChance = eval(this.EpicLootChance);
+                obj.MarkerColor = eval(this.MarkerColor);
                 obj.OverrideName = eval(this.OverrideName);
+                obj.LegendaryItemDefaultListRank = eval(this.LegendaryItemDefaultListRank);
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 if (ForcedLocations != null)
                 {
@@ -818,9 +864,17 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.UseGlobal ?? true)
+                    if (printMask?.UseChanceNoneGlobal ?? true)
                     {
-                        sb.AppendItem(UseGlobal, "UseGlobal");
+                        sb.AppendItem(UseChanceNoneGlobal, "UseChanceNoneGlobal");
+                    }
+                    if (printMask?.RequiredBiome ?? true)
+                    {
+                        sb.AppendItem(RequiredBiome, "RequiredBiome");
+                    }
+                    if (printMask?.RequiredResourceVein ?? true)
+                    {
+                        sb.AppendItem(RequiredResourceVein, "RequiredResourceVein");
                     }
                     if ((printMask?.Entries?.Overall ?? true)
                         && Entries is {} EntriesItem)
@@ -860,17 +914,21 @@ namespace Mutagen.Bethesda.Starfield
                             }
                         }
                     }
-                    if (printMask?.LVLL ?? true)
+                    if (printMask?.EpicLootChance ?? true)
                     {
-                        sb.AppendItem(LVLL, "LVLL");
+                        sb.AppendItem(EpicLootChance, "EpicLootChance");
                     }
-                    if (printMask?.LIMC ?? true)
+                    if (printMask?.MarkerColor ?? true)
                     {
-                        sb.AppendItem(LIMC, "LIMC");
+                        sb.AppendItem(MarkerColor, "MarkerColor");
                     }
                     if (printMask?.OverrideName ?? true)
                     {
                         sb.AppendItem(OverrideName, "OverrideName");
+                    }
+                    if (printMask?.LegendaryItemDefaultListRank ?? true)
+                    {
+                        sb.AppendItem(LegendaryItemDefaultListRank, "LegendaryItemDefaultListRank");
                     }
                     if (printMask?.Model?.Overall ?? true)
                     {
@@ -918,12 +976,15 @@ namespace Mutagen.Bethesda.Starfield
             public Exception? MaxCount;
             public Exception? Flags;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
-            public Exception? UseGlobal;
+            public Exception? UseChanceNoneGlobal;
+            public Exception? RequiredBiome;
+            public Exception? RequiredResourceVein;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledItemEntry.ErrorMask?>>?>? Entries;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FilterKeywordChance.ErrorMask?>>?>? FilterKeywordChances;
-            public Exception? LVLL;
-            public Exception? LIMC;
+            public Exception? EpicLootChance;
+            public Exception? MarkerColor;
             public Exception? OverrideName;
+            public Exception? LegendaryItemDefaultListRank;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ForcedLocations;
             #endregion
@@ -954,18 +1015,24 @@ namespace Mutagen.Bethesda.Starfield
                         return Flags;
                     case LeveledItem_FieldIndex.Conditions:
                         return Conditions;
-                    case LeveledItem_FieldIndex.UseGlobal:
-                        return UseGlobal;
+                    case LeveledItem_FieldIndex.UseChanceNoneGlobal:
+                        return UseChanceNoneGlobal;
+                    case LeveledItem_FieldIndex.RequiredBiome:
+                        return RequiredBiome;
+                    case LeveledItem_FieldIndex.RequiredResourceVein:
+                        return RequiredResourceVein;
                     case LeveledItem_FieldIndex.Entries:
                         return Entries;
                     case LeveledItem_FieldIndex.FilterKeywordChances:
                         return FilterKeywordChances;
-                    case LeveledItem_FieldIndex.LVLL:
-                        return LVLL;
-                    case LeveledItem_FieldIndex.LIMC:
-                        return LIMC;
+                    case LeveledItem_FieldIndex.EpicLootChance:
+                        return EpicLootChance;
+                    case LeveledItem_FieldIndex.MarkerColor:
+                        return MarkerColor;
                     case LeveledItem_FieldIndex.OverrideName:
                         return OverrideName;
+                    case LeveledItem_FieldIndex.LegendaryItemDefaultListRank:
+                        return LegendaryItemDefaultListRank;
                     case LeveledItem_FieldIndex.Model:
                         return Model;
                     case LeveledItem_FieldIndex.ForcedLocations:
@@ -1010,8 +1077,14 @@ namespace Mutagen.Bethesda.Starfield
                     case LeveledItem_FieldIndex.Conditions:
                         this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
                         break;
-                    case LeveledItem_FieldIndex.UseGlobal:
-                        this.UseGlobal = ex;
+                    case LeveledItem_FieldIndex.UseChanceNoneGlobal:
+                        this.UseChanceNoneGlobal = ex;
+                        break;
+                    case LeveledItem_FieldIndex.RequiredBiome:
+                        this.RequiredBiome = ex;
+                        break;
+                    case LeveledItem_FieldIndex.RequiredResourceVein:
+                        this.RequiredResourceVein = ex;
                         break;
                     case LeveledItem_FieldIndex.Entries:
                         this.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledItemEntry.ErrorMask?>>?>(ex, null);
@@ -1019,14 +1092,17 @@ namespace Mutagen.Bethesda.Starfield
                     case LeveledItem_FieldIndex.FilterKeywordChances:
                         this.FilterKeywordChances = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FilterKeywordChance.ErrorMask?>>?>(ex, null);
                         break;
-                    case LeveledItem_FieldIndex.LVLL:
-                        this.LVLL = ex;
+                    case LeveledItem_FieldIndex.EpicLootChance:
+                        this.EpicLootChance = ex;
                         break;
-                    case LeveledItem_FieldIndex.LIMC:
-                        this.LIMC = ex;
+                    case LeveledItem_FieldIndex.MarkerColor:
+                        this.MarkerColor = ex;
                         break;
                     case LeveledItem_FieldIndex.OverrideName:
                         this.OverrideName = ex;
+                        break;
+                    case LeveledItem_FieldIndex.LegendaryItemDefaultListRank:
+                        this.LegendaryItemDefaultListRank = ex;
                         break;
                     case LeveledItem_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
@@ -1075,8 +1151,14 @@ namespace Mutagen.Bethesda.Starfield
                     case LeveledItem_FieldIndex.Conditions:
                         this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
                         break;
-                    case LeveledItem_FieldIndex.UseGlobal:
-                        this.UseGlobal = (Exception?)obj;
+                    case LeveledItem_FieldIndex.UseChanceNoneGlobal:
+                        this.UseChanceNoneGlobal = (Exception?)obj;
+                        break;
+                    case LeveledItem_FieldIndex.RequiredBiome:
+                        this.RequiredBiome = (Exception?)obj;
+                        break;
+                    case LeveledItem_FieldIndex.RequiredResourceVein:
+                        this.RequiredResourceVein = (Exception?)obj;
                         break;
                     case LeveledItem_FieldIndex.Entries:
                         this.Entries = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledItemEntry.ErrorMask?>>?>)obj;
@@ -1084,14 +1166,17 @@ namespace Mutagen.Bethesda.Starfield
                     case LeveledItem_FieldIndex.FilterKeywordChances:
                         this.FilterKeywordChances = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FilterKeywordChance.ErrorMask?>>?>)obj;
                         break;
-                    case LeveledItem_FieldIndex.LVLL:
-                        this.LVLL = (Exception?)obj;
+                    case LeveledItem_FieldIndex.EpicLootChance:
+                        this.EpicLootChance = (Exception?)obj;
                         break;
-                    case LeveledItem_FieldIndex.LIMC:
-                        this.LIMC = (Exception?)obj;
+                    case LeveledItem_FieldIndex.MarkerColor:
+                        this.MarkerColor = (Exception?)obj;
                         break;
                     case LeveledItem_FieldIndex.OverrideName:
                         this.OverrideName = (Exception?)obj;
+                        break;
+                    case LeveledItem_FieldIndex.LegendaryItemDefaultListRank:
+                        this.LegendaryItemDefaultListRank = (Exception?)obj;
                         break;
                     case LeveledItem_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
@@ -1118,12 +1203,15 @@ namespace Mutagen.Bethesda.Starfield
                 if (MaxCount != null) return true;
                 if (Flags != null) return true;
                 if (Conditions != null) return true;
-                if (UseGlobal != null) return true;
+                if (UseChanceNoneGlobal != null) return true;
+                if (RequiredBiome != null) return true;
+                if (RequiredResourceVein != null) return true;
                 if (Entries != null) return true;
                 if (FilterKeywordChances != null) return true;
-                if (LVLL != null) return true;
-                if (LIMC != null) return true;
+                if (EpicLootChance != null) return true;
+                if (MarkerColor != null) return true;
                 if (OverrideName != null) return true;
+                if (LegendaryItemDefaultListRank != null) return true;
                 if (Model != null) return true;
                 if (ForcedLocations != null) return true;
                 return false;
@@ -1207,7 +1295,13 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 {
-                    sb.AppendItem(UseGlobal, "UseGlobal");
+                    sb.AppendItem(UseChanceNoneGlobal, "UseChanceNoneGlobal");
+                }
+                {
+                    sb.AppendItem(RequiredBiome, "RequiredBiome");
+                }
+                {
+                    sb.AppendItem(RequiredResourceVein, "RequiredResourceVein");
                 }
                 if (Entries is {} EntriesItem)
                 {
@@ -1246,13 +1340,16 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
                 {
-                    sb.AppendItem(LVLL, "LVLL");
+                    sb.AppendItem(EpicLootChance, "EpicLootChance");
                 }
                 {
-                    sb.AppendItem(LIMC, "LIMC");
+                    sb.AppendItem(MarkerColor, "MarkerColor");
                 }
                 {
                     sb.AppendItem(OverrideName, "OverrideName");
+                }
+                {
+                    sb.AppendItem(LegendaryItemDefaultListRank, "LegendaryItemDefaultListRank");
                 }
                 Model?.Print(sb);
                 if (ForcedLocations is {} ForcedLocationsItem)
@@ -1293,12 +1390,15 @@ namespace Mutagen.Bethesda.Starfield
                 ret.MaxCount = this.MaxCount.Combine(rhs.MaxCount);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), Noggog.ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
-                ret.UseGlobal = this.UseGlobal.Combine(rhs.UseGlobal);
+                ret.UseChanceNoneGlobal = this.UseChanceNoneGlobal.Combine(rhs.UseChanceNoneGlobal);
+                ret.RequiredBiome = this.RequiredBiome.Combine(rhs.RequiredBiome);
+                ret.RequiredResourceVein = this.RequiredResourceVein.Combine(rhs.RequiredResourceVein);
                 ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledItemEntry.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), Noggog.ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
                 ret.FilterKeywordChances = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, FilterKeywordChance.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.FilterKeywordChances?.Overall, rhs.FilterKeywordChances?.Overall), Noggog.ExceptionExt.Combine(this.FilterKeywordChances?.Specific, rhs.FilterKeywordChances?.Specific));
-                ret.LVLL = this.LVLL.Combine(rhs.LVLL);
-                ret.LIMC = this.LIMC.Combine(rhs.LIMC);
+                ret.EpicLootChance = this.EpicLootChance.Combine(rhs.EpicLootChance);
+                ret.MarkerColor = this.MarkerColor.Combine(rhs.MarkerColor);
                 ret.OverrideName = this.OverrideName.Combine(rhs.OverrideName);
+                ret.LegendaryItemDefaultListRank = this.LegendaryItemDefaultListRank.Combine(rhs.LegendaryItemDefaultListRank);
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.ForcedLocations = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(Noggog.ExceptionExt.Combine(this.ForcedLocations?.Overall, rhs.ForcedLocations?.Overall), Noggog.ExceptionExt.Combine(this.ForcedLocations?.Specific, rhs.ForcedLocations?.Specific));
                 return ret;
@@ -1333,12 +1433,15 @@ namespace Mutagen.Bethesda.Starfield
             public bool MaxCount;
             public bool Flags;
             public Condition.TranslationMask? Conditions;
-            public bool UseGlobal;
+            public bool UseChanceNoneGlobal;
+            public bool RequiredBiome;
+            public bool RequiredResourceVein;
             public LeveledItemEntry.TranslationMask? Entries;
             public FilterKeywordChance.TranslationMask? FilterKeywordChances;
-            public bool LVLL;
-            public bool LIMC;
+            public bool EpicLootChance;
+            public bool MarkerColor;
             public bool OverrideName;
+            public bool LegendaryItemDefaultListRank;
             public Model.TranslationMask? Model;
             public bool ForcedLocations;
             #endregion
@@ -1354,10 +1457,13 @@ namespace Mutagen.Bethesda.Starfield
                 this.ChanceNone = defaultOn;
                 this.MaxCount = defaultOn;
                 this.Flags = defaultOn;
-                this.UseGlobal = defaultOn;
-                this.LVLL = defaultOn;
-                this.LIMC = defaultOn;
+                this.UseChanceNoneGlobal = defaultOn;
+                this.RequiredBiome = defaultOn;
+                this.RequiredResourceVein = defaultOn;
+                this.EpicLootChance = defaultOn;
+                this.MarkerColor = defaultOn;
                 this.OverrideName = defaultOn;
+                this.LegendaryItemDefaultListRank = defaultOn;
                 this.ForcedLocations = defaultOn;
             }
 
@@ -1376,12 +1482,15 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((MaxCount, null));
                 ret.Add((Flags, null));
                 ret.Add((Conditions == null ? DefaultOn : !Conditions.GetCrystal().CopyNothing, Conditions?.GetCrystal()));
-                ret.Add((UseGlobal, null));
+                ret.Add((UseChanceNoneGlobal, null));
+                ret.Add((RequiredBiome, null));
+                ret.Add((RequiredResourceVein, null));
                 ret.Add((Entries == null ? DefaultOn : !Entries.GetCrystal().CopyNothing, Entries?.GetCrystal()));
                 ret.Add((FilterKeywordChances == null ? DefaultOn : !FilterKeywordChances.GetCrystal().CopyNothing, FilterKeywordChances?.GetCrystal()));
-                ret.Add((LVLL, null));
-                ret.Add((LIMC, null));
+                ret.Add((EpicLootChance, null));
+                ret.Add((MarkerColor, null));
                 ret.Add((OverrideName, null));
+                ret.Add((LegendaryItemDefaultListRank, null));
                 ret.Add((Model != null ? Model.OnOverall : DefaultOn, Model?.GetCrystal()));
                 ret.Add((ForcedLocations, null));
             }
@@ -1447,6 +1556,11 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(ILeveledItem);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => LeveledItemCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => LeveledItemSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => LeveledItemSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
@@ -1563,17 +1677,24 @@ namespace Mutagen.Bethesda.Starfield
         new Byte? MaxCount { get; set; }
         new LeveledItem.Flag Flags { get; set; }
         new ExtendedList<Condition> Conditions { get; }
-        new IFormLinkNullable<IGlobalGetter> UseGlobal { get; set; }
+        new IFormLinkNullable<IGlobalGetter> UseChanceNoneGlobal { get; set; }
+        new IFormLinkNullable<IBiomeGetter> RequiredBiome { get; set; }
+        new IFormLinkNullable<IResourceGetter> RequiredResourceVein { get; set; }
         new ExtendedList<LeveledItemEntry>? Entries { get; set; }
         new ExtendedList<FilterKeywordChance>? FilterKeywordChances { get; set; }
-        new MemorySlice<Byte>? LVLL { get; set; }
-        new MemorySlice<Byte>? LIMC { get; set; }
+        new IFormLinkNullable<IGlobalGetter> EpicLootChance { get; set; }
+        new Color? MarkerColor { get; set; }
         new TranslatedString? OverrideName { get; set; }
+        new Byte? LegendaryItemDefaultListRank { get; set; }
         /// <summary>
         /// Aspects: IModeled
         /// </summary>
         new Model? Model { get; set; }
         new ExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; set; }
+        #region Mutagen
+        new LeveledItem.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface ILeveledItemInternal :
@@ -1624,12 +1745,15 @@ namespace Mutagen.Bethesda.Starfield
         Byte? MaxCount { get; }
         LeveledItem.Flag Flags { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
-        IFormLinkNullableGetter<IGlobalGetter> UseGlobal { get; }
+        IFormLinkNullableGetter<IGlobalGetter> UseChanceNoneGlobal { get; }
+        IFormLinkNullableGetter<IBiomeGetter> RequiredBiome { get; }
+        IFormLinkNullableGetter<IResourceGetter> RequiredResourceVein { get; }
         IReadOnlyList<ILeveledItemEntryGetter>? Entries { get; }
         IReadOnlyList<IFilterKeywordChanceGetter>? FilterKeywordChances { get; }
-        ReadOnlyMemorySlice<Byte>? LVLL { get; }
-        ReadOnlyMemorySlice<Byte>? LIMC { get; }
+        IFormLinkNullableGetter<IGlobalGetter> EpicLootChance { get; }
+        Color? MarkerColor { get; }
         ITranslatedStringGetter? OverrideName { get; }
+        Byte? LegendaryItemDefaultListRank { get; }
         #region Model
         /// <summary>
         /// Aspects: IModeledGetter
@@ -1637,6 +1761,10 @@ namespace Mutagen.Bethesda.Starfield
         IModelGetter? Model { get; }
         #endregion
         IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; }
+
+        #region Mutagen
+        LeveledItem.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -1823,14 +1951,17 @@ namespace Mutagen.Bethesda.Starfield
         MaxCount = 14,
         Flags = 15,
         Conditions = 16,
-        UseGlobal = 17,
-        Entries = 18,
-        FilterKeywordChances = 19,
-        LVLL = 20,
-        LIMC = 21,
-        OverrideName = 22,
-        Model = 23,
-        ForcedLocations = 24,
+        UseChanceNoneGlobal = 17,
+        RequiredBiome = 18,
+        RequiredResourceVein = 19,
+        Entries = 20,
+        FilterKeywordChances = 21,
+        EpicLootChance = 22,
+        MarkerColor = 23,
+        OverrideName = 24,
+        LegendaryItemDefaultListRank = 25,
+        Model = 26,
+        ForcedLocations = 27,
     }
     #endregion
 
@@ -1841,9 +1972,9 @@ namespace Mutagen.Bethesda.Starfield
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Starfield.ProtocolKey;
 
-        public const ushort AdditionalFieldCount = 18;
+        public const ushort AdditionalFieldCount = 21;
 
-        public const ushort FieldCount = 25;
+        public const ushort FieldCount = 28;
 
         public static readonly Type MaskType = typeof(LeveledItem.Mask<>);
 
@@ -1892,12 +2023,16 @@ namespace Mutagen.Bethesda.Starfield
                 RecordTypes.CIS1,
                 RecordTypes.CIS2,
                 RecordTypes.LVLG,
+                RecordTypes.LLRB,
+                RecordTypes.LLRV,
                 RecordTypes.LVLO,
                 RecordTypes.LLCT,
+                RecordTypes.COED,
                 RecordTypes.LLKC,
-                RecordTypes.LVLL,
+                RecordTypes.LVSG,
                 RecordTypes.LIMC,
                 RecordTypes.ONAM,
+                RecordTypes.LVLL,
                 RecordTypes.MODL,
                 RecordTypes.MODT,
                 RecordTypes.MOLM,
@@ -1960,12 +2095,15 @@ namespace Mutagen.Bethesda.Starfield
             item.MaxCount = default;
             item.Flags = default(LeveledItem.Flag);
             item.Conditions.Clear();
-            item.UseGlobal.Clear();
+            item.UseChanceNoneGlobal.Clear();
+            item.RequiredBiome.Clear();
+            item.RequiredResourceVein.Clear();
             item.Entries = null;
             item.FilterKeywordChances = null;
-            item.LVLL = default;
-            item.LIMC = default;
+            item.EpicLootChance.Clear();
+            item.MarkerColor = default;
             item.OverrideName = default;
+            item.LegendaryItemDefaultListRank = default;
             item.Model = null;
             item.ForcedLocations = null;
             base.Clear(item);
@@ -1988,9 +2126,12 @@ namespace Mutagen.Bethesda.Starfield
             obj.VirtualMachineAdapter?.RemapLinks(mapping);
             obj.Components.RemapLinks(mapping);
             obj.Conditions.RemapLinks(mapping);
-            obj.UseGlobal.Relink(mapping);
+            obj.UseChanceNoneGlobal.Relink(mapping);
+            obj.RequiredBiome.Relink(mapping);
+            obj.RequiredResourceVein.Relink(mapping);
             obj.Entries?.RemapLinks(mapping);
             obj.FilterKeywordChances?.RemapLinks(mapping);
+            obj.EpicLootChance.Relink(mapping);
             obj.Model?.RemapLinks(mapping);
             obj.ForcedLocations?.RemapLinks(mapping);
         }
@@ -2116,7 +2257,9 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.Conditions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.UseGlobal = item.UseGlobal.Equals(rhs.UseGlobal);
+            ret.UseChanceNoneGlobal = item.UseChanceNoneGlobal.Equals(rhs.UseChanceNoneGlobal);
+            ret.RequiredBiome = item.RequiredBiome.Equals(rhs.RequiredBiome);
+            ret.RequiredResourceVein = item.RequiredResourceVein.Equals(rhs.RequiredResourceVein);
             ret.Entries = item.Entries.CollectionEqualsHelper(
                 rhs.Entries,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -2125,9 +2268,10 @@ namespace Mutagen.Bethesda.Starfield
                 rhs.FilterKeywordChances,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.LVLL = MemorySliceExt.SequenceEqual(item.LVLL, rhs.LVLL);
-            ret.LIMC = MemorySliceExt.SequenceEqual(item.LIMC, rhs.LIMC);
+            ret.EpicLootChance = item.EpicLootChance.Equals(rhs.EpicLootChance);
+            ret.MarkerColor = item.MarkerColor.ColorOnlyEquals(rhs.MarkerColor);
             ret.OverrideName = object.Equals(item.OverrideName, rhs.OverrideName);
+            ret.LegendaryItemDefaultListRank = item.LegendaryItemDefaultListRank == rhs.LegendaryItemDefaultListRank;
             ret.Model = EqualsMaskHelper.EqualsHelper(
                 item.Model,
                 rhs.Model,
@@ -2250,9 +2394,17 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if (printMask?.UseGlobal ?? true)
+            if (printMask?.UseChanceNoneGlobal ?? true)
             {
-                sb.AppendItem(item.UseGlobal.FormKeyNullable, "UseGlobal");
+                sb.AppendItem(item.UseChanceNoneGlobal.FormKeyNullable, "UseChanceNoneGlobal");
+            }
+            if (printMask?.RequiredBiome ?? true)
+            {
+                sb.AppendItem(item.RequiredBiome.FormKeyNullable, "RequiredBiome");
+            }
+            if (printMask?.RequiredResourceVein ?? true)
+            {
+                sb.AppendItem(item.RequiredResourceVein.FormKeyNullable, "RequiredResourceVein");
             }
             if ((printMask?.Entries?.Overall ?? true)
                 && item.Entries is {} EntriesItem)
@@ -2284,20 +2436,24 @@ namespace Mutagen.Bethesda.Starfield
                     }
                 }
             }
-            if ((printMask?.LVLL ?? true)
-                && item.LVLL is {} LVLLItem)
+            if (printMask?.EpicLootChance ?? true)
             {
-                sb.AppendLine($"LVLL => {SpanExt.ToHexString(LVLLItem)}");
+                sb.AppendItem(item.EpicLootChance.FormKeyNullable, "EpicLootChance");
             }
-            if ((printMask?.LIMC ?? true)
-                && item.LIMC is {} LIMCItem)
+            if ((printMask?.MarkerColor ?? true)
+                && item.MarkerColor is {} MarkerColorItem)
             {
-                sb.AppendLine($"LIMC => {SpanExt.ToHexString(LIMCItem)}");
+                sb.AppendItem(MarkerColorItem, "MarkerColor");
             }
             if ((printMask?.OverrideName ?? true)
                 && item.OverrideName is {} OverrideNameItem)
             {
                 sb.AppendItem(OverrideNameItem, "OverrideName");
+            }
+            if ((printMask?.LegendaryItemDefaultListRank ?? true)
+                && item.LegendaryItemDefaultListRank is {} LegendaryItemDefaultListRankItem)
+            {
+                sb.AppendItem(LegendaryItemDefaultListRankItem, "LegendaryItemDefaultListRank");
             }
             if ((printMask?.Model?.Overall ?? true)
                 && item.Model is {} ModelItem)
@@ -2421,9 +2577,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.Conditions.SequenceEqual(rhs.Conditions, (l, r) => ((ConditionCommon)((IConditionGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LeveledItem_FieldIndex.Conditions)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.UseGlobal) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.UseChanceNoneGlobal) ?? true))
             {
-                if (!lhs.UseGlobal.Equals(rhs.UseGlobal)) return false;
+                if (!lhs.UseChanceNoneGlobal.Equals(rhs.UseChanceNoneGlobal)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.RequiredBiome) ?? true))
+            {
+                if (!lhs.RequiredBiome.Equals(rhs.RequiredBiome)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.RequiredResourceVein) ?? true))
+            {
+                if (!lhs.RequiredResourceVein.Equals(rhs.RequiredResourceVein)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Entries) ?? true))
             {
@@ -2433,17 +2597,21 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.FilterKeywordChances.SequenceEqualNullable(rhs.FilterKeywordChances, (l, r) => ((FilterKeywordChanceCommon)((IFilterKeywordChanceGetter)l).CommonInstance()!).Equals(l, r, equalsMask?.GetSubCrystal((int)LeveledItem_FieldIndex.FilterKeywordChances)))) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.LVLL) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.EpicLootChance) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.LVLL, rhs.LVLL)) return false;
+                if (!lhs.EpicLootChance.Equals(rhs.EpicLootChance)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.LIMC) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.MarkerColor) ?? true))
             {
-                if (!MemorySliceExt.SequenceEqual(lhs.LIMC, rhs.LIMC)) return false;
+                if (!lhs.MarkerColor.ColorOnlyEquals(rhs.MarkerColor)) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.OverrideName) ?? true))
             {
                 if (!object.Equals(lhs.OverrideName, rhs.OverrideName)) return false;
+            }
+            if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.LegendaryItemDefaultListRank) ?? true))
+            {
+                if (lhs.LegendaryItemDefaultListRank != rhs.LegendaryItemDefaultListRank) return false;
             }
             if ((equalsMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Model) ?? true))
             {
@@ -2507,20 +2675,23 @@ namespace Mutagen.Bethesda.Starfield
             }
             hash.Add(item.Flags);
             hash.Add(item.Conditions);
-            hash.Add(item.UseGlobal);
+            hash.Add(item.UseChanceNoneGlobal);
+            hash.Add(item.RequiredBiome);
+            hash.Add(item.RequiredResourceVein);
             hash.Add(item.Entries);
             hash.Add(item.FilterKeywordChances);
-            if (item.LVLL is {} LVLLItem)
+            hash.Add(item.EpicLootChance);
+            if (item.MarkerColor is {} MarkerColoritem)
             {
-                hash.Add(LVLLItem);
-            }
-            if (item.LIMC is {} LIMCItem)
-            {
-                hash.Add(LIMCItem);
+                hash.Add(MarkerColoritem);
             }
             if (item.OverrideName is {} OverrideNameitem)
             {
                 hash.Add(OverrideNameitem);
+            }
+            if (item.LegendaryItemDefaultListRank is {} LegendaryItemDefaultListRankitem)
+            {
+                hash.Add(LegendaryItemDefaultListRankitem);
             }
             if (item.Model is {} Modelitem)
             {
@@ -2572,9 +2743,17 @@ namespace Mutagen.Bethesda.Starfield
             {
                 yield return FormLinkInformation.Factory(item);
             }
-            if (FormLinkInformation.TryFactory(obj.UseGlobal, out var UseGlobalInfo))
+            if (FormLinkInformation.TryFactory(obj.UseChanceNoneGlobal, out var UseChanceNoneGlobalInfo))
             {
-                yield return UseGlobalInfo;
+                yield return UseChanceNoneGlobalInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.RequiredBiome, out var RequiredBiomeInfo))
+            {
+                yield return RequiredBiomeInfo;
+            }
+            if (FormLinkInformation.TryFactory(obj.RequiredResourceVein, out var RequiredResourceVeinInfo))
+            {
+                yield return RequiredResourceVeinInfo;
             }
             if (obj.Entries is {} EntriesItem)
             {
@@ -2589,6 +2768,10 @@ namespace Mutagen.Bethesda.Starfield
                 {
                     yield return FormLinkInformation.Factory(item);
                 }
+            }
+            if (FormLinkInformation.TryFactory(obj.EpicLootChance, out var EpicLootChanceInfo))
+            {
+                yield return EpicLootChanceInfo;
             }
             if (obj.Model is {} ModelItems)
             {
@@ -2841,9 +3024,17 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.UseGlobal) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.UseChanceNoneGlobal) ?? true))
             {
-                item.UseGlobal.SetTo(rhs.UseGlobal.FormKeyNullable);
+                item.UseChanceNoneGlobal.SetTo(rhs.UseChanceNoneGlobal.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.RequiredBiome) ?? true))
+            {
+                item.RequiredBiome.SetTo(rhs.RequiredBiome.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.RequiredResourceVein) ?? true))
+            {
+                item.RequiredResourceVein.SetTo(rhs.RequiredResourceVein.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Entries) ?? true))
             {
@@ -2909,31 +3100,21 @@ namespace Mutagen.Bethesda.Starfield
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.LVLL) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.EpicLootChance) ?? true))
             {
-                if(rhs.LVLL is {} LVLLrhs)
-                {
-                    item.LVLL = LVLLrhs.ToArray();
-                }
-                else
-                {
-                    item.LVLL = default;
-                }
+                item.EpicLootChance.SetTo(rhs.EpicLootChance.FormKeyNullable);
             }
-            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.LIMC) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.MarkerColor) ?? true))
             {
-                if(rhs.LIMC is {} LIMCrhs)
-                {
-                    item.LIMC = LIMCrhs.ToArray();
-                }
-                else
-                {
-                    item.LIMC = default;
-                }
+                item.MarkerColor = rhs.MarkerColor;
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.OverrideName) ?? true))
             {
                 item.OverrideName = rhs.OverrideName?.DeepCopy();
+            }
+            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.LegendaryItemDefaultListRank) ?? true))
+            {
+                item.LegendaryItemDefaultListRank = rhs.LegendaryItemDefaultListRank;
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Model) ?? true))
             {
@@ -3221,8 +3402,16 @@ namespace Mutagen.Bethesda.Starfield
                 });
             FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.UseGlobal,
+                item: item.UseChanceNoneGlobal,
                 header: translationParams.ConvertToCustom(RecordTypes.LVLG));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.RequiredBiome,
+                header: translationParams.ConvertToCustom(RecordTypes.LLRB));
+            FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.RequiredResourceVein,
+                header: translationParams.ConvertToCustom(RecordTypes.LLRV));
             Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILeveledItemEntryGetter>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Entries,
@@ -3248,13 +3437,13 @@ namespace Mutagen.Bethesda.Starfield
                         writer: subWriter,
                         translationParams: conv);
                 });
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.LVLL,
-                header: translationParams.ConvertToCustom(RecordTypes.LVLL));
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                item: item.EpicLootChance,
+                header: translationParams.ConvertToCustom(RecordTypes.LVSG));
+            ColorBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.LIMC,
+                item: item.MarkerColor,
                 header: translationParams.ConvertToCustom(RecordTypes.LIMC));
             StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -3262,6 +3451,10 @@ namespace Mutagen.Bethesda.Starfield
                 header: translationParams.ConvertToCustom(RecordTypes.ONAM),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
+            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer: writer,
+                item: item.LegendaryItemDefaultListRank,
+                header: translationParams.ConvertToCustom(RecordTypes.LVLL));
             if (item.Model is {} ModelItem)
             {
                 ((ModelBinaryWriteTranslation)((IBinaryItem)ModelItem).BinaryWriteTranslator).Write(
@@ -3436,8 +3629,20 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.LVLG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UseGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    return (int)LeveledItem_FieldIndex.UseGlobal;
+                    item.UseChanceNoneGlobal.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)LeveledItem_FieldIndex.UseChanceNoneGlobal;
+                }
+                case RecordTypeInts.LLRB:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.RequiredBiome.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)LeveledItem_FieldIndex.RequiredBiome;
+                }
+                case RecordTypeInts.LLRV:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.RequiredResourceVein.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)LeveledItem_FieldIndex.RequiredResourceVein;
                 }
                 case RecordTypeInts.LVLO:
                 case RecordTypeInts.LLCT:
@@ -3463,17 +3668,17 @@ namespace Mutagen.Bethesda.Starfield
                         .CastExtendedList<FilterKeywordChance>();
                     return (int)LeveledItem_FieldIndex.FilterKeywordChances;
                 }
-                case RecordTypeInts.LVLL:
+                case RecordTypeInts.LVSG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LVLL = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)LeveledItem_FieldIndex.LVLL;
+                    item.EpicLootChance.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    return (int)LeveledItem_FieldIndex.EpicLootChance;
                 }
                 case RecordTypeInts.LIMC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LIMC = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
-                    return (int)LeveledItem_FieldIndex.LIMC;
+                    item.MarkerColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    return (int)LeveledItem_FieldIndex.MarkerColor;
                 }
                 case RecordTypeInts.ONAM:
                 {
@@ -3485,6 +3690,12 @@ namespace Mutagen.Bethesda.Starfield
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: true);
                     return (int)LeveledItem_FieldIndex.OverrideName;
+                }
+                case RecordTypeInts.LVLL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LegendaryItemDefaultListRank = frame.ReadUInt8();
+                    return (int)LeveledItem_FieldIndex.LegendaryItemDefaultListRank;
                 }
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:
@@ -3578,6 +3789,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         protected override Type LinkType => typeof(ILeveledItem);
 
+        public LeveledItem.MajorFlag MajorFlags => (LeveledItem.MajorFlag)this.MajorRecordFlagsRaw;
 
         #region VirtualMachineAdapter
         private int? _VirtualMachineAdapterLengthOverride;
@@ -3620,23 +3832,35 @@ namespace Mutagen.Bethesda.Starfield
         public LeveledItem.Flag Flags => _FlagsLocation.HasValue ? (LeveledItem.Flag)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(LeveledItem.Flag);
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = Array.Empty<IConditionGetter>();
-        #region UseGlobal
-        private int? _UseGlobalLocation;
-        public IFormLinkNullableGetter<IGlobalGetter> UseGlobal => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _UseGlobalLocation);
+        #region UseChanceNoneGlobal
+        private int? _UseChanceNoneGlobalLocation;
+        public IFormLinkNullableGetter<IGlobalGetter> UseChanceNoneGlobal => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _UseChanceNoneGlobalLocation);
+        #endregion
+        #region RequiredBiome
+        private int? _RequiredBiomeLocation;
+        public IFormLinkNullableGetter<IBiomeGetter> RequiredBiome => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IBiomeGetter>(_package, _recordData, _RequiredBiomeLocation);
+        #endregion
+        #region RequiredResourceVein
+        private int? _RequiredResourceVeinLocation;
+        public IFormLinkNullableGetter<IResourceGetter> RequiredResourceVein => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IResourceGetter>(_package, _recordData, _RequiredResourceVeinLocation);
         #endregion
         public IReadOnlyList<ILeveledItemEntryGetter>? Entries { get; private set; }
         public IReadOnlyList<IFilterKeywordChanceGetter>? FilterKeywordChances { get; private set; }
-        #region LVLL
-        private int? _LVLLLocation;
-        public ReadOnlyMemorySlice<Byte>? LVLL => _LVLLLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _LVLLLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region EpicLootChance
+        private int? _EpicLootChanceLocation;
+        public IFormLinkNullableGetter<IGlobalGetter> EpicLootChance => FormLinkBinaryTranslation.Instance.NullableRecordOverlayFactory<IGlobalGetter>(_package, _recordData, _EpicLootChanceLocation);
         #endregion
-        #region LIMC
-        private int? _LIMCLocation;
-        public ReadOnlyMemorySlice<Byte>? LIMC => _LIMCLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _LIMCLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region MarkerColor
+        private int? _MarkerColorLocation;
+        public Color? MarkerColor => _MarkerColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _MarkerColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
         #endregion
         #region OverrideName
         private int? _OverrideNameLocation;
         public ITranslatedStringGetter? OverrideName => _OverrideNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_recordData, _OverrideNameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, parsingBundle: _package.MetaData, eager: false) : default(TranslatedString?);
+        #endregion
+        #region LegendaryItemDefaultListRank
+        private int? _LegendaryItemDefaultListRankLocation;
+        public Byte? LegendaryItemDefaultListRank => _LegendaryItemDefaultListRankLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _LegendaryItemDefaultListRankLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
         #endregion
         public IModelGetter? Model { get; private set; }
         public IReadOnlyList<IFormLinkGetter<ILocationReferenceTypeGetter>>? ForcedLocations { get; private set; }
@@ -3783,8 +4007,18 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.LVLG:
                 {
-                    _UseGlobalLocation = (stream.Position - offset);
-                    return (int)LeveledItem_FieldIndex.UseGlobal;
+                    _UseChanceNoneGlobalLocation = (stream.Position - offset);
+                    return (int)LeveledItem_FieldIndex.UseChanceNoneGlobal;
+                }
+                case RecordTypeInts.LLRB:
+                {
+                    _RequiredBiomeLocation = (stream.Position - offset);
+                    return (int)LeveledItem_FieldIndex.RequiredBiome;
+                }
+                case RecordTypeInts.LLRV:
+                {
+                    _RequiredResourceVeinLocation = (stream.Position - offset);
+                    return (int)LeveledItem_FieldIndex.RequiredResourceVein;
                 }
                 case RecordTypeInts.LVLO:
                 case RecordTypeInts.LLCT:
@@ -3810,20 +4044,25 @@ namespace Mutagen.Bethesda.Starfield
                         getter: (s, p) => FilterKeywordChanceBinaryOverlay.FilterKeywordChanceFactory(s, p));
                     return (int)LeveledItem_FieldIndex.FilterKeywordChances;
                 }
-                case RecordTypeInts.LVLL:
+                case RecordTypeInts.LVSG:
                 {
-                    _LVLLLocation = (stream.Position - offset);
-                    return (int)LeveledItem_FieldIndex.LVLL;
+                    _EpicLootChanceLocation = (stream.Position - offset);
+                    return (int)LeveledItem_FieldIndex.EpicLootChance;
                 }
                 case RecordTypeInts.LIMC:
                 {
-                    _LIMCLocation = (stream.Position - offset);
-                    return (int)LeveledItem_FieldIndex.LIMC;
+                    _MarkerColorLocation = (stream.Position - offset);
+                    return (int)LeveledItem_FieldIndex.MarkerColor;
                 }
                 case RecordTypeInts.ONAM:
                 {
                     _OverrideNameLocation = (stream.Position - offset);
                     return (int)LeveledItem_FieldIndex.OverrideName;
+                }
+                case RecordTypeInts.LVLL:
+                {
+                    _LegendaryItemDefaultListRankLocation = (stream.Position - offset);
+                    return (int)LeveledItem_FieldIndex.LegendaryItemDefaultListRank;
                 }
                 case RecordTypeInts.MODL:
                 case RecordTypeInts.MODT:

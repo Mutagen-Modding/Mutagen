@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="LeveledPackIn" recordType="LVLP" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="LeveledPackIn" recordType="LVLP" objType="Record" baseClass="StarfieldMajorRecord" majorFlag="true">
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
@@ -10,7 +10,7 @@
       <UInt64 name="XALG" recordType="XALG" unknown="true" />
       <Float name="ChanceNone" recordType="LVLD" nullable="False" binary="Custom" />
       <UInt8 name="MaxCount" recordType="LVLM" />
-      <Enum name="Flags" recordType="LVLF" nullable="False" enumName="LeveledItem.Flag" byteLength="2" />
+      <Enum name="Flags" recordType="LVLF" nullable="False" enumName="LeveledPackIn.Flag" byteLength="2" />
       <RefList name="Conditions" refName="Condition" />
       <FormLink name="UseGlobal" refName="Global" recordType="LVLG" />
       <RefList name="Entries" counterRecType="LLCT" refName="LeveledPackInEntry" counterLength="1" />

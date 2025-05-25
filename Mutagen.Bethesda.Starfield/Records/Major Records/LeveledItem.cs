@@ -7,11 +7,22 @@ namespace Mutagen.Bethesda.Starfield;
 public partial class LeveledItem
 {
     [Flags]
+    public enum MajorFlag
+    {
+        UseAll = 0x8000
+    }
+
+    [Flags]
     public enum Flag
     {
         CalculateFromAllLevelsLessThanOrEqualPlayer = 0x01,
         CalculateForEachItemInCount = 0x02,
-        UseAll = 0x04
+        UseAll = 0x04,
+        ShowAsMarker1 = 0x08,
+        ShowAsMarker2 = 0x10,
+        EvalAsStack = 0x20,
+        GetChanceFromRequiredBiome = 0x80,
+        DoAllBeforeRepeating = 0x100,
     }
 }
 

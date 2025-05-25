@@ -5,7 +5,11 @@ partial class Light
     [Flags]
     public enum MajorFlag
     {
+        NonPlayable = 0x0000_0004,
+        HiddenFromLocalMap = 0x0000_0200,
+        AdaptiveLighting = 0x0000_8000,
         RandomAnimStart = 0x0001_0000,
+        HasCurrents = 0x0008_0000,
         Obstacle = 0x0200_0000,
         PortalStrict = 0x1000_0000
     }

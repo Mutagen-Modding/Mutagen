@@ -134,6 +134,9 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - APlacedTrap
 - PlacedNpc
 - PlacedObject
+### ILocationOwner
+- Faction
+- Npc
 ### ILocationRecord
 - LocationReferenceType
 ### INpcSpawn
@@ -291,6 +294,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IBaseObject
 ### Faction
 - IAliasVoiceType
+- ILocationOwner
 - IObjectId
 - IOwner
 - IRelatable
@@ -374,6 +378,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### Npc
 - IBaseObject
 - IConstructibleObjectTarget
+- ILocationOwner
 - INpcSpawn
 - INpcTemplateTarget
 - IOwner

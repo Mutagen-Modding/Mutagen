@@ -2,7 +2,6 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Location" recordType="LCTN" objType="Record" baseClass="StarfieldMajorRecord" majorFlag="true" >
     <Fields>
-      <RefList name="Components" refName="AComponent" />
       <RefList name="Properties" refName="ObjectProperty" recordType="PRPS" />
       <RefList name="AddedPersistLocationReferences" refName="LocationReference" recordType="ACPR" />
       <RefList name="MasterPersistLocationReferences" refName="LocationReference" recordType="LCPR" />
@@ -48,27 +47,30 @@
         <FormLink refName="Keyword" />
       </List>
       <RefList name="Properties2" refName="ObjectProperty" recordType="PRPS" />
-      <RefDirect name="Faction" refName="LocationFaction" />
+      <RefDirect name="Owner" refName="LocationOwnerData" />
       <FormLink name="ParentLocation" recordType="PNAM" refName="Location" />
-      <FormLink name="NAM1" recordType="NAM1" refName="MusicType" unknown="true" />
+      <FormLink name="MusicType" recordType="NAM1" refName="MusicType" />
       <FormLink name="UnreportedCrimeFaction" recordType="FNAM" refName="Faction" />
       <FormLink name="WorldLocationMarkerRef" recordType="MNAM">
         <Interface>IPlacedSimple</Interface>
       </FormLink>
       <Float name="WorldLocationRadius" recordType="RNAM" />
       <Float name="ActorFadeMult" recordType="ANAM" />
-      <Float name="TNAM" recordType="TNAM" unknown="true" />
+      <Float name="RandomConversionTimer" recordType="TNAM" />
       <Color name="Color" recordType="CNAM" binaryType="Alpha" />
       <Int32 name="StarID" recordType="XNAM" />
       <Int32 name="PlanetID" recordType="YNAM" />
     </Fields>
   </Object>
-  <Object name="LocationFaction" objType="Subrecord" recordType="DATA">
+  <Object name="LocationOwnerData" objType="Subrecord" recordType="DATA">
     <Fields>
-      <FormLink name="Faction" refName="Faction" />
-      <Int8 name="UnknownDATA" />
-      <Int8 name="SystemLevel" />
-      <Int16 name="UnknownDATA2" />
+      <FormLink name="Owner" >
+        <Interface>ILocationOwner</Interface>
+      </FormLink>
+      <Int8 name="FactionRank" default="-1" />
+      <Int8 name="EncounterMinLevel" />
+      <Enum name="EncounterFlags" enumName="LocationOwnerData.EncounterFlag" byteLength="1" />
+      <Int8 name="EncounterMaxLevel" />
     </Fields>
   </Object>
   <Object name="LocationReference" objType="Subrecord">

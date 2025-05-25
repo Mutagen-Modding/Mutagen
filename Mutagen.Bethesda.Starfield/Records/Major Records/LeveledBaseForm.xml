@@ -5,12 +5,17 @@
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" overflowRecordType="XXXX" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" nullable="False" />
       <Percent name="DirtinessScale" recordType="ODTY" nullable="False" />
+      <RefDirect name="ObjectPaletteDefaults" refName="ObjectPaletteDefaults" />
+      <RefDirect name="Transforms" refName="Transforms" />
+      <UInt64 name="XALG" recordType="XALG" unknown="true" />
+      <RefList name="Components" refName="AComponent" />
       <Float name="ChanceNone" recordType="LVLD" nullable="False" />
       <UInt8 name="MaxCount" recordType="LVLM" />
       <Enum name="Flags" recordType="LVLF" nullable="False" enumName="LeveledItem.Flag" byteLength="2" />
       <FormLink name="UseGlobal" refName="Global" recordType="LVLG" />
       <RefList name="Conditions" refName="Condition" />
       <RefList name="Entries" counterRecType="LLCT" refName="LeveledBaseFormEntry" counterLength="1" />
+      <RefList name="FilterKeywordChances" refName="FilterKeywordChance" recordType="LLKC" />
       <RefDirect name="Model" refName="Model" />
     </Fields>
     <LinkInterface>IExternalBaseTemplate</LinkInterface>
@@ -30,6 +35,7 @@
           <Int8 name="Unused2" />
         </Fields>
       </Data>
+      <RefDirect name="Data" refName="ExtraData" />
       <RefList name="Conditions" refName="Condition" />
     </Fields>
   </Object>

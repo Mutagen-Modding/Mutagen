@@ -6,6 +6,15 @@ using Mutagen.Bethesda.Starfield.Internals;
 
 namespace Mutagen.Bethesda.Starfield;
 
+public partial class LeveledSpaceCell
+{
+    [Flags]
+    public enum Flag
+    {
+        DoAllBeforeRepeating = 0x100,
+    }
+}
+
 partial class LeveledSpaceCellBinaryCreateTranslation
 {
     public const int FloatChanceNoneVersion = 510;
