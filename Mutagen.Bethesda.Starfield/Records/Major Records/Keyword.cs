@@ -2,8 +2,6 @@
 
 public partial class Keyword
 {
-    // ToDo
-    // Copy Paste Risk
     [Flags]
     public enum MajorFlag
     {

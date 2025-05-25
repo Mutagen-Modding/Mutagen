@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Layer" recordType="LAYR" objType="Record" baseClass="StarfieldMajorRecord">
+  <Object name="Layer" recordType="LAYR" objType="Record" baseClass="StarfieldMajorRecord" majorFlag="true" >
     <Fields>
       <RefList name="Components" refName="AComponent" />
       <FormLink name="Parent" recordType="PNAM" refName="Layer" />
-      <Color name="SurfaceColor" recordType="XCLP" />
-      <UInt32 name="LODB" recordType="LODB" unknown="true" />
+      <Color name="SurfaceColor" recordType="XCLP" nullable="False" />
+      <Enum name="LodBehavior" recordType="LODB" enumName="Layer.LodBehaviorType" nullable="False" />
     </Fields>
   </Object>
 </Loqui>

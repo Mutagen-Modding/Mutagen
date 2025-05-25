@@ -82,14 +82,10 @@ namespace Mutagen.Bethesda.Starfield
         IFormLinkNullableGetter<ILayerGetter> ILayerGetter.Parent => this.Parent;
         #endregion
         #region SurfaceColor
-        public Color? SurfaceColor { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Color? ILayerGetter.SurfaceColor => this.SurfaceColor;
+        public Color SurfaceColor { get; set; } = default(Color);
         #endregion
-        #region LODB
-        public UInt32? LODB { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt32? ILayerGetter.LODB => this.LODB;
+        #region LodBehavior
+        public Layer.LodBehaviorType LodBehavior { get; set; } = default(Layer.LodBehaviorType);
         #endregion
 
         #region To String
@@ -119,7 +115,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Parent = initialValue;
                 this.SurfaceColor = initialValue;
-                this.LODB = initialValue;
+                this.LodBehavior = initialValue;
             }
 
             public Mask(
@@ -133,7 +129,7 @@ namespace Mutagen.Bethesda.Starfield
                 TItem Components,
                 TItem Parent,
                 TItem SurfaceColor,
-                TItem LODB)
+                TItem LodBehavior)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -146,7 +142,7 @@ namespace Mutagen.Bethesda.Starfield
                 this.Components = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>(Components, Enumerable.Empty<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>());
                 this.Parent = Parent;
                 this.SurfaceColor = SurfaceColor;
-                this.LODB = LODB;
+                this.LodBehavior = LodBehavior;
             }
 
             #pragma warning disable CS8618
@@ -161,7 +157,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AComponent.Mask<TItem>?>>?>? Components;
             public TItem Parent;
             public TItem SurfaceColor;
-            public TItem LODB;
+            public TItem LodBehavior;
             #endregion
 
             #region Equals
@@ -178,7 +174,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (!object.Equals(this.Components, rhs.Components)) return false;
                 if (!object.Equals(this.Parent, rhs.Parent)) return false;
                 if (!object.Equals(this.SurfaceColor, rhs.SurfaceColor)) return false;
-                if (!object.Equals(this.LODB, rhs.LODB)) return false;
+                if (!object.Equals(this.LodBehavior, rhs.LodBehavior)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -187,7 +183,7 @@ namespace Mutagen.Bethesda.Starfield
                 hash.Add(this.Components);
                 hash.Add(this.Parent);
                 hash.Add(this.SurfaceColor);
-                hash.Add(this.LODB);
+                hash.Add(this.LodBehavior);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -212,7 +208,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (!eval(this.Parent)) return false;
                 if (!eval(this.SurfaceColor)) return false;
-                if (!eval(this.LODB)) return false;
+                if (!eval(this.LodBehavior)) return false;
                 return true;
             }
             #endregion
@@ -235,7 +231,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 if (eval(this.Parent)) return true;
                 if (eval(this.SurfaceColor)) return true;
-                if (eval(this.LODB)) return true;
+                if (eval(this.LodBehavior)) return true;
                 return false;
             }
             #endregion
@@ -268,7 +264,7 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 obj.Parent = eval(this.Parent);
                 obj.SurfaceColor = eval(this.SurfaceColor);
-                obj.LODB = eval(this.LODB);
+                obj.LodBehavior = eval(this.LodBehavior);
             }
             #endregion
 
@@ -314,9 +310,9 @@ namespace Mutagen.Bethesda.Starfield
                     {
                         sb.AppendItem(SurfaceColor, "SurfaceColor");
                     }
-                    if (printMask?.LODB ?? true)
+                    if (printMask?.LodBehavior ?? true)
                     {
-                        sb.AppendItem(LODB, "LODB");
+                        sb.AppendItem(LodBehavior, "LodBehavior");
                     }
                 }
             }
@@ -332,7 +328,7 @@ namespace Mutagen.Bethesda.Starfield
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>? Components;
             public Exception? Parent;
             public Exception? SurfaceColor;
-            public Exception? LODB;
+            public Exception? LodBehavior;
             #endregion
 
             #region IErrorMask
@@ -347,8 +343,8 @@ namespace Mutagen.Bethesda.Starfield
                         return Parent;
                     case Layer_FieldIndex.SurfaceColor:
                         return SurfaceColor;
-                    case Layer_FieldIndex.LODB:
-                        return LODB;
+                    case Layer_FieldIndex.LodBehavior:
+                        return LodBehavior;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -368,8 +364,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Layer_FieldIndex.SurfaceColor:
                         this.SurfaceColor = ex;
                         break;
-                    case Layer_FieldIndex.LODB:
-                        this.LODB = ex;
+                    case Layer_FieldIndex.LodBehavior:
+                        this.LodBehavior = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -391,8 +387,8 @@ namespace Mutagen.Bethesda.Starfield
                     case Layer_FieldIndex.SurfaceColor:
                         this.SurfaceColor = (Exception?)obj;
                         break;
-                    case Layer_FieldIndex.LODB:
-                        this.LODB = (Exception?)obj;
+                    case Layer_FieldIndex.LodBehavior:
+                        this.LodBehavior = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -406,7 +402,7 @@ namespace Mutagen.Bethesda.Starfield
                 if (Components != null) return true;
                 if (Parent != null) return true;
                 if (SurfaceColor != null) return true;
-                if (LODB != null) return true;
+                if (LodBehavior != null) return true;
                 return false;
             }
             #endregion
@@ -458,7 +454,7 @@ namespace Mutagen.Bethesda.Starfield
                     sb.AppendItem(SurfaceColor, "SurfaceColor");
                 }
                 {
-                    sb.AppendItem(LODB, "LODB");
+                    sb.AppendItem(LodBehavior, "LodBehavior");
                 }
             }
             #endregion
@@ -471,7 +467,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Components = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AComponent.ErrorMask?>>?>(Noggog.ExceptionExt.Combine(this.Components?.Overall, rhs.Components?.Overall), Noggog.ExceptionExt.Combine(this.Components?.Specific, rhs.Components?.Specific));
                 ret.Parent = this.Parent.Combine(rhs.Parent);
                 ret.SurfaceColor = this.SurfaceColor.Combine(rhs.SurfaceColor);
-                ret.LODB = this.LODB.Combine(rhs.LODB);
+                ret.LodBehavior = this.LodBehavior.Combine(rhs.LodBehavior);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -497,7 +493,7 @@ namespace Mutagen.Bethesda.Starfield
             public AComponent.TranslationMask? Components;
             public bool Parent;
             public bool SurfaceColor;
-            public bool LODB;
+            public bool LodBehavior;
             #endregion
 
             #region Ctors
@@ -508,7 +504,7 @@ namespace Mutagen.Bethesda.Starfield
             {
                 this.Parent = defaultOn;
                 this.SurfaceColor = defaultOn;
-                this.LODB = defaultOn;
+                this.LodBehavior = defaultOn;
             }
 
             #endregion
@@ -519,7 +515,7 @@ namespace Mutagen.Bethesda.Starfield
                 ret.Add((Components == null ? DefaultOn : !Components.GetCrystal().CopyNothing, Components?.GetCrystal()));
                 ret.Add((Parent, null));
                 ret.Add((SurfaceColor, null));
-                ret.Add((LODB, null));
+                ret.Add((LodBehavior, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -583,6 +579,11 @@ namespace Mutagen.Bethesda.Starfield
 
         protected override Type LinkType => typeof(ILayer);
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         public override IEnumerable<IAssetLinkGetter> EnumerateAssetLinks(AssetLinkQuery queryCategories, IAssetLinkCache? linkCache, Type? assetType) => LayerCommon.Instance.EnumerateAssetLinks(this, queryCategories, linkCache, assetType);
         public override IEnumerable<IAssetLink> EnumerateListedAssetLinks() => LayerSetterCommon.Instance.EnumerateListedAssetLinks(this);
         public override void RemapAssetLinks(IReadOnlyDictionary<IAssetLinkGetter, string> mapping, AssetLinkQuery queryCategories, IAssetLinkCache? linkCache) => LayerSetterCommon.Instance.RemapAssetLinks(this, mapping, linkCache, queryCategories);
@@ -674,8 +675,12 @@ namespace Mutagen.Bethesda.Starfield
     {
         new ExtendedList<AComponent> Components { get; }
         new IFormLinkNullable<ILayerGetter> Parent { get; set; }
-        new Color? SurfaceColor { get; set; }
-        new UInt32? LODB { get; set; }
+        new Color SurfaceColor { get; set; }
+        new Layer.LodBehaviorType LodBehavior { get; set; }
+        #region Mutagen
+        new Layer.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface ILayerInternal :
@@ -697,8 +702,12 @@ namespace Mutagen.Bethesda.Starfield
         static new ILoquiRegistration StaticRegistration => Layer_Registration.Instance;
         IReadOnlyList<IAComponentGetter> Components { get; }
         IFormLinkNullableGetter<ILayerGetter> Parent { get; }
-        Color? SurfaceColor { get; }
-        UInt32? LODB { get; }
+        Color SurfaceColor { get; }
+        Layer.LodBehaviorType LodBehavior { get; }
+
+        #region Mutagen
+        Layer.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -878,7 +887,7 @@ namespace Mutagen.Bethesda.Starfield
         Components = 7,
         Parent = 8,
         SurfaceColor = 9,
-        LODB = 10,
+        LodBehavior = 10,
     }
     #endregion
 
@@ -975,8 +984,8 @@ namespace Mutagen.Bethesda.Starfield
             ClearPartial();
             item.Components.Clear();
             item.Parent.Clear();
-            item.SurfaceColor = default;
-            item.LODB = default;
+            item.SurfaceColor = default(Color);
+            item.LodBehavior = default(Layer.LodBehaviorType);
             base.Clear(item);
         }
         
@@ -1093,7 +1102,7 @@ namespace Mutagen.Bethesda.Starfield
                 include);
             ret.Parent = item.Parent.Equals(rhs.Parent);
             ret.SurfaceColor = item.SurfaceColor.ColorOnlyEquals(rhs.SurfaceColor);
-            ret.LODB = item.LODB == rhs.LODB;
+            ret.LodBehavior = item.LodBehavior == rhs.LodBehavior;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1161,15 +1170,13 @@ namespace Mutagen.Bethesda.Starfield
             {
                 sb.AppendItem(item.Parent.FormKeyNullable, "Parent");
             }
-            if ((printMask?.SurfaceColor ?? true)
-                && item.SurfaceColor is {} SurfaceColorItem)
+            if (printMask?.SurfaceColor ?? true)
             {
-                sb.AppendItem(SurfaceColorItem, "SurfaceColor");
+                sb.AppendItem(item.SurfaceColor, "SurfaceColor");
             }
-            if ((printMask?.LODB ?? true)
-                && item.LODB is {} LODBItem)
+            if (printMask?.LodBehavior ?? true)
             {
-                sb.AppendItem(LODBItem, "LODB");
+                sb.AppendItem(item.LodBehavior, "LodBehavior");
             }
         }
         
@@ -1233,9 +1240,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 if (!lhs.SurfaceColor.ColorOnlyEquals(rhs.SurfaceColor)) return false;
             }
-            if ((equalsMask?.GetShouldTranslate((int)Layer_FieldIndex.LODB) ?? true))
+            if ((equalsMask?.GetShouldTranslate((int)Layer_FieldIndex.LodBehavior) ?? true))
             {
-                if (lhs.LODB != rhs.LODB) return false;
+                if (lhs.LodBehavior != rhs.LodBehavior) return false;
             }
             return true;
         }
@@ -1267,14 +1274,8 @@ namespace Mutagen.Bethesda.Starfield
             var hash = new HashCode();
             hash.Add(item.Components);
             hash.Add(item.Parent);
-            if (item.SurfaceColor is {} SurfaceColoritem)
-            {
-                hash.Add(SurfaceColoritem);
-            }
-            if (item.LODB is {} LODBitem)
-            {
-                hash.Add(LODBitem);
-            }
+            hash.Add(item.SurfaceColor);
+            hash.Add(item.LodBehavior);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1433,9 +1434,9 @@ namespace Mutagen.Bethesda.Starfield
             {
                 item.SurfaceColor = rhs.SurfaceColor;
             }
-            if ((copyMask?.GetShouldTranslate((int)Layer_FieldIndex.LODB) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Layer_FieldIndex.LodBehavior) ?? true))
             {
-                item.LODB = rhs.LODB;
+                item.LodBehavior = rhs.LodBehavior;
             }
             DeepCopyInCustom(
                 item: item,
@@ -1621,13 +1622,14 @@ namespace Mutagen.Bethesda.Starfield
                 writer: writer,
                 item: item.Parent,
                 header: translationParams.ConvertToCustom(RecordTypes.PNAM));
-            ColorBinaryTranslation.Instance.WriteNullable(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SurfaceColor,
                 header: translationParams.ConvertToCustom(RecordTypes.XCLP));
-            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
-                writer: writer,
-                item: item.LODB,
+            EnumBinaryTranslation<Layer.LodBehaviorType, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.LodBehavior,
+                length: 4,
                 header: translationParams.ConvertToCustom(RecordTypes.LODB));
         }
 
@@ -1722,8 +1724,10 @@ namespace Mutagen.Bethesda.Starfield
                 case RecordTypeInts.LODB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LODB = frame.ReadUInt32();
-                    return (int)Layer_FieldIndex.LODB;
+                    item.LodBehavior = EnumBinaryTranslation<Layer.LodBehaviorType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
+                    return (int)Layer_FieldIndex.LodBehavior;
                 }
                 default:
                     return StarfieldMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1784,6 +1788,7 @@ namespace Mutagen.Bethesda.Starfield
         }
         protected override Type LinkType => typeof(ILayer);
 
+        public Layer.MajorFlag MajorFlags => (Layer.MajorFlag)this.MajorRecordFlagsRaw;
 
         public IReadOnlyList<IAComponentGetter> Components { get; private set; } = Array.Empty<IAComponentGetter>();
         #region Parent
@@ -1792,11 +1797,11 @@ namespace Mutagen.Bethesda.Starfield
         #endregion
         #region SurfaceColor
         private int? _SurfaceColorLocation;
-        public Color? SurfaceColor => _SurfaceColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SurfaceColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
+        public Color SurfaceColor => _SurfaceColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_recordData, _SurfaceColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color);
         #endregion
-        #region LODB
-        private int? _LODBLocation;
-        public UInt32? LODB => _LODBLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LODBLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        #region LodBehavior
+        private int? _LodBehaviorLocation;
+        public Layer.LodBehaviorType LodBehavior => _LodBehaviorLocation.HasValue ? (Layer.LodBehaviorType)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_recordData, _LodBehaviorLocation!.Value, _package.MetaData.Constants)) : default(Layer.LodBehaviorType);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1888,8 +1893,8 @@ namespace Mutagen.Bethesda.Starfield
                 }
                 case RecordTypeInts.LODB:
                 {
-                    _LODBLocation = (stream.Position - offset);
-                    return (int)Layer_FieldIndex.LODB;
+                    _LodBehaviorLocation = (stream.Position - offset);
+                    return (int)Layer_FieldIndex.LodBehavior;
                 }
                 default:
                     return base.FillRecordType(

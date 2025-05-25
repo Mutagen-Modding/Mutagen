@@ -2249,6 +2249,9 @@
     <Compile Include="Records\Major Records\Key.cs">
       <DependentUpon>Key.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Layer.cs">
+      <DependentUpon>Layer.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\LensFlareSpriteData.cs">
       <DependentUpon>LensFlare.xml</DependentUpon>
     </Compile>
@@ -5553,7 +5556,7 @@
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\ItemResource_Generated.cs">
-      <DependentUpon>ItemComponent.xml</DependentUpon>
+      <DependentUpon>ItemResource.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\Link\IResourceTarget_Generated.cs" />
     <Compile Include="Records\Major Records\QuestAdapter_Generated.cs">
