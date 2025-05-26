@@ -174,7 +174,7 @@ public sealed record GameConstants
         hasEnabledMarkers: false,
         defaultFormVersion: null,
         defaultModHeaderVersion: 1f,
-        defaultHighRangeFormId: 0xD62,
+        defaultHighRangeFormId: 0x800,
         useLowerRangeFormIdVersion: null,
         myDocumentsString: "Oblivion",
         iniName: "Oblivion",
