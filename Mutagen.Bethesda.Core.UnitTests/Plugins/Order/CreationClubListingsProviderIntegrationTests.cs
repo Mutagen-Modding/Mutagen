@@ -53,7 +53,7 @@ ModB.esp"},
                 dataDirectoryInjection,
                 new CreationClubListingsPathInjection(cccPath),
                 new CreationClubRawListingsReader())
-            .Get().ShouldEqual(
+            .Get().ShouldEqualEnumerable(
                 new ModListing("ModA.esp", true, true),
                 new ModListing("ModB.esp", true, true));
     }
@@ -75,7 +75,7 @@ ModB.esp"},
                 dataDirectoryInjection,
                 new CreationClubListingsPathInjection(cccPath),
                 new CreationClubRawListingsReader())
-            .Get().ShouldEqual(
+            .Get().ShouldEqualEnumerable(
                 new ModListing("ModA.esp", true, true));   
     }
 }

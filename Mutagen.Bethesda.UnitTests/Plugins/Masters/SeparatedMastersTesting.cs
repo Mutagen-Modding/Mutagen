@@ -67,7 +67,7 @@ public class SeparatedMastersTesting
         var locs = RecordLocator.GetLocations(modPath, GameRelease.SkyrimSE,
             loadOrder: lo,
             fileSystem: fileSystem);
-        locs.ListedRecords.Select(x => x.Value.FormKey).ShouldEqual(
+        locs.ListedRecords.Select(x => x.Value.FormKey).ShouldEqualEnumerable(
             modBWeapon.FormKey, 
             originatingWeapon.FormKey,
             modANpc.FormKey,
@@ -97,10 +97,10 @@ public class SeparatedMastersTesting
             FileSystem = fileSystem,
             MasterFlagsLookup = lo
         });
-        reimport.Npcs.Select(x => x.FormKey).ShouldEqual(modANpc.FormKey, originatingNpc.FormKey);
+        reimport.Npcs.Select(x => x.FormKey).ShouldEqualEnumerable(modANpc.FormKey, originatingNpc.FormKey);
         var reimportNpc = reimport.Npcs[originatingNpc.FormKey];
         reimportNpc.Template.FormKey.ShouldBe(modANpc.FormKey);
-        reimport.Weapons.Select(x => x.FormKey).ShouldEqual(modBWeapon.FormKey, originatingWeapon.FormKey);
+        reimport.Weapons.Select(x => x.FormKey).ShouldEqualEnumerable(modBWeapon.FormKey, originatingWeapon.FormKey);
         var reimportWeapon = reimport.Weapons[originatingWeapon.FormKey];
         reimportWeapon.Template.FormKey.ShouldBe(modBWeapon.FormKey);
     }
@@ -174,7 +174,7 @@ public class SeparatedMastersTesting
         var locs = RecordLocator.GetLocations(modPath, GameRelease.Starfield,
             loadOrder: lo,
             fileSystem: fileSystem);
-        locs.ListedRecords.Select(x => x.Value.FormKey).ShouldEqual(
+        locs.ListedRecords.Select(x => x.Value.FormKey).ShouldEqualEnumerable(
             originatingWeapon.FormKey,
             originatingLightWeapon.FormKey,
             originatingMediumWeapon.FormKey,
@@ -258,7 +258,7 @@ public class SeparatedMastersTesting
             FileSystem = fileSystem,
             MasterFlagsLookup = lo
         });
-        reimport.Npcs.Select(x => x.FormKey).ShouldEqual(
+        reimport.Npcs.Select(x => x.FormKey).ShouldEqualEnumerable(
             modANpc.FormKey,
             lightModANpc.FormKey,
             mediumModANpc.FormKey,
@@ -271,7 +271,7 @@ public class SeparatedMastersTesting
         reimportLightNpc.InheritsSoundsFrom.FormKey.ShouldBe(lightModANpc.FormKey);
         var reimportMediumNpc = reimport.Npcs[originatingMediumNpc.FormKey];
         reimportMediumNpc.InheritsSoundsFrom.FormKey.ShouldBe(mediumModANpc.FormKey);
-        reimport.Weapons.Select(x => x.FormKey).ShouldEqual(
+        reimport.Weapons.Select(x => x.FormKey).ShouldEqualEnumerable(
             originatingWeapon.FormKey,
             originatingLightWeapon.FormKey,
             originatingMediumWeapon.FormKey);
@@ -281,7 +281,7 @@ public class SeparatedMastersTesting
         reimportLightWeapon.AimModel.FormKey.ShouldBe(lightModBAim.FormKey);
         var reimportMediumWeapon = reimport.Weapons[originatingMediumWeapon.FormKey];
         reimportMediumWeapon.AimModel.FormKey.ShouldBe(mediumModBAim.FormKey);
-        reimport.AimModels.Select(x => x.FormKey).ShouldEqual(
+        reimport.AimModels.Select(x => x.FormKey).ShouldEqualEnumerable(
             modBAim.FormKey,
             lightModBAim.FormKey,
             mediumModBAim.FormKey);

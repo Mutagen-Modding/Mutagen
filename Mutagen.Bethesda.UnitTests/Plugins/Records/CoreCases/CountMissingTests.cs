@@ -15,7 +15,7 @@ public class CountMissingTests : ASpecificCaseTest<Npc, INpcGetter>
     public override void TestItem(INpcGetter item)
     {
         item.Keywords.ShouldHaveCount(2);
-        item.Keywords.Select(x => x.FormKey).ShouldEqual(
+        item.Keywords.Select(x => x.FormKey).ShouldEqualEnumerable(
             FormKey.Factory("02332A:CountMissing.esp"),
             FormKey.Factory("02332B:CountMissing.esp"));
     }

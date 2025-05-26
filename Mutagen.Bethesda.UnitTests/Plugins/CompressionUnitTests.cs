@@ -29,6 +29,6 @@ public class CompressionUnitTests
             .WithFileSystem(fileSystem)
             .Construct();
         reimport.Npcs.Select(x => x.EditorID)
-            .ShouldEqual("Test123");
+            .ShouldEqualEnumerable("Test123");
     }
 }

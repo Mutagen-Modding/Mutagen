@@ -42,8 +42,8 @@ public class FindAllOfSubrecordsTests : RecordSpanExtensionTests
             TestRecordTypes.EDID);
         result.ShouldHaveCount(5);
         result.Select(x => x.RecordType).ShouldAllBe(TestRecordTypes.EDID);
-        result.Select(x => x.ContentLength).ShouldEqual(7, 2, 3, 2, 2);
-        result.Select(x => x.Location).ShouldEqual(0, 0xD, 0x15, 0x1E, 0x35);
+        result.Select(x => x.ContentLength).ShouldEqualEnumerable(7, 2, 3, 2, 2);
+        result.Select(x => x.Location).ShouldEqualEnumerable(0, 0xD, 0x15, 0x1E, 0x35);
     }
     
     [Fact]
@@ -53,9 +53,9 @@ public class FindAllOfSubrecordsTests : RecordSpanExtensionTests
             Overflow(), GameConstants.Oblivion,
             TestRecordTypes.MAST, TestRecordTypes.DATA, TestRecordTypes.EDID);
         result.ShouldHaveCount(3);
-        result.Select(x => x.RecordType).ShouldEqual(TestRecordTypes.MAST, TestRecordTypes.DATA, TestRecordTypes.EDID);
-        result.Select(x => x.ContentLength).ShouldEqual(4, 2, 4);
-        result.Select(x => x.Location).ShouldEqual(0, 0x14, 0x1C);
+        result.Select(x => x.RecordType).ShouldEqualEnumerable(TestRecordTypes.MAST, TestRecordTypes.DATA, TestRecordTypes.EDID);
+        result.Select(x => x.ContentLength).ShouldEqualEnumerable(4, 2, 4);
+        result.Select(x => x.Location).ShouldEqualEnumerable(0, 0x14, 0x1C);
         result[0].AsInt32().ShouldBe(0x04030201);
         result[1].AsInt16().ShouldEqual(0x0809);
         result[2].AsInt32().ShouldBe(0x44332211);

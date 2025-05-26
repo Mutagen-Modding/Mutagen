@@ -15,7 +15,7 @@ public class RecordTypeLocatorTests
     {
         var stream = TestDataPathing.GetReadFrame("Plugins/Analysis/SkyrimTypical.esp", GameRelease.SkyrimSE);
         var locs = RecordLocator.GetLocations(stream);
-        locs.FormKeys.ShouldEqual(
+        locs.FormKeys.ShouldEqualEnumerable(
             FormKey.Factory("034182:SkyrimTypical.esp"),
             FormKey.Factory("039850:SkyrimTypical.esp"),
             FormKey.Factory("0C6974:SkyrimTypical.esp"),
@@ -28,7 +28,7 @@ public class RecordTypeLocatorTests
             FormKey.Factory("020532:SkyrimTypical.esp"),
             FormKey.Factory("000E42:SkyrimTypical.esp"),
             FormKey.Factory("000E45:SkyrimTypical.esp"));
-        locs.GrupLocations.Keys.ShouldEqual(
+        locs.GrupLocations.Keys.ShouldEqualEnumerable(
             0x50,
             0x16D,
             0x185,
@@ -47,7 +47,7 @@ public class RecordTypeLocatorTests
             0x642,
             0x688,
             0x6EA);
-        locs.GrupLocations.Values.ShouldEqual(
+        locs.GrupLocations.Values.ShouldEqualEnumerable(
             new GroupLocationMarker(new RangeInt64(80, 364), new("AMMO"), 0),
             new GroupLocationMarker(new RangeInt64(365, 969), new("CELL"), 0),
             new GroupLocationMarker(new RangeInt64(389, 969), new(0), 2),
@@ -66,7 +66,7 @@ public class RecordTypeLocatorTests
             new GroupLocationMarker(new RangeInt64(1602, 1671), new(0x204F2), 9),
             new GroupLocationMarker(new RangeInt64(1672, 1924), new("DIAL"), 0),
             new GroupLocationMarker(new RangeInt64(1770, 1924), new(0xE42), 7));
-        locs.ListedRecords.Keys.ShouldEqual(
+        locs.ListedRecords.Keys.ShouldEqualEnumerable(
             0x68,
             0x1B5,
             0x279,
@@ -79,7 +79,7 @@ public class RecordTypeLocatorTests
             0x65A,
             0x6A0,
             0x702);
-        locs.ListedRecords.Values.ShouldEqual(
+        locs.ListedRecords.Values.ShouldEqualEnumerable(
             new RecordLocationMarker(
                 FormKey.Factory("034182:SkyrimTypical.esp"), 
                 new RangeInt64(104, 364),
@@ -136,15 +136,15 @@ public class RecordTypeLocatorTests
         var stream = TestDataPathing.GetReadFrame("Plugins/Analysis/SkyrimTypical.esp", GameRelease.SkyrimSE);
         var locs = RecordLocator.GetLocations(stream,
             new RecordInterest("AMMO"));
-        locs.FormKeys.ShouldEqual(
+        locs.FormKeys.ShouldEqualEnumerable(
             FormKey.Factory("034182:SkyrimTypical.esp"));
-        locs.GrupLocations.Keys.ShouldEqual(
+        locs.GrupLocations.Keys.ShouldEqualEnumerable(
             0x50);
-        locs.GrupLocations.Values.ShouldEqual(
+        locs.GrupLocations.Values.ShouldEqualEnumerable(
             new GroupLocationMarker(new RangeInt64(80, 364), new("AMMO"), 0));
-        locs.ListedRecords.Keys.ShouldEqual(
+        locs.ListedRecords.Keys.ShouldEqualEnumerable(
             0x68);
-        locs.ListedRecords.Values.ShouldEqual(
+        locs.ListedRecords.Values.ShouldEqualEnumerable(
             new RecordLocationMarker(
                 FormKey.Factory("034182:SkyrimTypical.esp"),
                 new RangeInt64(104, 364),
@@ -157,17 +157,17 @@ public class RecordTypeLocatorTests
         var stream = TestDataPathing.GetReadFrame("Plugins/Analysis/SkyrimTypical.esp", GameRelease.SkyrimSE);
         var locs = RecordLocator.GetLocations(stream,
             new RecordInterest("INFO"));
-        locs.FormKeys.ShouldEqual(
+        locs.FormKeys.ShouldEqualEnumerable(
             FormKey.Factory("000E45:SkyrimTypical.esp"));
-        locs.GrupLocations.Keys.ShouldEqual(
+        locs.GrupLocations.Keys.ShouldEqualEnumerable(
             0x688,
             0x6EA);
-        locs.GrupLocations.Values.ShouldEqual(
+        locs.GrupLocations.Values.ShouldEqualEnumerable(
             new GroupLocationMarker(new RangeInt64(1672, 1924), new("DIAL"), 0),
             new GroupLocationMarker(new RangeInt64(1770, 1924), new(0xE42), 7));
-        locs.ListedRecords.Keys.ShouldEqual(
+        locs.ListedRecords.Keys.ShouldEqualEnumerable(
             0x702);
-        locs.ListedRecords.Values.ShouldEqual(
+        locs.ListedRecords.Values.ShouldEqualEnumerable(
             new RecordLocationMarker(
                 FormKey.Factory("000E45:SkyrimTypical.esp"),
                 new RangeInt64(1794, 1924),

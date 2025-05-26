@@ -270,7 +270,7 @@ public class ModKeyTests
         var arr = new ModKey[] { "ModA.esp", "ModB.esp", "modc.esp" };
         var toSort = new List<ModKey> { "ModC.esp", "ModA.esp" };
         toSort.Sort(ModKey.LoadOrderComparer(arr));
-        toSort.ShouldEqual("ModA.esp", "ModC.esp");
+        toSort.ShouldEqualEnumerable("ModA.esp", "ModC.esp");
     }
     
     [Fact]
@@ -279,7 +279,7 @@ public class ModKeyTests
         var arr = new ModKey[] { "ModA.esp", "ModB.esp", "ModC.esp" };
         var toSort = new List<ModKey> { "modc.esp", "ModA.esp" };
         toSort.Sort(ModKey.LoadOrderComparer(arr));
-        toSort.ShouldEqual("ModA.esp", "modc.esp");
+        toSort.ShouldEqualEnumerable("ModA.esp", "modc.esp");
     }
 
     #endregion

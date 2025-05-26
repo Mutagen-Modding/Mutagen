@@ -36,6 +36,6 @@ public class PluginRawListingsReaderTests
         };
         sut.Parser.Parse(default!).ReturnsForAnyArgs(listings);
         sut.Read(existingPath)
-            .ShouldEqual(listings);
+            .ShouldEqualEnumerable(listings);
     }
 }

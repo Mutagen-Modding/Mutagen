@@ -70,11 +70,11 @@ public class GameEnvironmentBuilderTests
         env.LoadOrderFilePath.ShouldBe(pluginListingsPathProvider.Path);
         env.CreationClubListingsFilePath.ShouldBe(cccListingPathContext.Path);
         env.LoadOrder.Count.ShouldBe(modKeys.Length);
-        env.LoadOrder.Select(x => x.Key).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqual(true);
+        env.LoadOrder.Select(x => x.Key).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqualEnumerable(true);
         env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
-        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(modKeys);
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldEqualEnumerable(modKeys);
     }
     
     [Theory]
@@ -105,11 +105,11 @@ public class GameEnvironmentBuilderTests
         env.LoadOrderFilePath.ShouldBe(pluginListingsPathProvider.Path);
         env.CreationClubListingsFilePath.ShouldBe(cccListingPathContext.Path);
         env.LoadOrder.Count.ShouldBe(modKeys.Length);
-        env.LoadOrder.Select(x => x.Key).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqual(true);
+        env.LoadOrder.Select(x => x.Key).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqualEnumerable(true);
         env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
-        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(modKeys);
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldEqualEnumerable(modKeys);
     }
     
     [Theory]
@@ -261,11 +261,11 @@ public class GameEnvironmentBuilderTests
             .Build();
 
         env.LoadOrder.Count.ShouldBe(modKeysToUse.Length);
-        env.LoadOrder.Select(x => x.Key).ShouldBe(modKeysToUse);
-        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(modKeysToUse);
-        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqual(true);
+        env.LoadOrder.Select(x => x.Key).ShouldEqualEnumerable(modKeysToUse);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldEqualEnumerable(modKeysToUse);
+        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqualEnumerable(true);
         env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
-        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(modKeysToUse);
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldEqualEnumerable(modKeysToUse);
     }
     
     [Theory]
@@ -295,11 +295,11 @@ public class GameEnvironmentBuilderTests
             .Build();
 
         env.LoadOrder.Count.ShouldBe(modKeysToUse.Length);
-        env.LoadOrder.Select(x => x.Key).ShouldBe(modKeysToUse);
-        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(modKeysToUse);
-        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqual(true);
+        env.LoadOrder.Select(x => x.Key).ShouldEqualEnumerable(modKeysToUse);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldEqualEnumerable(modKeysToUse);
+        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqualEnumerable(true);
         env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
-        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(modKeysToUse);
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldEqualEnumerable(modKeysToUse);
     }
     
     [Theory]
@@ -329,11 +329,11 @@ public class GameEnvironmentBuilderTests
             .Build();
 
         env.LoadOrder.Count.ShouldBe(modKeys.Length);
-        env.LoadOrder.Select(x => x.Key).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqual(false);
+        env.LoadOrder.Select(x => x.Key).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqualEnumerable(false);
         env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
-        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(modKeys);
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldEqualEnumerable(modKeys);
     }
     
     [Theory]
@@ -363,11 +363,11 @@ public class GameEnvironmentBuilderTests
             .Build();
 
         env.LoadOrder.Count.ShouldBe(modKeys.Length);
-        env.LoadOrder.Select(x => x.Key).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqual(false);
+        env.LoadOrder.Select(x => x.Key).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqualEnumerable(false);
         env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
-        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(modKeys);
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldEqualEnumerable(modKeys);
     }
     
     [Theory]
@@ -395,11 +395,11 @@ public class GameEnvironmentBuilderTests
             .Build();
 
         env.LoadOrder.Count.ShouldBe(modKeys.Length);
-        env.LoadOrder.Select(x => x.Key).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqual(false);
+        env.LoadOrder.Select(x => x.Key).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqualEnumerable(false);
         env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
-        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(modKeys);
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldEqualEnumerable(modKeys);
     }
     
     [Theory]
@@ -427,11 +427,11 @@ public class GameEnvironmentBuilderTests
             .Build();
 
         env.LoadOrder.Count.ShouldBe(modKeys.Length);
-        env.LoadOrder.Select(x => x.Key).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqual(false);
+        env.LoadOrder.Select(x => x.Key).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqualEnumerable(false);
         env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
-        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(modKeys);
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldEqualEnumerable(modKeys);
     }
     
     [Theory]
@@ -600,11 +600,11 @@ public class GameEnvironmentBuilderTests
             .Build();
 
         env.LoadOrder.Count.ShouldBe(modKeys.Length);
-        env.LoadOrder.Select(x => x.Key).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqual(true);
+        env.LoadOrder.Select(x => x.Key).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqualEnumerable(true);
         env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
-        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(modKeys.And(outputModKey));
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldEqualEnumerable(modKeys.And(outputModKey));
     }
     
     [Theory]
@@ -635,10 +635,10 @@ public class GameEnvironmentBuilderTests
             .Build();
 
         env.LoadOrder.Count.ShouldBe(modKeys.Length);
-        env.LoadOrder.Select(x => x.Key).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.ModKey).ShouldBe(modKeys);
-        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqual(true);
+        env.LoadOrder.Select(x => x.Key).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.ModKey).ShouldEqualEnumerable(modKeys);
+        env.LoadOrder.Select(x => x.Value.Enabled).Distinct().ShouldEqualEnumerable(true);
         env.LoadOrder.Select(x => x.Value.Mod).ShouldNotContain(x => x == null);
-        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldBe(modKeys.And(outputModKey));
+        env.LinkCache.ListedOrder.Select(x => x.ModKey).ShouldEqualEnumerable(modKeys.And(outputModKey));
     }
 }

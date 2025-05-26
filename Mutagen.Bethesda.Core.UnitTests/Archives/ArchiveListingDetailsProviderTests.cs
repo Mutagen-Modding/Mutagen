@@ -35,7 +35,7 @@ public class ArchiveListingDetailsProviderTests
             "ModD.bsa",
         };
         list.Order(sut.GetComparerFor(null));
-        list.ShouldEqual(
+        list.ShouldEqualEnumerable(
             "ArchiveA.bsa",
             "ArchiveA - Textures.bsa",
             "ArchiveB.bsa",

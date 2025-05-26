@@ -38,7 +38,7 @@ public class GetApplicableArchivePathsTests
         fs.File.WriteAllText(Path.Combine(dataDir.Path, SomeExplicitListingBsa), string.Empty);
         var applicable = sut.Get()
             .ToArray();
-        applicable.ShouldEqual(
+        applicable.ShouldEqualEnumerable(
             Path.Combine(dataDir.Path, SomeExplicitListingBsa),
             Path.Combine(dataDir.Path, SkyrimBsa),
             Path.Combine(dataDir.Path, MyModBsa));

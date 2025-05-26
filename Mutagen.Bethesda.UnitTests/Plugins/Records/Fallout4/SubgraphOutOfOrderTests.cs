@@ -14,11 +14,11 @@ public class SubgraphOutOfOrderTests : ASpecificCaseTest<Subgraph, ISubgraphGett
     
     public override void TestItem(ISubgraphGetter subgraph)
     {       
-        subgraph.ActorKeywords.ShouldEqual(
+        subgraph.ActorKeywords.ShouldEqualEnumerable(
             new FormLink<IKeywordGetter>(FormKey.Factory("030B00:Fallout4.esm")),
             new FormLink<IKeywordGetter>(FormKey.Factory("030B01:Fallout4.esm")));
         subgraph.BehaviorGraph.ShouldBe(@"Actors\Shared\Behaviors\AlienSharedCoreWrappingBehavior.hkx");
-        subgraph.AnimationPaths.ShouldEqual(
+        subgraph.AnimationPaths.ShouldEqualEnumerable(
             @"Actors\Alien\Animations\Injured\BothLegs",
             @"Actors\Alien\Animations");
         subgraph.Role.ShouldBe(Subgraph.SubgraphRole.Weapon);

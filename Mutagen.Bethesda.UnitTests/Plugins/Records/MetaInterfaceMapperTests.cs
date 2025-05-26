@@ -14,13 +14,13 @@ public class MetaInterfaceMapperTests
         MetaInterfaceMapping.Instance.TryGetRegistrationsForInterface(typeof(IEnchantable), out var setterRegis)
             .ShouldBeTrue();
         setterRegis.Setter.ShouldBeTrue();
-        setterRegis.Registrations.Select(x => x.GetterType).ShouldEqual(
+        setterRegis.Registrations.Select(x => x.GetterType).ShouldEqualEnumerable(
             typeof(IArmorGetter),
             typeof(IWeaponGetter));
         MetaInterfaceMapping.Instance.TryGetRegistrationsForInterface(typeof(IEnchantableGetter), out var getterRegis)
             .ShouldBeTrue();
         getterRegis.Setter.ShouldBeFalse();
-        getterRegis.Registrations.Select(x => x.GetterType).ShouldEqual(
+        getterRegis.Registrations.Select(x => x.GetterType).ShouldEqualEnumerable(
             typeof(IArmorGetter),
             typeof(IWeaponGetter));
     }
@@ -31,13 +31,13 @@ public class MetaInterfaceMapperTests
         MetaInterfaceMapping.Instance.TryGetRegistrationsForInterface(typeof(IIdleRelation), out var setterRegis)
             .ShouldBeTrue();
         setterRegis.Setter.ShouldBeTrue();
-        setterRegis.Registrations.Select(x => x.GetterType).ShouldEqual(
+        setterRegis.Registrations.Select(x => x.GetterType).ShouldEqualEnumerable(
             typeof(IActionRecordGetter),
             typeof(IIdleAnimationGetter));
         MetaInterfaceMapping.Instance.TryGetRegistrationsForInterface(typeof(IIdleRelationGetter), out var getterRegis)
             .ShouldBeTrue();
         getterRegis.Setter.ShouldBeFalse();
-        getterRegis.Registrations.Select(x => x.GetterType).ShouldEqual(
+        getterRegis.Registrations.Select(x => x.GetterType).ShouldEqualEnumerable(
             typeof(IActionRecordGetter),
             typeof(IIdleAnimationGetter));
     }
@@ -48,14 +48,14 @@ public class MetaInterfaceMapperTests
         MetaInterfaceMapping.Instance.TryGetRegistrationsForInterface(typeof(IAStoryManagerNode), out var setterRegis)
             .ShouldBeTrue();
         setterRegis.Setter.ShouldBeTrue();
-        setterRegis.Registrations.Select(x => x.GetterType).ShouldEqual(
+        setterRegis.Registrations.Select(x => x.GetterType).ShouldEqualEnumerable(
             typeof(IStoryManagerBranchNodeGetter),
             typeof(IStoryManagerQuestNodeGetter),
             typeof(IStoryManagerEventNodeGetter));
         MetaInterfaceMapping.Instance.TryGetRegistrationsForInterface(typeof(IAStoryManagerNodeGetter), out var getterRegis)
             .ShouldBeTrue();
         getterRegis.Setter.ShouldBeFalse();
-        getterRegis.Registrations.Select(x => x.GetterType).ShouldEqual(
+        getterRegis.Registrations.Select(x => x.GetterType).ShouldEqualEnumerable(
             typeof(IStoryManagerBranchNodeGetter),
             typeof(IStoryManagerQuestNodeGetter),
             typeof(IStoryManagerEventNodeGetter));
@@ -67,7 +67,7 @@ public class MetaInterfaceMapperTests
         MetaInterfaceMapping.Instance.TryGetRegistrationsForInterface(GameCategory.Skyrim, typeof(IEnchantable), out var regis)
             .ShouldBeTrue();
         regis.Setter.ShouldBeTrue();
-        regis.Registrations.Select(x => x.GetterType).ShouldEqual(
+        regis.Registrations.Select(x => x.GetterType).ShouldEqualEnumerable(
             typeof(IArmorGetter),
             typeof(IWeaponGetter));
     }
@@ -85,13 +85,13 @@ public class MetaInterfaceMapperTests
         MetaInterfaceMapping.Instance.TryGetRegistrationsForInterface("Mutagen.Bethesda.Skyrim.IEnchantable", out var setterRegis)
             .ShouldBeTrue();
         setterRegis.Setter.ShouldBeTrue();
-        setterRegis.Registrations.Select(x => x.GetterType).ShouldEqual(
+        setterRegis.Registrations.Select(x => x.GetterType).ShouldEqualEnumerable(
             typeof(IArmorGetter),
             typeof(IWeaponGetter));
         MetaInterfaceMapping.Instance.TryGetRegistrationsForInterface("Mutagen.Bethesda.Skyrim.IEnchantableGetter", out var getterRegis)
             .ShouldBeTrue();
         getterRegis.Setter.ShouldBeFalse();
-        getterRegis.Registrations.Select(x => x.GetterType).ShouldEqual(
+        getterRegis.Registrations.Select(x => x.GetterType).ShouldEqualEnumerable(
             typeof(IArmorGetter),
             typeof(IWeaponGetter));
     }
@@ -102,13 +102,13 @@ public class MetaInterfaceMapperTests
         MetaInterfaceMapping.Instance.TryGetRegistrationsForInterface(GameCategory.Skyrim, "Mutagen.Bethesda.Skyrim.IEnchantable", out var setterRegis)
             .ShouldBeTrue();
         setterRegis.Setter.ShouldBeTrue();
-        setterRegis.Registrations.Select(x => x.GetterType).ShouldEqual(
+        setterRegis.Registrations.Select(x => x.GetterType).ShouldEqualEnumerable(
             typeof(IArmorGetter),
             typeof(IWeaponGetter));
         MetaInterfaceMapping.Instance.TryGetRegistrationsForInterface(GameCategory.Skyrim, "Mutagen.Bethesda.Skyrim.IEnchantableGetter", out var getterRegis)
             .ShouldBeTrue();
         getterRegis.Setter.ShouldBeFalse();
-        getterRegis.Registrations.Select(x => x.GetterType).ShouldEqual(
+        getterRegis.Registrations.Select(x => x.GetterType).ShouldEqualEnumerable(
             typeof(IArmorGetter),
             typeof(IWeaponGetter));
     }

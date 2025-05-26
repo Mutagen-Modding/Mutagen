@@ -35,7 +35,7 @@ public class PluginListingsParserTests
 ModB.esp
 *ModC.esp"))
             .ToList();
-        result.ShouldEqual(
+        result.ShouldEqualEnumerable(
             new LoadOrderListing("ModA.esm", true),
             new LoadOrderListing("ModB.esp", false),
             new LoadOrderListing("ModC.esp", true));
@@ -52,7 +52,7 @@ ModB.esp
 #ModB.esp
 *ModC.esp"))
             .ToList();
-        result.ShouldEqual(
+        result.ShouldEqualEnumerable(
             new LoadOrderListing("ModA.esm", true),
             new LoadOrderListing("#ModB.esp", false),
             new LoadOrderListing("ModC.esp", true));
@@ -69,7 +69,7 @@ ModB.esp
 ModB.esp#Hello
 *ModC.esp"))
             .ToList();
-        result.ShouldEqual(
+        result.ShouldEqualEnumerable(
             new LoadOrderListing("ModA.esm", true),
             new LoadOrderListing("ModB.esp", false),
             new LoadOrderListing("ModC.esp", true));
