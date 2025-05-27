@@ -227,7 +227,7 @@ public class ModCompactorTests
         mod.Npcs.Records.Count().ShouldBe(4099);
         ret.ResultingStyle.ShouldBe(MasterStyle.Medium);
         ret.RemappedFormKeys
-            .ShouldEqualEnumerable(new KeyValuePair<FormKey, FormKey>(n2.FormKey, new FormKey(n.FormKey.ModKey, 1801)));
+            .ShouldEqualEnumerable(new KeyValuePair<FormKey, FormKey>(n2.FormKey, new FormKey(n.FormKey.ModKey, 0x1801)));
     }
     
     [Theory, MutagenModAutoData]
@@ -251,6 +251,6 @@ public class ModCompactorTests
         mod.Npcs.Records.Count().ShouldBe(4099);
         ret.ResultingStyle.ShouldBe(MasterStyle.Full);
         ret.RemappedFormKeys
-            .ShouldEqualEnumerable(new KeyValuePair<FormKey, FormKey>(n2.FormKey, new FormKey(n.FormKey.ModKey, 1801)));
+            .ShouldEqualEnumerable(new KeyValuePair<FormKey, FormKey>(n3.FormKey, new FormKey(n.FormKey.ModKey, 0x1801)));
     }
 }
