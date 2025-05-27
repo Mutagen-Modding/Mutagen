@@ -249,6 +249,7 @@ public sealed record GameConstants
             Language.Spanish,
             Language.Polish,
             Language.Chinese,
+            Language.Japanese,
             Language.Russian,
         },
         languageFormat: Strings.StringsLanguageFormat.FullName,
