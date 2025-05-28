@@ -11,7 +11,7 @@
       </List>
       <RefList name="UniqueActorReferencesAdded" refName="UniqueActorReference" recordType="ACUN" />
       <RefList name="UniqueActorReferencesStatic" refName="UniqueActorReference" recordType="LCUN" />
-      <List name="UniqueActorRemoved" recordType="RCUN">
+      <List name="UniqueActorReferencesRemoved" recordType="RCUN">
         <FormLink refName="Npc" />
       </List>
       <RefList name="LocationRefTypeReferencesAdded" refName="LocationRefTypeReference" recordType="ACSR" />
